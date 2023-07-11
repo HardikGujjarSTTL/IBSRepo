@@ -1,0 +1,405 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div>
+    <div class="dashGreenHeader cf">
+        <h2 class="alignLeft">Admin Dashboard</h2>
+    </div>
+    <div class="admindashboard-section">
+        <div class="admindashboard-wrap">
+            <div class="row admin-dashboard">
+                <div class="col-md-4 col-lg-2">
+                    <div class="dashboard-box das1">
+                        <div class="dash-total">
+                            <div class="total-inner">
+                                Total<br>
+                                Landlords
+                            </div>
+                            <div class="total-icons"><img src="images/landlord.png" alt="landlord"> </div>
+                        </div>
+                        <div class="dash-count">
+                            <div class="total-amount">3,313</div>
+                            <div class="total-add"><a href="#">Add</a> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="dashboard-box das2">
+                        <div class="dash-total">
+                            <div class="total-inner">
+                                Total <br>
+                                Properties
+                            </div>
+                            <div class="total-icons"><img src="images/house-icons.png" alt="house-icons"> </div>
+                        </div>
+                        <div class="dash-count">
+                            <div class="total-amount">4,382</div>
+                            <div class="total-add"><a href="#">Add</a> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="dashboard-box das3">
+                        <div class="dash-total">
+                            <div class="total-inner">
+                                Total <br>
+                                Trustees
+                            </div>
+                            <div class="total-icons"><img src="images/people-icons.png" alt="people-icons"> </div>
+                        </div>
+                        <div class="dash-count">
+                            <div class="total-amount">1,230</div>
+                            <div class="total-add"><a href="#">Add</a> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="dashboard-box das4">
+                        <div class="dash-total">
+                            <div class="total-inner">
+                                Total <br>
+                                Tenants
+                            </div>
+                            <div class="total-icons"><img src="images/houseowner-icons.png" alt="houseowner-icons"> </div>
+                        </div>
+                        <div class="dash-count">
+                            <div class="total-amount">3,685</div>
+                            <div class="total-add"><a href="#">Add</a> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="dashboard-box das2">
+                        <div class="dash-total">
+                            <div class="total-inner">
+                                Total <br>
+                                Income
+                            </div>
+                            <div class="total-icons"><img src="images/profit-icons.png" alt="profit-icons"> </div>
+                        </div>
+                        <div class="dash-count">
+                            <div class="total-amount">£ 14.25 M</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <div class="dashboard-box das6">
+                        <div class="dash-total">
+                            <div class="total-inner">
+                                Total <br>
+                                Expenses
+                            </div>
+                            <div class="total-icons"><img src="images/expense-icons.png" alt="expense-icons"> </div>
+                        </div>
+                        <div class="dash-count">
+                            <div class="total-amount">£ 6.45 M</div>
+                            <div class="total-add"><a href="#">Add</a> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="graph-section">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="graph-inner">
+        <div class="invoice">
+            <h3 class="headingh3">Invoice Status Month Wise</h3>
+            <div class="datefrom">
+                <div class="from-celender">
+                    <input placeholder="From" type="text" class="datepicker" />
+                </div>
+                <div class="colwithbtn">
+                    <input placeholder="To" type="text" class="datepicker" />
+                </div>
+            </div>
+        </div>
+        <div class="graph">
+            <div id="monthlychart"></div>
+        </div>
+        </div>
+        </div>
+        </div>
+    </section>
+    <section class="recently-wrap">
+        <div class="recently-property">
+            <div class="row mb-0">
+                <div class="col-md-4">
+                    <div class="recently-inner">
+                        <div class="recently-title">
+                            <h3>Recently Added Landlord</h3>
+                            <a class="viewall" href="javascript:void(0)"> View All</a>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">Kimberley Aberdeen Limited</div>
+                                <p> 1st Floor, Unit 4 and 5, Oriel House, Yourk Lane, St Helier, Jersey, JE2 4YH</p>
+                            </div>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">Stabroad Ltd</div>
+                                <p> 2nd Parklands Avenue, Plot 209/8902/1, Nairobi, Kenya</p>
+                            </div>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">Caramel Properties</div>
+                                <p>Limited P O Box 1075, JTC House, 28 Esplanade, St Helier, Jersey, JE4 2QP</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="recently-inner">
+                        <div class="recently-title">
+                            <h3>Recently Added Property</h3>
+                            <a class="viewall" href="javascript:void(0)"> View All</a>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">1SB01</div>
+                                <p>33 Mabley St, London E9 5RH, United Kingdom</p>
+                            </div>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">2DK01</div>
+                                <p>89 Kenworthy Rd, London E9 5RB, United Kingdom</p>
+                            </div>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">A502</div>
+                                <p>31 Swinnerton St, London E9 5RG, United Kingdom</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="recently-inner">
+                        <div class="recently-title">
+                            <h3>Recently Added Tenants</h3>
+                            <a class="viewall" href="javascript:void(0)"> View All</a>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">Esther Bellingham</div>
+                                <p>14 Daintry Way, London E9 5JJ, United Kingdom</p>
+                            </div>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">David Blackburn</div>
+                                <p>Studio F3, Arbeit Studios - Trowbridge Gardens, 1 Trowbridge Rd, London E9 5EN, United Kingdom</p>
+                            </div>
+                        </div>
+                        <div class="sb01-box">
+                            <div class="sb01-date">
+                                <p><img src="images/calender.png" alt="calender"><span> 06-06-2023</span></p>
+                            </div>
+                            <div class="kimberley">
+                                <div class="kim-title">Natalie Brammer</div>
+                                <p> 1 Trowbridge Rd, London E9 5LD, United Kingdom</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="table-section">
+        <div class="table-title">
+            <h3 class="headingh3">Recent Task List</h3>
+            <a class="viewall" href="#">View All</a>
+        </div>
+        <div class="dash-table">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-inner">
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <th scope="col">Sr. No</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">Task ID</th>
+                        <th scope="col">Task For</th>
+                        <th scope="col">Ref No.</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Issue Type</th>
+                        <th scope="col">Task Name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Solicitor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01</td>
+                        <td>06-06-2023</td>
+                        <td>136</td>
+                        <td>Tenant</td>
+                        <td>K1403-001</td>
+                        <td>Paul Wladarz and Company</td>
+                        <td>Lease Renewal</td>
+                        <td>2022-2023 Lease Renewal</td>
+                        <td class="oranges">Overdue</td>
+                        <td>DKLM & Co.</td>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>03-06-2023</td>
+                        <td>3134</td>
+                        <td>Landlord</td>
+                        <td>M801</td>
+                        <td>167 High Holborn & Finance</td>
+                        <td>Rent Review</td>
+                        <td>Planning Applicatin & CPO</td>
+                        <td class="green-color">Resolve</td>
+                        <td>Penningtons Ma..</td>
+                    </tr>
+                    <tr>
+                        <td>03</td>
+                        <td>01-06-2023</td>
+                        <td>1343</td>
+                        <td>Property</td>
+                        <td>T118</td>
+                        <td>DP Realty Limited</td>
+                        <td>Sub Letting</td>
+                        <td>2022-23 Licence to Underlet</td>
+                        <td class="oranges">Overdue</td>
+                        <td>Irwin Mitchell LLP</td>
+                    </tr>
+                    <tr>
+                        <td>04</td>
+                        <td>28-05-2023</td>
+                        <td>3231</td>
+                        <td>Tenant</td>
+                        <td>R101</td>
+                        <td>Gala Bingo</td>
+                        <td>Funding & Loans</td>
+                        <td>2022-23 Vacant Property</td>
+                        <td class="green-color">Resolve</td>
+                        <td>Harold Benajamin</td>
+                    </tr>
+                    <tr>
+                        <td>05</td>
+                        <td>24-05-2023</td>
+                        <td>3321</td>
+                        <td>Property</td>
+                        <td>M1001</td>
+                        <td>Avicenna Retai Ltd.</td>
+                        <td>Repair</td>
+                        <td>2022-2023 Lease Renewal</td>
+                        <td class="oranges">Overdue</td>
+                        <td>Penningtons Ma..</td>
+                    </tr>
+                </tbody>
+            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+
+
+        Highcharts.chart('monthlychart', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Amount in £ million'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
+                pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">£ {point.y:.1f}' +
+                    '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
+                footerFormat: '</tr></table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'Total Invoice Amount',
+                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4,
+                    194.1, 95.6, 54.4]
+
+            }, {
+                name: 'Received Amount',
+                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5,
+                    106.6, 92.3]
+
+            }, {
+                name: 'Pending Amount',
+                data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3,
+                    51.2]
+
+            }]
+        });
+    </script>
+}

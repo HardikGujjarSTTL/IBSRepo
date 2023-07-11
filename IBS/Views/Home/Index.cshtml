@@ -1,0 +1,51 @@
+﻿@model IBM.Models.LoginModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="loginForm">
+    <h2 class="heading1 bold">Login</h2>
+    <form role="form" asp-antiforgery="true" asp-controller="Home" asp-action="Index" method="post" id="frmLogin">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inputIcon">
+                    <label for="email">Email Address</label>
+                    <input id="txtUsername" type="text" value="" class="input" asp-for="UserName" maxlength="50" placeholder="Enter Email Address Here" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="password">Password</label>
+                <div class="inputIcon">
+                     <input type="password" id="txtPswd" asp-for="Password" class="input" data-toggle="password" autocomplete="off" placeholder="••••••••">
+                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="remember">
+                    <div class="remecheckbox">
+                        <input type="checkbox" class="input">
+                        Remembered Me
+                    </div>
+                    <a asp-controller="Home" asp-action="ForgotPassword" title="Forgot Password" class="link1">Forgot your password ?</a>
+                </div>
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-12">
+                <button type="submit" class="btn btnGreen">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+    </script>
+}

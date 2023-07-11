@@ -1,0 +1,17 @@
+﻿@using IBS.Models;
+@{
+    Alert alert = TempData.ContainsKey("TempDataAlerts")
+              ? TempData.Get<Alert>("TempDataAlerts")
+              : new Alert();
+
+    string Message = alert.Message;
+    string AlertStyle = alert.AlertStyle;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ('@Message' != '') {
+            ShowHideMsg('@AlertStyle', '@Message');
+        }
+    });
+</script>

@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="MobileOptimized" content="width" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBS | @ViewData["Title"]</title>
+    <link rel="shortcut icon" href="~/images/favicon.ico" />
+    <link type="text/css" href="~/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/css/admin-style.css" rel="stylesheet" />
+    <link type="text/css" href="~/css/admin-responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="~/js/modernizr.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+   <script src="~/lib/select2/js/select2.min.js"></script>
+
+    <script src="~/js/crypto-js.js"></script>
+    <script src="~/js/aes.js"></script>
+
+</head>
+
+<body class="noJS">
+
+    <partial name="_AlterPartial" />
+
+    <noscript class="jsRequired">
+        This page uses Javascript. Your browser either doesn't support Javascript
+        or you have it turned off. To see this page as it is meant to appear
+        please use a Javascript enabled browser.
+    </noscript>
+    <!--Wrapper-->
+    <div id="wrapper">
+        <!--mainContainer-->
+        <section id="mainContainer">
+            <div class="navBtn"><a href="#" id="menu-toggle" class="navbar-toggle"><i class="mdi mdi-menu"></i></a></div>
+            <div class="mobi_logoSection"> <a href="#" title="IBS"><img src="" width="191" height="57" alt="IBS" /></a> </div>
+            <!--leftSidebarNav-->
+            <aside id="sidebar" class="navbar-default navbar-static-side">
+                <div class="sidebar-collapse menu-scroll">
+                    <ul id="side-menu" class="nav">
+                        <li>
+                            <!--logoSection-->
+                            <div class="logoSection">
+                                @*<a href="dashboard.htm" title="IBS"><img src="~/images/logo.png" width="191" height="57" alt="IBS" /></a>*@
+                                <a href="dashboard.htm" title="IBS"><img src="" width="191" height="57" alt="IBS" /></a>
+                            </div>
+                            <!--logoSection-->
+                        </li>
+                        <li><a href="#"><i class="fa fa-fw"><img src="~/images/dashboard-icons.svg" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>
+                        @* <li>
+                        <a href="#"><span class="fa arrow"></span><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a>
+                        <ul class="nav nav-second-level">
+                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                        </ul>
+                        </li>*@
+                        @* <li>
+                        <a href="#"><span class="fa arrow"></span><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a>
+                        <ul class="nav nav-second-level">
+                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                        </ul>
+                        </li>*@
+                        <li><a asp-action="Index" asp-controller="Property"><i class="fa  fa-fw"><img src="~/images/property-icons.svg" alt="Property" /></i><span class="menu-title">Property</span></a></li>
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Tenant</span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                                <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                                <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>
+                        <li><a href="#"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Tenant</span></a></li>
+                        <li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>
+                        <li><a href="#"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Tenant</span></a></li>
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/trustees-icons.svg" alt="trustees" /></i><span class="menu-title">Trustees</span></a></li>
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/tasks-icons.svg" alt="tasks" /></i><span class="menu-title">Tasks</span></a></li>
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/rent-schedule-icons.svg" alt="rent schedule" /></i><span class="menu-title">Rent Schedule</span></a></li>
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/transaction-expense-icons.svg" alt="transaction expense" /></i><span class="menu-title">Transaction Expense</span></a></li>
+                        <li><a asp-action="Index" asp-controller="User"><i class="fa  fa-fw"><img src="~/images/users-icons.svg" alt="users" /></i><span class="menu-title">Users</span></a></li>
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/roles-icons.svg" alt="roles" /></i><span class="menu-title">Roles</span></a></li>
+                        <li>
+                            <a href="#">
+                                <span class="fa arrow"></span>
+                                <i class="fa  fa-fw">
+                                    <img src="~/images/master-data-icons.svg" alt="master" />
+                                </i>
+                                <span class="menu-title">Master</span>
+                            </a>
+                            <ul class="nav nav-second-level">
+                                
+                            </ul>
+                        </li>
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-icons.svg" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
+                    </ul>
+                </div>
+            </aside>
+            <!--leftSidebarNav-->
+            <!--contentContainer-->
+            <div class="contentContainer">
+                <!--header-->
+                <header id="header">
+                    <!--topLinksAndSearch-->
+                    <div class="topLinksAndSearch cf">
+                        <!--userTopLinks-->
+                        <div class="userTopLinks">
+                            <ul>
+                                <li>
+                                    <div class="search">
+                                        <input type="text" placeholder="Enter Keyword" />
+                                        <button type="submit"> <span class="fa fa-search"></span> </button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="relative">
+                                        <a href="#" class="openDrpPopup"> <span class="fa fa-bell-o" aria-hidden="true"></span> <span class="roundCount red">5</span> </a>
+                                        <div class="dropPopup messagePopup">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">
+                                                        <span class="dropPopupTitle">Lorem Ipsum is simply dummy.</span> <span class="dropPopupText">
+                                                            Lorem Ipsum is simply dummy text of the printing
+                                                            and typesetting industry.
+                                                        </span> <span class="dropPopupDate">15-06-2016</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <span class="dropPopupTitle">Lorem Ipsum is simply dummy.</span> <span class="dropPopupText">
+                                                            Lorem Ipsum is simply dummy text of the printing
+                                                            and typesetting industry.
+                                                        </span> <span class="dropPopupDate">15-06-2016</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <span class="dropPopupTitle">Lorem Ipsum is simply dummy.</span> <span class="dropPopupText">
+                                                            Lorem Ipsum is simply dummy text of the printing
+                                                            and typesetting industry.
+                                                        </span> <span class="dropPopupDate">15-06-2016</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <span class="dropPopupTitle">Lorem Ipsum is simply dummy.</span> <span class="dropPopupText">
+                                                            Lorem Ipsum is simply dummy text of the printing
+                                                            and typesetting industry.
+                                                        </span> <span class="messageDate">15-06-2016</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <a href="#" class="viewAll">View All Messages</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="#" class="">
+                                        <i class="fa fa-cog" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--userTopLinks-->
+                        <!--userInformation-->
+                        <div class="userInformation">
+                            <!--userImg-->
+                            <div class="userImgWrap">
+                                <div class="userImg"> <img src="~/images/user-icon.png" width="51" height="51" alt="Admin" title="admin" /> </div>
+                            </div>
+                            <!--userImg-->
+                            <!--userDetail-->
+                            <div class="userDetail">
+                                <a href="#" class="openDrpPopup">
+                                    <div class="user">
+                                        <h4> Rishi Haria <i class="fa-solid fa-chevron-down"></i> </h4>
+                                        <p>Admin</p>
+                                    </div>
+                                </a>
+                                <div class="dropPopup messagePopup">
+                                    <ul>
+                                        <li>
+                                            <a href="#"><i class="fa fa-user" aria-hidden="true"></i> Account</a>
+                                        </li>
+                                        <li>
+                                            @if (IBS.Helper.SessionHelper.UserModelDTO != null)
+                                            {
+                                                <a asp-action="ChangePassword" asp-controller="Home" asp-route-id="@IBS.Models.Common.EncryptQueryString(Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.UserId))">
+                                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                                    Change Password
+                                                </a>
+                                            }
+                                        </li>
+                                        <li>
+                                            <form asp-area="" asp-action="Logout" asp-controller="Home">
+                                                <button type="submit"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</button>
+                                                @*<a href="#"><i class="fa fafa-sign-out" aria-hidden="true"></i> Logout</a>*@
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--userDetail-->
+                        </div>
+                        <!--userInformation-->
+                    </div>
+                    <!--topLinksAndSearch-->
+                </header>
+                <!--header-->
+                <div class="adminInnerContent">
+                    <main role="main" class="pb-3">
+                        @RenderBody()
+                    </main>
+                    <partial name="_DeleteConfirmationPartial" />
+                </div>
+                <!--footer-->
+                <footer id="footer" class="footer">
+                    <p>Copyright &copy; 2023, IBS. All rights reserved.</p>
+                </footer>
+                <!--footer-->
+            </div>
+            <!--contentContainer-->
+        </section>
+        <!--mainContainer-->
+    </div>
+    <!--Wrapper-->
+
+    <script src="~/js/highcharts.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="~/js/functions.js"></script>
+    <script src="~/js/admin-general.js"></script>
+
+</body>
+
+</html>
