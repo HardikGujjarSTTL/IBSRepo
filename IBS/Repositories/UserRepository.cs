@@ -89,7 +89,6 @@ namespace IBS.Repositories
                 throw new Exception("User Record Not found");
             else
             {
-
                 user.Password = resetPassword.ConfirmPassword;
                 context.SaveChanges();
             }
