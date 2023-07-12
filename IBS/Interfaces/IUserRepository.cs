@@ -1,4 +1,4 @@
-﻿using IBM.Models;
+﻿using IBS.DataAccess;
 using IBS.Models;
 
 namespace IBS.Interfaces
@@ -12,10 +12,8 @@ namespace IBS.Interfaces
         public void Update(UserModel model);
 
         public T02User FindByLoginDetail(LoginModel model);
-        
 
         public void ChangePassword(int UserId, String NewPassword);
-
         public T02User FindByUsernameOrEmail(string UserName);
         public void ChangePassword(ResetPasswordModel resetPassword);
     }

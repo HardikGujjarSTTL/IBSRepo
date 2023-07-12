@@ -6,6 +6,7 @@ using System.Diagnostics.Metrics;
 using System.Linq.Expressions;
 using System.Text;
 using System.Reflection.Metadata;
+using IBS.DataAccess;
 
 namespace IBS.Models
 {
@@ -110,7 +111,23 @@ namespace IBS.Models
             else
                 return string.Empty;
         }
+        public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
+        {
 
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            //TblException objexception = new TblException();
+
+            //objexception.ControllerName = ControllerName;
+            //objexception.ActionName = ActionName;
+            //objexception.ExceptionMessage = exception;
+            //objexception.Exception = exceptionmsg;
+            //objexception.CreateBy = CreatedBy;
+            //objexception.CreateIp = CreatedIP;
+
+            //context.TblExceptions.Add(objexception);
+            //context.SaveChanges();
+        }
 
     }
 

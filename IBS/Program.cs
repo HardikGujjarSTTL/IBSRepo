@@ -1,6 +1,6 @@
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
-using IBS.Models;
 using IBS.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -39,6 +39,7 @@ builder.Services.AddHttpContextAccessor();
 //                 });
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 var app = builder.Build();
 

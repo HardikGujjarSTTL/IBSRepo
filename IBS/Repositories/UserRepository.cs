@@ -1,4 +1,4 @@
-﻿using IBM.Models;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +66,6 @@ namespace IBS.Repositories
         
         public void ChangePassword(int UserId, String NewPassword)
         {
-            T02User userMaster = new T02User();
             var user = context.T02Users.Find(UserId);
             if (user == null)
                 throw new Exception("User Record Not found");

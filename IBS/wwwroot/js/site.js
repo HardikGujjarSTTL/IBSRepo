@@ -2,9 +2,13 @@
     toastr[type](msg);
 }
 
-function gotoTab(tab) {
-    $("#" + tab).css("pointer-events", "all");
-    $("#" + tab).trigger("click");
+function ShowHideMsgNew(type, msg) {
+    if (type) {
+        toastr["success"](msg);
+    }
+    else {
+        toastr["error"](msg);
+    }
 }
 
 function isNumber(evt) {

@@ -7,7 +7,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using IBS.Helper;
-using IBM.Models;
+using IBS.DataAccess;
 
 namespace IBS.Controllers
 {
