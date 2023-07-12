@@ -25,7 +25,6 @@ namespace IBS.Controllers
             {
                 model = roleRepository.FindByID(id);
             }
-
             return View(model);
         }
 
