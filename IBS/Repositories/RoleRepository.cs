@@ -17,7 +17,7 @@ namespace IBS.Repositories
         public RoleModel FindByID(int RoleId)
         {
             RoleModel model = new();
-            Role tenant = context.Roles.Find(RoleId);
+            Role tenant = context.Roles.Find(Convert.ToDecimal(RoleId));
 
             if (tenant == null)
                 throw new Exception("Role Record Not found");
@@ -26,8 +26,8 @@ namespace IBS.Repositories
                 model.RoleId = tenant.RoleId;
                 model.Rolename = tenant.Rolename;
                 model.Roledescription = tenant.Roledescription;
-                model.Issysadmin = tenant.Issysadmin;
-                model.Isactive = tenant.Isactive;
+                model.Issysadmin =Convert.ToBoolean(tenant.Issysadmin);
+                model.Isactive = Convert.ToBoolean(tenant.Isactive);
                 model.Isdeleted = tenant.Isdeleted;
                 return model;
             }
@@ -61,13 +61,14 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.Roles
+                    where l.Isdeleted == 0 
                     select new RoleModel
                     {
                         RoleId = l.RoleId,
                         Rolename = l.Rolename,
                         Roledescription = l.Roledescription,
-                        Issysadmin = l.Issysadmin,
-                        Isactive = l.Isactive,
+                        Issysadmin = Convert.ToBoolean(l.Issysadmin),
+                        Isactive = Convert.ToBoolean(l.Isactive),
                         Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,
                         Createdby = l.Createdby,
@@ -92,11 +93,11 @@ namespace IBS.Repositories
         }
         public bool Remove(int RoleId, int UserID)
         {
-            var roles = context.Roles.Find(RoleId);
+            var roles = context.Roles.Find(Convert.ToDecimal(RoleId));
             if (roles == null) { return false; }
 
             roles.Isdeleted = Convert.ToByte(true);
-            roles.Updatedby = Convert.ToString(UserID);
+            roles.Updatedby = Convert.ToDecimal(UserID);
             roles.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
@@ -112,8 +113,8 @@ namespace IBS.Repositories
                 Role obj = new Role();
                 obj.Rolename = model.Rolename;
                 obj.Roledescription = model.Roledescription;
-                obj.Issysadmin = model.Issysadmin;
-                obj.Isactive = model.Isactive;
+                obj.Issysadmin = Convert.ToByte(model.Issysadmin);
+                obj.Isactive = Convert.ToByte(model.Isactive);
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = model.Createdby;
                 obj.Createddate = DateTime.Now;
@@ -125,11 +126,11 @@ namespace IBS.Repositories
             {
                 role.Rolename = model.Rolename;
                 role.Roledescription = model.Roledescription;
-                role.Issysadmin = model.Issysadmin;
-                role.Isactive = model.Isactive;
+                role.Issysadmin = Convert.ToByte(model.Issysadmin);
+                role.Isactive = Convert.ToByte(model.Isactive);
                 role.Isdeleted = Convert.ToByte(false);
-                role.Createdby = model.Createdby;
-                role.Createddate = DateTime.Now;
+                role.Updatedby = model.Updatedby;
+                role.Updateddate = DateTime.Now;
                 context.SaveChanges();
                 RoleId = Convert.ToInt32(role.RoleId);
             }

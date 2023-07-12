@@ -35,12 +35,10 @@
 </div>
 
 @section scripts{
-
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
-
     <script type="text/javascript">
-
+        
         $(function () {
             InitializeDatatable();
         });
@@ -75,24 +73,24 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "RoleName" },
-                    { data: "RoleDescription" },
+                        { data: "Rolename" },
+                        { data: "Roledescription" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            return data.IsSysAdmin ? "YES" : "NO";
+                                return data.Issysadmin ? "YES" : "NO";
                         }
                     },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            return data.IsActive ? "YES" : "NO";
+                                return data.Isactive ? "YES" : "NO";
                         }
                     },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.Role_Id;
+                                var id = data.RoleId;
                             var editUrl = '@Url.Action("Manage", "Role")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '<a onclick="RoleDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
@@ -110,6 +108,5 @@
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
-
     </script>
 }
