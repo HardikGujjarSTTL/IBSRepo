@@ -32,4 +32,6 @@ public partial class T02User
     public string? CallRemarking { get; set; }
 
     public string? UserType { get; set; }
+
+    public decimal? Id { get; set; }
 }

@@ -113,22 +113,18 @@ namespace IBS.Models
         }
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
-
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
-
-            //TblException objexception = new TblException();
-
-            //objexception.ControllerName = ControllerName;
-            //objexception.ActionName = ActionName;
-            //objexception.ExceptionMessage = exception;
-            //objexception.Exception = exceptionmsg;
-            //objexception.CreateBy = CreatedBy;
-            //objexception.CreateIp = CreatedIP;
-
-            //context.TblExceptions.Add(objexception);
-            //context.SaveChanges();
+            Tblexception objexception = new Tblexception();
+            objexception.Controllername = ControllerName;
+            objexception.Actionname = ActionName;
+            objexception.Exceptionmessage = exception;
+            objexception.Exception = exceptionmsg;
+            objexception.Createdby = CreatedBy;
+            objexception.Createip = CreatedIP;
+            objexception.Createddate = DateTime.Now;
+            context.Tblexceptions.Add(objexception);
+            context.SaveChanges();
         }
-
     }
 
     public static class DbContextHelper

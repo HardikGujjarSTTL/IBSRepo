@@ -35,7 +35,7 @@ namespace IBS.Controllers
         {
             get
             {
-                return Convert.ToInt32(GetUserInfo.UserId);
+                return Convert.ToInt32(GetUserInfo.Id);
             }
         }
 

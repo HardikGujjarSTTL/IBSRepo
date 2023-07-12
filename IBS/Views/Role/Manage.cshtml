@@ -10,27 +10,36 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="Reference">Role Name</label>
-                <input type="text" class="input" asp-for="Rolename" maxlength="30" style="text-transform: uppercase;">
+                <input type="text" class="input" asp-for="Rolename" maxlength="30">
                 <span asp-validation-for="Rolename" class="text-danger"></span>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference">Role Description</label>
-                <input type="text" class="input" asp-for="Roledescription" maxlength="30" style="text-transform: uppercase;">
+                <textarea class="input" asp-for="Roledescription" maxlength="30">
+                    </textarea>
                 <span asp-validation-for="Roledescription" class="text-danger"></span>
             </div>
         </div>
-        @* <div class="row my-0">
-        <div class="col-md-4 mb-3">
-        <div class="company-checkbox">
-        <div class="remember">
-        <div class="remecheckbox">
-        <input type="checkbox" class="input" asp-for="Issysadmin" /> <lable for="IsArchived">Is Sys Admin ? </lable> &nbsp;
-        <input type="checkbox" class="input" asp-for="Isactive" /><lable for="IsCreditArchived">Is Active</lable>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="checkbox" class="input" asp-for="Issysadmin" /> <lable for="IsArchived">Is Sys Admin ? </lable> &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="checkbox" class="input" asp-for="Isactive" /><lable for="IsCreditArchived">Is Active</lable>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        </div>
-        </div>
-        </div>
-        </div>*@
         <div class="savenext-btn">
             <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" onclick="Save();">Save</button>
@@ -40,13 +49,14 @@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
-    <script>
+    <script type="text/javascript">
         function Save() {
             if ($("#frmRoleDetails").valid()) {
                 $("#frmRoleDetails").submit();
             }
         }
         completed = function (response) {
+            var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/Role/Index";
         };

@@ -385,6 +385,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T99ClusterMaster> T99ClusterMasters { get; set; }
 
+    public virtual DbSet<Tblexception> Tblexceptions { get; set; }
+
     public virtual DbSet<Temp10Ic> Temp10Ics { get; set; }
 
     public virtual DbSet<Temp22Bill> Temp22Bills { get; set; }
@@ -6155,12 +6157,11 @@ public partial class ModelContext : DbContext
             entity.ToTable("ROLES");
 
             entity.Property(e => e.RoleId)
-                .HasColumnType("NUMBER(20)")
+                .HasDefaultValueSql("\"IBSDEV\".\"ROLES_SEQ\".\"NEXTVAL\"")
+                .HasColumnType("NUMBER(38)")
                 .HasColumnName("ROLE_ID");
             entity.Property(e => e.Createdby)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasColumnType("NUMBER(38)")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
@@ -6183,9 +6184,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ROLENAME");
             entity.Property(e => e.Updatedby)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasColumnType("NUMBER(38)")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasColumnType("DATE")
@@ -6338,6 +6337,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("EMP_NO");
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("\"IBSDEV\".\"T02_USERS_SEQ\".\"NEXTVAL\"")
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
             entity.Property(e => e.Password)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -12361,6 +12364,44 @@ public partial class ModelContext : DbContext
                 .HasColumnName("USER_ID");
         });
 
+        modelBuilder.Entity<Tblexception>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("TBLEXCEPTION_PK");
+
+            entity.ToTable("TBLEXCEPTION");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("\"IBSDEV\".\"TBLEXCEPTION_SEQ\".\"NEXTVAL\"")
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Actionname)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONNAME");
+            entity.Property(e => e.Controllername)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CONTROLLERNAME");
+            entity.Property(e => e.Createdby)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Createip)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEIP");
+            entity.Property(e => e.Exception)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("EXCEPTION");
+            entity.Property(e => e.Exceptionmessage)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("EXCEPTIONMESSAGE");
+        });
+
         modelBuilder.Entity<Temp10Ic>(entity =>
         {
             entity
@@ -14569,11 +14610,13 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
         modelBuilder.HasSequence("RITESPOSEQ");
         modelBuilder.HasSequence("ROLES_SEQ");
+        modelBuilder.HasSequence("T02_USERS_SEQ");
         modelBuilder.HasSequence("T45_CLAIM_MASTER_SEQ");
         modelBuilder.HasSequence("T46_CLAIM_DETAIL_SEQ");
         modelBuilder.HasSequence("T47_IE_WORK_PLAN_SEQ");
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
+        modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
 
         OnModelCreatingPartial(modelBuilder);
     }

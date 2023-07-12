@@ -45,6 +45,7 @@ namespace IBS.Controllers
                     {
                         new Claim("UserId", userMaster.UserId.ToString()),
                         new Claim("UserName", userMaster.UserName),
+                        new Claim("Id", userMaster.Id.ToString()),
                         //new Claim("Email", userMaster.Email),
                         //new Claim("Mname", userMaster.Mname),
                         //new Claim("Lname", userMaster.Lname),

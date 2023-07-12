@@ -25,7 +25,6 @@ namespace IBS.Controllers
             {
                 model = roleRepository.FindByID(id);
             }
-
             return View(model);
         }
 
@@ -63,12 +62,13 @@ namespace IBS.Controllers
                 if (model.RoleId > 0)
                 {
                     msg = "Role Updated Successfully.";
+                    model.Updatedby = UserId;
                 }
-
+                model.Createdby =UserId;
                 int i = roleRepository.RoleDetailsInsertUpdate(model);
                 if (i > 0)
                 {
-                    return Json(new { status = true, responseText = msg, TenantId = i });
+                    return Json(new { status = true, responseText = msg });
                 }
             }
             catch (Exception ex)

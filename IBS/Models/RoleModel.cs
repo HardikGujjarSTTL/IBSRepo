@@ -8,18 +8,18 @@
 
         public string? Roledescription { get; set; }
 
-        public byte? Issysadmin { get; set; }
+        public bool Issysadmin { get; set; }
 
-        public byte? Isactive { get; set; }
+        public bool Isactive { get; set; }
 
         public byte? Isdeleted { get; set; }
 
         public DateTime? Createddate { get; set; }
 
-        public string? Createdby { get; set; }
+        public decimal? Createdby { get; set; }
 
         public DateTime? Updateddate { get; set; }
 
-        public string? Updatedby { get; set; }
+        public decimal? Updatedby { get; set; }
     }
 }

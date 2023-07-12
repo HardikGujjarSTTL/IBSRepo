@@ -19,9 +19,9 @@ public partial class Role
 
     public DateTime? Createddate { get; set; }
 
-    public string? Createdby { get; set; }
+    public decimal? Createdby { get; set; }
 
     public DateTime? Updateddate { get; set; }
 
-    public string? Updatedby { get; set; }
+    public decimal? Updatedby { get; set; }
 }

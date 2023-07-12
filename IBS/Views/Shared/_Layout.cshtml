@@ -53,55 +53,17 @@
                             </div>
                             <!--logoSection-->
                         </li>
-                        <li><a href="#"><i class="fa fa-fw"><img src="~/images/dashboard-icons.svg" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
-                        <li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>
-                        @* <li>
-                        <a href="#"><span class="fa arrow"></span><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a>
-                        <ul class="nav nav-second-level">
-                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                        </ul>
-                        </li>*@
-                        @* <li>
-                        <a href="#"><span class="fa arrow"></span><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a>
-                        <ul class="nav nav-second-level">
-                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                        <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                        </ul>
-                        </li>*@
-                        <li><a asp-action="Index" asp-controller="Property"><i class="fa  fa-fw"><img src="~/images/property-icons.svg" alt="Property" /></i><span class="menu-title">Property</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-icons.svg" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
+                        @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
+                       
                         <li>
-                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Tenant</span></a>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Master</span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                                <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
-                                <li><a href="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lorem</span></a></li>
+                                <li><a asp-action="Index" asp-controller="Role"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Role</span></a></li>
+                                <li><a asp-action="Index" asp-controller="Home"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User</span></a></li>
                             </ul>
                         </li>
-                        <li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>
-                        <li><a href="#"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Tenant</span></a></li>
-                        <li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>
-                        <li><a href="#"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Tenant</span></a></li>
-                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/trustees-icons.svg" alt="trustees" /></i><span class="menu-title">Trustees</span></a></li>
-                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/tasks-icons.svg" alt="tasks" /></i><span class="menu-title">Tasks</span></a></li>
-                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/rent-schedule-icons.svg" alt="rent schedule" /></i><span class="menu-title">Rent Schedule</span></a></li>
-                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/transaction-expense-icons.svg" alt="transaction expense" /></i><span class="menu-title">Transaction Expense</span></a></li>
-                        <li><a asp-action="Index" asp-controller="User"><i class="fa  fa-fw"><img src="~/images/users-icons.svg" alt="users" /></i><span class="menu-title">Users</span></a></li>
-                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/roles-icons.svg" alt="roles" /></i><span class="menu-title">Roles</span></a></li>
-                        <li>
-                            <a href="#">
-                                <span class="fa arrow"></span>
-                                <i class="fa  fa-fw">
-                                    <img src="~/images/master-data-icons.svg" alt="master" />
-                                </i>
-                                <span class="menu-title">Master</span>
-                            </a>
-                            <ul class="nav nav-second-level">
-                                
-                            </ul>
-                        </li>
+                        @*<li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>*@
                         <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-icons.svg" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
                     </ul>
                 </div>
