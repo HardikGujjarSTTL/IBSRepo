@@ -1,0 +1,62 @@
+﻿@model IBS.Models.UserModel
+
+@{
+    ViewData["Title"] = "Manage User";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Administrator" asp-action="UserDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserDetails">
+    <input type="hidden" asp-for="UserId" />
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">User Id</label>
+                <input type="text" class="input" asp-for="UserId" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">User Name</label>
+                <input type="text" class="input" asp-for="UserName" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Employee No.</label>
+                <input type="text" class="input" asp-for="EmpNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="EmpNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Region</label>
+                <input type="text" class="input" asp-for="Region" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="Region" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Status</label>
+                <input type="text" class="input" asp-for="Status" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">User Type</label>
+                <input type="text" class="input" asp-for="UserType" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="UserType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="Administrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function Save() {
+            if ($("#frmUserDetails").valid()) {
+                $("#frmUserDetails").submit();
+            }
+        }
+        completed = function (response) {
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/Administrator/UserManage";
+        };
+    </script>
+}
