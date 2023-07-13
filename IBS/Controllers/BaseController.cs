@@ -7,7 +7,7 @@ namespace IBS.Controllers
 {
     public class BaseController : Controller
     {
-        public T02User SetUserInfo
+        public UserSessionModel SetUserInfo
         {
             set
             {
@@ -15,14 +15,14 @@ namespace IBS.Controllers
             }
         }
 
-        public T02User GetUserInfo
+        public UserSessionModel GetUserInfo
         {
             get
             {
                 string userInfoString = HttpContext.Session.GetString("UserInfo");
                 if (!string.IsNullOrWhiteSpace(userInfoString))
                 {
-                    T02User appUser = JsonSerializer.Deserialize<T02User>(userInfoString);
+                    UserSessionModel appUser = JsonSerializer.Deserialize<UserSessionModel>(userInfoString);
 
                     if (appUser != null)
                         return appUser;
@@ -35,7 +35,7 @@ namespace IBS.Controllers
         {
             get
             {
-                return Convert.ToInt32(GetUserInfo.Id);
+                return Convert.ToInt32(GetUserInfo.UserID);
             }
         }
 

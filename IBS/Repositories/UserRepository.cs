@@ -63,7 +63,20 @@ namespace IBS.Repositories
             return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == model.UserName.Trim() && p.Password.Trim() == model.Password.Trim());
             //return new T02User();
         }
-        
+
+        public VendorModel FindVendorLoginDetail(LoginModel model)
+        {
+            VendorModel vendorModel = new VendorModel();
+            vendorModel = (from m in context.T05Vendors 
+                           where m.VendCd == Convert.ToInt32(model.UserName) && m.VendPwd.Trim() == model.Password.Trim()
+                           select new VendorModel
+                           {
+                               VendName = m.VendName,
+                               VendCd = m.VendCd
+                           }).FirstOrDefault();
+            return vendorModel;
+        }
+
         public void ChangePassword(int UserId, String NewPassword)
         {
             var user = context.T02Users.Find(UserId);

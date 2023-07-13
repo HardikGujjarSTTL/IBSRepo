@@ -25,8 +25,10 @@ namespace IBS.Controllers
             Configuration = configuration;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string type="admin")
         {
+            HttpContext.Session.SetString("LoginType", type);
+            
             return View();
         }
 
@@ -37,30 +39,65 @@ namespace IBS.Controllers
             if (ModelState.IsValid)
             {
                 // username = anet
-                T02User userMaster = userRepository.FindByLoginDetail(loginModel);
-                if (userMaster != null)
+                string LoginType = HttpContext.Session.GetString("LoginType").ToString();
+                if (LoginType.ToLower() =="admin")
                 {
-                    SetUserInfo = userMaster;
-                    var userClaims = new List<Claim>()
+                    T02User userMaster = userRepository.FindByLoginDetail(loginModel);
+                    if (userMaster != null)
                     {
-                        new Claim("UserId", userMaster.UserId.ToString()),
-                        new Claim("UserName", userMaster.UserName),
-                        new Claim("Id", userMaster.Id.ToString()),
-                        //new Claim("Email", userMaster.Email),
-                        //new Claim("Mname", userMaster.Mname),
-                        //new Claim("Lname", userMaster.Lname),
-                        //new Claim(ClaimTypes.Email, userMaster.Email),
-                        //new Claim(ClaimTypes.Role, userMaster.UserType.ToString()),
-                     };
-                    var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                    var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                    HttpContext.SignInAsync(userPrincipal);
-                    return RedirectToAction("Index", "Dashboard");
+                        UserSessionModel userSessionModel= new UserSessionModel();
+                        userSessionModel.UserID= Convert.ToInt32(userMaster.Id);
+                        userSessionModel.Name = Convert.ToString(userMaster.UserName);
+                        userSessionModel.UserName = Convert.ToString(userMaster.UserName);
+                        userSessionModel.LoginType = Convert.ToString(LoginType);
+
+                        SetUserInfo = userSessionModel;
+                        var userClaims = new List<Claim>()
+                        {
+                            new Claim("UserId", userSessionModel.UserID.ToString()),
+                            new Claim("UserName", Convert.ToString(userSessionModel.UserName)),
+                            new Claim("UserID", userSessionModel.UserID.ToString()),
+                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
+                         };
+                        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+                        HttpContext.SignInAsync(userPrincipal);
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                    else
+                    {
+                        AlertDanger("Invalid Username or Password");
+                    }
                 }
-                else
+                else if (LoginType.ToLower() == "vendor")
                 {
-                    AlertDanger("Invalid Username or Password");
+                    VendorModel userMaster = userRepository.FindVendorLoginDetail(loginModel);
+                    if (userMaster != null)
+                    {
+                        UserSessionModel userSessionModel = new UserSessionModel();
+                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
+                        userSessionModel.Name = Convert.ToString(userMaster.VendName);
+                        userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
+                        userSessionModel.LoginType = Convert.ToString(LoginType);
+
+                        SetUserInfo = userSessionModel;
+                        var userClaims = new List<Claim>()
+                        {
+                            new Claim("UserName", Convert.ToString(userMaster.VendCd)),
+                            new Claim("UserID", userSessionModel.UserID.ToString()),
+                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
+                         };
+                        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+                        HttpContext.SignInAsync(userPrincipal);
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                    else
+                    {
+                        AlertDanger("Invalid Username or Password");
+                    }
                 }
+                
             }
             return View(loginModel);
         }

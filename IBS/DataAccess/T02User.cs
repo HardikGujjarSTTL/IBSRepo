@@ -34,4 +34,12 @@ public partial class T02User
     public string? UserType { get; set; }
 
     public decimal? Id { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public decimal? Createdby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Updatedby { get; set; }
 }

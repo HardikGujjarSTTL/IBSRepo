@@ -125,6 +125,41 @@ namespace IBS.Models
             context.Tblexceptions.Add(objexception);
             context.SaveChanges();
         }
+
+        public static List<DropDownDTO> GetCity()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<DropDownDTO> city = (from a in context.T03Cities
+                                          select
+                                     new DropDownDTO
+                                     {
+                                         Text = a.City,
+                                         Value = a.CityCd
+                                     }).ToList();
+            return city;
+        }
+
+        public static List<TextValueDropDownDTO> VendorApproval()
+        {
+            List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
+            TextValueDropDownDTO single = new TextValueDropDownDTO();
+            single.Text= "RDSO Approved";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single= new TextValueDropDownDTO();
+            single.Text = "RE Approved";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Both RE & RDSO Approved";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Other";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
     }
 
     public static class DbContextHelper
