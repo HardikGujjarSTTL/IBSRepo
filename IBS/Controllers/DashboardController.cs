@@ -8,7 +8,6 @@ namespace IBS.Controllers
         public IActionResult Index()
         {
             return View();
-
         }
     }
 }
