@@ -27,14 +27,6 @@ namespace IBS.Helper
         }
     }
 
-    public class DropDownDTO
-    {
-        public int Value { get; set; }
-        public string Text { get; set; }
-        public string Group { get; set; }
-        public int DisplayOrder { get; set; }
-    }
-
     public class EnumUtility<T>
     {
         public static IEnumerable<SelectListItem> GetEnumList(Type EnumerationType)
