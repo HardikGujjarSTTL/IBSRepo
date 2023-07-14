@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Models;
 using System.Text.Json;
 
 namespace IBS.Helper
@@ -12,14 +13,14 @@ namespace IBS.Helper
             httpContextAccessor = accessor;
         }
 
-        public static T02User UserModelDTO
+        public static UserSessionModel UserModelDTO
         {
             get
             {
                 string userInfoString = httpContextAccessor.HttpContext.Session.GetString("UserInfo");
                 if (!string.IsNullOrWhiteSpace(userInfoString))
                 {
-                    T02User appUser = JsonSerializer.Deserialize<T02User>(userInfoString);
+                    UserSessionModel appUser = JsonSerializer.Deserialize<UserSessionModel>(userInfoString);
 
                     if (appUser != null)
                         return appUser;

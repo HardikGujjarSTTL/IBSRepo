@@ -6395,7 +6395,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("T03_CITY");
 
             entity.Property(e => e.CityCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
                 .HasColumnName("CITY_CD");
             entity.Property(e => e.City)
                 .HasMaxLength(50)
@@ -6512,7 +6513,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VEND_CD_ALPHA");
             entity.Property(e => e.VendCityCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("VEND_CITY_CD");
             entity.Property(e => e.VendContactPer1)
                 .HasMaxLength(25)
@@ -6597,7 +6598,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE_ADD2");
             entity.Property(e => e.ConsigneeCity)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CONSIGNEE_CITY");
             entity.Property(e => e.ConsigneeDept)
                 .HasMaxLength(15)

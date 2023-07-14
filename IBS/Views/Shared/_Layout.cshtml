@@ -10,23 +10,24 @@
     <link type="text/css" href="~/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link type="text/css" href="~/css/font-awesome.min.css" rel="stylesheet" />
-    <link type="text/css" href="~/css/admin-style.css" rel="stylesheet" />
-    <link type="text/css" href="~/css/admin-responsive.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
     <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link type="text/css" href="~/css/admin-style.css" rel="stylesheet" />
+    <link type="text/css" href="~/css/admin-responsive.css" rel="stylesheet" />
     <script src="~/js/modernizr.js"></script>
     <script src="~/lib/jquery/jquery.min.js"></script>
-   <script src="~/lib/select2/js/select2.min.js"></script>
-
+    <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/js/crypto-js.js"></script>
     <script src="~/js/aes.js"></script>
-
 </head>
 
 <body class="noJS">
+    @{
+        string LoginType = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.LoginType);
+    }
 
     <partial name="_AlterPartial" />
 
@@ -55,7 +56,7 @@
                         </li>
                         <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-icons.svg" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
                         @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
-                       
+
                         <li>
                             <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Master</span></a>
                             <ul class="nav nav-second-level">
@@ -68,6 +69,23 @@
                                 <li><a asp-action="UserMaster" asp-controller="UserAdministrator"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User</span></a></li>
                             </ul>
                         </li>
+                        @*@if(LoginType == "vendor")
+                        {*@
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Details</span></a></li>
+                        <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Profile</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Upload Documents</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">PO/Contracts Registration</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Call For Inspection</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add New Items in Already Registered LOA</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Registered Pending Calls Off Qty Enhancement Form</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Inspection Fee Bill</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call/IC Status</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call Status</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO IC Status</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Invoice</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add MA</span></a></li>
+                        <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Sample Payment</span></a></li>
+                        @*}*@
                         @*<li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>*@
                         <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-icons.svg" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
                     </ul>
@@ -162,7 +180,7 @@
                                         <li>
                                             @if (IBS.Helper.SessionHelper.UserModelDTO != null)
                                             {
-                                                <a asp-action="ChangePassword" asp-controller="Home" asp-route-id="@IBS.Models.Common.EncryptQueryString(Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.UserId))">
+                                                <a asp-action="ChangePassword" asp-controller="Home" asp-route-id="@IBS.Models.Common.EncryptQueryString(Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.UserID))">
                                                     <i class="fa fa-key" aria-hidden="true"></i>
                                                     Change Password
                                                 </a>

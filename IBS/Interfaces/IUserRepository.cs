@@ -20,5 +20,7 @@ namespace IBS.Interfaces
         DTResult<UserModel> GetUserList(DTParameters dtParameters);
         bool Remove(string UserId);
         int UserDetailsInsertUpdate(UserModel model);
+
+        public VendorModel FindVendorLoginDetail(LoginModel model);
     }
 }
