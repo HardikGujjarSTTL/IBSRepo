@@ -41,6 +41,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IVendorProfileRepository, VendorProfileRepository>();
+builder.Services.AddScoped<IPOMasterRepository, POMasterRepository>();
 
 var app = builder.Build();
 

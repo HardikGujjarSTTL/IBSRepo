@@ -1,0 +1,184 @@
+﻿@model IBS.Models.PO_MasterModel
+
+@{
+    ViewData["Title"] = "PO Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>PO Master</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CaseNo" />
+                <input type="hidden" id="hdnType" />
+                <input type="hidden" id="hdnRailway" />
+                <input type="hidden" id="hdnRailwayCode" />
+                <input type="hidden" id="hdnRCD" />
+
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-8 mb-3">
+                            <label for="Reference">
+                                Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
+                            </label>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <input type="text" class="input" asp-for="CaseNo">
+                            <span asp-validation-for="CaseNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 mb-3">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" onclick="Submit();">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Railway/Non-Railway</label>
+                            @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Agency/Client</label>
+                            @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="RlyCd" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Case To Be Registered At</label>
+                            @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="RegionCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
+                            @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="StockNonstock" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
+                            @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="PoOrLetter" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">* Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Purchase Order No./ LOA No.</label>
+                            <input type="text" class="input" asp-for="PoNo">
+                            <span asp-validation-for="PoNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
+                            <input type="text" class="input datepicker" asp-for="PoDt" readonly="true">
+                            <span asp-validation-for="PoDt" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-2 mb-3">
+                            <label for="Reference">Purchaser</label>
+                            <input type="text" class="input" id="txtSPur">
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" onclick="SearchPurchaser();">Search Purchaser</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below</label>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="PurchaserCd" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <input type="text" class="input" id="txtPurchaser">
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Date of Reciept of PO in RITES</label>
+                            <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
+                            <span asp-validation-for="RecvDt" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-3">
+                            <div class="reference">
+                                <h4>Manufacturer's Information</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <div class="reference">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="chkManuf" />
+                                    <label class="custom-checkbox">Same As Vendor</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <input type="text" class="input" id="txtMName">
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" onclick="SelectManufacturer();">Select Manufacturer</button>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="VendCd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Place of Inspection</label>
+                            <textarea class="input" asp-for="VendCd" maxlength="30"> </textarea>
+                            <span asp-validation-for="VendCd" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Remarks</label>
+                            <textarea class="input" asp-for="Remarks" maxlength="30"> </textarea>
+                            <span asp-validation-for="Remarks" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmPOMasterDetails").valid()) {
+                $("#frmPOMasterDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/POMaster/Index";
+        };
+    </script>
+}

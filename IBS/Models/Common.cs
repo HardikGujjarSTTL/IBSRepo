@@ -180,6 +180,93 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<TextValueDropDownDTO> ClientType()
+        {
+            List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
+            TextValueDropDownDTO single = new TextValueDropDownDTO();
+            single = new TextValueDropDownDTO();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "PSU";
+            single.Value = "PSU";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "State Govt.";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Foreign Railways";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<TextValueDropDownDTO> RegionCode()
+        {
+            List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
+            TextValueDropDownDTO single = new TextValueDropDownDTO();
+            single = new TextValueDropDownDTO();
+            single.Text = "NORTHERN REGION";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "EASTERN REGION";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "WESTERN REGION";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "SOUTHERN REGION.";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "CENTRAL REGION";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "CO QA DIVISION";
+            single.Value = "Q";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<TextValueDropDownDTO> StockNonstock()
+        {
+            List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
+            TextValueDropDownDTO single = new TextValueDropDownDTO();
+            single = new TextValueDropDownDTO();
+            single.Text = "Stock";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Non-Stock";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<TextValueDropDownDTO> PoOrLetter()
+        {
+            List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
+            TextValueDropDownDTO single = new TextValueDropDownDTO();
+            single = new TextValueDropDownDTO();
+            single.Text = "Purchase Order";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Letter of Offer";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static IEnumerable<DropDownDTO> GetYesNoCommon()
         {

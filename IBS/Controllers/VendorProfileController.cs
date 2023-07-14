@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-    public class VendorProfileController : Controller
+    public class VendorProfileController : BaseController
     {
         #region Variables
         private readonly IVendorProfileRepository vendorProfileRepository;
@@ -24,6 +24,30 @@ namespace IBS.Controllers
                 model = vendorProfileRepository.FindByID(VendCd);
             }
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult VendorProfileDetailsSave(VendorModel model)
+        {
+            try
+            {
+                string msg = "";
+                if (model.VendCd > 0)
+                {
+                    msg = "Vendor Updated Successfully.";
+                }
+                int i = vendorProfileRepository.VendorDetailsInsertUpdate(model);
+                if (i > 0)
+                {
+                    return Json(new { status = true, responseText = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorProfile", "VendorProfileDetailsSave", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
     }
 }

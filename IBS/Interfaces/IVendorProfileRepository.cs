@@ -6,5 +6,6 @@ namespace IBS.Interfaces
     public interface IVendorProfileRepository
     {
         public VendorModel FindByID(int VendCd);
+        int VendorDetailsInsertUpdate(VendorModel model);
     }
 }

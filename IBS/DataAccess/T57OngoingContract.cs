@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T57OngoingContract
 {
-    public byte ContractId { get; set; }
+    public int ContractId { get; set; }
 
     public string? ClientName { get; set; }
 
