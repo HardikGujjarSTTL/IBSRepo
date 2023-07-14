@@ -79,4 +79,31 @@ namespace IBS.Helper
             return objDropDown;
         }
     }
+
+    public static class EnumExtensions
+    {
+        public static string Description(this Enum enumValue)
+        {
+            var enumType = enumValue.GetType();
+            var field = enumType.GetField(enumValue.ToString());
+            var attributes = field.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return attributes.Length == 0
+                ? enumValue.ToString()
+                : ((DescriptionAttribute)attributes[0]).Description;
+        }
+    }
+
+    public class DropDownDTO
+    {
+        public int Value { get; set; }
+        public string Text { get; set; }
+        public string Group { get; set; }
+        public int DisplayOrder { get; set; }
+    }
+
+    public class TextValueDropDownDTO
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+    }
 }

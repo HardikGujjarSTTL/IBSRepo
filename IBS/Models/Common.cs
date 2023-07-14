@@ -150,12 +150,12 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<DropDownDTO> city = (from a in context.T03Cities
-                                          select
-                                     new DropDownDTO
-                                     {
-                                         Text = a.City,
-                                         Value = a.CityCd
-                                     }).ToList();
+                                      select
+                                 new DropDownDTO
+                                 {
+                                     Text = a.City,
+                                     Value = a.CityCd
+                                 }).ToList();
             return city;
         }
 
@@ -163,10 +163,10 @@ namespace IBS.Models
         {
             List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
             TextValueDropDownDTO single = new TextValueDropDownDTO();
-            single.Text= "RDSO Approved";
+            single.Text = "RDSO Approved";
             single.Value = "R";
             textValueDropDownDTO.Add(single);
-            single= new TextValueDropDownDTO();
+            single = new TextValueDropDownDTO();
             single.Text = "RE Approved";
             single.Value = "E";
             textValueDropDownDTO.Add(single);
@@ -180,7 +180,6 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-    }
 
         public static IEnumerable<DropDownDTO> GetYesNoCommon()
         {
@@ -201,7 +200,6 @@ namespace IBS.Models
 
         }
     }
-
     public static class DbContextHelper
     {
         public static DbContextOptions<ModelContext> GetDbContextOptions()
@@ -239,9 +237,6 @@ namespace IBS.Models
 
             return query.Provider.CreateQuery<T>(resultExpression);
         }
-
-
-
-
     }
 }
+
