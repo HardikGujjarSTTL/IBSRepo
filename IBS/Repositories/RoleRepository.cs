@@ -17,18 +17,18 @@ namespace IBS.Repositories
         public RoleModel FindByID(int RoleId)
         {
             RoleModel model = new();
-            Role tenant = context.Roles.Find(Convert.ToDecimal(RoleId));
+            Role role = context.Roles.Find(Convert.ToDecimal(RoleId));
 
-            if (tenant == null)
+            if (role == null)
                 throw new Exception("Role Record Not found");
             else
             {
-                model.RoleId = tenant.RoleId;
-                model.Rolename = tenant.Rolename;
-                model.Roledescription = tenant.Roledescription;
-                model.Issysadmin =Convert.ToBoolean(tenant.Issysadmin);
-                model.Isactive = Convert.ToBoolean(tenant.Isactive);
-                model.Isdeleted = tenant.Isdeleted;
+                model.RoleId = role.RoleId;
+                model.Rolename = role.Rolename;
+                model.Roledescription = role.Roledescription;
+                model.Issysadmin =Convert.ToBoolean(role.Issysadmin);
+                model.Isactive = Convert.ToBoolean(role.Isactive);
+                model.Isdeleted = role.Isdeleted;
                 return model;
             }
         }

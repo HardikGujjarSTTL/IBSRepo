@@ -4,7 +4,9 @@ namespace IBS.Models
 {
     public class UserModel
     {
-        public string UserId { get; set; } = null!;
+        public decimal ID { get; set; }
+
+        public string UserId { get; set; }
 
         public string? UserName { get; set; }
 
@@ -31,6 +33,18 @@ namespace IBS.Models
         public string? CallRemarking { get; set; }
 
         public string? UserType { get; set; }
+
+        public RoleModel RoleModel { get; set; }
+
+        public decimal? Isdeleted { get; set; }
+
+        public DateTimeOffset? Createddate { get; set; }
+
+        public string? Createdby { get; set; }
+
+        public DateTimeOffset? Updateddate { get; set; }
+
+        public string? Updatedby { get; set; }
     }
 
     public class UserAuthorizationModel

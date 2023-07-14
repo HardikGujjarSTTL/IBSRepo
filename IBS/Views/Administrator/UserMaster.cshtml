@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "User List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Authorized users of the System</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="Administrator" asp-action="UserManage" class="formBtn"> Add New User</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtUser" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User ID</th>
+                            <th>User Name</th>
+                            <th>EMP NO</th>
+                            <th>REGION</th>
+                            <th>STATUS</th>
+                            <th>Action</th>
+                            @*<th>Delete</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            
+            $("#dtUser").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "UserId" },
+                    { data: "UserName" },
+                    { data: "EmpNo" },
+                    { data: "Region" },
+                    //{ data: "Status" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            return data.Status ? "Active" : "InActive";
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Id = data.UserId;
+                            var editUrl = '@Url.Action("UserManage", "Administrator")?UserId=' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var id = data.UserId;
+                    //        var editUrl = '@Url.Action("Manage", "User")/' + id;
+                    //        //var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="UserDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function UserDelete(UserId) {
+            var url = '@Url.Action("Delete", "Administrator")?UserId=' + UserId;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+    </script>
+}

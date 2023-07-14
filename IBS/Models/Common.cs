@@ -125,8 +125,81 @@ namespace IBS.Models
             context.Tblexceptions.Add(objexception);
             context.SaveChanges();
         }
-    }
 
+        //public static IEnumerable<SelectListItem> GetRegionType()
+        //{
+        //    var obj = EnumUtility<List<SelectListItem>>.GetEnumList(typeof(Enums.RegionType)).ToList();
+        //    obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
+        //    return obj;
+        //}
+
+        public static List<SelectListItem> GetRegionType()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T01Regions
+                       select new SelectListItem
+                       {
+                           Value = c.RegionCode.ToString(),
+                           Text = c.Region
+                       }).OrderBy(c => c.Text).ToList();
+            obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
+            return obj;
+        }
+
+        public static List<DropDownDTO> GetCity()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<DropDownDTO> city = (from a in context.T03Cities
+                                      select
+                                 new DropDownDTO
+                                 {
+                                     Text = a.City,
+                                     Value = a.CityCd
+                                 }).ToList();
+            return city;
+        }
+
+        public static List<TextValueDropDownDTO> VendorApproval()
+        {
+            List<TextValueDropDownDTO> textValueDropDownDTO = new List<TextValueDropDownDTO>();
+            TextValueDropDownDTO single = new TextValueDropDownDTO();
+            single.Text = "RDSO Approved";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "RE Approved";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Both RE & RDSO Approved";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new TextValueDropDownDTO();
+            single.Text = "Other";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static IEnumerable<DropDownDTO> GetYesNoCommon()
+        {
+            return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
+        }
+
+        public static List<DropDownDTO> GetRole()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<DropDownDTO> Role = (from a in ModelContext.Roles
+                                      select
+                                 new DropDownDTO
+                                 {
+                                     Text = Convert.ToString(a.Rolename),
+                                     Value = Convert.ToInt32(a.RoleId)
+                                 }).ToList();
+            return Role;
+
+        }
+    }
     public static class DbContextHelper
     {
         public static DbContextOptions<ModelContext> GetDbContextOptions()
@@ -166,3 +239,4 @@ namespace IBS.Models
         }
     }
 }
+

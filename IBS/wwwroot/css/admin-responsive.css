@@ -38,6 +38,8 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .loginPageInfo{  height: auto;display: block; }
 .loginFooter { position: relative; }
 .admindashboard-section .col-lg-2 { flex: 0 0 33.33%;  margin-bottom: 20px; }
+.company-checkbox, .remember{ display: block;}
+    #landlord-details .company-checkbox, .remember{ display: flex;}
 }
 @media only screen and (max-width:1023px) {
 .menuCollepase { width: 70px !important; }
@@ -49,13 +51,13 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .mobi_logoSection { display: block; position: absolute; top: 8px; left: 15px; z-index: 2; }
 .topLinksAndSearch { background:#081e40; height: 75px; padding: 9px 0; }
 .navbar-toggle { height: 33px; width: 33px;line-height: 37px;font-size: 34px; }
-.navBtn, .left-side-collapsed .navBtn{ right:0;left: 225px; top:21px;  }
+.navBtn, .left-side-collapsed .navBtn{ right:0;left: 208px; top:21px;  }
 #sidebar{ top: 75px; z-index: 22; }
 .logoSection { position: absolute;top: -70px;left: 15px;display: none; }
 #header { padding: 0px; }
 .userDetail h4, a.openDrpPopup i, .userDetail p{ color: #fff; }
 .topLinksAndSearch .userTopLinks{  padding: 4px 0; }
-.left-side-opend.ipad #sidebar { display: block; }
+.left-side-opend #sidebar { display: block; }
 .left-side-collapsed.nav-hover #sidebar, .left-side-collapsed.ipad #sidebar { display: block; left: -89px; }
 .navbar-toggle{ background: transparent; }
 .search input { background: transparent;border: 1px solid #c7c7c7; }
@@ -156,12 +158,10 @@ tast-date{ margin-top:15px; }
 }
 @media only screen and (max-width:479px) {
 .dropPopup { margin-right: 0; top: 56px; width: 95%; margin: 0 2.5%; }
-.userDetail{ margin-left: 0; padding: 0; width: 110px; }
 .topLinksAndSearch{ padding: 0 7px;height: 55px; }
 .topLinksAndSearch .userTopLinks li { position: static;  padding: 0;}
 .topLinksAndSearch li{ padding: 0; }
 .topLinksAndSearch .userTopLinks{ margin-left: 0;padding: 0; }
-.dropPopup:before { display: none; }
 .topLinksAndSearch .userTopLinks .messagePopup li { position: relative; }
 .logoSection { max-width: 223px; }
 .remember{ display: block; }
@@ -169,13 +169,17 @@ tast-date{ margin-top:15px; }
 .mobi_logoSection{ width: 120px; }
 .userImg { width: 35px;height: 35px;margin-right: 7px; }
 .navBtn, .left-side-collapsed .navBtn { left: 133px;top: 10px; }
-.userDetail{ width: 91px; }
 .userInformation{ align-items: center; }
 #sidebar { top: 55px; }
 .mobi_logoSection{ left: 7px; }
-.userDetail .dropPopup { top: 47px; right: 0; }
 .list-inner { display: block; }
 .list-inner .tast-list h2 { margin: 15px 0; }
+.mobi_logoSection img { width: 124px;height: 37px; }
+.userDetail{ margin-left: 0; padding: 0; width:auto; }
+.userDetail .dropPopup { top: 22px; right: 0; }
+.userDetail .openDrpPopup{ display:none}
+.dropPopup::before{ right:15px;}
+
 }
 @media only screen and (max-width:400px) {
 .adminForm .sixColFeild li .feildCol { width: 100%; margin-bottom: 10px; }
@@ -194,4 +198,5 @@ tast-date{ margin-top:15px; }
 @media only screen and (max-width:359px) {
 .popupStepsView .tabNav li::before { width: 30%; left: -15%; }
 .properties ul, .otherdetails .company-checkbox{ display: block; }
+
 }

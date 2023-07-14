@@ -7,7 +7,7 @@ namespace IBS.Interfaces
     {
         public void Add(UserModel model);
 
-        public UserModel FindByID(int UserId);
+        public UserModel FindByID(string UserId);
 
         public void Update(UserModel model);
 
@@ -16,5 +16,11 @@ namespace IBS.Interfaces
         public void ChangePassword(int UserId, String NewPassword);
         public T02User FindByUsernameOrEmail(string UserName);
         public void ChangePassword(ResetPasswordModel resetPassword);
+
+        DTResult<UserModel> GetUserList(DTParameters dtParameters);
+        bool Remove(string UserId);
+        int UserDetailsInsertUpdate(UserModel model);
+
+        public VendorModel FindVendorLoginDetail(LoginModel model);
     }
 }
