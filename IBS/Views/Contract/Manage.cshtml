@@ -1,0 +1,171 @@
+﻿@model IBS.Models.ContractModel
+
+@{
+    ViewData["Title"] = "Manage Contract";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRoleDetails">
+    <input type="hidden" asp-for="ContractId" />
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Contract No</label>
+                <input type="text" class="input" asp-for="ContractNo" maxlength="30" />
+                <span asp-validation-for="ContractNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Name of Client</label>
+                <input type="text" class="input" asp-for="ClientName" maxlength="30" />                   
+                <span asp-validation-for="ClientName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Offer Date</label>                 
+                    <div class="from-celender">
+                    <input placeholder="OfferDt" asp-for="OfferDt" type="date" class="datepicker" />
+                </div>
+                <span asp-validation-for="OfferDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Expected Contract Fees</label>
+                <input type="text" class="input" asp-for="ContractFeeNum" mode maxlength="30" />                    
+                <span asp-validation-for="ContractFeeNum" class="text-danger">Numeric Only</span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Expected OR</label>
+                <input type="text" class="input" asp-for="ExpOr" maxlength="30" />                 
+                <span asp-validation-for="ExpOr" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Rate of Insp Fee</label>
+                <input type="text" class="input" asp-for="ContInspFee" maxlength="30" />                 
+                <span asp-validation-for="ContInspFee" class="text-danger"></span>
+            </div>
+              
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Status of Offer</label>
+                <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
+                    <option value="">--Select--</option>
+                    <option value="S">Offer Sent</option>
+                    <option value="A">Offer Accepted</option>
+                    <option value="B">BID Lost</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <asp:label id=Label19 runat="server" Font-Bold="True" Width="159px" ForeColor="DarkBlue" Font-Size="8pt" Font-Names="Verdana">Contract/LOA Sign Date</asp:label>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Contract/LOA Sign Date</label>
+                <input type="text" class="input" asp-for="ContSignDt" maxlength="30" />
+                <span asp-validation-for="ContSignDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Contract No.</label>
+                <input type="text" class="input" asp-for="ContractNo" maxlength="30" />
+                <span asp-validation-for="ContractNo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Contract No.</label>
+                <input type="text" class="input" asp-for="ExpOr" maxlength="30" />
+                <span asp-validation-for="ExpOr" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Contract From Date</label>
+
+                <label for="Reference">From Date</label>
+                <div class="from-celender">
+                    <input placeholder="ContPerFrom" asp-for="ContPerFrom" type="date" class="datepicker" />
+                </div>
+                <span asp-validation-for="ContPerFrom" class="text-danger"></span>
+
+                <label for="Reference">To Date</label>
+                <div class="from-celender">
+                    <input placeholder="ContPerTo" type="date" asp-for="ContPerTo" class=" datepicker" />
+                </div>
+                <span asp-validation-for="ContPerTo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Broad Scope of Work</label>
+                <input type="text" class="input" asp-for="ScopeOfWork" maxlength="30" />
+                <span asp-validation-for="ScopeOfWork" class="text-danger"></span>
+            </div>
+              
+            <div class="col-md-4 mb-3">
+                <label for="Reference">CM</label>
+                <select id="ddlCM" class="form-control col-md-8" name="Status" asp-for="ContractCm">
+                    <option value="">--Select--</option>
+                    <option value="129">ANIRUDH KUMAR</option>
+                    <option value="131">NARINDER KUMAR SACHEDEVA</option>
+                    <option value="138">NAGESH RAMACHANDRA DEOTARE</option>                    
+                </select>
+                <span asp-validation-for="ContractCm" class="text-danger"></span>
+                @*@Html.DropDownListFor(model => model.ContractCm, new SelectList(IBS.Models.Common.GetCM(), "Value", "Text"),"--Select--", new { @class = "",onChange="GetLandLordName();", @disabled="disabled"})*@
+               
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Special Condition of Contract</label>
+                <input type="text" class="input" asp-for="ContractSpecialCondn" maxlength="30" />
+                <span asp-validation-for="ContractSpecialCondn" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Panalty (If Any)</label>
+                <input type="text" class="input" asp-for="ContractPanalty" maxlength="30" />
+                <span asp-validation-for="ContractPanalty" class="text-danger"></span>
+            </div>
+
+            @*<div class="col-md-4 mb-3">
+                <label for="Reference">Contract Documents (If Any)</label>
+            
+                <span asp-validation-for="" class="text-danger"></span>
+            </div>*@
+
+        </div>
+        <div class="row my-0">
+          @*  <div class="col-md-4 mb-3">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="checkbox" class="input" asp-for="Issysadmin" /> <lable for="IsArchived">Is Sys Admin ? </lable> &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            @*<div class="col-md-4 mb-3">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="checkbox" class="input" asp-for="Isactive" /><lable for="IsCreditArchived">Is Active</lable>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="Contract" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmContractDetails").valid()) {
+                $("#frmContractDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/Contract/Index";
+        };
+    </script>
+}

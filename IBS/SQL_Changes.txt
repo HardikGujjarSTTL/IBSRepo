@@ -279,7 +279,22 @@ ALTER TABLE TblException
 
 
 =============================================================================================================================================
+By Vishvaraj Rathod
 
+ALTER TABLE T57_ONGOING_CONTRACTS 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T57_ONGOING_CONTRACTS
+    ADD CreatedBy Number(2,0);
+
+ALTER TABLE T46_CLAIM_DETAIL 
+    ADD UpdatedBy Number(2,0); 
+    
+ALTER TABLE T57_ONGOING_CONTRACTS
+    ADD CreatedDate DATE
+
+ALTER TABLE T57_ONGOING_CONTRACTS
+    ADD UpdatedDate DATE 
 
 
 
