@@ -27,7 +27,7 @@ namespace IBS.Repositories
             //context.SaveChanges();
         }
 
-        public UserModel FindByID(int UserId)
+        public UserModel FindByID(string UserId)
         {
             UserModel model = new();
             T02User user = context.T02Users.Find(UserId);
@@ -36,9 +36,22 @@ namespace IBS.Repositories
                 throw new Exception("User Record Not found");
             else
             {
+                model.ID = Convert.ToDecimal(user.Id);
                 model.UserId = user.UserId;
                 model.UserName = user.UserName;
                 model.Password = user.Password;
+                model.EmpNo = user.EmpNo;
+                model.Region = user.Region;
+                model.AuthLevl = user.AuthLevl;
+                model.Status = user.Status;
+                model.AllowPo = user.AllowPo;
+                model.AllowUpChksht = user.AllowUpChksht;
+                model.AllowDnChksht = user.AllowDnChksht;
+                model.CallMarking = user.CallMarking;
+                model.CallRemarking = user.CallRemarking;
+                model.UserType = user.UserType;
+
+                model.Isdeleted = user.Isdeleted;
                 return model;
             }
         }
@@ -122,8 +135,10 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T02Users
+                    where (l.Isdeleted == 0 || l.Isdeleted == null)
                     select new UserModel
                     {
+                        ID = Convert.ToDecimal(l.Id),
                         UserId = l.UserId,
                         UserName = l.UserName,
                         EmpNo = l.EmpNo,
@@ -133,11 +148,12 @@ namespace IBS.Repositories
                         AllowDnChksht = l.AllowDnChksht,
                         CallMarking = l.CallMarking,
                         CallRemarking = l.CallRemarking,
-                        UserType = l.UserType
-                        //Createddate = l.Createddate,
-                        //Createdby = l.Createdby,
-                        //Updateddate = l.Updateddate,
-                        //Updatedby = l.Updatedby
+                        UserType = l.UserType,
+                        Isdeleted = l.Isdeleted,
+                        Createddate = l.Createddate,
+                        Createdby = l.Createdby,
+                        Updateddate = l.Updateddate,
+                        Updatedby = l.Updatedby
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -154,55 +170,69 @@ namespace IBS.Repositories
 
             return dTResult;
         }
-        public bool Remove(int UserID)
+        public bool Remove(string UserID)
         {
             var User = context.T02Users.Find(UserID);
-            if (User == null) { return false; }
+            if (User == null)
+            {
+                return false;
+            }
 
-            //User.Isdeleted = Convert.ToByte(true);
-            //User.Updatedby = Convert.ToString(UserID);
-            //User.Updateddate = DateTime.Now;
+            User.Isdeleted = Convert.ToByte(true);
+            User.Updatedby = UserID;
+            User.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
 
         public int UserDetailsInsertUpdate(UserModel model)
         {
-            int UserId = 0;
+            int Id = 0;
             var User = context.T02Users.Find(model.UserId);
             #region User save
             if (User == null)
             {
                 T02User obj = new T02User();
-                //obj.UserId = model.UserId;
+                obj.UserId = model.UserId;
                 obj.UserName = model.UserName;
                 obj.EmpNo = model.EmpNo;
                 obj.Region = model.Region;
                 obj.Status = model.Status;
                 obj.UserType = model.UserType;
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = model.Createdby;
-                //obj.Createddate = DateTime.Now;
+                obj.AuthLevl = model.AuthLevl;
+                obj.AllowPo = model.AllowPo;
+                obj.AllowDnChksht = model.AllowDnChksht;
+                obj.CallMarking = model.CallMarking;
+                obj.CallRemarking = model.CallRemarking;
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = model.UserId;
+                obj.Createddate = DateTime.Now;
                 context.T02Users.Add(obj);
                 context.SaveChanges();
-                UserId = Convert.ToInt32(obj.UserId);
+                Id = Convert.ToInt32(obj.Id);
             }
             else
             {
-                User.UserId = model.UserId;
+                //User.UserId = model.UserId;
                 User.UserName = model.UserName;
                 User.EmpNo = model.EmpNo;
                 User.Region = model.Region;
                 User.Status = model.Status;
                 User.UserType = model.UserType;
-                //User.Isdeleted = Convert.ToByte(false);
-                //User.Createdby = model.Createdby;
-                //User.Createddate = DateTime.Now;
+                User.AuthLevl = model.AuthLevl;
+                User.AllowPo = model.AllowPo;
+                User.AllowDnChksht = model.AllowDnChksht;
+                User.CallMarking = model.CallMarking;
+                User.CallRemarking = model.CallRemarking;
+
+                User.Isdeleted = Convert.ToByte(false);
+                User.Updatedby = model.UserId;
+                User.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                UserId = Convert.ToInt32(User.UserId);
+                Id = Convert.ToInt32(User.Id);
             }
             #endregion
-            return UserId;
+            return Id;
         }
     }
 

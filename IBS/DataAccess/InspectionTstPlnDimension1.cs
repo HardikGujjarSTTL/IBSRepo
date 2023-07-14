@@ -3,25 +3,17 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class InspectionTstPlnDimension1
+public partial class InspectionTstPlndimension1
 {
-    public int? ExtendedHgt { get; set; }
+    public string? DimCd { get; set; }
 
-    public int? CompressedHgt { get; set; }
+    public string? Parameter { get; set; }
 
-    public int? DustCvrDiameter { get; set; }
+    public string? Specified { get; set; }
 
-    public int? TubeDiameter { get; set; }
+    public string? ItemCd { get; set; }
 
-    public int? BarPnDia17mm { get; set; }
+    public string? HeaderCode { get; set; }
 
-    public int? BarPnCd { get; set; }
-
-    public int? BarPnTotalLngth { get; set; }
-
-    public int? EyeRing { get; set; }
-
-    public string? PlNo { get; set; }
-
-    public string? InspectCd { get; set; }
+    public decimal? RowHeight { get; set; }
 }

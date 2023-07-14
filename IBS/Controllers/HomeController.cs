@@ -120,7 +120,7 @@ namespace IBS.Controllers
             {
                 id = Common.DecryptQueryString(id.ToString());
             }
-            UserModel user = userRepository.FindByID(Convert.ToInt32(id));
+            UserModel user = userRepository.FindByID(id);
             ResetPasswordModel resetPassword = new() { UserId = Convert.ToInt32(id) };
             return View(resetPassword);
         }
@@ -134,7 +134,7 @@ namespace IBS.Controllers
                 resetPassword.NewPassword = resetPassword.NewPassword;
                 resetPassword.ConfirmPassword = resetPassword.ConfirmPassword;
 
-                UserModel user = userRepository.FindByID(resetPassword.UserId);
+                UserModel user = userRepository.FindByID(Convert.ToString(resetPassword.UserId));
                 string UserId = formCollection["UserId"];
                 if (Convert.ToInt32(user.UserId) != Convert.ToInt32(UserId))
                 {
@@ -165,8 +165,8 @@ namespace IBS.Controllers
             UserModel user = new UserModel();
             if (!string.IsNullOrEmpty(id))
             {
-                int userid = Convert.ToInt32(Common.DecryptQueryString(id));
-                if (userid > 0)
+                string userid = Common.DecryptQueryString(id);
+                if (userid != null)
                 {
                     user = userRepository.FindByID(userid);
                 }
@@ -187,7 +187,7 @@ namespace IBS.Controllers
 
                 user.Password = strNewPassword;
 
-                UserModel userMaster = userRepository.FindByID(Convert.ToInt32(user.UserId));
+                UserModel userMaster = userRepository.FindByID(user.UserId);
 
                 if (userMaster.Password != strOldPassword)
                 { 

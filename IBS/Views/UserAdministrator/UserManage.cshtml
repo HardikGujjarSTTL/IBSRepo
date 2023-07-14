@@ -4,8 +4,14 @@
     ViewData["Title"] = "Manage User";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="Administrator" asp-action="UserDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserDetails">
-    <input type="hidden" asp-for="UserId" />
+<form data-ajax="true" asp-antiforgery="true" asp-controller="UserAdministrator" asp-action="UserDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserDetails">
+    
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        <input type="hidden" asp-for="ID" />
+    </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-4 mb-3">
@@ -194,7 +200,7 @@
 
         </div>
         <div class="savenext-btn">
-            <a asp-controller="Administrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
+            <a asp-controller="UserAdministrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" onclick="Save();">Save</button>
         </div>
     </div>
@@ -211,7 +217,7 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Administrator/UserMaster";
+                window.location.href = "/UserAdministrator/UserMaster";
         };
     </script>
 }

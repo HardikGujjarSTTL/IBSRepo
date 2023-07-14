@@ -125,6 +125,45 @@ namespace IBS.Models
             context.Tblexceptions.Add(objexception);
             context.SaveChanges();
         }
+
+        //public static IEnumerable<SelectListItem> GetRegionType()
+        //{
+        //    var obj = EnumUtility<List<SelectListItem>>.GetEnumList(typeof(Enums.RegionType)).ToList();
+        //    obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
+        //    return obj;
+        //}
+
+        public static List<SelectListItem> GetRegionType()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T01Regions
+                       select new SelectListItem
+                       {
+                           Value = c.RegionCode.ToString(),
+                           Text = c.Region
+                       }).OrderBy(c => c.Text).ToList();
+            obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
+            return obj;
+        }
+
+        public static IEnumerable<DropDownDTO> GetYesNoCommon()
+        {
+            return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
+        }
+
+        public static List<DropDownDTO> GetRole()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<DropDownDTO> Role = (from a in ModelContext.Roles
+                                      select
+                                 new DropDownDTO
+                                 {
+                                     Text = Convert.ToString(a.Rolename),
+                                     Value = Convert.ToInt32(a.RoleId)
+                                 }).ToList();
+            return Role;
+
+        }
     }
 
     public static class DbContextHelper
@@ -164,5 +203,9 @@ namespace IBS.Models
 
             return query.Provider.CreateQuery<T>(resultExpression);
         }
+
+
+
+
     }
 }

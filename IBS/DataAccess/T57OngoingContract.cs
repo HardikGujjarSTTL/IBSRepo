@@ -42,4 +42,14 @@ public partial class T57OngoingContract
     public string? Status { get; set; }
 
     public DateTime? ContSignDt { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public byte? Createdby { get; set; }
+
+    public byte? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 }

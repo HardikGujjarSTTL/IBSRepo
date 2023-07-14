@@ -7,12 +7,12 @@ using System.Text.Json;
 
 namespace IBS.Controllers
 {
-    public class AdministratorController : BaseController
+    public class UserAdministratorController : BaseController
     {
         #region Variables
         private readonly IUserRepository userRepository;
         #endregion
-        public AdministratorController(IUserRepository _userRepository)
+        public UserAdministratorController(IUserRepository _userRepository)
         {
             userRepository = _userRepository;
         }
@@ -69,7 +69,7 @@ namespace IBS.Controllers
             {
                 string msg = "User Inserted Successfully.";
 
-                if (model.UserId != null)
+                if (model.ID > 0)
                 {
                     msg = "User Updated Successfully.";
                 }
@@ -86,6 +86,5 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-
     }
 }
