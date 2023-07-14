@@ -37,9 +37,11 @@ public partial class T02User
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public decimal? Createdby { get; set; }
+    public string? Createdby { get; set; }
 
     public DateTimeOffset? Updateddate { get; set; }
 
-    public decimal? Updatedby { get; set; }
+    public string? Updatedby { get; set; }
+
+    public decimal? Isdeleted { get; set; }
 }

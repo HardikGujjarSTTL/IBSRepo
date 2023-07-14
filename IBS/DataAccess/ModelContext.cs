@@ -451,7 +451,7 @@ public partial class ModelContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.225)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
+        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -6334,7 +6334,8 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CALL_REMARKING");
             entity.Property(e => e.Createdby)
-                .HasColumnType("NUMBER(38)")
+                .HasMaxLength(50)
+                .IsUnicode(false)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -6347,6 +6348,9 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("\"IBSDEV\".\"T02_USERS_SEQ\".\"NEXTVAL\"")
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Password)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -6367,7 +6371,8 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("STATUS");
             entity.Property(e => e.Updatedby)
-                .HasColumnType("NUMBER(38)")
+                .HasMaxLength(50)
+                .IsUnicode(false)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -6390,7 +6395,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("T03_CITY");
 
             entity.Property(e => e.CityCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
                 .HasColumnName("CITY_CD");
             entity.Property(e => e.City)
                 .HasMaxLength(50)
@@ -6507,7 +6513,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VEND_CD_ALPHA");
             entity.Property(e => e.VendCityCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("VEND_CITY_CD");
             entity.Property(e => e.VendContactPer1)
                 .HasMaxLength(25)
@@ -6592,7 +6598,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE_ADD2");
             entity.Property(e => e.ConsigneeCity)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CONSIGNEE_CITY");
             entity.Property(e => e.ConsigneeDept)
                 .HasMaxLength(15)

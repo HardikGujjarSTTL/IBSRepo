@@ -13,7 +13,7 @@ namespace IBS.Models
 
         public string? VendAdd2 { get; set; }
 
-        public byte? VendCityCd { get; set; }
+        public int? VendCityCd { get; set; }
 
         public string? VendContactPer1 { get; set; }
 

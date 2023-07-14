@@ -17,13 +17,15 @@ namespace IBS.Repositories
 
         public VendorModel FindByID(int VendCd)
         {
+
+
             VendorModel model = (from m in context.T05Vendors
-                                 where m.VendCd == Convert.ToInt32(VendCd)
+                                 where m.VendCd == VendCd
                                  select new VendorModel
                                  {
-                                     VendCd = m.VendCd,
+                                     VendCd= m.VendCd,
                                      VendName = m.VendName,
-                                     VendAdd1 = m.VendAdd1,
+                                     VendAdd1 =  m.VendAdd1,
                                      VendAdd2 = m.VendAdd2,
                                      VendCityCd = m.VendCityCd,
                                      VendApproval = m.VendApproval,

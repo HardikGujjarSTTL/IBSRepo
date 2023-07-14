@@ -1,5 +1,5 @@
 
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.225)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
 
 =============================================================================================================================================
 By Hardik Gujjar
@@ -292,7 +292,14 @@ ALTER TABLE T05_VENDOR
 ADD CONSTRAINT T05_VENDOR_pk  PRIMARY KEY (ID);
 
 
+ALTER TABLE T03_CITY
+MODIFY (CITY_CD  NUMBER(6,0));
 
+ ALTER TABLE T05_VENDOR
+MODIFY (VEND_CITY_CD  NUMBER(6,0));
+
+ ALTER TABLE T06_CONSIGNEE
+MODIFY (CONSIGNEE_CITY  NUMBER(6,0));
 
 =============================================================================================================================================
 

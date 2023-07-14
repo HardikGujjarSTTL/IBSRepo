@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T03City
 {
-    public byte CityCd { get; set; }
+    public int CityCd { get; set; }
 
     public string? Location { get; set; }
 
