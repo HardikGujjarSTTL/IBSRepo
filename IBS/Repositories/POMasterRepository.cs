@@ -192,6 +192,39 @@ namespace IBS.Repositories
             #endregion
             return Id;
         }
+        public PO_MasterModel FindCaseNo(string CaseNo)
+        {
+            PO_MasterModel model = new();
+            T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
+
+            if (POMaster == null)
+                throw new Exception("Po Master Record Not found");
+            else
+            {
+                model.CaseNo = POMaster.CaseNo;
+                model.PurchaserCd = POMaster.PurchaserCd;
+                model.StockNonstock = POMaster.StockNonstock;
+                model.RlyNonrly = POMaster.RlyNonrly;
+                model.PoOrLetter = POMaster.PoOrLetter;
+                model.PoNo = POMaster.PoNo;
+                model.L5noPo = POMaster.L5noPo;
+                model.PoDt = POMaster.PoDt;
+                model.RecvDt = POMaster.RecvDt;
+                model.VendCd = POMaster.VendCd;
+                model.RlyCd = POMaster.RlyCd;
+                model.RegionCode = POMaster.RegionCode;
+                model.UserId = POMaster.UserId;
+                model.Datetime = POMaster.Datetime;
+                model.Remarks = POMaster.Remarks;
+                model.InspectingAgency = POMaster.InspectingAgency;
+                model.PoiCd = POMaster.PoiCd;
+                model.PoSource = POMaster.PoSource;
+                model.PendingCharges = POMaster.PendingCharges;
+                model.Id = POMaster.Id;
+                return model;
+            }
+        }
+
     }
 
 }

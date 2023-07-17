@@ -1,7 +1,9 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers
 {
@@ -76,5 +78,52 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        public IActionResult GetLOADetails(string CaseNo)
+        {
+            try
+            {
+                var obj = pOMasterRepository.FindCaseNo(CaseNo);
+                return Json(new { status = true, poMaster = obj });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Tenant", "Delete", 1, GetIPAddress());
+            }
+
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetAgencyClient(string RlyNonrly)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetAgencyClient(RlyNonrly);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetAgencyClient", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetPurchaserCd(string consignee)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetPurchaserCd(consignee);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetPurchaserCd", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        
     }
 }
