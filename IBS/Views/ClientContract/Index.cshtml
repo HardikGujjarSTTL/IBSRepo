@@ -1,31 +1,29 @@
 ﻿
 @{
-    ViewData["Title"] = "Contract List";
+    ViewData["Title"] = "Client Contract List";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Contract List</h2>
+            <h2>Client Contract List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="Contract" asp-action="Manage" class="formBtn">Add New Contract</a>
+            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" class="formBtn">Add New Client Contract</a>
         </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtContract" class="table-responsive">
+                <table id="dtClientContract" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Contract Code</th>
+                            <th>#</th>                            
                             <th>Client</th>
-                            <th>Contract No</th>
-                            <th>Rate of Insp Fee</th>
-                            <th>Contract Period From</th>
-                            <th>Contract Period To</th>
-                            <th>Contract CM</th>
+                            <th>VisitDt</th>
+                            <th>ClientOfficerName</th>
+                            <th>OverallOutcome</th>
+                            <th>Highlights</th>                            
                             <th>Action</th>
                             @*<th>View Contract</th>*@
                         </tr>
@@ -48,7 +46,7 @@
         });
 
         function InitializeDatatable() {
-            $("#dtContract").DataTable({
+            $("#dtClientContract").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,

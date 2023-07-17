@@ -20,7 +20,7 @@ namespace IBS.Repositories
         public ContractModel FindByID(int ContractId)
         {
             ContractModel model = new();
-            T57OngoingContract tenant = context.T57OngoingContracts.Find(Convert.ToDecimal(ContractId));
+            T57OngoingContract tenant = context.T57OngoingContracts.Find(Convert.ToInt32(ContractId));
 
             if (tenant == null)
                 throw new Exception("Contract Record Not found");
@@ -70,14 +70,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "Contractname";
+                    orderCriteria = "ClientName";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "Contractname";
+                orderCriteria = "ClientName";
                 orderAscendingDirection = true;
             }
             query = from l in context.T57OngoingContracts
@@ -94,16 +94,21 @@ namespace IBS.Repositories
                         ContPerFrom = Convert.ToDateTime(l.ContPerFrom),
                         Status = l.Status,
                         ContractSpecialCondn = l.ContractSpecialCondn,
-                        Datetime = l.Datetime,
-                        OfferDt = l.OfferDt,
-                        ContPerTo = l.ContPerTo,
+                        Datetime = Convert.ToDateTime(l.Datetime),
+                        OfferDt = Convert.ToDateTime(l.OfferDt),
+                        ContPerTo = Convert.ToDateTime(l.ContPerTo),
                         RegionCode = l.RegionCode,
                         ContractFee = l.ContractFee,
                         ContractFeeNum = l.ContractFeeNum,
                         ScopeOfWork = l.ScopeOfWork,
                         UserId = l.UserId,
-                        ContSignDt = l.ContSignDt,
-        };
+                        ContSignDt = Convert.ToDateTime(l.ContSignDt),                        
+                        Isdeleted = l.Isdeleted,
+                        Createdby = l.Createdby,
+                        Createddate = l.Createddate,
+                        Updatedby= l.Updatedby,
+                        Updateddate= l.Updateddate,
+            };
 
             dTResult.recordsTotal = query.Count();
 
@@ -120,12 +125,12 @@ namespace IBS.Repositories
 
         public bool Remove(int ContractId, int UserID)
         {
-            var _contracts = context.T57OngoingContracts.Find(Convert.ToDecimal(ContractId));
+            var _contracts = context.T57OngoingContracts.Find(Convert.ToInt32(ContractId));
             if (_contracts == null) { return false; }
 
-            //_contracts.Isdeleted = Convert.ToByte(true);
-            //_contracts.Updatedby = Convert.ToDecimal(UserID);
-            //_contracts.Updateddate = DateTime.Now;
+            _contracts.Isdeleted = Convert.ToByte(true);
+            _contracts.Updatedby = Convert.ToInt32(UserID);
+            _contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -161,9 +166,11 @@ namespace IBS.Repositories
                 //obj.Contractdescription = model.Contractdescription;
                 //obj.Issysadmin = Convert.ToByte(model.Issysadmin);
                 //obj.Isactive = Convert.ToByte(model.Isactive);
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = model.Createdby;
-                //obj.Createddate = DateTime.Now;
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = Convert.ToInt32(model.UserId);
+                obj.Createddate = DateTime.Now;
+                obj.Updatedby = Convert.ToInt32(model.UserId);
+                obj.Updateddate = DateTime.Now;
                 context.T57OngoingContracts.Add(obj);
                 context.SaveChanges();
                 ContractId = Convert.ToInt32(obj.ContractId);

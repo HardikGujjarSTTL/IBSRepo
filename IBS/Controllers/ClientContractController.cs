@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-    public class ContractController : BaseController
+    public class ClientContractController : BaseController
     {
         #region Variables
-        private readonly IContractRepository contractRepository;
+        private readonly IClientContractRepository clientcontractRepository;
         #endregion
-        public ContractController(IContractRepository _contractRepository)
+        public ClientContractController(IClientContractRepository _clientcontractRepository)
         {
-            contractRepository = _contractRepository;
+            clientcontractRepository = _clientcontractRepository;
         }
         public IActionResult Index()
         {
@@ -20,10 +20,10 @@ namespace IBS.Controllers
         }
         public IActionResult Manage(int id)
         {
-            ContractModel model = new();
+            ClientContractModel model = new();
             if (id > 0)
             {
-                model = contractRepository.FindByID(id);
+                model = clientcontractRepository.FindByID(id);
             }
             return View(model);
         }
@@ -31,21 +31,21 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<ContractModel> dTResult = contractRepository.GetContractList(dtParameters);
+            DTResult<ClientContractModel> dTResult = clientcontractRepository.GetClientContractList(dtParameters);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)
         {
             try
             {
-                if (contractRepository.Remove(id, UserId))
+                if (clientcontractRepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Contract", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientContract", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("Index");
@@ -53,19 +53,19 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ContractDetailsSave(ContractModel model)
+        public IActionResult ClientContractDetailsSave(ClientContractModel model)
         {
             try
             {
-                string msg = "Contract Inserted Successfully.";
+                string msg = "ClientContract Inserted Successfully.";
 
-                if (model.ContractId > 0)
+                if (model.RitesOfficerCd > 0)
                 {
-                    msg = "Contract Updated Successfully.";
+                    msg = "ClientContract Updated Successfully.";
                     model.Updatedby = UserId;
                 }
-                model.Createdby =UserId;
-                int i = contractRepository.ContractDetailsInsertUpdate(model);
+                model.Createdby = UserId;
+                int i = clientcontractRepository.ClientContractDetailsInsertUpdate(model);
                 if (i > 0)
                 {
                     return Json(new { status = true, responseText = msg });
@@ -73,7 +73,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Contract", "ContractDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientContract", "ClientContractDetailsSave", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

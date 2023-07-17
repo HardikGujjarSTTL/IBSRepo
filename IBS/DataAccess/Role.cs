@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class Role
 {
-    public decimal RoleId { get; set; }
+    public int RoleId { get; set; }
 
     public string? Rolename { get; set; }
 

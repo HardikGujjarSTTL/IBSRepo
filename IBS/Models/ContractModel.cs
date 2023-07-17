@@ -4,7 +4,7 @@ namespace IBS.Models
 {
     public class ContractModel
     {
-        public byte ContractId { get; set; }
+        public int ContractId { get; set; }
 
         public string? ClientName { get; set; }
 
@@ -46,11 +46,11 @@ namespace IBS.Models
 
         public DateTime? Createddate { get; set; }
 
-        public decimal? Createdby { get; set; }
+        public int? Createdby { get; set; }
 
         public DateTime? Updateddate { get; set; }
 
-        public decimal? Updatedby { get; set; }
+        public int? Updatedby { get; set; }
 
     }
 }
