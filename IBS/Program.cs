@@ -46,6 +46,8 @@ builder.Services.AddScoped<IMasterTableStatusRepository, MasterTableStatusReposi
 builder.Services.AddScoped<IAllow_Old_Bill_DateRepository, Allow_Old_Bill_DateRepository>();
 builder.Services.AddScoped<IIE_Instructions_AdminRepository, IE_Instructions_AdminRepository>();
 builder.Services.AddScoped<IDownloadDocumentsRepository, DownloadDocumentsRepository>();
+builder.Services.AddScoped<IPOMasterRepository, POMasterRepository>();
+builder.Services.AddScoped<IContractRepository, ContractRepository>();
 
 var app = builder.Build();
 

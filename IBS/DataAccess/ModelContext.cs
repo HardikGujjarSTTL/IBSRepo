@@ -10884,25 +10884,20 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T58ClientContact>(entity =>
         {
-            entity.HasKey(e => new { e.VisitDt, e.Client, e.RitesOfficerCd, e.TypeCb }).HasName("PK_CLIENT_CONTACT_NEW");
+            entity.HasKey(e => e.Id).HasName("T58_CLIENT_CONTACT_PK");
 
             entity.ToTable("T58_CLIENT_CONTACT");
 
-            entity.Property(e => e.VisitDt)
-                .HasColumnType("DATE")
-                .HasColumnName("VISIT_DT");
+            entity.HasIndex(e => new { e.VisitDt, e.Client, e.RitesOfficerCd, e.TypeCb }, "PK_CLIENT_CONTACT_NEW").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T58_CLIENT_CONTACT_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.Client)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("CLIENT");
-            entity.Property(e => e.RitesOfficerCd)
-                .HasPrecision(3)
-                .HasColumnName("RITES_OFFICER_CD");
-            entity.Property(e => e.TypeCb)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("TYPE_CB");
             entity.Property(e => e.ClientOfficerName)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -10944,6 +10939,14 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("REGION_CD");
+            entity.Property(e => e.RitesOfficerCd)
+                .HasPrecision(3)
+                .HasColumnName("RITES_OFFICER_CD");
+            entity.Property(e => e.TypeCb)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("TYPE_CB");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
@@ -10955,6 +10958,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
+            entity.Property(e => e.VisitDt)
+                .HasColumnType("DATE")
+                .HasColumnName("VISIT_DT");
         });
 
         modelBuilder.Entity<T59LabExp>(entity =>
@@ -14769,6 +14775,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T47_IE_WORK_PLAN_SEQ");
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
+        modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
 

@@ -40,4 +40,6 @@ public partial class T58ClientContact
     public int? Updatedby { get; set; }
 
     public DateTime? Updateddate { get; set; }
+
+    public int Id { get; set; }
 }
