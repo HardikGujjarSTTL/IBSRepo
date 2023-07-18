@@ -41,6 +41,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IVendorProfileRepository, VendorProfileRepository>();
+builder.Services.AddScoped<IGeneralMessageRepository, GeneralMessageRepository>();
+builder.Services.AddScoped<IMasterTableStatusRepository, MasterTableStatusRepository>();
+builder.Services.AddScoped<IAllow_Old_Bill_DateRepository, Allow_Old_Bill_DateRepository>();
+builder.Services.AddScoped<IIE_Instructions_AdminRepository, IE_Instructions_AdminRepository>();
+builder.Services.AddScoped<IDownloadDocumentsRepository, DownloadDocumentsRepository>();
 
 var app = builder.Build();
 

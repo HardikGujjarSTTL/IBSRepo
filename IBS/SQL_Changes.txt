@@ -192,7 +192,76 @@ ADD CONSTRAINT T53_VIGILANCE_CASES_MASTER_pk  PRIMARY KEY (ID);
  ALTER TABLE T70_UNREGISTERED_CALLS
 MODIFY (IE_CD  NUMBER(6,0));
 
+=============================================================================================================================================
+Added by Bhavesh Rathod
+=============================================================================================================================================
+1) T02_Users
+ALTER TABLE T02_Users ADD CREATEDBY VARCHAR2(50 BYTE);
+ALTER TABLE T02_Users ADD UPDATEDBY VARCHAR2(50 BYTE);
+ALTER TABLE T02_Users ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T02_Users ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T02_Users ADD ISDELETED NUMBER(38,0);
 
+2) T96_MESSAGES
+
+ALTER TABLE T96_MESSAGES ADD CREATEDBY VARCHAR2(50 BYTE)
+ALTER TABLE T96_MESSAGES ADD UPDATEDBY VARCHAR2(50 BYTE)
+ALTER TABLE T96_MESSAGES ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T96_MESSAGES ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T96_MESSAGES ADD ISDELETED NUMBER(38,0)
+
+ALTER TABLE T96_MESSAGES 
+MODIFY MESSAGE_ID NUMBER(6,0) ;
+
+ALTER TABLE T96_MESSAGES ADD (
+  CONSTRAINT T96_MESSAGES_pk PRIMARY KEY (MESSAGE_ID));
+
+CREATE SEQUENCE T96_MESSAGES_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+UPDATE T96_MESSAGES
+   SET MESSAGE_ID = T96_MESSAGES_seq.nextval;
+
+ALTER TABLE T96_MESSAGES
+    MODIFY MESSAGE_ID INT DEFAULT T96_MESSAGES_seq.nextval;
+
+3) Create View : MasterTableStatus
+
+CREATE VIEW MasterTableStatus 
+AS
+Select 'CITY MASTER' as TableName,count(*) as TotalCount from T03_CITY
+union all
+Select 'UNIT OF MEASUREMENTS' as TableName,count(*) as TotalCount from T04_UOM
+union all
+Select 'VENDOR/MANUFACTURER MASTER' as TableName,count(*) as TotalCount from T05_VENDOR
+union all
+Select 'CONSIGNEE/PURCHASER MASTER' as TableName,count(*) as TotalCount from T06_CONSIGNEE
+union all
+Select 'BILL PAYING OFFICERS' as TableName,count(*) as TotalCount from T12_BILL_PAYING_OFFICER
+union all
+Select 'INSPECTION ENGINEERS' as TableName,count(*) as TotalCount from T09_IE
+union all
+Select 'RAILWAY DESIGNATIONS' as TableName,count(*) as TotalCount from T90_RLY_DESIGNATION
+union all
+Select 'RAILWAYS' as TableName,count(*) as TotalCount from T91_RAILWAYS
+union all
+Select 'BANK MASTER' as TableName,count(*) as TotalCount from T94_BANK
+
+4) T97_CONTROL_FILE
+ALTER TABLE T97_CONTROL_FILE 
+MODIFY GRACE_DAYS NUMBER(6,0) ;
+
+5) T72_IE_MESSAGES
+ALTER TABLE T72_IE_MESSAGES ADD CREATEDBY VARCHAR2(50 BYTE)
+ALTER TABLE T72_IE_MESSAGES ADD UPDATEDBY VARCHAR2(50 BYTE)
+ALTER TABLE T72_IE_MESSAGES ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T72_IE_MESSAGES ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T72_IE_MESSAGES ADD ISDELETED NUMBER(38,0)
+
+ALTER TABLE T72_IE_MESSAGES 
+MODIFY MESSAGE_ID NUMBER(6,0);
 =============================================================================================================================================
 
 -- 1. Create a table with a primary key constraint

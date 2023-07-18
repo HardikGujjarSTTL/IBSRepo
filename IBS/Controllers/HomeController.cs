@@ -25,10 +25,10 @@ namespace IBS.Controllers
             Configuration = configuration;
         }
 
-        public IActionResult Index(string type="admin")
+        public IActionResult Index(string type = "admin")
         {
             HttpContext.Session.SetString("LoginType", type);
-            
+
             return View();
         }
 
@@ -40,15 +40,17 @@ namespace IBS.Controllers
             {
                 // username = anet
                 string LoginType = HttpContext.Session.GetString("LoginType").ToString();
-                if (LoginType.ToLower() =="admin")
+                if (LoginType.ToLower() == "admin")
                 {
                     T02User userMaster = userRepository.FindByLoginDetail(loginModel);
                     if (userMaster != null)
                     {
-                        UserSessionModel userSessionModel= new UserSessionModel();
-                        userSessionModel.UserID= Convert.ToInt32(userMaster.Id);
+                        UserSessionModel userSessionModel = new UserSessionModel();
+                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
                         userSessionModel.Name = Convert.ToString(userMaster.UserName);
                         userSessionModel.UserName = Convert.ToString(userMaster.UserName);
+                        userSessionModel.Region = Convert.ToString(userMaster.Region);
+                        userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
                         userSessionModel.LoginType = Convert.ToString(LoginType);
 
                         SetUserInfo = userSessionModel;
@@ -58,6 +60,9 @@ namespace IBS.Controllers
                             new Claim("UserName", Convert.ToString(userSessionModel.UserName)),
                             new Claim("UserID", userSessionModel.UserID.ToString()),
                             new Claim("LoginType", userSessionModel.LoginType.ToString()),
+
+                            new Claim("Region", userSessionModel.Region.ToString()),
+                            new Claim("AuthLevl", userSessionModel.AuthLevl.ToString()),
                          };
                         var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
@@ -97,7 +102,7 @@ namespace IBS.Controllers
                         AlertDanger("Invalid Username or Password");
                     }
                 }
-                
+
             }
             return View(loginModel);
         }
@@ -128,7 +133,7 @@ namespace IBS.Controllers
                 {
 
                     string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
-                    body = body.Replace("{{USERNAME}}", userMaster.UserName ).Replace("{{RESETPASSURL}}", Configuration.GetSection("BaseURL").Value + Url.Action("ResetPassword", "Home", new { id = Common.EncryptQueryString(Convert.ToString(userMaster.UserId)) }));
+                    body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", Configuration.GetSection("BaseURL").Value + Url.Action("ResetPassword", "Home", new { id = Common.EncryptQueryString(Convert.ToString(userMaster.UserId)) }));
                     EmailUtility emailUtility = new(Configuration);
                     string error = emailUtility.SendEmail(new EmailDetails
                     {
@@ -227,7 +232,7 @@ namespace IBS.Controllers
                 UserModel userMaster = userRepository.FindByID(user.UserId);
 
                 if (userMaster.Password != strOldPassword)
-                { 
+                {
                     AlertDanger("Old Password does not match.");
                     return View(user);
                 }

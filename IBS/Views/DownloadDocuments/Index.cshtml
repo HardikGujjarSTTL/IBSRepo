@@ -1,0 +1,266 @@
+﻿@model IBS.Models.DownloadDocumentsModel
+@{
+    ViewData["Title"] = "DOWNLOAD DOCUMENTS";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>DOWNLOAD DOCUMENTS</h2>
+        </div>
+        @*<div class="list-btn">
+        <a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Add New User</a>
+        </div>*@
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Document Type </label>
+                    @Html.DropDownListFor(model => model.DocType, new SelectList(IBS.Models.Common.GetDocType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="GetDocSubType('')"})
+                    <span class="text-danger" id="spnErrorAuthLevl"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" id="divIEName" style="display:none;">
+                <div class="reference">
+                    <label id="IEName" for="Name">INSTRUCTIONS TO IE </label>
+                    @Html.DropDownListFor(model => model.DocSubType, new SelectList(IBS.Models.Common.GetDocSubType("") , "Value", "Text"),"--Select--", new { @class = "" })
+                    <span class="text-danger" id="spnErrorLlRef"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3" id="divRegion" style="display:none;">
+                <div class="reference">
+                    <label for="Name">Region </label>
+                    @Html.DropDownListFor(model => model.Region, new SelectList(IBS.Models.Common.GetRegionType() , "Value", "Text"), new { @class = ""})
+                    <span class="text-danger" id="spnErrorAuthLevl"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Name of the Document</label>
+                <input type="text" class="input" asp-for="DocumentName" maxlength="50" style="text-transform: uppercase;">
+                <span asp-validation-for="DocumentName" class="text-danger"></span>
+            </div>
+
+            <div class="list-btn">
+                <a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Search </a>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Document ID</th>
+                            <th>Document Name</th>
+                            <th>Document No.</th>
+                            <th>Issue Date</th>
+                            <th>File Location</th>
+                                        @*<th>Action</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+            @section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function Save() {
+            alert("button");
+        }
+
+
+        function GetDocSubType(id) {
+
+            //grdSearch();
+            
+
+            var DocType = $("#DocType").val();
+            var DocTypeName = $("#DocType option:selected").text();
+            $.ajax({
+                url: '@Url.Action("GetDocSubType", "DownloadDocuments")?DocType=' + DocType,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    debugger
+
+                    if (DocType == "I") {
+                        $("#divRegion").show();
+                    }
+                    else {
+                        $("#divRegion").hide();
+                    }
+                    if (response.list.length > 0) {
+                        $("#divIEName").show();
+                    }
+                    else {
+                        $("#divIEName").hide();
+                    }
+                    $("#IEName").text(DocTypeName);
+                    $("#DocSubType").html("");
+                    $("#DocSubType").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#DocSubType").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    if (id > 0) {
+                        $("#DocSubType").val(id);
+                    }
+                }
+            });
+        }
+
+        function InitializeDatatable() {
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "FILE_NAME" },
+                    { data: "DocumentName" },
+                    { data: "DocumentNo" },
+                    {
+                        data: "IssueDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "FILE_LOCATION" },
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var MessageId = data.MessageId;
+                    //        var RegionCode = data.RegionCode;
+                    //        var editUrl = '@Url.Action("Index", "DownloadDocuments")?MessageId=' + MessageId + '&RegionCode=' + RegionCode;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '<a onclick="MessageDelete(\'' + MessageId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + MessageId + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function grdSearch() {
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "DocType": $("#DocType").val(),
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "FILE_NAME" },
+                    { data: "DocumentName" },
+                    { data: "DocumentNo" },
+                    {
+                        data: "IssueDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "FILE_LOCATION" },
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var MessageId = data.MessageId;
+                    //        var RegionCode = data.RegionCode;
+                    //        var editUrl = '@Url.Action("Index", "DownloadDocuments")?MessageId=' + MessageId + '&RegionCode=' + RegionCode;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '<a onclick="MessageDelete(\'' + MessageId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + MessageId + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function MessageDelete(MessageId) {
+            var url = '@Url.Action("Delete", "DownloadDocuments")?MessageId=' + MessageId;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+    </script>
+    }

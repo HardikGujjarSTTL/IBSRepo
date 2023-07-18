@@ -14,11 +14,15 @@ namespace IBS.Interfaces
         public T02User FindByLoginDetail(LoginModel model);
 
         public void ChangePassword(int UserId, String NewPassword);
+
         public T02User FindByUsernameOrEmail(string UserName);
+
         public void ChangePassword(ResetPasswordModel resetPassword);
 
         DTResult<UserModel> GetUserList(DTParameters dtParameters);
+
         bool Remove(string UserId);
+
         int UserDetailsInsertUpdate(UserModel model);
 
         public VendorModel FindVendorLoginDetail(LoginModel model);

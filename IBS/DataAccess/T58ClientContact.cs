@@ -30,4 +30,14 @@ public partial class T58ClientContact
     public string TypeCb { get; set; } = null!;
 
     public decimal? OutAmt { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 }
