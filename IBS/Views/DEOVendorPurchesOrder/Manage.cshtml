@@ -1,0 +1,144 @@
+﻿@model IBS.Models.DEOVendorPurchesOrderModel
+
+@{
+    ViewData["Title"] = "MANAGE PURCHASE ORDER SUBMITTED BY VENDORS AWAITING ALLOCATION OF CASE NUMBER";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="DEOVendorPurchesOrder" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        <input type="hidden" asp-for="UserId" />
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Ref No.</label>
+                <input type="text" class="input" asp-for="CaseNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="CaseNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Railway/Non-Railway</label>
+                <input type="text" class="input" asp-for="RlyNonrly" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="PropertyId">Agency/Client</label>
+                @Html.DropDownListFor(model => model.RlyNonrly, Common.GetRegionType(), new { })
+                <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Vendor</label>
+                <input type="text" class="input" asp-for="VendCd" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="VendCd" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Vendor Name</label>
+                <input type="text" class="input" asp-for="VendName" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="VendName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">PO/Offer Letter No.</label>
+                    @Html.DropDownListFor(model => model.PoiCd, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
+                    <span class="text-danger" id="spnErrorPONo"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Stock / Non-Stock</label>
+                    @Html.DropDownListFor(model => model.PoiCd, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
+                    <span class="text-danger" id="spnErrorPONo"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Purchase Order No.</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">PO Date</label>
+                <input type="text" class="input" asp-for="PoDt" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Purchaser</label>
+                <input type="text" class="input" asp-for="PoDt" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Date of Reciept of PO in RITES</label>
+                <input type="text" class="input" asp-for="RecvDt" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="RecvDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Last 5 digit of PO</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Inspection Agency/PO Cancelled</label>
+                    @Html.DropDownListFor(model => model.PoiCd, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
+                    <span class="text-danger" id="spnErrorPONo"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Manufacturer's Information</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Place of Inspection</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Remarks</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+            
+
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="UserAdministrator" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/DEOVendorPurchesOrder";
+        };
+    </script>
+}
