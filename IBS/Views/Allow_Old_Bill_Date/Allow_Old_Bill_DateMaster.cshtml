@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "ALLOW OLD BILL DATE FORM";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>ALLOW OLD BILL DATE FORM</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="Allow_Old_Bill_Date" asp-action="Allow_Old_Bill_DateManage" class="formBtn"> Add New OLD Bill</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Region</th>
+                            <th>Allow Old Bill Date</th>
+                            <th>No. Of Grace Days</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    { data: "Region" },
+                    { data: "AllowOldBillDt" },
+                    { data: "GraceDays" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Id = data.Region;
+                            var editUrl = '@Url.Action("Allow_Old_Bill_DateManage", "Allow_Old_Bill_Date")?region=' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //html += '<a onclick="MessageDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        //function MessageDelete(MessageID) {
+        //    var url = '@Url.Action("Delete", "GeneralMessages")?MessageID=' + MessageID;
+        //    $("#btn-delete-yes").attr("href", url);
+        //    $("#modal-delete-conf").modal("show");
+        //}
+
+    </script>
+}

@@ -1,30 +1,29 @@
 ﻿@{
-    ViewData["Title"] = "User List";
+    ViewData["Title"] = "INSTRUCTIONS FOR IE List";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Authorized users of the System</h2>
+            <h2>INSTRUCTIONS FOR IE List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="Administrator" asp-action="UserManage" class="formBtn"> Add New User</a>
+            <a asp-area="" asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsManage" class="formBtn"> Add New Instruction</a>
         </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtUser" class="table-responsive">
+                <table id="dtList" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>User ID</th>
-                            <th>User Name</th>
-                            <th>EMP NO</th>
-                            <th>REGION</th>
-                            <th>STATUS</th>
+                            <th>Message ID</th>
+                            <th>RegionCode</th>
+                            <th>Letter No.</th>
+                            <th>Letter Dt.</th>
+                            <th>Message</th>
                             <th>Action</th>
-                            @*<th>Delete</th>*@
                         </tr>
                     </thead>
                     <tbody>
@@ -47,8 +46,8 @@
         });
 
         function InitializeDatatable() {
-            
-            $("#dtUser").DataTable({
+
+            $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -78,24 +77,27 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "UserId" },
-                    { data: "UserName" },
-                    { data: "EmpNo" },
-                    { data: "Region" },
-                    //{ data: "Status" },
+                    { data: "MessageId", 'visible': false },
+                    { data: "RegionCode", 'visible': false },
+                    { data: "LetterNo" },
                     {
-                        data: null, orderable: false,
+                        data: "LetterDt",
                         render: function (data, type, row) {
-                            return data.Status ? "Active" : "InActive";
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
                         }
                     },
+                    { data: "Message" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Id = data.UserId;
-                            var editUrl = '@Url.Action("UserManage", "Administrator")?UserId=' + Id;
+                            var MessageId = data.MessageId;
+                            var RegionCode = data.RegionCode;
+                            var editUrl = '@Url.Action("IE_InstructionsManage", "IE_Instructions_Admin")?MessageId=' + MessageId + '&RegionCode=' + RegionCode;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="MessageDelete(\'' + MessageId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + MessageId + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -116,8 +118,8 @@
             });
         }
 
-        function UserDelete(UserId) {
-            var url = '@Url.Action("Delete", "Administrator")?UserId=' + UserId;
+        function MessageDelete(MessageId) {
+            var url = '@Url.Action("Delete", "IE_Instructions_Admin")?MessageId=' + MessageId;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }

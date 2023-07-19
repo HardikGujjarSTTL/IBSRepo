@@ -141,7 +141,8 @@ namespace IBS.Models
                        {
                            Value = c.RegionCode.ToString(),
                            Text = c.Region
-                       }).OrderBy(c => c.Text).ToList();
+                           //}).OrderBy(c => c.Text).ToList();
+                       }).ToList();
             obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
             return obj;
         }
@@ -273,15 +274,15 @@ namespace IBS.Models
             return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
         }
 
-        public static List<DropDownDTO> GetRole()
+        public static List<SelectListItem> GetRole()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            List<DropDownDTO> Role = (from a in ModelContext.Roles
+            List<SelectListItem> Role = (from a in ModelContext.Roles
                                       select
-                                 new DropDownDTO
+                                 new SelectListItem
                                  {
                                      Text = Convert.ToString(a.Rolename),
-                                     Value = Convert.ToInt32(a.RoleId)
+                                     Value = Convert.ToString(a.RoleId)
                                  }).ToList();
             return Role;
 
@@ -440,6 +441,33 @@ namespace IBS.Models
 
             return model;
 
+        }
+
+        public static List<SelectListItem> GetDocType()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> DocType = (from a in ModelContext.T74DocumentTypes
+                                      select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.DocTypeDesc),
+                                     Value = Convert.ToString(a.DocType)
+                                 }).ToList();
+            return DocType;
+        }
+
+        public static List<SelectListItem> GetDocSubType(string DocType)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> DocSubType = (from a in ModelContext.T75DocSubTypes
+                                             where a.DocType == DocType
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = a.DocSubTypeDesc,
+                                         Value = a.DocSubType
+                                     }).ToList();
+            return DocSubType;
         }
     }
     public static class DbContextHelper
