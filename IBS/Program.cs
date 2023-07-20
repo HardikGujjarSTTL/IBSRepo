@@ -48,6 +48,7 @@ builder.Services.AddScoped<IIE_Instructions_AdminRepository, IE_Instructions_Adm
 builder.Services.AddScoped<IDownloadDocumentsRepository, DownloadDocumentsRepository>();
 builder.Services.AddScoped<IPOMasterRepository, POMasterRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddScoped<IDocument, Document>();
 
 var app = builder.Build();
 
