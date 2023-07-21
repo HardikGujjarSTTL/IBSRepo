@@ -5,7 +5,6 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 By Hardik Gujjar
 =============================================================================================================================================
 
-
 ALTER TABLE T09_IE 
     MODIFY IE_PWD  VARCHAR2(8 BYTE);
 
