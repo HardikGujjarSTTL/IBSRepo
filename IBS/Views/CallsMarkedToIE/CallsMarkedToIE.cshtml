@@ -1,0 +1,165 @@
+﻿@model IBS.Models.CallsMarkedToIEModel
+@{
+    ViewData["Title"] = "RITES INSPECTION & BILLING SYSTEM";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>RITES INSPECTION & BILLING SYSTEM</h2>
+        </div>
+        @*<div class="list-btn">
+        <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn"> Add New User</a>
+        </div>*@
+        <input type="hidden" asp-for="@Model.PType" />
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtUser" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>VENDOR NAME</th>
+                            <th>NEW VENDOR</th>
+                            <th>PURCHASER</th>
+                            <th>ITEM</th>
+                            <th>DELV DATE</th>
+
+                            <th>INSP DESIRE DATE</th>
+                            <th>CALL DATE</th>
+                            <th>CALL SERIAL NO.</th>
+                            <th>CALL DOCUMENT(IF ANY).</th>
+                            <th>CASE NO/VIEW PO</th>
+
+                            <th>PO SOURCE</th>
+                            <th>STATUS</th>
+                            <th>REMARKS</th>
+                            <th>PONO</th>
+                            <th>PO DATE</th>
+
+                            <th>CONTACT PERSON</th>
+                            <th>CONTACT PERSON PHONE NO.</th>
+                            <th>USER(Other Then IE)</th>
+                            <th>LAST UPDATION DATE</th>
+
+                            <th>PType</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            var PType = $("#PType").val();
+            $("#dtUser").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            PType: PType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Vendor" },
+                    { data: "NewVendor" },
+                    { data: "Consignee" },
+                    { data: "ItemDescPo" },
+                    {
+                        data: "ExtDelvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "InspDesireDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "CallMarkDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "callDocAny" },
+                    { data: "PoSource" },
+                    { data: "PoSource" },
+                    { data: "CallStatus" },
+                    { data: "Remarks" },
+                    { data: "PoNo" },
+                    { data: "PoDate" },
+                    { data: "MfgPers" },
+                    { data: "MfgPhone" },
+                    { data: "UserId" },
+                    { data: "Datetime" },
+                    { data: "PType" },
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var CaseNo = data.CaseNo;
+                    //        var MaNo = data.MaNo;
+                    //        var MaDtc = data.MaDtc;
+                    //        var MaSno = data.MaSno;
+                    //        var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    //{ data: "MaStatus" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}

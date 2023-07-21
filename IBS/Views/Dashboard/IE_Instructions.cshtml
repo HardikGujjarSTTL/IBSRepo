@@ -1,0 +1,133 @@
+﻿@model IBS.Models.IEMessagesModel
+
+@{
+    ViewData["Title"] = "INSTRUCTIONS FOR IE's";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>INSTRUCTIONS FOR IE's</h2>
+        </div>
+    </div>
+    <div class="row my-0">
+        <marquee direction="left" style="color:red;">Latest Instruction: SUBMISSION OF INSPECTION DOCUMENTS, Letter No. RITES/RMI/06/IE INST NO. 332, Dated: 07/07/2022</marquee>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtUser" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Message ID</th>
+                            <th>Message Dt</th>
+                            <th>Message</th>
+                            <th>Letter No.</th>
+                            <th>Letter Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="row my-0">
+        <div class="col-md-4 mb-3">
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="accordion-body center">
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference" style="color:DarkMagenta;">Plz Read all the Instructions Carefully Before Proceeding !!!</label>
+                        <label for="Reference" style="color:red;">Please Enter your DSC expiry Date (In DD/MM/YYYY) :</label>
+                        <input type="text" class="input" asp-for="MessageId" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="MessageId" class="text-danger"></span>
+                        <a href="http://192.168.0.214/RBS/DSC EXPIRY DATE.pdf" target="_blank">Steps to Check DSC Expiry Date</a>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <button type="button" class="save-btn active">Proceed</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtUser").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "MessageId" },
+                    {
+                        data: "MessageDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Message" },
+                    { data: "LetterNo" },
+                    {
+                        data: "LetterDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+    }

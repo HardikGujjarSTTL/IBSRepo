@@ -47,6 +47,14 @@ namespace IBS.Controllers
             }
         }
 
+        public int GetIeCd
+        {
+            get
+            {
+                return Convert.ToInt32(GetUserInfo.IeCd);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))

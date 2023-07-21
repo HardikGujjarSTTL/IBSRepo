@@ -79,7 +79,7 @@
                                 <li><a asp-action="#" asp-controller="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Purchase Order Submitted By Vendors Awaiting Allocation Of Case No.</span></a></li>
                                 <li><a asp-action="Index" asp-controller="DEOCRISPurchesOrderMA"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Registered In RITES.</span></a></li>
                                 <li><a asp-action="Index" asp-controller="MAapprove"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Approval For MA</span></a></li>
-                                <li><a asp-action="#" asp-controller="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Not Registered In RITES.(Under Testing)</span></a></li>
+                                <li><a asp-action="Index" asp-controller="DEOCRISPurchesOrderMAWCaseNo"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Not Registered In RITES.(Under Testing)</span></a></li>
                                 
                                 
                             </ul>
@@ -91,6 +91,14 @@
                             <ul class="nav nav-second-level">
                                 <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Profile</span></a></li>
                                 <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Document</span></a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Details</span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Sorted On Call Date</span></a></li>
+                                <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Sorted On Vendor</span></a></li>
                             </ul>
                         </li>
                         

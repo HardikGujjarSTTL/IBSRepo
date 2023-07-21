@@ -1,15 +1,14 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
 
 namespace IBS.Repositories
 {
-    public class DEOCRISPurchesOrderRepository : IDEOCRISPurchesOrderRepository
+    public class DEOCRISPurchesOrderWCaseNoRepository : IDEOCRISPurchesOrderWCaseNoRepository
     {
         private readonly ModelContext context;
 
-        public DEOCRISPurchesOrderRepository(ModelContext context)
+        public DEOCRISPurchesOrderWCaseNoRepository(ModelContext context)
         {
             this.context = context;
         }
@@ -20,13 +19,18 @@ namespace IBS.Repositories
             //MmpPomaDtl user = context.MmpPomaDtls.Find(Rly, Makey, Slno);
 
             var GetValuePO = (from h in context.ImmsRitesPoHdrs
-                                  join r in context.T91Railways on h.RlyCd equals r.RlyCd
-                                  join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
-                                  join d in context.MmpPomaDtls on m.Makey equals d.Makey
-                                  where d.Rly == Rly && d.Makey == Makey && d.Slno == Slno
-                                  select new {
-                                      h,r,m,d
-                                  }
+                              join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd
+                              join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
+                              join d in context.MmpPomaDtls on m.Makey equals d.Makey
+                              where 
+                              d.Rly == Rly && d.Makey == Makey && d.Slno == Slno
+                              select new
+                              {
+                                  h,
+                                  r,
+                                  m,
+                                  d
+                              }
                   ).ToList();
 
             if (GetValuePO == null)
@@ -89,16 +93,15 @@ namespace IBS.Repositories
             }
 
             string MaDt1 = Convert.ToDateTime("31-03-2020").ToString("dd-MM-yyyy");
-            string MaDt2 = Convert.ToDateTime("01-01-2020").ToString("dd-MM-yyyy");
 
             query = from h in context.ImmsRitesPoHdrs
                     join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd
                     join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
                     join d in context.MmpPomaDtls on m.Makey equals d.Makey
                     where h.ImmsPokey == m.Pokey && h.ImmsRlyCd == m.Rly && m.Makey == d.Makey && m.Rly == d.Rly && h.ImmsRlyCd == r.ImmsRlyCd
-                    && h.RitesCaseNo != null 
-                    && d.MaStatus == null
-                    && h.RegionCode == GetRegionCode && m.MaDate > Convert.ToDateTime(MaDt1) && m.MaDate > Convert.ToDateTime(MaDt2)
+                    && h.RegionCode == null
+                    && m.MaDate > Convert.ToDateTime(MaDt1)
+                    && h.RitesCaseNo == null && d.MaStatus == null
 
                     select new DEOCRISPurchesOrderMAModel
                     {
@@ -109,6 +112,7 @@ namespace IBS.Repositories
                         RecvDate = h.RecvDate,
                         ImmsRlyCd = h.ImmsRlyCd,
                         ImmsRlyShortname = h.ImmsRlyShortname,
+                        RlyCd = r.RlyCd,
                         VendorName = h.ImmsVendorName + "," + h.ImmsVendorDetail,
                         Remarks = h.Remarks,
                         PoDoc = "Vendor/PO/" + h.PoNo + ".pdf",
@@ -121,15 +125,16 @@ namespace IBS.Repositories
                         Makey = d.Makey,
                         Slno = d.Slno,
                         OldValue = d.OldValue,
-                        MaStatus = d.MaStatus
+                        MaStatus = d.MaStatus,
+                        RegionCode = h.RegionCode
 
                     };
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.RitesCaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Remarks).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.PoNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.MaNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
