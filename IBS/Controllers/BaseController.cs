@@ -55,6 +55,14 @@ namespace IBS.Controllers
             }
         }
 
+        public string UserName
+        {
+            get
+            {
+                return (GetUserInfo.UserName);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))
