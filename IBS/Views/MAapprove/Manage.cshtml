@@ -1,0 +1,167 @@
+﻿@model IBS.Models.MAapproveModel
+
+@{
+    ViewData["Title"] = "MA APPROVE FORM";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="MAapprove" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        <input type="hidden" asp-for="CaseNo" />
+        <input type="hidden" asp-for="MaNo" />
+        <input type="hidden" asp-for="MaDtc" />
+        <input type="hidden" asp-for="MaSno" />
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Case No.</label>
+                <input type="text" class="input" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase; color:orangered;" readonly="readonly">
+                <span asp-validation-for="CaseNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="Reference">PO No.</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase; color:orangered;" readonly="readonly">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">PO Date</label>
+                <input type="text" class="input" asp-for="PoDt" maxlength="30" style="text-transform: uppercase; color:orangered;" readonly="readonly">
+                <span asp-validation-for="PoDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="Reference">RLY Code.</label>
+                <input type="text" class="input" asp-for="RlyCd" maxlength="100" style="text-transform: uppercase; color:orangered;" readonly="readonly">
+                <span asp-validation-for="RlyCd" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Name">SNo.</label>
+                    <input type="text" class="input" asp-for="MaSno" maxlength="30" style="text-transform: uppercase; color:orangered;" readonly="readonly">
+                    <span asp-validation-for="MaSno" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="Reference">BPO Type</label>
+                @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"),"--Select--",new {@disabled = "disabled" })
+                <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="Name">PO/Offer Letter No.</label>
+                @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetterTypes() , "Value", "Text"),"--Select--",new {@disabled = "disabled" })
+                <span asp-validation-for="PoOrLetter" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="Reference">MA No.</label>
+                <input type="text" class="input" asp-for="MaNo" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                <span asp-validation-for="MaNo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Name">MA Date (DD/MM/YYYY)</label>
+                    <input type="text" class="input" asp-for="MaDt" maxlength="30" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="MaDt" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Name">Field</label>
+                    <input type="text" class="input" asp-for="MaField" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="MaField" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-9 mb-3">
+                <label for="reference">MA Description</label>
+                <textarea rows="4" asp-for="MaDesc" style="text-transform: uppercase;" readonly="readonly"></textarea>
+                <span asp-validation-for="MaDesc" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Original PO Entry</label>
+                    <textarea rows="4" asp-for="OldPoValue" style="text-transform: uppercase;" readonly="readonly"></textarea>
+                    <span asp-validation-for="OldPoValue" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Amended PO Entry</label>
+                    <textarea rows="4" asp-for="NewPoValue" style="text-transform: uppercase;" readonly="readonly"></textarea>
+                    <span asp-validation-for="NewPoValue" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">MA Documents</label>
+                    <input type="text" class="input" asp-for="MADoc" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="MADoc" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">MA Status</label>
+                @Html.DropDownListFor(model => model.MaStatus, new SelectList(IBS.Models.Common.MAApproveStatus() , "Value", "Text"),"--Select--",new { @onchange="GetStatus()" })
+                <span asp-validation-for="MaStatus" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0" id="divMaRemarks" style="display:none;">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">REMARKS</label>
+                    <textarea rows="4" asp-for="MaRemarks" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="MaRemarks" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="MAapprove" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function GetStatus() {
+            debugger
+            var MaStatus = $('#MaStatus').val();
+            if (MaStatus == "R") {
+                $("#divMaRemarks").show();
+            }
+            else
+            {
+                $("#divMaRemarks").hide();
+            }
+        }
+
+
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/MAapprove";
+        };
+    </script>
+}

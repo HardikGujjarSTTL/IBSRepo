@@ -1,0 +1,148 @@
+﻿@model IBS.Models.DEOVendorPurchesOrderModel
+@{
+    ViewData["Title"] = "PURCHASE ORDER SUBMITTED BY VENDORS AWAITING ALLOCATION OF CASE NUMBER";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>PURCHASE ORDER SUBMITTED BY VENDORS AWAITING ALLOCATION OF CASE NUMBER</h2>
+        </div>
+    </div>
+    <span class="fa fa-select">test</span>
+    
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ref No.</th>
+                            <th>Purchase Order Number</th>
+                            <th>Purchase Order Date</th>
+                            <th>Recv Date</th>
+                            <th>Agency</th>
+                            <th>Vendor</th>
+                            <th>Remarks</th>
+                            <th></th>
+                            <th>Action</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    { data: "PoNo" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "RecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "RlyCd" },
+                    { data: "VendName" },
+                    { data: "Remarks" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <span style=\"color:red\">No PO</span>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Select"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function MessageDelete(CaseNo) {
+            var url = '@Url.Action("Delete", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+    </script>
+    }

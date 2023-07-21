@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "MA ISSUED BY CRIS AGAINST CRIS PURCHASE ORDERS NOT REGISTERED IN RITES";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>MA ISSUED BY CRIS AGAINST CRIS PURCHASE ORDERS NOT REGISTERED IN RITES List</h2>
+        </div>
+        @*<div class="list-btn">
+        <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn"> Add New User</a>
+        </div>*@
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Purchase Order Number</th>
+                            <th>Purchase Order Date</th>
+                            <th>Recv Date</th>
+                            <th>Agency</th>
+                            <th>Vendor</th>
+                            <th>MA No.</th>
+                            <th>MA DT</th>
+                            <th>Subject</th>
+                            <th>MA Field</th>
+                            <th>New Value</th>
+                            <th>Action</th>
+                            @*<th>MaStatus</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "PoNo" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "RecvDate",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "ImmsRlyShortname" },
+                    { data: "VendorName" },
+                    { data: "MaNo" },
+                    {
+                        data: "MaDate",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Subject" },
+                    { data: "MaFldDescr" },
+                    { data: "NewValue" },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Rly = data.Rly;
+                            var Makey = data.Makey;
+                            var Slno = data.Slno;
+                            var editUrl = '@Url.Action("Manage", "DEOCRISPurchesOrderMAWCaseNo")?Rly=' + Rly + "&Makey=" + Makey + "&Slno=" + Slno;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    //{ data: "MaStatus" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}

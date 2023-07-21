@@ -26,5 +26,8 @@ namespace IBS.Interfaces
         int UserDetailsInsertUpdate(UserModel model);
 
         public VendorModel FindVendorLoginDetail(LoginModel model);
+
+        public IELoginModel FindIELoginDetail(LoginModel model);
+
     }
 }

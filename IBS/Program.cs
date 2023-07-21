@@ -49,6 +49,12 @@ builder.Services.AddScoped<IDownloadDocumentsRepository, DownloadDocumentsReposi
 builder.Services.AddScoped<IPOMasterRepository, POMasterRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
 builder.Services.AddScoped<IDocument, Document>();
+builder.Services.AddScoped<IDEOVendorPurchesOrderRepository, DEOVendorPurchesOrderRepository>();
+builder.Services.AddScoped<IDEOCRISPurchesOrderRepository, DEOCRISPurchesOrderRepository>();
+builder.Services.AddScoped<IMAapproveRepository, MAapproveRepository>();
+builder.Services.AddScoped<IDEOCRISPurchesOrderWCaseNoRepository, DEOCRISPurchesOrderWCaseNoRepository>();
+builder.Services.AddScoped<IIEMessageRepository, IEMessageRepository>();
+builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>();
 
 var app = builder.Build();
 
