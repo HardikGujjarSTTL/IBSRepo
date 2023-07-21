@@ -55,7 +55,7 @@ namespace IBS.Helpers
                 }
                 FileInfo newfile = new FileInfo(DestinationPath);
 
-                item.Applicationid = ApplicationID;
+                item.Applicationid = Convert.ToString(ApplicationID);
                 item.Relativepath = FolderPath.Replace("~", "");
                 item.Extension = newfile.Extension;
                 item.FileDisplayName = item.FileName;

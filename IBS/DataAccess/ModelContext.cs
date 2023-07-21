@@ -1573,7 +1573,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(18,6)")
                 .HasColumnName("ACCURACY");
             entity.Property(e => e.Applicationid)
-                .HasPrecision(6)
+                .HasMaxLength(100)
+                .IsUnicode(false)
                 .HasColumnName("APPLICATIONID");
             entity.Property(e => e.Camera)
                 .HasMaxLength(255)
