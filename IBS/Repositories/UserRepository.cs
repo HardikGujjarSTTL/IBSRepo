@@ -91,6 +91,24 @@ namespace IBS.Repositories
             return vendorModel;
         }
 
+        public IELoginModel FindIELoginDetail(LoginModel model)
+        {
+            IELoginModel ieModel = new IELoginModel();
+            ieModel = (from m in context.T09Ies
+                       where m.IeEmpNo == model.UserName && m.IePwd.Trim() == model.Password.Trim() && m.IeStatus == null
+                       select new IELoginModel
+                       {
+                           IeCd = m.IeCd,
+                           IeEmpNo = m.IeEmpNo,
+                           IePwd = m.IePwd,
+                           IeName = m.IeName,
+                           IeRegion = m.IeRegion,
+                           IePhoneNo = m.IePhoneNo,
+                           IeEmail = m.IeEmail
+                       }).FirstOrDefault();
+            return ieModel;
+        }
+
         public void ChangePassword(int UserId, String NewPassword)
         {
             var user = context.T02Users.Find(UserId);

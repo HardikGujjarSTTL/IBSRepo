@@ -102,6 +102,40 @@ namespace IBS.Controllers
                         AlertDanger("Invalid Username or Password");
                     }
                 }
+                else if (LoginType.ToLower() == "ielogin")
+                {
+                    IELoginModel userMaster = userRepository.FindIELoginDetail(loginModel);
+                    if (userMaster != null)
+                    {
+                        UserSessionModel userSessionModel = new UserSessionModel();
+                        userSessionModel.UserID = Convert.ToInt32(userMaster.IeEmpNo);
+                        userSessionModel.Name = Convert.ToString(userMaster.IeName);
+                        userSessionModel.UserName = Convert.ToString(userMaster.IeName);
+                        userSessionModel.LoginType = Convert.ToString(LoginType);
+
+                        userSessionModel.IeCd = Convert.ToInt32(userMaster.IeCd);
+                        userSessionModel.Region = Convert.ToString(userMaster.IeRegion);
+
+                        SetUserInfo = userSessionModel;
+                        var userClaims = new List<Claim>()
+                        {
+                            new Claim("UserName", Convert.ToString(userMaster.IeName)),
+                            new Claim("UserID", userSessionModel.UserID.ToString()),
+                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
+                            new Claim("Region", userSessionModel.Region.ToString()),
+                            new Claim("IeCd", userSessionModel.IeCd.ToString()),
+                         };
+                        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+                        HttpContext.SignInAsync(userPrincipal);
+                        return RedirectToAction("IE_Instructions", "Dashboard");
+                    }
+                    else
+                    {
+                        AlertDanger("Invalid Username or Password");
+                    }
+                }
+
 
             }
             return View(loginModel);
@@ -254,5 +288,6 @@ namespace IBS.Controllers
             HttpContext.SignOutAsync("CookieAuthentication");
             return RedirectToAction("Index");
         }
+        
     }
 }

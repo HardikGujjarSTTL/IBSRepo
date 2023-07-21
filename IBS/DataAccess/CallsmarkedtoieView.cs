@@ -17,13 +17,13 @@ public partial class CallsmarkedtoieView
 
     public string? ItemDescPo { get; set; }
 
-    public string? ExtDelvDt { get; set; }
+    public DateTime? ExtDelvDt { get; set; }
 
-    public string? CallMarkDt { get; set; }
+    public DateTime? CallMarkDt { get; set; }
 
-    public string? InspDesireDt { get; set; }
+    public DateTime? DtInspDesire { get; set; }
 
-    public string? CallRecvDt { get; set; }
+    public DateTime CallRecvDt { get; set; }
 
     public string? NewVendor { get; set; }
 
@@ -33,7 +33,7 @@ public partial class CallsmarkedtoieView
 
     public string? PoNo { get; set; }
 
-    public string? PoDate { get; set; }
+    public DateTime? PoDt { get; set; }
 
     public string? PoYr { get; set; }
 
@@ -47,7 +47,7 @@ public partial class CallsmarkedtoieView
 
     public string? UserId { get; set; }
 
-    public string? Datetime { get; set; }
+    public DateTime? Datetime { get; set; }
 
     public string? Remarks { get; set; }
 
@@ -62,6 +62,10 @@ public partial class CallsmarkedtoieView
     public string? MfgPhone { get; set; }
 
     public short CallSno { get; set; }
+
+    public string? DocsSubmitted { get; set; }
+
+    public int? IeCd { get; set; }
 
     public decimal? Count { get; set; }
 }

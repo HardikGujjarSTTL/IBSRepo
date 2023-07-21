@@ -767,12 +767,10 @@ public partial class ModelContext : DbContext
                 .ToView("CALLSMARKEDTOIE_VIEW");
 
             entity.Property(e => e.CallMarkDt)
-                .HasMaxLength(10)
-                .IsUnicode(false)
+                .HasColumnType("DATE")
                 .HasColumnName("CALL_MARK_DT");
             entity.Property(e => e.CallRecvDt)
-                .HasMaxLength(10)
-                .IsUnicode(false)
+                .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
             entity.Property(e => e.CallSno)
                 .HasPrecision(5)
@@ -804,13 +802,22 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER")
                 .HasColumnName("COUNT");
             entity.Property(e => e.Datetime)
-                .HasMaxLength(10)
-                .IsUnicode(false)
+                .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
-            entity.Property(e => e.ExtDelvDt)
-                .HasMaxLength(10)
+            entity.Property(e => e.DocsSubmitted)
+                .HasMaxLength(1)
                 .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("DOCS_SUBMITTED");
+            entity.Property(e => e.DtInspDesire)
+                .HasColumnType("DATE")
+                .HasColumnName("DT_INSP_DESIRE");
+            entity.Property(e => e.ExtDelvDt)
+                .HasColumnType("DATE")
                 .HasColumnName("EXT_DELV_DT");
+            entity.Property(e => e.IeCd)
+                .HasPrecision(6)
+                .HasColumnName("IE_CD");
             entity.Property(e => e.IeName)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -819,10 +826,6 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("IE_PHONE_NO");
-            entity.Property(e => e.InspDesireDt)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("INSP_DESIRE_DT");
             entity.Property(e => e.ItemDescPo)
                 .HasMaxLength(400)
                 .IsUnicode(false)
@@ -846,10 +849,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasColumnName("NEW_VENDOR");
-            entity.Property(e => e.PoDate)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("PO_DATE");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
             entity.Property(e => e.PoNo)
                 .HasMaxLength(75)
                 .IsUnicode(false)
@@ -12602,13 +12604,28 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("RLY_DESIG_CD");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.RlyDesigDesc)
                 .HasMaxLength(40)
                 .IsUnicode(false)
                 .HasColumnName("RLY_DESIG_DESC");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
