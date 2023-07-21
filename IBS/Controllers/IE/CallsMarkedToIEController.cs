@@ -19,6 +19,7 @@ namespace IBS.Controllers.IE
         {
             CallsMarkedToIEModel model = new();
             model.PType = type;
+            model.IeName = UserName;
 
             return View(model);
         }

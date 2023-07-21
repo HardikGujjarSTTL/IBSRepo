@@ -9,24 +9,39 @@
             <h2>RITES INSPECTION & BILLING SYSTEM</h2>
         </div>
         <input type="hidden" asp-for="@Model.PType" />
-        <input type="text" class="input" name="FromDate" id="FromDate" readonly>
-        <input type="text" class="input" name="ToDate" id="ToDate" readonly>
+        <input type="hidden" asp-for="@Model.IeName" />
     </div>
     <div class="row my-0">
-        <div class="col-md-4 mb-4">
-            <label for="Reference">Welcome : </label>
-            <label for="Reference" type="text" asp-for="PType" id="PType"></label>
+        <div class="col-md-6 mb-4">
+            <span style="color:red;">Welcome :</span>
+            <label id="UserName" name="UserName" runat="server" style="color:red;"></label>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-6 mb-4">
             @if (Model.PType == "C")
             {
-                <label for="Reference">(STATUS AS ON DATE)- Report Sorted on Vendor Name</label>
+                <b>
+                    <span style="color:#3333FF;">CALLS STATUS FOR THE PERIOD</span>
+                    <label id="ToDate" name="ToDate" runat="server" style="color:#3333FF;"></label>
+                    <span style="color:#3333FF;">TO</span>
+                    <label id="FromDate" name="FromDate" runat="server" style="color:#3333FF;"></label>
+                    <span style="color:#3333FF;">AND ALL PENDING CALLS</span>
+
+                </b>
+                <label for="Reference" style="color:#3333FF;">(STATUS AS ON DATE)- Report Sorted on Call Date</label>
             }
             else
             {
-                <label for="Reference">(STATUS AS ON DATE)- Report Sorted on Vendor Name</label>
-            }
 
+                <b>
+                    <span style="color:#3333FF;">CALLS STATUS FOR THE PERIOD</span>
+                    <label id="ToDate" name="ToDate" runat="server" style="color:#3333FF;"></label>
+                    <span style="color:#3333FF;">TO</span>
+                    <label id="FromDate" name="FromDate" runat="server" style="color:#3333FF;"></label>
+                    <span style="color:#3333FF;">AND ALL PENDING CALLS</span>
+
+                </b>
+                <label for="Reference" style="color:#3333FF;">(STATUS AS ON DATE)- Report Sorted on Vendor Name</label>
+            }
         </div>
     </div>
     <section class="table-section">
@@ -58,8 +73,6 @@
                             <th>CONTACT PERSON PHONE NO.</th>
                             <th>USER(Other Then IE)</th>
                             <th>LAST UPDATION DATE</th>
-
-                            <th>PType</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,8 +99,10 @@
             var fromdate = new Date();
             var todate = new Date();
 
-            $('#FromDate').val(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
-            $('#ToDate').val(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
+            $("#UserName").text($("#IeName").val());
+
+            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
+            $('#ToDate').text(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
         }
 
         function InitializeDatatable() {
@@ -166,7 +181,6 @@
                     { data: "MfgPhone" },
                     { data: "UserId" },
                     { data: "Datetime" },
-                    { data: "PType" },
                     //{
                     //    data: null, orderable: false,
                     //    render: function (data, type, row) {
