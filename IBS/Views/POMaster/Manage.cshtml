@@ -38,12 +38,13 @@
                     <div class="row my-0">
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Railway/Non-Railway</label>
-                            @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ onChange="FillAgencyClient()"})
+                            @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
+
                             <span asp-validation-for="RlyNonrly" class="text-danger"></span>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Agency/Client</label>
-                            @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
                             <span asp-validation-for="RlyCd" class="text-danger"></span>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -57,6 +58,19 @@
                             <span asp-validation-for="StockNonstock" class="text-danger"></span>
                         </div>
                     </div>
+
+                    <div class="row my-0">
+                        <div class="col-md-5 mb-3">
+                            <label for="Reference">Vendor</label>
+                            <input type="text" class="input" id="txtVend">
+                            <input type="hidden" id="hdnlblVendor" />
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="Reference"></label>
+                            @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
+                        </div>
+                    </div>
+
                     <div class="row my-0">
                         <div class="col-md-3 mb-3">
                             <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
@@ -92,7 +106,7 @@
                             <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below</label>
                         </div>
                         <div class="col-md-3 mb-3">
-                            @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("","","") , "Value", "Text"),"--Select--")
                             <span asp-validation-for="PurchaserCd" class="text-danger"></span>
                         </div>
                         <div class="col-md-2 mb-3">
@@ -118,7 +132,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="reference">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="chkManuf" />
+                                    <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
                                     <label class="custom-checkbox">Same As Vendor</label>
                                 </div>
                             </div>
@@ -140,8 +154,7 @@
                             <label for="Reference">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
                         </div>
                         <div class="col-md-2 mb-3">
-                            @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="VendCd" class="text-danger"></span>
+                            @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
                         </div>
                     </div>
                     <div class="row my-0">
@@ -169,6 +182,10 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        $(document).ready(function () {
+            FillVendor();
+        });
+
         function Save() {
             if ($("#frmPOMasterDetails").valid()) {
                 $("#frmPOMasterDetails").submit();
@@ -180,8 +197,7 @@
             window.location.href = "/POMaster/Index";
         };
 
-        function LOASubmit()
-        {
+        function LOASubmit() {
             $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
                 if (response != null && response != undefined) {
                     $('#PoNo').val(response.poMaster.PoNo);
@@ -193,8 +209,7 @@
                     $('#RlyNonrly').val(response.poMaster.RlyNonrly);
                     FillAgencyClient();
                     $('#RlyCd').val(response.poMaster.RlyCd);
-                    if(response.poMaster.RlyNonrly == "R")
-                    {
+                    if (response.poMaster.RlyNonrly == "R") {
                         $('#hdnRailwayCode').val(response.poMaster.RlyNonrly);
                         $('#hdnRCD').val(response.poMaster.RlyCd);
                         $('#txtSPur').val(response.poMaster.RlyCd);
@@ -231,6 +246,7 @@
                     $("#hdnRailway").val($("#RlyCd option:selected").text());
                 }
             });
+            FillPurchaserCd();
         }
 
         function FillPurchaserCd() {
@@ -254,10 +270,82 @@
                 }
             });
         }
-        function SearchPurchaser()
-        {
+        function SearchPurchaser() {
             FillPurchaserCd();
         }
-        
+
+        function fill_consignee_purcher() {
+            var RlyNonrlyValue = $("#RlyNonrly").val();
+            var RlyNonrlyText = $("#RlyNonrly option:selected").text();
+            var RlyCd = $("#RlyCd").val();
+            $.ajax({
+                url: '@Url.Action("Getfill_consignee_purcher", "POMaster")?RlyNonrlyValue=' + RlyNonrlyValue + '&RlyNonrlyText=' + RlyNonrlyText + '&RlyCd=' + RlyCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PurchaserCd").html("");
+                    $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function sameAsVendor() {
+            var chkManuf = $('input[name="chkManuf"]:checked').val();
+        }
+
+        function FillVendor() {
+            $.ajax({
+                url: '@Url.Action("GetVendor", "POMaster")',
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    if (response.list != null) {
+                        $("#VendCd").html("");
+                        $("#VendCd").append("<option value=''>--Select--</option>");
+                        $.each(response.list, function (index, value) {
+                            $("#VendCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        });
+                        vendor_status();
+                    }
+                    else
+                    {
+                        ShowHideMsgNew(response.status, "No Vendor Found!!!");
+                    }
+                }
+            });
+        }
+
+        function vendor_status() {
+            var VendCd = $("#VendCd").val();
+            $.ajax({
+                url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    $("#txtVend").val("");
+                }
+                else
+                {
+                    $("#txtVend").val(VendCd);
+                }
+            });
+        }
+
     </script>
 }

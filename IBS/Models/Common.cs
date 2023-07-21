@@ -389,7 +389,7 @@ namespace IBS.Models
                        }).ToList();
                 dropDownDTOs.AddRange(dropList);
             }
-            else
+            else if (RlyNonrly != "")
             {
                 List<SelectListItem> dropList = new List<SelectListItem>();
                 dropList = (from a in ModelContext.T12BillPayingOfficers
@@ -399,7 +399,46 @@ namespace IBS.Models
                        {
                            Text = Convert.ToString(a.BpoRly),
                            Value = Convert.ToString(a.BpoOrgn)
-                       }).DistinctBy(x => x.Text).OrderBy(x => x.Text).ToList();
+                       }).OrderBy(x => x.Text).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+        }
+
+        public static List<SelectListItem> Getfill_consignee_purcher(string RlyNonrlyValue, string RlyNonrlyText, string RlyCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+            if (RlyNonrlyText == "Railways")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T06Consignees
+                            join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
+                            where a.ConsigneeFirm == Convert.ToString(RlyCd)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.ConsigneeCd +"-"+ a.ConsigneeFirm + "/"+ a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
+                           Value = Convert.ToString(a.ConsigneeCd)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            else if (RlyNonrlyText != "")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T06Consignees
+                            join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
+                            where a.ConsigneeType == Convert.ToString(RlyNonrlyValue)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.ConsigneeCd + "-" + a.ConsigneeFirm + "/" + a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
+                           Value = Convert.ToString(a.ConsigneeCd)
+                       }).ToList();
                 dropDownDTOs.AddRange(dropList);
             }
             return dropDownDTOs;
@@ -428,6 +467,60 @@ namespace IBS.Models
                 dropDownDTOs.AddRange(dropList);
             }
             return dropDownDTOs;
+        }
+
+        public static List<SelectListItem> GetVendor(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from a in ModelContext.T05Vendors
+                        join b in ModelContext.T03Cities on a.VendCityCd equals b.CityCd
+                        where a.VendCd == VendCd && a.VendName != null
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.VendName + "/" + a.VendAdd1 + "/" + b.Location + "/" + b.City),
+                       Value = Convert.ToString(a.VendCd)
+                   }).ToList();
+
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+        public static VendorModel Getvendor_status(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            VendorModel model = (from m in ModelContext.T05Vendors
+                                 where m.VendCd == VendCd
+                                 select new VendorModel
+                                 {
+                                     VendCd = m.VendCd,
+                                     VendName = m.VendName,
+                                     VendAdd1 = m.VendAdd1,
+                                     VendAdd2 = m.VendAdd2,
+                                     VendCityCd = m.VendCityCd,
+                                     VendApproval = m.VendApproval,
+                                     VendApprovalFr = m.VendApprovalFr,
+                                     VendApprovalTo = m.VendApprovalTo,
+                                     VendContactPer1 = m.VendContactPer1,
+                                     VendContactTel1 = m.VendContactTel1,
+                                     VendContactPer2 = m.VendContactPer2,
+                                     VendContactTel2 = m.VendContactTel2,
+                                     VendEmail = m.VendEmail,
+                                     VendRemarks = m.VendRemarks,
+                                     VendStatus = m.VendStatus
+                                 }).FirstOrDefault();
+
+            return model;
+
         }
 
         public static List<SelectListItem> GetDocType()

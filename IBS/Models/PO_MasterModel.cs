@@ -53,6 +53,7 @@ namespace IBS.Models
         public byte? Isdeleted { get; set; }
 
         public int? Id { get; set; }
+        public int? ddlManufac { get; set; }
 
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
