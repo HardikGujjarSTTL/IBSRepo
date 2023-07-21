@@ -48,6 +48,15 @@ namespace IBS.Repositories
             return MainList;
         }
 
+        public int GetRecordsMaxID(int DocumentCategoryID)
+        {
+            int? id = (from x in context.IbsAppdocuments
+                            where x.Documentcategory == DocumentCategoryID
+                            select x.Applicationid).Max();
+
+            return Convert.ToInt32(id);
+        }
+
         public int SaveDocument(List<APPDocumentDTO> objAPPDocumentDTO, int[] DocumentIds = null)
         {
             List<IbsAppdocument> objSaveData = new List<IbsAppdocument>();
@@ -103,6 +112,61 @@ namespace IBS.Repositories
                 AllowedFileExtensions = objAdd.Allowedfileextensions,
                 MaxContentLengthInKB = objAdd.Maxcontentlengthinkb,
             };
+        }
+
+        public DTResult<FileUpload> GetList(DTParameters dtParameters)
+        {
+
+            DTResult<FileUpload> dTResult = new() { draw = 0 };
+            IQueryable<FileUpload>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "Id";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "Id";
+                orderAscendingDirection = true;
+            }
+            query = from l in context.IbsAppdocuments
+                    join b in context.IbsDocumentcategories on l.Documentcategory equals b.Id
+                    join c in context.IbsDocuments on l.Documentid equals c.Id
+                    where l.Isdeleted == 0 || l.Isdeleted == null
+                    select new FileUpload
+                    {
+                        Id = l.Id,
+                        Applicationid = l.Applicationid,
+                        DocumentCategory = b.Categoryname,
+                        DocumentName = c.Documentname
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.DocumentCategory).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.DocumentName).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
     }
 }

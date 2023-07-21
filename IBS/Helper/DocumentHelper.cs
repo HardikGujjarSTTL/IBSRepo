@@ -34,12 +34,12 @@ namespace IBS.Helpers
                 Directory.CreateDirectory(path);
             }
 
-            //string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.UserRegistration);
+            string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.TempFilePath);
 
             foreach (APPDocumentDTO item in DocumentsList)
             {
                 item.UniqueFileName = item.UniqueFileName.Replace("'", "");
-                string TempPath = Path.Combine(path, item.UniqueFileName);
+                string TempPath = Path.Combine(TempFilePath, item.UniqueFileName);
 
                 if (!string.IsNullOrEmpty(FilePreFix) && !item.UniqueFileName.Contains(FilePreFix))
                 {

@@ -104,7 +104,7 @@
                     <span id="@("File_" + uniqueId)" style="width:100% !important">
                         @if (!string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName))
                         {
-                                        <a class="aTag" target="_blank" href="../@(Url.Content(Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
+                                        <a class="aTag" target="_blank" href="@(Url.Content(Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
 
                             if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                             {
@@ -116,7 +116,8 @@
                         @if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                         {
                             <input name="UploadFile" type="file" id="@("Brw_" + uniqueId)" onchange="OnFileUpload('@uniqueId', @Model.IBS_DocumentList[i].ID, this, true)"
-                                   data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))">
+                                   data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))" 
+                                        style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;position: relative;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
 
                             <label for="@("Brw_" + uniqueId)">
                                 @*@(Model.IBS_DocumentList[i].DocumentName)
@@ -199,7 +200,8 @@ else
                                     @if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                                     {
                                         <input type="file" name="UploadFile" id="@("Brw_" + Model.IBS_DocumentList[i].UploaderIDName)"
-                                               onchange="OnFileUpload('@Model.IBS_DocumentList[i].UploaderIDName', @Model.IBS_DocumentList[i].ID, this, false)" data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))" />
+                                               onchange="OnFileUpload('@Model.IBS_DocumentList[i].UploaderIDName', @Model.IBS_DocumentList[i].ID, this, false)" data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))" 
+                                                               style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;position: relative;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;"/>
                                         <br />
                                         <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
                                     }

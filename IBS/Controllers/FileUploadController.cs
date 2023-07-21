@@ -24,7 +24,12 @@ namespace IBS.Controllers
         {
             return View();
         }
-
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<FileUpload> dTResult = iDocument.GetList(dtParameters);
+            return Json(dTResult);
+        }
         public IActionResult Manage(int id)
         {
             //List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.UserRegi, new int());
@@ -59,7 +64,9 @@ namespace IBS.Controllers
                 #region File Upload Profile Picture
                 if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                 {
-                    int ResultId = 10;
+                    // for only demo
+                    int ResultId = iDocument.GetRecordsMaxID((int)Enums.DocumentCategory.UserRegi) + 1;
+
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Profile_Picture };
                     List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                     id = DocumentHelper.SaveFiles(Convert.ToInt32(ResultId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.UserRegistration), env, iDocument, "USER", string.Empty, DocumentIds);
