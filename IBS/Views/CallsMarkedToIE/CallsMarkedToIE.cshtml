@@ -8,10 +8,26 @@
         <div class="tast-list">
             <h2>RITES INSPECTION & BILLING SYSTEM</h2>
         </div>
-        @*<div class="list-btn">
-        <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn"> Add New User</a>
-        </div>*@
         <input type="hidden" asp-for="@Model.PType" />
+        <input type="text" class="input" name="FromDate" id="FromDate" readonly>
+        <input type="text" class="input" name="ToDate" id="ToDate" readonly>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-4 mb-4">
+            <label for="Reference">Welcome : </label>
+            <label for="Reference" type="text" asp-for="PType" id="PType"></label>
+        </div>
+        <div class="col-md-4 mb-4">
+            @if (Model.PType == "C")
+            {
+                <label for="Reference">(STATUS AS ON DATE)- Report Sorted on Vendor Name</label>
+            }
+            else
+            {
+                <label for="Reference">(STATUS AS ON DATE)- Report Sorted on Vendor Name</label>
+            }
+
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -63,7 +79,16 @@
 
         $(function () {
             InitializeDatatable();
+            setDefaultDate();
         });
+
+        function setDefaultDate() {
+            var fromdate = new Date();
+            var todate = new Date();
+
+            $('#FromDate').val(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
+            $('#ToDate').val(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
+        }
 
         function InitializeDatatable() {
             var PType = $("#PType").val();
