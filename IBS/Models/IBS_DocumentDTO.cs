@@ -16,7 +16,7 @@ namespace IBS.Models
         public byte Ismandatory { get; set; }
         public byte IsVisible { get; set; }
         public long? APPDocumentID { get; set; }
-        public int? ApplicationID { get; set; }
+        public string? ApplicationID { get; set; }
         public int? DocumentID { get; set; }
         public string RelativePath { get; set; }
         public string FileID { get; set; }

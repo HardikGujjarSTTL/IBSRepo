@@ -331,7 +331,7 @@ ALTER TABLE IBS_DocumentCategory
     
 CREATE TABLE IBS_APPDocument(
 	ID NUMBER(6,0)  NOT NULL,
-	ApplicationID NUMBER(6,0) NULL,
+	ApplicationID Varchar2(100) NULL,
 	DocumentCategory NUMBER(6,0) NULL,
 	DocumentID NUMBER(6,0) NULL,
 	RelativePath Varchar2(1000) NULL,
