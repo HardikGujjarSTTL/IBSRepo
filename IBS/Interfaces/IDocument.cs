@@ -7,10 +7,10 @@ namespace IBS.Interfaces
 {
     public interface IDocument
     {
-        List<IBS_DocumentDTO> GetRecordsList(int DocumentCategoryID, int ApplicationID);
+        List<IBS_DocumentDTO> GetRecordsList(int DocumentCategoryID, string ApplicationID);
         int GetRecordsMaxID(int DocumentCategoryID);
         int SaveDocument(List<APPDocumentDTO> objSPVMemberDTO, int[] DocumentIds = null);
-        void DeleteAllFiles(int ApplicationID);
+        void DeleteAllFiles(string ApplicationID);
         IBS_DocumentDTO FindRecord(int ID);
         DTResult<FileUpload> GetList(DTParameters dtParameters);
     }

@@ -21,7 +21,7 @@ namespace IBS.Helpers
             pIDocument = _pIDocument;
         }
 
-        public static int SaveFiles(int ApplicationID, List<APPDocumentDTO> DocumentsList, string FolderPath, IWebHostEnvironment env, IDocument pIDocument1, string FilePreFix = "", String SpecificFileName = "", int[] DocumentIds = null)
+        public static int SaveFiles(string ApplicationID, List<APPDocumentDTO> DocumentsList, string FolderPath, IWebHostEnvironment env, IDocument pIDocument1, string FilePreFix = "", String SpecificFileName = "", int[] DocumentIds = null)
         {
 
             int id =0;
@@ -55,7 +55,7 @@ namespace IBS.Helpers
                 }
                 FileInfo newfile = new FileInfo(DestinationPath);
 
-                item.Applicationid = Convert.ToString(ApplicationID);
+                item.Applicationid = ApplicationID;
                 item.Relativepath = FolderPath.Replace("~", "");
                 item.Extension = newfile.Extension;
                 item.FileDisplayName = item.FileName;
@@ -72,7 +72,7 @@ namespace IBS.Helpers
             return id;
         }
 
-        public void DeleteAllFiles(int ApplicationID)
+        public void DeleteAllFiles(string ApplicationID)
         {
             pIDocument.DeleteAllFiles(ApplicationID);
         }
