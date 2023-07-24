@@ -8,9 +8,8 @@
         <h2>Manage Role</h2>
     </div>
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="Role" asp-action="RoleDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRoleDetails">
                 <input type="hidden" asp-for="RoleId" />
                 <div class="accordion-body">
@@ -52,7 +51,6 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 </section>
 @section scripts{

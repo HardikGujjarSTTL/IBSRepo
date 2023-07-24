@@ -8,9 +8,8 @@
         <h2>PO Master</h2>
     </div>
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="CaseNo" />
@@ -175,7 +174,6 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 </section>
 @section scripts{
