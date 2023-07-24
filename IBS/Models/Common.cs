@@ -455,7 +455,7 @@ namespace IBS.Models
 
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where consignee.Contains(a.Consignee)
+                        where a.Consignee.Contains(consignee)
                         select
                    new SelectListItem
                    {
