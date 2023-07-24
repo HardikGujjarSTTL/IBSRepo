@@ -461,6 +461,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VendorFeedback> VendorFeedbacks { get; set; }
 
+    public virtual DbSet<ViewGetvendor> ViewGetvendors { get; set; }
+
+    public virtual DbSet<ViewPomasterlist> ViewPomasterlists { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
@@ -15193,6 +15197,66 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.VendCd)
                 .HasPrecision(6)
                 .HasColumnName("VEND_CD");
+        });
+
+        modelBuilder.Entity<ViewGetvendor>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GETVENDOR");
+
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.VendName)
+                .HasMaxLength(305)
+                .IsUnicode(false)
+                .HasColumnName("VEND_NAME");
+        });
+
+        modelBuilder.Entity<ViewPomasterlist>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_POMASTERLIST");
+
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.ConsigneeSName)
+                .HasMaxLength(132)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE_S_NAME");
+            entity.Property(e => e.PoDt)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.RealCaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("REAL_CASE_NO");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(68)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.VendName)
+                .HasMaxLength(205)
+                .IsUnicode(false)
+                .HasColumnName("VEND_NAME");
         });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");

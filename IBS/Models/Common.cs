@@ -455,7 +455,7 @@ namespace IBS.Models
 
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where consignee.Contains(a.Consignee)
+                        where a.Consignee.Contains(consignee)
                         select
                    new SelectListItem
                    {
@@ -479,16 +479,14 @@ namespace IBS.Models
             dropDownDTOs.Add(drop);
 
             List<SelectListItem> dropList = new List<SelectListItem>();
-            dropList = (from a in ModelContext.T05Vendors
-                        join b in ModelContext.T03Cities on a.VendCityCd equals b.CityCd
+            dropList = (from a in ModelContext.ViewGetvendors
                         where a.VendCd == VendCd && a.VendName != null
                         select
                    new SelectListItem
                    {
-                       Text = Convert.ToString(a.VendName + "/" + a.VendAdd1 + "/" + b.Location + "/" + b.City),
-                       Value = Convert.ToString(a.VendCd)
+                       Text = Convert.ToString(a.VendName),
+                       Value = Convert.ToString(a.VendCd),
                    }).ToList();
-
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
@@ -522,6 +520,32 @@ namespace IBS.Models
             return model;
 
         }
+
+        public static List<SelectListItem> Getmanufacturer(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from a in ModelContext.ViewGetvendors
+                        where a.VendCd == VendCd && a.VendName != null
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.VendName),
+                       Value = Convert.ToString(a.VendCd),
+                   }).ToList();
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+
 
         public static List<SelectListItem> GetDocType()
         {
