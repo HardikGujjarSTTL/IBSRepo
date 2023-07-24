@@ -997,7 +997,7 @@ font-weight: 600;}
 	.remember { display: flex; align-items: center; font-weight: 500; font-family: 'Poppins'; justify-content: space-between;margin-right: 20px; }
 	.remecheckbox { display: flex; align-items: center; font-size: 14px; color: #646464; }
 	.remember a.link1 { color: #323232; font-size: 14px; text-decoration: none; font-weight: 400; }
-	.remember a.link1:hover { color:#2B368B; }
+	.remember a.link1:hover { color:#E83535; }
 	.loginForm .btnGreen { width: 100%; background:#008B29; border-radius: 5px; height: 50px; line-height: 28px; font-size: 20px; text-transform: uppercase; transition: all 0.4s; }
 	.loginForm .btnGreen:hover { background: #F66A2F; }
 	.loginFooter p { font-size: 17px; color: #646464; }
@@ -1392,3 +1392,4 @@ animation: show-bar-one 1.2s 0.1s forwards;}
 /*21/07/2023 PCDO Entry Form Style End*/
 
 .graph-section .datefrom .from-celender, .table-section .datefrom .from-celender{ margin-right:15px!important;}
+.userDetail .dropPopup.messagePopup li:before, .userDetail .dropPopup.messagePopup li:first-child:before{ display:none;}
