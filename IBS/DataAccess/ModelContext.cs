@@ -39,6 +39,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Deowork> Deoworks { get; set; }
 
+    public virtual DbSet<DocumentCatalogView> DocumentCatalogViews { get; set; }
+
     public virtual DbSet<ErpProblem> ErpProblems { get; set; }
 
     public virtual DbSet<GeneralFile> GeneralFiles { get; set; }
@@ -1167,6 +1169,32 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USER_NAME");
+        });
+
+        modelBuilder.Entity<DocumentCatalogView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("DOCUMENT_CATALOG_VIEW");
+
+            entity.Property(e => e.DocSubType)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("DOC_SUB_TYPE");
+            entity.Property(e => e.DocType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("DOC_TYPE");
+            entity.Property(e => e.FId)
+                .HasColumnType("NUMBER")
+                .HasColumnName("F_ID");
+            entity.Property(e => e.FileId)
+                .HasMaxLength(7)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("FILE_ID");
         });
 
         modelBuilder.Entity<ErpProblem>(entity =>

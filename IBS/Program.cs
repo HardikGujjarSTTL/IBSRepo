@@ -1,6 +1,7 @@
 using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
+using IBS.Interfaces.Administration;
 using IBS.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -55,6 +56,8 @@ builder.Services.AddScoped<IMAapproveRepository, MAapproveRepository>();
 builder.Services.AddScoped<IDEOCRISPurchesOrderWCaseNoRepository, DEOCRISPurchesOrderWCaseNoRepository>();
 builder.Services.AddScoped<IIEMessageRepository, IEMessageRepository>();
 builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>();
+
+builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration.UploadDocRepository>();
 
 var app = builder.Build();
 

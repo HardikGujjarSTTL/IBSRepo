@@ -30,10 +30,10 @@ namespace IBS.Controllers
             DTResult<FileUpload> dTResult = iDocument.GetList(dtParameters);
             return Json(dTResult);
         }
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string id)
         {
             //List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.UserRegi, new int());
-            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.UserRegi, id == 0 ? new int() : (int)id);
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.UserRegi, id);
             FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
             FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document).ToList();
@@ -42,7 +42,7 @@ namespace IBS.Controllers
             FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.objuserDTO = FileUploaderCOI;
 
-            List<IBS_DocumentDTO> lstDocumentProfile_Picture = iDocument.GetRecordsList((int)Enums.DocumentCategory.UserRegi, id == 0 ? new int() : (int)id);
+            List<IBS_DocumentDTO> lstDocumentProfile_Picture = iDocument.GetRecordsList((int)Enums.DocumentCategory.UserRegi, id);
             FileUploaderDTO FileUploaderCOIProfile_Picture = new FileUploaderDTO();
             FileUploaderCOIProfile_Picture.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderCOIProfile_Picture.IBS_DocumentList = lstDocumentProfile_Picture.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Profile_Picture).ToList();
@@ -69,7 +69,7 @@ namespace IBS.Controllers
 
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Profile_Picture };
                     List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                    id = DocumentHelper.SaveFiles(Convert.ToInt32(ResultId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.UserRegistration), env, iDocument, "USER", string.Empty, DocumentIds);
+                    id = DocumentHelper.SaveFiles(Convert.ToString(ResultId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.UserRegistration), env, iDocument, "USER", string.Empty, DocumentIds);
 
                     //foreach (var lstEducationDetails in DocumentsList)
                     //{
