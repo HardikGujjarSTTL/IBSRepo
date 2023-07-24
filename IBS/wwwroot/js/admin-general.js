@@ -511,14 +511,30 @@
 					}
 					else {}
 				});*/
+				//$('ul#side-menu > li').click(function () {
+				//	if ($(this).children("ul").length) {
+				//		if ($(this).hasClass('active')) {
+				//			$(this).children("ul").slideToggle();
+				//			$(this).toggleClass('active');
+				//		} else {
+				//			$(this).children("ul").slideToggle();
+				//			$(this).toggleClass('active');
+				//		}
+				//	}
+
+
 				$('ul#side-menu > li').click(function () {
+					$('ul#side-menu > li').removeClass('active');
 					if ($(this).children("ul").length) {
 						if ($(this).hasClass('active')) {
-							$(this).children("ul").slideToggle();
-							$(this).toggleClass('active');
+							$(this).removeClass('active');
+							$(this).children("ul").removeClass("show").addClass("hide");
 						} else {
-							$(this).children("ul").slideToggle();
-							$(this).toggleClass('active');
+							$(this).addClass('active');
+							$('.nav-second-level').removeClass("show").addClass("hide");
+							$(this).children("ul").removeClass("hide").addClass("show");
+
+							//$("#container").css({ "min-height": $("#sidebar").outerHeight() });
 						}
 					}
 					else { }
