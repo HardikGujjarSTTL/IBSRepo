@@ -86,8 +86,8 @@ ul.bulletText { list-style: none; padding: 0; }
 ul.bulletText li { background: url(../images/right-arrow.gif) no-repeat left 7px; padding: 2px 0 2px 15px; }
 p, h1, h2, h3, h4, h5, h6, ul, ol, dd, table, fieldset, address { margin: 0 0 25px; }
 input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], select, textarea { height: 43px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; line-height: 26px; padding: 3px 10px; width: 100%; color: #838d94; }
-input[type="submit"], input[type="button"], input[type="reset"], button, .button { background-color: #E83535; color: #fff; border: 1px solid #E83535; border-radius: 0; }
-input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, button:hover, .button:hover { color: #fff; background-color: #444; border-color: #444; }
+input[type="submit"], input[type="button"], input[type="reset"], button, .button { background-color: #F66A2F; color: #fff; border: 1px solid #F66A2F; border-radius: 0; }
+input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, button:hover, .button:hover { color: #fff; background-color: #008B29; border-color: #008B29; }
 input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="reset"].cancelBtn { background-color: #888; border-color: #444; }
 .alignLeft { float: left }
 .alignRight { float: right; }
@@ -372,7 +372,7 @@ table, .tableData { border-collapse: separate; border-spacing: 0; width: 100%; e
 	.dropPopup li span.dropPopupDate { font-size: 12px; }
 	.dropPopup li:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0 none; }
 	.dropPopup .viewAll { display: block; background: #F66A2F; border-radius: 3px; -webkit-border-radius: 5px; font-size: 14px; color: #fff; text-align: center; padding: 10px; text-decoration: none; margin-top: 15px; }
-	.dropPopup .viewAll:hover { color: #fff; background: #000; }
+	.dropPopup .viewAll:hover { color: #fff; background: #008B29; }
 	.dropPopup::before { content: ""; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 12px solid #092651; position: absolute; z-index: 111; right: 30px; top: -12px; width: 0; height: 0; }
 
 	/*********serachFeild**********/
@@ -997,7 +997,7 @@ font-weight: 600;}
 	.remember { display: flex; align-items: center; font-weight: 500; font-family: 'Poppins'; justify-content: space-between;margin-right: 20px; }
 	.remecheckbox { display: flex; align-items: center; font-size: 14px; color: #646464; }
 	.remember a.link1 { color: #323232; font-size: 14px; text-decoration: none; font-weight: 400; }
-	.remember a.link1:hover { color:#E83535; }
+	.remember a.link1:hover { color:#F66A2F; }
 	.loginForm .btnGreen { width: 100%; background:#008B29; border-radius: 5px; height: 50px; line-height: 28px; font-size: 20px; text-transform: uppercase; transition: all 0.4s; }
 	.loginForm .btnGreen:hover { background: #F66A2F; }
 	.loginFooter p { font-size: 17px; color: #646464; }
@@ -1294,7 +1294,7 @@ font-weight: 600;}
 	font-weight: 400;
 	color: #646464;
 }
-a.registerLink{color:#E83535; text-decoration:none;}
+a.registerLink{color:#F66A2F; text-decoration:none;}
 a.registerLink:hover{color:#646464; text-decoration:underline;}
 
 .boxRadius, .accordion-body { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; padding: 20px; }
