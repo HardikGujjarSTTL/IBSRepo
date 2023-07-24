@@ -22,9 +22,14 @@ namespace IBS.Models
 
         public DateTime? RecvDt { get; set; }
 
+        public string? PoDtDate { get; set; }
+
         public int? VendCd { get; set; }
 
         public string? RlyCd { get; set; }
+        public string? VendorName { get; set; }
+        public string? ConsigneeSName { get; set; }
+        public string? RealCaseNo { get; set; }
 
         public string? RegionCode { get; set; }
 

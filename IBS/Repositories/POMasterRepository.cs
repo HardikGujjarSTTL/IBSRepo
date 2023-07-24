@@ -46,7 +46,7 @@ namespace IBS.Repositories
                 return model;
             }
         }
-        public DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters)
+        public DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters,int VendCd)
         {
 
             DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
@@ -63,52 +63,38 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "CaseNo";
+                    orderCriteria = "RealCaseNo";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CaseNo";
+                orderCriteria = "RealCaseNo";
                 orderAscendingDirection = true;
             }
-            query = from POMaster in context.T13PoMasters
-                    where POMaster.Isdeleted == 0
+            query = from POMaster in context.ViewPomasterlists
+                    where POMaster.VendCd == VendCd
                     select new PO_MasterModel
                     {
-                        CaseNo = POMaster.CaseNo,
-                        PurchaserCd = POMaster.PurchaserCd,
-                        StockNonstock = POMaster.StockNonstock,
-                        RlyNonrly = POMaster.RlyNonrly,
-                        PoOrLetter = POMaster.PoOrLetter,
-                        PoNo = POMaster.PoNo,
-                        L5noPo = POMaster.L5noPo,
-                        PoDt = POMaster.PoDt,
-                        RecvDt = POMaster.RecvDt,
                         VendCd = POMaster.VendCd,
+                        CaseNo = POMaster.CaseNo,
+                        PoNo = POMaster.PoNo,
+                        PoDtDate = POMaster.PoDt,
                         RlyCd = POMaster.RlyCd,
-                        RegionCode = POMaster.RegionCode,
-                        UserId = POMaster.UserId,
-                        Datetime = POMaster.Datetime,
+                        VendorName = POMaster.VendName,
+                        ConsigneeSName = POMaster.ConsigneeSName,
+                        RealCaseNo = POMaster.RealCaseNo,
                         Remarks = POMaster.Remarks,
-                        InspectingAgency = POMaster.InspectingAgency,
-                        PoiCd = POMaster.PoiCd,
-                        PoSource = POMaster.PoSource,
-                        PendingCharges = POMaster.PendingCharges,
-                        Id = POMaster.Id,
-                        Isdeleted = POMaster.Isdeleted,
-                        Createddate = POMaster.Createddate,
-                        Createdby = POMaster.Createdby,
-                        Updateddate = POMaster.Updateddate,
-                        Updatedby = POMaster.Updatedby
                     };
+
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Remarks).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.PoNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.PoDtDate).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
