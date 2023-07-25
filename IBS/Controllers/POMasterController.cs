@@ -33,7 +33,8 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterList(dtParameters);
+            int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterList(dtParameters, VendCd);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)
@@ -88,7 +89,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Tenant", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetLOADetails", 1, GetIPAddress());
             }
 
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
@@ -110,6 +111,21 @@ namespace IBS.Controllers
         }
 
         [HttpGet]
+        public IActionResult Getfill_consignee_purcher(string RlyNonrlyValue, string RlyNonrlyText, string RlyCd)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.Getfill_consignee_purcher(RlyNonrlyValue, RlyNonrlyText, RlyCd);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "Getfill_consignee_purcher", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
         public IActionResult GetPurchaserCd(string consignee)
         {
             try
@@ -123,7 +139,65 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+        [HttpGet]
+        public IActionResult GetVendor()
+        {
+            try
+            {
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+                List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
+                foreach (var item in agencyClient.Where(x=>x.Value == Convert.ToString(VendCd)).ToList())
+                {
+                    if(item.Value == Convert.ToString(VendCd))
+                    {
+                        item.Selected=true;
+                    }
+                }
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetVendor", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
 
-        
+        [HttpGet]
+        public IActionResult Getvendor_status(int VendCd)
+        {
+            try
+            {
+                VendorModel getvendor_status = Common.Getvendor_status(VendCd);
+                if (getvendor_status != null)
+                {
+                    if (getvendor_status.VendStatus == "B")
+                    {
+                        return Json(new { status = true, responseText = "This Vendor is Banned/Blacklisted From  " + getvendor_status.VendStatusDtFr + " To " + getvendor_status.VendStatusDtTo });
+                    }
+                }
+                return Json(new { status = false, responseText = "" });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "Getvendor_status", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetManufVEND(int VendCd)
+        {
+            try
+            {
+                VendorModel getvendor = Common.GetManufVEND(VendCd);
+                return Json(new { status = true, getvendor = getvendor });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetManufVEND", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
     }
 }

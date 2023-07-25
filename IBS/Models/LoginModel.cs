@@ -20,6 +20,9 @@ namespace IBS.Models
         public string Name { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
+        public string Region { get; set; }
+        public string AuthLevl { get; set; }
+        public int IeCd { get; set; }
     }
 
     public class ForgotPasswordModel

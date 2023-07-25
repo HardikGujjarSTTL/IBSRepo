@@ -1,6 +1,7 @@
 using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
+using IBS.Interfaces.Administration;
 using IBS.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -41,8 +42,23 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IVendorProfileRepository, VendorProfileRepository>();
+builder.Services.AddScoped<IGeneralMessageRepository, GeneralMessageRepository>();
+builder.Services.AddScoped<IMasterTableStatusRepository, MasterTableStatusRepository>();
+builder.Services.AddScoped<IAllow_Old_Bill_DateRepository, Allow_Old_Bill_DateRepository>();
+builder.Services.AddScoped<IIE_Instructions_AdminRepository, IE_Instructions_AdminRepository>();
+builder.Services.AddScoped<IDownloadDocumentsRepository, DownloadDocumentsRepository>();
 builder.Services.AddScoped<IPOMasterRepository, POMasterRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddScoped<IDocument, Document>();
+builder.Services.AddScoped<IDEOVendorPurchesOrderRepository, DEOVendorPurchesOrderRepository>();
+builder.Services.AddScoped<IDEOCRISPurchesOrderRepository, DEOCRISPurchesOrderRepository>();
+builder.Services.AddScoped<IMAapproveRepository, MAapproveRepository>();
+builder.Services.AddScoped<IDEOCRISPurchesOrderWCaseNoRepository, DEOCRISPurchesOrderWCaseNoRepository>();
+builder.Services.AddScoped<IIEMessageRepository, IEMessageRepository>();
+builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>();
+
+builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration.UploadDocRepository>();
+
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 var app = builder.Build();
 

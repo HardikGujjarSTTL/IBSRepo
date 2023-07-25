@@ -1,0 +1,51 @@
+﻿
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Document</h2>
+    </div>
+</div>
+<section class="table-section" id="tab-1">
+    <div class="task-listinput">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="FileUpload" asp-action="FileUploadSave" data-ajax-method="post" data-ajax-complete="completed" id="frmFileDetails">
+                <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.objuserDTO" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.objProfile_Picture" />
+                        </div>
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="FileUpload" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+         completed = function (response) {
+            //var res = response.responseJSON;
+            //ShowHideMsgNew(res.status, res.responseText);
+                window.location.href = "/FileUpload/Index";
+        };
+
+        function Save() {
+            if ($("#frmFileDetails").valid()) {
+                SaveSingleDocuments("tab-1");
+                $("#frmFileDetails").submit();
+            }
+            //$("#frmFileDetails").submit(function (e) {
+            //    if ($("#frmFileDetails").valid()) {
+            //        if (!SaveSingleDocuments("tab-1")) { return false; }
+            //    }
+            //});
+        }
+    </script>
+}

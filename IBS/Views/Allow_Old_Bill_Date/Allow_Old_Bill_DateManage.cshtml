@@ -1,0 +1,66 @@
+﻿@model IBS.Models.Allow_Old_Bill_DateModel
+
+@{
+    ViewData["Title"] = "Manage ALLOW OLD BILL DATE FORM";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Allow_Old_Bill_Date" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmAllowOldBillDateDetails">
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        <input type="hidden" asp-for="Region" />
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="PropertyId">Region</label>
+                @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
+                <span asp-validation-for="Region" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="custom-readio">
+                    <label for="Reference">Allow Old Bill Date (Y/N)</label>
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" asp-for="AllowOldBillDt" value="Y" id="AllowOldBillDt_Y" />
+                                <label for="AllowOldBillDt_Y">Yes</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" asp-for="AllowOldBillDt" value="N" id="AllowOldBillDt_N" />
+                                <label for="AllowOldBillDt_N">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="Reference">No. Of Grace Days</label>
+                <input type="text" class="input" asp-for="GraceDays" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="GraceDays" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="Allow_Old_Bill_Date" asp-action="Allow_Old_Bill_DateMaster" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function Save() {
+            if ($("#frmAllowOldBillDateDetails").valid()) {
+                $("#frmAllowOldBillDateDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/Allow_Old_Bill_Date/Allow_Old_Bill_DateMaster";
+        };
+    </script>
+}

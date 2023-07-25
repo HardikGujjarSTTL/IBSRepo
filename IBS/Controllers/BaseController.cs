@@ -39,6 +39,30 @@ namespace IBS.Controllers
             }
         }
 
+        public string GetRegionCode
+        {
+            get
+            {
+                return (GetUserInfo.Region);
+            }
+        }
+
+        public int GetIeCd
+        {
+            get
+            {
+                return Convert.ToInt32(GetUserInfo.IeCd);
+            }
+        }
+
+        public string UserName
+        {
+            get
+            {
+                return (GetUserInfo.UserName);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))

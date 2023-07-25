@@ -1,0 +1,98 @@
+﻿@model IBS.Models.IE_Instructions_AdminModel
+
+@{
+    ViewData["Title"] = "MANAGE INSTRUCTIONS FOR IE";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="IE_Instructions_Admin" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        <input type="hidden" asp-for="MessageId" />
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+
+            <div class="col-md-4 mb-3" style="display:none;">
+                <label for="Reference">Message Id</label>
+                <input type="text" class="input" asp-for="MessageId" maxlength="50" style="text-transform: uppercase;" readonly="readonly">
+                <span asp-validation-for="MessageId" class="text-danger"></span>
+            </div>
+            @* <div class="col-md-4 mb-3">
+            <label for="PropertyId">Region Code</label>
+            @Html.DropDownListFor(model => model.RegionCode, Common.GetRegionType(), new { })
+            <span asp-validation-for="RegionCode" class="text-danger"></span>
+            </div>*@
+
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Letter No.</label>
+                <input type="text" class="input" asp-for="LetterNo" maxlength="50" style="text-transform: uppercase;">
+                <span asp-validation-for="LetterNo" class="text-danger"></span>
+            </div>
+
+            @* <div class="col-md-4 mb-3">
+            <label for="Reference">Letter Dt.</label>
+            <input type="text" class="datepicker" asp-for="LetterDt" maxlength="30" style="text-transform: uppercase;" placeholder="dd-MM-yyyy" readonly="readonly">
+            <span asp-validation-for="LetterDt" class="text-danger"></span>
+            </div>*@
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="otherdetails">
+                    <label for="LetterDate">Letter Dt.</label>
+                    <div class="tast-date">
+                        <div class="datefrom">
+                            <div class="from-celender">
+                                <input id="LetterDt" asp-for="LetterDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Message</label>
+                @*<input type="text" class="input" asp-for="Message" maxlength="800" style="text-transform: uppercase;">*@
+                <textarea rows="4" asp-for="Message" style="text-transform: uppercase;"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="savenext-btn">
+                    <a asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsMaster" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+
+            $('#LetterDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+
+
+        });
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/IE_Instructions_Admin/IE_InstructionsMaster";
+        };
+    </script>
+}

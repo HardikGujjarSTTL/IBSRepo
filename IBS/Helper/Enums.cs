@@ -1,10 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace IBS.Helper
 {
     public class Enums
     {
+        public enum FileUploaderMode : int
+        {
+            View = 1,
+            Add_Edit = 2
+        }
+
+        public enum FilUploadMode
+        {
+            Single = 1,
+            Multiple = 2,
+        }
+
+        public enum FolderPath
+        {
+            [Description("/Files/TempUploadedFiles")]
+            TempFilePath = 1,
+            [Description("/Files/UserRegistration")]
+            UserRegistration = 2,
+            [Description("/Files/AdminUserUploadDoc")]
+            AdminUserUploadDoc = 3,
+        }
+
+        public enum DocumentCategory : int
+        {
+            UserRegi = 8,
+            AdminUserUploadDoc = 9,
+        }
+
+
+        public enum DocumentCategory_CANRegisrtation : int
+        {
+            Address_Proof_Document = 5,
+            Profile_Picture = 6,
+        }
+
+        public enum DocumentCategory_AdminUserUploadDoc : int
+        {
+            Browse_the_Document_to_Upload = 7,
+        }
+
+        public static string GetEnumDescription(object enumValue)
+        {
+            string defDesc = string.Empty;
+            FieldInfo fi = enumValue.GetType().GetField(enumValue.ToString());
+
+            if (null != fi)
+            {
+                object[] attrs = fi.GetCustomAttributes(typeof(DescriptionAttribute), true);
+                if (attrs != null && attrs.Length > 0)
+                    return ((DescriptionAttribute)attrs[0]).Description;
+            }
+
+            return defDesc;
+        }
+
 
         public enum RegionType
         {

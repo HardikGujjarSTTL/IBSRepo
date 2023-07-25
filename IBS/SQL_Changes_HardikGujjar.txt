@@ -1,0 +1,411 @@
+
+Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+
+=============================================================================================================================================
+By Hardik Gujjar
+=============================================================================================================================================
+
+ALTER TABLE T09_IE 
+    MODIFY IE_PWD  VARCHAR2(8 BYTE);
+
+ALTER TABLE T50_LAB_REGISTER 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T50_LAB_REGISTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T50_LAB_REGISTER
+   SET ID = T50_LAB_REGISTER_seq.nextval;
+ALTER TABLE T50_LAB_REGISTER
+    MODIFY ID NUMBER(6,0) DEFAULT T50_LAB_REGISTER_seq.nextval;
+ALTER TABLE T50_LAB_REGISTER
+ADD CONSTRAINT T50_LAB_REGISTER_pk  PRIMARY KEY (ID);
+
+-------------------------------
+
+ALTER TABLE T51_LAB_REGISTER_DETAIL 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T51_LAB_REGISTER_DETAIL_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T51_LAB_REGISTER_DETAIL
+   SET ID = T51_LAB_REGISTER_DETAIL_seq.nextval;
+ALTER TABLE T51_LAB_REGISTER_DETAIL
+    MODIFY ID NUMBER(6,0) DEFAULT T51_LAB_REGISTER_DETAIL_seq.nextval;
+ALTER TABLE T51_LAB_REGISTER_DETAIL
+ADD CONSTRAINT T51_LAB_REGISTER_DETAIL_pk  PRIMARY KEY (ID);
+ALTER TABLE T51_LAB_REGISTER_DETAIL
+MODIFY (SAMPLE_REG_NO VARCHAR2(9 BYTE) NOT NULL);
+
+-------------------------------
+
+ALTER TABLE T60_IE_POI_MAPPING 
+ADD ID Int ;
+CREATE SEQUENCE T60_IE_POI_MAPPING_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+UPDATE T60_IE_POI_MAPPING
+   SET ID = T60_IE_POI_MAPPING_seq.nextval;
+ALTER TABLE T60_IE_POI_MAPPING
+    MODIFY ID INT DEFAULT T60_IE_POI_MAPPING_seq.nextval;
+ALTER TABLE T60_IE_POI_MAPPING
+ADD CONSTRAINT T60_IE_POI_MAPPING_pk  PRIMARY KEY (ID);
+ALTER TABLE T60_IE_POI_MAPPING
+MODIFY (ID Int NOT NULL);
+ALTER TABLE T60_IE_POI_MAPPING
+MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+ALTER TABLE T09_IE 
+MODIFY IE_CD NUMBER(6,0);
+ALTER TABLE T09_IE
+MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+
+
+ALTER TABLE T48_NI_IE_WORK_PLAN
+MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+
+-------------------------------
+
+ALTER TABLE T45_CLAIM_MASTER 
+ADD NUMBER(6,0) Int ;
+CREATE SEQUENCE T45_CLAIM_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T45_CLAIM_MASTER
+   SET ID = T45_CLAIM_MASTER_seq.nextval;
+ALTER TABLE T45_CLAIM_MASTER
+    MODIFY NUMBER(6,0) INT DEFAULT T45_CLAIM_MASTER_seq.nextval;
+ALTER TABLE T45_CLAIM_MASTER
+ADD CONSTRAINT T45_CLAIM_MASTER_pk  PRIMARY KEY (ID);
+
+-------------------------------
+
+ALTER TABLE T46_CLAIM_DETAIL 
+ADD NUMBER(6,0) Int ;
+CREATE SEQUENCE T46_CLAIM_DETAIL_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T46_CLAIM_DETAIL
+   SET ID = T46_CLAIM_DETAIL_seq.nextval;
+ALTER TABLE T46_CLAIM_DETAIL
+    MODIFY ID NUMBER(6,0) DEFAULT T46_CLAIM_DETAIL_seq.nextval;
+
+    ALTER TABLE T45_CLAIM_MASTER
+MODIFY (CLAIM_NO VARCHAR2(11 BYTE) NOT NULL);
+
+-------------------------------
+
+ALTER TABLE T47_IE_WORK_PLAN 
+ADD NUMBER(6,0) Int ;
+CREATE SEQUENCE T47_IE_WORK_PLAN_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T47_IE_WORK_PLAN
+   SET ID = T47_IE_WORK_PLAN_seq.nextval;
+ALTER TABLE T47_IE_WORK_PLAN
+    MODIFY ID NUMBER(6,0) DEFAULT T47_IE_WORK_PLAN_seq.nextval;
+
+    
+    ALTER TABLE T47_IE_WORK_PLAN
+MODIFY (CALL_SNO NUMBER(5,0) NOT NULL);
+
+-------------------------------
+
+    ALTER TABLE T09_IE
+MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+
+ ALTER TABLE NO_IE_WORK_PLAN
+MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+
+
+ ALTER TABLE T10_IC_BOOKSET
+MODIFY (ISSUE_TO_IECD  NUMBER(6,0));
+
+ ALTER TABLE T16_IC_CANCEL
+MODIFY (ISSUE_TO_IECD  NUMBER(6,0));
+
+ ALTER TABLE T17_CALL_REGISTER
+MODIFY (IE_CD  NUMBER(6,0));
+
+ ALTER TABLE T20_IC
+MODIFY (IE_CD  NUMBER(6,0));
+
+ ALTER TABLE T31_HOLOGRAM_ISSUED
+MODIFY (HG_IECD  NUMBER(6,0));
+
+ ALTER TABLE T45_CLAIM_MASTER
+MODIFY (IE_CD  NUMBER(6,0));
+
+ ALTER TABLE T47_IE_WORK_PLAN
+MODIFY (IE_CD  NUMBER(6,0));
+
+-------------------------------
+
+ALTER TABLE T53_VIGILANCE_CASES_MASTER 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T53_VIGILANCE_CASES_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T53_VIGILANCE_CASES_MASTER
+   SET ID = T53_VIGILANCE_CASES_MASTER_seq.nextval;
+ALTER TABLE T53_VIGILANCE_CASES_MASTER
+    MODIFY ID NUMBER(6,0) DEFAULT T53_VIGILANCE_CASES_MASTER_seq.nextval;
+ALTER TABLE T53_VIGILANCE_CASES_MASTER
+ADD CONSTRAINT T53_VIGILANCE_CASES_MASTER_pk  PRIMARY KEY (ID);
+
+-------------------------------
+
+ ALTER TABLE T70_UNREGISTERED_CALLS
+MODIFY (IE_CD  NUMBER(6,0));
+
+-------------------------------
+CREATE TABLE Roles (
+  Role_Id    NUMBER(6,0) NOT NULL,
+  RoleName  VARCHAR2(50),
+  RoleDescription  VARCHAR2(500),
+  IsSysAdmin  NUMBER(2,0),
+  IsActive  NUMBER(2,0),
+  IsDeleted  NUMBER(2,0),
+  CreatedDate  DATE,
+  CreatedBy  Int,
+  UpdatedDate  DATE,
+  UpdatedBy  Int
+  );
+ALTER TABLE Roles ADD (
+  CONSTRAINT Roles_pk PRIMARY KEY (Role_Id));
+CREATE SEQUENCE ROLES_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE ROLES
+   SET Role_Id = ROLES_seq.nextval;
+ALTER TABLE ROLES
+    MODIFY Role_Id  NUMBER(6,0) DEFAULT ROLES_seq.nextval;
+
+-------------------------------
+    
+ALTER TABLE t02_users 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE t02_users_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE t02_users
+   SET ID = t02_users_seq.nextval;
+ALTER TABLE t02_users
+    MODIFY ID NUMBER(6,0) DEFAULT t02_users_seq.nextval;
+
+ -------------------------------   
+
+CREATE TABLE TblException (
+  Id   NUMBER(6,0) NOT NULL,
+  ControllerName  VARCHAR2(50),
+  ActionName  VARCHAR2(50),
+  ExceptionMessage  VARCHAR2(500),
+  Exception  VARCHAR2(500),
+  CreatedDate  DATE,
+  CreatedBy  Int,
+  CreateIp  VARCHAR2(50)
+  );
+ALTER TABLE TblException ADD (
+  CONSTRAINT TblException_pk PRIMARY KEY (Id));
+CREATE SEQUENCE TblException_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE TblException
+   SET Id = TblException_seq.nextval;
+ALTER TABLE TblException
+    MODIFY Id NUMBER(6,0) DEFAULT TblException_seq.nextval;
+    
+-------------------------------
+
+
+ALTER TABLE T05_VENDOR 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T05_VENDOR_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T05_VENDOR
+   SET ID = T05_VENDOR_seq.nextval;
+ALTER TABLE T05_VENDOR
+  MODIFY ID NUMBER(6,0) DEFAULT T05_VENDOR_seq.nextval;
+ALTER TABLE T05_VENDOR
+ADD CONSTRAINT T05_VENDOR_pk  PRIMARY KEY (ID);
+
+-------------------------------
+
+ALTER TABLE T03_CITY
+MODIFY (CITY_CD  NUMBER(6,0));
+ALTER TABLE T05_VENDOR
+MODIFY (VEND_CITY_CD  NUMBER(6,0));
+ALTER TABLE T06_CONSIGNEE
+MODIFY (CONSIGNEE_CITY  NUMBER(6,0));
+
+-------------------------------
+
+ALTER TABLE T13_PO_MASTER 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T13_PO_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T13_PO_MASTER
+   SET ID = T13_PO_MASTER_seq.nextval;
+ALTER TABLE T13_PO_MASTER
+    MODIFY ID NUMBER(6,0) DEFAULT T13_PO_MASTER_seq.nextval;
+
+-------------------------------
+
+ALTER TABLE T13_PO_MASTER 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T13_PO_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T13_PO_MASTER
+   SET ID = T13_PO_MASTER_seq.nextval;
+ALTER TABLE T13_PO_MASTER
+    MODIFY ID NUMBER(6,0) DEFAULT T13_PO_MASTER_seq.nextval;
+
+-------------------------------
+
+CREATE TABLE IBS_Document(
+	ID NUMBER(6,0)  NOT NULL,
+	DocumentName Varchar2(500),
+	DocumentCategory NUMBER(6,0),
+	AllowedFileExtensions Varchar2(100) NOT NULL,
+	MaxContentLengthInKB NUMBER(6,0),
+	IsMandatory NUMBER(2,0) NOT NULL,
+	IsVisible NUMBER(2,0) NOT NULL,
+	VerifyDSC NUMBER(2,0) NOT NULL,
+	StaticLink Nvarchar2(250),
+	WorkflowStatusID NUMBER(6,0) ,
+	IsDownloadTemplate NUMBER(2,0) ,
+	FolderPath Varchar2(500) ,
+	IsVideo NUMBER(2,0) NOT NULL
+)
+
+ALTER TABLE IBS_Document ADD (
+  CONSTRAINT IBS_Document_pk PRIMARY KEY (ID));
+  
+CREATE SEQUENCE IBS_Document_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+ALTER TABLE IBS_Document
+    MODIFY ID  NUMBER(6,0) DEFAULT IBS_Document_seq.nextval;
+
+-------------------------------
+    
+CREATE TABLE IBS_DocumentCategory(
+	ID NUMBER(6,0)  NOT NULL,
+	CategoryName Varchar2(50) NULL,
+	GroupName Varchar2(50) NULL,
+	grouplabel Varchar2(100) NULL,
+	categorylabel Varchar2(100) NULL,
+	ShowList NUMBER(2,0) NOT NULL,
+	GroupId NUMBER(6,0) NULL
+)
+
+ALTER TABLE IBS_DocumentCategory ADD (
+  CONSTRAINT IBS_DocumentCategory_pk PRIMARY KEY (ID));
+  
+CREATE SEQUENCE IBS_DocumentCategory_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+   
+ALTER TABLE IBS_DocumentCategory
+    MODIFY ID  NUMBER(6,0) DEFAULT IBS_DocumentCategory_seq.nextval;
+
+-------------------------------
+    
+CREATE TABLE IBS_APPDocument(
+	ID NUMBER(6,0)  NOT NULL,
+	ApplicationID Varchar2(100) NULL,
+	DocumentCategory NUMBER(6,0) NULL,
+	DocumentID NUMBER(6,0) NULL,
+	RelativePath Varchar2(1000) NULL,
+	FileID Varchar2(100) NULL,
+	Extension Varchar2(50) NULL,
+	FileDisplayName Varchar2(1000) NULL,
+	IsOtherDoc NUMBER(2,0) NULL,
+	OtherDocumentName Varchar2(1000) NULL,
+	IsDeleted NUMBER(2,0) NULL,
+	Latitude Number(18, 6) NULL,
+	Longitude Number(18, 6) NULL,
+	Camera Varchar2(255) NULL,
+	PhotoTakenDate DATE NULL,
+	Maker Varchar2(255) NULL,
+	Accuracy Number(18, 6) NULL,
+	IsVideo NUMBER(2,0) NOT NULL,
+	ThumnailPath Varchar2(500) NULL,
+	ThumnailFileID Varchar2(100) NULL,
+	ThumnailExtension Varchar2(50) NULL,
+	CouchDBDocID Nvarchar2(50) NULL
+)
+
+ALTER TABLE IBS_APPDocument ADD (
+  CONSTRAINT IBS_APPDocument_pk PRIMARY KEY (ID));
+  
+CREATE SEQUENCE IBS_APPDocument_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+   
+ALTER TABLE IBS_APPDocument
+    MODIFY ID  NUMBER(6,0) DEFAULT IBS_APPDocument_seq.nextval;
+
+ALTER TABLE IBS_APPDocument
+ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
+  FOREIGN KEY (DocumentID)
+  REFERENCES IBS_Document(ID);
+
+
+    
+Create VIEW view_POMasterList 
+AS
+    select 
+        m.VEND_CD,
+        m.CASE_NO,
+        m.PO_NO,
+        to_char(m.PO_DT,'dd/mm/yyyy')PO_DT,
+        (decode(m.RLY_NONRLY,'R','Railway','P','Private','S','State Government','F','Foreign Railways','U','PSU')||'('||m.RLY_CD||')')RLY_CD,
+        m.REAL_CASE_NO,(v.VEND_NAME||'('||NVL2(t.LOCATION,t.LOCATION||' : '||t.CITY,t.CITY)||')')VEND_NAME,
+        (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
+        m.REMARKS 
+        from 
+            T80_PO_MASTER m,
+            T05_VENDOR v,
+            T06_CONSIGNEE c, 
+            T03_CITY t 
+        where 
+            m.VEND_CD=v.VEND_CD and 
+            v.VEND_CITY_CD=t.CITY_CD And 
+            m.PURCHASER_CD=c.CONSIGNEE_CD(+)
+
+
+Create VIEW view_GetVendor
+AS
+    select VEND_CD,(trim(V.VEND_NAME)||'/'||trim(V.VEND_ADD1)||'/'||NVL2(C.LOCATION,C.LOCATION||' / '||C.CITY,C.CITY)) VEND_NAME 
+    from T05_VENDOR V, 
+        T03_CITY C 
+    where 
+        VEND_NAME is not null and 
+        V.VEND_CITY_CD=C.CITY_CD 
+        ORDER BY VEND_NAME
+
+
+Create VIEW view_GetManufVEND
+AS
+    select VEND_CD,VEND_NAME,VEND_ADD1,VEND_CONTACT_PER_1,VEND_CONTACT_TEL_1,VEND_STATUS,to_char(VEND_STATUS_DT_FR,'dd/mm/yyyy')VEND_STATUS_FR,to_char(VEND_STATUS_DT_TO,'dd/mm/yyyy')VEND_STATUS_TO,VEND_EMAIL 
+    from T05_VENDOR
