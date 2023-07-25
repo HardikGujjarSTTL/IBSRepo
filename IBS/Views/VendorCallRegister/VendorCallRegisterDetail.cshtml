@@ -180,7 +180,15 @@
             <div class="col-md-6 mb-3">
                 <div class="reference">
                     <label for="Name">State whether the items is on RDSO Vendor Directory</label>
-                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    @*@foreach (var val in IBS.Models.Common.CommonYesNo())
+                    {
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" name="Lltype" asp-for="Lltype" value="@val.Value" id="Lltype@(val.Value)" />
+                                <label for="Lltype@(val.Value)">@val.Text</label>
+                            </div>
+                        </div>
+                    }*@
                     <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                 </div>
             </div>
