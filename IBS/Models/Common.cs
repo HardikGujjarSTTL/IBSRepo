@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Reflection.Metadata;
 using IBS.DataAccess;
+using Newtonsoft.Json.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Models
 {
@@ -180,6 +182,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> ClientType()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -205,6 +208,48 @@ namespace IBS.Models
             single.Value = "F";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
+        }
+         
+        public static IEnumerable<SelectListItem> GetClientByClientType(string CoCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            if (CoCd == "R")
+            {
+                return (from a in ModelContext.T91Railways
+                        where a.RlyCd != "CORE"
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.RlyCd),
+                            Value = Convert.ToString(a.Railway)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else if(CoCd != "")
+            {
+                return (from a in ModelContext.T12BillPayingOfficers
+                        where a.BpoType == CoCd
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.BpoRly),
+                            Value = Convert.ToString(a.BpoOrgn)
+                        }).DistinctBy(x => x.Text).OrderBy(x => x.Value).ToList();
+            }
+            else
+            {
+                List<SelectListItem> clients = new List<SelectListItem>();
+                return clients;
+            }
+        }
+
+        public static List<SelectListItem> GetRitesOfficerCd()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());             
+                return (from a in ModelContext.T08IeControllOfficers
+                        where a.CoStatus != null
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.CoName),
+                            Value = Convert.ToString(a.CoCd)
+                        }).OrderBy(c => c.Text).ToList();            
         }
 
         public static List<SelectListItem> RegionCode()

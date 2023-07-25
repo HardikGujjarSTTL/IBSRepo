@@ -43,7 +43,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IVendorProfileRepository, VendorProfileRepository>();
 builder.Services.AddScoped<IPOMasterRepository, POMasterRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
-
+builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
