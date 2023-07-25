@@ -1,0 +1,54 @@
+﻿@model IBS.Models.RDMModel
+
+@{
+    ViewData["Title"] = "Rites Designation Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Rites Designation Master</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="RitesDesignationMaster" asp-action="RitesDesignationMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRitesDesignationMaster">
+                <input type="hidden" asp-for="RDesigCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Designation</label>
+                            <textarea class="input" asp-for="RDesignation" maxlength="50"> </textarea>
+                            <span asp-validation-for="RDesignation" class="text-danger"></span>
+                        </div>
+                        @*<div class="col-md-4 mb-3">
+                            <label for="Reference">Designation Code</label>
+                            <textarea class="input" asp-for="RDesigCd" maxlength="30"></textarea>
+                            <span asp-validation-for="RDesigCd" class="text-danger"></span>
+                        </div>*@
+                       
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="RitesDesignationMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmRitesDesignationMaster").valid()) {
+                $("#frmRitesDesignationMaster").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/RitesDesignationMaster/Index";
+        };
+    </script>
+}

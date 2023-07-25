@@ -7061,8 +7061,18 @@ public partial class ModelContext : DbContext
             entity.ToTable("T07_RITES_DESIG");
 
             entity.Property(e => e.RDesigCd)
-                .HasPrecision(2)
+                .HasPrecision(3)
+                .HasDefaultValueSql("\"IBSDEV\".\"T07_RITES_DESIG_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("R_DESIG_CD");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.RDesignation)
                 .HasMaxLength(10)
                 .IsUnicode(false)
@@ -15450,103 +15460,6 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VEND_NAME");
         });
-
-        modelBuilder.Entity<ViewVoucherList>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VIEW_VOUCHER_LIST");
-
-            entity.Property(e => e.AccDesc)
-                .HasMaxLength(81)
-                .IsUnicode(false)
-                .HasColumnName("ACC_DESC");
-            entity.Property(e => e.Amount)
-                .HasColumnType("NUMBER(12,2)")
-                .HasColumnName("AMOUNT");
-            entity.Property(e => e.BankName)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("BANK_NAME");
-            entity.Property(e => e.BpoName)
-                .HasMaxLength(310)
-                .IsUnicode(false)
-                .HasColumnName("BPO_NAME");
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.ChqDt)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("CHQ_DT");
-            entity.Property(e => e.ChqNo)
-                .HasMaxLength(12)
-                .IsUnicode(false)
-                .HasColumnName("CHQ_NO");
-            entity.Property(e => e.Narration)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("NARRATION");
-            entity.Property(e => e.Sno)
-                .HasPrecision(4)
-                .HasColumnName("SNO");
-            entity.Property(e => e.VchrNo)
-                .HasMaxLength(8)
-                .IsUnicode(false)
-                .HasColumnName("VCHR_NO");
-        });
-
-        modelBuilder.Entity<ViewVoucherList2>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VIEW_VOUCHER_LIST2");
-
-            entity.Property(e => e.AccDesc)
-                .HasMaxLength(81)
-                .IsUnicode(false)
-                .HasColumnName("ACC_DESC");
-            entity.Property(e => e.Amount)
-                .HasColumnType("NUMBER(12,2)")
-                .HasColumnName("AMOUNT");
-            entity.Property(e => e.BankCd)
-                .HasPrecision(6)
-                .HasColumnName("BANK_CD");
-            entity.Property(e => e.BankName)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("BANK_NAME");
-            entity.Property(e => e.BpoName)
-                .HasMaxLength(310)
-                .IsUnicode(false)
-                .HasColumnName("BPO_NAME");
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.ChqDt)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("CHQ_DT");
-            entity.Property(e => e.ChqNo)
-                .HasMaxLength(12)
-                .IsUnicode(false)
-                .HasColumnName("CHQ_NO");
-            entity.Property(e => e.Narration)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("NARRATION");
-            entity.Property(e => e.Sno)
-                .HasPrecision(4)
-                .HasColumnName("SNO");
-            entity.Property(e => e.VchrNo)
-                .HasMaxLength(8)
-                .IsUnicode(false)
-                .HasColumnName("VCHR_NO");
-        });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
@@ -15566,7 +15479,6 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
         modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
         modelBuilder.HasSequence("T91_RAILWAYS_SEQ");
-        modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
 
