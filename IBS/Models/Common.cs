@@ -15,6 +15,7 @@ namespace IBS.Models
 
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
+        public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -349,6 +350,76 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> CallRStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "1st  Re-Mark";
+            single.Value = "1";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "2nd  Re-Mark";
+            single.Value = "2";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "3rd  Re-Mark";
+            single.Value = "3";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "4th  Re-Mark";
+            single.Value = "4";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "5th  Re-Mark";
+            single.Value = "5";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "6th  Re-Mark";
+            single.Value = "6";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "7th  Re-Mark";
+            single.Value = "7";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "8th  Re-Mark";
+            single.Value = "8";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "9th  Re-Mark";
+            single.Value = "9";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> Departmentlist()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Mechanical";
+            single.Value = "M";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Electrical";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Civil";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Textiles";
+            single.Value = "T";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "M & P";
+            single.Value = "Z";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static IEnumerable<DropDownDTO> GetYesNoCommon()
         {
             return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
@@ -365,6 +436,21 @@ namespace IBS.Models
                                      Value = Convert.ToString(a.RoleId)
                                  }).ToList();
             return Role;
+
+        }
+
+        public static List<SelectListItem> GetIEName(string RegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T09Ies
+                                       where a.IeRegion == RegionCode
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.IeName),
+                                        Value = Convert.ToString(a.IeCd)
+                                    }).ToList();
+            return IE;
 
         }
 

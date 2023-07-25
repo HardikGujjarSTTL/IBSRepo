@@ -15,7 +15,7 @@ public partial class T58ClientContact
 
     public string Client { get; set; } = null!;
 
-    public byte RitesOfficerCd { get; set; }
+    public int RitesOfficerCd { get; set; }
 
     public string? Highlights { get; set; }
 

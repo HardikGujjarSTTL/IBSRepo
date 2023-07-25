@@ -1,0 +1,337 @@
+﻿@model IBS.Models.VenderCallRegisterModel
+
+@{
+    ViewData["Title"] = "VENDOR CALL REGISTRATION";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        <input type="hidden" asp-for="CaseNo" />
+        <input type="hidden" asp-for="CallRecvDt" />
+        <input type="hidden" asp-for="CallSno" />
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="Reference">Case No.</label>
+                <input type="text" class="input" asp-for="CaseNo" maxlength="100" style="color:orangered" readonly="readonly">
+                <span asp-validation-for="CaseNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="Reference">Call Date</label>
+                <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
+                <span asp-validation-for="CallRecvDt" class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="Reference">Call SNo.</label>
+                <input type="text" class="input" asp-for="CallSno" maxlength="30" style="color:orangered" readonly="readonly">
+                <span asp-validation-for="CallSno" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <label for="Reference">Purchaser</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="100" style="color:orangered" readonly="readonly">
+                <span asp-validation-for="PoNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="Reference">Vendor</label>
+                <input type="text" class="input" asp-for="VendCd" maxlength="30" style="color:orangered" readonly="readonly">
+                <span asp-validation-for="VendCd" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <label for="Reference">Purchase Order Date</label>
+                <input type="text" class="input" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
+                <span asp-validation-for="PoDt" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Purchase Order No.</label>
+                    <input type="text" class="input" asp-for="PoNo" maxlength="30" style="color:orangered" readonly="readonly">
+                    <span asp-validation-for="PoNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Call Status</label>
+                    <textarea rows="4" asp-for="CallStatus" style="color:orangered" readonly="readonly"></textarea>
+                    <span asp-validation-for="CallStatus" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Region</label>
+                    <input type="text" class="input" asp-for="RegionCode" style="color:orangered" readonly="readonly">
+                    <span asp-validation-for="RegionCode" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Date of Mark of call to IE</label>
+                    <input type="text" class="input" asp-for="CallMarkDt" readonly="readonly">
+                    <span asp-validation-for="CallMarkDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Call Status date</label>
+                    <input type="text" class="input" asp-for="CallStatusDt" readonly="readonly">
+                    <span asp-validation-for="CallStatusDt" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Name">Call Install No.</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Expected Date of Inspection/Material Readiness Date.</label>
+                <input type="text" class="input" asp-for="DtInspDesire" readonly="readonly">
+                <span asp-validation-for="DtInspDesire" class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Name">Call Letter Number\ Dispatch Reference No.</label>
+                    <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
+                    <span asp-validation-for="CallLetterNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Name">Call Letter Date (DD/MM/YYYY)</label>
+                    <input type="text" class="input" asp-for="CallLetterDt" readonly="readonly">
+                    <span asp-validation-for="CallLetterDt" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Inspecting Engineer to whom Call is marked</label>
+                    @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEName(@Model.SetRegionCode) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeCd" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Call Re-Mark Status(If Call has been Re-marked)</label>
+                    @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <div class="reference">
+                    <label for="Name">Remarks</label>
+                    <label for="Name" style="color:orangered">(250 Chars Maxm)</label>
+                    <textarea rows="4" asp-for="Remarks" readonly="readonly"></textarea>
+                    <span asp-validation-for="Remarks" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
+                    @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">State whether the Call is for Final Or Stage Inspection</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+
+                    @*<div class="col-md-1 mb-2">
+                        <input type="radio" id="huey" name="drone" checked>
+                        <label for="huey" id="rdoFinal" name="rdoFinal" runat="server"></label>
+                    </div>
+                    <div class="col-md-1 mb-2">
+                        <input type="radio" id="dewey" name="drone">
+                        <label for="huey" id="rdoStage" name="rdoStage" runat="server"></label>
+                    </div>*@
+
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">State whether the items is on RDSO Vendor Directory</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">If Yes, whether the vendor is RDSO Aprroved. Indicate validity of approval</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Does PO specified staggered DP</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">If yes, details of lot size and staggered DP</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Manufacturer's Information</label>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">check</label>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    @*@Html.DropDownListFor(model => model.MaStatus, new SelectList(IBS.Models.Common.MAStatus() , "Value", "Text"),"--Select--")*@
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Place of Inspection</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Contact Person's Name</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Manufacturer Email</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Phone No.</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Update details</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name" style="color:orangered">In case of IRFC Funded Project, Select 'Yes'</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Bill Paying Officer & Address</label>
+                    <label for="Name" style="color:orangered">(Mention the Name of the party in whose favour invoice is to be raised and it's Address.)</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">GSTIN No.</label>
+                    <label for="Name" style="color:orangered">(Mention the GST NO. of the party in whose favour invoice is to be raised.)</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name">Check box</label>
+                    <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/VendorCallRegister/VendorCallRegister";
+        };
+    </script>
+}
