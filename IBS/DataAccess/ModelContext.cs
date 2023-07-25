@@ -7061,18 +7061,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("T07_RITES_DESIG");
 
             entity.Property(e => e.RDesigCd)
-                .HasPrecision(3)
-                .HasDefaultValueSql("\"IBSDEV\".\"T07_RITES_DESIG_SEQ\".\"NEXTVAL\"")
-                .HasColumnName("R_DESIG_CD");
-            entity.Property(e => e.Createdby)
-                .HasPrecision(6)
-                .HasColumnName("CREATEDBY");
-            entity.Property(e => e.Createddate)
-                .HasColumnType("DATE")
-                .HasColumnName("CREATEDDATE");
-            entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
-                .HasColumnName("ISDELETED");
+                .HasColumnName("R_DESIG_CD");
             entity.Property(e => e.RDesignation)
                 .HasMaxLength(10)
                 .IsUnicode(false)

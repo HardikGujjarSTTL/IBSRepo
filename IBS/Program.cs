@@ -63,6 +63,7 @@ builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
 builder.Services.AddScoped<IVendorCallRegisterRepository, IBS.Repositories.Vendor.VendorCallRegisterRepository>();
 
+builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

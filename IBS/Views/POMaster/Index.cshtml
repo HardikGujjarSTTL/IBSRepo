@@ -18,14 +18,14 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>CASE NO</th>
-                            <th>PO NO</th>
-                            <th>PO DT</th>
-                            <th>RLY CD</th>
-                            <th>VEND NAME</th>
-                            <th>CONSIGNEE S NAME</th>
-                            <th>REMARKS</th>
-                            <th>REAL CASE NO</th>
+                            <th>Ref No.</th>
+                            <th>Purchase Order Number</th>
+                            <th>Purchase Order Date</th>
+                            <th>Agency</th>
+                            <th>Vendor</th>
+                            <th>Purchaser Name</th>
+                            <th>Remarks</th>
+                            <th>Case No.</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -78,12 +78,12 @@
                     },
                     { data: "CaseNo" },
                     { data: "PoNo" },
-                    { data: "PoDt" },
+                    { data: "PoDtDate" },
                     { data: "RlyCd" },
-                    { data: "VendCd" },
-                    { data: "VendCd" },
+                    { data: "VendorName" },
+                    { data: "ConsigneeSName" },
                     { data: "Remarks" },
-                    { data: "Remarks" },
+                    { data: "RealCaseNo" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {

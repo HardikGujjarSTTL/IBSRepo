@@ -58,8 +58,7 @@ namespace IBS.Controllers
             try
             {
                 string msg = "ClientContract Inserted Successfully.";
-
-                if (model.RitesOfficerCd > 0)
+                if (model.Id > 0)
                 {
                     msg = "ClientContract Updated Successfully.";
                     model.Updatedby = UserId;
@@ -76,6 +75,11 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientContract", "ClientContractDetailsSave", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult GetClientByClientType(string CoCd)
+        {
+            return Json(Common.GetClientByClientType(CoCd).ToList());
         }
 
     }

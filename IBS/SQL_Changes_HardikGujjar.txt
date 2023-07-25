@@ -372,3 +372,40 @@ ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
 
 
     
+Create VIEW view_POMasterList 
+AS
+    select 
+        m.VEND_CD,
+        m.CASE_NO,
+        m.PO_NO,
+        to_char(m.PO_DT,'dd/mm/yyyy')PO_DT,
+        (decode(m.RLY_NONRLY,'R','Railway','P','Private','S','State Government','F','Foreign Railways','U','PSU')||'('||m.RLY_CD||')')RLY_CD,
+        m.REAL_CASE_NO,(v.VEND_NAME||'('||NVL2(t.LOCATION,t.LOCATION||' : '||t.CITY,t.CITY)||')')VEND_NAME,
+        (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
+        m.REMARKS 
+        from 
+            T80_PO_MASTER m,
+            T05_VENDOR v,
+            T06_CONSIGNEE c, 
+            T03_CITY t 
+        where 
+            m.VEND_CD=v.VEND_CD and 
+            v.VEND_CITY_CD=t.CITY_CD And 
+            m.PURCHASER_CD=c.CONSIGNEE_CD(+)
+
+
+Create VIEW view_GetVendor
+AS
+    select VEND_CD,(trim(V.VEND_NAME)||'/'||trim(V.VEND_ADD1)||'/'||NVL2(C.LOCATION,C.LOCATION||' / '||C.CITY,C.CITY)) VEND_NAME 
+    from T05_VENDOR V, 
+        T03_CITY C 
+    where 
+        VEND_NAME is not null and 
+        V.VEND_CITY_CD=C.CITY_CD 
+        ORDER BY VEND_NAME
+
+
+Create VIEW view_GetManufVEND
+AS
+    select VEND_CD,VEND_NAME,VEND_ADD1,VEND_CONTACT_PER_1,VEND_CONTACT_TEL_1,VEND_STATUS,to_char(VEND_STATUS_DT_FR,'dd/mm/yyyy')VEND_STATUS_FR,to_char(VEND_STATUS_DT_TO,'dd/mm/yyyy')VEND_STATUS_TO,VEND_EMAIL 
+    from T05_VENDOR
