@@ -473,10 +473,10 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
+            //SelectListItem drop = new SelectListItem();
+            //drop.Text = "Other";
+            //drop.Value = "0";
+            //dropDownDTOs.Add(drop);
 
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.ViewGetvendors
@@ -521,29 +521,26 @@ namespace IBS.Models
 
         }
 
-        public static List<SelectListItem> Getmanufacturer(int VendCd)
+        public static VendorModel GetManufVEND(int VendCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
+            VendorModel model = (from m in ModelContext.ViewGetmanufvends
+                                 where m.VendCd == VendCd
+                                 select new VendorModel
+                                 {
+                                     VendCd = m.VendCd,
+                                     VendName = m.VendName,
+                                     VendAdd1 = m.VendAdd1,
+                                     VendContactPer1 = m.VendContactPer1,
+                                     VendContactTel1 = m.VendContactTel1,
+                                     VendStatus = m.VendStatus,
+                                     VendStatusDtFrST = m.VendStatusFr,
+                                     VendStatusDtToST = m.VendStatusTo,
+                                     VendEmail = m.VendEmail
+                                 }).FirstOrDefault();
 
-            List<SelectListItem> dropList = new List<SelectListItem>();
-            dropList = (from a in ModelContext.ViewGetvendors
-                        where a.VendCd == VendCd && a.VendName != null
-                        select
-                   new SelectListItem
-                   {
-                       Text = Convert.ToString(a.VendName),
-                       Value = Convert.ToString(a.VendCd),
-                   }).ToList();
-            if (dropList.Count > 0)
-            {
-                dropDownDTOs.AddRange(dropList);
-            }
-            return dropDownDTOs;
+            return model;
+
         }
 
 

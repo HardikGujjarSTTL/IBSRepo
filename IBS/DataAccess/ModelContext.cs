@@ -461,9 +461,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VendorFeedback> VendorFeedbacks { get; set; }
 
+    public virtual DbSet<ViewGetmanufvend> ViewGetmanufvends { get; set; }
+
     public virtual DbSet<ViewGetvendor> ViewGetvendors { get; set; }
 
     public virtual DbSet<ViewPomasterlist> ViewPomasterlists { get; set; }
+
+    public virtual DbSet<ViewVoucherList> ViewVoucherLists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -11318,7 +11322,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("REGION_CD");
             entity.Property(e => e.RitesOfficerCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("RITES_OFFICER_CD");
             entity.Property(e => e.TypeCb)
                 .HasMaxLength(1)
@@ -15199,6 +15203,49 @@ public partial class ModelContext : DbContext
                 .HasColumnName("VEND_CD");
         });
 
+        modelBuilder.Entity<ViewGetmanufvend>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GETMANUFVEND");
+
+            entity.Property(e => e.VendAdd1)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("VEND_ADD1");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.VendContactPer1)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("VEND_CONTACT_PER_1");
+            entity.Property(e => e.VendContactTel1)
+                .HasMaxLength(45)
+                .IsUnicode(false)
+                .HasColumnName("VEND_CONTACT_TEL_1");
+            entity.Property(e => e.VendEmail)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("VEND_EMAIL");
+            entity.Property(e => e.VendName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("VEND_NAME");
+            entity.Property(e => e.VendStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("VEND_STATUS");
+            entity.Property(e => e.VendStatusFr)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("VEND_STATUS_FR");
+            entity.Property(e => e.VendStatusTo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("VEND_STATUS_TO");
+        });
+
         modelBuilder.Entity<ViewGetvendor>(entity =>
         {
             entity
@@ -15257,6 +15304,53 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(205)
                 .IsUnicode(false)
                 .HasColumnName("VEND_NAME");
+        });
+
+        modelBuilder.Entity<ViewVoucherList>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_VOUCHER_LIST");
+
+            entity.Property(e => e.AccDesc)
+                .HasMaxLength(81)
+                .IsUnicode(false)
+                .HasColumnName("ACC_DESC");
+            entity.Property(e => e.Amount)
+                .HasColumnType("NUMBER(12,2)")
+                .HasColumnName("AMOUNT");
+            entity.Property(e => e.BankName)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("BANK_NAME");
+            entity.Property(e => e.BpoName)
+                .HasMaxLength(310)
+                .IsUnicode(false)
+                .HasColumnName("BPO_NAME");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.ChqDt)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.Narration)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NARRATION");
+            entity.Property(e => e.Sno)
+                .HasPrecision(4)
+                .HasColumnName("SNO");
+            entity.Property(e => e.VchrNo)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("VCHR_NO");
         });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");

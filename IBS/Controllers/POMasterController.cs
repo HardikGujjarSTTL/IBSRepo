@@ -185,26 +185,19 @@ namespace IBS.Controllers
         }
 
         [HttpGet]
-        public IActionResult Getmanufacturer()
+        public IActionResult GetManufVEND(int VendCd)
         {
             try
             {
-                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
-                List<SelectListItem> agencyClient = Common.Getmanufacturer(VendCd);
-                foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(VendCd)).ToList())
-                {
-                    if (item.Value == Convert.ToString(VendCd))
-                    {
-                        item.Selected = true;
-                    }
-                }
-                return Json(new { status = true, list = agencyClient });
+                VendorModel getvendor = Common.GetManufVEND(VendCd);
+                return Json(new { status = true, getvendor = getvendor });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetVendor", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetManufVEND", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
     }
 }
