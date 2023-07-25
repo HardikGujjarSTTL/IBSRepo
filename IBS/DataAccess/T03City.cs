@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T03City
 {
-    public byte CityCd { get; set; }
+    public int CityCd { get; set; }
 
     public string? Location { get; set; }
 
@@ -18,6 +18,16 @@ public partial class T03City
     public DateTime? Datetime { get; set; }
 
     public string? PinCode { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 
     public virtual T92State? StateCdNavigation { get; set; }
 

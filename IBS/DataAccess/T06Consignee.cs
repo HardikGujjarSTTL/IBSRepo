@@ -19,7 +19,7 @@ public partial class T06Consignee
 
     public string? ConsigneeAdd2 { get; set; }
 
-    public byte? ConsigneeCity { get; set; }
+    public int? ConsigneeCity { get; set; }
 
     public string? UserId { get; set; }
 

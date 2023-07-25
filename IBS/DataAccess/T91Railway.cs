@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T91Railway
 {
-    public string RlyCd { get; set; } = null!;
+    public string? RlyCd { get; set; }
 
     public string? Railway { get; set; }
 
@@ -16,4 +16,16 @@ public partial class T91Railway
     public DateTime? Datetime { get; set; }
 
     public string? ImmsRlyCd { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public int Id { get; set; }
 }

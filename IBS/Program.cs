@@ -40,6 +40,11 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
+builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
+builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
+builder.Services.AddScoped<IRly_Designation_Form, Rly_Designation_Form>();
+builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 var app = builder.Build();
 

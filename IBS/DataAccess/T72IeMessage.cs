@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T72IeMessage
 {
-    public byte MessageId { get; set; }
+    public int MessageId { get; set; }
 
     public string? LetterNo { get; set; }
 
@@ -20,4 +20,14 @@ public partial class T72IeMessage
     public string RegionCode { get; set; } = null!;
 
     public DateTime? MessageDt { get; set; }
+
+    public string? Createdby { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
 }

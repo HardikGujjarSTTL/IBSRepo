@@ -13,7 +13,7 @@ public partial class T05Vendor
 
     public string? VendAdd2 { get; set; }
 
-    public byte? VendCityCd { get; set; }
+    public int? VendCityCd { get; set; }
 
     public string? VendContactPer1 { get; set; }
 
@@ -50,6 +50,8 @@ public partial class T05Vendor
     public string? VendPwd { get; set; }
 
     public string? OnlineCallStatus { get; set; }
+
+    public decimal? Id { get; set; }
 
     public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();
 
