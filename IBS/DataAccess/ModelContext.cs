@@ -467,13 +467,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewGetvendor> ViewGetvendors { get; set; }
 
-    public virtual DbSet<ViewLaboratory> ViewLaboratories { get; set; }
-
     public virtual DbSet<ViewPomasterlist> ViewPomasterlists { get; set; }
 
     public virtual DbSet<ViewVoucherList> ViewVoucherLists { get; set; }
-
-    public virtual DbSet<ViewVoucherList2> ViewVoucherList2s { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -15531,10 +15527,6 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T47_IE_WORK_PLAN_SEQ");
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
-        modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
-        modelBuilder.HasSequence("T91_RAILWAYS_SEQ");
-        modelBuilder.HasSequence("T94_BANK_SEQ");
-        modelBuilder.HasSequence("T96_MESSAGES_SEQ");
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
 
         OnModelCreatingPartial(modelBuilder);

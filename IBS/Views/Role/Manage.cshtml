@@ -3,49 +3,56 @@
 @{
     ViewData["Title"] = "Manage Role";
 }
-
-<form data-ajax="true" asp-antiforgery="true" asp-controller="Role" asp-action="RoleDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRoleDetails">
-    <input type="hidden" asp-for="RoleId" />
-    <div class="accordion-body">
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Role Name</label>
-                <input type="text" class="input" asp-for="Rolename" maxlength="30">
-                <span asp-validation-for="Rolename" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Role Description</label>
-                <textarea class="input" asp-for="Roledescription" maxlength="30">
-                    </textarea>
-                <span asp-validation-for="Roledescription" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="company-checkbox">
-                    <div class="remember">
-                        <div class="remecheckbox">
-                            <input type="checkbox" class="input" asp-for="Issysadmin" /> <lable for="IsArchived">Is Sys Admin ? </lable> &nbsp;
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="company-checkbox">
-                    <div class="remember">
-                        <div class="remecheckbox">
-                            <input type="checkbox" class="input" asp-for="Isactive" /><lable for="IsCreditArchived">Is Active</lable>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="savenext-btn">
-            <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
-        </div>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Role</h2>
     </div>
-</form>
+</div>
+<section>
+    <div class="task-listinput">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="Role" asp-action="RoleDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRoleDetails">
+                <input type="hidden" asp-for="RoleId" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Role Name</label>
+                            <input type="text" class="input" asp-for="Rolename" maxlength="30">
+                            <span asp-validation-for="Rolename" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Role Description</label>
+                            <textarea class="input" asp-for="Roledescription" maxlength="30"> </textarea>
+                            <span asp-validation-for="Roledescription" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="checkbox" class="input" asp-for="Issysadmin" /> <lable for="IsArchived">Is Sys Admin ? </lable> &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="checkbox" class="input" asp-for="Isactive" /><lable for="IsCreditArchived">Is Active</lable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+</section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />

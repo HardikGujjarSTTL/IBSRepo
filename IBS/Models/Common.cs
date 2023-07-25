@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Reflection.Metadata;
 using IBS.DataAccess;
+using Newtonsoft.Json.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Models
 {
@@ -14,6 +16,7 @@ namespace IBS.Models
     {
 
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
+        public const string CommonDateFormateForJS = "DD-MM-YYYY";
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -125,8 +128,494 @@ namespace IBS.Models
             context.Tblexceptions.Add(objexception);
             context.SaveChanges();
         }
-    }
 
+        //public static IEnumerable<SelectListItem> GetRegionType()
+        //{
+        //    var obj = EnumUtility<List<SelectListItem>>.GetEnumList(typeof(Enums.RegionType)).ToList();
+        //    obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
+        //    return obj;
+        //}
+
+        public static List<SelectListItem> GetRegionType()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T01Regions
+                       select new SelectListItem
+                       {
+                           Value = c.RegionCode.ToString(),
+                           Text = c.Region
+                           //}).OrderBy(c => c.Text).ToList();
+                       }).ToList();
+            obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
+            return obj;
+        }
+
+        public static List<SelectListItem> GetCity()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.T03Cities
+                                      select
+                                 new SelectListItem
+                                 {
+                                     Text = a.City,
+                                     Value = Convert.ToString(a.CityCd)
+                                 }).ToList();
+            return city;
+        }
+
+        public static List<SelectListItem> VendorApproval()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "RDSO Approved";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "RE Approved";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Both RE & RDSO Approved";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Other";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> ClientType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PSU";
+            single.Value = "PSU";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Govt.";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Foreign Railways";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+         
+        public static IEnumerable<SelectListItem> GetClientByClientType(string CoCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            if (CoCd == "R")
+            {
+                return (from a in ModelContext.T91Railways
+                        where a.RlyCd != "CORE"
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.RlyCd),
+                            Value = Convert.ToString(a.Railway)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else if(CoCd != "")
+            {
+                return (from a in ModelContext.T12BillPayingOfficers
+                        where a.BpoType == CoCd
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.BpoRly),
+                            Value = Convert.ToString(a.BpoOrgn)
+                        }).DistinctBy(x => x.Text).OrderBy(x => x.Value).ToList();
+            }
+            else
+            {
+                List<SelectListItem> clients = new List<SelectListItem>();
+                return clients;
+            }
+        }
+
+        public static List<SelectListItem> GetRitesOfficerCd()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());             
+                return (from a in ModelContext.T08IeControllOfficers
+                        where a.CoStatus != null
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.CoName),
+                            Value = Convert.ToString(a.CoCd)
+                        }).OrderBy(c => c.Text).ToList();            
+        }
+
+        public static List<SelectListItem> MAStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Approved";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Approved With No Changes in IBS";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> MAApproveStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Approved with No Change In IBS";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Return With Remarks";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Approved";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> RailwaysTypes()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PSU";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Govt.";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Foreign Railways";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> PoOrLetterTypes()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Purchase Order";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Letter of Offer";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            
+            return textValueDropDownDTO.ToList();
+        }
+
+
+        
+        public static List<SelectListItem> RegionCode()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "NORTHERN REGION";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "EASTERN REGION";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "WESTERN REGION";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "SOUTHERN REGION.";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CENTRAL REGION";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CO QA DIVISION";
+            single.Value = "Q";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> StockNonstock()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Stock";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Non-Stock";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> PoOrLetter()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Purchase Order";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Letter of Offer";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static IEnumerable<DropDownDTO> GetYesNoCommon()
+        {
+            return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
+        }
+
+        public static List<SelectListItem> GetRole()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> Role = (from a in ModelContext.Roles
+                                      select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.Rolename),
+                                     Value = Convert.ToString(a.RoleId)
+                                 }).ToList();
+            return Role;
+
+        }
+
+        public static List<SelectListItem> GetAgencyClient(string RlyNonrly)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+            if (RlyNonrly == "R")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T91Railways
+                            where a.RlyCd != "CORE"
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.RlyCd),
+                           Value = Convert.ToString(a.Railway)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            else if (RlyNonrly != "")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T12BillPayingOfficers
+                            where a.BpoType == Convert.ToString(RlyNonrly)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.BpoRly),
+                           Value = Convert.ToString(a.BpoOrgn)
+                       }).OrderBy(x => x.Text).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+        }
+
+        public static List<SelectListItem> Getfill_consignee_purcher(string RlyNonrlyValue, string RlyNonrlyText, string RlyCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+            if (RlyNonrlyText == "Railways")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T06Consignees
+                            join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
+                            where a.ConsigneeFirm == Convert.ToString(RlyCd)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.ConsigneeCd +"-"+ a.ConsigneeFirm + "/"+ a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
+                           Value = Convert.ToString(a.ConsigneeCd)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            else if (RlyNonrlyText != "")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T06Consignees
+                            join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
+                            where a.ConsigneeType == Convert.ToString(RlyNonrlyValue)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.ConsigneeCd + "-" + a.ConsigneeFirm + "/" + a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
+                           Value = Convert.ToString(a.ConsigneeCd)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+
+        public static List<SelectListItem> GetPurchaserCd(string? consignee)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from a in ModelContext.V06Consignees
+                        where a.Consignee.Contains(consignee)
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.ConsigneeCd + "-" + a.Consignee),
+                       Value = Convert.ToString(a.ConsigneeCd)
+                   }).OrderBy(x => x.Text).ToList();
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+
+        public static List<SelectListItem> GetVendor(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            //SelectListItem drop = new SelectListItem();
+            //drop.Text = "Other";
+            //drop.Value = "0";
+            //dropDownDTOs.Add(drop);
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from a in ModelContext.ViewGetvendors
+                        where a.VendCd == VendCd && a.VendName != null
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.VendName),
+                       Value = Convert.ToString(a.VendCd),
+                   }).ToList();
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+        public static VendorModel Getvendor_status(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            VendorModel model = (from m in ModelContext.T05Vendors
+                                 where m.VendCd == VendCd
+                                 select new VendorModel
+                                 {
+                                     VendCd = m.VendCd,
+                                     VendName = m.VendName,
+                                     VendAdd1 = m.VendAdd1,
+                                     VendAdd2 = m.VendAdd2,
+                                     VendCityCd = m.VendCityCd,
+                                     VendApproval = m.VendApproval,
+                                     VendApprovalFr = m.VendApprovalFr,
+                                     VendApprovalTo = m.VendApprovalTo,
+                                     VendContactPer1 = m.VendContactPer1,
+                                     VendContactTel1 = m.VendContactTel1,
+                                     VendContactPer2 = m.VendContactPer2,
+                                     VendContactTel2 = m.VendContactTel2,
+                                     VendEmail = m.VendEmail,
+                                     VendRemarks = m.VendRemarks,
+                                     VendStatus = m.VendStatus
+                                 }).FirstOrDefault();
+
+            return model;
+
+        }
+
+        public static VendorModel GetManufVEND(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            VendorModel model = (from m in ModelContext.ViewGetmanufvends
+                                 where m.VendCd == VendCd
+                                 select new VendorModel
+                                 {
+                                     VendCd = m.VendCd,
+                                     VendName = m.VendName,
+                                     VendAdd1 = m.VendAdd1,
+                                     VendContactPer1 = m.VendContactPer1,
+                                     VendContactTel1 = m.VendContactTel1,
+                                     VendStatus = m.VendStatus,
+                                     VendStatusDtFrST = m.VendStatusFr,
+                                     VendStatusDtToST = m.VendStatusTo,
+                                     VendEmail = m.VendEmail
+                                 }).FirstOrDefault();
+
+            return model;
+
+        }
+
+
+        public static List<SelectListItem> GetDocType()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> DocType = (from a in ModelContext.T74DocumentTypes
+                                      select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.DocTypeDesc),
+                                     Value = Convert.ToString(a.DocType)
+                                 }).ToList();
+            return DocType;
+        }
+
+        public static List<SelectListItem> GetDocSubType(string DocType)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> DocSubType = (from a in ModelContext.T75DocSubTypes
+                                             where a.DocType == DocType
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = a.DocSubTypeDesc,
+                                         Value = a.DocSubType
+                                     }).ToList();
+            return DocSubType;
+        }
+    }
     public static class DbContextHelper
     {
         public static DbContextOptions<ModelContext> GetDbContextOptions()
@@ -166,3 +655,4 @@ namespace IBS.Models
         }
     }
 }
+

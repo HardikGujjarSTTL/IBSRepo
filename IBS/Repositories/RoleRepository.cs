@@ -17,18 +17,18 @@ namespace IBS.Repositories
         public RoleModel FindByID(int RoleId)
         {
             RoleModel model = new();
-            Role tenant = context.Roles.Find(Convert.ToDecimal(RoleId));
+            Role role = context.Roles.Find(Convert.ToInt32(RoleId));
 
-            if (tenant == null)
+            if (role == null)
                 throw new Exception("Role Record Not found");
             else
             {
-                model.RoleId = tenant.RoleId;
-                model.Rolename = tenant.Rolename;
-                model.Roledescription = tenant.Roledescription;
-                model.Issysadmin =Convert.ToBoolean(tenant.Issysadmin);
-                model.Isactive = Convert.ToBoolean(tenant.Isactive);
-                model.Isdeleted = tenant.Isdeleted;
+                model.RoleId = role.RoleId;
+                model.Rolename = role.Rolename;
+                model.Roledescription = role.Roledescription;
+                model.Issysadmin =Convert.ToBoolean(role.Issysadmin);
+                model.Isactive = Convert.ToBoolean(role.Isactive);
+                model.Isdeleted = role.Isdeleted;
                 return model;
             }
         }
@@ -93,7 +93,7 @@ namespace IBS.Repositories
         }
         public bool Remove(int RoleId, int UserID)
         {
-            var roles = context.Roles.Find(Convert.ToDecimal(RoleId));
+            var roles = context.Roles.Find(Convert.ToInt32(RoleId));
             if (roles == null) { return false; }
 
             roles.Isdeleted = Convert.ToByte(true);
@@ -106,7 +106,7 @@ namespace IBS.Repositories
         public int RoleDetailsInsertUpdate(RoleModel model)
         {
             int RoleId = 0;
-            var role = context.Roles.Find(model.RoleId);
+            var role = (from r in context.Roles where r.RoleId == Convert.ToInt32(model.RoleId) select r).FirstOrDefault();
             #region Role save
             if (role == null)
             {

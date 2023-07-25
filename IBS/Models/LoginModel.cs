@@ -13,6 +13,18 @@ namespace IBS.Models
 
     }
 
+    public class UserSessionModel
+    {
+        public string LoginType { get; set; }
+        public int UserID { get; set; }
+        public string Name { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Region { get; set; }
+        public string AuthLevl { get; set; }
+        public int IeCd { get; set; }
+    }
+
     public class ForgotPasswordModel
     {
         [Required(ErrorMessage = "Username or Email-Id is required.")]

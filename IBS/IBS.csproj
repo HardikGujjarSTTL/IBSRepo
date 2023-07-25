@@ -9,6 +9,20 @@
   <ItemGroup>
     <None Include="Views\Home\Index.cshtml" />
     <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="wwwroot\css\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\css\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\css\fonts\materialdesignicons-webfont.svg" />
+    <None Include="wwwroot\css\fonts\materialdesignicons-webfont.woff2" />
+    <None Include="wwwroot\css\fonts\Poppins-Bold.svg" />
+    <None Include="wwwroot\css\fonts\Poppins-Bold.woff2" />
+    <None Include="wwwroot\css\fonts\Poppins-Light.svg" />
+    <None Include="wwwroot\css\fonts\Poppins-Light.woff2" />
+    <None Include="wwwroot\css\fonts\Poppins-Medium.svg" />
+    <None Include="wwwroot\css\fonts\Poppins-Medium.woff2" />
+    <None Include="wwwroot\css\fonts\Poppins-Regular.svg" />
+    <None Include="wwwroot\css\fonts\Poppins-Regular.woff2" />
+    <None Include="wwwroot\css\fonts\Poppins-SemiBold.svg" />
+    <None Include="wwwroot\css\fonts\Poppins-SemiBold.woff2" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
@@ -61,7 +75,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.14" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.9" />
   </ItemGroup>
