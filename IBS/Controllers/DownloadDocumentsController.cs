@@ -12,23 +12,50 @@ namespace IBS.Controllers
     {
         #region Variables
         private readonly IDownloadDocumentsRepository downloaddocument_adminRepository;
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _config;
 
         //public int setMessageID { get; set; }
         #endregion
-        public DownloadDocumentsController(IDownloadDocumentsRepository _downloaddocument_adminRepository)
+        public DownloadDocumentsController(IDownloadDocumentsRepository _downloaddocument_adminRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             downloaddocument_adminRepository = _downloaddocument_adminRepository;
+            iDocument = _iDocumentRepository;
+            env = _environment;
+            _config = configuration;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = new DownloadDocumentsModel();
+            model.DocType = "R";
+
+
+            
+
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             DTResult<DownloadDocumentsModel> dTResult = downloaddocument_adminRepository.GetMessageList(dtParameters);
+            //int i=0;
+            //if (dTResult.data.Count() > 0)
+            //{
+            //    for( i = 1; i<= dTResult.data.Count(); i++)
+            //    {
+            //        List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.AdminUserUploadDoc, dTResult.data.);
+            //        FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
+            //        FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            //        FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.Browse_the_Document_to_Upload).ToList();
+            //        FileUploaderCOI.OthersSection = false;
+            //        FileUploaderCOI.MaxUploaderinOthers = 5;
+            //        FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            //        ViewBag.AdminUserUploadDoc = FileUploaderCOI;
+            //    }
+            //}
             return Json(dTResult);
         }
 

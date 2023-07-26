@@ -403,3 +403,9 @@ AS
         VEND_NAME is not null and 
         V.VEND_CITY_CD=C.CITY_CD 
         ORDER BY VEND_NAME
+
+
+Create VIEW view_GetManufVEND
+AS
+    select VEND_CD,VEND_NAME,VEND_ADD1,VEND_CONTACT_PER_1,VEND_CONTACT_TEL_1,VEND_STATUS,to_char(VEND_STATUS_DT_FR,'dd/mm/yyyy')VEND_STATUS_FR,to_char(VEND_STATUS_DT_TO,'dd/mm/yyyy')VEND_STATUS_TO,VEND_EMAIL 
+    from T05_VENDOR

@@ -97,5 +97,26 @@ and (T17.CALL_STATUS NOT IN('B','C') or (T17.CALL_STATUS='C' and T17.CALL_RECV_D
 --and T17.IE_CD='"+wIECD+"' 
 and T18.ITEM_SRNO_PO=(Select min(B.ITEM_SRNO_PO) from T18_CALL_DETAILS B where B.CASE_NO=T18.CASE_NO AND B.CALL_RECV_DT=T18.CALL_RECV_DT AND B.CALL_SNO=T18.CALL_SNO)
 
+7) CREATE VIEW T17_CALL_REGISTER_SEARCH_VIEW
+AS
+select P.VEND_CD,P.CASE_NO,C.CALL_RECV_DT CALL_RECV_DT,
+C.CALL_INSTALL_NO,C.CALL_SNO,
+decode(C.CALL_STATUS,'M','Pending','A','Accepted','R','Rejection','C','Cancelled','U','Under Lab Testing','S','Still Under Inspection','G','Stage Inspection')
+||decode(C.CALL_CANCEL_STATUS,'N',' (Non Chargeable)','C',' (Chargeable)','')CALL_STATUS,C.CALL_LETTER_NO,P.REMARKS,
+P.PO_NO,
+P.PO_DT PO_DT,I.IE_SNAME,(V.VEND_NAME||'('||NVL2(T.LOCATION,T.LOCATION||' : '||T.CITY,T.CITY)||')')VENDOR 
+from T17_CALL_REGISTER C, T13_PO_MASTER P,T09_IE I, T05_VENDOR V,T03_CITY T 
+where P.CASE_NO=C.CASE_NO(+) and C.IE_CD=I.IE_CD(+) and P.VEND_CD=V.VEND_CD 
+and V.VEND_CITY_CD=T.CITY_CD 
+
+
+CREATE VIEW VENDOR_CALL_PO_DETAILS_VIEW
+AS
+select CASE_NO,(C.CONSIGNEE_CD||'-'||trim(C.CONSIGNEE_DESIG)||'/'||trim(C.CONSIGNEE_DEPT)||'/'||trim(C.CONSIGNEE_FIRM)) PURCHASER_CD, 
+V.VEND_NAME VEND_CD, P.PO_NO, 
+P.PO_DT PO_DT,substr(P.RLY_CD,1,7)RLY, P.L5NO_PO, P.RLY_NONRLY 
+from T13_PO_MASTER P,T06_CONSIGNEE C,T05_VENDOR V 
+where P.PURCHASER_CD=C.CONSIGNEE_CD(+) and P.VEND_CD=V.VEND_CD 
+
 =============================================================================================================================================
 

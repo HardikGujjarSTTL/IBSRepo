@@ -11,111 +11,63 @@
 </div>
 <section>
     <div class="task-listinput">
-        
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientContractDetails">
                 <input type="hidden" asp-for="Id" />
                 <div class="accordion-body">
                     <div class="row my-0">
                         <div class="col-md-4 mb-4">
-                            <label for="Reference">Date Of Contract</label>
+                            <label for="VisitDt">Date Of Contract</label>
                             <input type="text" class="input datepicker" asp-for="VisitDt" readonly="true">
                             <span asp-validation-for="VisitDt" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-4 mb-4">
-                            <label for="Reference">Contract No</label>
-                            <input type="text" class="input" asp-for="ClientType" maxlength="300" />
+                            <label for="ClientType">Client Type</label>
+                            @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.ClientType(), "Value", "Text"),"--Select--", new { @onChange="FillClient()"})
                             <span asp-validation-for="ClientType" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-4 mb-4">
-                            <label for="Reference">Name of Client</label>
-                            <input type="text" class="input" asp-for="ClientType" maxlength="300" />
-                            <span asp-validation-for="ClientType" class="text-danger"></span>
-                        </div>
-
-                        
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Expected Contract Fees<span class="text-danger" style="font-size:smaller">    * Numeric Only</span></label>                            
-                            <input type="text" class="input" asp-for="ClientType" mode maxlength="300" />
-                            <span asp-validation-for="ClientType" class="text-danger"></span>
+                            <label for="Client">Select Client</label>
+                            @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClientByClientType(""), "Value", "Text"),"--Select--")
+                            <span asp-validation-for="Client" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-4 mb-4">
-                            <label for="Reference">Expected OR</label>
-                            <input type="text" class="input" asp-for="ClientType" maxlength="300" />
-                            <span asp-validation-for="ClientType" class="text-danger"></span>
+                            <label for="Reference">Officer Name Contracted<span class="text-danger" style="font-size:smaller">*</span></label>
+                            <input type="text" class="input" asp-for="ClientOfficerName" mode maxlength="300" />
+                            <span asp-validation-for="ClientOfficerName" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-4 mb-4">
-                            <label for="Reference">Rate of Insp Fee</label>
-                            <input type="text" class="input" asp-for="ClientType" maxlength="300" />
-                            <span asp-validation-for="ClientType" class="text-danger"></span>
+                            <label for="Designation">Designation<span class="text-danger" style="font-size:smaller">*</span></label>
+                            <input type="text" class="input" asp-for="Designation" mode maxlength="300" />
+                            <span asp-validation-for="Designation" class="text-danger"></span>
                         </div>
 
-                        @*<div class="col-md-4 mb-3">
-                            <label for="Reference">Status of Offer</label>
-                            <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
-                                <option value="">--Select--</option>
-                                <option value="S">Offer Sent</option>
-                                <option value="A">Offer Accepted</option>
-                                <option value="B">BID Lost</option>
-                            </select>
-                            <span asp-validation-for="Status" class="text-danger"></span>
+                        <div class="col-md-4 mb-4">
+                            <label for="RitesOfficerCd">Rites Controlling Officer</label>
+                            @Html.DropDownListFor(model => model.RitesOfficerCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(), "Value", "Text"),"--Select--")
+                            <span asp-validation-for="RitesOfficerCd" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Contract/LOA Sign Date</label>
-                            <input type="text" class="input datepicker" asp-for="ContSignDt" readonly="true">
-                            <span asp-validation-for="ContSignDt" class="text-danger"></span>
+                        <div class="col-md-6 mb-4">
+                            <label for="Highlights">Highlights of Discussion if Any</label>
+                            <textarea rows="3" type="text" name="Highlights" class="input" asp-for="Highlights" maxlength="300"></textarea>
+                            <span asp-validation-for="Highlights" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Contract No.</label>
-                            <input type="text" class="input" asp-for="ContractNo" maxlength="300" />
-                            <span asp-validation-for="ContractNo" class="text-danger"></span>
+                        <div class="col-md-6 mb-4">
+                            <label for="OverallOutcome">Overall OutCome of the Visit</label>
+                            <textarea rows="3" type="text" name="OverallOutcome" class="input" asp-for="OverallOutcome" maxlength="300"></textarea>
+                            <span asp-validation-for="OverallOutcome" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Contract From Date</label>
-                            <input type="text" class="input datepicker" asp-for="ContPerFrom" readonly="true">
-                            <span asp-validation-for="ContPerFrom" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Contract To Date</label>
-                            <input type="text" class="input datepicker" asp-for="ContPerTo" readonly="true">
-                            <span asp-validation-for="ContPerTo" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Broad Scope of Work</label>
-                            <input type="text" class="input" asp-for="ScopeOfWork" maxlength="300" />
-                            <span asp-validation-for="ScopeOfWork" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">CM</label>
-                            <select id="ddlCM" class="form-control col-md-8" name="ContractCm" asp-for="ContractCm">
-                                <option value="">--Select--</option>
-                                <option value="129">ANIRUDH KUMAR</option>
-                                <option value="131">NARINDER KUMAR SACHEDEVA</option>
-                                <option value="149">P K LAL</option>
-                            </select>
-                            <span asp-validation-for="ContractCm" class="text-danger"></span>
-                        </div>*@
-                        @*@Html.DropDownListFor(model => model.ContractCm, new SelectList(IBS.Models.Common.GetCM(), "Value", "Text"),"--Select--", new { @class = "",onChange="GetLandLordName();", @disabled="disabled"})*@
-                    
-
-                         
-                        
-
-                        
                     </div>
 
                     <div class="savenext-btn">
-                        <a asp-controller="Contract" asp-action="Index" class="reset-btn">Cancel</a>
+                        <a asp-controller="ClientContract" asp-action="Index" class="reset-btn">Cancel</a>
                         <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
                 </div>
@@ -127,14 +79,30 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         function Save() {
-            if ($("#frmContractDetails").valid()) {
-                $("#frmContractDetails").submit();
+            if ($("#frmClientContractDetails").valid()) {
+                $("#frmClientContractDetails").submit();
             }
         }
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Contract/Index";
+            window.location.href = "/ClientContract/Index";
         };
+
+        function FillClient() {
+            var _drpClientType = $('select#ClientType').val();
+
+            $.get("@Url.Action("GetClientByClientType", "ClientContract")", { CoCd: _drpClientType }, function (response) {
+                if (response != null) {
+                    $("#Client").empty();
+                    $("#Client").append($('<option value="">--Select--</option>'));
+                    $.each(response, function (ind, val) {
+                        $("#Client").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
+        }
+
     </script>
+
 }
