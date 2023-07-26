@@ -31,7 +31,7 @@ namespace IBS.Repositories
                 model.Designation = tenant.Designation;
                 model.ClientType = tenant.ClientType;
                 model.Client =  tenant.Client;
-                model.RitesOfficerCd = tenant.RitesOfficerCd;
+                //model.RitesOfficerCd = tenant.RitesOfficerCd;
                 model.Highlights = tenant.Highlights;
                 model.OverallOutcome = tenant.OverallOutcome;
                 model.RegionCd =  tenant.RegionCd;
@@ -83,7 +83,7 @@ namespace IBS.Repositories
                         Designation = l.Designation,
                         ClientType = l.ClientType,
                         Client = l.Client,
-                        RitesOfficerCd = l.RitesOfficerCd,
+                        //RitesOfficerCd = l.RitesOfficerCd,
                         Highlights = l.Highlights,
                         OverallOutcome =  l.OverallOutcome,
                         RegionCd = l.RegionCd,

@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T65LaboratoryMaster
 {
-    public byte LabId { get; set; }
+    public int LabId { get; set; }
 
     public string? LabName { get; set; }
 

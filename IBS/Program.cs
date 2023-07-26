@@ -55,7 +55,7 @@ builder.Services.AddScoped<IMAapproveRepository, MAapproveRepository>();
 builder.Services.AddScoped<IDEOCRISPurchesOrderWCaseNoRepository, DEOCRISPurchesOrderWCaseNoRepository>();
 builder.Services.AddScoped<IIEMessageRepository, IEMessageRepository>();
 builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>();
-
+builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
