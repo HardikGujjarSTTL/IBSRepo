@@ -160,7 +160,6 @@
                     <ul id="side-menu" class="nav">
                         <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
                         @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
-
                         <li>
                             <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-ico.png" alt="tenant" /></i><span class="menu-title">Master</span></a>
                             <ul class="nav nav-second-level">
@@ -169,6 +168,7 @@
                                 <li><a asp-action="Index" asp-controller="Role"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Role</span></a></li>
                             </ul>
                         </li>
+                        
                         <li>
                             <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/user-ico.png" alt="tenant" /></i><span class="menu-title">Administrator</span></a>
                             <ul class="nav nav-second-level">
@@ -273,11 +273,12 @@
                         </li>
                         <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-icons.svg" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
                         @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
-
+                          
                         <li>
                             <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Master</span></a>
                             <ul class="nav nav-second-level">
                                 <li><a asp-action="Index" asp-controller="Contract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Contract</span></a></li>
+                                <li><a asp-action="Index" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">ClientContract</span></a></li>
                                 <li><a asp-action="Index" asp-controller="Role"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Role</span></a></li>
                             </ul>
                         </li>
