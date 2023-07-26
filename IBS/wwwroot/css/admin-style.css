@@ -1203,7 +1203,7 @@ font-weight: 600;}
 .navbar-static-side ul li a.menu-title { margin-left: 10px; }
 .navbar-static-side ul li .nav-second-level li { border-bottom: 1px solid; }
 .navbar-static-side ul li .nav-second-level li:last-child { border-bottom:0 none; }
-.navbar-static-side ul li .nav-second-level li a { padding: 15px 15px 15px 40px; color: #efefef; }
+.navbar-static-side ul li .nav-second-level li a { padding: 15px 15px 15px 20px; color: #efefef; }
 .navbar-static-side ul li .nav-second-level li a span.submenu-title { margin-left: 10px; }
 .navbar-static-side ul li.sidebar-heading { padding: 5px 15px; }
 .navbar-static-side ul li.sidebar-heading h4 { font-family: 'Oswald'; font-size: 18px; font-weight: bold; }
