@@ -33,7 +33,8 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterList(dtParameters);
+            int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterList(dtParameters, VendCd);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)
@@ -145,6 +146,13 @@ namespace IBS.Controllers
             {
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
+                foreach (var item in agencyClient.Where(x=>x.Value == Convert.ToString(VendCd)).ToList())
+                {
+                    if(item.Value == Convert.ToString(VendCd))
+                    {
+                        item.Selected=true;
+                    }
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
@@ -172,6 +180,21 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "Getvendor_status", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetManufVEND(int VendCd)
+        {
+            try
+            {
+                VendorModel getvendor = Common.GetManufVEND(VendCd);
+                return Json(new { status = true, getvendor = getvendor });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetManufVEND", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

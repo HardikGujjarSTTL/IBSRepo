@@ -35,6 +35,10 @@ namespace IBS.Models
 
         public DateTime? VendStatusDtTo { get; set; }
 
+        public string? VendStatusDtFrST { get; set; }
+
+        public string? VendStatusDtToST { get; set; }
+
         public string? VendRemarks { get; set; }
 
         public string? VendCdAlpha { get; set; }

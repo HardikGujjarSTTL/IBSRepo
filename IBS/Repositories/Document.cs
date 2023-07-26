@@ -14,7 +14,7 @@ namespace IBS.Repositories
             _config = configuration;
         }
 
-        public List<IBS_DocumentDTO> GetRecordsList(int DocumentCategoryID, int ApplicationID)
+        public List<IBS_DocumentDTO> GetRecordsList(int DocumentCategoryID, string ApplicationID)
         {
             List<IBS_DocumentDTO> MainList = new List<IBS_DocumentDTO>();
             //int MaxContentLengthInKB = Convert.ToInt32(_config["MyAppSettings:MaxContentLengthInKB"]);
@@ -51,9 +51,10 @@ namespace IBS.Repositories
 
         public int GetRecordsMaxID(int DocumentCategoryID)
         {
-            //int? id = (from x in context.IbsAppdocuments
-            //                where x.Documentcategory == DocumentCategoryID select x.Applicationid).Max();
-            int? id=0;
+            string? id = (from x in context.IbsAppdocuments
+                            where x.Documentcategory == Convert.ToInt32(DocumentCategoryID)
+                            select x.Applicationid).Max();
+
             return Convert.ToInt32(id);
         }
 
@@ -83,7 +84,7 @@ namespace IBS.Repositories
             return objSaveData.FirstOrDefault().Id;
         }
 
-        public void DeleteAllFiles(int ApplicationID)
+        public void DeleteAllFiles(string ApplicationID)
         {
             List<IbsAppdocument> objGNR_APPDocument = (from c in context.IbsAppdocuments where c.Applicationid == Convert.ToString(ApplicationID) select c).ToList();
 

@@ -8,9 +8,8 @@
         <h2>PO Master</h2>
     </div>
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="CaseNo" />
@@ -147,21 +146,20 @@
                         </div>
                         <div class="col-md-2 mb-3">
                             <div class="savenext-btn">
-                                <button type="button" class="save-btn active" onclick="SelectManufacturer();">Select Manufacturer</button>
+                                <button type="button" id="btnPOI" class="save-btn active" onclick="SelectManufacturer();">Select Manufacturer</button>
                             </div>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="Reference">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
                         </div>
                         <div class="col-md-2 mb-3">
-                            @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
                         </div>
                     </div>
                     <div class="row my-0">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 mb-3" id="dvPlaceOfInspection">
                             <label for="Reference">Place of Inspection</label>
-                            <textarea class="input" asp-for="VendCd" maxlength="30"> </textarea>
-                            <span asp-validation-for="VendCd" class="text-danger"></span>
+                            <input type="text" class="input" id="txtMPOI" disabled="disabled">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Remarks</label>
@@ -175,7 +173,6 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 </section>
 @section scripts{
@@ -296,10 +293,6 @@
             });
         }
 
-        function sameAsVendor() {
-            var chkManuf = $('input[name="chkManuf"]:checked').val();
-        }
-
         function FillVendor() {
             $.ajax({
                 url: '@Url.Action("GetVendor", "POMaster")',
@@ -314,7 +307,7 @@
                         $("#VendCd").html("");
                         $("#VendCd").append("<option value=''>--Select--</option>");
                         $.each(response.list, function (index, value) {
-                            $("#VendCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                            $("#VendCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                         });
                         vendor_status();
                     }
@@ -344,6 +337,77 @@
                 {
                     $("#txtVend").val(VendCd);
                 }
+            });
+        }
+
+        function sameAsVendor() {
+            if($("#chkManuf").prop('checked') == true)
+            {
+                //$("#dvPlaceOfInspection").css("display", "block");
+                //$("#txtMPOI").attr("disabled", "disabled");
+                fill_manufacturer();
+                GetManufVEND();
+            }
+            else
+            {
+                //$("#dvPlaceOfInspection").css("display", "none");
+               //$("#txtMPOI").removeAttr("disabled");
+                $("#txtMName").val("");
+                $("#txtMPOI").val("");
+                $("#ddlManufac").html("");
+                $("#txtMName").removeAttr("disabled");
+            }
+        }
+
+        function fill_manufacturer() {
+            $.ajax({
+                url: '@Url.Action("GetVendor", "POMaster")',
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.list != null) {
+                    $("#ddlManufac").html("");
+                    $("#ddlManufac").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                    });
+                    vendor_status();
+                }
+                else {
+                    ShowHideMsgNew(response.status, "No Vendor Found!!!");
+                }
+            });
+        }
+
+        function GetManufVEND() {
+            var VendCd = $("#VendCd").val();
+            $.ajax({
+                url: '@Url.Action("GetManufVEND", "POMaster")?VendCd=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    if (response.getvendor.VendStatus == 'B') {
+                        ShowHideMsgNew(response.getvendor.status, "It is informed that due to unavoidable reasons, online call booking facility has temporarily restricted against your ID From: " + response.getvendor.VendStatusDtFrST);
+                        //$("#ddlManufac").css("display", "none");
+                    }
+                    else
+                    {
+                        $("#txtMName").val($("#ddlManufac").val());
+                        //$("#ddlManufac").css("display", "block");
+                        $("#txtMPOI").val(response.getvendor.VendAdd1);
+                        $("#txtMName").attr("disabled", "disabled");
+                        //$("#txtMPOI").css("disabled", "disabled");
+                        //$("#btnPOI").css("display", "none");
+                    }
+                }
+                
             });
         }
 

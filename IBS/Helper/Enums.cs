@@ -24,17 +24,26 @@ namespace IBS.Helper
             TempFilePath = 1,
             [Description("/Files/UserRegistration")]
             UserRegistration = 2,
+            [Description("/Files/AdminUserUploadDoc")]
+            AdminUserUploadDoc = 3,
         }
 
         public enum DocumentCategory : int
         {
             UserRegi = 8,
+            AdminUserUploadDoc = 9,
         }
+
 
         public enum DocumentCategory_CANRegisrtation : int
         {
             Address_Proof_Document = 5,
             Profile_Picture = 6,
+        }
+
+        public enum DocumentCategory_AdminUserUploadDoc : int
+        {
+            Browse_the_Document_to_Upload = 7,
         }
 
         public static string GetEnumDescription(object enumValue)
