@@ -1420,3 +1420,4 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 	text-decoration:none;
 }
 .reset-btn:hover{ background:#a8bfab;}
+.left-side-collapsed .navbar-static-side ul li .nav-second-level.show{ display:none;}
