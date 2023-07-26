@@ -39,19 +39,27 @@ namespace IBS.Repositories
                 orderCriteria = "IssueDt";
                 orderAscendingDirection = true;
             }
-            //string DocType="";
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DocType"]))
-            //{
-            //    //DocType = Convert.ToString(dtParameters.AdditionalValues["DocType"]);
-            //    DocType = !string.IsNullOrEmpty(dtParameters.AdditionalValues["DocType"]) ? short.Parse(dtParameters.AdditionalValues["DocType"]) : "";
-            //}
-
-            
-            //string DocSubType = Convert.ToString(dtParameters.AdditionalValues["DocSubType"]);
-            //string DocumentName = Convert.ToString(dtParameters.AdditionalValues["DocumentName"]);
+            string DocType = "";
+            string DocSubType = "";
+            string DocSearch = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DocType"]))
+            {
+                DocType = Convert.ToString(dtParameters.AdditionalValues["DocType"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DocSubType"]))
+            {
+                DocSubType = Convert.ToString(dtParameters.AdditionalValues["DocSubType"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DocSearch"]))
+            {
+                DocSearch = Convert.ToString(dtParameters.AdditionalValues["DocSearch"]);
+            }
+            DocType = DocType.ToString() == null ? string.Empty : DocType.ToString();
+            DocSubType = DocSubType.ToString() == null ? string.Empty : DocSubType.ToString();
+            DocSearch = DocSearch.ToString()==null ? string.Empty : DocSearch;
 
             query = from l in context.T76DocumentCatalogs
-                        //where l.DocType == DocType && l.DocSubType == DocSubType && l.DocumentName == DocumentName
+                    where l.DocType.Contains(DocType) && l.DocSubType.Contains(DocSubType) && l.DocumentName.Contains(DocSearch)
                     //where l.DocType == DocType
                     select new DownloadDocumentsModel
                     {

@@ -1,0 +1,158 @@
+
+Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+
+=============================================================================================================================================
+
+By Ravi Jaiswal
+
+
+
+ALTER TABLE T04_UOM 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T04_UOM
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T04_UOM 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T04_UOM
+    ADD CreatedDate DATE
+
+ALTER TABLE T04_UOM
+    ADD UpdatedDate DATE
+
+
+    CREATE SEQUENCE T04_UOM_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+ALTER TABLE T04_UOM
+    MODIFY UOM_CD NUMBER(3,0) DEFAULT T04_UOM_seq.nextval;
+********************************************************
+    
+ALTER TABLE T07_rites_desig 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T07_rites_desig
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T07_rites_desig 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T07_rites_desig
+    ADD CreatedDate DATE
+
+ALTER TABLE T07_rites_desig
+    ADD UpdatedDate DATE
+    
+    
+     CREATE SEQUENCE T07_RITES_DESIG_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+ALTER TABLE T07_RITES_DESIG
+    MODIFY R_DESIG_CD NUMBER(3,0) DEFAULT T07_RITES_DESIG_seq.nextval;
+
+    ***********************************
+    ALTER TABLE T91_RAILWAYS 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T91_RAILWAYS
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T91_RAILWAYS 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T91_RAILWAYS
+    ADD CreatedDate DATE
+
+ALTER TABLE T91_RAILWAYS
+    ADD UpdatedDate DATE
+
+
+
+    -----------------------------------------------
+    ALTER TABLE T91_RAILWAYS
+DROP PRIMARY KEY;
+
+    
+ALTER TABLE T91_RAILWAYS 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE T91_RAILWAYS_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+UPDATE T91_RAILWAYS
+   SET ID = T91_RAILWAYS_seq.nextval;
+
+ALTER TABLE T91_RAILWAYS
+    MODIFY ID NUMBER(6,0) DEFAULT T91_RAILWAYS_seq.nextval;
+
+ALTER TABLE T91_RAILWAYS
+ADD CONSTRAINT T91_RAILWAYS_pk  PRIMARY KEY (ID);
+
+--------------------------------
+ALTER TABLE T90_RLY_DESIGNATION 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T90_RLY_DESIGNATION
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T90_RLY_DESIGNATION 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T90_RLY_DESIGNATION
+    ADD CreatedDate DATE
+
+ALTER TABLE T90_RLY_DESIGNATION
+    ADD UpdatedDate DATE
+
+-----------------------------------------------------
+ALTER TABLE T03_CITY 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T03_CITY
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T03_CITY 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T03_CITY
+    ADD CreatedDate DATE
+
+ALTER TABLE T03_CITY
+    ADD UpdatedDate DATE
+-------------------------------------------------------
+ALTER TABLE T94_Bank 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T94_Bank
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T94_Bank 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T94_Bank
+    ADD CreatedDate DATE
+
+ALTER TABLE T94_Bank
+    ADD UpdatedDate DATE
+
+    ALTER TABLE T94_Bank
+MODIFY (BANK_CD  NUMBER(6,0));
+--------------------------------------------------------
+
+
+
+CREATE SEQUENCE T94_Bank_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+
+ALTER TABLE T94_Bank
+    MODIFY BANK_CD NUMBER(6,0) DEFAULT T94_Bank_seq.nextval;
