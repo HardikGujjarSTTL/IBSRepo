@@ -78,8 +78,10 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        function Save() {
-            if ($("#frmClientContractDetails").valid()) {
+        function Save() 
+        {
+            if ($("#frmClientContractDetails").valid()) 
+            {
                 $("#frmClientContractDetails").submit();
             }
         }
@@ -88,15 +90,14 @@
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/ClientContract/Index";
         };
-
         function FillClient() {
             var _drpClientType = $('select#ClientType').val();
-
             $.get("@Url.Action("GetClientByClientType", "ClientContract")", { CoCd: _drpClientType }, function (response) {
                 if (response != null) {
                     $("#Client").empty();
                     $("#Client").append($('<option value="">--Select--</option>'));
-                    $.each(response, function (ind, val) {
+                    $.each(response, function (ind, val) 
+                    {
                         $("#Client").append($('<option></option>').val(val.Value).html(val.Text));
                     });
                 }
