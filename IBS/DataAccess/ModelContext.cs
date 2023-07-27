@@ -15819,9 +15819,6 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
         modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
-        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ");
-        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ_1").IncrementsBy(135);
-        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ_2");
         modelBuilder.HasSequence("T91_RAILWAYS_SEQ");
         modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");

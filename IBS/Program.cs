@@ -69,6 +69,7 @@ builder.Services.AddScoped<IRly_Designation_Form, Rly_Designation_Form>();
 builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
+builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

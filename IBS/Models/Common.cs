@@ -735,6 +735,19 @@ namespace IBS.Models
                                      }).ToList();
             return DocSubType;
         }
+
+        public static List<SelectListItem> GetBank()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> Bank = (from a in context.T94Banks
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.BankName,
+                                        Value = Convert.ToString(a.BankCd)
+                                    }).ToList();
+            return Bank;
+        }
     }
     public static class DbContextHelper
     {
@@ -760,19 +773,33 @@ namespace IBS.Models
 
             Expression resultExpression = null;
 
+            //var property = typeof(T).GetProperty(sortColumn);
             var property = typeof(T).GetProperty(sortColumn);
-            // this is the part p.SortColumn
+
+            // Handle nullable properties
+            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
+            }
+
             var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+            var orderByExpression = Expression.Lambda(propertyAccess, parameter);
+
+            // this is the part p.SortColumn
+           // var propertyAccess = Expression.MakeMemberAccess(parameter, property);
 
             // this is the part p =&gt; p.SortColumn
-            var orderByExpression = Expression.Lambda(propertyAccess, parameter);
+           // var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
             // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
             resultExpression = Expression.Call(typeof(Queryable), command, new Type[] { typeof(T), property.PropertyType },
                query.Expression, Expression.Quote(orderByExpression));
 
             return query.Provider.CreateQuery<T>(resultExpression);
+     
         }
+
+       
     }
 }
 
