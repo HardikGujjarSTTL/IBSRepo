@@ -45,6 +45,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<GeneralFile> GeneralFiles { get; set; }
 
+    public virtual DbSet<Generatevoucher> Generatevouchers { get; set; }
+
     public virtual DbSet<Gf> Gfs { get; set; }
 
     public virtual DbSet<HistT06Consignee> HistT06Consignees { get; set; }
@@ -1344,6 +1346,18 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.VchrNumb)
                 .HasPrecision(4)
                 .HasColumnName("VCHR_NUMB");
+        });
+
+        modelBuilder.Entity<Generatevoucher>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("GENERATEVOUCHER");
+
+            entity.Property(e => e.VchrNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("VCHR_NO");
         });
 
         modelBuilder.Entity<Gf>(entity =>
@@ -10847,7 +10861,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.LabId)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("LAB_ID");
             entity.Property(e => e.PaymentId)
                 .HasMaxLength(8)
@@ -10904,7 +10918,7 @@ public partial class ModelContext : DbContext
 
             entity.HasOne(d => d.Lab).WithMany()
                 .HasForeignKey(d => d.LabId)
-                .HasConstraintName("FK_LAB_ID");
+                .HasConstraintName("FK_T65_LABORATORY_MASTER");
 
             entity.HasOne(d => d.SampleRegNoNavigation).WithMany()
                 .HasPrincipalKey(p => p.SampleRegNo)
@@ -11589,12 +11603,13 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T65LaboratoryMaster>(entity =>
         {
-            entity.HasKey(e => e.LabId).HasName("PK_LAB_ID");
+            entity.HasKey(e => e.LabId).HasName("T65_LABORATORY_MASTER_PK");
 
             entity.ToTable("T65_LABORATORY_MASTER");
 
             entity.Property(e => e.LabId)
-                .HasPrecision(4)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T65_LABORATORY_MASTER_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("LAB_ID");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
@@ -12886,6 +12901,21 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(40)
                 .IsUnicode(false)
                 .HasColumnName("ACC_DESC");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
         });
 
         modelBuilder.Entity<T96Message>(entity =>
@@ -15406,7 +15436,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("LAB_ADDRESS");
             entity.Property(e => e.LabId)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("LAB_ID");
             entity.Property(e => e.LabName)
                 .HasMaxLength(100)
@@ -15523,6 +15553,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
         modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
+        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ");
         modelBuilder.HasSequence("T91_RAILWAYS_SEQ");
         modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");
