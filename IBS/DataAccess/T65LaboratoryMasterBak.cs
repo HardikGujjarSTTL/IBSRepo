@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T65LaboratoryMaster
+public partial class T65LaboratoryMasterBak
 {
-    public int LabId { get; set; }
+    public int? LabId { get; set; }
 
     public string? LabName { get; set; }
 

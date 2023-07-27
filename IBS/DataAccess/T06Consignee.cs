@@ -33,6 +33,16 @@ public partial class T06Consignee
 
     public string? PinCode { get; set; }
 
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
     public virtual T03City? ConsigneeCityNavigation { get; set; }
 
     public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();

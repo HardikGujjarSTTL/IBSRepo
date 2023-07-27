@@ -1,7 +1,15 @@
-﻿using IBS.DataAccess;
+﻿using IBS.Controllers;
+using IBS.DataAccess;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.VisualStudio.Web.CodeGeneration;
+using System.Data;
+using System.Data.Common;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace IBS.Repositories.Vendor
 {
@@ -14,13 +22,14 @@ namespace IBS.Repositories.Vendor
             this.context = context;
         }
 
-        public VenderCallRegisterModel FindByID(string CaseNo, string CallRecvDt, int CallSno)
+        public VenderCallRegisterModel FindByID(string CaseNo, string CallRecvDt, int CallSno, string UserName)
         {
             VenderCallRegisterModel model = new();
             string CallRDt = Convert.ToDateTime(CallRecvDt).ToString("dd-MM-yyyy");
             //T17CallRegister user = context.T17CallRegisters.Find(Convert.ToString(CaseNo), CallRDt, Convert.ToString(CallSno));
             T17CallRegister user = context.T17CallRegisters.Where(X => X.CaseNo == CaseNo && X.CallRecvDt == Convert.ToDateTime(CallRDt) && X.CallSno == CallSno).FirstOrDefault();
             VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
+            T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(UserName)).FirstOrDefault();
 
             if (user == null)
                 throw new Exception("Vender Record Not found");
@@ -34,8 +43,8 @@ namespace IBS.Repositories.Vendor
                 model.CallMarkDt = user.CallMarkDt;
                 model.IeCd = user.IeCd;
                 model.DtInspDesire = user.DtInspDesire;
-                
-                if(user.CallStatus.Equals("M") || user.CallStatus.Equals("C"))
+
+                if (user.CallStatus.Equals("M") || user.CallStatus.Equals("C"))
                 {
                     model.CallStatus = user.CallCancelStatus.Equals("N") ? " (Non Chargeable)" : user.CallCancelStatus.Equals("C") ? " (Chargeable)" : "";
                 }
@@ -43,15 +52,15 @@ namespace IBS.Repositories.Vendor
                 {
                     model.CallStatus = user.CallStatus.Equals("M") ? "Marked" : user.CallStatus.Equals("C") ? "Cancelled" : user.CallStatus.Equals("A") ? "Accepted" : user.CallStatus.Equals("R") ? "Rejected" : user.CallStatus.Equals("U") ? "Under Lab Testing" : user.CallStatus.Equals("S") ? "Still Under Inspection" : user.CallStatus.Equals("G") ? "Stage Inspection" : "";
                 }
-                
-                
-                
+
+
+
                 model.CallStatusDt = user.CallStatusDt;
                 model.CallRemarkStatus = user.CallRemarkStatus;
                 model.CallInstallNo = user.CallInstallNo;
                 model.SetRegionCode = user.RegionCode;
                 model.RegionCode = user.RegionCode.Equals("N") ? "Northern" : user.RegionCode.Equals("S") ? "Southern" : user.RegionCode.Equals("E") ? "Eastern" : user.RegionCode.Equals("W") ? "Western" : "Central";
-                model.MfgCd = user.MfgCd;
+                model.MfgCd = Convert.ToInt32(user.MfgCd);
                 model.MfgPlace = user.MfgPlace;
                 model.UpdateAllowed = user.UpdateAllowed == null ? "Y" : user.UpdateAllowed;
                 model.Remarks = user.Remarks;
@@ -65,6 +74,14 @@ namespace IBS.Repositories.Vendor
                 model.Rly = GetView.Rly;
                 model.L5noPo = GetView.L5noPo;
                 model.RlyNonrly = GetView.RlyNonrly;
+
+                model.VendAdd1 = Vendor.VendAdd1;
+                model.VendContactPer1 = Vendor.VendContactPer1;
+                model.VendContactTel1 = Vendor.VendContactTel1;
+                model.VendStatus = Vendor.VendStatus;
+                model.VendStatusDtFr = Vendor.VendStatusDtFr;
+                model.VendStatusDtTo = Vendor.VendStatusDtTo;
+                model.VendEmail = Vendor.VendEmail;
 
                 return model;
             }
@@ -139,6 +156,101 @@ namespace IBS.Repositories.Vendor
             dTResult.recordsFiltered = query.Count();
 
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public DTResult<VenderCallRegisterModel> GetVenderList(DTParameters dtParameters, string UserName)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
+            //IQueryable<VenderCallRegisterModel>? query = null;
+
+            List<VenderCallRegisterModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            
+            string CaseNo = "";
+            string CallRecvDt = "";
+            string CallSno = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+            {
+                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+            }
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecvDt"]))
+            {
+                CallRecvDt = Convert.ToString(dtParameters.AdditionalValues["CallRecvDt"]);
+            }
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSno"]))
+            {
+                CallSno = Convert.ToString(dtParameters.AdditionalValues["CallSno"]);
+            }
+
+            CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
+            CallRecvDt = Convert.ToDateTime(CallRecvDt).ToString("dd/MM/yyyyy");
+            CallSno = CallSno.ToString() == "" ? string.Empty : CallSno.ToString();
+
+            var ItemSrnoPo = (from a in context.T18CallDetails
+                              where a.CaseNo == CaseNo && a.CallRecvDt == Convert.ToDateTime(CallRecvDt) && a.CallSno == Convert.ToInt16(CallSno)
+                              select a.ItemSrnoPo).FirstOrDefault();
+
+            query = (from l in context.VenderCallRegisterItemView1s
+                    where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(CallRecvDt) && l.CallSno == Convert.ToInt16(CallSno)
+                    
+                    select new VenderCallRegisterModel
+                    {
+                        Status = l.Status,
+                        ItemSrnoPo = l.ItemSrnoPo,
+                        ItemDescPo = l.ItemDescPo,
+                        QtyOrdered = l.QtyOrdered,
+                        CumQtyPrevOffered = l.CumQtyPrevOffered,
+                        CumQtyPrevPassed = l.CumQtyPrevPassed,
+                        QtyToInsp = l.QtyToInsp,
+                        QtyPassed = l.QtyPassed,
+                        QtyRejected = l.QtyRejected,
+                        QtyDue = l.QtyDue,
+                        Consignee = l.Consignee,
+                        DelvDate = l.DelvDate,
+                        CaseNo = CaseNo,
+                        CallRecvDt = Convert.ToDateTime(CallRecvDt),
+                        CallSno = Convert.ToInt16(CallSno)
+                    }).ToList();
+
+            query.AddRange(from l in context.VenderCallRegisterItemView2s
+                               where l.CaseNo == CaseNo && l.ItemSrnoPo != ItemSrnoPo
+
+                           select new VenderCallRegisterModel
+                               {
+                                   Status = l.Status,
+                                   ItemSrnoPo = l.ItemSrnoPo,
+                                   ItemDescPo = l.ItemDescPo,
+                                   QtyOrdered = l.QtyOrdered,
+                                   CumQtyPrevOffered = l.CumQtyPrevOffered,
+                                   CumQtyPrevPassed = l.CumQtyPrevPassed,
+                                   QtyToInsp = l.QtyToInsp,
+                                   QtyPassed = l.QtyPassed,
+                                   QtyRejected = l.QtyRejected,
+                                   QtyDue = l.QtyDue,
+                                   Consignee = l.Consignee,
+                                   DelvDate = l.DelvDate,
+                                   CaseNo = CaseNo,
+                                   CallRecvDt = Convert.ToDateTime(CallRecvDt),
+                                   CallSno = Convert.ToInt16(CallSno)
+                               });
+
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => w.Status.Contains(searchBy) || w.Consignee.Contains(searchBy)).ToList();
+
+            dTResult.recordsFiltered = query.Count();
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
 
