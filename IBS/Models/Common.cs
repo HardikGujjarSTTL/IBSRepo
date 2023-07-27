@@ -155,12 +155,12 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> city = (from a in context.T03Cities
-                                      select
-                                 new SelectListItem
-                                 {
-                                     Text = a.City,
-                                     Value = Convert.ToString(a.CityCd)
-                                 }).ToList();
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.City,
+                                        Value = Convert.ToString(a.CityCd)
+                                    }).ToList();
             return city;
         }
 
@@ -212,7 +212,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-         
+
         public static IEnumerable<SelectListItem> GetClientByClientType(string CoCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -226,7 +226,7 @@ namespace IBS.Models
                             Value = Convert.ToString(a.Railway)
                         }).OrderBy(c => c.Text).ToList();
             }
-            else if(CoCd != "")
+            else if (CoCd != "")
             {
                 return (from a in ModelContext.T12BillPayingOfficers
                         where a.BpoType == CoCd
@@ -245,14 +245,14 @@ namespace IBS.Models
 
         public static List<SelectListItem> GetRitesOfficerCd()
         {
-            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());             
-                return (from a in ModelContext.T08IeControllOfficers
-                        where a.CoStatus != null
-                        select new SelectListItem
-                        {
-                            Text = Convert.ToString(a.CoName),
-                            Value = Convert.ToString(a.CoCd)
-                        }).OrderBy(c => c.Text).ToList();            
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T08IeControllOfficers
+                    where a.CoStatus != null
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.CoName),
+                        Value = Convert.ToString(a.CoCd)
+                    }).OrderBy(c => c.Text).ToList();
         }
 
         public static List<SelectListItem> MAStatus()
@@ -328,12 +328,12 @@ namespace IBS.Models
             single.Text = "Letter of Offer";
             single.Value = "L";
             textValueDropDownDTO.Add(single);
-            
+
             return textValueDropDownDTO.ToList();
         }
 
 
-        
+
         public static List<SelectListItem> RegionCode()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -489,12 +489,12 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Role = (from a in ModelContext.Roles
-                                      select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.Rolename),
-                                     Value = Convert.ToString(a.RoleId)
-                                 }).ToList();
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.Rolename),
+                                        Value = Convert.ToString(a.RoleId)
+                                    }).ToList();
             return Role;
 
         }
@@ -504,12 +504,12 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> IE = (from a in ModelContext.T09Ies
                                        where a.IeRegion == RegionCode
-                                         select
-                                    new SelectListItem
-                                    {
-                                        Text = Convert.ToString(a.IeName),
-                                        Value = Convert.ToString(a.IeCd)
-                                    }).ToList();
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.IeName),
+                                      Value = Convert.ToString(a.IeCd)
+                                  }).ToList();
             return IE;
 
         }
@@ -568,7 +568,7 @@ namespace IBS.Models
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.ConsigneeCd +"-"+ a.ConsigneeFirm + "/"+ a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
+                           Text = Convert.ToString(a.ConsigneeCd + "-" + a.ConsigneeFirm + "/" + a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
                            Value = Convert.ToString(a.ConsigneeCd)
                        }).ToList();
                 dropDownDTOs.AddRange(dropList);
@@ -594,14 +594,9 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
-
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Contains(consignee)
+                        where a.Consignee.StartsWith(consignee)
                         select
                    new SelectListItem
                    {
@@ -612,6 +607,14 @@ namespace IBS.Models
             {
                 dropDownDTOs.AddRange(dropList);
             }
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+            if (dropDownDTOs != null && dropDownDTOs.Count > 1)
+            {
+                dropDownDTOs[0].Selected = true;
+            }
             return dropDownDTOs;
         }
 
@@ -619,7 +622,7 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            
+
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.ViewGetvendors
                         where a.VendCd == VendCd && a.VendName != null
@@ -643,7 +646,7 @@ namespace IBS.Models
 
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from v in ModelContext.T05Vendors
-                        join c in ModelContext.T03Cities on v.VendCityCd equals(c.CityCd)
+                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
                         where v.VendCityCd == c.CityCd && v.VendName != null && v.VendCd == VendCd
                         select
                    new SelectListItem
@@ -713,12 +716,12 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> DocType = (from a in ModelContext.T74DocumentTypes
-                                      select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.DocTypeDesc),
-                                     Value = Convert.ToString(a.DocType)
-                                 }).ToList();
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.DocTypeDesc),
+                                           Value = Convert.ToString(a.DocType)
+                                       }).ToList();
             return DocType;
         }
 
@@ -726,13 +729,13 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> DocSubType = (from a in ModelContext.T75DocSubTypes
-                                             where a.DocType == DocType
-                                          select
-                                     new SelectListItem
-                                     {
-                                         Text = a.DocSubTypeDesc,
-                                         Value = a.DocSubType
-                                     }).ToList();
+                                               where a.DocType == DocType
+                                               select
+                                          new SelectListItem
+                                          {
+                                              Text = a.DocSubTypeDesc,
+                                              Value = a.DocSubType
+                                          }).ToList();
             return DocSubType;
         }
 
@@ -786,20 +789,20 @@ namespace IBS.Models
             var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
             // this is the part p.SortColumn
-           // var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+            // var propertyAccess = Expression.MakeMemberAccess(parameter, property);
 
             // this is the part p =&gt; p.SortColumn
-           // var orderByExpression = Expression.Lambda(propertyAccess, parameter);
+            // var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
             // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
             resultExpression = Expression.Call(typeof(Queryable), command, new Type[] { typeof(T), property.PropertyType },
                query.Expression, Expression.Quote(orderByExpression));
 
             return query.Provider.CreateQuery<T>(resultExpression);
-     
+
         }
 
-       
+
     }
 }
 

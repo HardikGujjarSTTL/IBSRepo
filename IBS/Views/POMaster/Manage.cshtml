@@ -58,7 +58,7 @@
                         </div>
                     </div>
 
-                    <div class="row my-0">
+                   @* <div class="row my-0">
                         <div class="col-md-5 mb-3">
                             <label for="Reference">Vendor</label>
                             <input type="text" class="input" id="txtVend">
@@ -68,7 +68,7 @@
                             <label for="Reference"></label>
                             @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="row my-0">
                         <div class="col-md-3 mb-3">
@@ -260,7 +260,7 @@
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
                     //$("#hdnRCD").val($("#RlyCd").val());
                     //$("#hdnRailway").val($("#RlyCd option:selected").text());
@@ -287,7 +287,7 @@
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
                 }
             });
@@ -309,7 +309,7 @@
                         $.each(response.list, function (index, value) {
                             $("#VendCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                         });
-                        vendor_status();
+                        //vendor_status();
                     }
                     else
                     {
@@ -319,34 +319,34 @@
             });
         }
 
-        function vendor_status() {
-            var VendCd = $("#VendCd").val();
-            $.ajax({
-                url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
-                type: 'GET',
-                cache: false,
-                data: '{}',
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response.status) {
-                    ShowHideMsgNew(response.status, response.responseText);
-                    $("#txtVend").val("");
-                }
-                else
-                {
-                    $("#txtVend").val(VendCd);
-                }
-            });
-        }
+        //function vendor_status() {
+        //    //var VendCd = $("#VendCd").val();
+        //    $.ajax({
+        //        url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
+        //        type: 'GET',
+        //        cache: false,
+        //        data: '{}',
+        //        processData: false,
+        //        contentType: false
+        //    }).done(function (response) {
+        //        if (response.status) {
+        //            ShowHideMsgNew(response.status, response.responseText);
+        //            $("#txtVend").val("");
+        //        }
+        //        else
+        //        {
+        //            $("#txtVend").val(VendCd);
+        //        }
+        //    });
+        //}
 
         function sameAsVendor() {
             if($("#chkManuf").prop('checked') == true)
             {
                 //$("#dvPlaceOfInspection").css("display", "block");
                 //$("#txtMPOI").attr("disabled", "disabled");
-                fill_manufacturer();
-                GetManufVEND();
+                fill_manufacturer(0);
+                GetManufVEND(0);
             }
             else
             {
@@ -359,9 +359,9 @@
             }
         }
 
-        function fill_manufacturer() {
+        function fill_manufacturer(id) {
             $.ajax({
-                url: '@Url.Action("GetVendor", "POMaster")',
+                url: '@Url.Action("GetVendor", "POMaster")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -374,7 +374,7 @@
                     $.each(response.list, function (index, value) {
                         $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
-                    vendor_status();
+                    //vendor_status();
                 }
                 else {
                     ShowHideMsgNew(response.status, "No Vendor Found!!!");
@@ -382,10 +382,14 @@
             });
         }
 
-        function GetManufVEND() {
-            var VendCd = $("#VendCd").val();
+        function GetManufVEND(id) {
+            //var VendCd = $("#VendCd").val();
+            //if(id > 0)
+            //{
+            //    VendCd=id;
+            //}
             $.ajax({
-                url: '@Url.Action("GetManufVEND", "POMaster")?VendCd=' + VendCd,
+                url: '@Url.Action("GetManufVEND", "POMaster")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -409,6 +413,13 @@
                 }
                 
             });
+        }
+
+        function SelectManufacturer()
+        {
+               var txtMName= $("#txtMName").val();
+                fill_manufacturer(txtMName);
+                GetManufVEND(txtMName);
         }
 
     </script>
