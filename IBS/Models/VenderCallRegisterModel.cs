@@ -63,7 +63,7 @@ namespace IBS.Models
         public string? RegionCode { get; set; }
         public string? SetRegionCode { get; set; }
 
-        public int? MfgCd { get; set; }
+        public int MfgCd { get; set; }
 
         public string? MfgPlace { get; set; }
 
@@ -154,5 +154,50 @@ namespace IBS.Models
         public string? L5noPo { get; set; }
 
         public string? RlyNonrly { get; set; }
+
+        //T05_VENDOR
+        public string? VendAdd1 { get; set; }
+        
+        public string? VendContactPer1 { get; set; }
+        
+        public string? VendContactTel1 { get; set; }
+
+        public string? VendStatus { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? VendStatusDtFr { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? VendStatusDtTo { get; set; }
+
+        public string? VendEmail { get; set; }
+
+        //VENDER_CALL_REGISTER_ITEM_VIEW
+        public string? Status { get; set; }
+
+        public byte? ItemSrnoPo { get; set; }
+
+        public string? ItemDescPo { get; set; }
+
+        public decimal? QtyOrdered { get; set; }
+
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        public decimal? QtyToInsp { get; set; }
+
+        public decimal? QtyPassed { get; set; }
+
+        public decimal? QtyRejected { get; set; }
+
+        public decimal? QtyDue { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? DelvDate { get; set; }
+
     }
 }

@@ -68,10 +68,17 @@ namespace IBS.Controllers.Vendor
 
             if (CaseNo != null && CallRecvDt != null && CallSno != null)
             {
-                model = venderRepository.FindByID(CaseNo, CallRecvDt, CallSno);
+                model = venderRepository.FindByID(CaseNo, CallRecvDt, CallSno, UserName);
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableList([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = venderRepository.GetVenderList(dtParameters, UserName);
+            return Json(dTResult);
         }
     }
 }

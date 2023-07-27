@@ -619,11 +619,7 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            //SelectListItem drop = new SelectListItem();
-            //drop.Text = "Other";
-            //drop.Value = "0";
-            //dropDownDTOs.Add(drop);
-
+            
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.ViewGetvendors
                         where a.VendCd == VendCd && a.VendName != null
@@ -639,6 +635,29 @@ namespace IBS.Models
             }
             return dropDownDTOs;
         }
+
+        public static List<SelectListItem> GetVendor_City(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from v in ModelContext.T05Vendors
+                        join c in ModelContext.T03Cities on v.VendCityCd equals(c.CityCd)
+                        where v.VendCityCd == c.CityCd && v.VendName != null && v.VendCd == VendCd
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                       Value = Convert.ToString(v.VendCd),
+                   }).ToList();
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+
         public static VendorModel Getvendor_status(int VendCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());

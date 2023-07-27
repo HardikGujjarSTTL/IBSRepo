@@ -11,7 +11,7 @@ public partial class T65LaboratoryMaster
 
     public string? LabAddress { get; set; }
 
-    public byte? LabCity { get; set; }
+    public int? LabCity { get; set; }
 
     public string? LabContactPer { get; set; }
 
