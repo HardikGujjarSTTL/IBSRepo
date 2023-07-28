@@ -18,7 +18,7 @@
                     <div class="row my-0">
                         <div class="col-md-4 mb-4">
                             <label for="VisitDt">Date Of Contract</label>
-                            <input type="text" class="input datepicker" asp-for="VisitDt" readonly="true">
+                            <input type="text" name="VisitDt" class="input datepicker" asp-for="VisitDt" readonly="true">
                             <span asp-validation-for="VisitDt" class="text-danger"></span>
                         </div>
 
@@ -72,16 +72,63 @@
                     </div>
                 </div>
             </form>
-    </div>
+        </div>
+        </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        function Save() 
-        {
-            if ($("#frmClientContractDetails").valid()) 
-            {
+        $(document).ready(function () {
+            if ('@Model.Client' != null) {
+                FillClient('@Model.Client');
+            }
+        });
+    </script>
+
+    <script language="javascript">
+        function validate() {
+            if (trimAll(document.frmClientContractDetails.VisitDt.value) == "") {
+                alert("Select Date of visit");
+                event.returnValue = false;
+            }
+
+            else if (trimAll(document.frmClientContractDetails.ClientType.value) == "") {
+                alert("Select Client Type");
+                event.returnValue = false;
+            }
+            else if (trimAll(document.frmClientContractDetails.Client.value) == "") {
+                alert("Select Client ");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.ClientOfficerName.value == "") {
+                alert("OFFICER NAME CONTACTED CANNOT BE LEFT BLANK");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.Designation.value == "") {
+                alert("DESIGNATION CANNOT BE LEFT BLANK");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.OverallOutcome.value == "") {
+                alert("OUTCOME CANNOT BE LEFT BLANK");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.RitesOfficerCd.value == "") {
+                alert("SELECT CONTROLLING OFFICER NAME");
+                event.returnValue = false;
+            }
+            else
+                return;
+
+        }
+        function integersOnly(obj) {
+            obj.value = obj.value.replace(/[^0-9-.]/g, '');
+        }
+    </script>
+    
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmClientContractDetails").valid()) {
                 $("#frmClientContractDetails").submit();
             }
         }
@@ -90,16 +137,19 @@
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/ClientContract/Index";
         };
-        function FillClient() {
+
+        function FillClient(id) {
             var _drpClientType = $('select#ClientType').val();
             $.get("@Url.Action("GetClientByClientType", "ClientContract")", { CoCd: _drpClientType }, function (response) {
                 if (response != null) {
                     $("#Client").empty();
                     $("#Client").append($('<option value="">--Select--</option>'));
-                    $.each(response, function (ind, val) 
-                    {
-                        $("#Client").append($('<option></option>').val(val.Value).html(val.Text));
+                    $.each(response, function (ind, val) {
+                        $("#Client").append($('<option></option>').val(val.Value).html(val.Text)); 
                     });
+                    if (id != null) {
+                        $("#Client").val(id);
+                    }
                 }
             });
         }

@@ -243,6 +243,162 @@ namespace IBS.Models
             }
         }
 
+        public static List<SelectListItem> GetMonth(string CoCd)
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+
+            single = new SelectListItem();
+            single.Text = "January";
+            single.Value = "01";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "February";
+            single.Value = "02";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "March";
+            single.Value = "03";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "April";
+            single.Value = "04";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "May";
+            single.Value = "05";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "June";
+            single.Value = "06";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "July";
+            single.Value = "07";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "August";
+            single.Value = "08";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "September";
+            single.Value = "09";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "October";
+            single.Value = "10";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "November";
+            single.Value = "11";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "December";
+            single.Value = "12";
+            textValueDropDownDTO.Add(single);
+
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetYear(string CoCd)
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+
+            single = new SelectListItem();
+            single.Text = "2008";
+            single.Value = "2008";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2009";
+            single.Value = "2009";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2010";
+            single.Value = "2010";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2011";
+            single.Value = "2011";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2012";
+            single.Value = "2012";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2013";
+            single.Value = "2013";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2014";
+            single.Value = "2014";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2015";
+            single.Value = "2015";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2016";
+            single.Value = "2016";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2017";
+            single.Value = "2017";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2018";
+            single.Value = "2018";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2019";
+            single.Value = "2019";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2020";
+            single.Value = "2020";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2021";
+            single.Value = "2021";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2022";
+            single.Value = "2022";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2023";
+            single.Value = "2023";
+            textValueDropDownDTO.Add(single);
+
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> GetRitesOfficerCd()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());             
@@ -331,9 +487,7 @@ namespace IBS.Models
             
             return textValueDropDownDTO.ToList();
         }
-
-
-        
+         
         public static List<SelectListItem> RegionCode()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -688,8 +842,7 @@ namespace IBS.Models
             return model;
 
         }
-
-
+         
         public static List<SelectListItem> GetDocType()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -754,6 +907,8 @@ namespace IBS.Models
 
             return query.Provider.CreateQuery<T>(resultExpression);
         }
+
+        
     }
 }
 

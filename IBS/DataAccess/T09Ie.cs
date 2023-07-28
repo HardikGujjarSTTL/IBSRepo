@@ -57,6 +57,16 @@ public partial class T09Ie
 
     public DateTime? DscExpiryDt { get; set; }
 
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 
     public virtual T07RitesDesig? IeDesigNavigation { get; set; }

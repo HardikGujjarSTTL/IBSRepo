@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T65LaboratoryMaster
+public partial class T65LaboratoryMasterBak1
 {
     public int LabId { get; set; }
 
