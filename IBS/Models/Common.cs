@@ -160,7 +160,28 @@ namespace IBS.Models
                                  }).ToList();
             return city;
         }
-
+        
+            public static List<SelectListItem> GetLabApproval()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "--Select--";
+            single.Value = "0";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "NABL";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "RITES";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CERTIFER APPROVED";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
         public static List<SelectListItem> VendorApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();

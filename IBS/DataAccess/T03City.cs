@@ -19,6 +19,16 @@ public partial class T03City
 
     public string? PinCode { get; set; }
 
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
     public virtual T92State? StateCdNavigation { get; set; }
 
     public virtual ICollection<T05Vendor> T05Vendors { get; set; } = new List<T05Vendor>();

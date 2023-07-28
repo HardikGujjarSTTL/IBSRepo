@@ -56,6 +56,7 @@ builder.Services.AddScoped<IMAapproveRepository, MAapproveRepository>();
 builder.Services.AddScoped<IDEOCRISPurchesOrderWCaseNoRepository, DEOCRISPurchesOrderWCaseNoRepository>();
 builder.Services.AddScoped<IIEMessageRepository, IEMessageRepository>();
 builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>();
+builder.Services.AddScoped<ILaboratoryMstRepository, LaboratoryMstRepository>();
 
 builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration.UploadDocRepository>();
 
