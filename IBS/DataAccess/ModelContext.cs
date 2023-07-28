@@ -17,11 +17,17 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Abc> Abcs { get; set; }
 
+    public virtual DbSet<Acccode> Acccodes { get; set; }
+
+    public virtual DbSet<Acccode2> Acccode2s { get; set; }
+
     public virtual DbSet<AuCri> AuCris { get; set; }
 
     public virtual DbSet<AuditT20Ic> AuditT20Ics { get; set; }
 
     public virtual DbSet<BackupT05Vendor02oct2010> BackupT05Vendor02oct2010s { get; set; }
+
+    public virtual DbSet<Bankcodedrpdown> Bankcodedrpdowns { get; set; }
 
     public virtual DbSet<BounceT25RvDetail> BounceT25RvDetails { get; set; }
 
@@ -526,6 +532,36 @@ public partial class ModelContext : DbContext
                 .HasColumnName("IC_TYPE_ID");
         });
 
+        modelBuilder.Entity<Acccode>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("ACCCODE");
+
+            entity.Property(e => e.AccCd)
+                .HasPrecision(6)
+                .HasColumnName("ACC_CD");
+            entity.Property(e => e.AccDesc)
+                .HasMaxLength(81)
+                .IsUnicode(false)
+                .HasColumnName("ACC_DESC");
+        });
+
+        modelBuilder.Entity<Acccode2>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("ACCCODE2");
+
+            entity.Property(e => e.AccCd)
+                .HasPrecision(6)
+                .HasColumnName("ACC_CD");
+            entity.Property(e => e.AccDesc)
+                .HasMaxLength(81)
+                .IsUnicode(false)
+                .HasColumnName("ACC_DESC");
+        });
+
         modelBuilder.Entity<AuCri>(entity =>
         {
             entity.HasKey(e => e.Au).HasName("AU_CRIS_PK");
@@ -673,6 +709,21 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.VendStatusDtTo)
                 .HasColumnType("DATE")
                 .HasColumnName("VEND_STATUS_DT_TO");
+        });
+
+        modelBuilder.Entity<Bankcodedrpdown>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("BANKCODEDRPDOWN");
+
+            entity.Property(e => e.BankCd)
+                .HasPrecision(6)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.BankName)
+                .HasMaxLength(47)
+                .IsUnicode(false)
+                .HasColumnName("BANK_NAME");
         });
 
         modelBuilder.Entity<BounceT25RvDetail>(entity =>
@@ -7194,6 +7245,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CallMarkingStoppingDt)
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_MARKING_STOPPING_DT");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -7206,7 +7263,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("IE_CALL_MARKING");
             entity.Property(e => e.IeCityCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CITY_CD");
             entity.Property(e => e.IeCoCd)
                 .HasPrecision(3)
@@ -7269,6 +7326,15 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("IE_TYPE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -11457,25 +11523,46 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T59LabExp>(entity =>
         {
-            entity.HasKey(e => new { e.LabBillPer, e.RegionCode }).HasName("PKT59_LAB_EXP");
+            entity.HasKey(e => e.Id).HasName("ID");
 
             entity.ToTable("T59_LAB_EXP");
 
+            entity.HasIndex(e => new { e.LabBillPer, e.RegionCode }, "PKT59_LAB_EXP").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("NULL ")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(3)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.LabBillPer)
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("LAB_BILL_PER");
+            entity.Property(e => e.LabExp)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("LAB_EXP");
             entity.Property(e => e.RegionCode)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("REGION_CODE");
-            entity.Property(e => e.Datetime)
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
                 .HasColumnType("DATE")
-                .HasColumnName("DATETIME");
-            entity.Property(e => e.LabExp)
-                .HasColumnType("NUMBER(13,2)")
-                .HasColumnName("LAB_EXP");
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -14101,7 +14188,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeCoCd)
                 .HasPrecision(3)
@@ -15819,6 +15906,10 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
         modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
+        modelBuilder.HasSequence("T59_LAB_EXP_SEQ");
+        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ");
+        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ_1").IncrementsBy(135);
+        modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ_2");
         modelBuilder.HasSequence("T91_RAILWAYS_SEQ");
         modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");

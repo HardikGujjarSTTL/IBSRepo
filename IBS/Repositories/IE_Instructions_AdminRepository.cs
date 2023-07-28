@@ -71,14 +71,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "Datetime";
+                    orderCriteria = "LetterNo";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "Datetime";
+                orderCriteria = "LetterNo";
                 orderAscendingDirection = true;
             }
             query = from l in context.T72IeMessages

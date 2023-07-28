@@ -1,11 +1,16 @@
 ﻿using IBS.Controllers;
 using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGeneration;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Xml;
@@ -87,6 +92,55 @@ namespace IBS.Repositories.Vendor
             }
         }
 
+        public VenderCallRegisterModel FindByVenderDetail(int MfgCd)
+        {
+            VenderCallRegisterModel model = new();
+
+            T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == MfgCd).FirstOrDefault();
+
+            if (Vendor == null)
+                throw new Exception("Vender Record Not found");
+            else
+            {
+                model.VendAdd1 = Vendor.VendAdd1;
+                model.VendContactPer1 = Vendor.VendContactPer1;
+                model.VendContactTel1 = Vendor.VendContactTel1;
+                model.VendStatus = Vendor.VendStatus;
+                model.VendStatusDtFr = Vendor.VendStatusDtFr;
+                model.VendStatusDtTo = Vendor.VendStatusDtTo;
+                model.VendEmail = Vendor.VendEmail;
+
+                return model;
+            }
+        }
+
+        public DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
+            IQueryable<VenderCallRegisterModel>? query = null;
+
+            query = from l in context.T05Vendors
+                        //where l.VendCd == MfgCd
+                    join c in context.T03Cities on l.VendCityCd equals (c.CityCd)
+                    where l.VendCityCd == c.CityCd && l.VendName != null && l.VendCd == MfgCd
+
+                    select new VenderCallRegisterModel
+                    {
+                        Vendor = Convert.ToString(l.VendName) + "/" + Convert.ToString(l.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                        VendCd = Convert.ToString(l.VendCd),
+                        VendAdd1 = l.VendAdd1,
+                        VendContactPer1 = l.VendContactPer1,
+                        VendContactTel1 = l.VendContactTel1,
+                        VendStatus = l.VendStatus,
+                        VendStatusDtFr = l.VendStatusDtFr,
+                        VendStatusDtTo = l.VendStatusDtTo,
+                        VendEmail = l.VendEmail
+                    };
+
+            dTResult.data = query;
+            return dTResult;
+        }
+
         public DTResult<VenderCallRegisterModel> GetUserList(DTParameters dtParameters, string UserName)
         {
             DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
@@ -103,14 +157,14 @@ namespace IBS.Repositories.Vendor
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "CallRecvDt";
+                    orderCriteria = "CaseNo";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CallRecvDt";
+                orderCriteria = "CaseNo";
                 orderAscendingDirection = true;
             }
             string CaseNo = "";
@@ -138,9 +192,9 @@ namespace IBS.Repositories.Vendor
                         CallRecvDt = l.CallRecvDt,
                         CallInstallNo = l.CallInstallNo,
                         CallSno = l.CallSno,
-                        CallStatus = l.CallStatus,
+                        CallStatus = l.CallStatus == null ? string.Empty : l.CallStatus,
                         CallLetterNo = l.CallLetterNo,
-                        Remarks = l.Remarks,
+                        Remarks = l.Remarks == null ? string.Empty : l.Remarks,
                         PoNo = l.PoNo,
                         PoDt = l.PoDt,
                         IeSname = l.IeSname,
@@ -170,7 +224,7 @@ namespace IBS.Repositories.Vendor
             List<VenderCallRegisterModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
-            
+
             string CaseNo = "";
             string CallRecvDt = "";
             string CallSno = "";
@@ -198,48 +252,48 @@ namespace IBS.Repositories.Vendor
                               select a.ItemSrnoPo).FirstOrDefault();
 
             query = (from l in context.VenderCallRegisterItemView1s
-                    where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(CallRecvDt) && l.CallSno == Convert.ToInt16(CallSno)
-                    
-                    select new VenderCallRegisterModel
-                    {
-                        Status = l.Status,
-                        ItemSrnoPo = l.ItemSrnoPo,
-                        ItemDescPo = l.ItemDescPo,
-                        QtyOrdered = l.QtyOrdered,
-                        CumQtyPrevOffered = l.CumQtyPrevOffered,
-                        CumQtyPrevPassed = l.CumQtyPrevPassed,
-                        QtyToInsp = l.QtyToInsp,
-                        QtyPassed = l.QtyPassed,
-                        QtyRejected = l.QtyRejected,
-                        QtyDue = l.QtyDue,
-                        Consignee = l.Consignee,
-                        DelvDate = l.DelvDate,
-                        CaseNo = CaseNo,
-                        CallRecvDt = Convert.ToDateTime(CallRecvDt),
-                        CallSno = Convert.ToInt16(CallSno)
-                    }).ToList();
+                     where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(CallRecvDt) && l.CallSno == Convert.ToInt16(CallSno)
+
+                     select new VenderCallRegisterModel
+                     {
+                         Status = l.Status,
+                         ItemSrnoPo = l.ItemSrnoPo,
+                         ItemDescPo = l.ItemDescPo,
+                         QtyOrdered = l.QtyOrdered,
+                         CumQtyPrevOffered = l.CumQtyPrevOffered,
+                         CumQtyPrevPassed = l.CumQtyPrevPassed,
+                         QtyToInsp = l.QtyToInsp,
+                         QtyPassed = l.QtyPassed,
+                         QtyRejected = l.QtyRejected,
+                         QtyDue = l.QtyDue,
+                         Consignee = l.Consignee,
+                         DelvDate = l.DelvDate,
+                         CaseNo = CaseNo,
+                         CallRecvDt = Convert.ToDateTime(CallRecvDt),
+                         CallSno = Convert.ToInt16(CallSno)
+                     }).ToList();
 
             query.AddRange(from l in context.VenderCallRegisterItemView2s
-                               where l.CaseNo == CaseNo && l.ItemSrnoPo != ItemSrnoPo
+                           where l.CaseNo == CaseNo && l.ItemSrnoPo != ItemSrnoPo
 
                            select new VenderCallRegisterModel
-                               {
-                                   Status = l.Status,
-                                   ItemSrnoPo = l.ItemSrnoPo,
-                                   ItemDescPo = l.ItemDescPo,
-                                   QtyOrdered = l.QtyOrdered,
-                                   CumQtyPrevOffered = l.CumQtyPrevOffered,
-                                   CumQtyPrevPassed = l.CumQtyPrevPassed,
-                                   QtyToInsp = l.QtyToInsp,
-                                   QtyPassed = l.QtyPassed,
-                                   QtyRejected = l.QtyRejected,
-                                   QtyDue = l.QtyDue,
-                                   Consignee = l.Consignee,
-                                   DelvDate = l.DelvDate,
-                                   CaseNo = CaseNo,
-                                   CallRecvDt = Convert.ToDateTime(CallRecvDt),
-                                   CallSno = Convert.ToInt16(CallSno)
-                               });
+                           {
+                               Status = l.Status,
+                               ItemSrnoPo = l.ItemSrnoPo,
+                               ItemDescPo = l.ItemDescPo,
+                               QtyOrdered = l.QtyOrdered,
+                               CumQtyPrevOffered = l.CumQtyPrevOffered,
+                               CumQtyPrevPassed = l.CumQtyPrevPassed,
+                               QtyToInsp = l.QtyToInsp,
+                               QtyPassed = l.QtyPassed,
+                               QtyRejected = l.QtyRejected,
+                               QtyDue = l.QtyDue,
+                               Consignee = l.Consignee,
+                               DelvDate = l.DelvDate,
+                               CaseNo = CaseNo,
+                               CallRecvDt = Convert.ToDateTime(CallRecvDt),
+                               CallSno = Convert.ToInt16(CallSno)
+                           });
 
 
             dTResult.recordsTotal = query.Count();
@@ -257,34 +311,49 @@ namespace IBS.Repositories.Vendor
             return dTResult;
         }
 
-        //public VenderCallRegisterModel FindByID()
-        //{
-        //    VenderCallRegisterModel model = new();
-        //    DateTime CDATE = DateTime.Now;
+        public int DetailsInsertUpdate(VenderCallRegisterModel model)
+        {
+            int ID = 0;
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("p_MfgCd", OracleDbType.Varchar2, model.MfgCd, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_VendContactPer1", OracleDbType.Varchar2, model.VendContactPer1, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_VendContactTel1", OracleDbType.Varchar2, model.VendContactTel1, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_VendEmail", OracleDbType.Varchar2, model.VendEmail, ParameterDirection.Input);
 
+                var ds = DataAccessDB.ExecuteNonQuery("SP_UPDATE_VENDOR_INFO", par, 1);
+                ID = model.MfgCd;
+            }
+            return ID;
+        }
 
-        //    if (user == null)
-        //        throw new Exception("User Record Not found");
-        //    else
-        //    {
-        //        model.ID = Convert.ToDecimal(user.Id);
-        //        model.UserId = user.UserId;
-        //        model.UserName = user.UserName;
-        //        model.Password = user.Password;
-        //        model.EmpNo = user.EmpNo;
-        //        model.Region = user.Region;
-        //        model.AuthLevl = user.AuthLevl;
-        //        model.Status = user.Status;
-        //        model.AllowPo = user.AllowPo;
-        //        model.AllowUpChksht = user.AllowUpChksht;
-        //        model.AllowDnChksht = user.AllowDnChksht;
-        //        model.CallMarking = user.CallMarking;
-        //        model.CallRemarking = user.CallRemarking;
-        //        model.UserType = user.UserType;
+        public int RegiserCallSave(VenderCallRegisterModel model)
+        {
+            int ID = 0;
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[14];
+                par[0] = new OracleParameter("p_CALL_LETTER_NO", OracleDbType.Varchar2, model.CallLetterNo, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_CALL_LETTER_DT", OracleDbType.Date, model.CallLetterDt, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_CALL_MARK_DT", OracleDbType.Date, model.CallMarkDt, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_CALL_SNO", OracleDbType.Int32, model.CallSno, ParameterDirection.Input);
+                par[4] = new OracleParameter("p_DT_INSP_DESIRE", OracleDbType.Date, model.DtInspDesire, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_CALL_STATUS_DT", OracleDbType.Date, model.CallStatusDt, ParameterDirection.Input);
+                par[6] = new OracleParameter("p_CALL_REMARK_STATUS", OracleDbType.Varchar2, model.CallRemarkStatus, ParameterDirection.Input);
+                par[7] = new OracleParameter("p_CALL_INSTALL_NO", OracleDbType.Varchar2, model.CallInstallNo, ParameterDirection.Input);
+                par[8] = new OracleParameter("p_REMARKS", OracleDbType.Varchar2, model.Remarks, ParameterDirection.Input);
+                par[9] = new OracleParameter("p_MFG_CD", OracleDbType.Varchar2, model.MfgCd, ParameterDirection.Input);
+                par[10] = new OracleParameter("p_MFG_PLACE", OracleDbType.Varchar2, model.MfgPlace, ParameterDirection.Input);
+                par[11] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, model.UserId, ParameterDirection.Input);
+                par[12] = new OracleParameter("p_DATETIME", OracleDbType.Date, model.Datetime, ParameterDirection.Input);
+                par[13] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, model.CaseNo, ParameterDirection.Input);
+                par[14] = new OracleParameter("p_CALL_RECV_DT", OracleDbType.Date, model.CallRecvDt, ParameterDirection.Input);
 
-        //        model.Isdeleted = user.Isdeleted;
-        //        return model;
-        //    }
-        //}
+                var ds = DataAccessDB.ExecuteNonQuery("SP_UPDATE_CALL_REGISTER", par, 1);
+                return ID;
+            }
+        }
+
     }
 }
