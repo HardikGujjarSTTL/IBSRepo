@@ -111,9 +111,7 @@
                     <span asp-validation-for="CallLetterNo" class="text-danger"></span>
                 </div>
             </div>
-
         </div>
-
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -137,8 +135,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="row my-0">
             <div class="col-md-12 mb-3">
                 <div class="reference">
@@ -162,7 +158,7 @@
                     <label for="Name">State whether the Call is for Final Or Stage Inspection</label>
                     <div class="company-checkbox">
                         <div class="remember">
-                            <div class="remecheckbox" >
+                            <div class="remecheckbox">
                                 <input type="radio" id="huey" name="drone" checked disabled="disabled">
                                 <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
 
@@ -172,7 +168,7 @@
                         </div>
                     </div>
                     <label for="Name" style="color:DarkMagenta">* Select Stage in case of Stage Inspection Call.</label>
-                    
+
                 </div>
             </div>
         </div>
@@ -205,27 +201,27 @@
                         {
                             <div class="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" name="VendRdso" asp-for="VendRdso" value="@val.Value" id="VendRdso@(val.Value)" />
+                                    <input type="radio" name="VendRdso" asp-for="VendRdso" value="@val.Value" id="VendRdso@(val.Value)" onchange="ononchangeVendRdso()" />
                                     <label for="VendRdso@(val.Value)">@val.Text</label>
                                 </div>
                             </div>
                         }
                     </div>
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <span asp-validation-for="VendRdso" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3 mb-3" id="divVendApprovalFr">
                 <div class="reference">
                     <label for="Name">From</label>
-                    <input type="text" class="input" asp-for="VendApprovalFr" id="VendApprovalFr">
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <input type="text" class="datepicker" asp-for="VendApprovalFr" id="VendApprovalFr">
+                    <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3 mb-3" id="divVendApprovalTo">
                 <div class="reference">
                     <label for="Name">To</label>
-                    <input type="text" class="input datetime" asp-for="VendApprovalTo" id="VendApprovalTo">
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <input type="text" class="datepicker" asp-for="VendApprovalTo" id="VendApprovalTo">
+                    <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -239,68 +235,71 @@
                         {
                             <div class="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" name="StaggeredDp" asp-for="StaggeredDp" value="@val.Value" id="StaggeredDp@(val.Value)"/>
+                                    <input type="radio" name="StaggeredDp" asp-for="StaggeredDp" value="@val.Value" id="StaggeredDp@(val.Value)" onchange="ononchangeStaggeredDp()" />
                                     <label for="StaggeredDp@(val.Value)">@val.Text</label>
                                 </div>
                             </div>
                         }
                     </div>
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <span asp-validation-for="StaggeredDp" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        <div class="row my-0">
+        <div class="row my-0" id="divDPDetails">
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Name">If yes, details of lot size and staggered DP</label>
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Name">1. Lot Size & DP</label>
                     <input type="text" class="input" asp-for="LotDp1">
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <span asp-validation-for="LotDp1" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Name">2. Lot Size & DP</label>
                     <input type="text" class="input" asp-for="LotDp2">
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <span asp-validation-for="LotDp2" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>
-                </div>
+
+    </div>
+    <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="company-checkbox">
-                    <div class="remember">
-                        <div class="remecheckbox">
-                            <input type="checkbox" class="input" name="IsSameVender">
-                            Same As Vendor
-                        </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="company-checkbox">
+                <div class="remember">
+                    <div class="remecheckbox">
+                        <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
+                        Same As Vendor
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-6 mb-3">
                 <div class="reference">
                     <label for="Name">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
-                    <input type="text" class="input" asp-for="MfgCd" readonly="readonly">
-                    <span asp-validation-for="MfgCd" class="text-danger"></span>
+                    <input type="text" class="input" id="MfgCd1" value="@Model.MfgCd">
+                    @*<span asp-validation-for="MfgCd" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Name"> </label>
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn">Select Manufacturer</button>
+                        @*<button type="button" class="search-btn" id="SearchDetailsM" onclick="location.href='@Url.Action("VendorCallRegisterDetail", "VendorCallRegister",new { Action = "M",CaseNo = @Model.CaseNo,CallRecvDt = Convert.ToDateTime(@Model.CallRecvDt).ToString("dd-MM-yyyy"), CallSno = @Model.CallSno })'">Select Manufacturer</button>*@
+                        <button type="button" class="search-btn" id="SearchDetailsM">Select Manufacturer</button>
                     </div>
                     <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                 </div>
@@ -317,7 +316,7 @@
             <div class="col-md-12 mb-3">
                 <div class="reference">
                     <label for="Name">Place of Inspection</label>
-                    <textarea rows="4" asp-for="VendAdd1" readonly="readonly"></textarea>
+                    <textarea rows="4" asp-for="VendAdd1"></textarea>
                     <span asp-validation-for="VendAdd1" class="text-danger"></span>
                 </div>
             </div>
@@ -326,29 +325,27 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Contact Person's Name</label>
-                    <input type="text" class="input" asp-for="VendContactPer1" readonly="readonly">
+                    <input type="text" class="input" asp-for="VendContactPer1">
                     <span asp-validation-for="VendContactPer1" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Name">Manufacturer Email</label>
-                    <input type="text" class="input" asp-for="VendEmail" readonly="readonly">
+                    <input type="text" class="input" asp-for="VendEmail">
                     <span asp-validation-for="VendEmail" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Name">Phone No.</label>
-                    <input type="text" class="input" asp-for="VendContactTel1" readonly="readonly">
+                    <input type="text" class="input" asp-for="VendContactTel1">
                     <span asp-validation-for="VendContactTel1" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-2 mb-3">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn">Update Manufacturer's Contact Details.</button>
+                    <button type="button" class="save-btn" id="btnUpdateMDetails">Update Manufacturer's Contact Details.</button>
                 </div>
             </div>
         </div>
@@ -362,7 +359,7 @@
                         {
                             <div class="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" name="Lltype" asp-for="IrfcFunded" value="@val.Value" id="Lltype@(val.Value)" />
+                                    <input type="radio" name="IrfcFunded" asp-for="IrfcFunded" value="@val.Value" id="IrfcFunded@(val.Value)" />
                                     <label for="IrfcFunded@(val.Value)">@val.Text</label>
                                 </div>
                             </div>
@@ -397,17 +394,13 @@
                 <div class="company-checkbox">
                     <div class="remember">
                         <div class="remecheckbox">
-                            <input type="checkbox" class="input" name="IsSameVender">
+                            <input type="checkbox" class="input" name="IsNewVender">
                             <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>
                         </div>
                     </div>
                 </div>
-                <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                @*<span asp-validation-for="CallInstallNo" class="text-danger"></span>*@
             </div>
-        </div>
-        <div class="savenext-btn">
-            <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
         </div>
     </div>
     <section class="table-section">
@@ -437,25 +430,67 @@
             </div>
         </div>
     </section>
+
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="Name" style="color:red">* Click on Register Call Button Once only</label>
+                <br/>
+                <label for="Name" style="color:red">* Enter the Quantity Offered Now of All the Items Which You want to be Inspected in this call.</label>
+                <br/>
+                <div class="savenext-btn">
+                    <a asp-controller="VendorCallRegisterDetail" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" id="btnRegiserCallSave">Save</button>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+            </div>
+        </div>
+        
+    </div>
 </form>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-
             $("#ItemRdsoY").prop("checked", true);
             $("#VendRdsoY").prop("checked", true);
             $("#StaggeredDpY").prop("checked", true);
 
+            $("#MfgCd").prop("disabled", "disabled");
+
+            DateFormate();
             InitializeDatatable();
+
+
         });
+
+        function DateFormate() {
+            $('#VendApprovalFr').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#VendApprovalTo').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+        }
+
+        //function UpdateMDetails() {
+        //    alert(1);
+        //}
 
         function Save() {
             if ($("#frmDetails").valid()) {
                 $("#frmDetails").submit();
             }
         }
+
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
@@ -520,17 +555,190 @@
         }
 
         function ononchangeItemRdso() {
-             var ItemRdso =$('input:radio[name=ItemRdso]:checked').val();
-            if(ItemRdso == 'Y')
-            {
+            var ItemRdso = $('input:radio[name=ItemRdso]:checked').val();
+            if (ItemRdso == 'Y') {
                 $("#divRDSOY").show();
             }
-            else
-            {
+            else {
                 $("#divRDSOY").hide();
                 $("#VendApprovalFr").val("");
                 $("#VendApprovalTo").val("");
             }
         }
+
+        function ononchangeVendRdso() {
+            var VendRdso = $('input:radio[name=VendRdso]:checked').val();
+            if (VendRdso == 'Y') {
+                $("#divVendApprovalFr").show();
+                $("#divVendApprovalTo").show();
+            }
+            else {
+                $("#divVendApprovalFr").hide();
+                $("#divVendApprovalTo").hide();
+                $("#VendApprovalFr").val("");
+                $("#VendApprovalTo").val("");
+            }
+        }
+
+        function ononchangeStaggeredDp() {
+            var StaggeredDp = $('input:radio[name=StaggeredDp]:checked').val();
+            if (StaggeredDp == 'Y') {
+                $("#divDPDetails").show();
+            }
+            else {
+                $("#divDPDetails").hide();
+                $("#LotDp1").val("");
+                $("#LotDp2").val("");
+            }
+        }
+
+        $("#SearchDetailsM").click(function () {
+            FillVendorClick();
+        });
+
+        $('#IsSameVender').change(function () {
+            var StaggeredDp = $('input:checkbox[name=IsSameVender]:checked').val();
+            if (this.checked) {
+                FillVendor();
+            }
+            else {
+                $("#MfgCd").val("");
+                $("#MfgCd1").val("");
+                $("#VendAdd1").val("");
+                $("#VendContactPer1").val("");
+                $("#VendEmail").val("");
+                $("#VendContactTel1").val("");
+            }
+
+        });
+
+        function FillVendor() {
+            var MfgCd = $('#MfgCd').val();
+            var hdnMfgCd = $("#MfgCd1").val();
+
+            if (MfgCd == null) {
+                MfgCd = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("GetVendorDetails", "VendorCallRegister")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: MfgCd },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        $("#MfgCd").val(contacts.data[0].VendCd);
+                        $("#MfgCd1").val(contacts.data[0].VendCd);
+                        $("#VendAdd1").val(contacts.data[0].VendAdd1);
+                        $("#VendContactPer1").val(contacts.data[0].VendContactPer1);
+                        $("#VendEmail").val(contacts.data[0].VendEmail);
+                        $("#VendContactTel1").val(contacts.data[0].VendContactTel1);
+
+                        hdnMfgCd = contacts.data[0].VendCd;
+                        BindVendor(hdnMfgCd);
+                        $("#MfgCd").val(hdnMfgCd);
+                    }
+                }
+            });
+
+        }
+
+        function FillVendorClick() {
+            var MfgCd = $('#MfgCd1').val();
+            BindVendor(MfgCd);
+            $.ajax({
+                url: '@Url.Action("GetVendorDetailsClick", "VendorCallRegister")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: MfgCd },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        $("#MfgCd").val(contacts.data[0].VendCd);
+                        $("#MfgCd1").val(contacts.data[0].VendCd);
+                        $("#VendAdd1").val(contacts.data[0].VendAdd1);
+                        $("#VendContactPer1").val(contacts.data[0].VendContactPer1);
+                        $("#VendEmail").val(contacts.data[0].VendEmail);
+                        $("#VendContactTel1").val(contacts.data[0].VendContactTel1);
+                    }
+                }
+            });
+        }
+
+        function BindVendor(MfgCd1) {
+            //var MfgCd1 = $('#MfgCd1').val();
+            $.ajax({
+                url: '@Url.Action("BindVendor", "VendorCallRegister")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: MfgCd1 },
+                success: function (contacts) {
+                    $("#MfgCd").html(""); // clear before appending new list
+                    $("#MfgCd").append($('<option></option>').val(0).html("--Select--"));
+                    if (contacts && contacts.length > 0) {
+                        if (MfgCd1 > 0) {
+                            $.each(contacts, function (i, cnt) {
+                                $("#MfgCd").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                            });
+                            $("#MfgCd").val(MfgCd1);
+                        } else {
+                            $.each(contacts, function (i, cnt) {
+                                $("#MfgCd").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        $("#btnUpdateMDetails").click(function () {
+            var formData = {
+                MfgCd: $("#MfgCd").val(),
+                VendCd: $("#VendCd").val(),
+                VendAdd1: $("#VendAdd1").val(),
+                VendContactPer1: $("#VendContactPer1").val(),
+                VendEmail: $("#VendEmail").val(),
+                VendContactTel1: $("#VendContactTel1").val(),
+            }
+            $.post("@Url.Action("UpdateDetails", "VendorCallRegister")", { model: formData }, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                    //$("#PropertyId").val(response.PropertyID);
+                    //$("#Id").val(response.PropertyID);
+                    //if ($('#PropertyId').val() > 0) {
+                    //    $(".nav-link").css("pointer-events", "all");
+                    //}
+                    //if ($("#Id").val() == "0") {
+                    //    gotoTab('inspection-tab');
+                    //}
+                    //else {
+                    //    gotoTab('InsuranceDetail-tab');
+                    //}
+                }
+            });
+
+            return false;
+        });
+
+
+        $("#btnRegiserCallSave").click(function () {
+            var formData = {
+                //MfgCd: $("#MfgCd").val(),
+                //VendCd: $("#VendCd").val(),
+                //VendAdd1: $("#VendAdd1").val(),
+                //VendContactPer1: $("#VendContactPer1").val(),
+                //VendEmail: $("#VendEmail").val(),
+                //VendContactTel1: $("#VendContactTel1").val(),
+                //VendContactTel1: $("#VendContactTel1").val(),
+                //VendContactTel1: $("#VendContactTel1").val(),
+                //VendContactTel1: $("#VendContactTel1").val(),
+            }
+            $.post("@Url.Action("DetailsSave", "VendorCallRegister")", { model: formData }, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                }
+            });
+
+            return false;
+        });
+
     </script>
 }

@@ -6,8 +6,16 @@ namespace IBS.Interfaces.Vendor
     {
         public VenderCallRegisterModel FindByID(string CaseNo, string CallRecvDt, int CallSno, string UserName);
 
+        public VenderCallRegisterModel FindByVenderDetail(int MfgCd);
+
+        DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd);
+
         DTResult<VenderCallRegisterModel> GetUserList(DTParameters dtParameters,string UserName);
 
         DTResult<VenderCallRegisterModel> GetVenderList(DTParameters dtParameters, string UserName);
+
+        int DetailsInsertUpdate(VenderCallRegisterModel model);
+
+        int RegiserCallSave(VenderCallRegisterModel model);
     }
 }

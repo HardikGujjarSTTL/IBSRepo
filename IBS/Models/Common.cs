@@ -9,6 +9,8 @@ using System.Reflection.Metadata;
 using IBS.DataAccess;
 using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
+using System.Data;
+using Oracle.ManagedDataAccess.Client;
 
 namespace IBS.Models
 {
@@ -751,6 +753,8 @@ namespace IBS.Models
                                     }).ToList();
             return Bank;
         }
+
+        
     }
     public static class DbContextHelper
     {

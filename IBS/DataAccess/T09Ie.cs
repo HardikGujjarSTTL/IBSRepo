@@ -19,7 +19,7 @@ public partial class T09Ie
 
     public string? IeDepartment { get; set; }
 
-    public byte? IeCityCd { get; set; }
+    public int? IeCityCd { get; set; }
 
     public string? IePhoneNo { get; set; }
 
@@ -56,6 +56,16 @@ public partial class T09Ie
     public DateTime? CallMarkingStoppingDt { get; set; }
 
     public DateTime? DscExpiryDt { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 
