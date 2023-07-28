@@ -137,7 +137,7 @@ namespace IBS.Repositories
 
         public int ContractDetailsInsertUpdate(ContractModel model)
         {
-            int ContractId = 0;
+            int ContractId = 0; 
             var _contract = context.T57OngoingContracts.Find(model.ContractId);
             #region Contract save
             if (_contract == null)

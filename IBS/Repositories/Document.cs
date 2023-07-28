@@ -46,6 +46,7 @@ namespace IBS.Repositories
                             }).ToList();
 
             return MainList;
+            
         }
 
         public int GetRecordsMaxID(int DocumentCategoryID)
@@ -66,7 +67,7 @@ namespace IBS.Repositories
                 {
                     objSaveData.Add(new IbsAppdocument
                     {
-                        Applicationid = item.Applicationid,
+                        Applicationid = Convert.ToString(item.Applicationid),
                         Documentid = item.Documentid,
                         Relativepath = item.Relativepath,
                         Fileid = item.UniqueFileName,
@@ -85,7 +86,7 @@ namespace IBS.Repositories
 
         public void DeleteAllFiles(string ApplicationID)
         {
-            List<IbsAppdocument> objGNR_APPDocument = (from c in context.IbsAppdocuments where c.Applicationid == ApplicationID select c).ToList();
+            List<IbsAppdocument> objGNR_APPDocument = (from c in context.IbsAppdocuments where c.Applicationid == Convert.ToString(ApplicationID) select c).ToList();
 
             foreach (var Docitem in objGNR_APPDocument)
             {

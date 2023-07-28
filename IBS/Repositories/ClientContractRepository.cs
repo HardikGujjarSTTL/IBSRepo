@@ -64,30 +64,31 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "ID";
+                    orderCriteria = "Id";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 //if we have an empty search then just order the results by Id ascending
-                orderCriteria = "ID";
+                orderCriteria = "Id";
                 orderAscendingDirection = true;
             }
             query = from l in context.T58ClientContacts
                     //where l.Isdeleted == 0 
                     select new ClientContractModel
                     {
-                        VisitDt = l.VisitDt,
+                        Id = Convert.ToInt32(l.Id),
+                        VisitDt = Convert.ToDateTime(l.VisitDt),
                         ClientOfficerName = l.ClientOfficerName,
                         Designation = l.Designation,
                         ClientType = l.ClientType,
                         Client = l.Client,
-                        RitesOfficerCd = Convert.ToByte(l.RitesOfficerCd),
+                        RitesOfficerCd = l.RitesOfficerCd,
                         Highlights = l.Highlights,
                         OverallOutcome =  l.OverallOutcome,
                         RegionCd = l.RegionCd,
-                        UserId = l.UserId,
+                        //UserId = l.UserId,
                         Datetime = Convert.ToDateTime(l.Datetime),
                         TypeCb = l.TypeCb,
                         OutAmt = l.OutAmt,                                                
@@ -126,7 +127,7 @@ namespace IBS.Repositories
         public int ClientContractDetailsInsertUpdate(ClientContractModel model)
         {
             int ContractId = 0;
-            var _contract = context.T58ClientContacts.Find(model.RitesOfficerCd);
+            var _contract = context.T58ClientContacts.Find(model.Id);
             #region Contract save
             if (_contract == null)
             {
@@ -141,7 +142,7 @@ namespace IBS.Repositories
                 obj.RegionCd = model.RegionCd;
                 obj.UserId = model.UserId;
                 obj.Datetime = model.Datetime;
-                obj.TypeCb = model.TypeCb;                
+                obj.TypeCb = "C";                
                 obj.OutAmt = model.OutAmt;                  
                 //obj.Isdeleted = Convert.ToByte(false);
                 //obj.Createdby = Convert.ToInt32(model.UserId);
@@ -150,7 +151,7 @@ namespace IBS.Repositories
                 //obj.Updateddate = DateTime.Now;
                 context.T58ClientContacts.Add(obj);
                 context.SaveChanges();
-                ContractId = Convert.ToInt32(obj.RitesOfficerCd);
+                ContractId = Convert.ToInt32(obj.Id);
             }
             else
             {   
@@ -164,9 +165,9 @@ namespace IBS.Repositories
                _contract.RegionCd = model.RegionCd;
                 _contract.UserId = model.UserId;
                 _contract.Datetime = model.Datetime;
-               _contract.TypeCb = model.TypeCb;
-               _contract.OutAmt = model.OutAmt;                 
-                ContractId = Convert.ToInt32(_contract.RitesOfficerCd);
+               _contract.TypeCb = "C";
+                _contract.OutAmt = model.OutAmt;                 
+                ContractId = Convert.ToInt32(_contract.Id);
                 context.SaveChanges();
             }
             #endregion

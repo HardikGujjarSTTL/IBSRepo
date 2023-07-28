@@ -75,20 +75,18 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "ContractId" },
-                    { data: "ClientName" },
-                    { data: "ContractNo" },
-                    { data: "ContInspFee" },
-                    { data: "ContPerFrom" },
-                    { data: "ContPerTo" },
-                    { data: "ContractCm" },                     
+                    { data: "Client" },
+                    { data: "VisitDt" },
+                    { data: "ClientOfficerName" },
+                    { data: "OverallOutcome" },
+                    { data: "Highlights" },                                        
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.ContractId;
-                            var editUrl = '@Url.Action("Manage", "Contract")/' + id;
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "ClientContract")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="ClientContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -98,8 +96,8 @@
             });
         }
 
-        function ContractDelete(id) {
-            var url = '@Url.Action("Delete", "Contract")';
+        function ClientContractDelete(id) {
+            var url = '@Url.Action("Delete", "ClientContract")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
