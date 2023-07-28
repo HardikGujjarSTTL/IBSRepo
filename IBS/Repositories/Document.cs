@@ -16,34 +16,34 @@ namespace IBS.Repositories
 
         public List<IBS_DocumentDTO> GetRecordsList(int DocumentCategoryID, string ApplicationID)
         {
-            List<IBS_DocumentDTO> MainList = new List<IBS_DocumentDTO>();
-            //int MaxContentLengthInKB = Convert.ToInt32(_config["MyAppSettings:MaxContentLengthInKB"]);
-            //var MainList = (from x in context.IbsDocuments.Where(e => e.Documentcategory == DocumentCategoryID)
-            //                join y in context.IbsAppdocuments.Where(e => e.Applicationid == ApplicationID && (e.Isdeleted != Convert.ToByte(true))) on x.Id equals y.Documentid into APPDocuments
-            //                from Y1 in APPDocuments.DefaultIfEmpty()
-            //                select new IBS_DocumentDTO
-            //                {
-            //                    ID = x.Id,
-            //                    DocumentName = x.Documentname,
-            //                    DocumentCategory = x.Documentcategory,
-            //                    AllowedFileExtensions = x.Allowedfileextensions,
-            //                    //MaxContentLengthInKB = x.MaxContentLengthInKB,
-            //                    MaxContentLengthInKB = x.Maxcontentlengthinkb.HasValue ? x.Maxcontentlengthinkb : MaxContentLengthInKB,
-            //                    Ismandatory = x.Ismandatory,
-            //                    IsVisible = x.Isvisible,
-            //                    APPDocumentID = Y1.Id,
-            //                    ApplicationID = Y1.Applicationid,
-            //                    DocumentID = Y1.Documentid ?? 0,
-            //                    RelativePath = Y1.Relativepath,
-            //                    FileID = Y1.Fileid,
-            //                    Extension = Y1.Extension,
-            //                    FileDisplayName = Y1.Filedisplayname,
-            //                    IsOtherDoc = Y1.Isotherdoc,
-            //                    OtherDocumentName = Y1.Otherdocumentname,
-            //                    VerifyDSC = x.Verifydsc,
-            //                    IsDownloadTemplate = x.Isdownloadtemplate != null ? x.Isdownloadtemplate : Convert.ToByte(false),
-            //                    CouchDBDocID = Y1.Couchdbdocid,
-            //                }).ToList();
+            //List<IBS_DocumentDTO> MainList = new List<IBS_DocumentDTO>();
+            int MaxContentLengthInKB = Convert.ToInt32(_config["MyAppSettings:MaxContentLengthInKB"]);
+            var MainList = (from x in context.IbsDocuments.Where(e => e.Documentcategory == DocumentCategoryID)
+                            join y in context.IbsAppdocuments.Where(e => e.Applicationid == ApplicationID && (e.Isdeleted != Convert.ToByte(true))) on x.Id equals y.Documentid into APPDocuments
+                            from Y1 in APPDocuments.DefaultIfEmpty()
+                            select new IBS_DocumentDTO
+                            {
+                                ID = x.Id,
+                                DocumentName = x.Documentname,
+                                DocumentCategory = x.Documentcategory,
+                                AllowedFileExtensions = x.Allowedfileextensions,
+                                //MaxContentLengthInKB = x.MaxContentLengthInKB,
+                                MaxContentLengthInKB = x.Maxcontentlengthinkb.HasValue ? x.Maxcontentlengthinkb : MaxContentLengthInKB,
+                                Ismandatory = x.Ismandatory,
+                                IsVisible = x.Isvisible,
+                                APPDocumentID = Y1.Id,
+                                ApplicationID = Y1.Applicationid,
+                                DocumentID = Y1.Documentid ?? 0,
+                                RelativePath = Y1.Relativepath,
+                                FileID = Y1.Fileid,
+                                Extension = Y1.Extension,
+                                FileDisplayName = Y1.Filedisplayname,
+                                IsOtherDoc = Y1.Isotherdoc,
+                                OtherDocumentName = Y1.Otherdocumentname,
+                                VerifyDSC = x.Verifydsc,
+                                IsDownloadTemplate = x.Isdownloadtemplate != null ? x.Isdownloadtemplate : Convert.ToByte(false),
+                                CouchDBDocID = Y1.Couchdbdocid,
+                            }).ToList();
 
             return MainList;
             

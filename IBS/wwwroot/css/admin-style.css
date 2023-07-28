@@ -1428,3 +1428,18 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .blueBtn { display: inline-block; vertical-align: top; height: 49px; padding: 0px 20px; text-decoration: none; background: #7194E8; color: #fff; font-size: 15px; border-radius:6px; line-height:49px; }
 .blueBtn:hover { background: #F66A2F; color: #fff; }
 .vendor-dashboard .dashboard-box{ min-height:155px;}
+.fileUploadWrap input[type="file"] { position: absolute; opacity: 0; visibility: hidden; }
+.fileUploadWrap { position: relative; padding-right: 110px; width: 100%; }
+.fileUploadWrap .button { position: absolute; right: 0; top: 0; }
+.fileUploadWrap label { background: #f1f1f1; width: 100%; padding: 11px 20px; font-weight: 400; position: relative; padding-right: 35px; border-radius: 5px;}
+.fileUploadWrap label:after { content: "\f093"; font-size: 16px; font-family: 'FontAwesome'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); color: #F66A2F; transition: all 0.3s ease-out; -webkit-transition: all 0.3s ease-out; line-height: 1; }
+.fileUploadWrap input[type="file"] { position: absolute; opacity: 0; visibility: hidden; }
+.fileUploadWrap { position: relative; padding-right: 110px; width: 100%; }
+.fileUploadWrap .button { position: absolute; right: 0; top: 0; }
+.fileUploadWrap label { background: #f1f1f1; width: 100%; padding: 8px 20px; font-weight: 400; position: relative; padding-right: 35px; border-radius: 5px;}
+.fileUploadWrap label { background: #fff; border: 1px solid #e1e1e1; height: 40px; }
+.fileUploadWrap label:after { content: "\f093"; font-size: 16px; font-family: 'FontAwesome'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); color: #F66A2F; transition: all 0.3s ease-out; -webkit-transition: all 0.3s ease-out; line-height: 1; }
+.formInputs .fieldOuter { display: block; margin-bottom: 10px;}
+.rightAction { display: block; position: relative;}
+.rightAction .button { position: absolute; right: 5px; top: 6px; padding: 4px 10px; font-size: 14px; border-radius:5px;}
+.aTag { -moz-appearance: textfield !important; -webkit-appearance: textfield !important; border: 1px solid #e1e1e1; width: 100%; padding: 7px 10px; height: 40px;  background: #f1f1f1;  border-radius: 5px; display: block;  width: 100% !important;}
