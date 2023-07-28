@@ -30,7 +30,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-        {
+            {
             DTResult<ContractModel> dTResult = contractRepository.GetContractList(dtParameters);
             return Json(dTResult);
         }

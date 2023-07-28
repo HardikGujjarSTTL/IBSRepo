@@ -45,14 +45,7 @@
         border-left: 1px solid #cfd8dc;
     }
 
-    .aTag {
-        -moz-appearance: textfield !important;
-        -webkit-appearance: textfield !important;
-        border: 1px solid #e1e1e1;
-        width: 81% !important;
-        padding: 10px;
-        background: #f1f1f1;
-    }
+    
 
     .fileUploadWrap {
         padding: unset !important;
@@ -101,7 +94,7 @@
                     <input type="hidden" id="@("hdnSingleIsMandatory_" + uniqueId)" value="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "true" : "false")" />
                     <input type="hidden" id="@("hdnSingleFYID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].FYID)" />
 
-                    <span id="@("File_" + uniqueId)" style="width:100% !important">
+                    <span class="rightAction" id="@("File_" + uniqueId)" style="width:100% !important">
                         @if (!string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName))
                         {
                                         <a class="aTag" target="_blank" href="@(Url.Content(Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
@@ -117,7 +110,7 @@
                         {
                             <input name="UploadFile" type="file" id="@("Brw_" + uniqueId)" onchange="OnFileUpload('@uniqueId', @Model.IBS_DocumentList[i].ID, this, true)"
                                    data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))" 
-                                        style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;position: relative;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
+                                        style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
 
                             <label for="@("Brw_" + uniqueId)">
                                 @*@(Model.IBS_DocumentList[i].DocumentName)

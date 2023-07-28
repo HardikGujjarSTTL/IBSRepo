@@ -70,6 +70,7 @@ builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<ILabBillingRepository, LabBillingRepository>();
+builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

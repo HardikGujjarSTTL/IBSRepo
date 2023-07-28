@@ -19,7 +19,7 @@ public partial class T09Ie
 
     public string? IeDepartment { get; set; }
 
-    public byte? IeCityCd { get; set; }
+    public int? IeCityCd { get; set; }
 
     public string? IePhoneNo { get; set; }
 

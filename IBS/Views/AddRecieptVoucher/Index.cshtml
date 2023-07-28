@@ -1,27 +1,34 @@
 ﻿@{
-    ViewData["Title"] = "File Upload List";
+    ViewData["Title"] = "Voucher List";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>File Upload List</h2>
+            <h2>Voucher List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="FileUpload" asp-action="Manage" class="formBtn"> <span class="fa fa-plus"></span> Add New File</a>
+            <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn">Add New Voucher</a>
         </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtRole" class="table-responsive">
+                <table id="dtListVoucher" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Application ID</th>
-                            <th>Document Category</th>
-                            <th>Document</th>
+                            @*<th>S NO</th>*@
+                            <th>Cheque No.</th>
+                            <th>Cheque Date</th>
+                            <th>Amount</th>
+                            <th>Bank Name</th>
+                            <th>BPO Name</th>
+                            <th>Account Description</th>
+                            <th>Case No.</th>
+                            <th>Narration</th>
                             <th>Action</th>
+                            @*<th>View Contract</th>*@
                         </tr>
                     </thead>
                     <tbody>
@@ -42,7 +49,7 @@
         });
 
         function InitializeDatatable() {
-            $("#dtRole").DataTable({
+            $("#dtListVoucher").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -53,7 +60,7 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
+                    url: "@Url.Action("VoucherList")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -71,15 +78,22 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "Applicationid" },
-                    { data: "DocumentCategory" },
-                    { data: "DocumentName" },
+                    //{ data: "SNO" },
+                    { data: "CHQ_NO" },
+                    { data: "CHQ_DT" },
+                    { data: "AMOUNT" },
+                    { data: "BANK_CD" },
+                    { data: "BPO_CD" },
+                    { data: "ACC_CD" },
+                    { data: "CASE_NO" },
+                    { data: "NARRATION" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.Applicationid;
-                            var editUrl = '@Url.Action("Manage", "FileUpload")/' + id;
+                            var id = data.ContractId;
+                            var editUrl = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                           // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -89,5 +103,6 @@
             });
         }
 
+        
     </script>
 }
