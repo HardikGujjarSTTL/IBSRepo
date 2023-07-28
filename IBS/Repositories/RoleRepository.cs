@@ -2,7 +2,9 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
+using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace IBS.Repositories
 {
@@ -16,6 +18,32 @@ namespace IBS.Repositories
         }
         public RoleModel FindByID(int RoleId)
         {
+            using (var connection = context.Database.GetDbConnection())
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SP_GetRoleByID"; // Replace with the name of your stored procedure
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Add any parameters to the command if required
+                    // For example:
+                     command.Parameters.Add(new OracleParameter("@role_id", "1"));
+
+                    DataTable dataTable = new DataTable();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        dataTable.Load(reader);
+
+                        //reader.NextResult();
+                        //DataTable dataTable1 = new DataTable();
+                        //dataTable1.Load(reader);
+                    }
+
+                }
+            }
+
             RoleModel model = new();
             Role role = context.Roles.Find(Convert.ToInt32(RoleId));
 

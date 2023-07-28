@@ -84,7 +84,8 @@ namespace IBS.Controllers
         {
             try
             {
-                var obj = pOMasterRepository.FindCaseNo(CaseNo);
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+                var obj = pOMasterRepository.FindCaseNo(CaseNo, VendCd);
                 return Json(new { status = true, poMaster = obj });
             }
             catch (Exception ex)

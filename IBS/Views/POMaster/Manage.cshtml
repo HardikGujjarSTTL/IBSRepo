@@ -44,6 +44,8 @@
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Agency/Client</label>
                             @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                            </br>
+                            <input type="text" class="input" id="txtBPO_RLY">
                             <span asp-validation-for="RlyCd" class="text-danger"></span>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -86,7 +88,8 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
-                            <input type="text" class="input datepicker" asp-for="PoDt" readonly="true">
+                            @*<input type="text" class="datepicker" asp-for="PoDt" readonly="true">*@
+                            <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                             <span asp-validation-for="PoDt" class="text-danger"></span>
                         </div>
                     </div>
@@ -112,7 +115,7 @@
                             <input type="text" class="input" id="txtPurchaser">
                         </div>
                     </div>
-                    <div class="row my-0">
+                    <div class="row my-0" style="display: none;">
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Date of Reciept of PO in RITES</label>
                             <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
@@ -211,6 +214,7 @@
                         $('#hdnRCD').val(response.poMaster.RlyCd);
                         $('#txtSPur').val(response.poMaster.RlyCd);
                         FillPurchaserCd();
+                        
                     }
                     if (response.poMaster.PurchaserCd != "0" && response.poMaster.PurchaserCd != "") {
                         $('#PurchaserCd').val(response.poMaster.PurchaserCd);
@@ -259,9 +263,18 @@
                 if (response.status) {
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    var id=0;
                     $.each(response.list, function (index, value) {
                         $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        if(value.Selected == true)
+                        {
+                            id=value.Value;
+                        }
                     });
+                    if(id>0)
+                    {
+                        $("#PurchaserCd").val(id);
+                    }
                     //$("#hdnRCD").val($("#RlyCd").val());
                     //$("#hdnRailway").val($("#RlyCd option:selected").text());
                 }

@@ -118,11 +118,17 @@ namespace IBS.Repositories
         }
         public int POMasterDetailsInsertUpdate(PO_MasterModel model)
         {
+            
             int Id = 0;
             var POMaster = context.T13PoMasters.Find(model.Id);
             #region POMaster save
             if (POMaster == null)
             {
+               var w_ctr= model.RegionCode + model.PoDt.ToString().Substring(8,2) + model.PoDt.ToString().Substring(0, 2);
+               var cn=(from m in context.T13PoMasters 
+                       where m.RegionCode==model.RegionCode && m.CaseNo.Substring(0,4)== w_ctr
+                       select m.CaseNo.Substring(6,4)).Max();
+
                 T13PoMaster obj = new T13PoMaster();
                 obj.CaseNo = model.CaseNo;
                 obj.PurchaserCd = model.PurchaserCd;
@@ -178,10 +184,12 @@ namespace IBS.Repositories
             #endregion
             return Id;
         }
-        public PO_MasterModel FindCaseNo(string CaseNo)
+        public PO_MasterModel FindCaseNo(string CaseNo,int VendCd)
         {
             PO_MasterModel model = new();
-            T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
+            //T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
+            T13PoMaster POMaster =(from l in context.T13PoMasters
+                                  where l.CaseNo== CaseNo && l.VendCd == VendCd select l).FirstOrDefault();
 
             if (POMaster == null)
                 throw new Exception("Po Master Record Not found");

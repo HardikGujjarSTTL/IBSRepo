@@ -613,7 +613,7 @@ namespace IBS.Models
             dropDownDTOs.Add(drop);
             if (dropDownDTOs != null && dropDownDTOs.Count > 1)
             {
-                dropDownDTOs[0].Selected = true;
+                dropDownDTOs[1].Selected = true;
             }
             return dropDownDTOs;
         }
