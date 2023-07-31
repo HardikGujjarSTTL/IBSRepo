@@ -617,14 +617,9 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
-
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Contains(consignee)
+                        where a.Consignee.StartsWith(consignee)
                         select
                    new SelectListItem
                    {
@@ -634,6 +629,14 @@ namespace IBS.Models
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
+            }
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+            if (dropDownDTOs != null && dropDownDTOs.Count > 1)
+            {
+                dropDownDTOs[1].Selected = true;
             }
             return dropDownDTOs;
         }

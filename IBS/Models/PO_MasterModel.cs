@@ -60,6 +60,9 @@ namespace IBS.Models
         public int? Id { get; set; }
         public int? ddlManufac { get; set; }
 
+        public string? OUT_CASE_NO { get; set; }
+        public string? OUT_ERR_CD { get; set; }
+
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
         public virtual T01Region? RegionCodeNavigation { get; set; }
