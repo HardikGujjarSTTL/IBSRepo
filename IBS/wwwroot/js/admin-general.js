@@ -623,7 +623,10 @@
 		}
 
 
-		$(".datepicker").datepicker();
+		$(".datepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+		});
 
 	});
 	/*================= On Document Load End =================*/
