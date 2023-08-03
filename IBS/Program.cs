@@ -66,6 +66,7 @@ builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWo
 builder.Services.AddScoped<IVendorCallRegisterRepository, IBS.Repositories.Vendor.VendorCallRegisterRepository>();
 builder.Services.AddScoped<IPurchesOrder1LOARepository, IBS.Repositories.Vendor.PurchesOrder1LOARepository>();
 builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.CallRegisterRepository>();
+builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vendor.DownloadInspFeeBillRepository>();
 
 
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
