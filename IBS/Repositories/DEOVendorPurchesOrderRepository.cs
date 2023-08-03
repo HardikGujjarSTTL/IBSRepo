@@ -65,9 +65,9 @@ namespace IBS.Repositories
                         PoiCd = p.PoiCd,
                         Isdeleted = p.Isdeleted,
                         Createddate = p.Createddate,
-                        Createdby = p.Createdby,
+                        Createdby = Convert.ToString(p.Createdby),
                         Updateddate = p.Updateddate,
-                        Updatedby = p.Updatedby,
+                        Updatedby = Convert.ToString(p.Updatedby),
                         //VendCdNavigation = v,
                         VendName = v.VendName,
 
