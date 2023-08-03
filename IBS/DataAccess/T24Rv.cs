@@ -9,7 +9,7 @@ public partial class T24Rv
 
     public DateTime? VchrDt { get; set; }
 
-    public byte? BankCd { get; set; }
+    public int? BankCd { get; set; }
 
     public string? VchrType { get; set; }
 
