@@ -39,11 +39,11 @@ public partial class T80PoMaster
 
     public string? PoOrLetter { get; set; }
 
-    public string? Createdby { get; set; }
+    public int? Createdby { get; set; }
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public string? Updatedby { get; set; }
+    public int? Updatedby { get; set; }
 
     public DateTimeOffset? Updateddate { get; set; }
 

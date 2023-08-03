@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T26ChequePosting
 {
-    public byte? BankCd { get; set; }
+    public int? BankCd { get; set; }
 
     public string? ChqNo { get; set; }
 

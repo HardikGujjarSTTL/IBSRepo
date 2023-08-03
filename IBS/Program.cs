@@ -5,6 +5,7 @@ using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
+using IBS.Repositories.Vendor;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -62,6 +63,10 @@ builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>(
 builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration.UploadDocRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
 builder.Services.AddScoped<IVendorCallRegisterRepository, IBS.Repositories.Vendor.VendorCallRegisterRepository>();
+builder.Services.AddScoped<IPurchesOrder1LOARepository, IBS.Repositories.Vendor.PurchesOrder1LOARepository>();
+builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.CallRegisterRepository>();
+
+
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
 builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
@@ -70,6 +75,7 @@ builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

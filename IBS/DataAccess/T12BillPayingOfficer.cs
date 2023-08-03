@@ -17,7 +17,7 @@ public partial class T12BillPayingOfficer
 
     public string? BpoAdd { get; set; }
 
-    public byte? BpoCityCd { get; set; }
+    public int? BpoCityCd { get; set; }
 
     public string? BillPassOfficer { get; set; }
 
@@ -66,6 +66,16 @@ public partial class T12BillPayingOfficer
     public string? LegalName { get; set; }
 
     public string? PinCode { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 
     public virtual T01Region? BpoRegionNavigation { get; set; }
 

@@ -77,14 +77,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "MaDate";
+                    orderCriteria = "RitesCaseNo";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "MaDate";
+                orderCriteria = "RitesCaseNo";
                 orderAscendingDirection = true;
             }
 
@@ -129,7 +129,7 @@ namespace IBS.Repositories
 
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.RitesCaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Remarks).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
