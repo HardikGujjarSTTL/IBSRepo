@@ -5,11 +5,11 @@ namespace IBS.DataAccess;
 
 public partial class T08IeControllOfficer
 {
-    public byte CoCd { get; set; }
+    public int CoCd { get; set; }
 
     public string? CoName { get; set; }
 
-    public byte? CoDesig { get; set; }
+    public int? CoDesig { get; set; }
 
     public string? CoRegion { get; set; }
 
@@ -22,6 +22,16 @@ public partial class T08IeControllOfficer
     public DateTime? CoStatusDt { get; set; }
 
     public string? CoType { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 
     public virtual T07RitesDesig? CoDesigNavigation { get; set; }
 

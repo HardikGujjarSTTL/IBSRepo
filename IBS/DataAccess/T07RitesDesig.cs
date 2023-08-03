@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T07RitesDesig
 {
-    public byte RDesigCd { get; set; }
+    public int RDesigCd { get; set; }
 
     public string? RDesignation { get; set; }
 
