@@ -11615,7 +11615,6 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T59LabExp>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("ID");
             entity.HasKey(e => new { e.RegionCode, e.LabBillPer }).HasName("T59_LAB_EXP_PK");
 
             entity.ToTable("T59_LAB_EXP");
@@ -11648,14 +11647,6 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
-            entity.Property(e => e.LabBillPer)
-                .HasMaxLength(6)
-                .IsUnicode(false)
-                .HasColumnName("LAB_BILL_PER");
-            entity.Property(e => e.Createdby)
-                .HasPrecision(6)
-                .HasColumnName("CREATEDBY");
-            entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
@@ -15705,66 +15696,6 @@ public partial class ModelContext : DbContext
                 .HasColumnName("QTY_TO_INSP");
             entity.Property(e => e.Status)
                 .HasMaxLength(6)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("STATUS");
-        });
-
-        modelBuilder.Entity<VenderCallRegisterItemView2>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VENDER_CALL_REGISTER_ITEM_VIEW2");
-
-            entity.Property(e => e.CallRecvDt)
-                .HasColumnType("DATE")
-                .HasColumnName("CALL_RECV_DT");
-            entity.Property(e => e.CallSno)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CALL_SNO");
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.Consignee)
-                .HasMaxLength(378)
-                .IsUnicode(false)
-                .HasColumnName("CONSIGNEE");
-            entity.Property(e => e.CumQtyPrevOffered)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CUM_QTY_PREV_OFFERED");
-            entity.Property(e => e.CumQtyPrevPassed)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CUM_QTY_PREV_PASSED");
-            entity.Property(e => e.DelvDate)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("DELV_DATE");
-            entity.Property(e => e.ItemDescPo)
-                .HasMaxLength(400)
-                .IsUnicode(false)
-                .HasColumnName("ITEM_DESC_PO");
-            entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
-                .HasColumnName("ITEM_SRNO_PO");
-            entity.Property(e => e.QtyDue)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_DUE");
-            entity.Property(e => e.QtyOrdered)
-                .HasColumnType("NUMBER(12,4)")
-                .HasColumnName("QTY_ORDERED");
-            entity.Property(e => e.QtyPassed)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_PASSED");
-            entity.Property(e => e.QtyRejected)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_REJECTED");
-            entity.Property(e => e.QtyToInsp)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_TO_INSP");
-            entity.Property(e => e.Status)
-                .HasMaxLength(9)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("STATUS");
