@@ -7,7 +7,7 @@
 
 
 <h2>@ViewData["Title"]</h2>
-
+<div class="boxRadius">
 <form asp-controller="YourController" asp-action="YourAction" method="post">
     <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
            bgColor="#f0f8ff" border="1">
@@ -175,6 +175,9 @@
         </tr>
         
     </table>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <button type="button" class="btn btn-secondary">Cancel</button>
+        <div class="savenext-btn">
+            <a type="button" class="reset-btn">Cancel</a>
+            <button type="submit" class="save-btn active">Save</button>
+        </div>
 </form>
+</div>
