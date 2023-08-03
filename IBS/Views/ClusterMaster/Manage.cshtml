@@ -1,0 +1,54 @@
+﻿@model IBS.Models.ClusterMasterModel
+
+@{
+    ViewData["Title"] = "Cluster Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Cluster Master</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="ClusterMaster" asp-action="ClusterMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClusterMaster">
+                <input type="hidden" asp-for="ClusterCode" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Cluster Name</label>
+                            <textarea class="input" asp-for="ClusterName" maxlength="30"> </textarea>
+                            <span asp-validation-for="ClusterName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Geographical Area</label>
+                            <textarea class="input" asp-for="GeographicalPartition" maxlength="30"> </textarea>
+                            <span asp-validation-for="GeographicalPartition" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="savenext-btn">
+                        <a asp-controller="ClusterMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmClusterMaster").valid()) {
+                $("#frmClusterMaster").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/ClusterMaster/Index";
+        };
+    </script>
+}

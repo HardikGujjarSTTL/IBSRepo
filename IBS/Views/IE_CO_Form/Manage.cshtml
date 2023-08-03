@@ -1,0 +1,76 @@
+﻿@model IBS.Models.IE_CO_FormModel
+
+@{
+    ViewData["Title"] = "Controlling Officers of Inspecting Engineers";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Controlling Officers of Inspecting Engineers</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="IE_CO_Form" asp-action="IE_CO_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmIE_CO_Form">
+                <input type="hidden" asp-for="CoCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        @*<div class="col-md-4 mb-3">
+                            <label for="Reference">Controlling Officer Code</label>
+                            <textarea class="input" asp-for="CoCd" maxlength="30"> </textarea>
+                            <span asp-validation-for="CoCd" class="text-danger"></span>
+                        </div>*@
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Controlling Officer Name</label>
+                            <textarea class="input" asp-for="CoName" maxlength="30"> </textarea>
+                            <span asp-validation-for="CoName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Designation</label>
+                            <input type="text" class="input" asp-for="CoDesig" maxlength="30">
+                            <span asp-validation-for="CoDesig" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Phone No.</label>
+                            <input type="text" class="input" asp-for="CoPhoneNo" maxlength="30">
+                            <span asp-validation-for="CoPhoneNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Email</label>
+                            <input type="text" class="input" asp-for="CoEmail" maxlength="30">
+                            <span asp-validation-for="CoEmail" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Type</label>
+                            <input type="text" class="input" asp-for="CoType" maxlength="30">
+                            <span asp-validation-for="CoType" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="IE_CO_Form" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmIE_CO_Form").valid()) {
+                $("#frmIE_CO_Form").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/IE_CO_Form/Index";
+        };
+    </script>
+}

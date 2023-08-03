@@ -35,5 +35,15 @@ public partial class T18CallDetail
 
     public DateTime? Datetime { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
     public virtual T06Consignee? ConsigneeCdNavigation { get; set; }
 }

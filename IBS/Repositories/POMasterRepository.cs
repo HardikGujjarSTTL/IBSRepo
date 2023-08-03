@@ -17,35 +17,31 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public PO_MasterModel FindByID(int Id)
+        public PO_MasterModel FindByID(string CaseNo)
         {
             PO_MasterModel model = new();
-            T13PoMaster POMaster = context.T13PoMasters.Find(Convert.ToInt32(Id));
+            T80PoMaster POMaster = context.T80PoMasters.Find(CaseNo);
 
             if (POMaster == null)
                 throw new Exception("Po Master Record Not found");
             else
             {
-                model.CaseNo = POMaster.CaseNo;
+                model.CaseNo = POMaster.CaseNo.Trim();
                 model.PurchaserCd = POMaster.PurchaserCd;
                 model.StockNonstock = POMaster.StockNonstock;
                 model.RlyNonrly = POMaster.RlyNonrly;
                 model.PoOrLetter = POMaster.PoOrLetter;
                 model.PoNo = POMaster.PoNo;
-                model.L5noPo = POMaster.L5noPo;
                 model.PoDt = POMaster.PoDt;
                 model.RecvDt = POMaster.RecvDt;
+                model.RlyCdDesc = POMaster.RlyCdDesc;
                 model.VendCd = POMaster.VendCd;
                 model.RlyCd = POMaster.RlyCd;
                 model.RegionCode = POMaster.RegionCode;
                 model.UserId = POMaster.UserId;
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
-                model.InspectingAgency = POMaster.InspectingAgency;
                 model.PoiCd = POMaster.PoiCd;
-                model.PoSource = POMaster.PoSource;
-                model.PendingCharges = POMaster.PendingCharges;
-                model.Id = POMaster.Id;
                 return model;
             }
         }
@@ -81,7 +77,7 @@ namespace IBS.Repositories
                     select new PO_MasterModel
                     {
                         VendCd = POMaster.VendCd,
-                        CaseNo = POMaster.CaseNo,
+                        CaseNo = POMaster.CaseNo.Trim(),
                         PoNo = POMaster.PoNo,
                         PoDtDate = POMaster.PoDt,
                         RlyCd = POMaster.RlyCd,
@@ -108,9 +104,9 @@ namespace IBS.Repositories
 
             return dTResult;
         }
-        public bool Remove(int Id, int UserID)
+        public bool Remove(string CaseNo, int UserID)
         {
-            var POMasters = context.T13PoMasters.Find(Convert.ToInt32(Id));
+            var POMasters = context.T80PoMasters.Find(CaseNo);
             if (POMasters == null) { return false; }
 
             POMasters.Isdeleted = Convert.ToByte(true);
@@ -119,25 +115,26 @@ namespace IBS.Repositories
             context.SaveChanges();
             return true;
         }
-        public int POMasterDetailsInsertUpdate(PO_MasterModel model)
+        public string POMasterDetailsInsertUpdate(PO_MasterModel model)
         {
             
-            int Id = 0;
-            var POMaster = context.T13PoMasters.Find(model.Id);
+            string CaseNo = "";
+            var POMaster = context.T80PoMasters.Find(model.CaseNo);
             #region POMaster save
             if (POMaster == null)
             {
-               //var w_ctr= model.RegionCode + model.PoDt.ToString().Substring(8,2) + model.PoDt.ToString().Substring(0, 2);
-               //var cn=(from m in context.T13PoMasters 
-               //        where m.RegionCode==model.RegionCode && m.CaseNo.Substring(0,4)== w_ctr
-               //        select m.CaseNo.Substring(6,4)).Max();
+                //var w_ctr= model.RegionCode + model.PoDt.ToString().Substring(8,2) + model.PoDt.ToString().Substring(0, 2);
+                //var cn=(from m in context.T80PoMasters 
+                //        where m.RegionCode==model.RegionCode && m.CaseNo.Substring(0,4)== w_ctr
+                //        select m.CaseNo.Substring(6,4)).Max();
 
                 string date = model.PoDt.ToString().Substring(0, 10);
-                OracleParameter[] par = new OracleParameter[4];
+                OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, model.RegionCode, ParameterDirection.Input);
                 par[1] = new OracleParameter("IN_PO_DT", OracleDbType.Varchar2, date, ParameterDirection.Input);
-                par[2] = new OracleParameter("OUT_CASE_NO", OracleDbType.Char, ParameterDirection.Output);
-                par[3] = new OracleParameter("OUT_ERR_CD", OracleDbType.Int32, ParameterDirection.Output);
+                //par[2] = new OracleParameter("OUT_CASE_NO", OracleDbType.Char, ParameterDirection.Output);
+                //par[3] = new OracleParameter("OUT_ERR_CD", OracleDbType.Int32, ParameterDirection.Output);
+                par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 var ds = DataAccessDB.GetDataSet("GENERATE_VEND_CASE_NO", par, 1);
 
@@ -148,67 +145,54 @@ namespace IBS.Repositories
                     model1 = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
                 }
 
-                T13PoMaster obj = new T13PoMaster();
-                obj.CaseNo = model.CaseNo;
+                T80PoMaster obj = new T80PoMaster();
+                obj.CaseNo = model1.CaseNo.Trim();
                 obj.PurchaserCd = model.PurchaserCd;
                 obj.StockNonstock = model.StockNonstock;
-                obj.RlyNonrly = model.RlyNonrly;
                 obj.PoOrLetter = model.PoOrLetter;
+                obj.RlyNonrly = model.RlyNonrly;
                 obj.PoNo = model.PoNo;
-                obj.L5noPo = model.L5noPo;
                 obj.PoDt = model.PoDt;
                 obj.RecvDt = model.RecvDt;
                 obj.VendCd = model.VendCd;
                 obj.RlyCd = model.RlyCd;
+                obj.RlyCdDesc = model.RlyCdDesc;
                 obj.RegionCode = model.RegionCode;
-                obj.UserId = model.UserId;
-                obj.Datetime = model.Datetime;
                 obj.Remarks = model.Remarks;
-                obj.InspectingAgency = model.InspectingAgency;
+                obj.Datetime = DateTime.Now;
                 obj.PoiCd = model.PoiCd;
-                obj.PoSource = model.PoSource;
-                obj.PendingCharges = model.PendingCharges;
-                obj.Createddate = DateTime.Now;
-                obj.Createdby = model.Createdby;
-                context.T13PoMasters.Add(obj);
+                context.T80PoMasters.Add(obj);
                 context.SaveChanges();
-                Id = Convert.ToInt32(obj.Id);
+                CaseNo = obj.CaseNo;
             }
             else
             {
-                POMaster.CaseNo = model.CaseNo;
                 POMaster.PurchaserCd = model.PurchaserCd;
                 POMaster.StockNonstock = model.StockNonstock;
-                POMaster.RlyNonrly = model.RlyNonrly;
                 POMaster.PoOrLetter = model.PoOrLetter;
+                POMaster.RlyNonrly = model.RlyNonrly;
                 POMaster.PoNo = model.PoNo;
-                POMaster.L5noPo = model.L5noPo;
                 POMaster.PoDt = model.PoDt;
                 POMaster.RecvDt = model.RecvDt;
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
+                POMaster.RlyCdDesc = model.RlyCdDesc;
                 POMaster.RegionCode = model.RegionCode;
-                POMaster.UserId = model.UserId;
-                POMaster.Datetime = model.Datetime;
                 POMaster.Remarks = model.Remarks;
-                POMaster.InspectingAgency = model.InspectingAgency;
+                POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
-                POMaster.PoSource = model.PoSource;
-                POMaster.PendingCharges = model.PendingCharges;
-                POMaster.Updatedby = model.Updatedby;
-                POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                Id = Convert.ToInt32(POMaster.Id);
+                CaseNo = POMaster.CaseNo;
             }
             #endregion
-            return Id;
+            return CaseNo;
         }
         public PO_MasterModel FindCaseNo(string CaseNo,int VendCd)
         {
             PO_MasterModel model = new();
             //T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
-            T13PoMaster POMaster =(from l in context.T13PoMasters
-                                  where l.CaseNo== CaseNo && l.VendCd == VendCd select l).FirstOrDefault();
+            T80PoMaster POMaster =(from l in context.T80PoMasters
+                                   where l.CaseNo== CaseNo && l.VendCd == VendCd select l).FirstOrDefault();
 
             if (POMaster == null)
                 throw new Exception("Po Master Record Not found");
@@ -220,7 +204,6 @@ namespace IBS.Repositories
                 model.RlyNonrly = POMaster.RlyNonrly;
                 model.PoOrLetter = POMaster.PoOrLetter;
                 model.PoNo = POMaster.PoNo;
-                model.L5noPo = POMaster.L5noPo;
                 model.PoDt = POMaster.PoDt;
                 model.RecvDt = POMaster.RecvDt;
                 model.VendCd = POMaster.VendCd;
@@ -229,11 +212,7 @@ namespace IBS.Repositories
                 model.UserId = POMaster.UserId;
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
-                model.InspectingAgency = POMaster.InspectingAgency;
                 model.PoiCd = POMaster.PoiCd;
-                model.PoSource = POMaster.PoSource;
-                model.PendingCharges = POMaster.PendingCharges;
-                model.Id = POMaster.Id;
                 return model;
             }
         }

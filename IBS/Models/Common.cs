@@ -120,7 +120,9 @@ namespace IBS.Models
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
             Tblexception objexception = new Tblexception();
+
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
@@ -503,6 +505,40 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> DiscountType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Percentage";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Lumpsum";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Per No.";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> ExciseType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Percentage";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Lumpsum";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static IEnumerable<DropDownDTO> GetYesNoCommon()
         {
             return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
@@ -537,6 +573,46 @@ namespace IBS.Models
 
         }
 
+        public static List<SelectListItem> GetRailPrices()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> lst = (from a in ModelContext.T34RailPrices
+                                        orderby a.RailDesc ascending
+                                        select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.RailDesc),
+                                      Value = Convert.ToString(a.RailId)
+                                  }).ToList();
+            return lst;
+        }
+
+        public static List<SelectListItem> GetUOM()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> lst = (from a in ModelContext.T04Uoms
+                                        select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.UomLDesc),
+                                      Value = Convert.ToString(a.UomCd)
+                                  }).ToList();
+            return lst;
+        }
+        public static List<SelectListItem> GetConsignee(string CaseNo)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> lst = (from a in ModelContext.ViewConsigneeDetails
+                                        where a.CaseNo == CaseNo
+                                        select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.ConsigneeName),
+                                      Value = Convert.ToString(a.ConsigneeCd)
+                                  }).ToList();
+            return lst;
+        }
+
         public static List<SelectListItem> GetAgencyClient(string RlyNonrly)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -553,8 +629,8 @@ namespace IBS.Models
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.RlyCd),
-                           Value = Convert.ToString(a.Railway)
+                           Text = Convert.ToString(a.Railway),
+                           Value = Convert.ToString(a.RlyCd)
                        }).ToList();
                 dropDownDTOs.AddRange(dropList);
             }

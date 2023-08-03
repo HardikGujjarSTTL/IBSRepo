@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Bill Paying Officer";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Bill Paying Officer</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="Bill_Paying_Officer_Form" asp-action="Manage" class="formBtn"> Add New BPO</a>
+        </div>
+
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtBPO" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>BPO Code</th>
+                            <th>BPO Name</th>
+                            <th>City</th>
+                            <th>GSTIN NO.</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtBPO").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BpoCd" },
+                    { data: "BpoName" },
+                    { data: "BpoCityCd" },
+                    { data: "GstinNo" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.BpoCd;
+                            var editUrl = '@Url.Action("Manage", "Bill_Paying_Officer_Form")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="BPODelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function UOMDelete(id) {
+            var url = '@Url.Action("Delete", "Bill_Paying_Officer_Form")';
+            $("#btn-delete-yes").attr("href", url + "/" + id);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

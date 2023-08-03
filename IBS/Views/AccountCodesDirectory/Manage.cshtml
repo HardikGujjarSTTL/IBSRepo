@@ -1,0 +1,57 @@
+﻿@model IBS.Models.AccountCodesDirectoryModel
+
+@{
+    ViewData["Title"] = "Account Codes Directory";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Account Codes Directory</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="AccountCodesDirectory" asp-action="AccountCodesDirectoryDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmAccountCodesDirectory">
+                <input type="hidden" asp-for="AccCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                       
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Account Code</label>
+                            <textarea class="input" asp-for="AccCd" maxlength="30"> </textarea>
+                            <span asp-validation-for="AccCd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Account Description</label>
+                            <input type="text" class="input" asp-for="AccDesc" maxlength="30">
+                            <span asp-validation-for="AccDesc" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="AccountCodesDirectory" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmBankMaster").valid()) {
+                $("#frmBankMaster").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/AccountCodesDirectory/Index";
+        };
+    </script>
+}
