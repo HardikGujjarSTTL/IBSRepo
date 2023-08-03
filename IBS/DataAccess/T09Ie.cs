@@ -13,17 +13,17 @@ public partial class T09Ie
 
     public string? IeEmpNo { get; set; }
 
-    public byte? IeDesig { get; set; }
+    public int? IeDesig { get; set; }
 
-    public byte? IeSealNo { get; set; }
+    public int? IeSealNo { get; set; }
 
     public string? IeDepartment { get; set; }
 
-    public byte? IeCityCd { get; set; }
+    public int? IeCityCd { get; set; }
 
     public string? IePhoneNo { get; set; }
 
-    public byte? IeCoCd { get; set; }
+    public int? IeCoCd { get; set; }
 
     public DateTime? IeJoinDt { get; set; }
 
@@ -56,6 +56,16 @@ public partial class T09Ie
     public DateTime? CallMarkingStoppingDt { get; set; }
 
     public DateTime? DscExpiryDt { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 

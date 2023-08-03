@@ -7,7 +7,7 @@ public partial class T52LabPosting
 {
     public string? SampleRegNo { get; set; }
 
-    public byte? BankCd { get; set; }
+    public int? BankCd { get; set; }
 
     public string? ChqNo { get; set; }
 

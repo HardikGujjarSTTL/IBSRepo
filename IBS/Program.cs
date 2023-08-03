@@ -63,8 +63,14 @@ builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
 builder.Services.AddScoped<IRly_Designation_Form, Rly_Designation_Form>();
 builder.Services.AddScoped<IBankMaster, BankMaster>();
-
+builder.Services.AddScoped<IAccountCodesDirectory, AccountCodesDirectory>();
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
+builder.Services.AddScoped<IMasterItemsListForm, MasterItemsListForm>();
+builder.Services.AddScoped<IConsignee_PMForm, Consignee_PMForm>();
+builder.Services.AddScoped<IInspectionEngineers, InspectionEngineers>();
+builder.Services.AddScoped<I_IE_CO_Form, IE_CO_Form>();
+builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
+builder.Services.AddScoped<IClusterMaster, ClusterMaster>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

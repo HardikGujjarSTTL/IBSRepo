@@ -63,7 +63,7 @@ public partial class V22Bill
 
     public string? SapCustCdCon { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public byte? IeCoCd { get; set; }
 

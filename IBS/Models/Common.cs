@@ -117,7 +117,9 @@ namespace IBS.Models
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
             Tblexception objexception = new Tblexception();
+
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;

@@ -57,6 +57,16 @@ public partial class T15PoDetail
 
     public string? PlNo { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
     public virtual T14PoBpo? C { get; set; }
 
     public virtual T13PoMaster CaseNoNavigation { get; set; } = null!;

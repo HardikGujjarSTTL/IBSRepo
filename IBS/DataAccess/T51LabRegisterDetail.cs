@@ -17,7 +17,7 @@ public partial class T51LabRegisterDetail
 
     public string? Test { get; set; }
 
-    public byte? LabId { get; set; }
+    public int? LabId { get; set; }
 
     public decimal? TestingFee { get; set; }
 
