@@ -15964,7 +15964,7 @@ public partial class ModelContext : DbContext
                 .ToView("VIEW_POMASTERLIST");
 
             entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
