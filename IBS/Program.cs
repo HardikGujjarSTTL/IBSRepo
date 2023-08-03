@@ -84,6 +84,9 @@ builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>(
 builder.Services.AddScoped<IClusterMaster, ClusterMaster>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 
+#region Inspection and Billing
+builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

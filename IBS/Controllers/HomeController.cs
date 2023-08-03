@@ -25,7 +25,7 @@ namespace IBS.Controllers
             Configuration = configuration;
         }
 
-        public IActionResult Index(string type = "vendor")
+        public IActionResult Index(string type = "admin")
         {
             HttpContext.Session.SetString("LoginType", type);
 
@@ -40,7 +40,7 @@ namespace IBS.Controllers
             {
                 // username = anet
                 string LoginType = HttpContext.Session.GetString("LoginType").ToString();
-                if (LoginType.ToLower() == "admin")
+                if (LoginType.ToLower() == "admin") 
                 {
                     T02User userMaster = userRepository.FindByLoginDetail(loginModel);
                     if (userMaster != null)

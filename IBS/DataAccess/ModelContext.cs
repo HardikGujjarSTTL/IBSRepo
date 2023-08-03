@@ -6875,6 +6875,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("CITY");
+            entity.Property(e => e.CountryCd)
+                .HasPrecision(6)
+                .HasColumnName("COUNTRY_CD");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");

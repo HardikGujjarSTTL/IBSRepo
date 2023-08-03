@@ -1,0 +1,144 @@
+﻿@model IBS.Models.HologramAccountalSearchModel
+
+@{
+    ViewData["Title"] = "Hologram Accountal List";
+}
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Hologram Accountal List</h2>
+            <form data-ajax="true" asp-antiforgery="false" asp-controller="HologramAccountal" asp-action="GetHologramAccountal" data-ajax-method="get" data-ajax-complete="completed" id="frmHologramAccountDetails">
+                @*<input type="hidden" asp-for="ContractId" />*@
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-2 mb-4">
+                            <label for="Reference">Book No</label>
+                            <input type="text" class="input" asp-for="BK_NO" maxlength="200" />
+                            <span asp-validation-for="BK_NO" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-2 mb-4">
+                            <label for="Reference">Set No</label>
+                            <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
+                            <span asp-validation-for="SET_NO" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="savenext-btn">
+                                @*<a asp-controller="Contract" asp-action="Index" class="reset-btn">Cancel</a>*@
+                                
+                                <button type="button" class="save-btn active" onclick="Save();">Submit</button>
+                                <button type="button" class="reset-btn">Delete</button>
+                                <button type="submit" class="reset-btn">Search</button>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </form>
+        </div>        
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtContract" class="table-responsive">
+                    <thead>
+                        <tr>
+                            @*<th>#</th>*@
+                            <th>Action</th>
+                            <th>Case No.</th>
+                            <th>Book No</th>
+                            <th>Set No.</th>
+                            <th>IE</th>
+                            <th>Holograms used on Material</th>
+                            <th>Holograms used on Samples</th>
+                            <th>Holograms used on Test</th>
+                            <th>Holograms used on IC</th>
+                            <th>Hologram used on IC Doc</th>
+                            <th>Holograms used on Other Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    @*<partial name="_ValidationScriptsPartial" />*@
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtContract").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%'
+                        //render: function (data, type, row, meta) {
+                        //    return meta.row + meta.settings._iDisplayStart + 1;
+                        //}
+                    },
+                    { data: "CASE_NO" },
+                    { data: "BK_NO" },
+                    { data: "SET_NO" },
+                    { data: "IE_SNAME" },
+                    { data: "HG_NO_MATERIAL" },
+                    { data: "HG_NO_SAMPLE" },
+                    { data: "HG_NO_TEST" },
+                    { data: "HG_NO_IC" },
+                    { data: "HG_NO_IC_DOC" },
+                    { data: "HG_NO_OT" },
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        return data.Issysadmin ? "YES" : "NO";
+                    //    }
+                    //},
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        return data.Isactive ? "YES" : "NO";
+                    //    }
+                    //},
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var id = data.RoleId;
+                    //        var editUrl = '@Url.Action("Manage", "Role")/' + id;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '<a onclick="RoleDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                ],
+                "order": [[0, "asc"]]
+            });
+        }        
+    </script>
+}

@@ -20,12 +20,12 @@ namespace IBS.Controllers
         {
             return View();
         }
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string CaseNo)
         {
             PO_MasterModel model = new();
-            if (id > 0)
+            if (CaseNo != null)
             {
-                model = pOMasterRepository.FindByID(id);
+                model = pOMasterRepository.FindByID(CaseNo);
             }
             return View(model);
         }
@@ -37,11 +37,11 @@ namespace IBS.Controllers
             DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterList(dtParameters, VendCd);
             return Json(dTResult);
         }
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string CaseNo)
         {
             try
             {
-                if (pOMasterRepository.Remove(id, UserId))
+                if (pOMasterRepository.Remove(CaseNo, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -60,15 +60,22 @@ namespace IBS.Controllers
         {
             try
             {
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 string msg = "PO Master Inserted Successfully.";
-                if (model.Id > 0)
+                if (model.CaseNo != null)
                 {
                     msg = "PO Master Updated Successfully.";
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = pOMasterRepository.POMasterDetailsInsertUpdate(model);
-                if (i > 0)
+                model.VendCd = VendCd;
+                if (model.PoiCd == null || model.PoiCd == 0)
+                {
+                    model.PoiCd = VendCd;
+                }
+
+                string i = pOMasterRepository.POMasterDetailsInsertUpdate(model);
+                if (i != "" && i != null)
                 {
                     return Json(new { status = true, responseText = msg });
                 }
