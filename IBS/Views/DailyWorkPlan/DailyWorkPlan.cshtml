@@ -1,0 +1,136 @@
+﻿@model IBS.Models.DailyWorkPlanModel
+@{
+    ViewData["Title"] = "IE DAILY WORK PLAN";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="DailyWorkPlan" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>IE DAILY WORK PLAN</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Reason for Not Entering WorkPlan of Date:</label>
+                    <label id="ReasonDt" name="ReasonDt" runat="server"></label>
+                    <textarea rows="4" asp-for="Reason" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="Reason" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-1 mb-2">
+                <input type="radio" id="huey" name="drone" checked>
+                <label for="huey" id="FromDate" name="FromDate" runat="server"></label>
+            </div>
+            <div class="col-md-1 mb-2">
+                <input type="radio" id="dewey" name="drone">
+                <label for="dewey" id="ToDate" name="ToDate" runat="server"></label>
+            </div>
+            <div class="list-btn">
+                <button type="button" class="formBtn" onclick="Save();">Save</button>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>CoCd</th>
+                            <th>Reason</th>
+                            <th>NwpDt</th>
+                            <th>RegionCode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(function () {
+            setDefaultDate();
+            InitializeDatatable();
+        });
+
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+        function setDefaultDate() {
+            var fromdate = new Date();
+            var todate = new Date();
+            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
+            $('#ToDate').text(moment(todate.setDate(todate.getDate() + 1)).format('@Common.CommonDateFormateForJS'));
+            $('#ReasonDt').text(moment(todate.setDate(todate.getDate() )).format('@Common.CommonDateFormateForJS'));
+        }
+
+        function InitializeDatatable() {
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CoCd" },
+                    { data: "Reason" },
+                    {
+                        data: "NwpDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "RegionCode" },
+                    
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/DailyWorkPlan/DailyWorkPlan";
+        };
+    </script>
+    }

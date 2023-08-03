@@ -1,0 +1,26 @@
+
+Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+=============================================================================================================================================
+
+create view view_Laboratory
+as
+select LAB_ID,LAB_NAME,LAB_ADDRESS,T1.City from T65_LABORATORY_MASTER T0
+left join T03_CITY T1 on T0.LAB_CITY=t1.city_cd
+
+
+
+ALTER TABLE T65_LABORATORY_MASTER
+MODIFY LAB_ID NUMBER(6,0) ;
+
+ALTER TABLE t51_lab_register_detail 
+MODIFY LAB_ID NUMBER(6,0) ;
+
+CREATE SEQUENCE T65_LABORATORY_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+ALTER TABLE T65_LABORATORY_MASTER
+    MODIFY LAB_ID NUMBER(6,0) DEFAULT T65_LABORATORY_MASTER_seq.nextval;
+
+    ALTER INDEX PK_LAB_ID RENAME TO T65_LABORATORY_MASTER_PK;

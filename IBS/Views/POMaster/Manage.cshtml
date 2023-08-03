@@ -44,6 +44,8 @@
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Agency/Client</label>
                             @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                            </br>
+                            <input type="text" class="input" id="txtBPO_RLY">
                             <span asp-validation-for="RlyCd" class="text-danger"></span>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -58,7 +60,7 @@
                         </div>
                     </div>
 
-                    <div class="row my-0">
+                   @* <div class="row my-0">
                         <div class="col-md-5 mb-3">
                             <label for="Reference">Vendor</label>
                             <input type="text" class="input" id="txtVend">
@@ -68,7 +70,7 @@
                             <label for="Reference"></label>
                             @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="row my-0">
                         <div class="col-md-3 mb-3">
@@ -86,7 +88,8 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
-                            <input type="text" class="input datepicker" asp-for="PoDt" readonly="true">
+                            @*<input type="text" class="datepicker" asp-for="PoDt" readonly="true">*@
+                            <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                             <span asp-validation-for="PoDt" class="text-danger"></span>
                         </div>
                     </div>
@@ -112,7 +115,7 @@
                             <input type="text" class="input" id="txtPurchaser">
                         </div>
                     </div>
-                    <div class="row my-0">
+                    <div class="row my-0" style="display: none;">
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Date of Reciept of PO in RITES</label>
                             <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
@@ -211,6 +214,7 @@
                         $('#hdnRCD').val(response.poMaster.RlyCd);
                         $('#txtSPur').val(response.poMaster.RlyCd);
                         FillPurchaserCd();
+                        
                     }
                     if (response.poMaster.PurchaserCd != "0" && response.poMaster.PurchaserCd != "") {
                         $('#PurchaserCd').val(response.poMaster.PurchaserCd);
@@ -259,9 +263,18 @@
                 if (response.status) {
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    var id=0;
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        if(value.Selected == true)
+                        {
+                            id=value.Value;
+                        }
                     });
+                    if(id>0)
+                    {
+                        $("#PurchaserCd").val(id);
+                    }
                     //$("#hdnRCD").val($("#RlyCd").val());
                     //$("#hdnRailway").val($("#RlyCd option:selected").text());
                 }
@@ -287,7 +300,7 @@
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
                 }
             });
@@ -309,7 +322,7 @@
                         $.each(response.list, function (index, value) {
                             $("#VendCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                         });
-                        vendor_status();
+                        //vendor_status();
                     }
                     else
                     {
@@ -319,34 +332,34 @@
             });
         }
 
-        function vendor_status() {
-            var VendCd = $("#VendCd").val();
-            $.ajax({
-                url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
-                type: 'GET',
-                cache: false,
-                data: '{}',
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response.status) {
-                    ShowHideMsgNew(response.status, response.responseText);
-                    $("#txtVend").val("");
-                }
-                else
-                {
-                    $("#txtVend").val(VendCd);
-                }
-            });
-        }
+        //function vendor_status() {
+        //    //var VendCd = $("#VendCd").val();
+        //    $.ajax({
+        //        url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
+        //        type: 'GET',
+        //        cache: false,
+        //        data: '{}',
+        //        processData: false,
+        //        contentType: false
+        //    }).done(function (response) {
+        //        if (response.status) {
+        //            ShowHideMsgNew(response.status, response.responseText);
+        //            $("#txtVend").val("");
+        //        }
+        //        else
+        //        {
+        //            $("#txtVend").val(VendCd);
+        //        }
+        //    });
+        //}
 
         function sameAsVendor() {
             if($("#chkManuf").prop('checked') == true)
             {
                 //$("#dvPlaceOfInspection").css("display", "block");
                 //$("#txtMPOI").attr("disabled", "disabled");
-                fill_manufacturer();
-                GetManufVEND();
+                fill_manufacturer(0);
+                GetManufVEND(0);
             }
             else
             {
@@ -359,9 +372,9 @@
             }
         }
 
-        function fill_manufacturer() {
+        function fill_manufacturer(id) {
             $.ajax({
-                url: '@Url.Action("GetVendor", "POMaster")',
+                url: '@Url.Action("GetVendor", "POMaster")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -374,7 +387,7 @@
                     $.each(response.list, function (index, value) {
                         $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
-                    vendor_status();
+                    //vendor_status();
                 }
                 else {
                     ShowHideMsgNew(response.status, "No Vendor Found!!!");
@@ -382,10 +395,14 @@
             });
         }
 
-        function GetManufVEND() {
-            var VendCd = $("#VendCd").val();
+        function GetManufVEND(id) {
+            //var VendCd = $("#VendCd").val();
+            //if(id > 0)
+            //{
+            //    VendCd=id;
+            //}
             $.ajax({
-                url: '@Url.Action("GetManufVEND", "POMaster")?VendCd=' + VendCd,
+                url: '@Url.Action("GetManufVEND", "POMaster")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -409,6 +426,13 @@
                 }
                 
             });
+        }
+
+        function SelectManufacturer()
+        {
+               var txtMName= $("#txtMName").val();
+                fill_manufacturer(txtMName);
+                GetManufVEND(txtMName);
         }
 
     </script>

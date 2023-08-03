@@ -31,7 +31,7 @@ namespace IBS.Repositories
                 model.Designation = tenant.Designation;
                 model.ClientType = tenant.ClientType;
                 model.Client =  tenant.Client;
-                model.RitesOfficerCd = tenant.RitesOfficerCd;
+                model.RitesOfficerCd = Convert.ToByte(tenant.RitesOfficerCd);
                 model.Highlights = tenant.Highlights;
                 model.OverallOutcome = tenant.OverallOutcome;
                 model.RegionCd =  tenant.RegionCd;

@@ -22,10 +22,14 @@
                     <span class="text-danger" id="spnErrorAuthLevl"></span>
                 </div>
             </div>
-            <div class="col-md-4 mb-3" id="divIEName" style="display:none;">
+            <div class="col-md-4 mb-3" id="divIEName">
                 <div class="reference">
                     <label id="IEName" for="Name">INSTRUCTIONS TO IE </label>
-                    @Html.DropDownListFor(model => model.DocSubType, new SelectList(IBS.Models.Common.GetDocSubType("") , "Value", "Text"),"--Select--", new { @class = "" })
+                    @*@if (Model.DocType == "R")
+                    {*@
+                    @Html.DropDownListFor(model => model.DocSubType, new SelectList(IBS.Models.Common.GetDocSubType(Model.DocType) , "Value", "Text"),"--Select--", new { @class = "" })
+
+
                     <span class="text-danger" id="spnErrorLlRef"></span>
                 </div>
             </div>
@@ -45,7 +49,8 @@
             </div>
 
             <div class="list-btn">
-                <a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Search </a>
+                @*<a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Search </a>*@
+                <button type="button" class="formBtn" onclick="Save();">Search</button>
             </div>
         </div>
     </div>
@@ -61,7 +66,7 @@
                             <th>Document No.</th>
                             <th>Issue Date</th>
                             <th>File Location</th>
-                                        @*<th>Action</th>*@
+                            @*<th>Action</th>*@
                         </tr>
                     </thead>
                     <tbody>
@@ -72,29 +77,35 @@
     </section>
 </div>
 
-            @section scripts{
+@section scripts{
 
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
 
-        $(function () {
-            InitializeDatatable();
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('actiontype');
+            if (actiontype == "CI") {
+                $("#DocType").val('R');
+            }
+            else {
+                $("#DocType").val("");
+            }
+            GetDocSubType();
         });
 
         function Save() {
-            alert("button");
+            InitializeDatatable();
         }
 
-
-        function GetDocSubType(id) {
-
-            //grdSearch();
-            
-
+        function GetDocSubType() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('actiontype');
             var DocType = $("#DocType").val();
             var DocTypeName = $("#DocType option:selected").text();
+            $("#DocumentName").val('');
             $.ajax({
                 url: '@Url.Action("GetDocSubType", "DownloadDocuments")?DocType=' + DocType,
                 type: 'GET',
@@ -124,15 +135,32 @@
                     $.each(response.list, function (index, value) {
                         $("#DocSubType").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
-                    if (id > 0) {
-                        $("#DocSubType").val(id);
+                    //if (id > 0) {
+                    //    $("#DocSubType").val(id);
+                    //}
+                    if (actiontype == "CI") {
+                        debugger;
+
+                        $("#DocSubType").val('Q');
+                        $("#DocType").attr('disabled', 'disabled');
+                        $("#DocSubType").attr('disabled', 'disabled');
+                    }
+                    else {
+                        $("#DocType").removeAttr('disabled');
+                        $("#DocSubType").removeAttr('disabled');
                     }
                 }
             });
         }
 
         function InitializeDatatable() {
-
+            debugger;
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('actiontype');
+            var DocType = $("#DocType").val();
+            var DocSubType = $("#DocSubType").val();
+            var DocSearch = $("#DocumentName").val();
+            
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -150,69 +178,9 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-
-                columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "FILE_NAME" },
-                    { data: "DocumentName" },
-                    { data: "DocumentNo" },
-                    {
-                        data: "IssueDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "FILE_LOCATION" },
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var MessageId = data.MessageId;
-                    //        var RegionCode = data.RegionCode;
-                    //        var editUrl = '@Url.Action("Index", "DownloadDocuments")?MessageId=' + MessageId + '&RegionCode=' + RegionCode;
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                    //        html += '<a onclick="MessageDelete(\'' + MessageId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + MessageId + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
-                    //        html += '</div>';
-                    //        return html;
-                    //    }
-                    //},
-                ],
-                "order": [[0, "asc"]]
-            });
-        }
-
-        function grdSearch() {
-
-            $("#dtList").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "DocType": $("#DocType").val(),
+                            "DocType": DocType.toString(),
+                            "DocSubType": DocSubType.toString(),
+                            "DocSearch": DocSearch.toString()
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
