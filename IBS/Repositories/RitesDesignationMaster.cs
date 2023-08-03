@@ -21,7 +21,7 @@ namespace IBS.Repositories
                 throw new Exception("Role Record Not found");
             else
             {
-                model.RDesigCd = role.RDesigCd;
+              //  model.RDesigCd = role.RDesigCd;
                 model.RDesignation = role.RDesignation;
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
@@ -63,7 +63,7 @@ namespace IBS.Repositories
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RDMModel
                     {
-                        RDesigCd = l.RDesigCd,
+                      //  RDesigCd = l.RDesigCd,
                         RDesignation = l.RDesignation,
                         Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,

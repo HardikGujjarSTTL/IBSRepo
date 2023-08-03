@@ -71,6 +71,10 @@ builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+
+#region Inspection and Billing
+builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
