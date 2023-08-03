@@ -59,6 +59,7 @@ builder.Services.AddScoped<IMAapproveRepository, MAapproveRepository>();
 builder.Services.AddScoped<IDEOCRISPurchesOrderWCaseNoRepository, DEOCRISPurchesOrderWCaseNoRepository>();
 builder.Services.AddScoped<IIEMessageRepository, IEMessageRepository>();
 builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>();
+builder.Services.AddScoped<ILaboratoryMstRepository, LaboratoryMstRepository>();
 
 builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration.UploadDocRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
@@ -72,8 +73,14 @@ builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
 builder.Services.AddScoped<IRly_Designation_Form, Rly_Designation_Form>();
 builder.Services.AddScoped<IBankMaster, BankMaster>();
-
+builder.Services.AddScoped<IAccountCodesDirectory, AccountCodesDirectory>();
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
+builder.Services.AddScoped<IMasterItemsListForm, MasterItemsListForm>();
+builder.Services.AddScoped<IConsignee_PMForm, Consignee_PMForm>();
+builder.Services.AddScoped<IInspectionEngineers, InspectionEngineers>();
+builder.Services.AddScoped<I_IE_CO_Form, IE_CO_Form>();
+builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
+builder.Services.AddScoped<IClusterMaster, ClusterMaster>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 
 var app = builder.Build();

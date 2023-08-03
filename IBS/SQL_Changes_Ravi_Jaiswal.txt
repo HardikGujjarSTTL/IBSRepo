@@ -46,6 +46,9 @@ ALTER TABLE T07_rites_desig
 
 ALTER TABLE T07_rites_desig
     ADD UpdatedDate DATE
+
+    ALTER TABLE T07_RITES_DESIG
+MODIFY (R_DESIG_CD  NUMBER(6,0));
     
     
      CREATE SEQUENCE T07_RITES_DESIG_seq
@@ -156,3 +159,127 @@ CREATE SEQUENCE T94_Bank_seq
 
 ALTER TABLE T94_Bank
     MODIFY BANK_CD NUMBER(6,0) DEFAULT T94_Bank_seq.nextval;
+-------------------------------------------------------------------
+ALTER TABLE T95_ACCOUNT_CODES 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T95_ACCOUNT_CODES
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T95_ACCOUNT_CODES 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T95_ACCOUNT_CODES
+    ADD CreatedDate DATE
+
+ALTER TABLE T95_ACCOUNT_CODES
+    ADD UpdatedDate DATE
+
+    ALTER TABLE T95_ACCOUNT_CODES
+MODIFY (ACC_CD  NUMBER(6,0));
+-------------------------------------------
+ALTER TABLE T61_ITEM_MASTER 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T61_ITEM_MASTER
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T61_ITEM_MASTER 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T61_ITEM_MASTER
+    ADD CreatedDate DATE
+
+ALTER TABLE T61_ITEM_MASTER
+    ADD UpdatedDate DATE
+---------------------------------
+ALTER TABLE T06_CONSIGNEE 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T06_CONSIGNEE
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T06_CONSIGNEE 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T06_CONSIGNEE
+    ADD CreatedDate DATE
+
+ALTER TABLE T06_CONSIGNEE
+    ADD UpdatedDate DATE
+---------------------------------
+ALTER TABLE T09_IE 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T09_IE
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T09_IE 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T09_IE
+    ADD CreatedDate DATE
+
+ALTER TABLE T09_IE
+    ADD UpdatedDate DATE
+
+    ALTER TABLE T09_IE
+MODIFY (IE_CITY_CD  NUMBER(6,0));
+
+ALTER TABLE T09_IE
+MODIFY (IE_SEAL_NO  NUMBER(6,0));
+-----------------------------------------
+ALTER TABLE T08_IE_CONTROLL_OFFICER 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T08_IE_CONTROLL_OFFICER
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T08_IE_CONTROLL_OFFICER 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T08_IE_CONTROLL_OFFICER
+    ADD CreatedDate DATE
+
+ALTER TABLE T08_IE_CONTROLL_OFFICER
+    ADD UpdatedDate DATE
+
+    ALTER TABLE T08_IE_CONTROLL_OFFICER
+MODIFY (CO_CD  NUMBER(6,0));
+--------------------------------------------
+ALTER TABLE T12_Bill_Paying_Officer 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T12_Bill_Paying_Officer
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T12_Bill_Paying_Officer 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T12_Bill_Paying_Officer
+    ADD CreatedDate DATE
+
+ALTER TABLE T12_Bill_Paying_Officer
+    ADD UpdatedDate DATE
+------------------------------------------
+ALTER TABLE T99_CLUSTER_MASTER 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T99_CLUSTER_MASTER
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T99_CLUSTER_MASTER 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T99_CLUSTER_MASTER
+    ADD CreatedDate DATE
+
+ALTER TABLE T99_CLUSTER_MASTER
+    ADD UpdatedDate DATE
+
+ALTER TABLE T99_CLUSTER_MASTER
+MODIFY (CLUSTER_CODE  NUMBER(6,0));
+-------------------------------------
+
+
+

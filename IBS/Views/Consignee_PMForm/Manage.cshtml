@@ -1,0 +1,77 @@
+﻿@model IBS.Models.Consignee_PMFormModel
+
+@{
+    ViewData["Title"] = "Consignee/Purchaser Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Consignee/Purchaser Master</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="Consignee_PMForm" asp-action="Consignee_PMFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmConsignee_PMForm">
+                <input type="hidden" asp-for="ConsigneeCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Consignee code</label>
+                            <textarea class="input" asp-for="ConsigneeCd" maxlength="30"> </textarea>
+                            <span asp-validation-for="ConsigneeCd" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Railway/Purchaser</label>
+                            <textarea class="input" asp-for="ConsigneeType" maxlength="30"> </textarea>
+                            <span asp-validation-for="ConsigneeType" class="text-danger"></span>
+                        </div>
+                        <div class="row my-0">
+                            <div class="col-md-4 mb-3">
+                                <label for="Reference">Sap Customer Code</label>
+                                <input type="text" class="input" asp-for="SapCustCdCon" maxlength="30">
+                                <span asp-validation-for="SapCustCdCon" class="text-danger"></span>
+                            </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                                <label for="Reference">Consignee Designation</label>
+                                <input type="text" class="input" asp-for="ConsigneeDesig" maxlength="30">
+                                <span asp-validation-for="ConsigneeDesig" class="text-danger"></span>
+                        </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Reference">City</label>
+                                <input type="text" class="input" asp-for="ConsigneeCity" maxlength="30">
+                                <span asp-validation-for="ConsigneeCity" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Reference">GSTIN No.</label>
+                                <input type="text" class="input" asp-for="GstinNo" maxlength="30">
+                                <span asp-validation-for="GstinNo" class="text-danger"></span>
+                            </div>
+
+                    </div>
+                    <div class="savenext-btn">
+                            <a asp-controller="Consignee_PMForm" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmConsignee_PMForm").valid()) {
+                $("#frmConsignee_PMForm").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/Consignee_PMForm/Index";
+        };
+    </script>
+}

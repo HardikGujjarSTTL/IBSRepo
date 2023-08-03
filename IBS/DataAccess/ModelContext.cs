@@ -12607,7 +12607,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T80_PO_MASTER");
 
             entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
@@ -12750,18 +12750,12 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T82PoDetail>(entity =>
         {
-            entity.HasKey(e => new { e.CaseNo, e.ItemSrno }).HasName("PK82_PO_DETAILS");
+            entity
+                .HasNoKey()
+                .ToTable("T82_PO_DETAIL");
 
-            entity.ToTable("T82_PO_DETAIL");
+            entity.HasIndex(e => new { e.CaseNo, e.ItemSrno }, "PK82_PO_DETAILS").IsUnique();
 
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
-                .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.BasicValue)
                 .HasColumnType("NUMBER(13,2)")
                 .HasColumnName("BASIC_VALUE");
@@ -12773,6 +12767,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(5)
                 .IsUnicode(false)
                 .HasColumnName("BPO_CD");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
             entity.Property(e => e.Consignee)
                 .HasMaxLength(300)
                 .IsUnicode(false)
@@ -12819,6 +12818,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(400)
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
+            entity.Property(e => e.ItemSrno)
+                .HasPrecision(4)
+                .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.OtChargePer)
                 .HasColumnType("NUMBER(10,2)")
                 .HasColumnName("OT_CHARGE_PER");
@@ -12858,12 +12860,12 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(15,2)")
                 .HasColumnName("VALUE");
 
-            entity.HasOne(d => d.CaseNoNavigation).WithMany(p => p.T82PoDetails)
+            entity.HasOne(d => d.CaseNoNavigation).WithMany()
                 .HasForeignKey(d => d.CaseNo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK82_CASE_NO");
+                .HasConstraintName("FK_T82_PO_DETAIL_T80_PO_MASTER");
 
-            entity.HasOne(d => d.UomCdNavigation).WithMany(p => p.T82PoDetails)
+            entity.HasOne(d => d.UomCdNavigation).WithMany()
                 .HasForeignKey(d => d.UomCd)
                 .HasConstraintName("FK82_UOM_CD");
         });
@@ -15962,7 +15964,7 @@ public partial class ModelContext : DbContext
                 .ToView("VIEW_POMASTERLIST");
 
             entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");

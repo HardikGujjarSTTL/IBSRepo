@@ -55,7 +55,5 @@ public partial class T80PoMaster
 
     public virtual T01Region? RegionCodeNavigation { get; set; }
 
-    public virtual ICollection<T82PoDetail> T82PoDetails { get; set; } = new List<T82PoDetail>();
-
     public virtual T05Vendor? VendCdNavigation { get; set; }
 }

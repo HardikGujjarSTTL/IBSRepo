@@ -30,6 +30,4 @@ public partial class T04Uom
     public DateTime? Updateddate { get; set; }
 
     public virtual ICollection<T15PoDetail> T15PoDetails { get; set; } = new List<T15PoDetail>();
-
-    public virtual ICollection<T82PoDetail> T82PoDetails { get; set; } = new List<T82PoDetail>();
 }

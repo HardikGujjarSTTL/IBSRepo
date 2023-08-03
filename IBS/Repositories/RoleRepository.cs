@@ -2,7 +2,9 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
+using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace IBS.Repositories
 {

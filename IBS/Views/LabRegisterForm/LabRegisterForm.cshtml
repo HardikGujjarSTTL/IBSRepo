@@ -1,0 +1,180 @@
+﻿@model IBS.Models.LABREGISTERModel
+
+@{
+    ViewData["Title"] = "LAB REGISTER";
+}
+
+
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="YourController" asp-action="YourAction" method="post">
+    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
+           bgColor="#f0f8ff" border="1">
+        <tr>
+            <td style="width: 25%; height: 19px" valign="top">
+                <label class="control-label">Sample Registration No.</label>
+            </td>
+            <td style="width: 25%; height: 19px" valign="top">
+                <label asp-for="SampleRegNo" class="control-label" id="lblRNo"></label>
+            </td>
+            <td style="width: 25%; height: 19px" valign="top">
+                <label class="control-label">Sample Registration Date</label>
+            </td>
+            <td style="width: 25%; height: 19px" valign="top">
+                <input asp-for="SampleRegDate" class="form-control" />
+                <span asp-validation-for="SampleRegDate" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">CaseNo</label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label asp-for="CaseNo" class="control-label" id="lblCaseNo"></label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Call Date & Sno</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 21px"
+                valign="top">
+                <label asp-for="CallDateAndSno" class="control-label" id="lblCallDT"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label asp-for="Vendor" class="control-label"></label>
+            </td>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top" colspan="3">
+                <label asp-for="Vendor" class="control-label" id="lblVend"></label>
+                <label asp-for="VendorCode" class="control-label" id="lblVENDCD" style="display:none;"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label asp-for="IE" class="control-label"></label>
+            </td>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label asp-for="IE" class="control-label" id="lblIE"></label>
+                <label asp-for="IECode" class="control-label" id="lblIECD" style="display:none;"></label>
+            </td>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label class="control-label">Date of Dispatch of Sample</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 19px"
+                vAlign="top">
+                <input asp-for="SampleDispatchDate" class="form-control" />
+                <span asp-validation-for="SampleDispatchDate" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label class="control-label">Date of Drawal of Sample</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 19px"
+                vAlign="top">
+                <input asp-for="SampleDrawalDate" class="form-control" />
+                <span asp-validation-for="SampleDrawalDate" class="text-danger"></span>
+            </td>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label class="control-label">Date of Receipt of Sample</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 19px"
+                vAlign="top">
+                <input asp-for="SampleReceiptDate" class="form-control" />
+                <span asp-validation-for="SampleReceiptDate" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label class="control-label">Testing Type</label>
+            </td>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top" colspan="3">
+                <label>
+                    @Html.RadioButtonFor(m => m.TestingType, "Normal", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "5" })
+                    Normal
+                </label>
+                <label>
+                    @Html.RadioButtonFor(m => m.TestingType, "Re-Testing", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" })
+                    Re-Testing
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Total Testing Fee</label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label asp-for="TotalTestingFee" class="control-label" id="lbltotf"></label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Total Handling Charges</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 21px"
+                valign="top">
+                <label asp-for="TotalHandlingCharges" class="control-label" id="lblthc"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Total Service Tax</label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label asp-for="TotalServiceTax" class="control-label" id="lblservicetax"></label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Total Lab Charges</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 21px"
+                valign="top">
+                <label asp-for="TotalLabCharges" class="control-label" id="lbltolc"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Total TDS</label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label asp-for="TotalTDS" class="control-label" id="lbltotds"></label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Amount Recieved</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 21px"
+                valign="top">
+                <label asp-for="AmountRecieved" class="control-label" id="lblar"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 23px"></td>
+            <td style="width: 25%; height: 23px">
+                @Html.Label("Label34", "Total Amount Cleared", new { @class = "text-darkblue font-bold font-size-8pt" })
+            </td>
+            <td style="width: 25%; height: 23px">
+                @Html.LabelFor(m => m.TotalAmountCleared, new { @class = "text-orangered font-bold font-size-8pt" })
+            </td>
+            <td style="width: 25%; height: 23px"></td>
+        </tr>
+        <tr>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label class="control-label">Code No	</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 19px"
+                vAlign="top">
+                <input asp-for="CodeNo" class="form-control" />
+                <span asp-validation-for="CodeNo" class="text-danger"></span>
+            </td>
+            <td style="WIDTH: 25%; HEIGHT: 19px" vAlign="top">
+                <label class="control-label">Code Date</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 19px"
+                vAlign="top">
+                <input asp-for="CodeDate" class="form-control" />
+                <span asp-validation-for="CodeDate" class="text-danger"></span>
+            </td>
+        </tr>
+        
+    </table>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary">Cancel</button>
+</form>

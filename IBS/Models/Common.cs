@@ -120,7 +120,9 @@ namespace IBS.Models
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
             Tblexception objexception = new Tblexception();
+
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
@@ -165,7 +167,28 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
-
+        
+            public static List<SelectListItem> GetLabApproval()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "--Select--";
+            single.Value = "0";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "NABL";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "RITES";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CERTIFER APPROVED";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
         public static List<SelectListItem> VendorApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -670,14 +693,9 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
-
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Contains(consignee)
+                        where a.Consignee.StartsWith(consignee)
                         select
                    new SelectListItem
                    {
@@ -687,6 +705,14 @@ namespace IBS.Models
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
+            }
+            SelectListItem drop = new SelectListItem();
+            drop.Text = "Other";
+            drop.Value = "0";
+            dropDownDTOs.Add(drop);
+            if (dropDownDTOs != null && dropDownDTOs.Count > 1)
+            {
+                dropDownDTOs[1].Selected = true;
             }
             return dropDownDTOs;
         }

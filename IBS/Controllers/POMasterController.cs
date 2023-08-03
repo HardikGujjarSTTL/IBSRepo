@@ -84,7 +84,8 @@ namespace IBS.Controllers
         {
             try
             {
-                var obj = pOMasterRepository.FindCaseNo(CaseNo);
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+                var obj = pOMasterRepository.FindCaseNo(CaseNo, VendCd);
                 return Json(new { status = true, poMaster = obj });
             }
             catch (Exception ex)
@@ -140,17 +141,21 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetVendor()
+        public IActionResult GetVendor(int id = 0)
         {
             try
             {
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
-                List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
-                foreach (var item in agencyClient.Where(x=>x.Value == Convert.ToString(VendCd)).ToList())
+                if (id > 0)
                 {
-                    if(item.Value == Convert.ToString(VendCd))
+                    VendCd = id;
+                }
+                List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
+                foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(VendCd)).ToList())
+                {
+                    if (item.Value == Convert.ToString(VendCd))
                     {
-                        item.Selected=true;
+                        item.Selected = true;
                     }
                 }
                 return Json(new { status = true, list = agencyClient });
@@ -163,10 +168,11 @@ namespace IBS.Controllers
         }
 
         [HttpGet]
-        public IActionResult Getvendor_status(int VendCd)
+        public IActionResult Getvendor_status()
         {
             try
             {
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 VendorModel getvendor_status = Common.Getvendor_status(VendCd);
                 if (getvendor_status != null)
                 {
@@ -185,10 +191,15 @@ namespace IBS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetManufVEND(int VendCd)
+        public IActionResult GetManufVEND(int id = 0)
         {
             try
             {
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+                if (id > 0)
+                {
+                    VendCd = id;
+                }
                 VendorModel getvendor = Common.GetManufVEND(VendCd);
                 return Json(new { status = true, getvendor = getvendor });
             }
