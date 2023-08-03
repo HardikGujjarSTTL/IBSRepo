@@ -532,8 +532,8 @@ namespace IBS.Models
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.RlyCd),
-                           Value = Convert.ToString(a.Railway)
+                           Text = Convert.ToString(a.Railway),
+                           Value = Convert.ToString(a.RlyCd)
                        }).ToList();
                 dropDownDTOs.AddRange(dropList);
             }
