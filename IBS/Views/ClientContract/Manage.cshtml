@@ -11,7 +11,7 @@
 </div>
 <section>
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientContractDetails">
                 <input type="hidden" asp-for="Id" />
                 <div class="accordion-body">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </form>
-    </div>
+    
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />

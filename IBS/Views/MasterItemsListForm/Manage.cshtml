@@ -8,9 +8,9 @@
         <h2>Master Items List Form</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="MasterItemsListForm" asp-action="MasterItemsListFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmMasterItemsListForm">
                 
                 <div class="accordion-body">
@@ -34,9 +34,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />

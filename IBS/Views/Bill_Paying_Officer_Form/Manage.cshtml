@@ -8,9 +8,9 @@
         <h2>Bill Paying Officer</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="Bill_Paying_Officer_Form" asp-action="Bill_Paying_Officer_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBill_Paying_Officer_Form">
                 <input type="hidden" asp-for="BpoCd" />
                 <div class="accordion-body">
@@ -40,9 +40,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />

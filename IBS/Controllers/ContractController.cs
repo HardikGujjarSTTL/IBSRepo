@@ -30,7 +30,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-            {
+        {
             DTResult<ContractModel> dTResult = contractRepository.GetContractList(dtParameters);
             return Json(dTResult);
         }
@@ -64,7 +64,7 @@ namespace IBS.Controllers
                     msg = "Contract Updated Successfully.";
                     model.Updatedby = UserId;
                 }
-                model.Createdby =UserId;
+                model.Createdby = UserId;
                 int i = contractRepository.ContractDetailsInsertUpdate(model);
                 if (i > 0)
                 {

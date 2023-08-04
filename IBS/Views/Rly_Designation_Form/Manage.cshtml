@@ -8,9 +8,9 @@
         <h2>Railway Designation Master</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="Rly_Designation_Form" asp-action="Rly_Designation_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRly_Designation_Form">
                 @*<input type="hidden" asp-for="RlyDesigCd" />*@
                 <div class="accordion-body">
@@ -33,9 +33,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />

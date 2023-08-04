@@ -8,9 +8,9 @@
         <h2>Bank Master</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="BankMaster" asp-action="BankMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBankMaster">
                 <input type="hidden" asp-for="BankCd" />
                 <div class="accordion-body">
@@ -25,8 +25,7 @@
                             <textarea class="input" asp-for="BankName" maxlength="30"> </textarea>
                             <span asp-validation-for="BankName" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="row my-0">
+                    
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Fmis Bank Code</label>
                             <input type="text" class="input" asp-for="FmisBankCd" maxlength="30">
@@ -40,9 +39,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
