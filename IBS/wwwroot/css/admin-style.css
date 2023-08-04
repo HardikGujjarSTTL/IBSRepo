@@ -1464,3 +1464,6 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .width25p{width:25%;}
 .formSubBtn{ margin-top:35px; width:auto;}
 .astric{ color:#f00;}
+div.dataTables_wrapper div.dataTables_length select{appearance:auto!important;}
+div.dataTables_wrapper div.dataTables_length label, div.dataTables_wrapper div.dataTables_filter label{ margin:0; padding:0;}
+.dataTables_wrapper .row{ margin-bottom:0;}
