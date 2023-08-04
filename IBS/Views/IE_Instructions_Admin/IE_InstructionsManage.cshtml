@@ -37,8 +37,7 @@
             <input type="text" class="datepicker" asp-for="LetterDt" maxlength="30" style="text-transform: uppercase;" placeholder="dd-MM-yyyy" readonly="readonly">
             <span asp-validation-for="LetterDt" class="text-danger"></span>
             </div>*@
-        </div>
-        <div class="row my-0">
+       
             <div class="col-md-4 mb-3">
                 <div class="otherdetails">
                     <label for="LetterDate">Letter Dt.</label>
@@ -51,8 +50,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
+       
             <div class="col-md-4 mb-3">
                 <label for="Reference">Message</label>
                 @*<input type="text" class="input" asp-for="Message" maxlength="800" style="text-transform: uppercase;">*@
@@ -60,14 +58,11 @@
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
         </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+        
                 <div class="savenext-btn">
                     <a asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsMaster" class="reset-btn">Cancel</a>
                     <button type="button" class="save-btn active" onclick="Save();">Save</button>
                 </div>
-            </div>
-        </div>
     </div>
 </form>
 @section scripts{
