@@ -211,6 +211,51 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> VendorStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Active";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Banned/BlackListed";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Re-Instated";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> ItemBlocked()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No";
+            single.Value = "";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Yes";
+            single.Value = "Y";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> OnlineCallStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Yes";
+            single.Value = "Y";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> ClientType()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();

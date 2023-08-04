@@ -5,7 +5,7 @@ using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace IBS.Controllers
+namespace IBS.Controllers.Vendor
 {
     public class POMasterController : BaseController
     {
@@ -215,6 +215,17 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetManufVEND", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+
+        public IActionResult ManageVendorDetails(string CaseNo)
+        {
+            PO_MasterModel model = new();
+            if (CaseNo != null)
+            {
+                model = pOMasterRepository.FindByID(CaseNo);
+            }
+            return View(model);
         }
 
     }

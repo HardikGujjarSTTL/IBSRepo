@@ -74,6 +74,7 @@ namespace IBS.Repositories
             }
             query = from POMaster in context.ViewPomasterlists
                     where POMaster.VendCd == VendCd
+                    && POMaster.Isdeleted != Convert.ToByte(true)
                     select new PO_MasterModel
                     {
                         VendCd = POMaster.VendCd,
