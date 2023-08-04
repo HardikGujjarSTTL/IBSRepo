@@ -37,5 +37,5 @@ public partial class T66TechRef
 
     public string? Updatedby { get; set; }
 
-    public string? Isdeleted { get; set; }
+    public byte? Isdeleted { get; set; }
 }
