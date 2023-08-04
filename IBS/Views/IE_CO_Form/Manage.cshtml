@@ -8,24 +8,19 @@
         <h2>Controlling Officers of Inspecting Engineers</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="IE_CO_Form" asp-action="IE_CO_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmIE_CO_Form">
                 <input type="hidden" asp-for="CoCd" />
                 <div class="accordion-body">
-                    <div class="row my-0">
-                        @*<div class="col-md-4 mb-3">
+            @*<div class="row my-0">
+                        <div class="col-md-4 mb-3">
                             <label for="Reference">Controlling Officer Code</label>
                             <textarea class="input" asp-for="CoCd" maxlength="30"> </textarea>
                             <span asp-validation-for="CoCd" class="text-danger"></span>
-                        </div>*@
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Controlling Officer Name</label>
-                            <textarea class="input" asp-for="CoName" maxlength="30"> </textarea>
-                            <span asp-validation-for="CoName" class="text-danger"></span>
                         </div>
-                    </div>
+            </div>*@
                     <div class="row my-0">
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Designation</label>
@@ -47,7 +42,11 @@
                             <input type="text" class="input" asp-for="CoType" maxlength="30">
                             <span asp-validation-for="CoType" class="text-danger"></span>
                         </div>
-
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Controlling Officer Name</label>
+                    <textarea class="input" asp-for="CoName" maxlength="30"> </textarea>
+                    <span asp-validation-for="CoName" class="text-danger"></span>
+                </div>
                     </div>
                     <div class="savenext-btn">
                         <a asp-controller="IE_CO_Form" asp-action="Index" class="reset-btn">Cancel</a>
@@ -55,9 +54,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />

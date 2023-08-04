@@ -1,56 +1,52 @@
-﻿@model IBS.Models.PurchesOrder1LOAModel
+﻿@model IBS.Models.VendorCallsMarkedForSpecificPOModel
 @{
     ViewData["Title"] = "REGISTERED LOA ADD NEW ITEMS FORM";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="PurchesOrder1LOA" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallsMarkedForSpecificPO" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
             <h2>REGISTERED LOA ADD NEW ITEMS FORM</h2>
         </div>
+        <input type="hidden" id="hdnRailway" />
+        <input type="hidden" id="hdnRCD" />
     </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Case Number</label>
-                    <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    <label for="Reference">Client Type</label>
+                    @Html.DropDownListFor(model => model.RlyNorly, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"),"--Select--", new{ @onChange="FillRlyCd();"})
+                    <span asp-validation-for="RlyNorly" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Offer Letter No.</label>
-                    <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="PoNo" class="text-danger"></span>
+                    <label for="Reference">Select Client</label>
+                    @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetClientByClientType(""), "Value", "Text"),"--Select--")
+                    <span asp-validation-for="RlyCd" class="text-danger"></span>
                 </div>
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">LOA Date</label>
-                    @*<label id="CallRecvDt" name="CallRecvDt" asp-for=@Model.CallRecvDt runat="server"></label>*@
+                    <label for="Reference">PO Date</label>
                     <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="PoDt" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">Vendor Name</label>
-                    <input type="text" class="input" asp-for="VendName" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="VendName" class="text-danger"></span>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <a asp-controller="VendorCallsMarkedForSpecificPO" asp-action="Index" class="reset-btn">Cancel</a>
+                    @*<a asp-controller="Modified" asp-action="Manage" class="reset-btn">Cancel</a>*@
+                    @*<button type="button" class="save-btn" id="btnModifyLOA">Modify LOA</button>*@
+                    <button type="button" class="save-btn active" id="btnSearchLOA">Search PO No.</button>
                 </div>
             </div>
         </div>
-       
-                <div class="savenext-btn">
-                    <a asp-controller="PurchesOrder1LOA" asp-action="Index" class="reset-btn">Cancel</a>
-                    @*<a asp-controller="Modified" asp-action="Manage" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn" id="btnModifyLOA">Modify LOA</button>
-                    <button type="button" class="save-btn active" id="btnSearchLOA">Search LOA</button>
-                </div>
-   
 
     </div>
     <section class="table-section">
@@ -60,15 +56,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Case No.</th>
-                            <th>Offer Letter Number</th>
-                            <th>LOA Date</th>
-                            <th>Agency</th>
-                            <th>Vendor</th>
-                            <th>Purchaser Name</th>
-                            <th>Inspection By/PO Cancelled</th>
-                            @*<th>View PO</th>
-                            <th>View PO</th>*@
+                            <th>Po No.</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -86,7 +74,7 @@
     <script type="text/javascript">
         $(function () {
             setDefaultDate();
-            InitializeDatatable();
+            //InitializeDatatable();
         });
 
         $("#btnSearchLOA").click(function () {
@@ -104,14 +92,33 @@
             });
         }
 
+        function FillRlyCd() {
+            var RlyNorly = $("#RlyNorly").val();
+            $.ajax({
+                url: '@Url.Action("GetRlyCd", "VendorCallsMarkedForSpecificPO")?RlyNorly=' + RlyNorly,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#RlyCd").html("");
+                    $("#RlyCd").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#RlyCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    $("#hdnRCD").val($("#RlyCd").val());
+                    $("#hdnRailway").val($("#RlyCd option:selected").text());
+                }
+            });
+            FillPurchaserCd();
+        }
+
         function InitializeDatatable() {
-            var CaseNo = $("#CaseNo").val();
-            //var PoNo = $("#PoNo").val();
-            //var PoDt = $("#PoDt").val();
-            //var VendName = $("#VendName").val();
-            var PoNo = "";
-            var PoDt = "";
-            var VendName = "";
+            var RlyNorly = $("#RlyNorly").val();
+            var RlyCd = $("#RlyCd").val();
+            var PoDt = $("#PoDt").val();
 
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -124,16 +131,15 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable", "PurchesOrder1LOA")",
+                    url: "@Url.Action("LoadTable", "VendorCallsMarkedForSpecificPO")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            "CaseNo": CaseNo,
-                            "PoNo": PoNo,
-                            "PoDt": PoDt,
-                            "VendName": VendName
+                            "RlyNorly": RlyNorly,
+                            "RlyCd": RlyCd,
+                            "PoDt": PoDt
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -147,32 +153,12 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CaseNo" },
                     { data: "PoNo" },
-
-                    {
-                        data: "PoDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "RlyCd" },
-                    { data: "VendName" },
-                    { data: "ConsigneeSName" },
-                    { data: "InspectingAgency" },
-                    //{ data: "PoDoc" },
-                    //{ data: "PoDoc1" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
                             var PoNo = data.PoNo;
-                            var PoDt = data.PoDt;
-                            var VendName = data.VendName;
-                            var editUrl = '@Url.Action("Index", "PurchesOrder1LOA")?CaseNo=' + CaseNo;
+                            var editUrl = '@Url.Action("Index", "VendorCallsMarkedForSpecificPO")?PoNo=' + PoNo;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
