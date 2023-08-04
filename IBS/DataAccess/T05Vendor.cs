@@ -51,7 +51,15 @@ public partial class T05Vendor
 
     public string? OnlineCallStatus { get; set; }
 
-    public decimal? Id { get; set; }
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
 
     public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();
 
