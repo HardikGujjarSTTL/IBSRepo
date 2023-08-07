@@ -783,7 +783,7 @@ table, .tableData { border-collapse: separate; border-spacing: 0; width: 100%; e
 	.col-sm-1, .col-sm-10, .col-sm-11, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9 { float: left; width: 50%; }
 	.pagination li { display: inline-block; }
 	.pagination li a { background-color: #eeeeee; color: #000000; margin-left: 5px; float: left; padding: 10px 15px; text-decoration: none; }
-	.pagination li a:hover, .pagination li.active a { background-color: #008B29; }
+	.pagination li a:hover, .pagination li.active a { background-color: #008B29; color:#fff; }
 	div.dataTables_length select { display: inline-block; width: 75px; margin-left: 5px; vertical-align: middle; }
 	div.dataTables_length span.customSelect { display: inline-block !important; margin: 0 5px; vertical-align: middle; }
 	.box-body .row .col-sm-12 { overflow-x: auto; overflow-y: hidden; }
@@ -1478,3 +1478,7 @@ div.dataTables_wrapper div.dataTables_length select{ font-size:0.9em;}
 .modal-header .close{ background:#f1f1f1; border-radius:5px; color:#000; border-color:#d1d1d1;}
 .modal-header .close:hover{ background:#dedede;}
 .modal-footer .btn-default:hover{ background:#d1d1d1;}
+.field-validation-error{ font-size:0.8em;}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination li.next a:after, div.dataTables_wrapper div.dataTables_paginate ul.pagination li.previous a:before{ content:"\f054"; font-family:FontAwesome; font-size:0.8em; padding-left:10px;}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination li.previous a:before{ content:"\f053"; padding-right:5px; padding-left:0;}
+.pagination li.disabled a{color:#999;}
