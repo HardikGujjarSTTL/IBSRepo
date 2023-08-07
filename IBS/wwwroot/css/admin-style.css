@@ -1245,7 +1245,11 @@ font-weight: 600;}
 #sidebar { background-color:#2B368B;}
 .nav .open>a, .nav .open>a:hover, .nav .open>a:focus {border-color:#018da8 }
 .navbar-static-side ul li, .navbar-static-side ul li .nav-second-level li { border-bottom-color:rgba(0,0,0,0.3); display:block; width:100%; }
-.navbar-static-side ul li.active a, .navbar-static-side ul li a:hover { background-color: #008B29;}
+.navbar-static-side ul li.active a, .navbar-static-side ul li a:hover { background-color: #008B29; position:relative;}
+.navbar-static-side ul li.active a:after {
+	left: 100%;	top: 50%;	border: solid transparent;	content: "";	height: 0;	width: 0;	position: absolute;	pointer-events: none;	border-color: rgba(0, 139, 41, 0);
+	border-left-color: #008B29;	border-width: 10px;	margin-top: -10px;}
+.navbar-static-side ul li .nav-second-level li a:after{ display:none;}
 .navbar-static-side ul li .nav-second-level li.active a, .navbar-static-side ul li .nav-second-level li:hover a, .navbar-static-side ul li .nav-second-level li:focus a, .navbar-static-side ul li .nav-second-level li a.activeLink { color: #f2b604; }
 .navbar-static-side ul li .nav-second-level li a, .navbar-static-side ul li .nav-second-level { background: #194928;}
 .navbar-static-side ul li .nav-second-level{ margin:0;}
@@ -1465,5 +1469,12 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .formSubBtn{ margin-top:35px; width:auto;}
 .astric{ color:#f00;}
 div.dataTables_wrapper div.dataTables_length select{appearance:auto!important;}
-div.dataTables_wrapper div.dataTables_length label, div.dataTables_wrapper div.dataTables_filter label{ margin:0; padding:0;}
+div.dataTables_wrapper div.dataTables_length label, div.dataTables_wrapper div.dataTables_filter label{ margin:0; padding:0; font-size:0.8em;}
 .dataTables_wrapper .row{ margin-bottom:0;}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination li a, div.dataTables_wrapper div.dataTables_info{ font-size:0.8em;}
+div.dataTables_wrapper div.dataTables_length select{ font-size:0.9em;}
+.modal-footer .btn-success, .modal-footer .btn-default{ width:auto;}
+.modal-footer .btn-default{ background:#dedede;}
+.modal-header .close{ background:#f1f1f1; border-radius:5px; color:#000; border-color:#d1d1d1;}
+.modal-header .close:hover{ background:#dedede;}
+.modal-footer .btn-default:hover{ background:#d1d1d1;}
