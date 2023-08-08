@@ -367,9 +367,9 @@ ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
 
 
     
-Create VIEW view_POMasterList 
+create View VIEW_POMASTERLIST
 AS
-    select 
+select 
         m.VEND_CD,
         m.CASE_NO,
         m.PO_NO,
@@ -377,7 +377,9 @@ AS
         (decode(m.RLY_NONRLY,'R','Railway','P','Private','S','State Government','F','Foreign Railways','U','PSU')||'('||m.RLY_CD||')')RLY_CD,
         m.REAL_CASE_NO,(v.VEND_NAME||'('||NVL2(t.LOCATION,t.LOCATION||' : '||t.CITY,t.CITY)||')')VEND_NAME,
         (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
-        m.REMARKS 
+        m.REMARKS ,
+        m.Isdeleted,
+        m.RLY_NONRLY
         from 
             T80_PO_MASTER m,
             T05_VENDOR v,
@@ -417,7 +419,9 @@ select
         m.REAL_CASE_NO,(v.VEND_NAME||'('||NVL2(t.LOCATION,t.LOCATION||' : '||t.CITY,t.CITY)||')')VEND_NAME,
         (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
         m.REMARKS ,
-        m.Isdeleted
+        m.Isdeleted,
+        m.RLY_NONRLY,
+        m.RLY_CD AS MAINRLY_CD
         from 
             T80_PO_MASTER m,
             T05_VENDOR v,
@@ -465,4 +469,120 @@ ALTER TABLE T05_VENDOR ADD UPDATEDBY  NUMBER(6,0)
 ALTER TABLE T05_VENDOR ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
 ALTER TABLE T05_VENDOR ADD ISDELETED NUMBER(2,0)
 
+ALTER TABLE T82_PO_DETAIL ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T82_PO_DETAIL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T82_PO_DETAIL ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T82_PO_DETAIL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T82_PO_DETAIL ADD ISDELETED NUMBER(2,0)
 
+
+
+CREATE OR REPLACE PROCEDURE GET_BPOS_BY_TYPE_RLY (
+    p_BPO_TYPE IN VARCHAR2,
+    p_client IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT BPO_CD,
+            (B.BPO_CD||'-'||B.BPO_NAME||'/'||B.BPO_RLY||'/'||NVL2(B.BPO_ADD,B.BPO_ADD||'/','')||NVL2(C.LOCATION,C.CITY||'/'||C.LOCATION,C.CITY)) BPO_NAME
+        FROM T12_BILL_PAYING_OFFICER B
+        JOIN T03_CITY C ON B.BPO_CITY_CD = C.CITY_CD
+        WHERE BPO_TYPE = p_BPO_TYPE
+        AND UPPER(TRIM(BPO_RLY)) = UPPER(TRIM(p_client))
+        ORDER BY BPO_NAME;
+END;
+
+create or replace PROCEDURE GET_PO_DETAILS(
+    p_case_no IN CHAR,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        p.CASE_NO,
+        p.ITEM_SRNO,
+        p.ITEM_DESC,
+        CASE
+            WHEN p.CONSIGNEE IS NOT NULL THEN
+                (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
+                || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY)))
+            ELSE
+                (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
+                || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY)))
+        END AS CONSIGNEE_NAME,
+        p.QTY,
+        p.RATE,
+        p.VALUE AS DATAVALUE
+    FROM
+        T82_PO_DETAIL p
+    JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE
+        p.CASE_NO = p_case_no
+    ORDER BY
+        p.ITEM_SRNO;
+END;
+
+create or replace PROCEDURE SP_GetConsignee (
+    p_RLY_NONRLY IN VARCHAR2,
+    p_client IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    IF p_RLY_NONRLY = 'P' THEN
+        OPEN p_Result FOR
+            SELECT A.CONSIGNEE_CD,
+                   (A.CONSIGNEE_CD || '-' || NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                   NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) CONSIGNEE_NAME
+            FROM T06_CONSIGNEE A, T03_CITY B
+            WHERE A.CONSIGNEE_CITY = B.CITY_CD AND A.CONSIGNEE_TYPE = 'P'
+            ORDER BY (NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                      NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY)));
+    ELSE 
+        IF p_client != '0' THEN
+            OPEN p_Result FOR
+            SELECT A.CONSIGNEE_CD,
+                   (A.CONSIGNEE_CD || '-' || NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                   NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) CONSIGNEE_NAME
+            FROM T06_CONSIGNEE A, T03_CITY B
+            WHERE A.CONSIGNEE_CITY = B.CITY_CD AND UPPER(TRIM(A.CONSIGNEE_FIRM)) = UPPER(TRIM(p_client))
+            ORDER BY (NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                      NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY)));
+            ELSE
+                OPEN p_Result FOR
+                    SELECT A.CONSIGNEE_CD,
+                           (A.CONSIGNEE_CD || '-' || NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                           NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                           NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                           NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                           NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) CONSIGNEE_NAME
+                    FROM T06_CONSIGNEE A, T03_CITY B
+                    WHERE A.CONSIGNEE_CITY = B.CITY_CD AND A.CONSIGNEE_CD = 0
+                    ORDER BY (NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                              NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                              NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                              NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                              NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY)));
+            END IF;
+    END IF;
+END;

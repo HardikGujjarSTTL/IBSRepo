@@ -24,4 +24,8 @@ public partial class ViewPomasterlist
     public string? Remarks { get; set; }
 
     public decimal? Isdeleted { get; set; }
+
+    public string? RlyNonrly { get; set; }
+
+    public string? MainrlyCd { get; set; }
 }

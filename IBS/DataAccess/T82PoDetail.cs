@@ -63,6 +63,16 @@ public partial class T82PoDetail
 
     public string? PlNo { get; set; }
 
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
     public virtual T80PoMaster CaseNoNavigation { get; set; } = null!;
 
     public virtual T04Uom? UomCdNavigation { get; set; }

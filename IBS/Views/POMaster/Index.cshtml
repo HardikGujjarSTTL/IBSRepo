@@ -26,6 +26,7 @@
                             <th>Purchaser Name</th>
                             <th>Remarks</th>
                             <th>Case No.</th>
+                            <th>View Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -84,6 +85,19 @@
                     { data: "ConsigneeSName" },
                     { data: "Remarks" },
                     { data: "RealCaseNo" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CaseNo;
+                            var RlyCd = data.MainrlyCd;
+                            var RlyNonrly = data.RlyNonrly;
+                            var PoDtDate = data.PoDtDate;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "POMaster")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {

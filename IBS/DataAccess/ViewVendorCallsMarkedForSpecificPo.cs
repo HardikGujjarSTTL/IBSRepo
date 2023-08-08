@@ -9,7 +9,7 @@ public partial class ViewVendorCallsMarkedForSpecificPo
 
     public string? PoNo { get; set; }
 
-    public string? PoDt { get; set; }
+    public DateTime? PoDt { get; set; }
 
     public string? RlyNonrly { get; set; }
 

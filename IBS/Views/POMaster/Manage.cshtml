@@ -10,7 +10,7 @@
 </div>
 <section>
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" id="hdnType" />
@@ -222,8 +222,8 @@
         });
 
         function Save() {
-            if ($("#frmPOMasterDetails").valid()) {
-                $("#frmPOMasterDetails").submit();
+            if ($("#frmPOMaster").valid()) {
+                $("#frmPOMaster").submit();
             }
         }
         completed = function (response) {

@@ -1,0 +1,109 @@
+﻿@model IBS.Models.PO_MasterModel
+@{
+    ViewData["Title"] = "PO Master Details List";
+}
+@{
+    var CaseNo = Model.CaseNo;
+    var ItemSrno = 0;
+    var RlyCd = Model.RlyCd;
+    var RlyNonrly = Model.RlyNonrly;
+    var PoDt = Model.PoDt;
+}
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>PO Master Details List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="POMaster" asp-action="PoDetailManage" asp-route-CASE_NO="@CaseNo" asp-route-ITEM_SRNO="@ItemSrno" class="formBtn"><span class="fa fa-plus"></span> Add New PO Master Details</a>
+            <a asp-controller="POMaster" asp-action="Index" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtPOMasterDetails" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Item Sl. No.</th>
+                            <th>Item description</th>
+                            <th>Consignee</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Total Value(Inc. Taxes)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            InitializePOMasterDetailsDatatable();
+        });
+
+        function InitializePOMasterDetailsDatatable() {
+            var CaseNo = '@Model.CaseNo';
+            $("#dtPOMasterDetails").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableForPODetails")?CaseNo=" + CaseNo,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            CaseNo: CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "ITEM_SRNO" },
+                    { data: "ITEM_DESC" },
+                    { data: "CONSIGNEE_NAME" },
+                    { data: "QTY" },
+                    { data: "RATE" },
+                    { data: "DATAVALUE" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CASE_NO = data.CASE_NO;
+                            var ITEM_SRNO = data.ITEM_SRNO;
+                            var editUrl = '@Url.Action("PoDetailManage", "POMaster")?CASE_NO=' + CASE_NO + "&ITEM_SRNO=" + ITEM_SRNO;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="POMasterDetailsDelete(this.CASE_NO,this.ITEM_SRNO); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function POMasterDetailsDelete(CASE_NO, ITEM_SRNO) {
+            var url = '@Url.Action("DeletePODetails", "POMaster")?CASE_NO=' + CASE_NO + "&ITEM_SRNO=" + ITEM_SRNO;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+       
+    </script>
+}
