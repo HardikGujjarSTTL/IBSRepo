@@ -131,6 +131,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Mastertablestatus> Mastertablestatuses { get; set; }
 
+    public virtual DbSet<MenuMaster> MenuMasters { get; set; }
+
+    public virtual DbSet<Menurolemapping> Menurolemappings { get; set; }
+
     public virtual DbSet<Migration> Migrations { get; set; }
 
     public virtual DbSet<MmpPomaDtl> MmpPomaDtls { get; set; }
@@ -443,6 +447,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Userrole> Userroles { get; set; }
+
     public virtual DbSet<V05Vendor> V05Vendors { get; set; }
 
     public virtual DbSet<V06Consignee> V06Consignees { get; set; }
@@ -492,6 +498,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<ViewCalldetailsforspecificpoReport> ViewCalldetailsforspecificpoReports { get; set; }
 
     public virtual DbSet<ViewConsigneeDetail> ViewConsigneeDetails { get; set; }
+
+    public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
     public virtual DbSet<ViewGetmanufvend> ViewGetmanufvends { get; set; }
 
@@ -5532,6 +5540,74 @@ public partial class ModelContext : DbContext
                 .HasColumnName("TOTALCOUNT");
         });
 
+        modelBuilder.Entity<MenuMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008596");
+
+            entity.ToTable("MENU_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Actionname)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONNAME");
+            entity.Property(e => e.Controllername)
+                .HasMaxLength(50)
+                .HasColumnName("CONTROLLERNAME");
+            entity.Property(e => e.Iconcssclass)
+                .HasMaxLength(50)
+                .HasColumnName("ICONCSSCLASS");
+            entity.Property(e => e.Iconpath)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ICONPATH");
+            entity.Property(e => e.Isactive)
+                .HasPrecision(1)
+                .HasColumnName("ISACTIVE");
+            entity.Property(e => e.Menudescription)
+                .HasMaxLength(250)
+                .HasColumnName("MENUDESCRIPTION");
+            entity.Property(e => e.Parentid)
+                .HasPrecision(6)
+                .HasColumnName("PARENTID");
+            entity.Property(e => e.RoleId)
+                .HasPrecision(6)
+                .HasColumnName("ROLE_ID");
+            entity.Property(e => e.Sortorder)
+                .HasPrecision(6)
+                .HasColumnName("SORTORDER");
+            entity.Property(e => e.Title)
+                .HasMaxLength(50)
+                .HasColumnName("TITLE");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.MenuMasters)
+                .HasForeignKey(d => d.RoleId)
+                .HasConstraintName("FK_MENU_MASTER_ROLE_ID_ROLES");
+        });
+
+        modelBuilder.Entity<Menurolemapping>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008599");
+
+            entity.ToTable("MENUROLEMAPPING");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER")
+                .HasColumnName("ID");
+            entity.Property(e => e.Isactive)
+                .HasPrecision(1)
+                .HasColumnName("ISACTIVE");
+            entity.Property(e => e.Menuid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("MENUID");
+            entity.Property(e => e.Roleid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ROLEID");
+        });
+
         modelBuilder.Entity<Migration>(entity =>
         {
             entity.ToTable("MIGRATIONS");
@@ -6763,20 +6839,21 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<SapBillregisterSend>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C008583");
+            entity.HasKey(e => e.Batchid).HasName("SYS_C008587");
 
             entity.ToTable("SAP_BILLREGISTER_SEND");
 
-            entity.Property(e => e.Id)
-                .HasColumnType("NUMBER")
-                .HasColumnName("ID");
-            entity.Property(e => e.BatchDt)
-                .HasColumnType("DATE")
-                .HasColumnName("BATCH_DT");
             entity.Property(e => e.Batchid)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("BATCHID");
+            entity.Property(e => e.BatchDt)
+                .HasColumnType("DATE")
+                .HasColumnName("BATCH_DT");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER")
+                .HasColumnName("ID");
             entity.Property(e => e.SapAcknowledgementDt)
                 .HasColumnType("DATE")
                 .HasColumnName("SAP_ACKNOWLEDGEMENT_DT");
@@ -6788,11 +6865,12 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<SapBillregisterSendDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C008582");
+            entity.HasKey(e => e.Id).HasName("SYS_C008590");
 
             entity.ToTable("SAP_BILLREGISTER_SEND_DETAILS");
 
             entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER")
                 .HasColumnName("ID");
             entity.Property(e => e.AckDt)
@@ -6812,7 +6890,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("BILL_DT");
             entity.Property(e => e.BillNo)
-                .HasColumnType("NUMBER")
+                .HasMaxLength(20)
+                .IsUnicode(false)
                 .HasColumnName("BILL_NO");
             entity.Property(e => e.BkNo)
                 .HasMaxLength(50)
@@ -9401,6 +9480,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.RetentionMoney)
                 .HasColumnType("NUMBER(13,2)")
                 .HasColumnName("RETENTION_MONEY");
+            entity.Property(e => e.SapStatus)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("SAP_STATUS");
             entity.Property(e => e.ScannedStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -10024,6 +10107,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.RecNo)
                 .HasPrecision(2)
                 .HasColumnName("REC_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -10091,8 +10180,18 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("HG_REGION");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -14400,6 +14499,27 @@ public partial class ModelContext : DbContext
                 .HasColumnName("UPDATED_AT");
         });
 
+        modelBuilder.Entity<Userrole>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008603");
+
+            entity.ToTable("USERROLES");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.RoleId)
+                .HasPrecision(6)
+                .HasColumnName("ROLE_ID");
+            entity.Property(e => e.UserId)
+                .HasPrecision(6)
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.Usertype)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USERTYPE");
+        });
+
         modelBuilder.Entity<V05Vendor>(entity =>
         {
             entity
@@ -16311,6 +16431,114 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(378)
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE_NAME");
+        });
+
+        modelBuilder.Entity<ViewGetBillregisterDtail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_BILLREGISTER_DTAILS");
+
+            entity.Property(e => e.AckDt)
+                .HasColumnType("DATE")
+                .HasColumnName("ACK_DT");
+            entity.Property(e => e.BillAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("BILL_AMOUNT");
+            entity.Property(e => e.BillDt)
+                .HasColumnType("DATE")
+                .HasColumnName("BILL_DT");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.BkNo)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("BK_NO");
+            entity.Property(e => e.Bpo)
+                .HasMaxLength(158)
+                .IsUnicode(false)
+                .HasColumnName("BPO");
+            entity.Property(e => e.BpoType)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("BPO_TYPE");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Cgst)
+                .HasColumnType("NUMBER")
+                .HasColumnName("CGST");
+            entity.Property(e => e.Checkvalue)
+                .HasMaxLength(2000)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CHECKVALUE");
+            entity.Property(e => e.DigBillGenDt)
+                .HasColumnType("DATE")
+                .HasColumnName("DIG_BILL_GEN_DT");
+            entity.Property(e => e.EduCess)
+                .HasColumnType("NUMBER")
+                .HasColumnName("EDU_CESS");
+            entity.Property(e => e.Finalised)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("FINALISED");
+            entity.Property(e => e.IcDt)
+                .HasColumnType("DATE")
+                .HasColumnName("IC_DT");
+            entity.Property(e => e.Igst)
+                .HasColumnType("NUMBER")
+                .HasColumnName("IGST");
+            entity.Property(e => e.InspFee)
+                .HasColumnType("NUMBER")
+                .HasColumnName("INSP_FEE");
+            entity.Property(e => e.InvoiceNo)
+                .HasMaxLength(14)
+                .IsUnicode(false)
+                .HasColumnName("INVOICE_NO");
+            entity.Property(e => e.IrnNo)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("IRN_NO");
+            entity.Property(e => e.KrishiKalyanCess)
+                .HasColumnType("NUMBER")
+                .HasColumnName("KRISHI_KALYAN_CESS");
+            entity.Property(e => e.MaterialValue)
+                .HasColumnType("NUMBER(15,2)")
+                .HasColumnName("MATERIAL_VALUE");
+            entity.Property(e => e.RecipientGstinNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("RECIPIENT_GSTIN_NO");
+            entity.Property(e => e.Senttosap)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("SENTTOSAP");
+            entity.Property(e => e.ServiceTax)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SERVICE_TAX");
+            entity.Property(e => e.SetNo)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("SET_NO");
+            entity.Property(e => e.Sgst)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SGST");
+            entity.Property(e => e.SheCess)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SHE_CESS");
+            entity.Property(e => e.State)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("STATE");
+            entity.Property(e => e.SwachhBharatCess)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SWACHH_BHARAT_CESS");
         });
 
         modelBuilder.Entity<ViewGetmanufvend>(entity =>

@@ -7,7 +7,7 @@ public partial class SapBillregisterSend
 {
     public decimal Id { get; set; }
 
-    public string? Batchid { get; set; }
+    public string Batchid { get; set; } = null!;
 
     public DateTime? BatchDt { get; set; }
 

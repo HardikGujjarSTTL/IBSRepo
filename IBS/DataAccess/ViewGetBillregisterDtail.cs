@@ -3,19 +3,9 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class SapBillregisterSendDetail
+public partial class ViewGetBillregisterDtail
 {
-    public decimal Id { get; set; }
-
-    public string? Batchid { get; set; }
-
-    public DateTime? BatchDt { get; set; }
-
-    public string? SapAcknowledgementId { get; set; }
-
-    public DateTime? SapAcknowledgementDt { get; set; }
-
-    public string? BillNo { get; set; }
+    public string BillNo { get; set; } = null!;
 
     public DateTime? BillDt { get; set; }
 

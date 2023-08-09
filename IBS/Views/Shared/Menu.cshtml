@@ -1,0 +1,39 @@
+﻿@{
+    List<MenuMasterModel> menuList = IBS.Helper.SessionHelper.MenuModelDTO;
+}
+<div class="sidebar-collapse menu-scroll">
+    <ul id="side-menu" class="nav">
+        <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
+        @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
+
+
+        @if (menuList != null)
+        {
+            foreach (var mp in menuList.Where(p => p.ParentId == 0))
+            {
+                <li>
+                    
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="@mp.IconPath" alt="tenant" /></i><span class="menu-title"> @mp.Title </span></a>
+
+                    @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)
+                    {
+                        @:<ul class="nav nav-second-level">
+                    }
+                    @foreach (var cp in menuList.Where(p => p.ParentId == mp.MenuId))
+                    {
+                        string url = Url.Action(cp.ActionName,cp.ControllerName );
+                        @:<li><a href="@url"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a></li>
+                    }
+
+                    @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)
+                    {
+                    @:</ul>
+                    }
+                </li>
+            }
+        }
+        
+    </ul>
+</div>
+
+

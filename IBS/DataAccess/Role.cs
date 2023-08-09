@@ -24,4 +24,6 @@ public partial class Role
     public DateTime? Updateddate { get; set; }
 
     public decimal? Updatedby { get; set; }
+
+    public virtual ICollection<MenuMaster> MenuMasters { get; set; } = new List<MenuMaster>();
 }
