@@ -80,7 +80,7 @@ namespace IBS.Controllers
                     if (userMaster != null)
                     {
                         UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
+                        userSessionModel.UserID = Convert.ToInt32(userMaster.UserId);
                         userSessionModel.Name = Convert.ToString(userMaster.VendName);
                         userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
                         userSessionModel.LoginType = Convert.ToString(LoginType);

@@ -81,14 +81,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "MaDate";
+                    orderCriteria = "PoNo";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "MaDate";
+                orderCriteria = "PoNo";
                 orderAscendingDirection = true;
             }
 

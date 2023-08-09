@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
+using Newtonsoft.Json;
 
 namespace IBS.Models
 {
@@ -168,8 +169,8 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
-        
-            public static List<SelectListItem> GetLabApproval()
+
+        public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
@@ -208,6 +209,51 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Other";
             single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> VendorStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Active";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Banned/BlackListed";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Re-Instated";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> ItemBlocked()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No";
+            single.Value = "";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Yes";
+            single.Value = "Y";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> OnlineCallStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Yes";
+            single.Value = "Y";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -825,7 +871,6 @@ namespace IBS.Models
 
         }
 
-
         public static List<SelectListItem> GetDocType()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -866,7 +911,111 @@ namespace IBS.Models
             return Bank;
         }
 
-        
+        public static List<SelectListItem> GetBillPayingOfficer(string RlyCd, string RlyNonrly)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("p_BPO_TYPE", OracleDbType.Varchar2, RlyNonrly, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_client", OracleDbType.Varchar2, RlyCd, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_BPOS_BY_TYPE_RLY", par, 1);
+
+            List<PO_MasterDetailsModel> model = new List<PO_MasterDetailsModel>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<PO_MasterDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+
+            List<SelectListItem> obj = (from a in model.ToList()
+                                        select
+                                   new SelectListItem
+                                   {
+                                       Text = a.BPO_NAME,
+                                       Value = a.BPO_CD
+                                   }).ToList();
+            return obj;
+        }
+
+        public static List<SelectListItem> GetBillPayingOfficerUsingSBPO(string SBPO)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            var obj = (from of in context.V12BillPayingOfficers
+                       where of.Bpo.Contains(SBPO) || of.BpoCd.Contains(SBPO)
+                       select of).ToList();
+
+
+            List<SelectListItem> objdata = (from a in obj
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.BpoCd + "-" + a.Bpo,
+                                        Value = a.BpoCd
+                                    }).ToList();
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetConsignee(string RlyCd, string RlyNonrly)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("p_RLY_NONRLY", OracleDbType.Varchar2, RlyNonrly, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_client", OracleDbType.Varchar2, RlyCd, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GetConsignee", par, 1);
+
+            List<PO_MasterDetailsModel> model = new List<PO_MasterDetailsModel>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<PO_MasterDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+
+            List<SelectListItem> obj = (from a in model.ToList()
+                                        select
+                                   new SelectListItem
+                                   {
+                                       Text = a.CONSIGNEE_NAME,
+                                       Value = a.CONSIGNEE_CD
+                                   }).ToList();
+            return obj;
+        }
+        public static List<SelectListItem> GetConsigneeUsingConsignee(int ConsigneeSearch)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            var obj = (from of in context.V06Consignees
+                       where of.ConsigneeCd == ConsigneeSearch
+                       select of).ToList();
+
+
+            List<SelectListItem> objdata = (from a in obj
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.ConsigneeCd + "-" + a.Consignee,
+                                           Value = Convert.ToString(a.ConsigneeCd)
+                                       }).ToList();
+            return objdata;
+        }
+        public static List<SelectListItem> GetUnitOfMeasurment()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> objdata = (from a in context.T04Uoms
+                                            orderby a.UomLDesc
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.UomLDesc,
+                                           Value = Convert.ToString(a.UomCd)
+                                       }).ToList();
+            return objdata;
+        }
+
     }
     public static class DbContextHelper
     {

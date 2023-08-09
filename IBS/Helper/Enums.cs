@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -26,12 +27,15 @@ namespace IBS.Helper
             UserRegistration = 2,
             [Description("/Files/AdminUserUploadDoc")]
             AdminUserUploadDoc = 3,
+            [Description("/Files/Vendor")]
+            Vendor = 4,
         }
 
         public enum DocumentCategory : int
         {
             UserRegi = 8,
             AdminUserUploadDoc = 9,
+            Vendor = 21,
         }
 
 
@@ -39,6 +43,7 @@ namespace IBS.Helper
         {
             Address_Proof_Document = 5,
             Profile_Picture = 6,
+            Document_Vendor_manufacturer_created = 23,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int

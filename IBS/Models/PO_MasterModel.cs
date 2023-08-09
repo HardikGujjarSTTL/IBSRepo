@@ -23,6 +23,7 @@ namespace IBS.Models
         public int? VendCd { get; set; }
 
         public string? RlyCd { get; set; }
+        public string? MainrlyCd { get; set; }
 
         public string? RlyCdDesc { get; set; }
 
