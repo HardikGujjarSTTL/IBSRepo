@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace IBS.DataAccess;
@@ -177,7 +176,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<RkmT26ChequePosting> RkmT26ChequePostings { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
-    public virtual DbSet<ConsigneeComplaints> ConsigneeComplaints { get; set; }
 
     public virtual DbSet<RptPrmIcLine> RptPrmIcLines { get; set; }
 
@@ -514,6 +512,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<ViewT15PoDetail> ViewT15PoDetails { get; set; }
 
     public virtual DbSet<ViewVendorCallsMarkedForSpecificIc> ViewVendorCallsMarkedForSpecificIcs { get; set; }
+
+    public virtual DbSet<ViewVendorCallsMarkedForSpecificIcSub> ViewVendorCallsMarkedForSpecificIcSubs { get; set; }
 
     public virtual DbSet<ViewVendorCallsMarkedForSpecificPo> ViewVendorCallsMarkedForSpecificPos { get; set; }
 
@@ -5603,10 +5603,10 @@ public partial class ModelContext : DbContext
                 .HasPrecision(1)
                 .HasColumnName("ISACTIVE");
             entity.Property(e => e.Menuid)
-                .HasColumnType("NUMBER")
+                .HasPrecision(6)
                 .HasColumnName("MENUID");
             entity.Property(e => e.Roleid)
-                .HasColumnType("NUMBER")
+                .HasPrecision(6)
                 .HasColumnName("ROLEID");
         });
 
@@ -6951,6 +6951,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.MaterialValue)
                 .HasColumnType("NUMBER")
                 .HasColumnName("MATERIAL_VALUE");
+            entity.Property(e => e.QrCode)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("QR_CODE");
             entity.Property(e => e.RecipientGstinNo)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -7760,12 +7764,27 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("REGION_CODE");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.MaximumCall)
                 .HasPrecision(3)
                 .HasColumnName("MAXIMUM_CALL");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -7790,6 +7809,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T103_VEND_DOCS_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
         });
 
         modelBuilder.Entity<T104VendEquipClbrCert>(entity =>
@@ -13904,11 +13927,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CREATEIP");
             entity.Property(e => e.Exception)
-                .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("EXCEPTION");
             entity.Property(e => e.Exceptionmessage)
-                .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("EXCEPTIONMESSAGE");
         });
@@ -16513,12 +16534,15 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.MaterialValue)
                 .HasColumnType("NUMBER(15,2)")
                 .HasColumnName("MATERIAL_VALUE");
+            entity.Property(e => e.QrCode)
+                .HasColumnType("NCLOB")
+                .HasColumnName("QR_CODE");
             entity.Property(e => e.RecipientGstinNo)
                 .HasMaxLength(15)
                 .IsUnicode(false)
                 .HasColumnName("RECIPIENT_GSTIN_NO");
             entity.Property(e => e.Senttosap)
-                .HasMaxLength(8)
+                .HasMaxLength(11)
                 .IsUnicode(false)
                 .HasColumnName("SENTTOSAP");
             entity.Property(e => e.ServiceTax)
@@ -16808,6 +16832,122 @@ public partial class ModelContext : DbContext
                 .HasColumnName("VENDOR");
         });
 
+        modelBuilder.Entity<ViewVendorCallsMarkedForSpecificIcSub>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_VENDOR_CALLS_MARKED_FOR_SPECIFIC_IC_SUB");
+
+            entity.Property(e => e.CallMarkDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_MARK_DT");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(5)
+                .HasColumnName("CALL_SNO");
+            entity.Property(e => e.CallStatus)
+                .HasMaxLength(101)
+                .IsUnicode(false)
+                .HasColumnName("CALL_STATUS");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.CoName)
+                .HasMaxLength(59)
+                .IsUnicode(false)
+                .HasColumnName("CO_NAME");
+            entity.Property(e => e.Colour)
+                .HasMaxLength(7)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("COLOUR");
+            entity.Property(e => e.Consignee)
+                .HasMaxLength(116)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE");
+            entity.Property(e => e.Count)
+                .HasColumnType("NUMBER")
+                .HasColumnName("COUNT");
+            entity.Property(e => e.Hologram)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("HOLOGRAM");
+            entity.Property(e => e.IcPhoto)
+                .HasMaxLength(18)
+                .IsUnicode(false)
+                .HasColumnName("IC_PHOTO");
+            entity.Property(e => e.IcPhotoA1)
+                .HasMaxLength(21)
+                .IsUnicode(false)
+                .HasColumnName("IC_PHOTO_A1");
+            entity.Property(e => e.IcPhotoA2)
+                .HasMaxLength(21)
+                .IsUnicode(false)
+                .HasColumnName("IC_PHOTO_A2");
+            entity.Property(e => e.IeName)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_NAME");
+            entity.Property(e => e.IePhoneNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_PHONE_NO");
+            entity.Property(e => e.ItemDescPo)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("ITEM_DESC_PO");
+            entity.Property(e => e.L5noPo)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("L5NO_PO");
+            entity.Property(e => e.Manufacturer)
+                .HasMaxLength(151)
+                .IsUnicode(false)
+                .HasColumnName("MANUFACTURER");
+            entity.Property(e => e.MfgCd)
+                .HasPrecision(6)
+                .HasColumnName("MFG_CD");
+            entity.Property(e => e.MfgPers)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("MFG_PERS");
+            entity.Property(e => e.MfgPhone)
+                .HasMaxLength(45)
+                .IsUnicode(false)
+                .HasColumnName("MFG_PHONE");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.QtyToInsp)
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY_TO_INSP");
+            entity.Property(e => e.Remark)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("REMARK");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyNonrly)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("RLY_NONRLY");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.Vendor)
+                .HasMaxLength(151)
+                .IsUnicode(false)
+                .HasColumnName("VENDOR");
+        });
+
         modelBuilder.Entity<ViewVendorCallsMarkedForSpecificPo>(entity =>
         {
             entity
@@ -16899,6 +17039,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T04_UOM_SEQ");
         modelBuilder.HasSequence("T05_VENDOR_SEQ");
         modelBuilder.HasSequence("T07_RITES_DESIG_SEQ");
+        modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
         modelBuilder.HasSequence("T45_CLAIM_MASTER_SEQ");
         modelBuilder.HasSequence("T46_CLAIM_DETAIL_SEQ");
@@ -16914,6 +17055,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
+        modelBuilder.HasSequence("VENDORDOCUMENT_SEQ");
 
         OnModelCreatingPartial(modelBuilder);
     }

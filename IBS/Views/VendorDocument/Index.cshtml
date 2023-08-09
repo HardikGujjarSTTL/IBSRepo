@@ -1,0 +1,123 @@
+﻿@model IBS.Models.VendEquipClbrCertModel
+
+@{
+    ViewData["Title"] = "Vendor Document";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Vendor Document</h2>
+    </div>
+</div>
+<section id="tab-1">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorDocument" asp-action="SaveVendorDocument" data-ajax-method="post" data-ajax-complete="completed" id="frmRoleDetails">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <input type="hidden" asp-for="VendCd" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Doc Type</label>
+                        @Html.DropDownListFor(model => model.DocType, new SelectList(IBS.Models.Common.DocType() , "Value", "Text"),"--Select--",new { @onchange="DocTypeChanged()" })
+                        <span asp-validation-for="DocType" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3" id="dvDocument">
+
+                    </div>
+                    @*<div class="col-md-6 mb-3" id="dvInernal_Records" style="display:none;">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Inernal_Records" />
+                    </div>
+                    <div class="col-md-6 mb-3" id="dvFirm_Certificate" style="display:none;">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Firm_Certificate" />
+                    </div>
+                    <div class="col-md-6 mb-3" id="dvRaw_Material" style="display:none;">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Raw_Material" />
+                    </div>
+                    <div class="col-md-6 mb-3" id="dvCalibration_Records" style="display:none;">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Calibration_Records" />
+                    </div>*@
+                </div>
+                <div id="dvCalibrationRecordsVendDocument">
+
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmRoleDetails").valid()) {
+                SaveSingleDocuments("tab-1");
+                $("#frmRoleDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/Role/Index";
+        };
+
+        function DocTypeChanged() {
+            var DocType = $("#DocType").val();
+            if (DocType != "") {
+                $.ajax({
+                    url: '@Url.Action("GetDocument", "VendorDocument")?DocType=' + DocType,
+                    type: 'POST',
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response != null) {
+                        $("#dvDocument").html("");
+                        $("#dvCalibrationRecordsVendDocument").html("");
+                        if (DocType == 'C') {
+                            $("#dvCalibrationRecordsVendDocument").html(response);
+                        }
+                        else
+                        {
+                            $("#dvDocument").html(response);
+                        }
+                    }
+                });
+            }
+
+            //if (DocType == 'I') {
+            //    $("#dvInernal_Records").show();
+            //    $("#dvFirm_Certificate").hide();
+            //    $("#dvRaw_Material").hide();
+            //    $("#dvCalibration_Records").hide();
+            //}
+            //else if (DocType == 'F') {
+            //    $("#dvFirm_Certificate").show();
+            //    $("#dvInernal_Records").hide();
+            //    $("#dvRaw_Material").hide();
+            //    $("#dvCalibration_Records").hide();
+            //}
+            //else if (DocType == 'R') {
+            //    $("#dvRaw_Material").show();
+            //    $("#dvInernal_Records").hide();
+            //    $("#dvFirm_Certificate").hide();
+            //    $("#dvCalibration_Records").hide();
+            //}
+            //else if (DocType == 'C') {
+            //    $("#dvCalibration_Records").show();
+            //    $("#dvInernal_Records").hide();
+            //    $("#dvFirm_Certificate").hide();
+            //    $("#dvRaw_Material").hide();
+            //}
+            //else
+            //{
+            //    $("#dvInernal_Records").hide();
+            //    $("#dvFirm_Certificate").hide();
+            //    $("#dvRaw_Material").hide();
+            //    $("#dvCalibration_Records").hide();
+            //}
+        }
+    </script>
+}
