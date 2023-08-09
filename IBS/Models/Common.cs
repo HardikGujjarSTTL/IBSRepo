@@ -155,6 +155,7 @@ namespace IBS.Models
             obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
             return obj;
         }
+        
 
         public static List<SelectListItem> GetCity()
         {
@@ -601,6 +602,20 @@ namespace IBS.Models
                                         Value = Convert.ToString(a.RoleId)
                                     }).ToList();
             return Role;
+
+        }
+
+        public static List<SelectListItem> GetComplaint()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> complaint = (from a in ModelContext.T08IeControllOfficers
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.CoName),
+                                        Value = Convert.ToString(a.CoCd)
+                                    }).ToList();
+            return complaint;
 
         }
 

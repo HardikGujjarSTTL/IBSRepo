@@ -70,6 +70,7 @@ builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vend
 builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Repositories.Vendor.VendorCallsMarkedForSpecificPORepository>();
 
 
+builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
 builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
