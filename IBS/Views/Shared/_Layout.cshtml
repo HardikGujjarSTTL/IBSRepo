@@ -301,32 +301,28 @@
                             </ul>
                         </li>
 
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-ico.png" alt="tenant" /></i><span class="menu-title">Lab</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="LaboratoryMaster" asp-controller="LaboratoryMaster"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Laboratory Master</span></a></li>
-                                    <li><a asp-action="LabTDSEntry" asp-controller="LabTDSEntry"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab TDS Entry</span></a></li>
-                                    <li><a asp-action="LabRegisterForm" asp-controller="LabRegisterForm"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Register Form</span></a></li>
-                                </ul>
-                            </li>
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-ico.png" alt="tenant" /></i><span class="menu-title">Lab</span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a asp-action="LaboratoryMaster" asp-controller="LaboratoryMaster"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Laboratory Master</span></a></li>
+                                <li><a asp-action="LabTDSEntry" asp-controller="LabTDSEntry"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab TDS Entry</span></a></li>
+                                <li><a asp-action="LabRegisterForm" asp-controller="LabRegisterForm"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Register Form</span></a></li>
+                            </ul>
+                        </li>
+                        
+                        @*}*@
+                        @*<li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>*@
+                        <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-icons.svg" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
+                        <li><a asp-action="Index" asp-controller="ConsigneeComplaints"><i class="fa fa-angle-double-right"></i><span class="menu-title">Consignee Complaints</span></a></li>
 
-                            @*}*@
-                            @*<li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>*@
-                            <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-icons.svg" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Inspection & Billing</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="Index" asp-controller="HologramAccountal"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Hologram Accountal</span></a></li>
-                                    
-                                </ul>
-                            </li>
-
-                        </ul>
-                    </div>
-                </aside>
-                <!--leftSidebarNav-->
-
-
+                            <li><a asp-action="Index" asp-controller="ConsigneeComplaints"> <i class="fa fa-fw"></i><span class="submenu-title">Consignee Complaints</span></a></li>
+                                
+                    </ul>
+                </div>
+            </aside>
+            <!--leftSidebarNav-->
+          
+                
                 <div class="adminInnerContent">
                     <main role="main" class="pb-3">
                         @RenderBody()

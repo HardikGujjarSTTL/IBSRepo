@@ -68,6 +68,7 @@ builder.Services.AddScoped<IPurchesOrder1LOARepository, IBS.Repositories.Vendor.
 builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.CallRegisterRepository>();
 
 
+builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
 builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();

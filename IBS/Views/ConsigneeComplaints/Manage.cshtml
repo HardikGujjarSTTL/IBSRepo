@@ -1,0 +1,158 @@
+﻿@model IBS.Models.ConsigneeComplaints
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>CONSIGNEE COMPLAINT</h2>
+    </div>
+</div>
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
+            <input type="hidden" asp-for="ComplaintId" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Region Where Complaint is Received</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Date of First reference/ Complaint Date</label>
+                        <input type="text" class="input datepicker" readonly="true" asp-for="FormattedComplaintDate" maxlength="300" />
+                        <span asp-validation-for="FormattedComplaintDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Case No.</label>
+                        <input type="text" class="input" asp-for="CASE_NO" readonly="true">
+                        <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">	Book No.<span class="text-danger" style="font-size:smaller"></span></label>
+                        <input type="text" class="input" asp-for="BK_NO" mode maxlength="300" />
+                        <span asp-validation-for="BK_NO" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Set No.</label>
+                        <input type="text" class="input" asp-for="SET_NO" maxlength="300" />
+                        <span asp-validation-for="SET_NO" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Inspection By</label>
+                        <input type="text" class="input" asp-for="ie_name" maxlength="300" />
+                        <span asp-validation-for="ie_name" class="text-danger"></span>
+                    </div>
+
+                   @* <div class="col-md-4 mb-3">
+                        <label for="Reference">Status of Offer</label>
+                        <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
+                            <option value="">--Select--</option>
+                            <option value="S">Offer Sent</option>
+                            <option value="A">Offer Accepted</option>
+                            <option value="B">BID Lost</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>*@
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">	PO No. & PO Date</label>
+                        <input type="text" class="input" asp-for="PO_NO" readonly="true">
+                        <span asp-validation-for="PO_NO" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Railway</label>
+                        <input type="text" class="input" asp-for="Railway" maxlength="300" />
+                        <span asp-validation-for="Railway" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee</label>
+                        <input type="text" class="input" asp-for="Consignee" readonly="true">
+                        <span asp-validation-for="Consignee" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Vendor</label>
+                        <input type="text" class="input" asp-for="VEND_NAME" readonly="true">
+                        <span asp-validation-for="VEND_NAME" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">IC Date</label>
+                        <input type="text" class="input datepicker" readonly="true" asp-for="FormattedIC_DATE" maxlength="300" />
+                        <span asp-validation-for="FormattedIC_DATE" class="text-danger"></span>
+                    </div>
+
+                 <div class="col-md-4 mb-3">
+                    <label for="Reference">Controlling Manager</label>
+                        @Html.DropDownListFor(model => model.CoName, new SelectList(IBS.Models.Common.GetComplaint() , "Text", "Text"),"--Select--", new { @class = ""})
+                    <span class="text-danger"></span>
+                </div>
+
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rejection Memo No.(25 Chars Maxm)</label>
+                        <input type="text" class="input" asp-for="RejMemoNo" maxlength="300" />
+                        <span asp-validation-for="RejMemoNo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rejection Memo Date</label>
+                        <input type="text" class="input"asp-for="RejMemoDt" maxlength="300" />
+                        <span asp-validation-for="RejMemoDt" class="text-danger"></span>
+                    </div>
+
+                    @*<div class="col-md-4 mb-3">
+                    <label for="Reference">Contract Documents (If Any)</label>
+                    <span asp-validation-for="" class="text-danger"></span>
+                    </div>*@
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Item Description	</label>
+                        <input type="text" class="input" asp-for="ItemDesc" maxlength="300" />
+                        <span asp-validation-for="ItemDesc" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Qty. Offered</label>
+                        <input type="text" class="input" asp-for="QtyOffered" maxlength="300" />
+                        <span asp-validation-for="QtyOffered" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Qty. Rejected</label>
+                        <input type="text" class="input" asp-for="QtyRejected" maxlength="300" />
+                        <span asp-validation-for="QtyRejected" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Unit of Measurement</label>
+                        <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
+                        <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rate</label>
+                        <input type="text" class="input" asp-for="Rate" maxlength="300" />
+                        <span asp-validation-for="Rate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">	Value of Qty. Rejected</label>
+                        <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
+                        <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Reasons of Rejection  (250 Chars Maxm)</label>
+                        <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
+                        <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="savenext-btn">
+                    <a asp-controller="ConsigneeComplaints" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
