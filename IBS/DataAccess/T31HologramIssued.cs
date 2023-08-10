@@ -19,5 +19,15 @@ public partial class T31HologramIssued
 
     public DateTime? Datetime { get; set; }
 
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
     public virtual T09Ie? HgIecdNavigation { get; set; }
 }

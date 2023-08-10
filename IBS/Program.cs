@@ -85,6 +85,7 @@ builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 
 #region Inspection and Billing
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
+builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 #endregion
 var app = builder.Build();
 
