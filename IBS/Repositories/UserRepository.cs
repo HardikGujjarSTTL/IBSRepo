@@ -1,7 +1,12 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System.Collections.Generic;
+using System.Data;
 using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
@@ -264,6 +269,35 @@ namespace IBS.Repositories
             }
             #endregion
             return Id;
+        }
+
+        public List<MenuMasterModel> GenerateMenuListByRoleId(int RoleID)
+        {
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_RoleID", OracleDbType.Int32, RoleID, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GetMenuMaster", par, 1);
+            List<MenuMasterModel> menuList = new List<MenuMasterModel>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                foreach (DataTable table in ds.Tables)
+                {
+                    menuList.AddRange(table.AsEnumerable().Select(row => new MenuMasterModel
+                    {
+                        MenuId = row.Field<Int32>("MENUID"),
+                        Title = row.Field<string>("TITLE"),
+                        ParentId = row.Field<Int32?>("PARENTID") != null ? row.Field<Int32?>("PARENTID") : 0,
+                        SortOrder = row.Field<Int32>("SORTORDER"),
+                        ControllerName = row.Field<string>("CONTROLLERNAME"),
+                        ActionName = row.Field<string>("ACTIONNAME"),
+                        IconPath = row.Field<string>("ICONPATH"),
+                        Role_Id = row.Field<Int32>("ROLE_ID")
+                    }));
+                }
+            }
+            return menuList;
         }
     }
 

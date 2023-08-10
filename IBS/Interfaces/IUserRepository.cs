@@ -29,5 +29,7 @@ namespace IBS.Interfaces
 
         public IELoginModel FindIELoginDetail(LoginModel model);
 
+        public List<MenuMasterModel> GenerateMenuListByRoleId(int RoleID);
+
     }
 }

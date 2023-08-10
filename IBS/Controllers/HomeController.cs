@@ -67,6 +67,8 @@ namespace IBS.Controllers
                         var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
                         HttpContext.SignInAsync(userPrincipal);
+
+                        SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(1);
                         return RedirectToAction("Index", "Dashboard");
                     }
                     else
