@@ -227,18 +227,13 @@ ALTER TABLE TblException
 -------------------------------
 
 
-ALTER TABLE T05_VENDOR 
-ADD ID NUMBER(6,0) ;
 CREATE SEQUENCE T05_VENDOR_seq
   START WITH 1
   INCREMENT BY 1
   CACHE 20;
-UPDATE T05_VENDOR
-   SET ID = T05_VENDOR_seq.nextval;
+  
 ALTER TABLE T05_VENDOR
-  MODIFY ID NUMBER(6,0) DEFAULT T05_VENDOR_seq.nextval;
-ALTER TABLE T05_VENDOR
-ADD CONSTRAINT T05_VENDOR_pk  PRIMARY KEY (ID);
+  MODIFY VEND_CD NUMBER(6,0) DEFAULT T05_VENDOR_seq.nextval;
 
 -------------------------------
 
@@ -372,9 +367,9 @@ ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
 
 
     
-Create VIEW view_POMasterList 
+create View VIEW_POMASTERLIST
 AS
-    select 
+select 
         m.VEND_CD,
         m.CASE_NO,
         m.PO_NO,
@@ -382,7 +377,9 @@ AS
         (decode(m.RLY_NONRLY,'R','Railway','P','Private','S','State Government','F','Foreign Railways','U','PSU')||'('||m.RLY_CD||')')RLY_CD,
         m.REAL_CASE_NO,(v.VEND_NAME||'('||NVL2(t.LOCATION,t.LOCATION||' : '||t.CITY,t.CITY)||')')VEND_NAME,
         (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
-        m.REMARKS 
+        m.REMARKS ,
+        m.Isdeleted,
+        m.RLY_NONRLY
         from 
             T80_PO_MASTER m,
             T05_VENDOR v,
@@ -409,3 +406,291 @@ Create VIEW view_GetManufVEND
 AS
     select VEND_CD,VEND_NAME,VEND_ADD1,VEND_CONTACT_PER_1,VEND_CONTACT_TEL_1,VEND_STATUS,to_char(VEND_STATUS_DT_FR,'dd/mm/yyyy')VEND_STATUS_FR,to_char(VEND_STATUS_DT_TO,'dd/mm/yyyy')VEND_STATUS_TO,VEND_EMAIL 
     from T05_VENDOR
+
+
+Create View VIEW_POMASTERLIST
+AS
+select 
+        m.VEND_CD,
+        m.CASE_NO,
+        m.PO_NO,
+        to_char(m.PO_DT,'dd/mm/yyyy')PO_DT,
+        (decode(m.RLY_NONRLY,'R','Railway','P','Private','S','State Government','F','Foreign Railways','U','PSU')||'('||m.RLY_CD||')')RLY_CD,
+        m.REAL_CASE_NO,(v.VEND_NAME||'('||NVL2(t.LOCATION,t.LOCATION||' : '||t.CITY,t.CITY)||')')VEND_NAME,
+        (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
+        m.REMARKS ,
+        m.Isdeleted,
+        m.RLY_NONRLY,
+        m.RLY_CD AS MAINRLY_CD
+        from 
+            T80_PO_MASTER m,
+            T05_VENDOR v,
+            T06_CONSIGNEE c, 
+            T03_CITY t 
+        where 
+            m.VEND_CD=v.VEND_CD and 
+            v.VEND_CITY_CD=t.CITY_CD And 
+            m.PURCHASER_CD=c.CONSIGNEE_CD(+)
+
+
+create or replace PROCEDURE GENERATE_VEND_CASE_NO(
+    IN_REGION_CD IN VARCHAR2,
+    IN_PO_DT IN VARCHAR2,
+    p_result_cursor    OUT SYS_REFCURSOR
+) AS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno CHAR(100) := NULL;
+    w_region CHAR(100) := NULL;
+    w_Case_No VARCHAR2(500) := NULL;
+
+BEGIN
+    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T80_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    w_Case_No := w_ctr || w_sno;
+
+    --INSERT INTO T80_PO_MASTER(CASE_NO, REGION_CODE) VALUES (w_Case_No, IN_REGION_CD);
+     --DBMS_OUTPUT.PUT_LINE(w_Case_No);
+     --DBMS_OUTPUT.PUT_LINE(IN_REGION_CD);
+    OPEN p_result_cursor FOR
+
+    SELECT w_Case_No AS CaseNo, IN_REGION_CD AS IN_REGION_CD FROM DUAL;
+
+END;
+
+
+ALTER TABLE T05_VENDOR ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T05_VENDOR ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T05_VENDOR ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T05_VENDOR ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T05_VENDOR ADD ISDELETED NUMBER(2,0)
+
+ALTER TABLE T82_PO_DETAIL ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T82_PO_DETAIL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T82_PO_DETAIL ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T82_PO_DETAIL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T82_PO_DETAIL ADD ISDELETED NUMBER(2,0)
+
+
+
+CREATE OR REPLACE PROCEDURE GET_BPOS_BY_TYPE_RLY (
+    p_BPO_TYPE IN VARCHAR2,
+    p_client IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT BPO_CD,
+            (B.BPO_CD||'-'||B.BPO_NAME||'/'||B.BPO_RLY||'/'||NVL2(B.BPO_ADD,B.BPO_ADD||'/','')||NVL2(C.LOCATION,C.CITY||'/'||C.LOCATION,C.CITY)) BPO_NAME
+        FROM T12_BILL_PAYING_OFFICER B
+        JOIN T03_CITY C ON B.BPO_CITY_CD = C.CITY_CD
+        WHERE BPO_TYPE = p_BPO_TYPE
+        AND UPPER(TRIM(BPO_RLY)) = UPPER(TRIM(p_client))
+        ORDER BY BPO_NAME;
+END;
+
+create or replace PROCEDURE GET_PO_DETAILS(
+    p_case_no IN CHAR,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        p.CASE_NO,
+        p.ITEM_SRNO,
+        p.ITEM_DESC,
+        CASE
+            WHEN p.CONSIGNEE IS NOT NULL THEN
+                (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
+                || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY)))
+            ELSE
+                (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
+                || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
+                || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY)))
+        END AS CONSIGNEE_NAME,
+        p.QTY,
+        p.RATE,
+        p.VALUE AS DATAVALUE
+    FROM
+        T82_PO_DETAIL p
+    JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE
+        p.CASE_NO = p_case_no
+    ORDER BY
+        p.ITEM_SRNO;
+END;
+
+create or replace PROCEDURE SP_GetConsignee (
+    p_RLY_NONRLY IN VARCHAR2,
+    p_client IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    IF p_RLY_NONRLY = 'P' THEN
+        OPEN p_Result FOR
+            SELECT A.CONSIGNEE_CD,
+                   (A.CONSIGNEE_CD || '-' || NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                   NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) CONSIGNEE_NAME
+            FROM T06_CONSIGNEE A, T03_CITY B
+            WHERE A.CONSIGNEE_CITY = B.CITY_CD AND A.CONSIGNEE_TYPE = 'P'
+            ORDER BY (NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                      NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY)));
+    ELSE 
+        IF p_client != '0' THEN
+            OPEN p_Result FOR
+            SELECT A.CONSIGNEE_CD,
+                   (A.CONSIGNEE_CD || '-' || NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                   NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                   NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) CONSIGNEE_NAME
+            FROM T06_CONSIGNEE A, T03_CITY B
+            WHERE A.CONSIGNEE_CITY = B.CITY_CD AND UPPER(TRIM(A.CONSIGNEE_FIRM)) = UPPER(TRIM(p_client))
+            ORDER BY (NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                      NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                      NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY)));
+            ELSE
+                OPEN p_Result FOR
+                    SELECT A.CONSIGNEE_CD,
+                           (A.CONSIGNEE_CD || '-' || NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                           NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                           NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                           NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                           NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) CONSIGNEE_NAME
+                    FROM T06_CONSIGNEE A, T03_CITY B
+                    WHERE A.CONSIGNEE_CITY = B.CITY_CD AND A.CONSIGNEE_CD = 0
+                    ORDER BY (NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                              NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                              NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                              NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                              NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY)));
+            END IF;
+    END IF;
+END;
+
+
+==================================== Menu Role ========================
+CREATE TABLE USERROLES (
+    ID NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    ROLE_ID NUMBER(6) NOT NULL,
+    USER_ID NUMBER(6) NOT NULL,
+    USERTYPE VARCHAR2(20 BYTE)
+);
+
+CREATE TABLE Menu_Master (
+    ID NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    ParentID NUMBER(6),
+    ControllerName NVARCHAR2(50),
+    ActionName VARCHAR2(50),
+    Title NVARCHAR2(50),
+    MenuDescription NVARCHAR2(250),
+    Role_Id NUMBER(6),
+    IconCssClass NVARCHAR2(50),
+    IsActive NUMBER(1),
+    SortOrder NUMBER(6),
+    IconPath VARCHAR2(50)
+);
+
+ALTER TABLE Menu_Master
+ADD CONSTRAINT DF_Menu_Master_IsActive DEFAULT 1 FOR IsActive;
+
+ALTER TABLE Menu_Master
+ADD CONSTRAINT FK_Menu_Master_Role_Id_ROLES FOREIGN KEY (Role_Id)
+REFERENCES ROLES (Role_Id);
+
+CREATE TABLE MenuRoleMapping (
+    ID NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    RoleID NUMBER(6),
+    MenuID NUMBER(6),
+    IsActive NUMBER(1)
+);
+
+
+create or replace PROCEDURE SP_GetMenuMaster (
+    p_RoleID IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT c.ID AS MenuId,
+               c.TITLE,
+               c.PARENTID AS ParentId,
+               c.Sortorder AS SortOrder,
+               c.CONTROLLERNAME AS ControllerName,
+               c.ACTIONNAME AS ActionName,
+               c.ICONPATH AS IconPath,
+               mrm.ROLEID AS Role_Id
+        FROM Menu_Master c
+        INNER JOIN MenuRoleMapping mrm ON mrm.MENUID = c.ID
+        WHERE TO_CHAR(mrm.MENUID) = TO_CHAR(c.ID)
+          AND mrm.ROLEID = p_RoleID
+          AND c.ISACTIVE = 1
+          AND mrm.ISACTIVE = 1
+        ORDER BY c.SORTORDER;
+
+END;
+
+
+
+
+==============
+
+ALTER TABLE T103_VEND_DOCS 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE T103_VEND_DOCS_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE T103_VEND_DOCS
+   SET ID = T103_VEND_DOCS_seq.nextval;
+ALTER TABLE T103_VEND_DOCS
+    MODIFY ID NUMBER(6,0) DEFAULT T103_VEND_DOCS_seq.nextval;
+
+    =================
+
+create or replace PROCEDURE SP_GetVendorDocumentDetails (
+p_VEND_CD IN VARCHAR2,
+p_DOC_TYPE IN VARCHAR2,
+p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT VEND_CD,
+               DOC_TYPE,
+               EQUIP_MK_SL,
+               CALIB_CERT_NO,
+               EQUIP_CLBR_CERT_SNO,
+               EQUIP_NAME,
+               EQUIP_RANGE,
+               CALIBRATED_BY,
+               DT_OF_CALIB,
+               NEXT_DT_CALIB,
+               EQUIP_DESC,
+               NABL_ACC_DET,
+               'DOC/' || VEND_CD || '_||_' || DOC_TYPE || '.PDF' AS V_DOC
+        FROM t104_vend_equip_clbr_cert
+        WHERE VEND_CD = p_VEND_CD
+          AND DOC_TYPE = p_DOC_TYPE
+        ORDER BY DT_OF_CALIB;
+END;

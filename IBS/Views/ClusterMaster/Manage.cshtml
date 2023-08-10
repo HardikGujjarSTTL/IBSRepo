@@ -8,9 +8,9 @@
         <h2>Cluster Master</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="ClusterMaster" asp-action="ClusterMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClusterMaster">
                 <input type="hidden" asp-for="ClusterCode" />
                 <div class="accordion-body">
@@ -33,9 +33,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />

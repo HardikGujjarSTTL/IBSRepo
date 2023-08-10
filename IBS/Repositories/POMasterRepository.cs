@@ -45,7 +45,7 @@ namespace IBS.Repositories
                 return model;
             }
         }
-        public DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters,int VendCd)
+        public DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters, int VendCd)
         {
 
             DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
@@ -74,6 +74,7 @@ namespace IBS.Repositories
             }
             query = from POMaster in context.ViewPomasterlists
                     where POMaster.VendCd == VendCd
+                    && POMaster.Isdeleted != Convert.ToByte(true)
                     select new PO_MasterModel
                     {
                         VendCd = POMaster.VendCd,
@@ -85,6 +86,8 @@ namespace IBS.Repositories
                         ConsigneeSName = POMaster.ConsigneeSName,
                         RealCaseNo = POMaster.RealCaseNo,
                         Remarks = POMaster.Remarks,
+                        RlyNonrly = POMaster.RlyNonrly,
+                        MainrlyCd = POMaster.MainrlyCd,
                     };
 
 
@@ -117,7 +120,6 @@ namespace IBS.Repositories
         }
         public string POMasterDetailsInsertUpdate(PO_MasterModel model)
         {
-            
             string CaseNo = "";
             var POMaster = context.T80PoMasters.Find(model.CaseNo);
             #region POMaster save
@@ -132,12 +134,9 @@ namespace IBS.Repositories
                 OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, model.RegionCode, ParameterDirection.Input);
                 par[1] = new OracleParameter("IN_PO_DT", OracleDbType.Varchar2, date, ParameterDirection.Input);
-                //par[2] = new OracleParameter("OUT_CASE_NO", OracleDbType.Char, ParameterDirection.Output);
-                //par[3] = new OracleParameter("OUT_ERR_CD", OracleDbType.Int32, ParameterDirection.Output);
                 par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 var ds = DataAccessDB.GetDataSet("GENERATE_VEND_CASE_NO", par, 1);
-
                 PO_MasterModel model1 = new();
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -187,12 +186,13 @@ namespace IBS.Repositories
             #endregion
             return CaseNo;
         }
-        public PO_MasterModel FindCaseNo(string CaseNo,int VendCd)
+        public PO_MasterModel FindCaseNo(string CaseNo, int VendCd)
         {
             PO_MasterModel model = new();
             //T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
-            T80PoMaster POMaster =(from l in context.T80PoMasters
-                                   where l.CaseNo== CaseNo && l.VendCd == VendCd select l).FirstOrDefault();
+            T80PoMaster POMaster = (from l in context.T80PoMasters
+                                    where l.CaseNo == CaseNo && l.VendCd == VendCd
+                                    select l).FirstOrDefault();
 
             if (POMaster == null)
                 throw new Exception("Po Master Record Not found");
@@ -216,7 +216,211 @@ namespace IBS.Repositories
                 return model;
             }
         }
+        public DTResult<PO_MasterDetailListModel> GetPOMasterDetailsList(DTParameters dtParameters)
+        {
 
+            DTResult<PO_MasterDetailListModel> dTResult = new() { draw = 0 };
+            IQueryable<PO_MasterDetailListModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "CASE_NO";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CASE_NO";
+                orderAscendingDirection = true;
+            }
+            string CaseNo = dtParameters.AdditionalValues.ToArray().Where(x => x.Key == "CaseNo").FirstOrDefault().Value;
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_case_no", OracleDbType.Char, CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_PO_DETAILS", par, 1);
+            List<PO_MasterDetailListModel> model = new List<PO_MasterDetailListModel>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<PO_MasterDetailListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+            query = model.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ITEM_SRNO).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ITEM_DESC).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+        public bool RemovePODetails(string CaseNo, string ITEM_SRNO, int UserID)
+        {
+            T82PoDetail POMastersDetails = (from pm in context.T82PoDetails
+                                            where pm.CaseNo == CaseNo && pm.ItemSrno == Convert.ToByte(ITEM_SRNO)
+                                            select pm).FirstOrDefault();
+            if (POMastersDetails == null) { return false; }
+
+            POMastersDetails.Isdeleted = Convert.ToByte(true);
+            POMastersDetails.Updatedby = Convert.ToInt32(UserID);
+            POMastersDetails.Updateddate = DateTime.Now;
+            context.SaveChanges();
+            return true;
+        }
+        public int GenerateITEM_SRNO(string CaseNo)
+        {
+            int maxSrNo = (from pm in context.T82PoDetails
+                           where pm.CaseNo == CaseNo
+                           select pm.ItemSrno).Max() + 1;
+            return maxSrNo;
+        }
+        public PO_MasterDetailsModel FindPODetailsByID(string CASE_NO, string ITEM_SRNO)
+        {
+            PO_MasterDetailsModel model = new();
+            T82PoDetail POMastersDetails = context.T82PoDetails.Where(x => x.CaseNo == CASE_NO && x.ItemSrno == Convert.ToByte(ITEM_SRNO)).FirstOrDefault();
+
+            if (POMastersDetails == null)
+                throw new Exception("Po Master Details Record Not found");
+            else
+            {
+                model.CaseNo = POMastersDetails.CaseNo;
+                model.ItemSrno = POMastersDetails.ItemSrno;
+                model.PlNo = POMastersDetails.PlNo;
+                model.BpoCd = POMastersDetails.BpoCd;
+                model.Bpo = POMastersDetails.Bpo;
+                model.ItemDesc = POMastersDetails.ItemDesc;
+                model.ConsigneeCd = POMastersDetails.ConsigneeCd;
+                model.Consignee = POMastersDetails.Consignee;
+                model.Qty = POMastersDetails.Qty;
+                model.BasicValue = POMastersDetails.BasicValue;
+                model.Rate = POMastersDetails.Rate;
+                model.UomCd = POMastersDetails.UomCd;
+                model.SalesTaxPer = POMastersDetails.SalesTaxPer;
+                model.SalesTax = POMastersDetails.SalesTax;
+                model.Excise = POMastersDetails.Excise;
+                model.ExcisePer = POMastersDetails.ExcisePer;
+                model.ExciseType = POMastersDetails.ExciseType;
+                model.Discount = POMastersDetails.Discount;
+                model.DiscountPer = POMastersDetails.DiscountPer;
+                model.DiscountType = POMastersDetails.DiscountType;
+                model.OtherCharges = POMastersDetails.OtherCharges;
+                model.OtChargePer = POMastersDetails.OtChargePer;
+                model.OtChargeType = POMastersDetails.OtChargeType;
+                model.Value = POMastersDetails.Value;
+                model.DelvDt = POMastersDetails.DelvDt;
+                model.ExtDelvDt = POMastersDetails.ExtDelvDt;
+                return model;
+            }
+        }
+        public DTResult<PO_MasterDetailsModel> FindByUOMDetail(decimal id)
+        {
+            DTResult<PO_MasterDetailsModel> dTResult = new() { draw = 0 };
+            IQueryable<PO_MasterDetailsModel>? query = null;
+            query = from l in context.T04Uoms
+                    where l.UomCd == id
+
+                    select new PO_MasterDetailsModel
+                    {
+                        UOMFactor = l.UomFactor
+                    };
+
+            dTResult.data = query;
+            return dTResult;
+        }
+        public int POMasterSubDetailsInsertUpdate(PO_MasterDetailsModel model)
+        {
+            int ItemSrno = 0;
+            var t82PoDetail = context.T82PoDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrno == model.ItemSrno).FirstOrDefault();
+            if (t82PoDetail == null)
+            {
+                T82PoDetail obj = new T82PoDetail();
+                obj.CaseNo = model.CaseNo;
+                obj.ItemSrno = model.ItemSrno;
+                obj.PlNo = model.PlNo;
+                obj.BpoCd = model.BpoCd;
+                obj.ItemDesc = model.ItemDesc;
+                obj.ConsigneeCd = model.ConsigneeCd;
+                obj.Bpo = model.Bpo;
+                obj.Consignee = model.Consignee;
+                obj.Qty = model.Qty;
+                obj.Rate = model.Rate;
+                obj.UomCd = model.UomCd;
+                obj.BasicValue = model.BasicValue;
+                obj.SalesTaxPer = model.SalesTaxPer;
+                obj.SalesTax = model.SalesTax;
+                obj.ExciseType = model.ExciseType;
+                obj.ExcisePer = model.ExcisePer;
+                obj.Excise = model.Excise;
+                obj.DiscountType = model.DiscountType;
+                obj.DiscountPer = model.DiscountPer;
+                obj.Discount = model.Discount;
+                obj.OtChargeType = model.OtChargeType;
+                obj.OtChargePer = model.OtChargePer;
+                obj.OtherCharges = model.OtherCharges;
+                obj.Value = model.Value;
+                obj.DelvDt = model.DelvDt;
+                obj.ExtDelvDt = model.ExtDelvDt;
+                obj.UserId = model.UserId;
+                obj.Datetime = DateTime.Now;
+                obj.Createdby = model.Createdby;
+                obj.Createddate = DateTime.Now;
+                context.T82PoDetails.Add(obj);
+                context.SaveChanges();
+                ItemSrno = Convert.ToInt32(obj.ItemSrno);
+            }
+            else
+            {
+                t82PoDetail.ItemDesc = model.ItemDesc;
+                t82PoDetail.PlNo = model.PlNo;
+                t82PoDetail.BpoCd = model.BpoCd;
+                t82PoDetail.Qty = model.Qty;
+                t82PoDetail.ConsigneeCd = model.ConsigneeCd;
+                t82PoDetail.Bpo = model.Bpo;
+                t82PoDetail.Consignee = model.Consignee;
+                t82PoDetail.UomCd = model.UomCd;
+                t82PoDetail.BasicValue = model.BasicValue;
+                t82PoDetail.Rate = model.Rate;
+                t82PoDetail.ExciseType = model.ExciseType;
+                t82PoDetail.ExcisePer = model.ExcisePer;
+                t82PoDetail.Excise = model.Excise;
+                t82PoDetail.SalesTaxPer = model.SalesTaxPer;
+                t82PoDetail.SalesTax = model.SalesTax;
+                t82PoDetail.DiscountType = model.DiscountType;
+                t82PoDetail.DiscountPer = model.DiscountPer;
+                t82PoDetail.Discount = model.Discount;
+                t82PoDetail.OtChargePer = model.OtChargePer;
+                t82PoDetail.OtChargeType = model.OtChargeType;
+                t82PoDetail.OtherCharges = model.OtherCharges;
+                t82PoDetail.Value = model.Value;
+                t82PoDetail.DelvDt = model.DelvDt;
+                t82PoDetail.ExtDelvDt = model.ExtDelvDt;
+                t82PoDetail.UserId = model.UserId;
+                t82PoDetail.Updatedby = model.Updatedby;
+                t82PoDetail.Updateddate = DateTime.Now;
+                context.SaveChanges();
+                ItemSrno = Convert.ToInt32(t82PoDetail.ItemSrno);
+            }
+            return ItemSrno;
+        }
     }
-
 }

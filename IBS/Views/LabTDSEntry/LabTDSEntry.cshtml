@@ -4,55 +4,56 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-
+<div class="boxRadius">
 <form asp-controller="YourController" asp-action="YourAction" method="post">
-    <table style="width: 90%; height: 40px; border-color: #b0c4de; cellspacing: 0; cellpadding: 1;"
-           width="625" align="center" bgcolor="#f0f8ff" border="1">
+    <table>
         <tr align="center">
-            <td align="center" style="width: 25%"><label asp-for="SampleRegNo" class="control-label"></label></td>
-            <td style="width: 25%">
+            <td class="width10p"><label asp-for="SampleRegNo" class="control-label"></label></td>
+                <td class="width25p">
+                <div class="gridSearch">
                 <input asp-for="SampleRegNo" class="form-control" />
-                <br />
-                <button type="submit" class="btn btn-primary" style="width:auto;">Search</button>
+                <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
             </td>
-            <td style="width: 25%"><label asp-for="CaseNo" class="control-label"></label></td>
-            <td style="width: 25%">
+                <td class="width25p"><label asp-for="CaseNo" class="control-label"></label></td>
+                <td class="width25p">
                 <label asp-for="CaseNo" class="control-label" id="lblCNo"></label>
             </td>
         </tr>
         <tr>
-            <td style="width: 25%; height: 22px" align="center">
+            <td>
                 <label asp-for="AmountReceived" class="control-label"></label>
             </td>
-            <td style="width: 25%; height: 22px" align="center">
+            <td>
                 <label asp-for="TDSAmount" class="control-label"></label>
             </td>
-            <td style="width: 25%; height: 22px" align="center">
+            <td>
                 <label asp-for="TDSDate" class="control-label"></label>
             </td>
-            <td align="center" style="width: 25%; height: 22px">
+            <td>
                 <label asp-for="TotalLabCharges" class="control-label"></label>
             </td>
         </tr>
         <tr>
-            <td style="width: 25%" align="center">
+            <td>
                 <label asp-for="AmountReceived" class="control-label" id="lblAmtRec"></label>
             </td>
-            <td style="width: 25%" align="center">
+            <td>
                 <input asp-for="TDSAmount" class="form-control" />
             </td>
-            <td style="width: 25%" align="center">
+            <td>
                 <input asp-for="TDSDate" class="form-control" />
             </td>
-            <td align="center" style="width: 25%">
+            <td>
                 <label asp-for="TotalLabCharges" class="control-label" id="lblTotLabCharges"></label>
             </td>
         </tr>
     </table>
-    <label style="padding-left:6%;"> * To Add New Record Fill Values and Click on Save </label>
-    <tr>
-        <button type="submit" class="btn btn-primary" style="width:auto;">Save</button>
-        <button type="button" class="btn btn-secondary" style="width:auto;">Cancel</button>
-    </tr>
+    <span> * To Add New Record Fill Values and Click on Save </span>
+        <div class="savenext-btn">
+            <a type="button" class="reset-btn">Cancel</a>
+            <button type="submit" class="save-btn active">Save</button>
+    </div>
    
 </form>
+</div>

@@ -43,6 +43,8 @@ public partial class ViewGetBillregisterDtail
 
     public string? IrnNo { get; set; }
 
+    public string? QrCode { get; set; }
+
     public string? Senttosap { get; set; }
 
     public string? Finalised { get; set; }

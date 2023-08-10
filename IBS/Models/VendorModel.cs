@@ -25,14 +25,22 @@ namespace IBS.Models
 
         public string? VendApproval { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? VendApprovalFr { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? VendApprovalTo { get; set; }
 
         public string? VendStatus { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? VendStatusDtFr { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? VendStatusDtTo { get; set; }
 
         public string? VendStatusDtFrST { get; set; }
@@ -55,7 +63,6 @@ namespace IBS.Models
 
         public string? OnlineCallStatus { get; set; }
 
-        public decimal? Id { get; set; }
 
         public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();
 
@@ -70,6 +77,16 @@ namespace IBS.Models
         public virtual ICollection<T80PoMaster> T80PoMasters { get; set; } = new List<T80PoMaster>();
 
         public virtual T03City? VendCityCdNavigation { get; set; }
+    }
+    public class VendorlistModel
+    {
+        public int VEND_CD { get; set; }
+
+        public string? VEND_NAME { get; set; }
+        public string? VEND_CITY_CD { get; set; }
+        public string? VEND_ADD { get; set; }
+        public string? VEND_CONT_NO { get; set; }
+        public string? VEND_EMAIL { get; set; }
     }
 
 }

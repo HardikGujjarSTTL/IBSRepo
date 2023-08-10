@@ -30,14 +30,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "Datetime";
+                    orderCriteria = "CaseNo";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "Datetime";
+                orderCriteria = "CaseNo";
                 orderAscendingDirection = true;
             }
             query = from p in context.T80PoMasters

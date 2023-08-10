@@ -8,9 +8,9 @@
         <h2>Account Codes Directory</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="AccountCodesDirectory" asp-action="AccountCodesDirectoryDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmAccountCodesDirectory">
                 <input type="hidden" asp-for="AccCd" />
                 <div class="accordion-body">
@@ -21,8 +21,7 @@
                             <textarea class="input" asp-for="AccCd" maxlength="30"> </textarea>
                             <span asp-validation-for="AccCd" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="row my-0">
+                   
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Account Description</label>
                             <input type="text" class="input" asp-for="AccDesc" maxlength="30">
@@ -36,9 +35,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
