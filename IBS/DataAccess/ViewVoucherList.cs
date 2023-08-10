@@ -24,4 +24,6 @@ public partial class ViewVoucherList
     public string? CaseNo { get; set; }
 
     public string? BankName { get; set; }
+
+    public int BankCd { get; set; }
 }

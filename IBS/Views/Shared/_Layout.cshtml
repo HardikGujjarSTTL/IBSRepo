@@ -208,10 +208,10 @@
                                     <li><a asp-action="Index" asp-controller="CallRegister"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Registered Pending Calls Off Qty Enhancement Form</span></a></li>
                                     <li><a asp-action="Index" asp-controller="DownloadInspectionFeeBill"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Inspection Fee Bill</span></a></li>
                                     @*<li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call/IC Status</span></a></li>*@
-                                    <li><a asp-action="Index" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call Status</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO IC Status</span></a></li>
+                                    <li><a asp-action="Index" asp-route-type="C" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call Status</span></a></li>
+                                    <li><a asp-action="Index" asp-route-type="I" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO IC Status</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Invoice</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add MA</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="VendorPOMA"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add MA</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Sample Payment</span></a></li>
                                 </ul>
                             </li>
@@ -262,20 +262,31 @@
                                 </ul>
                             </li>
 
-                            <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
+
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="tenant" /></i><span class="menu-title">Reports</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a asp-action="Index" asp-controller="BillRegister"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Bill Register</span></a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            @*<li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>*@
                         </ul>
                     </div>
                 </aside>
-            
-            <!--leftSidebarNav-->
+
+                <!--leftSidebarNav-->
 
 
-            <div class="adminInnerContent">
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
-                <partial name="_DeleteConfirmationPartial" />
-            </div>
+                <div class="adminInnerContent">
+                    <main role="main" class="pb-3">
+                        @RenderBody()
+                    </main>
+                    <partial name="_DeleteConfirmationPartial" />
+                </div>
             </div>
             <!--footer-->
             <footer id="footer" class="footer">

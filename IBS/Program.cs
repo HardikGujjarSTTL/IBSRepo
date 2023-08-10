@@ -3,6 +3,7 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
+using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
 using IBS.Repositories.Vendor;
@@ -68,6 +69,10 @@ builder.Services.AddScoped<IPurchesOrder1LOARepository, IBS.Repositories.Vendor.
 builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.CallRegisterRepository>();
 builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vendor.DownloadInspFeeBillRepository>();
 builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Repositories.Vendor.VendorCallsMarkedForSpecificPORepository>();
+builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
+
+
+builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 
 
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
