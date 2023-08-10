@@ -20,10 +20,9 @@
                 <span asp-validation-for="LabName" class="text-danger"></span>
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Lab Address</label>
-                @*<input type="text" class="input" asp-for="LAB_ADDRESS" maxlength="30" style="text-transform: uppercase;">*@
-                <textarea class="input" asp-for="LabAddress" maxlength="30"> </textarea>
-                <span asp-validation-for="LabAddress" class="text-danger"></span>
+                <label for="Reference">Email</label>
+                <input type="text" class="input" asp-for="LabEmail" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="LabEmail" class="text-danger"></span>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="PropertyId">City</label>
@@ -58,11 +57,11 @@
                 <span asp-validation-for="LabContactTel" class="text-danger"></span>
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Email</label>
-                <input type="text" class="input" asp-for="LabEmail" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="LabEmail" class="text-danger"></span>
+                <label for="Reference">Lab Address</label>
+                @*<input type="text" class="input" asp-for="LAB_ADDRESS" maxlength="30" style="text-transform: uppercase;">*@
+                <textarea class="input" asp-for="LabAddress" maxlength="30"> </textarea>
+                <span asp-validation-for="LabAddress" class="text-danger"></span>
             </div>
-
         </div>
         <div class="savenext-btn">
             <a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>

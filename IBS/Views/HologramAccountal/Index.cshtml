@@ -3,13 +3,13 @@
 @{
     ViewData["Title"] = "Hologram Accountal List";
 }
-<div>
-    <div class="list-inner">
+
+    
         <div class="tast-list">
             <h2>Hologram Accountal List</h2>
             <form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramAccountDetails" style="margin-top: 7px;">
                 <div class="accordion-body">
-                    <div class="row my-0">
+                    <div class="row my-0 d-flex align-items-end">
                         <div class="col-md-2 mb-4">
                             <label for="Reference">Book No</label>
                             <input type="text" class="input" asp-for="BK_NO" maxlength="200" />
@@ -21,7 +21,7 @@
                             <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
                             @*<span asp-validation-for="SET_NO" class="text-danger"></span>*@
                         </div>
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 mb-4 alignBtn">
                             <div class="savenext-btn">
                                 <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
                                 <button type="button" class="reset-btn" id="btnDelete">Delete</button>
@@ -34,7 +34,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    
     @*<h6 style="text-align: center">Search Result is Sorted on Book No. & Set No.</h6>*@
     <span id="Label8" style="display:inline-block;color:DarkMagenta;font-family:Verdana;font-size:8pt;font-weight:bold;width:100%;text-align:center;">Search Result is Sorted on Book No. &amp; Set No.</span>
     <section class="table-section" style="margin-bottom:10px;">
@@ -63,7 +63,7 @@
             </div>
         </div>
     </section>
-</div>
+
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />

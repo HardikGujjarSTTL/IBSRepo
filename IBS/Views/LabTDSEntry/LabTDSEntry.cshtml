@@ -3,55 +3,65 @@
     ViewData["Title"] = "LAB TDS ENTRY FORM";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+
 <div class="boxRadius">
 <form asp-controller="YourController" asp-action="YourAction" method="post">
-    <table>
-        <tr align="center">
-            <td class="width10p"><label asp-for="SampleRegNo" class="control-label"></label></td>
-                <td class="width25p">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label asp-for="SampleRegNo" class="control-label"></label>
                 <div class="gridSearch">
-                <input asp-for="SampleRegNo" class="form-control" />
-                <button type="submit" class="btn btn-primary">Search</button>
-                    </div>
-            </td>
-                <td class="width25p"><label asp-for="CaseNo" class="control-label"></label></td>
-                <td class="width25p">
-                <label asp-for="CaseNo" class="control-label" id="lblCNo"></label>
-            </td>
-        </tr>
-        <tr>
-            <td>
+                    <input asp-for="SampleRegNo" class="form-control" />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="CaseNo" class="control-label"></label>
+                <div class="d-flex">
+                    <label asp-for="CaseNo" class="control-label" id="lblCNo"></label>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
                 <label asp-for="AmountReceived" class="control-label"></label>
-            </td>
-            <td>
-                <label asp-for="TDSAmount" class="control-label"></label>
-            </td>
-            <td>
+                <div class="d-flex">
+                    <label asp-for="TDSAmount" class="control-label"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
                 <label asp-for="TDSDate" class="control-label"></label>
-            </td>
-            <td>
-                <label asp-for="TotalLabCharges" class="control-label"></label>
-            </td>
-        </tr>
-        <tr>
-            <td>
+                <div class="d-flex">
+                    <label asp-for="TotalLabCharges" class="control-label"></label>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
                 <label asp-for="AmountReceived" class="control-label" id="lblAmtRec"></label>
-            </td>
-            <td>
                 <input asp-for="TDSAmount" class="form-control" />
-            </td>
-            <td>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="control-label"><br /></label>
                 <input asp-for="TDSDate" class="form-control" />
-            </td>
-            <td>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
                 <label asp-for="TotalLabCharges" class="control-label" id="lblTotLabCharges"></label>
-            </td>
-        </tr>
-    </table>
-    <span> * To Add New Record Fill Values and Click on Save </span>
+            </div>
+        </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+             <span class="astric">*</span> To Add New Record Fill Values and Click on Save
+        </div>
+    </div>    
         <div class="savenext-btn">
-            <a type="button" class="reset-btn">Cancel</a>
+            <a href="javascript:void(0);" class="reset-btn">Cancel</a>
             <button type="submit" class="save-btn active">Save</button>
     </div>
    
