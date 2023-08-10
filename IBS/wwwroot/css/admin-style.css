@@ -360,7 +360,7 @@ table, .tableData { border-collapse: separate; border-spacing: 0; width: 100%; e
 	.topLinksAndSearch li a.active { color: #57bdde; }
 	.roundCount { background: #00bfe9; position: absolute; height: 18px; width: 18px; text-align: center; font-size: 10px; font-weight: 600; color: #fff; line-height: 18px; vertical-align: middle; right: -8px; bottom: -2px; border-radius: 50%; -webkit-border-radius: 50%; }
 	.roundCount.blue { background: #00bfe9; }
-	.roundCount.red { background: #e03329; }
+	.roundCount.red { background: #e03329; color:#fff; }
 	.searchIcon.closed, .searchIcon:hover { color: #57bdde; }
 	.menuToggle.active { color: #00bfe9; }
 	.dropPopup { display: none; width: 300px; background: #0E2753; padding: 10px; position: absolute; top: 53px; right: -20px; margin-right: -10px; border: 0 none; box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2); }
