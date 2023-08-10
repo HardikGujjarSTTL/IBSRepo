@@ -112,12 +112,9 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">MA Document</label>
-                    <input type="text" class="input" asp-for="MA_NO" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="MA_NO" class="text-danger"></span>
-                </div>
+            <div class="col-md-6 mb-3">
+                <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+                <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.VendorMADoc" />
             </div>
         </div>
         <div class="savenext-btn">

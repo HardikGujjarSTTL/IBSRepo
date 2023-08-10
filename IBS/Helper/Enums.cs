@@ -34,8 +34,9 @@ namespace IBS.Helper
         public enum DocumentCategory : int
         {
             UserRegi = 8,
-            AdminUserUploadDoc = 9,
+            AdminUserUploadDoc = 2,
             Vendor = 21,
+            VendorMADoc = 42,
         }
 
 
@@ -49,6 +50,10 @@ namespace IBS.Helper
         public enum DocumentCategory_AdminUserUploadDoc : int
         {
             Browse_the_Document_to_Upload = 7,
+        }
+        public enum DocumentCategory_VendorMADoc : int
+        {
+            VendorMADoc = 50,
         }
 
         public static string GetEnumDescription(object enumValue)

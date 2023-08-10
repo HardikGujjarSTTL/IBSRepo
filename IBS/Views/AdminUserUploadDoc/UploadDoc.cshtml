@@ -51,19 +51,17 @@
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                   
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
-                   
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
                 </div>
             </div>
-           
+
             <div class="savenext-btn">
-                <a asp-controller="AdminUserUploadDoc" asp-action="Index" class="reset-btn">Cancel</a>
+                <a asp-controller="AdminUserUploadDoc" asp-action="UploadDoc" class="reset-btn">Cancel</a>
                 <button type="button" class="save-btn active" onclick="Save();">Save</button>
             </div>
-          
+
         </div>
-       
+
     </form>
 </div>
 @section scripts{
