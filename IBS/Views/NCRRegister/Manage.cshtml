@@ -1,0 +1,145 @@
+﻿@model IBS.Models.NCRRegister
+
+@{
+    ViewData["Title"] = "Create NCR";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h3>NON CONFORMITY FORM</h3>
+    </div>
+</div>
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
+    <div class="accordion-body">
+        <div class="row my-0">
+
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">IC NO.</label>
+                    <input type="text" asp-for="ICNO" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="ICNO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">IC Date</label>
+                    <input type="text" class="input datepicker" asp-for="ICDate" readonly="true" id="fromdate" required>
+                    <span asp-validation-for="ICDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">BK NO.</label>
+                    <input type="text" asp-for="BKNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="BKNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Set No.</label>
+                    <input type="text" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="SetNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Case No.</label>
+                    <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">	Call Date - SNo.</label>
+                    <input type="text" asp-for="CALL_SNO" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="CALL_SNO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Contract No.</label>
+                    <input type="text" asp-for="ContractNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="ContractNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Date</label>
+                    <input type="text" asp-for="Date" class="input datepicker" readonly="true" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Vendor</label>
+                    <input type="text" asp-for="Vendor" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="Vendor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Inspecting Er.</label>
+                    <input type="text" asp-for="InspectingEr" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="InspectingEr" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Consignee</label>
+                    <input type="text" asp-for="CONSIGNEE" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="CONSIGNEE" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Item</label>
+                    <input type="text" asp-for="Item" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="Item" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Qty Passed</label>
+                    <input type="text" asp-for="QtyPassed" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="QtyPassed" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">NCR No.</label>
+                    <input type="text" asp-for="NC_NO" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="NC_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">	NCR Date</label>
+                    <input type="text" asp-for="NCRDate" maxlength="100" class="input datepicker" readonly="true" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="NCRDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">	NCR Class</label>
+                    <input type="text" asp-for="NCRClass" maxlength="100"  style="text-transform: uppercase;" required>
+                    <span asp-validation-for="NCRClass" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">	NCR Code</label>
+                    <input type="text" asp-for="NCRCode" maxlength="100"  style="text-transform: uppercase;" required>
+                    <span asp-validation-for="NCRCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="savenext-btn">
+            <button type="button" class="save-btn active btncls" id="btnsave">Save</button>
+            <button type="button" class="save-btn active btncls" >Send To IE</button>
+            <button type="button" class="save-btn active btncls" >Save Remarks</button>
+            <button type="button" class="save-btn active btncls" >Cancel</button>
+        </div>
+
+        </div>
+    </div>
+</form>

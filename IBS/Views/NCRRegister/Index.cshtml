@@ -1,0 +1,279 @@
+﻿
+@model IBS.Models.NCRRegister
+
+@{
+    ViewData["Title"] = "Create NCR";
+}
+
+<style>
+   .btncls{
+       margin-top: 30px;
+   }
+
+</style>
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
+    <div class="accordion-body" id="BYCaseNo">
+    <div class="row my-0">
+        <div class="list-inner">
+           <div class="tast-list">
+             <h3>New NCR</h3>
+           </div>
+        </div>
+        <div class="row mt-0">
+                <div class="col-md-3 mb-2">
+                    <input type="radio" id="rdocase" name="drone" checked>
+                    <label for="rdocase" id="rdoCASENO" val name="rdoCASENO" runat="server">By Case No.</label>
+                </div>
+                <div class="col-md-7 mb-2">
+                    <input type="radio" id="rdoie" name="drone">
+                    <label for="rdoie" id="rdoIE" name="rdoIE" runat="server">By IE</label>
+                </div>
+            </div>
+            <div>
+
+            </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Case No.</label>
+                <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;" required>
+                <span asp-validation-for="CaseNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Book No.</label>
+                <input type="text" asp-for="BKNo" maxlength="100" style="text-transform: uppercase;" required>
+                <span asp-validation-for="BKNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Set No.</label>
+                <input type="text" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;" required>
+                <span asp-validation-for="SetNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="savenext-btn btncls">
+                <button type="button" class="save-btn active" id="btnModify">New NCR</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="accordion-body" id="BYIE" style="display:none;">
+    <div class="row my-0">
+        <div class="list-inner">
+          <div class="tast-list">
+          <h3>New NCR</h3>
+        </div>
+    </div>
+    <div class="row mt-0">
+           <div class="col-md-3 mb-2">
+               <input type="radio" id="rdocase" name="drone" >
+               <label for="rdocase" id="rdoCASENO" val name="rdoCASENO" runat="server">By Case No.</label>
+           </div>
+           <div class="col-md-7 mb-2">
+               <input type="radio" id="rdoie" name="drone" >
+               <label for="rdoie" id="rdoIE" name="rdoIE" runat="server">By IE</label>
+           </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="PropertyId">IE</label>
+        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIENameWithoutCode(), "Value", "Text"), "--Select--", new { id = "IENAME" })
+        <span asp-validation-for="IeCd" class="text-danger"></span>
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="Reference">Date From.</label>
+        <label for="Reference">From</label>
+        <input type="text" class="input datepicker" asp-for="FromDate" readonly="true" id="fromdate" required> 
+        <span asp-validation-for="FromDate" class="text-danger"></span>
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="Reference">To</label>
+        <input type="text" class="input datepicker" asp-for="ToDate" readonly="true" id="todate" required>
+        <span asp-validation-for="ToDate" class="text-danger"></span>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active btncls" id="btnModify" onclick="Submit();">Submit</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+    <div class="accordion-body">
+        <class="row my-0">
+           <div class="list-inner">
+               <div class="tast-list">
+                 <h3>Update NCR</h3>
+               </div>
+            </div>
+        <div class="row mt-0">
+            <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">NCR No.</label>
+                <input type="text" asp-for="NC_NO" maxlength="100" id="NCNO" style="text-transform: uppercase;" required> 
+                <span asp-validation-for="NC_NO" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Case No.</label>
+                <input type="text" asp-for="CaseNo" maxlength="100" id="CASENO" style="text-transform: uppercase;" required>
+                <span asp-validation-for="CaseNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active btncls" id="btnModify">Modify NCR</button>
+            <button type="button" class="save-btn active btncls" onclick="Search();">Search</button>
+        </div>
+
+    </div>
+        </div>
+
+       </div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtNCR" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>NC Status</th>
+                                <th>Case No.</th>
+                                <th>Call Date</th>
+                                <th>Call SNO.</th>
+                                <th>IE</th>
+                                <th>Book NO.</th>
+                                <th>Set NO.</th>
+                                <th>Consignee</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+   
+</form>
+
+@section scripts{
+     <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+     <script type="text/javascript">
+          function Search() {
+            if ($("#frmNCRDetails").valid()) {
+                $("#frmNCRDetails").submit();
+            }
+            InitializeDatatable();
+        }
+
+         function Submit() {
+            if ($("#frmNCRDetails").valid()) {
+                $("#frmNCRDetails").submit();
+            }
+            InitializeDatatable();
+        }
+
+          completed = function (response) {
+            debugger
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/NCRRegister";
+        };
+
+
+         function InitializeDatatable() {
+            debugger
+            
+            var selectedValue = $("#IENAME").val();
+            var NCNO = $("#NCNO").val();
+            var CASENO = $("#CASENO").val();
+            var fromdate = $("#fromdate").val();
+            var todate = $("#todate").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+             $("#dtNCR").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        debugger
+                        var AdditionalValues = {
+                            "NCNO": NCNO,
+                            "CASENO": CASENO,
+                            "fromdate": fromdate,
+                            "todate": todate,
+                            "selectedValue": selectedValue
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "NC_NO" },
+                    { data: "CaseNo" },
+                    { data: "CALL_RECV_DT"},
+                    { data: "CALL_SNO" },
+                    { data: "IE_SNAME"},
+                     { data: "BKNo" },
+                    { data: "SetNo" },
+                    { data: "CONSIGNEE"},
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CASE_NO;
+                            var bkNo = data.BK_NO;
+                            var setNo = data.SET_NO;
+                            var editUrl = '@Url.Action("Manage", "NCRRegister")';
+
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+         $(function () {
+             $("input[name='drone']").change(function () {
+             var selectedValue = $("input[name='drone']:checked").attr("id");
+            if (selectedValue === "rdocase") {
+                $("#BYCaseNo").show();
+                $("#BYIE").hide();
+                $("#rdocase").prop("checked", true);
+             } else if (selectedValue === "rdoie") {
+                $("#BYCaseNo").hide();
+                $("#BYIE").show();
+                $("#dewey").prop("checked", true);
+             }
+            });
+          });
+
+
+     </script>
+}
+
+
+
+     

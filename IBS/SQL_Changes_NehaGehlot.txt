@@ -48,7 +48,6 @@ EXCEPTION
 END;
 
 ===============================================================================================================================================
-
 create or replace PROCEDURE GetFilteredConsigneeComplaints (
     p_po_no_param IN VARCHAR2,
      p_po_date_param IN VARCHAR2,
@@ -66,7 +65,7 @@ BEGIN
         AND i.CONSIGNEE_CD = c.CONSIGNEE_CD(+) AND m.CASE_NO = i.CASE_NO
         AND (p_po_no_param IS NULL OR UPPER(TRIM(PO_NO)) LIKE '%' || UPPER(TRIM(p_po_no_param)) || '%')
           --AND (p_po_date_param IS NULL OR TO_DATE(TO_CHAR(PO_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') = p_po_date_param)
-        AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'yy-MM-dd'))
+        AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'dd-MM-yy'))
         -- Adjust the date comparison
         MINUS
         SELECT m.CASE_NO, m.PO_NO, m.PO_DT, (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') RLY_CD,
@@ -76,7 +75,7 @@ BEGIN
         AND i.CONSIGNEE_CD = c.CONSIGNEE_CD(+) AND m.CASE_NO = i.CASE_NO
         AND i.CASE_NO = comp.CASE_NO AND i.BK_NO = comp.BK_NO AND i.SET_NO = comp.SET_NO
         AND (p_po_no_param IS NULL OR UPPER(TRIM(PO_NO)) LIKE '%' || UPPER(TRIM(p_po_no_param)) || '%')
-      AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'yy-MM-dd'))
+        AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'dd-MM-yy'))
          --AND (p_po_date_param IS NULL OR TO_DATE(TO_CHAR(PO_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') = p_po_date_param)
          
     )
