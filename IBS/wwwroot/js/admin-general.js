@@ -216,10 +216,10 @@
 		var midContentHt = $(".adminInnerContent").height();
 		var sideBarHt = $(".sidebar-collapse").height();
 		$(".sidebar-collapse").on('resize', function () {
-		if ($(".sidebar-collapse").height() > midContentHt) {
+			if ($(".sidebar-collapse").height() > midContentHt) {
 				//$(".adminInnerContent").css('height', sideBarHt); 
 			} else {
-			$(".#sidebar").css('height', midContentHt);
+				$(".#sidebar").css('height', midContentHt);
 				//$(".adminInnerContent").removeAttr('style');
 			}
 
@@ -252,7 +252,7 @@
 
 		}).trigger('resize');
 		/*================= On Document Load and Resize End =================*/
-		
+
 		/*Navigation */
 		if ($("#nav").length) {
 			if ($(".toggleMenu").length == 0) {
@@ -290,6 +290,19 @@
 					$(this).removeClass('nav-hover');
 				}
 			});
+
+			if ($(window).width() < 1024) {
+				setTimeout(function () {
+					$("body").removeClass("left-side-opend").addClass("ipadView");
+					$("#menu-toggle").click(function () {
+						if ($('body').hasClass("ipadView")) {
+							$('body').removeClass("left-side-opend");
+						} else {
+							$('body').removeClass("left-side-opend");
+						}
+					});
+				}, 800);
+			}
 
 			if ($("body").hasClass("left-side-full")) {
 
@@ -372,7 +385,7 @@
 				if ($("body").hasClass("mobileMenu")) {
 
 					if (!$("#sidebar").hasClass("open")) {
-						$("#sidebar").animate({ left: "0" }, 200);
+						$("#sidebar").animate({ left: "314px" }, 200);
 						$("#sidebar").addClass("open");
 						$(this).removeClass("active")
 					}
