@@ -34,6 +34,7 @@ namespace IBS.Controllers.Vendor
         {
             try
             {
+                int srNo = 0;
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 string msg = "Vendor Document Inserted Successfully.";
                 if (model.EquipClbrCertSno > 0)
@@ -41,6 +42,10 @@ namespace IBS.Controllers.Vendor
                     msg = "Vendor Document Updated Successfully.";
                 }
                 model.VendCd = VendCd;
+                if (model.DocType == "C")
+                {
+                    srNo = pVendorDocumentRepository.VendorCalibrationRecordsInsertUpdate(model);
+                }
                 int id = pVendorDocumentRepository.VendorDocumentInsertUpdate(model);
                 if (id > 0)
                 {
@@ -53,7 +58,7 @@ namespace IBS.Controllers.Vendor
                     }
                 }
                 #endregion
-                if (id > 0)
+                if ((model.DocType == "C" && srNo > 0) || id > 0)
                 {
                     return Json(new { status = true, responseText = msg });
                 }
@@ -72,11 +77,13 @@ namespace IBS.Controllers.Vendor
             try
             {
                 string id = "0";
+                int maxSrNo = 0;
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 VendEquipClbrCertModel model = new();
                 if (DocType != null)
                 {
                     model = pVendorDocumentRepository.FindByID(VendCd, DocType);
+                    maxSrNo= pVendorDocumentRepository.GetmaxSrNo(VendCd, DocType);
                 }
                 if (model != null)
                 {
@@ -123,7 +130,7 @@ namespace IBS.Controllers.Vendor
                 }
                 else if (DocType == "C")
                 {
-                    List<IBS_DocumentDTO> lstCalibrationDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorDocumentForCalibrationRecord, id);
+                    List<IBS_DocumentDTO> lstCalibrationDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorDocument, id);
                     FileUploaderDTO FileUploaderCalibration = new FileUploaderDTO();
                     FileUploaderCalibration.Mode = (int)Enums.FileUploaderMode.Add_Edit;
                     FileUploaderCalibration.IBS_DocumentList = lstCalibrationDocument.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Calibration_Records).ToList();
@@ -134,6 +141,7 @@ namespace IBS.Controllers.Vendor
                 }
                 if (DocType == "C")
                 {
+                    model.EquipClbrCertSno =Convert.ToByte(maxSrNo);
                     return PartialView("_CalibrationRecordsVendDocument", model);
                 }
                 else
@@ -141,6 +149,52 @@ namespace IBS.Controllers.Vendor
                     return PartialView("_VendDocument", model);
                 }
 
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorDocument", "GetDocument", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+            DTResult<VendEquipClbrCertListModel> dTResult = pVendorDocumentRepository.GetVendorCalibrationRecordssList(dtParameters, VendCd);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult EditVendorCalibration(int VendCd,string DocType,string EquipMkSl,string CalibCertNo,int EquipClbrCertSno )
+        {
+            try
+            {
+                string id = "0";
+                VendEquipClbrCertModel modelDoc = new();
+                VendEquipClbrCertModel model = new();
+                if (VendCd > 0 && DocType != null)
+                {
+                    modelDoc = pVendorDocumentRepository.FindByID(VendCd, DocType);
+                    if (modelDoc != null)
+                    {
+                        id = Convert.ToString(modelDoc.ID);
+                    }
+
+                    model = pVendorDocumentRepository.FindVendorCalibrationByID(VendCd, DocType, EquipMkSl, CalibCertNo, EquipClbrCertSno);
+                }
+
+                if (DocType == "C")
+                {
+                    List<IBS_DocumentDTO> lstCalibrationDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorDocument, id);
+                    FileUploaderDTO FileUploaderCalibration = new FileUploaderDTO();
+                    FileUploaderCalibration.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                    FileUploaderCalibration.IBS_DocumentList = lstCalibrationDocument.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Calibration_Records).ToList();
+                    FileUploaderCalibration.OthersSection = false;
+                    FileUploaderCalibration.MaxUploaderinOthers = 5;
+                    FileUploaderCalibration.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                    ViewBag.Calibration_Records = FileUploaderCalibration;
+                }
+                return PartialView("_CalibrationRecordsVendDocument", model);
             }
             catch (Exception ex)
             {

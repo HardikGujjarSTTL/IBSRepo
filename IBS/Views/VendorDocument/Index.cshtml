@@ -43,6 +43,9 @@
                     <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" class="save-btn active" onclick="Save();">Save</button>
                 </div>
+                <div id="dvCalibrationRecordsVendDocumentList" style="display:none;">
+                    <partial name="_CalibrationRecordsVendDocumentList" />
+                </div>
             </div>
         </form>
     </div>
@@ -51,6 +54,9 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        $(function () {
+            InitializeDatatable();
+        });
         function Save() {
             if ($("#frmRoleDetails").valid()) {
                 SaveSingleDocuments("tab-1");
@@ -76,8 +82,11 @@
                     if (response != null) {
                         $("#dvDocument").html("");
                         $("#dvCalibrationRecordsVendDocument").html("");
+                        $("#dvCalibrationRecordsVendDocumentList").hide();
                         if (DocType == 'C') {
                             $("#dvCalibrationRecordsVendDocument").html(response);
+                            $("#dvCalibrationRecordsVendDocumentList").show();
+                            SetDate();
                         }
                         else
                         {
@@ -118,6 +127,88 @@
             //    $("#dvRaw_Material").hide();
             //    $("#dvCalibration_Records").hide();
             //}
+        }
+
+        function InitializeDatatable() {
+            $("#dtDocument").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "EQUIP_NAME" },
+                    { data: "EQUIP_MK_SL" },
+                    { data: "DT_OF_CALIB" },
+                    { data: "NEXT_DT_CALIB" },
+                    { data: "CALIB_CERT_NO" },
+                    { data: "EQUIP_CLBR_CERT_SNO" },
+                    { data: "EQUIP_RANGE" },
+                    { data: "NABL_ACC_DET" },
+                    { data: "EQUIP_DESC" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var VendCd = data.VEND_CD;
+                            var DocType = data.DOC_TYPE;
+                            var EquipMkSl = data.EQUIP_MK_SL;
+                            var CalibCertNo = data.CALIB_CERT_NO;
+                            var EquipClbrCertSno = data.EQUIP_CLBR_CERT_SNO;
+                            //var editUrl = '@Url.Action("EditVendorCalibration", "VendorDocument")?VendCd=' + data.VEND_CD + "&DocType=" + data.DOC_TYPE + "&EquipMkSl=" + data.EQUIP_MK_SL + "&CalibCertNo=" + data.CALIB_CERT_NO + "&EquipClbrCertSno=" + data.EQUIP_CLBR_CERT_SNO;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="EditVendorCalibration(' + VendCd + ',\'' + DocType + '\',\'' +  EquipMkSl  + '\',\'' + CalibCertNo + '\',' + EquipClbrCertSno + '); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function EditVendorCalibration(VendCd, DocType, EquipMkSl, CalibCertNo, EquipClbrCertSno) {
+            $.ajax({
+                url: '@Url.Action("EditVendorCalibration", "VendorDocument")?VendCd=' + VendCd + "&DocType=" + DocType + "&EquipMkSl=" + EquipMkSl + "&CalibCertNo=" + CalibCertNo + "&EquipClbrCertSno=" + EquipClbrCertSno,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#DocType").val(DocType);
+                    $("#dvCalibrationRecordsVendDocument").html("");
+                    $("#dvCalibrationRecordsVendDocument").html(response);
+                    SetDate();
+                }
+            });
+        }
+        function SetDate()
+        {
+            $('#DtOfCalib').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#NextDtCalib').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
         }
     </script>
 }

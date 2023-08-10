@@ -39,7 +39,6 @@ namespace IBS.Helper
             AdminUserUploadDoc = 2,
             Vendor = 3,
             VendorDocument = 4,
-            VendorDocumentForCalibrationRecord = 5,
         }
 
 

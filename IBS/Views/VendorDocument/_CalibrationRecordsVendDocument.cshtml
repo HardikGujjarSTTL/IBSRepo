@@ -12,7 +12,14 @@
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Make,Model Sl.No./ID No.</label>
-        <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;">
+        @if (Model.EquipMkSl != null)
+        {
+            <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;" readonly="readonly">
+        }
+        else
+        {
+            <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;">
+        }
         <span asp-validation-for="EquipMkSl" class="text-danger"></span>
     </div>
 </div>
@@ -29,19 +36,26 @@
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Calibration Certificate No.</label>
-        <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;">
+        @if (Model.EquipMkSl != null)
+        {
+            <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;" readonly="readonly">
+        }
+        else
+        {
+            <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;">
+        }
         <span asp-validation-for="CalibCertNo" class="text-danger"></span>
     </div>
 </div>
 <div class="row my-0">
     <div class="col-md-4 mb-3">
         <label for="Reference">Date of Calibration</label>
-        <input type="text" class="datetime" asp-for="DtOfCalib" style="text-transform: uppercase;">
+        <input asp-for="DtOfCalib" type="text" class="datepicker" readonly="readonly" />
         <span asp-validation-for="DtOfCalib" class="text-danger"></span>
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Next date of Calibration</label>
-        <input type="text" class="datetime" asp-for="NextDtCalib" style="text-transform: uppercase;">
+        <input asp-for="NextDtCalib" type="text" class="datepicker" readonly="readonly" />
         <span asp-validation-for="NextDtCalib" class="text-danger"></span>
     </div>
     <div class="col-md-4 mb-3">
@@ -60,18 +74,3 @@
         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Calibration_Records" />
     </div>
 </div>
-
-@section scripts{
-    <script>
-        $('#DtOfCalib').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-        $('#NextDtCalib').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-    </script>
-}
