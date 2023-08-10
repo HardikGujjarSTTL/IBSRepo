@@ -361,6 +361,33 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> SapBillStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Pending";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Sent to SAP";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Not-Sent to SAP";
+            //single.Value = "Y";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Sent to SAP";
+            //single.Value = "S";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Received Response from SAP";
+            //single.Value = "R";
+            //textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> RailwaysTypes()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -705,6 +732,39 @@ namespace IBS.Models
                        {
                            Text = Convert.ToString(a.BpoRly),
                            Value = Convert.ToString(a.BpoOrgn)
+                       }).OrderBy(x => x.Text).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetRlyCd(string RlyNonrly)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            if (RlyNonrly == "R")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T91Railways
+                            where a.RlyCd != "CORE"
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.Railway),
+                           Value = Convert.ToString(a.RlyCd)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            else if (RlyNonrly != "" && RlyNonrly != null)
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T12BillPayingOfficers
+                            where a.BpoType == Convert.ToString(RlyNonrly)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.BpoOrgn),
+                           Value = Convert.ToString(a.BpoRly)
                        }).OrderBy(x => x.Text).ToList();
                 dropDownDTOs.AddRange(dropList);
             }

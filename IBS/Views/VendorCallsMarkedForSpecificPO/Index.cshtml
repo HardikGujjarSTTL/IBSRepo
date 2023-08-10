@@ -1,15 +1,17 @@
 ﻿@model IBS.Models.VendorCallsMarkedForSpecificPOModel
 @{
-    ViewData["Title"] = "REGISTERED LOA ADD NEW ITEMS FORM";
+    ViewData["Title"] = "Call Details For Specific PO";
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallsMarkedForSpecificPO" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>REGISTERED LOA ADD NEW ITEMS FORM</h2>
+            @*<h2>Call Details For Specific PO</h2>*@
+            <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;"></label></h2>
         </div>
         <input type="hidden" id="hdnRailway" />
         <input type="hidden" id="hdnRCD" />
+        <input type="hidden" asp-for="L5NoPo" />
     </div>
     <div class="accordion-body">
         <div class="row my-0">
@@ -72,8 +74,18 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+        var ActionType = "";
         $(function () {
             setDefaultDate();
+
+            var urlParams = new URLSearchParams(window.location.search);
+            ActionType = urlParams.get('type');
+            if(ActionType == "C"){
+                $("#lblTitle").text("Call Details For Specific PO");
+            }
+            else if (ActionType == "I") {
+                $("#lblTitle").text("IC Details For Specific PO");
+            }
             //InitializeDatatable();
         });
 
@@ -82,14 +94,16 @@
         });
 
         function Search() {
-            //InitializeDatatable();
+            InitializeDatatable();
         }
         function setDefaultDate() {
+            debugger
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd-mm-yy',
+                dateFormat: 'dd/mm/yy',
             });
+
         }
 
         function FillRlyCd() {
@@ -154,11 +168,22 @@
                         }
                     },
                     { data: "PoNo" },
+
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var PoNo = data.PoNo;
-                            var editUrl = '@Url.Action("Index", "VendorCallsMarkedForSpecificPO")?PoNo=' + PoNo;
+                            var L5NoPo = data.L5NoPo;
+                            var PoDt = moment(data.PoDt).format("DD-MM-YYYY")
+                            var RlyNorly = data.RlyNorly;
+                            var RlyCd = data.RlyCd;
+                            if (ActionType == "C") {
+                                var editUrl = '@Url.Action("ManageByReportCall", "VendorCallsMarkedForSpecificPO")?L5NoPo=' + L5NoPo + "&PoDt=" + PoDt + "&RlyNorly=" + RlyNorly + "&RlyCd=" + RlyCd + "&Action=" + ActionType;
+                            }
+                            else if (ActionType == "I") {
+                                var editUrl = '@Url.Action("ManageByReportIC", "VendorCallsMarkedForSpecificPO")?L5NoPo=' + L5NoPo + "&PoDt=" + PoDt + "&RlyNorly=" + RlyNorly + "&RlyCd=" + RlyCd + "&Action=" + ActionType;
+                            }
+
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
