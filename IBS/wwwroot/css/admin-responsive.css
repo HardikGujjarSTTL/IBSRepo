@@ -88,14 +88,14 @@ tast-date{ margin-top:15px; }
 }
 @media only screen and (max-width:800px) {
 /*Responsive Table*/
-.responsiveTable, .responsiveTable tr, .responsiveTable td, .responsiveTable td:before { display: block; text-align: left; border: none;	/* Converts a table, table row, table column and table column:before into a block element */ }
+.responsiveTable, .responsiveTable tr, .responsiveTable td, .responsiveTable td:before { display: block; text-align: left; border: none; }
 .responsiveTable, .responsiveTable tr, .responsiveTable td:last-child { border-bottom: none; }
-.responsiveTable thead, .responsiveTable tr th { position: absolute;	/* Hides table head but not using display none */ top: -1000em; left: -1000em; }
+.responsiveTable thead, .responsiveTable tr th { position: absolute; top: -1000em; left: -1000em; }
 .responsiveTable tr { border: 1px solid #eeeeee; border-bottom: 2px solid #eeeeee; margin: 0 0 20px; }
-.responsiveTable tr td:nth-child(1) { /* first column of the row */ border-left: none; }
-.responsiveTable tr td:last-child { /* last column of the row */ border-right: none; }
-.responsiveTable tr:last-child .td, .responsiveTable td { /* Column in the last row and column */ border-bottom: 1px solid #eeeeee; }
-.responsiveTable td:before { /* prints the value of data-label attribute before the column data */ font-weight: bold; padding-right: 20px; line-height: 27px; color: #174471; content: " "attr(data-label)"";	/* call the attribute value of data-label and adds a string // */ }
+.responsiveTable tr td:nth-child(1) {  border-left: none; }
+.responsiveTable tr td:last-child {  border-right: none; }
+.responsiveTable tr:last-child .td, .responsiveTable td { border-bottom: 1px solid #eeeeee; }
+.responsiveTable td:before { font-weight: bold; padding-right: 20px; line-height: 27px; color: #174471; content: " "attr(data-label)""; }
 .responsiveTable tbody { display: block; }
 .responsiveTable tr td { padding: 5px 15px; width: auto !important; }
 .chartArea .columnBox9 { width: 100%; }
