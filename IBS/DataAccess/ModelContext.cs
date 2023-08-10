@@ -495,8 +495,6 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VendorFeedback> VendorFeedbacks { get; set; }
 
-    public virtual DbSet<Vendordocument> Vendordocuments { get; set; }
-
     public virtual DbSet<ViewCalldetailsforspecificpoReport> ViewCalldetailsforspecificpoReports { get; set; }
 
     public virtual DbSet<ViewConsigneeDetail> ViewConsigneeDetails { get; set; }
@@ -12124,13 +12122,28 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("PL_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.ItemCd)
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasColumnName("ITEM_CD");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -16320,25 +16333,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.VendCd)
                 .HasPrecision(6)
                 .HasColumnName("VEND_CD");
-        });
-
-        modelBuilder.Entity<Vendordocument>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("VENDORDOCUMENT_PK");
-
-            entity.ToTable("VENDORDOCUMENT");
-
-            entity.Property(e => e.Id)
-                .HasPrecision(6)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.Documenttype)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("DOCUMENTTYPE");
-            entity.Property(e => e.Vendorid)
-                .HasPrecision(6)
-                .HasColumnName("VENDORID");
         });
 
         modelBuilder.Entity<ViewCalldetailsforspecificpoReport>(entity =>
