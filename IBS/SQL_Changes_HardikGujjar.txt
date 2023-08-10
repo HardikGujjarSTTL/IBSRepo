@@ -665,3 +665,32 @@ UPDATE T103_VEND_DOCS
    SET ID = T103_VEND_DOCS_seq.nextval;
 ALTER TABLE T103_VEND_DOCS
     MODIFY ID NUMBER(6,0) DEFAULT T103_VEND_DOCS_seq.nextval;
+
+    =================
+
+create or replace PROCEDURE SP_GetVendorDocumentDetails (
+p_VEND_CD IN VARCHAR2,
+p_DOC_TYPE IN VARCHAR2,
+p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT VEND_CD,
+               DOC_TYPE,
+               EQUIP_MK_SL,
+               CALIB_CERT_NO,
+               EQUIP_CLBR_CERT_SNO,
+               EQUIP_NAME,
+               EQUIP_RANGE,
+               CALIBRATED_BY,
+               DT_OF_CALIB,
+               NEXT_DT_CALIB,
+               EQUIP_DESC,
+               NABL_ACC_DET,
+               'DOC/' || VEND_CD || '_||_' || DOC_TYPE || '.PDF' AS V_DOC
+        FROM t104_vend_equip_clbr_cert
+        WHERE VEND_CD = p_VEND_CD
+          AND DOC_TYPE = p_DOC_TYPE
+        ORDER BY DT_OF_CALIB;
+END;

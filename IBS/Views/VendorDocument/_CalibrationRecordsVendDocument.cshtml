@@ -7,44 +7,46 @@
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Name of Equipment</label>
-        <input type="text" class="input" asp-for="EquipName" style="text-transform: uppercase;">
+        <input type="text" class="input" asp-for="EquipName" >
         <span asp-validation-for="EquipName" class="text-danger"></span>
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Make,Model Sl.No./ID No.</label>
         @if (Model.EquipMkSl != null)
         {
-            <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;" readonly="readonly">
+                <input type="text" class="input" asp-for="EquipMkSl"  readonly="readonly">
         }
         else
         {
-            <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;">
+                <input type="text" class="input" asp-for="EquipMkSl" >
         }
         <span asp-validation-for="EquipMkSl" class="text-danger"></span>
+        <span class="text-danger" id="spnErrorEquipMkSl"></span>
     </div>
 </div>
 <div class="row my-0">
     <div class="col-md-4 mb-3">
         <label for="Reference">Range & Least Count</label>
-        <input type="text" class="input" asp-for="EquipRange" style="text-transform: uppercase;">
+        <input type="text" class="input" asp-for="EquipRange" >
         <span asp-validation-for="EquipRange" class="text-danger"></span>
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Calibrated By Laboratory</label>
-        <input type="text" class="input" asp-for="CalibratedBy" style="text-transform: uppercase;">
+        <input type="text" class="input" asp-for="CalibratedBy" >
         <span asp-validation-for="CalibratedBy" class="text-danger"></span>
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">Calibration Certificate No.</label>
         @if (Model.EquipMkSl != null)
         {
-            <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;" readonly="readonly">
+                <input type="text" class="input" asp-for="CalibCertNo"  readonly="readonly">
         }
         else
         {
-            <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;">
+                <input type="text" class="input" asp-for="CalibCertNo" >
         }
         <span asp-validation-for="CalibCertNo" class="text-danger"></span>
+        <span class="text-danger" id="spnErrorCalibCertNo"></span>
     </div>
 </div>
 <div class="row my-0">
@@ -60,14 +62,14 @@
     </div>
     <div class="col-md-4 mb-3">
         <label for="Reference">NABL Accreditation Details</label>
-        <input type="text" class="input" asp-for="NablAccDet" style="text-transform: uppercase;">
+        <input type="text" class="input" asp-for="NablAccDet" >
         <span asp-validation-for="NablAccDet" class="text-danger"></span>
     </div>
 </div>
 <div class="row my-0">
     <div class="col-md-8 mb-3">
         <label for="Reference">Description, Lab ID No., Calibration Certificate No.,Valid upto</label>
-        <textarea rows="4" asp-for="EquipDesc" style="text-transform: uppercase;"></textarea>
+        <textarea rows="4" asp-for="EquipDesc" ></textarea>
         <span asp-validation-for="EquipDesc" class="text-danger"></span>
     </div>
     <div class="col-md-4 mb-3">
