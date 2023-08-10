@@ -1,32 +1,29 @@
 ﻿@{
-    ViewData["Title"] = "PO Master List";
+    ViewData["Title"] = "Vendor List";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>PO Master List</h2>
+            <h2>Vendor List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="POMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New PO Master</a>
+            <a asp-area="" asp-controller="VendorProfile" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Vendor</a>
         </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtPOMaster" class="table-responsive">
+                <table id="dtVendors" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Ref No.</th>
-                            <th>Purchase Order Number</th>
-                            <th>Purchase Order Date</th>
-                            <th>Agency</th>
-                            <th>Vendor</th>
-                            <th>Purchaser Name</th>
-                            <th>Remarks</th>
-                            <th>Case No.</th>
-                            <th>View Details</th>
+                            <th>Vendor Code</th>
+                            <th>Vendor Name</th>
+                            <th>Vendor Address</th>
+                            <th>Vendor City</th>
+                            <th>Vendor Tel No.</th>
+                            <th>Email</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -44,11 +41,11 @@
     <script type="text/javascript">
 
         $(function () {
-            InitializePOMasterDatatable();
+            InitializeVendorsDatatable();
         });
 
-        function InitializePOMasterDatatable() {
-            $("#dtPOMaster").DataTable({
+        function InitializeVendorsDatatable() {
+            $("#dtVendors").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -77,34 +74,19 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CaseNo" },
-                    { data: "PoNo" },
-                    { data: "PoDtDate" },
-                    { data: "RlyCd" },
-                    { data: "VendorName" },
-                    { data: "ConsigneeSName" },
-                    { data: "Remarks" },
-                    { data: "RealCaseNo" },
+                    { data: "VEND_CD" },
+                    { data: "VEND_NAME" },
+                    { data: "VEND_ADD" },
+                    { data: "VEND_CITY_CD" },
+                    { data: "VEND_CONT_NO" },
+                    { data: "VEND_EMAIL" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.CaseNo;
-                            var RlyCd = data.MainrlyCd;
-                            var RlyNonrly = data.RlyNonrly;
-                            var PoDtDate = data.PoDtDate;
-                            var poDetsilsUrl = '@Url.Action("PODetails", "POMaster")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var id = data.CaseNo;
-                            var editUrl = '@Url.Action("Manage", "POMaster")?CaseNo=' + id;
+                            var id = data.VEND_CD;
+                            var editUrl = '@Url.Action("Manage", "VendorProfile")?VEND_CD=' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="POMasterDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="VendorsDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -114,8 +96,8 @@
             });
         }
 
-        function POMasterDelete(id) {
-            var url = '@Url.Action("Delete", "POMaster")?CaseNo='+id;
+        function VendorsDelete(id) {
+            var url = '@Url.Action("Delete", "VendorProfile")?VEND_CD=' + id;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }

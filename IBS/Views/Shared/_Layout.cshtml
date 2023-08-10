@@ -158,11 +158,10 @@
             <div class="contentContainer">
                 <!--leftSidebarNav-->
                 <aside id="sidebar" class="navbar-default navbar-static-side">
+                    @*@Html.Partial("~/Views/Shared/Menu.cshtml")*@
                     <div class="sidebar-collapse menu-scroll">
                         <ul id="side-menu" class="nav">
                             <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
-                            @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
-
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-agreement-ico.png" alt="tenant" /></i><span class="menu-title">Master</span></a>
                                 <ul class="nav nav-second-level">
@@ -199,8 +198,9 @@
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/vendor-ico.png" alt="tenant" /></i><span class="menu-title">Vendor Details</span></a>
                                 <ul class="nav nav-second-level">
-                                    <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Profile</span></a></li>
-                                    <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Document</span></a></li>
+                                    <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="menu-title">Vendor Profile</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="menu-title">Vendor list</span></a></li>
+                                    <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="menu-title">Vendor Document</span></a></li>
 
                                     <li><a asp-action="Index" asp-controller="POMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">PO/Contracts Registration</span></a></li>
                                     <li><a asp-action="VendorCallRegister" asp-controller="VendorCallRegister"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Call For Inspection</span></a></li>

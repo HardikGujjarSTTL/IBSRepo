@@ -7,9 +7,9 @@ public partial class Menurolemapping
 {
     public decimal Id { get; set; }
 
-    public int? Roleid { get; set; }
+    public decimal? Roleid { get; set; }
 
-    public int? Menuid { get; set; }
+    public decimal? Menuid { get; set; }
 
     public bool? Isactive { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace IBS.DataAccess;
@@ -176,6 +177,7 @@ public partial class ModelContext : DbContext
     public virtual DbSet<RkmT26ChequePosting> RkmT26ChequePostings { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<ConsigneeComplaints> ConsigneeComplaints { get; set; }
 
     public virtual DbSet<RptPrmIcLine> RptPrmIcLines { get; set; }
 
