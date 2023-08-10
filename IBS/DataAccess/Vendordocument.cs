@@ -7,7 +7,7 @@ public partial class Vendordocument
 {
     public int Id { get; set; }
 
-    public int? Vendorid { get; set; }
+    public int? Vendcd { get; set; }
 
     public string? Documenttype { get; set; }
 }

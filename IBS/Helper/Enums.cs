@@ -29,14 +29,16 @@ namespace IBS.Helper
             AdminUserUploadDoc = 3,
             [Description("/Files/Vendor")]
             Vendor = 4,
+            [Description("/Files/VendorDocument")]
+            VendorDocument = 5,
         }
 
         public enum DocumentCategory : int
         {
-            UserRegi = 8,
+            UserRegi = 1,
             AdminUserUploadDoc = 2,
-            Vendor = 21,
-            VendorMADoc = 42,
+            Vendor = 3,
+            VendorDocument = 4,
         }
 
 
@@ -45,6 +47,10 @@ namespace IBS.Helper
             Address_Proof_Document = 5,
             Profile_Picture = 6,
             Document_Vendor_manufacturer_created = 23,
+            Inernal_Records = 45,
+            Firm_Certificate_Like_RDSO_Approval_Type_test_etc = 47,
+            Raw_Material_Invoice = 48,
+            Calibration_Records = 49,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int

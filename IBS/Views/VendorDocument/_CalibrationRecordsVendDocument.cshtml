@@ -1,0 +1,76 @@
+﻿@model IBS.Models.VendEquipClbrCertModel
+
+<div class="row my-0">
+    <div class="col-md-4 mb-3">
+        <label for="Reference">SNo.</label>
+        <input type="text" class="input" asp-for="EquipClbrCertSno" maxlength="100" style="text-transform: uppercase; color:orangered;" readonly="readonly">
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Name of Equipment</label>
+        <input type="text" class="input" asp-for="EquipName" style="text-transform: uppercase;">
+        <span asp-validation-for="EquipName" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Make,Model Sl.No./ID No.</label>
+        @if (Model.EquipMkSl != null)
+        {
+            <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;" readonly="readonly">
+        }
+        else
+        {
+            <input type="text" class="input" asp-for="EquipMkSl" style="text-transform: uppercase;">
+        }
+        <span asp-validation-for="EquipMkSl" class="text-danger"></span>
+    </div>
+</div>
+<div class="row my-0">
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Range & Least Count</label>
+        <input type="text" class="input" asp-for="EquipRange" style="text-transform: uppercase;">
+        <span asp-validation-for="EquipRange" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Calibrated By Laboratory</label>
+        <input type="text" class="input" asp-for="CalibratedBy" style="text-transform: uppercase;">
+        <span asp-validation-for="CalibratedBy" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Calibration Certificate No.</label>
+        @if (Model.EquipMkSl != null)
+        {
+            <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;" readonly="readonly">
+        }
+        else
+        {
+            <input type="text" class="input" asp-for="CalibCertNo" style="text-transform: uppercase;">
+        }
+        <span asp-validation-for="CalibCertNo" class="text-danger"></span>
+    </div>
+</div>
+<div class="row my-0">
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Date of Calibration</label>
+        <input asp-for="DtOfCalib" type="text" class="datepicker" readonly="readonly" />
+        <span asp-validation-for="DtOfCalib" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="Reference">Next date of Calibration</label>
+        <input asp-for="NextDtCalib" type="text" class="datepicker" readonly="readonly" />
+        <span asp-validation-for="NextDtCalib" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="Reference">NABL Accreditation Details</label>
+        <input type="text" class="input" asp-for="NablAccDet" style="text-transform: uppercase;">
+        <span asp-validation-for="NablAccDet" class="text-danger"></span>
+    </div>
+</div>
+<div class="row my-0">
+    <div class="col-md-8 mb-3">
+        <label for="Reference">Description, Lab ID No., Calibration Certificate No.,Valid upto</label>
+        <textarea rows="4" asp-for="EquipDesc" style="text-transform: uppercase;"></textarea>
+        <span asp-validation-for="EquipDesc" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Calibration_Records" />
+    </div>
+</div>
