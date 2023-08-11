@@ -674,6 +674,19 @@ namespace IBS.Models
             return IE;
 
         }
+        public static List<SelectListItem> GetNCCode()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> NCCODE = ModelContext.T69NcCodes
+                                          .Select(a => new SelectListItem
+                                          {
+                                              Text = a.NcCd + " - " + a.NcDesc,
+                                              Value = a.NcCd
+                                          })
+                                          .ToList();
+            return NCCODE;
+
+        }
 
         public static List<SelectListItem> GetRailPrices()
         {

@@ -1,6 +1,9 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Xml.Linq;
 
 namespace IBS.Controllers
 {
@@ -19,39 +22,54 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters);
-            return Json(dTResult);
+           DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters);
+           return Json(dTResult);
         }
 
-        public IActionResult Manage(string CaseNo, string BKNo, string SetNo, string NCNO, string Actions)
+        public IActionResult Manage(string CaseNo, string BKNo, string SetNo, string NC_NO, string Actions)
         {
-            if(Actions == "A")
-            {
-                ViewBag.ShowSaveButton = true;
-                ViewBag.ShowNCRNO = false;
-                ViewBag.ShowRemarksButton = false;
-                ViewBag.ShowNCRButton = true;
-            }else if(Actions == "M")
-            {
-                ViewBag.ShowNCRButton = false;
-                ViewBag.ShowNCRNO = true;
-                ViewBag.ShowRemarksButton = true;
-                ViewBag.ShowSaveButton = false;
-            }
             NCRRegister model = new();
-
             try
             {
-                if (CaseNo != null && BKNo != null && SetNo != null || NCNO != null)
+                if (Actions == "A")
                 {
-                    model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo,NCNO);
+                    ViewBag.ShowSaveButton = true;
+                    ViewBag.ShowNCRNO = false;
+                    ViewBag.ShowRemarksButton = false;
+                    ViewBag.ShowNCRButton = true;
                 }
+                else if (Actions == "M")
+                {
+                    ViewBag.ShowNCRButton = false;
+                    ViewBag.ShowNCRNO = true;
+                    ViewBag.ShowRemarksButton = true;
+                    ViewBag.ShowSaveButton = false;
+                }
+
+                model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo, NC_NO);
+
+                ViewBag.JsonData = model.JsonData;
             }
             catch (Exception ex)
             {
                 ex.Message.ToString();
             }
-            return View(model);
+
+            return View(model.Model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SaveRemarksofNCR(NCRRegister models,string serializedModel)
+        {
+            NCRRegister modelss = JsonConvert.DeserializeObject<NCRRegister>(serializedModel);
+            string msg = "Remarks Inserted Successfully.";
+            //foreach (var model in models)
+            //{
+            //    int i = nCRRegisterRepository.SaveRemarks(model);
+            //}
+            int i = nCRRegisterRepository.Saveupdate(models);
+            return Json(new { status = true, responseText = msg });
         }
 
     }

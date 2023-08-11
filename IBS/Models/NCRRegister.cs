@@ -10,7 +10,7 @@ namespace IBS.Models
         public string BKNo { get; set; }
         public string PO_NO { get; set; }
         public string SetNo { get; set; }
-        public string NC_NO { get; set; }
+        public string? NC_NO { get; set; }
         public string Vendor { get; set; }
         public string InspectingEr { get; set; }
         public string IE_SNAME { get; set; }
@@ -20,7 +20,7 @@ namespace IBS.Models
         public int QtyPassed { get; set; }
         public int VEND_CD { get; set; }
         public string CONSIGNEE { get; set; }
-        public string CONSIGNEE_CD { get; set; }
+        public int? CONSIGNEE_CD { get; set; }
         public string Item { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? IC_DT { get; set; }
@@ -30,11 +30,17 @@ namespace IBS.Models
         public DateTime? NCRDate { get; set; }
         public DateTime? Date { get; set; }
         [NotMapped]
-        public int IeCd { get; set; }
+        public string? IeCd { get; set; }
         public DateTime? CALL_RECV_DT { get; set; }
         [NotMapped]
         public string? SetRegionCode { get; set; }
         public string? NCRClass { get; set; }
         public string? NCRCode { get; set; }
+        public string? NcCdSno { get; set; }
+        public string? CoFinalRemarks1 { get; set; }
+        public string? RegionCode { get; set; }
+        public string? UserID { get; set; }
+        public NCRRegister Model { get; set; }
+        public string JsonData { get; set; }
     }
 }

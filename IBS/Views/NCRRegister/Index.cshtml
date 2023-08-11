@@ -36,7 +36,7 @@
         <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Case No.</label>
-                <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <input type="text" asp-for="CaseNo" maxlength="100" id="CASE_NO" style="text-transform: uppercase;" required>
                 <span asp-validation-for="CaseNo" class="text-danger"></span>
             </div>
         </div>
@@ -56,7 +56,7 @@
         </div>
         <div class="col-md-6 mb-3">
             <div class="savenext-btn btncls">
-                <button type="button" class="save-btn active" id="btnModify">New NCR</button>
+                <button type="button" class="save-btn active" id="btnModify" onclick="btnnewncr();">New NCR</button>
             </div>
         </div>
     </div>
@@ -86,12 +86,12 @@
     <div class="col-md-3 mb-3">
         <label for="Reference">Date From.</label>
         <label for="Reference">From</label>
-        <input type="text" class="input datepicker" asp-for="FromDate" readonly="true" id="fromdate" required> 
-        <span asp-validation-for="FromDate" class="text-danger"></span>
+                <input type="text" class="input datepicker" asp-for="FromDate" readonly="true" id="FromDate" required>
+                <span asp-validation-for="FromDate" class="text-danger"></span>
     </div>
     <div class="col-md-3 mb-3">
         <label for="Reference">To</label>
-        <input type="text" class="input datepicker" asp-for="ToDate" readonly="true" id="todate" required>
+                <input type="text" class="input datepicker" asp-for="ToDate" readonly="true" id="ToDate" required>
         <span asp-validation-for="ToDate" class="text-danger"></span>
     </div>
     <div class="col-md-3 mb-3">
@@ -114,14 +114,15 @@
             <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">NCR No.</label>
-                <input type="text" asp-for="NC_NO" maxlength="100" id="NCNO" style="text-transform: uppercase;" required> 
+                <input type="text" asp-for="NC_NO" maxlength="100" id="NCNO" style="text-transform: uppercase;" required>
                 <span asp-validation-for="NC_NO" class="text-danger"></span>
             </div>
         </div>
         <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Case No.</label>
-                <input type="text" asp-for="CaseNo" maxlength="100" id="CASENO" style="text-transform: uppercase;">
+                <input type="text" asp-for="CaseNo" maxlength="100" id="CASENO" style="text-transform: uppercase;" required>
+                <span asp-validation-for="CaseNo" class="text-danger"></span>
             </div>
         </div>
         <div class="col-md-3 mb-3">
@@ -129,8 +130,9 @@
             <button type="button" class="save-btn active btncls" id="btnModifyNCR" onclick="ModifyNCR();">Modify NCR</button>
             <button type="button" class="save-btn active btncls" onclick="Search();">Search</button>
         </div>
+     </div>
+                <p style="color:red;">*To Modify -> Enter NCR No. and Press Modify NCR Button *To Search -> Enter Case No. and Press Search Button to Search.</p>
 
-    </div>
         </div>
 
        </div>
@@ -166,24 +168,102 @@
     <partial name="_ValidationScriptsPartial" />
 
      <script type="text/javascript">
-          function Search() {
-            if ($("#frmNCRDetails").valid()) {
-                $("#frmNCRDetails").submit();
+
+         function Search() {
+            var ncrNoInput = $("#CASENO");
+            var ncrNoValue = ncrNoInput.val().trim();
+            var validationSpan = $("[data-valmsg-for='CaseNo']");
+
+            if (ncrNoValue === "") {
+                validationSpan.html("CASE No. is required.");
+                validationSpan.show();
+                return;
+            } else {
+                if ($("#frmNCRDetails").valid()) {
+                    $("#frmNCRDetails").submit();
+                }
+                InitializeDatatable();
             }
-            InitializeDatatable();
+            validationSpan.hide();
+            ModifyNCR();
         }
 
          function Submit() {
-            if ($("#frmNCRDetails").valid()) {
-                $("#frmNCRDetails").submit();
+            var ncrNoInput = $("#FromDate");
+            var ncrNoInput1 = $("#ToDate");
+            
+            var ncrNoValue = ncrNoInput.val().trim();
+            var ncrNoValue1 = ncrNoInput.val().trim();
+            
+            var validationSpan = $("[data-valmsg-for='FromDate']");
+            var validationSpan1 = $("[data-valmsg-for='ToDate']");
+            var ieCdDropDown = $("#IENAME");
+            var ieCdValue = ieCdDropDown.val();
+            var ieCdValidationSpan = $("[data-valmsg-for='IeCd']");
+
+            if (ncrNoValue === "" && ncrNoValue1 === "" && ieCdValue === "") {
+                validationSpan.html("FromDate is required.");
+                validationSpan1.html("ToDate is required.");
+                ieCdValidationSpan.html("IE Code is required.");
+                ieCdValidationSpan.show();
+                return;
+            } else {
+                if ($("#frmNCRDetails").valid()) {
+                    $("#frmNCRDetails").submit();
+                }
+                InitializeDatatable();
             }
-            InitializeDatatable();
+            validationSpan.hide();
+            ieCdValidationSpan.hide();
+            ModifyNCR();
+        }
+
+        function btnnewncr(){
+            debugger
+            var ncrNoInput = $("#BKNo");
+            var ncrNo1Input = $("#CASENO");
+            var ncrNo2Input = $("#SetNo");
+            var ncrNoValue = ncrNoInput.val().trim();
+            var ncrNo1Input = ncrNoInput.val().trim();
+            var ncrNo2Input = ncrNoInput.val().trim();
+            var validationSpan = $("[data-valmsg-for='BKNo']");
+            var validationSpan1 = $("[data-valmsg-for='CaseNo']");
+            var validationSpan2 = $("[data-valmsg-for='SetNo']");
+
+            if (ncrNoValue === "" && ncrNo1Input === "" && ncrNo2Input==="") {
+                validationSpan.html("BK No. is required.");
+                validationSpan1.html("Case No. is required.");
+                validationSpan2.html("Set No. is required.");
+                validationSpan.show();
+                return;
+            } else {
+                var CASENO = $("#CASENO").val();
+                var BKNo = $("#BKNo").val();
+                var SetNo = $("#SetNo").val();
+                var url = '@Url.Action("Manage", "NCRRegister")' + '?Actions=A&CASENO=' + CASENO + '&BKNo=' + BKNo + '&SetNo=' + SetNo;
+                window.location.href = url;
+            }
+            validationSpan.hide();
+            ModifyNCR();
         }
 
         function ModifyNCR(){
-                 var NC_NO = $("#NCNO").val();
-            var url = '@Url.Action("Manage", "NCRRegister")' + '?Actions=M&NCNO=' + NC_NO;
+            debugger
+            var ncrNoInput = $("#NCNO");
+            var ncrNoValue = ncrNoInput.val().trim();
+            var validationSpan = $("[data-valmsg-for='NC_NO']");
+
+            if (ncrNoValue === "") {
+                validationSpan.html("NCR No. is required.");
+                validationSpan.show();
+                return;
+            }else{
+                var NC_NO = $("#NCNO").val();
+                var url = '@Url.Action("Manage", "NCRRegister")' + '?Actions=M&NC_NO=' + NC_NO;
                 window.location.href = url;
+            }
+            validationSpan.hide();
+            ModifyNCR();
         }
 
           completed = function (response) {
@@ -202,8 +282,8 @@
             var CASENO = $("#CASENO").val();
             var BKNo = $("#BKNo").val();
             var SetNo = $("#SetNo").val();
-            var fromdate = $("#fromdate").val();
-            var todate = $("#todate").val();
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
 
             var ajaxUrl = "@Url.Action("LoadTable")";
 
@@ -227,8 +307,8 @@
                         var AdditionalValues = {
                             "NCNO": NCNO,
                             "CASENO": CASENO,
-                            "fromdate": fromdate,
-                            "todate": todate,
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
                             "selectedValue": selectedValue
                         };
                         d.AdditionalValues = AdditionalValues;
@@ -248,10 +328,11 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             debugger
+                            var NC_NO = data.NC_NO;
                             var CaseNo = data.CaseNo;
                             var BKNo = data.BKNo;
                             var SetNo = data.SetNo;
-                            var editUrl = '@Url.Action("Manage", "NCRRegister")';
+                            var editUrl = '@Url.Action("Manage", "NCRRegister")?NC_NO=' + NC_NO + '&Actions=' + "M";;
                             var AddUrl = '@Url.Action("Manage", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&Actions=' + "A";;
                             if (selectedValue != "") {
                                 var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + AddUrl + '\" class=\"edit\"><i title="Edit">Add NCR</i></a>';
@@ -282,6 +363,65 @@
             });
           });
 
+     
+        $("#NCNO").on("input", function () {
+            $("[data-valmsg-for='NC_NO']").hide(); 
+        });
+        $("#CASENO").on("input", function () {
+            $("[data-valmsg-for='CaseNo']").hide();
+        });
+        $("#BKNo").on("input", function () {
+            $("[data-valmsg-for='BKNo']").hide();
+        });
+        $("#SetNo").on("input", function () {
+            $("[data-valmsg-for='SetNo']").hide();
+        });
+        $("#FromDate").on("input", function () {
+            $("[data-valmsg-for='FromDate']").hide();
+        });
+        $("#ToDate").on("input", function () {
+            $("[data-valmsg-for='ToDate']").hide();
+        });
+
+        $("#NCNO").on("blur", function () {
+            if ($(this).val().trim() === "") {
+                $("[data-valmsg-for='NC_NO']").show();
+            }
+        });
+        $("#CASENO").on("blur", function () {
+            if ($(this).val().trim() === "") {
+                $("[data-valmsg-for='CaseNo']").show();
+            }
+        });
+        $("#BKNo").on("blur", function () {
+            if ($(this).val().trim() === "") {
+                $("[data-valmsg-for='BKNo']").show();
+            }
+        });
+        $("#SetNo").on("blur", function () {
+            if ($(this).val().trim() === "") {
+                $("[data-valmsg-for='SetNo']").show();
+            }
+        });
+        $("#FromDate").on("blur", function () {
+            if ($(this).val().trim() === "") {
+                $("[data-valmsg-for='FromDate']").show();
+            }
+        });
+        $("#ToDate").on("blur", function () {
+            if ($(this).val().trim() === "") {
+                $("[data-valmsg-for='ToDate']").show();
+            }
+        });
+        $("#IENAME").on("change", function () {
+            $("[data-valmsg-for='IeCd']").hide();
+        });
+
+        $("#IENAME").on("blur", function () {
+            if ($(this).val() === "") {
+                $("[data-valmsg-for='IeCd']").show();
+            }
+        });
 
      </script>
 }
