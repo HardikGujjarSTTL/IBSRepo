@@ -21,17 +21,17 @@
                             <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
                             @*<span asp-validation-for="SET_NO" class="text-danger"></span>*@
                         </div>
-                        <div class="col-md-5 mb-4" style="text-align:center;">
+                        <div class="col-md-5 mb-4">
                             <label for="Reference">IE To Whom Issued</label>
                             @*<input type="text" class="input" asp-for="SET_NO" maxlength="200" />*@
                             @Html.DropDownListFor(model => model.IE_CD, new SelectList(ViewBag.Status, "Value", "Text"),"--Select--")
                         </div>
-                        <div class="col-md-3 mb-4" style="text-align:center;">
+                        <div class="col-md-3 mb-4">
                             <label for="Reference">IC Submission Date in RITES</label>
-                            <input type="text" class="input" asp-for="IC_SUBMIT_DT" maxlength="200" style="text-align: center;" disabled />
+                            <input type="text" class="input" asp-for="IC_SUBMIT_DT" maxlength="200" disabled />
                         </div>
                     </div>
-                    <div class="row my-0" style="text-align:center;">
+                    <div class="row my-0">
                         <div class="col-md-8 mb-4">
                             <label for="Reference">Remarks</label>
                             <input type="text" class="input" asp-for="REMARKS" maxlength="200" />
@@ -40,10 +40,10 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Remarks Date</label>
-                            <input type="text" class="input" asp-for="REMARKS_DT" maxlength="200" style="text-align: center;" />
+                            <input type="text" class="input" asp-for="REMARKS_DT" maxlength="200" />
                         </div>
                     </div>
-                    <div class="row my-0" style="text-align:center;">
+                    <div class="row my-0">
                         <div class="col-md-12 mb-4">
                             <div class="savenext-btn">
                                 <button type="button" class="save-btn active" id="btnSave">Save</button>
@@ -57,11 +57,11 @@
                             </div>
                         </div>
                     </div>
-                    <h6 style="color:DarkMagenta;font-family:Verdana;font-weight:bold;width:100%;text-align:center;padding-left: 120px;padding-right: 120px;">
+                    <div class="alert alert-warning center">
                         To Search/Modify/Delete Book Set -> Enter Book No. & Set No /Inspection Engineer and click on [Search] button and then select the desired item.
-                    </h6>
-                    <div class="row my-0" style="text-align:center;">
-                        <strong style="text-align:center">
+                    </div>
+                    <div class="row my-0">
+                        <strong>
                             IC's Received but not Billed As on :&nbsp;
                             <input type="text" class="input" asp-for="RDT" maxlength="10" onblur="check_date(txtRDT);" style="color:DarkBlue;font-family:Verdana;font-size:12pt;width:150px;TEXT-ALIGN: center" />
                         </strong>
