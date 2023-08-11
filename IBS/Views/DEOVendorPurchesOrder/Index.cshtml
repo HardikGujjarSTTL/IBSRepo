@@ -24,7 +24,8 @@
                             <th>Vendor</th>
                             <th>Remarks</th>
                             <th></th>
-                            <th>Action</th>
+                            <th>Edit Case No</th>
+                            <th>View PO Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -34,6 +35,8 @@
             </div>
         </div>
     </section>
+</div>
+<div id="EditCaseNoModal" class="modal" tabindex="-1" role="dialog">
 </div>
 
 @section scripts{
@@ -114,8 +117,19 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Select"></i></a>';
+                            var RealCaseNo = data.RealCaseNo == null ? "" : data.RealCaseNo;
+                            //var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="OpenCaseNoModal(\'' + data.CaseNo + '\',\'' + data.PoNo + '\',\'' + data.PoDt + '\',\'' + data.RlyCd + '\',\'' + RealCaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CaseNo;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOVendorPurchesOrder")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -124,9 +138,9 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
+                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            //html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -136,11 +150,52 @@
             });
         }
 
-        function MessageDelete(CaseNo) {
-            var url = '@Url.Action("Delete", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
-            $("#btn-delete-yes").attr("href", url);
-            $("#modal-delete-conf").modal("show");
+        function OpenCaseNoModal(CaseNo, PoNo, PoDt, RlyCd, RealCaseNo) {
+            $.ajax({
+                url: '@Url.Action("EditCaseNo", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo + '&PoNo=' + PoNo + '&PoDt=' + PoDt + '&RlyCd=' + RlyCd + '&RealCaseNo=' + RealCaseNo,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#EditCaseNoModal").html("");
+                    $("#EditCaseNoModal").html(response);
+                    $("#EditCaseNoModal").modal('show');
+                }
+            });
         }
 
+        function UpdateRealCaseNo() {
+            var CaseNo = $("#CaseNo").val();
+            var PoNo = $("#PoNo").val();
+            var PoDt = $("#PoDt").val();
+            var RlyCd = $("#RlyCd").val();
+            var RealCaseNo = $("#RealCaseNo").val();
+            if (RealCaseNo.length == 9) {
+                $.ajax({
+                    url: '@Url.Action("UpdateRealCaseNo", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo + '&PoNo=' + PoNo + '&PoDt=' + PoDt + '&RlyCd=' + RlyCd + '&RealCaseNo=' + RealCaseNo,
+                    type: 'POST',
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response != null) {
+                        if (response.status) {
+                            $("#EditCaseNoModal").modal('hide');
+                            ShowHideMsgNew(res.status, response.responseText);
+                            InitializeDatatable();
+                        }
+                        else {
+                            ShowHideMsgNew(res.status, response.responseText);
+                        }
+                    }
+                });
+            }
+            else
+            {
+                ShowHideMsgNew(true, "PLEASE ENTER 9 CHARACTERS CASE NUMBER!!!");
+            }
+        }
     </script>
     }

@@ -422,5 +422,57 @@ namespace IBS.Repositories
             }
             return ItemSrno;
         }
+        public string UpdateRealCaseNo(DEOVendorPurchesOrderModel model)
+        {
+            string returnVal = "";
+            var POMaster = context.T13PoMasters.Find(model.CaseNo);
+            if (POMaster != null)
+            {
+                if (POMaster.PoNo == model.PoNo && POMaster.PoDt == model.PoDt && POMaster.RlyCd == model.RlyCd)
+                {
+                    var t80PoMasters = context.T80PoMasters.Find(model.CaseNo);
+                    t80PoMasters.RealCaseNo = model.RealCaseNo;
+                    t80PoMasters.Datetime = DateTime.Now;
+                    context.SaveChanges();
+                    returnVal = t80PoMasters.CaseNo;
+                }
+                else
+                {
+                    returnVal = "Not Match";
+                }
+            }
+            return returnVal;
+        }
+
+        public string getVendorEmail(string CASE_NO)
+        {
+            string vendorEmail = "";
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("IN_CASE_NO", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_INFO", par, 1);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                vendorEmail = ds.Tables[0].Rows[0]["VEND_EMAIL"].ToString();
+            }
+            return vendorEmail;
+        }
+
+        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO,string USER_ID)
+        {
+            string[] result = new string[2];
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, REGION_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("IN_TEMP_CASE_NO", OracleDbType.Char, CASE_NO, ParameterDirection.Input);
+            par[2] = new OracleParameter("IN_TEMP_USER_ID", OracleDbType.Char, USER_ID, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GENERATE_REAL_CASE_NO", par, 1);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                result[0] = ds.Tables[0].Rows[0]["ERR_CD"].ToString();
+                result[1] = ds.Tables[0].Rows[1]["OUT_CASE_NO"].ToString();
+            }
+            return result;
+        }
     }
 }
