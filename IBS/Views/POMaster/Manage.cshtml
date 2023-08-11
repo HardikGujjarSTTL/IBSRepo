@@ -10,182 +10,220 @@
 </div>
 <section>
     <div class="task-listinput">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="CaseNo" />
-                <input type="hidden" id="hdnType" />
-                <input type="hidden" id="hdnRailway" />
-                <input type="hidden" id="hdnRailwayCode" />
-                <input type="hidden" id="hdnRCD" />
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CaseNo" />
+            <input type="hidden" id="hdnType" />
+            <input type="hidden" id="hdnRailway" />
+            <input type="hidden" id="hdnRailwayCode" />
+            <input type="hidden" id="hdnRCD" />
 
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-8 mb-3">
-                            <label for="Reference">
-                                Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
-                            </label>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <input type="text" class="input" id="txtCaseNo">
-                        </div>
-                        <div class="col-md-1 mb-3">
-                            <div class="savenext-btn">
-                                <button type="button" class="save-btn active" onclick="LOASubmit();">Submit</button>
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference">
+                            Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
+                        </label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="gridSearch"><input type="text" class="input" id="txtCaseNo"> <button type="button" class="btn btn-primary" onclick="LOASubmit();">Submit</button></div>
+                    </div>
+                   
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Railway/Non-Railway</label>
+                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
+
+                        <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="Reference">Agency/Client</label>
+                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                            </div>
+                            <div class="col-md-6">
+                                <label for="txtBPO_RLY">&nbsp;</label><br />
+                                <input type="text" class="input" id="txtBPO_RLY">
+                                <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                         </div>
+                        
+                        
+                       
                     </div>
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Railway/Non-Railway</label>
-                            @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Case To Be Registered At</label>
+                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="RegionCode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
+                        @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="StockNonstock" class="text-danger"></span>
+                    </div>
+               
 
-                            <span asp-validation-for="RlyNonrly" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Agency/Client</label>
-                            @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
-                            <span asp-validation-for="RlyCd" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Case To Be Registered At</label>
-                            @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="RegionCode" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
-                            @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="StockNonstock" class="text-danger"></span>
-                        </div>
-                    </div>
+                @* <div class="row my-0">
+                <div class="col-md-5 mb-3">
+                <label for="Reference">Vendor</label>
+                <input type="text" class="input" id="txtVend">
+                <input type="hidden" id="hdnlblVendor" />
+                </div>
+                <div class="col-md-5 mb-3">
+                <label for="Reference"></label>
+                @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
+                </div>
+                </div>*@
 
-                    <div class="row my-0">
-                        <div class="col-md-5 mb-3">
-                            <label for="Reference">Vendor</label>
-                            <input type="text" class="input" id="txtVend">
-                            <input type="hidden" id="hdnlblVendor" />
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label for="Reference"></label>
-                            @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
-                        </div>
-                    </div>
-
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
-                            @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="PoOrLetter" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">* Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Purchase Order No./ LOA No.</label>
-                            <input type="text" class="input" asp-for="PoNo">
-                            <span asp-validation-for="PoNo" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
-                            <input type="text" class="input datepicker" asp-for="PoDt" readonly="true">
-                            <span asp-validation-for="PoDt" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-2 mb-3">
-                            <label for="Reference">Purchaser</label>
-                            <input type="text" class="input" id="txtSPur">
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="savenext-btn">
-                                <button type="button" class="save-btn active" onclick="SearchPurchaser();">Search Purchaser</button>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below</label>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("","","") , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="PurchaserCd" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <input type="text" class="input" id="txtPurchaser">
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Date of Reciept of PO in RITES</label>
-                            <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
-                            <span asp-validation-for="RecvDt" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row my-0">
-                        <div class="col-md-12 mb-3">
-                            <div class="reference">
-                                <h4>Manufacturer's Information</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <div class="reference">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
-                                    <label class="custom-checkbox">Same As Vendor</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <input type="text" class="input" id="txtMName">
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="savenext-btn">
-                                <button type="button" id="btnPOI" class="save-btn active" onclick="SelectManufacturer();">Select Manufacturer</button>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3" id="dvPlaceOfInspection">
-                            <label for="Reference">Place of Inspection</label>
-                            <input type="text" class="input" id="txtMPOI" disabled="disabled">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Remarks</label>
-                            <textarea class="input" asp-for="Remarks" maxlength="30"> </textarea>
-                            <span asp-validation-for="Remarks" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="PoOrLetter" class="text-danger"></span>
                     </div>
                 </div>
-            </form>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference"><span class="astric">*</span> Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchase Order No./ LOA No.</label>
+                        <input type="text" class="input" asp-for="PoNo">
+                        <span asp-validation-for="PoNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
+                        @*<input type="text" class="datepicker" asp-for="PoDt" readonly="true">*@
+                        <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="PoDt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchaser</label>
+                        <input type="text" class="input" id="txtSPur">
+                    </div>
+                    <div class="col-md-4 mb-3">
+
+                        <button type="button" class="btn btn-primary formSubBtn" onclick="SearchPurchaser();">Search Purchaser</button>
+                        
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below</label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("","","") , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="PurchaserCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" id="txtPurchaser">
+                    </div>
+                </div>
+                <div class="row my-0" style="display: none;">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Reciept of PO in RITES</label>
+                        <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
+                        <span asp-validation-for="RecvDt" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <div class="reference">
+                            <h4>Manufacturer's Information</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
+                                Same As Vendor</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" asp-for="PoiCd">
+                        @*<input type="text" class="input" id="txtMName">*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+
+                        <button type="button" id="btnPOI" class="btn btn-primary" style="width:auto;" onclick="SelectManufacturer();">Select Manufacturer</button>
+                        
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+                <div class="row my-0">
+                 
+                    <div class="col-md-4 mb-3" id="dvPlaceOfInspection">
+                        <label for="Reference">Place of Inspection</label>
+                        <input type="text" class="input" id="txtMPOI" disabled="disabled">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Remarks</label>
+                        <textarea class="input" asp-for="Remarks"> </textarea>
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        $(function () {
+            $('#PoDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#RecvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+        });
+
         $(document).ready(function () {
             FillVendor();
+            if ('@Model' != null) {
+                FillAgencyClient('@Model.RlyCd');
+                if ('@Model.RlyCd' == "0")
+                {
+                    $('#txtSPur').val('@Model.RlyCdDesc');
+                }
+                else
+                {
+                    $('#txtSPur').val('@Model.RlyCd');
+                }
+                FillPurchaserCd('@Model.PurchaserCd');
+            }
         });
 
         function Save() {
-            if ($("#frmPOMasterDetails").valid()) {
-                $("#frmPOMasterDetails").submit();
+            if ($("#frmPOMaster").valid()) {
+                $("#frmPOMaster").submit();
             }
         }
         completed = function (response) {
@@ -211,6 +249,7 @@
                         $('#hdnRCD').val(response.poMaster.RlyCd);
                         $('#txtSPur').val(response.poMaster.RlyCd);
                         FillPurchaserCd();
+
                     }
                     if (response.poMaster.PurchaserCd != "0" && response.poMaster.PurchaserCd != "") {
                         $('#PurchaserCd').val(response.poMaster.PurchaserCd);
@@ -223,7 +262,7 @@
             });
         }
 
-        function FillAgencyClient() {
+        function FillAgencyClient(id) {
             var RlyNonrly = $("#RlyNonrly").val();
             $.ajax({
                 url: '@Url.Action("GetAgencyClient", "POMaster")?RlyNonrly=' + RlyNonrly,
@@ -241,12 +280,15 @@
                     });
                     $("#hdnRCD").val($("#RlyCd").val());
                     $("#hdnRailway").val($("#RlyCd option:selected").text());
+                    if (id != "") {
+                        $("#RlyCd").val(id);
+                    }
                 }
             });
             FillPurchaserCd();
         }
 
-        function FillPurchaserCd() {
+        function FillPurchaserCd(ids) {
             var txtSPur = $("#txtSPur").val();
             $.ajax({
                 url: '@Url.Action("GetPurchaserCd", "POMaster")?consignee=' + txtSPur,
@@ -259,9 +301,19 @@
                 if (response.status) {
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    var id = 0;
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
                     });
+                    if (id > 0) {
+                        $("#PurchaserCd").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#PurchaserCd").val(ids);
+                    }
                     //$("#hdnRCD").val($("#RlyCd").val());
                     //$("#hdnRailway").val($("#RlyCd option:selected").text());
                 }
@@ -287,7 +339,7 @@
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
                 }
             });
@@ -309,59 +361,56 @@
                         $.each(response.list, function (index, value) {
                             $("#VendCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                         });
-                        vendor_status();
+                        //vendor_status();
                     }
-                    else
-                    {
+                    else {
                         ShowHideMsgNew(response.status, "No Vendor Found!!!");
                     }
                 }
             });
         }
 
-        function vendor_status() {
-            var VendCd = $("#VendCd").val();
-            $.ajax({
-                url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
-                type: 'GET',
-                cache: false,
-                data: '{}',
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response.status) {
-                    ShowHideMsgNew(response.status, response.responseText);
-                    $("#txtVend").val("");
-                }
-                else
-                {
-                    $("#txtVend").val(VendCd);
-                }
-            });
-        }
+        //function vendor_status() {
+        //    //var VendCd = $("#VendCd").val();
+        //    $.ajax({
+        //        url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
+        //        type: 'GET',
+        //        cache: false,
+        //        data: '{}',
+        //        processData: false,
+        //        contentType: false
+        //    }).done(function (response) {
+        //        if (response.status) {
+        //            ShowHideMsgNew(response.status, response.responseText);
+        //            $("#txtVend").val("");
+        //        }
+        //        else
+        //        {
+        //            $("#txtVend").val(VendCd);
+        //        }
+        //    });
+        //}
 
         function sameAsVendor() {
-            if($("#chkManuf").prop('checked') == true)
-            {
+            if ($("#chkManuf").prop('checked') == true) {
                 //$("#dvPlaceOfInspection").css("display", "block");
                 //$("#txtMPOI").attr("disabled", "disabled");
-                fill_manufacturer();
-                GetManufVEND();
+                fill_manufacturer(0);
+                GetManufVEND(0);
             }
-            else
-            {
+            else {
                 //$("#dvPlaceOfInspection").css("display", "none");
-               //$("#txtMPOI").removeAttr("disabled");
-                $("#txtMName").val("");
+                //$("#txtMPOI").removeAttr("disabled");
+                $("#PoiCd").val("");
                 $("#txtMPOI").val("");
                 $("#ddlManufac").html("");
-                $("#txtMName").removeAttr("disabled");
+                $("#PoiCd").removeAttr("disabled");
             }
         }
 
-        function fill_manufacturer() {
+        function fill_manufacturer(id) {
             $.ajax({
-                url: '@Url.Action("GetVendor", "POMaster")',
+                url: '@Url.Action("GetVendor", "POMaster")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -374,7 +423,7 @@
                     $.each(response.list, function (index, value) {
                         $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
-                    vendor_status();
+                    //vendor_status();
                 }
                 else {
                     ShowHideMsgNew(response.status, "No Vendor Found!!!");
@@ -382,10 +431,14 @@
             });
         }
 
-        function GetManufVEND() {
-            var VendCd = $("#VendCd").val();
+        function GetManufVEND(id) {
+            //var VendCd = $("#VendCd").val();
+            //if(id > 0)
+            //{
+            //    VendCd=id;
+            //}
             $.ajax({
-                url: '@Url.Action("GetManufVEND", "POMaster")?VendCd=' + VendCd,
+                url: '@Url.Action("GetManufVEND", "POMaster")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -397,18 +450,23 @@
                         ShowHideMsgNew(response.getvendor.status, "It is informed that due to unavoidable reasons, online call booking facility has temporarily restricted against your ID From: " + response.getvendor.VendStatusDtFrST);
                         //$("#ddlManufac").css("display", "none");
                     }
-                    else
-                    {
-                        $("#txtMName").val($("#ddlManufac").val());
+                    else {
+                        $("#PoiCd").val($("#ddlManufac").val());
                         //$("#ddlManufac").css("display", "block");
                         $("#txtMPOI").val(response.getvendor.VendAdd1);
-                        $("#txtMName").attr("disabled", "disabled");
+                        $("#PoiCd").attr("disabled", "disabled");
                         //$("#txtMPOI").css("disabled", "disabled");
                         //$("#btnPOI").css("display", "none");
                     }
                 }
-                
+
             });
+        }
+
+        function SelectManufacturer() {
+            var PoiCd = $("#PoiCd").val();
+            fill_manufacturer(PoiCd);
+            GetManufVEND(PoiCd);
         }
 
     </script>

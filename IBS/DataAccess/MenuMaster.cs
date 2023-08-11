@@ -23,7 +23,7 @@ public partial class MenuMaster
 
     public bool? Isactive { get; set; }
 
-    public decimal? Sortorder { get; set; }
+    public int? Sortorder { get; set; }
 
     public string? Iconpath { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
+using System;
 
 namespace IBS.Repositories
 {
@@ -65,6 +66,15 @@ namespace IBS.Repositories
             {
                 foreach (var item in objAPPDocumentDTO)
                 {
+                    List<IbsAppdocument> objGNR_APPDocument = (from c in context.IbsAppdocuments where c.Applicationid == Convert.ToString(item.Applicationid)
+                                                               && c.Documentcategory==item.DocumentCategoryID
+                                                               select c).ToList();
+                    foreach (var Docitem in objGNR_APPDocument)
+                    {
+                        Docitem.Isdeleted = Convert.ToByte(true);
+                    }
+                    context.SaveChanges();
+
                     objSaveData.Add(new IbsAppdocument
                     {
                         Applicationid = Convert.ToString(item.Applicationid),

@@ -32,5 +32,25 @@ namespace IBS.Helper
                 httpContextAccessor.HttpContext.Session.SetString("UserInfo", JsonSerializer.Serialize(value));
             }
         }
+
+        public static List<MenuMasterModel> MenuModelDTO
+        {
+            get
+            {
+                string menuInfoString = httpContextAccessor.HttpContext.Session.GetString("MenuModelDTO");
+                if (!string.IsNullOrWhiteSpace(menuInfoString))
+                {
+                    List<MenuMasterModel> appMenu = JsonSerializer.Deserialize<List<MenuMasterModel>>(menuInfoString);
+
+                    if (appMenu != null)
+                        return appMenu;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("MenuModelDTO", JsonSerializer.Serialize(value));
+            }
+        }
     }
 }

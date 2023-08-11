@@ -1,0 +1,18 @@
+﻿@model IBS.Models.VendEquipClbrCertModel
+
+@if (Model.DocType == "I")
+{
+    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Inernal_Records" />
+}
+@if (Model.DocType == "F")
+{
+    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Firm_Certificate" />
+}
+@if (Model.DocType == "R")
+{
+    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Raw_Material" />
+}
+@*@if (Model.DocType == "C")
+{
+    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Calibration_Records" />
+}*@

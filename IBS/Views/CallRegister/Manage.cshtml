@@ -1,0 +1,362 @@
+﻿@model IBS.Models.CallRegisterModel
+@{
+    ViewData["Title"] = "OFFERED QUANTITY ENHANCEMENT FORM";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="CallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>OFFERED QUANTITY ENHANCEMENT FORM</h2>
+        </div>
+        <input type="hidden" id="hdnQtyToInsp" asp-for="QtyToInsp" />
+        <input type="hidden" asp-for="CaseNo" />
+        <input type="hidden" asp-for="CallRecvDt" />
+        <input type="hidden" asp-for="CallSNo" />
+        <input type="hidden" asp-for="PoNo" />
+        <input type="hidden" asp-for="PoDt" />
+        <input type="hidden" asp-for="IE_SName" />
+    </div>
+    <div class="accordion-body">
+    <table>
+        <tr>
+            <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Case No:</td>
+            <td style="width: 40%; height: 16px" bgcolor="#ffffcc"> 
+                <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
+            </td>
+            <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Call Date - SNo:</td>
+            <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
+                <label id="lblCallRecvDt" style="text-transform: uppercase; color:red;"></label>
+                <span> - </span>
+                <label id="lblCallSNo" style="text-transform: uppercase; color:red;"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%; height: 16px" bgcolor="#ffffcc">PO No & Date:</td>
+            <td style="width: 40%; height: 16px" bgcolor="#ffffcc"> 
+                <label id="lblPoNo" style="text-transform: uppercase; color:red;"></label>
+                <span> & </span>
+                <label id="lblPoDt" style="text-transform: uppercase; color:red;"></label>
+            </td>
+            <td style="width: 15%; height: 16px" bgcolor="#ffffcc">IE:</td>
+            <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
+                <label id="lblIE_SName" style="text-transform: uppercase; color:red;"></label>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div class="accordion-body">
+        @*<div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Case No :</label>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Call Date</label>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">SNo.</label>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO No.</label>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO Date</label>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">IE</label>
+                </div>
+            </div>
+        </div>*@
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Item SNo.</label>
+                    <input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="ItemSrNoPo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Qty Ordered</label>
+                    <input type="text" class="input" asp-for="QtyOrdered" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="QtyOrdered" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Cumm. Qty off Prev</label>
+                    <input type="text" class="input" asp-for="CumQtyPrevOffered" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="CumQtyPrevOffered" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Qty Prev Passed</label>
+                    <input type="text" class="input" asp-for="CumQtyPrevPassed" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="CumQtyPrevPassed" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Qty Offered Now</label>
+                    <input type="text" class="input" asp-for="QtyToInsp" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="QtyToInsp" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Item Desc</label>
+                    <input type="text" class="input" asp-for="ItemDescPo" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="ItemDescPo" class="text-danger"></span>
+                </div>
+            </div>
+            @*<div class="col-md-6 mb-3">
+            <div class="reference">
+            <label for="Reference">QTY TO INSP</label>
+            <input type="text" class="input" asp-for="QtyToInsp" maxlength="100" style="text-transform: uppercase;">
+            <span asp-validation-for="QtyToInsp" class="text-danger"></span>
+            </div>
+            </div>*@
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <a asp-controller="CallRegister" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" id="btnSave">Save</button>
+                    @*<button type="button" class="save-btn active" onclick="Save();">Save</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Name" style="color:red;text-decoration:underline;font-size:15pt;">ITEMS MARKED/AVAILABLE FOR INSPECTION</label>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Status</th>
+                            <th>Item Desc</th>
+                            <th>Consignee</th>
+                            <th>Qty. Ord</th>
+                            <th>Cumm Qty off Prev</th>
+                            <th>Qty Prev Passed</th>
+                            <th>Qty Offered Now</th>
+                            <th>Qty Passed</th>
+                            <th>Qty Rejected</th>
+                            <th>Qty Due</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#lblCaseNo").text($("#CaseNo").val());
+            $("#lblCallRecvDt").text($("#CallRecvDt").val());
+            $("#lblCallSNo").text($("#CallSNo").val());
+            $("#lblPoNo").text($("#PoNo").val());
+            $("#lblPoDt").text($("#PoDt").val());
+            $("#lblIE_SName").text($("#IE_SName").val());
+
+
+
+            $('#QtyToInsp').on('input', function () {
+                var QtyToInsp = parseFloat($(this).val());
+                var hdnQtyToInsp = $("#hdnQtyToInsp").val();
+
+                if (QtyToInsp < hdnQtyToInsp) {
+                    alert("Qty To Inspected Cannot Be Decreased!!!");
+                    $("#QtyToInsp").val(hdnQtyToInsp);
+                }
+            });
+        });
+
+        $(function () {
+            //setDefaultDate();
+            InitializeDatatable();
+        });
+
+        $("#btnSearch").click(function () {
+            InitializeDatatable();
+        });
+
+        function setDefaultDate() {
+            $('#PoDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#CallRecvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+
+
+        }
+
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSNo = $("#CallSNo").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableDetails", "CallRegister")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "CallRecvDt": CallRecvDt,
+                            "CallSNo": CallSNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    { data: "ItemSrNoPo" },
+                    { data: "CallStatus" },
+                    { data: "ItemDescPo" },
+                    { data: "Consignee" },
+                    { data: "QtyOrdered" },
+                    { data: "CumQtyPrevOffered" },
+                    { data: "CumQtyPrevPassed" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassed" },
+                    { data: "QtyRejected" },
+                    { data: "QtyDue" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            //var CaseNo = data.CaseNo;
+                            //var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
+                            //var CallSNo = data.CallSNo;
+                            var editUrl = '@Url.Action("Manage", "CallRegister")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&ItemSrNoPo=" + data.ItemSrNoPo + "&CallStatus=M";
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        $("#btnSave").click(function () {
+            if ($("#frmDetails").valid()) {
+                debugger
+            var qord = parseInt($("#QtyOrdered").val());
+            var ppass = parseInt($("#CumQtyPrevPassed").val());
+            var qoff = parseInt($("#QtyToInsp").val());
+
+            if (!isNaN(qord) && !isNaN(ppass) && !isNaN(qoff)) {
+                if ((qord - ppass) < qoff) {
+                    alert("QUANTITY OFFERED SHOULD NOT BE GREATER THAN (QUANTITY ORDERED - QUANTITY PREVIOUSLY PASSED)");
+                    event.preventDefault();
+                    return;
+                }
+            }
+            if (!isNaN(qord) && !isNaN(qoff)) {
+                if (qord < qoff) {
+                    alert("QUANTITY OFFERED SHOULD NOT BE GREATER THAN QUANTITY ORDERED");
+                    event.preventDefault();
+                    return;
+                }
+            }
+            
+            var formData = new FormData($("#frmDetails")[0]);
+            debugger
+            $.ajax({
+                url: '@Url.Action("DetailsSave", "CallRegister")',
+                type: "POST",
+                dataType: "JSON",
+                //data: details,
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        if(response.Status == "1")
+                        {
+                            alert("Their are Other Calls Present For this Case No. and Item. So,Total Qty Offered in all the Calls  is Exceeding Qty Ordered in PO for the Given Case No.!!!");
+                        }
+                        else if(response.Status == "2")
+                        {
+                            alert("Total Qty To Inspected in the previous Calls  is already Exceeding Qty Ordered in PO for the Given Case No.!!!");
+                        }
+                        else{
+                             var msg = "Record Update Successfully.";
+                             var d = confirm(msg);
+                             if (d === true) {
+                                 window.location.href = '@Url.Action("Index", "CallRegister")';
+                             } 
+                        }
+                    } 
+                }
+            });
+            }
+        });
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/CallRegister";
+        };
+    </script>
+    }

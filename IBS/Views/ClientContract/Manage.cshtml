@@ -11,14 +11,14 @@
 </div>
 <section>
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientContractDetails">
                 <input type="hidden" asp-for="Id" />
                 <div class="accordion-body">
                     <div class="row my-0">
                         <div class="col-md-4 mb-4">
                             <label for="VisitDt">Date Of Contract</label>
-                            <input type="text" name="VisitDt" class="input datepicker" asp-for="VisitDt" readonly="true">
+                            <input type="text" class="input datepicker"  asp-for="VisitDt" readonly="true">
                             <span asp-validation-for="VisitDt" class="text-danger"></span>
                         </div>
 
@@ -72,8 +72,7 @@
                     </div>
                 </div>
             </form>
-        </div>
-        </div>
+    </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
