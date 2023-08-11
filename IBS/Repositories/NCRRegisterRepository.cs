@@ -39,7 +39,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string NCNO = "", CASENO = "", todate="", fromdate="", IENAME="";
+            string NCNO = "", CASENO = "", todate=null, fromdate= null, IENAME="";
 
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["NCNO"]))
             {
@@ -61,6 +61,7 @@ namespace IBS.Repositories
             {
                 todate = Convert.ToString(dtParameters.AdditionalValues["todate"]);
             }
+
 
             NCRRegister model = new NCRRegister();
             DataTable dt = new DataTable();
@@ -117,6 +118,83 @@ namespace IBS.Repositories
             }
 
             return dTResult;
+        }
+
+        public NCRRegister FindByIDActionA(string CASE_NO, string BK_NO, string SET_NO, string NCNO)
+        {
+            NCRRegister model = new NCRRegister();
+            DataTable dt = new DataTable();
+
+            if(NCNO != "" && NCNO != null)
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_nc_no", OracleDbType.Varchar2, NCNO, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GetForAction_M_NCR", par, 1);
+                dt = ds.Tables[0];
+            }
+            else {
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("p_case_no", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_bk_no", OracleDbType.Varchar2, BK_NO, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_set_no", OracleDbType.Varchar2, SET_NO, ParameterDirection.Input);
+                par[3] = new OracleParameter("RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GetForAction_A_NCR", par, 1);
+                dt = ds.Tables[0];
+            }
+
+            if (dt != null)
+            {
+
+                DataRow firstRow = dt.Rows[0]; // Get the first row of the DataTable
+
+                if (NCNO != "" && NCNO != null)
+                {
+                    model.QtyPassed = Convert.ToInt32(firstRow["QTY_PASSED"]);
+                    model.Item = firstRow["ITEM_DESC_PO"].ToString();
+                    if (!firstRow.IsNull("NC_DATE"))
+                    {
+                        model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
+                    }
+                }
+                model.CaseNo = firstRow["case_no"].ToString();
+                model.PO_NO = firstRow["po_no"].ToString();
+                model.BKNo = firstRow["bk_no"].ToString();
+                model.SetNo = firstRow["set_no"].ToString();
+                model.CONSIGNEE = firstRow["CONSIGNEE"].ToString();
+                model.CONSIGNEE_CD = firstRow["CONSIGNEE_CD"].ToString();
+                model.Vendor = firstRow["vendor"].ToString();
+                model.CALL_SNO = Convert.ToInt32(firstRow["CALL_SNO"]);
+
+                // Parse CALL_RECV_DT if it's not null
+                if (!firstRow.IsNull("CALL_RECV_DT"))
+                {
+                    DateTime callRecvDate;
+                    if (DateTime.TryParseExact(firstRow["CALL_RECV_DT"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out callRecvDate))
+                    {
+                        model.CALL_RECV_DT = callRecvDate;
+                    }
+                }
+
+                model.IeCd = Convert.ToInt32(firstRow["IE_CD"]);
+                model.IE_SNAME = firstRow["IE_NAME"].ToString();
+
+                // Parse IC_DATE if it's not null
+                if (!firstRow.IsNull("IC_DATE"))
+                {
+                    model.ICDate = Convert.ToDateTime(firstRow["IC_DATE"]);
+                }
+               
+                model.IC_NO = firstRow["IC_NO"].ToString();
+
+                // Parse PO_DT if it's not null
+                if (!firstRow.IsNull("PO_DT"))
+                {
+                    model.PO_DT = Convert.ToDateTime(firstRow["PO_DT"]);
+                }
+
+            }
+            return model;
         }
     }
 }

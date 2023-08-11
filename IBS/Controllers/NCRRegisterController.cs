@@ -23,16 +23,29 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string CASE_NO, string BK_NO, string SET_NO)
+        public IActionResult Manage(string CaseNo, string BKNo, string SetNo, string NCNO, string Actions)
         {
+            if(Actions == "A")
+            {
+                ViewBag.ShowSaveButton = true;
+                ViewBag.ShowNCRNO = false;
+                ViewBag.ShowRemarksButton = false;
+                ViewBag.ShowNCRButton = true;
+            }else if(Actions == "M")
+            {
+                ViewBag.ShowNCRButton = false;
+                ViewBag.ShowNCRNO = true;
+                ViewBag.ShowRemarksButton = true;
+                ViewBag.ShowSaveButton = false;
+            }
             NCRRegister model = new();
 
             try
             {
-            //    if (CASE_NO != null && BK_NO != null && SET_NO != null)
-            //    {
-            //        model = consigneeComplaints.FindByID(CASE_NO, BK_NO, SET_NO);
-            //    }
+                if (CaseNo != null && BKNo != null && SetNo != null || NCNO != null)
+                {
+                    model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo,NCNO);
+                }
             }
             catch (Exception ex)
             {

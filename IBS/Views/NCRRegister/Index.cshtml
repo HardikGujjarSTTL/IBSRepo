@@ -43,14 +43,14 @@
         <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Book No.</label>
-                <input type="text" asp-for="BKNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <input type="text" asp-for="BKNo" id="BKNo" maxlength="100" style="text-transform: uppercase;" required>
                 <span asp-validation-for="BKNo" class="text-danger"></span>
             </div>
         </div>
         <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Set No.</label>
-                <input type="text" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;" required>
+                    <input type="text" asp-for="SetNo" id="SetNo" maxlength="100" style="text-transform: uppercase;" required>
                 <span asp-validation-for="SetNo" class="text-danger"></span>
             </div>
         </div>
@@ -96,7 +96,7 @@
     </div>
     <div class="col-md-3 mb-3">
         <div class="savenext-btn">
-            <button type="button" class="save-btn active btncls" id="btnModify" onclick="Submit();">Submit</button>
+            <button type="button" class="save-btn active btncls" id="btnsubmit" onclick="Submit();">Submit</button>
         </div>
     </div>
     </div>
@@ -121,13 +121,12 @@
         <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Case No.</label>
-                <input type="text" asp-for="CaseNo" maxlength="100" id="CASENO" style="text-transform: uppercase;" required>
-                <span asp-validation-for="CaseNo" class="text-danger"></span>
+                <input type="text" asp-for="CaseNo" maxlength="100" id="CASENO" style="text-transform: uppercase;">
             </div>
         </div>
         <div class="col-md-3 mb-3">
         <div class="savenext-btn">
-            <button type="button" class="save-btn active btncls" id="btnModify">Modify NCR</button>
+            <button type="button" class="save-btn active btncls" id="btnModifyNCR" onclick="ModifyNCR();">Modify NCR</button>
             <button type="button" class="save-btn active btncls" onclick="Search();">Search</button>
         </div>
 
@@ -181,6 +180,12 @@
             InitializeDatatable();
         }
 
+        function ModifyNCR(){
+                 var NC_NO = $("#NCNO").val();
+            var url = '@Url.Action("Manage", "NCRRegister")' + '?Actions=M&NCNO=' + NC_NO;
+                window.location.href = url;
+        }
+
           completed = function (response) {
             debugger
             var res = response.responseJSON;
@@ -195,6 +200,8 @@
             var selectedValue = $("#IENAME").val();
             var NCNO = $("#NCNO").val();
             var CASENO = $("#CASENO").val();
+            var BKNo = $("#BKNo").val();
+            var SetNo = $("#SetNo").val();
             var fromdate = $("#fromdate").val();
             var todate = $("#todate").val();
 
@@ -240,12 +247,17 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var CaseNo = data.CASE_NO;
-                            var bkNo = data.BK_NO;
-                            var setNo = data.SET_NO;
+                            debugger
+                            var CaseNo = data.CaseNo;
+                            var BKNo = data.BKNo;
+                            var SetNo = data.SetNo;
                             var editUrl = '@Url.Action("Manage", "NCRRegister")';
-
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var AddUrl = '@Url.Action("Manage", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&Actions=' + "A";;
+                            if (selectedValue != "") {
+                                var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + AddUrl + '\" class=\"edit\"><i title="Edit">Add NCR</i></a>';
+                            }else{
+                                var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            }
                             html += '</div>';
                             return html;
                         }

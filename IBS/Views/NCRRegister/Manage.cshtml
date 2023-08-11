@@ -17,8 +17,8 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">IC NO.</label>
-                    <input type="text" asp-for="ICNO" maxlength="100" style="text-transform: uppercase;" required>
-                    <span asp-validation-for="ICNO" class="text-danger"></span>
+                    <input type="text" asp-for="IC_NO" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="IC_NO" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
@@ -59,15 +59,15 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Contract No.</label>
-                    <input type="text" asp-for="ContractNo" maxlength="100" style="text-transform: uppercase;" required>
-                    <span asp-validation-for="ContractNo" class="text-danger"></span>
+                    <input type="text" asp-for="PO_NO" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="PO_NO" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Date</label>
-                    <input type="text" asp-for="Date" class="input datepicker" readonly="true" maxlength="100" style="text-transform: uppercase;" required>
-                    <span asp-validation-for="Date" class="text-danger"></span>
+                    <input type="text" asp-for="PO_DT" class="input datepicker" readonly="true" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="PO_DT" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
@@ -80,8 +80,8 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Inspecting Er.</label>
-                    <input type="text" asp-for="InspectingEr" maxlength="100" style="text-transform: uppercase;" required>
-                    <span asp-validation-for="InspectingEr" class="text-danger"></span>
+                    <input type="text" asp-for="IE_SNAME" maxlength="100" style="text-transform: uppercase;" required>
+                    <span asp-validation-for="IE_SNAME" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
@@ -105,13 +105,16 @@
                     <span asp-validation-for="QtyPassed" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
-                <div class="reference">
-                    <label for="Reference">NCR No.</label>
-                    <input type="text" asp-for="NC_NO" maxlength="100" style="text-transform: uppercase;" required>
-                    <span asp-validation-for="NC_NO" class="text-danger"></span>
+            @if (ViewBag.ShowNCRNO)
+            {
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">NCR No.</label>
+                        <input type="text" asp-for="NC_NO" maxlength="100" style="text-transform: uppercase;" required>
+                        <span asp-validation-for="NC_NO" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
+            }
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">	NCR Date</label>
@@ -119,27 +122,78 @@
                     <span asp-validation-for="NCRDate" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
-                <div class="reference">
-                    <label for="Reference">	NCR Class</label>
-                    <input type="text" asp-for="NCRClass" maxlength="100"  style="text-transform: uppercase;" required>
-                    <span asp-validation-for="NCRClass" class="text-danger"></span>
+            @if (ViewBag.ShowNCRButton)
+            {
+                <div class="row mt-0">
+                    <div class="col-md-2 mb-3" id="ncrclass">
+                        <div class="reference">
+                            <label for="Reference">	NCR Class</label>
+                            <input type="text" asp-for="NCRClass" maxlength="100" style="text-transform: uppercase;" required>
+                            <span asp-validation-for="NCRClass" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3" id="ncrcodes">
+                        <div class="reference">
+                            <label for="Reference">	NCR Code</label>
+                            <input type="text" asp-for="NCRCode" maxlength="100" style="text-transform: uppercase;" required>
+                            <span asp-validation-for="NCRCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <input type="radio" id="rdononc" name="drone">
+                        <label for="rdononc" id="rdononc" val name="rdononc" runat="server">No NC</label>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <input type="radio" id="rdoaddnc" name="drone" checked>
+                        <label for="rdoaddnc" id="rdoaddnc" name="rdoaddnc" runat="server">Add NC</label>
+                    </div>
+                    
                 </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <div class="reference">
-                    <label for="Reference">	NCR Code</label>
-                    <input type="text" asp-for="NCRCode" maxlength="100"  style="text-transform: uppercase;" required>
-                    <span asp-validation-for="NCRCode" class="text-danger"></span>
-                </div>
-            </div>
+               
+            }
             <div class="savenext-btn">
-            <button type="button" class="save-btn active btncls" id="btnsave">Save</button>
-            <button type="button" class="save-btn active btncls" >Send To IE</button>
-            <button type="button" class="save-btn active btncls" >Save Remarks</button>
-            <button type="button" class="save-btn active btncls" >Cancel</button>
+                @if (ViewBag.ShowSaveButton)
+                {
+                    <button type="button" class="save-btn active btncls" id="btnsave">Save</button>
+                }
+                @if (ViewBag.ShowRemarksButton)
+                {
+                    <button type="button" class="save-btn active btncls" id="btnremarks">Save Remarks</button>
+                }
+            <button type="button" class="save-btn active btncls" id="btnsendIE">Send To IE</button>
+            <button type="button" asp-controller="NCRRegister" asp-action="Index" class="save-btn active btncls" >Cancel</button>
         </div>
 
         </div>
     </div>
 </form>
+
+@*@section script{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+     
+        </script>
+ }*@
+
+ <script>
+    $(function () {
+        $("input[name='drone']").change(function () {
+            var selectedValue = $("input[name='drone']:checked").attr("id");
+            if (selectedValue === "rdononc") {
+                $("#ncrclass").hide();
+                $("#ncrcodes").hide();
+                $("#btnsendIE").hide();
+                $("#rdononc").prop("checked", true);
+            } else if (selectedValue === "rdoaddnc") {
+                $("#ncrclass").show();
+                $("#ncrcodes").show();
+                $("#btnsendIE").show();
+                $("#rdoaddnc").prop("checked", true);
+            }
+        });
+    });
+ </script>
+    

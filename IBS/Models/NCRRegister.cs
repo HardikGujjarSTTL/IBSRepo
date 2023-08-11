@@ -8,24 +8,29 @@ namespace IBS.Models
         public string SelectedOption { get; set; } // Selected radio button option
         public string CaseNo { get; set; }
         public string BKNo { get; set; }
+        public string PO_NO { get; set; }
         public string SetNo { get; set; }
-        public string ICNO { get; set; }
         public string NC_NO { get; set; }
         public string Vendor { get; set; }
         public string InspectingEr { get; set; }
         public string IE_SNAME { get; set; }
+        public string IC_NO { get; set; }
         public int CALL_SNO { get; set; }
         public int ContractNo { get; set; }
         public int QtyPassed { get; set; }
+        public int VEND_CD { get; set; }
         public string CONSIGNEE { get; set; }
+        public string CONSIGNEE_CD { get; set; }
         public string Item { get; set; }
         public DateTime? FromDate { get; set; }
+        public DateTime? IC_DT { get; set; }
         public DateTime? ToDate { get; set; }
+        public DateTime? PO_DT { get; set; }
         public DateTime? ICDate { get; set; }
         public DateTime? NCRDate { get; set; }
         public DateTime? Date { get; set; }
         [NotMapped]
-        public int? IeCd { get; set; }
+        public int IeCd { get; set; }
         public DateTime? CALL_RECV_DT { get; set; }
         [NotMapped]
         public string? SetRegionCode { get; set; }
