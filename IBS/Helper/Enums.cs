@@ -31,6 +31,8 @@ namespace IBS.Helper
             Vendor = 4,
             [Description("/Files/VendorDocument")]
             VendorDocument = 5,
+            [Description("/MA")]
+            VendorMADocument = 6,
         }
 
         public enum DocumentCategory : int
@@ -39,6 +41,7 @@ namespace IBS.Helper
             AdminUserUploadDoc = 2,
             Vendor = 3,
             VendorDocument = 4,
+            VendorMADoc = 5,
         }
 
 
@@ -59,7 +62,7 @@ namespace IBS.Helper
         }
         public enum DocumentCategory_VendorMADoc : int
         {
-            VendorMADoc = 50,
+            VendorMADoc = 8,
         }
 
         public static string GetEnumDescription(object enumValue)

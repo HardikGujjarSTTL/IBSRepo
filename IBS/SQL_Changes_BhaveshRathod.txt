@@ -268,5 +268,15 @@ SP : SP_GET_BILL_REGITER_DETAILS
 ALTER TABLE T22_BILL
 ADD SAP_STATUS VARCHAR2(20);
 
+
+12) Ammendment form
+VIEW_MA_DETAIL_SEARCH
+VIEW_MA_SUB_DETAIL
+VIEW VIEW_GET_PO_DETAILS_REPORT
+VIEW VIEW_GET_PO_DETAILS_REPORT_LIST
+VIEW VIEW_GET_PO_DETAILS_REPORT_P_CALLDETAILS
+VIEW VIEW_GET_PO_DETAILS_REPORT_R_VENDOR_PLACE
+
+
 =============================================================================================================================================
 

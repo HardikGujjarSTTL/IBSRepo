@@ -16,7 +16,7 @@ namespace IBS.Models
 
         public string MaNo { get; set; } = null!;
 
-        public DateTime MaDt { get; set; }
+        public DateTime? MaDt { get; set; }
 
         public string? PoOrLetter { get; set; }
 

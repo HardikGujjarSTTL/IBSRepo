@@ -8,6 +8,7 @@
         <div class="tast-list">
             <h2>AMMENDMENT FORM</h2>
         </div>
+        <input type="hidden" asp-for="MA_SNO" />
     </div>
     <div class="accordion-body">
         <div class="row my-0">
@@ -112,12 +113,91 @@
             //    $("#btnAddMA").show();
             //    $("#btnModifyPO").hide();
             //}
-            
+
         });
 
         $("#btnSearch").click(function () {
             InitializeDatatable();
         });
+
+        $("#btnCaseHistory").click(function () {
+            var CaseNo = $("#CASE_NO").val();
+            var MaNo = $("#MA_NO").val();
+            var MaDt = $("#MA_DT").val();
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var MaStatus = urlParams.get('MaStatus');
+            var MaSNo = urlParams.get('MaSNo');
+
+            $.ajax({
+                url: '@Url.Action("GetMatch", "VendorPOMA")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "CaseNo": CaseNo },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        var VendCd = contacts.data[0].VEND_CD;
+                        var VEND_CD_S = contacts.data[0].VEND_CD_S;
+                        var Check = "";
+                        if (VendCd == "") {
+                            Check = "0";
+                            alert('ENTERED CASE NUMBER DOES NOT MATCH!!!');
+                        }
+                        else if (VendCd == VEND_CD_S) {
+                            Check = "2";
+                        }
+                        else {
+                            Check = "1";
+                            alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                            return;
+                        }
+                        if (Check == "2") {
+                            window.location.href = '@Url.Action("CaseHistoryReport", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDt=" + MaDt + "&MaStatus=" + MaStatus + "&MaSNo=" + MaSNo;
+                        }
+
+                    }
+                    else {
+                        alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                    }
+                }
+            });
+        });
+
+        function GetMatch() {
+            var CaseNo = $("#CASE_NO").val();
+            $.ajax({
+                url: '@Url.Action("GetMatch", "VendorPOMA")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "CaseNo": CaseNo },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        var VendCd = contacts.data[0].VEND_CD;
+                        var VEND_CD_S = contacts.data[0].VEND_CD_S;
+                        var Check = "";
+                        if (VendCd == "") {
+                            Check = "0";
+                            alert('ENTERED CASE NUMBER DOES NOT MATCH!!!');
+                        }
+                        else if (VendCd == VEND_CD_S) {
+                            Check = "2";
+                        }
+                        else {
+                            Check = "1";
+                            alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                            return;
+                        }
+                        if (Check == "2") {
+                            window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&Action=N";
+                        }
+
+                    }
+                    else {
+                        alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                    }
+                }
+            });
+        }
 
         function setDefaultDate() {
             $('#PoDt').datepicker({
@@ -253,34 +333,133 @@
         }
 
         $("#btnAddMA").click(function () {
+            GetMatch();
+        });
+
+        $("#btnModifyPO").click(function () {
             var CaseNo = $("#CASE_NO").val();
+            var MaNo = $("#MA_NO").val();
+            var MaDt = $("#MA_DT").val();
+            debugger
+            var urlParams = new URLSearchParams(window.location.search);
+            var MaStatus = urlParams.get('MaStatus');
             debugger
             $.ajax({
-                url: '@Url.Action("GetMatch", "VendorPOMA")',
+                url: '@Url.Action("GetMatchModify", "VendorPOMA")',
                 type: "GET",
                 dataType: "JSON",
-                data: { "CaseNo": CaseNo },
+                data: { "CaseNo": CaseNo, "MaNo": MaNo, "MaDt": MaDt },
                 success: function (contacts) {
                     if (contacts.data && contacts.data.length > 0) {
-                        var VendCd = contacts.data[0].VEND_CD;
+                        var PO_SRC = contacts.data[0].PO_SRC;
                         var VEND_CD_S = contacts.data[0].VEND_CD_S;
                         var Check = "";
-                        if (VendCd == "") {
-                            Check = "0";
-                            alert('ENTERED CASE NUMBER DOES NOT MATCH!!!');
-                        }
-                        else if (VendCd == VEND_CD_S) {
-                            Check = "2";
+                        if (PO_SRC == "V") {
+                            $.ajax({
+                                url: '@Url.Action("GetMatch", "VendorPOMA")',
+                                type: "GET",
+                                dataType: "JSON",
+                                data: { "CaseNo": CaseNo },
+                                success: function (contacts) {
+                                    if (contacts.data && contacts.data.length > 0) {
+                                        var VendCd = contacts.data[0].VEND_CD;
+                                        var VEND_CD_S = contacts.data[0].VEND_CD_S;
+                                        var Check = "";
+                                        if (VendCd == "") {
+                                            Check = "0";
+                                            alert('ENTERED CASE NUMBER DOES NOT MATCH!!!');
+                                        }
+                                        else if (VendCd == VEND_CD_S) {
+                                            Check = "2";
+                                        }
+                                        else {
+                                            Check = "1";
+                                            alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                                            return;
+                                        }
+                                        if (Check == "2") {
+                                            window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDt=" + MaDt + "&MaStatus=" + MaStatus + "&Action_T=E";
+                                        }
+
+                                    }
+                                    else {
+                                        alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                                    }
+                                }
+                            });
                         }
                         else {
-                            Check = "1";
-                            alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+
+                            alert('You Are Not Authorised to Add amendment for this case no!!!');
                             return;
                         }
-                        if (Check == "2") {
-                            window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&Action=N";
-                        }
+                    }
+                    else {
+                        alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                    }
+                }
+            });
+        });
 
+        $("#btnDeletePO").click(function () {
+            var CaseNo = $("#CASE_NO").val();
+            var MaNo = $("#MA_NO").val();
+            var MaDt = $("#MA_DT").val();
+            //var MaSNo = $("#MA_SNO").val();
+           debugger
+            var urlParams = new URLSearchParams(window.location.search);
+            var MaStatus = urlParams.get('MaStatus');
+            var MaSNo = urlParams.get('MaSNo');
+            debugger
+            $.ajax({
+                url: '@Url.Action("GetMatchModify", "VendorPOMA")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "CaseNo": CaseNo, "MaNo": MaNo, "MaDt": MaDt },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        var PO_SRC = contacts.data[0].PO_SRC;
+                        var VEND_CD_S = contacts.data[0].VEND_CD_S;
+                        var Check = "";
+                        if (PO_SRC == "V") {
+                            $.ajax({
+                                url: '@Url.Action("GetMatch", "VendorPOMA")',
+                                type: "GET",
+                                dataType: "JSON",
+                                data: { "CaseNo": CaseNo },
+                                success: function (contacts) {
+                                    if (contacts.data && contacts.data.length > 0) {
+                                        var VendCd = contacts.data[0].VEND_CD;
+                                        var VEND_CD_S = contacts.data[0].VEND_CD_S;
+                                        var Check = "";
+                                        if (VendCd == "") {
+                                            Check = "0";
+                                            alert('ENTERED CASE NUMBER DOES NOT MATCH!!!');
+                                        }
+                                        else if (VendCd == VEND_CD_S) {
+                                            Check = "2";
+                                        }
+                                        else {
+                                            Check = "1";
+                                            alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                                            return;
+                                        }
+                                        if (Check == "2") {
+                                            window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDt=" + MaDt + "&MaStatus=" + MaStatus + "&MaSNo=" + MaSNo + "&Action_T=E";
+                                        }
+
+                                    }
+                                    else {
+                                        alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');
+                                    }
+                                }
+                            });
+                        }
+                        else {
+
+                            alert('You Are Not Authorised to Add amendment for this case no!!!');
+                            return;
+                        }
                     }
                     else {
                         alert('You Are Not Authorised to Update/Delete Purchase Order of Other Vendors!!!');

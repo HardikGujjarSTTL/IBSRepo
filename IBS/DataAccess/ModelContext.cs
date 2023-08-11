@@ -51,6 +51,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DocumentCatalogView> DocumentCatalogViews { get; set; }
 
+    public virtual DbSet<DownloadBillingDocumentsForDigitalInvoice> DownloadBillingDocumentsForDigitalInvoices { get; set; }
+
+    public virtual DbSet<Emailconfiguration> Emailconfigurations { get; set; }
+
     public virtual DbSet<ErpProblem> ErpProblems { get; set; }
 
     public virtual DbSet<GeneralFile> GeneralFiles { get; set; }
@@ -501,11 +505,23 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
+    public virtual DbSet<ViewGetPoDetailsReport> ViewGetPoDetailsReports { get; set; }
+
+    public virtual DbSet<ViewGetPoDetailsReportList> ViewGetPoDetailsReportLists { get; set; }
+
+    public virtual DbSet<ViewGetPoDetailsReportPCalldetail> ViewGetPoDetailsReportPCalldetails { get; set; }
+
+    public virtual DbSet<ViewGetPoDetailsReportRVendorPlace> ViewGetPoDetailsReportRVendorPlaces { get; set; }
+
     public virtual DbSet<ViewGetmanufvend> ViewGetmanufvends { get; set; }
 
     public virtual DbSet<ViewGetvendor> ViewGetvendors { get; set; }
 
     public virtual DbSet<ViewLaboratory> ViewLaboratories { get; set; }
+
+    public virtual DbSet<ViewMaDetailSearch> ViewMaDetailSearches { get; set; }
+
+    public virtual DbSet<ViewMaSubDetail> ViewMaSubDetails { get; set; }
 
     public virtual DbSet<ViewPomasterlist> ViewPomasterlists { get; set; }
 
@@ -1346,6 +1362,59 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("FILE_ID");
+        });
+
+        modelBuilder.Entity<DownloadBillingDocumentsForDigitalInvoice>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("DOWNLOAD_BILLING_DOCUMENTS_FOR_DIGITAL_INVOICE");
+
+            entity.Property(e => e.Column1)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("COLUMN1");
+        });
+
+        modelBuilder.Entity<Emailconfiguration>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008619");
+
+            entity.ToTable("EMAILCONFIGURATION");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.Displayname)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("DISPLAYNAME");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("EMAIL");
+            entity.Property(e => e.Enablessl)
+                .HasPrecision(1)
+                .HasColumnName("ENABLESSL");
+            entity.Property(e => e.Host)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("HOST");
+            entity.Property(e => e.Password)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("PASSWORD");
+            entity.Property(e => e.Port)
+                .HasPrecision(6)
+                .HasColumnName("PORT");
+            entity.Property(e => e.Usedefaultcredentials)
+                .HasPrecision(1)
+                .HasColumnName("USEDEFAULTCREDENTIALS");
+            entity.Property(e => e.Username)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("USERNAME");
         });
 
         modelBuilder.Entity<ErpProblem>(entity =>
@@ -9981,6 +10050,12 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("BILL_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -9988,8 +10063,12 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_SUBMIT_DT");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(250)
                 .IsUnicode(false)
@@ -9997,6 +10076,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.RemarksDt)
                 .HasColumnType("DATE")
                 .HasColumnName("REMARKS_DT");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -16582,6 +16667,178 @@ public partial class ModelContext : DbContext
                 .HasColumnName("SWACHH_BHARAT_CESS");
         });
 
+        modelBuilder.Entity<ViewGetPoDetailsReport>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_PO_DETAILS_REPORT");
+
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.ImmsRlyCd)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("IMMS_RLY_CD");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.PoSource)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("PO_SOURCE");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.VendRemarks)
+                .HasMaxLength(2000)
+                .IsUnicode(false)
+                .HasColumnName("VEND_REMARKS");
+            entity.Property(e => e.Vendor)
+                .HasMaxLength(151)
+                .IsUnicode(false)
+                .HasColumnName("VENDOR");
+        });
+
+        modelBuilder.Entity<ViewGetPoDetailsReportList>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_PO_DETAILS_REPORT_LIST");
+
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.ExtDelvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("EXT_DELV_DT");
+            entity.Property(e => e.ItemDesc)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("ITEM_DESC");
+            entity.Property(e => e.ItemSrno)
+                .HasPrecision(4)
+                .HasColumnName("ITEM_SRNO");
+            entity.Property(e => e.Passed)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PASSED");
+            entity.Property(e => e.Qty)
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY");
+            entity.Property(e => e.Rejected)
+                .HasColumnType("NUMBER")
+                .HasColumnName("REJECTED");
+        });
+
+        modelBuilder.Entity<ViewGetPoDetailsReportPCalldetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_PO_DETAILS_REPORT_P_CALLDETAILS");
+
+            entity.Property(e => e.CallInstallNo)
+                .HasPrecision(4)
+                .HasColumnName("CALL_INSTALL_NO");
+            entity.Property(e => e.CallLetterDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_LETTER_DT");
+            entity.Property(e => e.CallRecvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_RECV_DT");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(5)
+                .HasColumnName("CALL_SNO");
+            entity.Property(e => e.CallStatus)
+                .HasMaxLength(86)
+                .IsUnicode(false)
+                .HasColumnName("CALL_STATUS");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.IeName)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_NAME");
+            entity.Property(e => e.Reason)
+                .HasMaxLength(773)
+                .IsUnicode(false)
+                .HasColumnName("REASON");
+            entity.Property(e => e.ReasonReject)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("REASON_REJECT");
+        });
+
+        modelBuilder.Entity<ViewGetPoDetailsReportRVendorPlace>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_PO_DETAILS_REPORT_R_VENDOR_PLACE");
+
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.BkNo)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("BK_NO");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.IcDt)
+                .HasColumnType("DATE")
+                .HasColumnName("IC_DT");
+            entity.Property(e => e.IcTypeId)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("IC_TYPE_ID");
+            entity.Property(e => e.IeName)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_NAME");
+            entity.Property(e => e.ItemDescPo)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("ITEM_DESC_PO");
+            entity.Property(e => e.ReasonReject)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("REASON_REJECT");
+            entity.Property(e => e.SetNo)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("SET_NO");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.Vendor)
+                .HasMaxLength(305)
+                .IsUnicode(false)
+                .HasColumnName("VENDOR");
+        });
+
         modelBuilder.Entity<ViewGetmanufvend>(entity =>
         {
             entity
@@ -16661,6 +16918,138 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("LAB_NAME");
+        });
+
+        modelBuilder.Entity<ViewMaDetailSearch>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_MA_DETAIL_SEARCH");
+
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.MaDesc)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("MA_DESC");
+            entity.Property(e => e.MaDt)
+                .HasColumnType("DATE")
+                .HasColumnName("MA_DT");
+            entity.Property(e => e.MaField)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("MA_FIELD");
+            entity.Property(e => e.MaNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MA_NO");
+            entity.Property(e => e.MaRemarks)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("MA_REMARKS");
+            entity.Property(e => e.MaSno)
+                .HasPrecision(2)
+                .HasColumnName("MA_SNO");
+            entity.Property(e => e.MaStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("MA_STATUS");
+            entity.Property(e => e.NewPoValue)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("NEW_PO_VALUE");
+            entity.Property(e => e.OldPoValue)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("OLD_PO_VALUE");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.PoOrLetter)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("PO_OR_LETTER");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(68)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyNonrly)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("RLY_NONRLY");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+        });
+
+        modelBuilder.Entity<ViewMaSubDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_MA_SUB_DETAIL");
+
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.MaDt)
+                .HasColumnType("DATE")
+                .HasColumnName("MA_DT");
+            entity.Property(e => e.MaField)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("MA_FIELD");
+            entity.Property(e => e.MaNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MA_NO");
+            entity.Property(e => e.MaSno)
+                .HasPrecision(2)
+                .HasColumnName("MA_SNO");
+            entity.Property(e => e.MaStatus)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("MA_STATUS");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.PoOrLetter)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("PO_OR_LETTER");
+            entity.Property(e => e.PoSrc)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("PO_SRC");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(68)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyNonrly)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("RLY_NONRLY");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("USER_ID");
         });
 
         modelBuilder.Entity<ViewPomasterlist>(entity =>
@@ -17044,6 +17433,7 @@ public partial class ModelContext : DbContext
                 .HasColumnName("VCHR_NO");
         });
         modelBuilder.HasSequence("AUDIT_SEQ");
+        modelBuilder.HasSequence("EMAILCONFIGURATIONSEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
