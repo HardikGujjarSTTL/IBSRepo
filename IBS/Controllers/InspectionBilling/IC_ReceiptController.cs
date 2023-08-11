@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.DataAccess;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -117,13 +118,106 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult ICReceiptSave(IC_ReceiptModel model)
         {
             int result = 0;
-            var res = iC_ReceiptRepository.CheckIC(model);
-            if (res == 1)
+            var msg = "";
+            try
             {
-                result = iC_ReceiptRepository.IC_Receipt_InsertUpdate(model);
+                var res = iC_ReceiptRepository.CheckIC(model);
+                if (res == 1)
+                {
+                    result = iC_ReceiptRepository.IC_Receipt_InsertUpdate(model);
+                }
+                else if (res == 0)
+                {
+                    msg = "Book No. and Set No. specified is not issued to the Selected Inspection Engineer!!!";
+                }
+                else if (res == 2)
+                {
+                    msg = "Bill already generated for given Book and Set No.!!!";
+                }
+                else if (res == 3)
+                {
+                    msg = "IC Submit Date Cannot be Less then Issue Date  !!!";
+                }
             }
+            catch (Exception ex)
+            {
+                msg = "Somthing went wrong";
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptSave", 1, GetIPAddress());
+            }
+            return Json(msg);
+        }
 
+        public IActionResult ICReceiptDelete(IC_ReceiptModel model)
+        {
+            int result = 0;
+            try
+            {
+                var REGION = Convert.ToString(GetUserInfo.Region);
+                model.REGION = REGION;
+                model.USER_ID = GetUserInfo.UserID;
+                result = iC_ReceiptRepository.IC_Receipt_Delete(model);
+
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptDelete", 1, GetIPAddress());
+            }
             return Json(result);
         }
+
+        public IActionResult ICFromToDate()
+        {
+            var action = Request.Query["Action"];
+            ViewBag.Action = action;
+            var partialView = "IC_Unbilled_Partial";
+            if(action == "UNBILLEDIC")
+            {
+                partialView = "IC_Unbilled_Partial";
+            }
+            else if(action == "ICISSUEDNSUB")
+            {
+                partialView = "IC_Issued_Partial";
+            }
+            ViewBag.PartialView = partialView;
+            return View();
+        }
+
+        public IActionResult Get_UnBilled_IC([FromBody] DTParameters dtParameters)
+        {
+            DTResult<ICReportModel> dtList = new();
+            try
+            {
+                var region = GetUserInfo.Region;
+                dtList = iC_ReceiptRepository.Get_UnBilled_IC(dtParameters, region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        public IActionResult Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters)
+        {
+            DTResult<ICIssueNotReceiveModel> dtList = new();
+            try
+            {
+                var region = GetUserInfo.Region;
+                var username = GetUserInfo.UserName;
+                var iccd = Convert.ToString(GetUserInfo.IeCd);
+                dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        //public IActionResult IC_Issued_Partial()
+        //{
+
+        //    return View();
+        //}
     }
 }

@@ -10,21 +10,21 @@
             <form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramAccountDetails" style="margin-top: 7px;">
                 <div class="accordion-body">
                     <div class="row my-0">
-                        <div class="col-md-2 mb-4">
+                        <div class="col-md-6 mb-4">
                             <label for="Reference">Book No</label>
                             <input type="text" class="input" asp-for="BK_NO" maxlength="200" />
                             @*<span asp-validation-for="BK_NO" class="text-danger"></span>*@
                         </div>
 
-                        <div class="col-md-2 mb-4">
+                        <div class="col-md-6 mb-4">
                             <label for="Reference">Set No</label>
                             <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
                             @*<span asp-validation-for="SET_NO" class="text-danger"></span>*@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="savenext-btn">
-                                <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
-                                <button type="button" class="reset-btn" id="btnDelete">Delete</button>
+                                @*<button type="button" class="save-btn active" id="btnSubmit">Submit</button>*@
+                                @*<button type="button" class="reset-btn" id="btnDelete">Delete</button>*@
                                 <button type="button" class="reset-btn" id="btnSearch">Search</button>
                             </div>
                         </div>
@@ -80,17 +80,17 @@
                 InitializeDatatable();
             });
 
-            $("#btnDelete").click(function () {
-                GetRegionCode("delete");
-            });
-            $("#btnSubmit").click(function () {
-                GetRegionCode("submit");
-            });
+            //$("#btnDelete").click(function () {
+            //    GetRegionCode("delete");
+            //});
+            //$("#btnSubmit").click(function () {
+            //    GetRegionCode("submit");
+            //});
         });
 
-        function GetRegionCode(type) {
-            var bk_no = $("#BK_NO").val();
-            var set_no = $("#SET_NO").val();
+        function GetRegionCode(bk_no, set_no, type) {
+            //var bk_no = $("#BK_NO").val();
+            //var set_no = $("#SET_NO").val();
             var url = "@Url.Action("GetRegionCode", "HologramAccountal")" + "?BK_NO=" + bk_no + "&SET_NO=" + set_no;
             $.ajax({
                 url: url,
@@ -108,7 +108,8 @@
                         }
                     }
                     else if (response == "2") {
-                        Manage();
+                        //Manage();
+                        Manage(bk_no, set_no);
                     }
                     else {
                         alert("No Record Present for Given Book No and Set No in IC Master!!! ");
@@ -167,7 +168,9 @@
 
                             gridData = row;
                             var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
-                            html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\"">SELECT</a>';
+                            //html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\"">SELECT</a>';
+                            html += '<a onclick="GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick = "GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'delete\'); " id=\"' + data.BK_NO + '\" class=\"delete\"" > <i class=\"fa fa-trash\" title="Delete" style="margin: 10px;"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -189,10 +192,10 @@
             $("#SET_NO").val(set_no);
         }
 
-        function Manage() {
+        function Manage(bk_no, set_no) {
             debugger
-            var bk_no = $("#BK_NO").val();
-            var set_no = $("#SET_NO").val();
+            //var bk_no = $("#BK_NO").val();
+            //var set_no = $("#SET_NO").val();
 
             var url = '@Url.Action("Manage", "HologramAccountal")';
             debugger

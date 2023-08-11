@@ -1,4 +1,6 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class HologramAccountalModel
     {
@@ -24,14 +26,30 @@
         public string REC_NO { get; set; }
 
         public string HG_REGION { get; set; }
+
+        [Required(ErrorMessage ="Hologram no. material from is required")]
         public string HG_NO_MATERIAL_FR { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. material to is required")]
         public string HG_NO_MATERIAL_TO { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. sample from is required")]
         public string HG_NO_SAMPLE_FR { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. sample to is required")]
         public string HG_NO_SAMPLE_TO { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. test from is required")]
         public string HG_NO_TEST_FR { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. test to is required")]
         public string HG_NO_TEST_TO { get; set; }
         public string HG_NO_IC_FR { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. ic from is required")]
         public string HG_NO_IC_TO { get; set; }
+
+        [Required(ErrorMessage = "Hologram no. ic to is required")]
         public string HG_NO_IC_DOC { get; set; }
         public string HG_OT_DESC { get; set; }
         public string HG_NO_OT_FR { get; set; }
