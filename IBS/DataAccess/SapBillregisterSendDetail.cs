@@ -70,4 +70,6 @@ public partial class SapBillregisterSendDetail
     public string? CaseNo { get; set; }
 
     public string? Checkvalue { get; set; }
+
+    public string? QrCode { get; set; }
 }

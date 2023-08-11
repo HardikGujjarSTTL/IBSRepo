@@ -1,0 +1,156 @@
+﻿@model IBS.Models.VendorPOMAModel
+@{
+    ViewData["Title"] = "VENDOR MA FORM";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorPOMA" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>VENDOR MA FORM</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Case No.</label>
+                    <input type="text" asp-for="CASE_NO" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Po No.</label>
+                    <input type="text" class="input" asp-for="PO_NO" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="PO_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO Date</label>
+                    <input type="text" class="datepicker" asp-for="PO_DT" maxlength="100" style="text-transform: uppercase;" placeholder="dd/mm/yyyy">
+                    <span asp-validation-for="PO_DT" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">RLY Code.</label>
+                    <input type="text" class="input" asp-for="RLY_CD" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="RLY_CD" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">SNo.</label>
+                    <input type="text" class="input" asp-for="MA_SNO" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="MA_SNO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">BPO Type<span style="color:red">*</span></label>
+                    @Html.DropDownListFor(model => model.BPO_TYPE, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="BPO_TYPE" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO/Offer Letter No.<span style="color:red">*</span></label>
+                    @Html.DropDownListFor(model => model.PO_OR_LETTER, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="PO_OR_LETTER" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA No.<span style="color:red">*</span></label>
+                    <input type="text" class="input" asp-for="MA_NO" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="MA_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA Date (DD/MM/YYYY)<span style="color:red">*</span></label>
+                    <input type="text" class="datepicker" asp-for="MA_DT" maxlength="100" style="text-transform: uppercase;" placeholder="dd/mm/yyyy">
+                    <span asp-validation-for="MA_DT" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Field</label>
+                    <textarea rows="4" asp-for="MA_FIELD" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="MA_FIELD" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA Description</label>
+                    <textarea rows="4" asp-for="MA_DESC" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="MA_DESC" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Original PO Entry</label>
+                    <textarea rows="4" asp-for="OLD_PO_VALUE" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="OLD_PO_VALUE" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Amended PO Entry</label>
+                    <textarea rows="4" asp-for="NEW_PO_VALUE" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="NEW_PO_VALUE" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA Document</label>
+                    <input type="text" class="input" asp-for="MA_NO" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="MA_NO" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="VendorPOMA" asp-action="Manage" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" id="btnAddMA">Save MA</button>
+        </div>
+    </div>
+
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Case Number</th>
+                            <th>Purchase Order Number</th>
+                            <th>Purchase Order Date</th>
+                            <th>MA No.</th>
+                            <th>MA Date</th>
+                            <th>Agency</th>
+                            <th>PO OR Letter</th>
+                            <th>MA Sno</th>
+                            <th>MA Field</th>
+                            <th>MA Status</th>
+                            <th>MA Source</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>

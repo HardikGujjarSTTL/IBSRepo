@@ -361,6 +361,33 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> SapBillStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Pending";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Sent to SAP";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Not-Sent to SAP";
+            //single.Value = "Y";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Sent to SAP";
+            //single.Value = "S";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Received Response from SAP";
+            //single.Value = "R";
+            //textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> RailwaysTypes()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -725,6 +752,39 @@ namespace IBS.Models
             return dropDownDTOs.DistinctBy(x => x.Text).ToList();
         }
 
+        public static List<SelectListItem> GetRlyCd(string RlyNonrly)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            if (RlyNonrly == "R")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T91Railways
+                            where a.RlyCd != "CORE"
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.Railway),
+                           Value = Convert.ToString(a.RlyCd)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            else if (RlyNonrly != "" && RlyNonrly != null)
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T12BillPayingOfficers
+                            where a.BpoType == Convert.ToString(RlyNonrly)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.BpoOrgn),
+                           Value = Convert.ToString(a.BpoRly)
+                       }).OrderBy(x => x.Text).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+        }
+
         public static List<SelectListItem> Getfill_consignee_purcher(string RlyNonrlyValue, string RlyNonrlyText, string RlyCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1028,6 +1088,29 @@ namespace IBS.Models
                                            Value = Convert.ToString(a.UomCd)
                                        }).ToList();
             return objdata;
+        }
+
+        public static List<SelectListItem> DocType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Inernal Records";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Firm Certificate(Like RDSO, Approval, Type test etc.)";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Raw Material/Invoice";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Calibration Records";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
         }
 
     }
