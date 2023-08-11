@@ -76,6 +76,7 @@ builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.Bil
 
 
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
+builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
 builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
@@ -96,6 +97,7 @@ builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
 
 #region Inspection and Billing
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
+builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 #endregion
 var app = builder.Build();
 

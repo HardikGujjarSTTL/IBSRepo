@@ -110,14 +110,15 @@
                     <!--userTopLinks-->
                     <!--userInformation-->
                     <div class="userInformation">
-                        <!--userImg-->
-                        <div class="userImgWrap">
-                            <div class="userImg"> <img src="~/images/user-icon.png" width="51" height="51" alt="Admin" title="admin" /> </div>
-                        </div>
-                        <!--userImg-->
+                      
                         <!--userDetail-->
                         <div class="userDetail">
                             <a href="#" class="openDrpPopup">
+                                <!--userImg-->
+                                <div class="userImgWrap">
+                                    <div class="userImg"> <img src="~/images/user-icon.png" width="51" height="51" alt="Admin" title="admin" /> </div>
+                                </div>
+                                <!--userImg-->
                                 <div class="user">
                                     <h4> Rishi Haria <i class="fa-solid fa-chevron-down"></i> </h4>
                                     <p>Admin</p>
@@ -262,13 +263,24 @@
                                 </ul>
                             </li>
 
+                            <li><a asp-action="Index" asp-controller="ConsigneeComplaints"><i class="fa fa-angle-double-right"></i><span class="menu-title">Consignee Complaints</span></a></li>
+                            <li><a asp-action="Index" asp-controller="NCRRegister"><i class="fa fa-angle-double-right"></i><span class="menu-title">NCR Register</span></a></li>
+                            <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
 
                             <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="tenant" /></i><span class="menu-title">Reports</span></a>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="tenant" /></i><span class="menu-title">Reports</span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
                                         <a asp-action="Index" asp-controller="BillRegister"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Bill Register</span></a>
                                     </li>
+                                    
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="IE" /></i><span class="menu-title">Inspection & Billing</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="Index" asp-controller="HologramAccountal"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Hologram Accountal</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IC_Receipt"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Receipt of Bookset in Inspection Office</span></a></li>
 
                                 </ul>
                             </li>

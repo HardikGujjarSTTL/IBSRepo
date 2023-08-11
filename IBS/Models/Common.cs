@@ -661,6 +661,33 @@ namespace IBS.Models
 
         }
 
+        public static List<SelectListItem> GetIENameWithoutCode()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T09Ies
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.IeName),
+                                      Value = Convert.ToString(a.IeCd)
+                                  }).ToList();
+            return IE;
+
+        }
+        public static List<SelectListItem> GetNCCode()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> NCCODE = ModelContext.T69NcCodes
+                                          .Select(a => new SelectListItem
+                                          {
+                                              Text = a.NcCd + " - " + a.NcDesc,
+                                              Value = a.NcCd
+                                          })
+                                          .ToList();
+            return NCCODE;
+
+        }
+
         public static List<SelectListItem> GetRailPrices()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1128,7 +1155,7 @@ namespace IBS.Models
             var property = typeof(T).GetProperty(sortColumn);
 
             // Handle nullable properties
-            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+             if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
             }
