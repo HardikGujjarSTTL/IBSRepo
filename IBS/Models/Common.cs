@@ -401,18 +401,58 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> GetRitesOfficerCd()
+        public static List<SelectListItem> GetRitesOfficerCd(int cocd = 0)
         {
-            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            return (from a in ModelContext.T08IeControllOfficers
-                    where a.CoStatus != null
-                    select new SelectListItem
-                    {
-                        Text = Convert.ToString(a.CoName),
-                        Value = Convert.ToString(a.CoCd)
-                    }).OrderBy(c => c.Text).ToList();
+            if (cocd == 0)
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T08IeControllOfficers
+                        where (a.CoStatus == null)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.CoName),
+                            Value = Convert.ToString(a.CoCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T08IeControllOfficers
+                        where (a.CoStatus == null) && (a.CoCd == cocd)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.CoName),
+                            Value = Convert.ToString(a.CoCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
         }
 
+        public static List<SelectListItem> GetInspEngCd(int IeCd = 0)
+        {
+            if (IeCd == 0)
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T09Ies
+                        where (a.IeStatus == null)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.IeName),
+                            Value = Convert.ToString(a.IeCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else 
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T09Ies
+                        where (a.IeStatus == null) && (a.IeCd == IeCd)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.IeName),
+                            Value = Convert.ToString(a.IeCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+        }
+        
         public static List<SelectListItem> MAStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();

@@ -1,0 +1,90 @@
+﻿@model IBS.Models.BillingAdjustmentModel
+@{
+    ViewData["Title"] = "Manage Billing Adjustment";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Billing Adjustment</h2>
+    </div>
+</div> 
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="BillingAdjustment" asp-action="BillingAdjustmentDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBillingAdjustmentDetails">
+            <input type="hidden" asp-for="Adjusment_Yr_Mth" />
+            <div class="accordion-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row"> 
+                            <div class="col-md-2 mb-4">
+                                <label class="lable-control" for="Reference"><b>For the Period : </b></label>
+                            </div>                            
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Month: </label>
+                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonth(""), "Value", "Text"),"--Select--")
+                                <span asp-validation-for="AdjusmentPerMon" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Year: </label>
+                                @Html.DropDownListFor(model => model.AdjusmentPerYear, new SelectList(IBS.Models.Common.GetYear(""), "Value", "Text"),"--Select--")
+                                <span asp-validation-for="AdjusmentPerYear" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2 mb-4">
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Adjustment Amount Fee(In Rs.)</label>
+                                <input type="text" class="input" asp-for="Adjustment_Amt" maxlength="500" />
+                                <span asp-validation-for="Adjustment_Amt" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Remarks</label>
+                                <input type="text" class="input" asp-for="Remarks" maxlength="500" />
+                                <span asp-validation-for="Remarks" class="text-danger"></span>
+                            </div>  
+                        </div>
+                    </div> 
+                    <div class="savenext-btn" style="justify-content:center">
+                        <a asp-controller="BillingAdjustment" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts 
+{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (@Model.Adjusment_Yr_Mth > null) {
+                var s = @Model.Adjusment_Yr_Mth;
+                var year = s.toString().substring(0, 4);
+                var mon = s.toString().substring(4, 6);
+                $("#AdjusmentPerMon").val(mon);
+                $("#AdjusmentPerYear").val(year);
+            }
+        });
+    </script>
+    <script type="text/javascript"> 
+        function Save() {
+            if ($("#frmBillingAdjustmentDetails").valid()) {
+                $("#frmBillingAdjustmentDetails").submit();
+            }
+        } 
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/BillingAdjustment/Index";
+        }; 
+    </script>
+}

@@ -11,7 +11,7 @@
 <section>
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="LabBilling" asp-action="LabBillingDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabBillingDetails">
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Lab_Bill_Per" />
             <div class="accordion-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -37,8 +37,8 @@
                             </div>
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Lab Fee (In Rs.)</label>
-                                <input type="text" class="input" asp-for="LabExp" maxlength="300" />
-                                <span asp-validation-for="LabExp" class="text-danger"></span>
+                                <input type="text" class="input" asp-for="Lab_Exp" maxlength="500" />
+                                <span asp-validation-for="Lab_Exp" class="text-danger"></span>
                             </div>  
                         </div>
                     </div> 
@@ -58,9 +58,9 @@
     <partial name="_ValidationScriptsPartial" />    
     <script type="text/javascript">
         $(document).ready(function () {
-            if (@Model.LabBillPer > null) 
+            if (@Model.Lab_Bill_Per > null) 
             {
-                var s = @Model.LabBillPer;
+                var s = @Model.Lab_Bill_Per;
                 var year = s.toString().substring(0, 4);
                 var mon = s.toString().substring(4, 6);
                 $("#LabBillPerMon").val(mon);

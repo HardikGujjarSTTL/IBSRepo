@@ -4,11 +4,11 @@ namespace IBS.Interfaces
 {
     public interface ILabBillingRepository
     {
-        public LabBillingModel FindByID(int Id);
-        DTResult<LabBillingModel> GetLabBillingList(DTParameters dtParameters);
+        public LabBillingModel FindByID(string LabBillPer, string RegionCode);
+        DTResult<LabBillingModel> GetLabBillingList(DTParameters dtParameters, string RegionCode);
         
-        bool Remove(int Id, int UserID);
+        bool Remove(string LabBillPer, string strRgn);
         
-        int LabBillingDetailsInsertUpdate(LabBillingModel model);
+        string LabBillingDetailsInsertUpdate(LabBillingModel model);
     }
 }

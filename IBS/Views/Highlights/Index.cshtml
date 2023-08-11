@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewData["Title"] = "Highlights List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Highlights List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="Highlights" asp-action="Manage" class="formBtn">Add New Highlights</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtHighlights" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>HighLights Date</th>
+                            <th>Highlights</th>
+                            <th>Action</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtHighlights").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "High_Dt" },
+                    { data: "Hight_Text" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var _HighDt = data.High_Dt;
+                            var editUrl = '@Url.Action("Manage", "Highlights")?_HighDt=' + _HighDt;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="HighlightsDelete(this._HighDt); return false;" href="javascript:void(\'0\');" id=\"' + _HighDt + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function HighlightsDelete(_HighDt) {
+            var url = '@Url.Action("Delete", "Highlights")';
+            $("#btn-delete-yes").attr("href", url + "/" + _HighDt);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

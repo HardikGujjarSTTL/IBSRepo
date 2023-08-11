@@ -7,6 +7,9 @@ using System;
 using System.Data;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using IBS.Helper;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
 
 namespace IBS.Repositories
 {
@@ -18,31 +21,28 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public LabBillingModel FindByID(int Id)
-        {
-            LabBillingModel model = new();
-            T59LabExp tenant = context.T59LabExps.Find(Convert.ToInt32(Id));
 
-            if (tenant == null)
-                throw new Exception("Bill Record Not found");
-            else
+        public LabBillingModel FindByID(string LabBillPer,string rgnCode)
+        {  
+            using (var dbContext = context.Database.GetDbConnection())
             {
-                model.Id = tenant.Id;
-                model.LabBillPer = tenant.LabBillPer;
-                model.LabExp = tenant.LabExp;
-                //model.RegionCode = Region;                                 
-                model.Datetime = tenant.Datetime;                 
-                model.UserId= tenant.UserId;              
-                //model.Isdeleted = tenant.Isdeleted;
-                //model.Createddate = tenant.Createddate;
-                //model.Createdby = tenant.Createdby;
-                //model.Updateddate = tenant.Updateddate;
-                //model.Updatedby = tenant.Updatedby;
-                return model;
-            }
-        }
+                OracleParameter[] par = new OracleParameter[3];
+                par[0] = new OracleParameter("p_LabBillPer", OracleDbType.Decimal, LabBillPer, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_REGIONCODE", OracleDbType.Char, rgnCode, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("SP_GetData_T59LabExp", par, 1);
 
-        public DTResult<LabBillingModel> GetLabBillingList(DTParameters dtParameters)
+                LabBillingModel model = new();
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<LabBillingModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
+                } 
+                return model;
+            } 
+        }
+ 
+        public DTResult<LabBillingModel> GetLabBillingList(DTParameters dtParameters, string RgnCd)
         { 
             DTResult<LabBillingModel> dTResult = new() { draw = 0 };
             IQueryable<LabBillingModel>? query = null;
@@ -58,24 +58,24 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "LabBillPer";
+                    orderCriteria = "Lab_Bill_Per";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "LabBillPer";
+                orderCriteria = "Lab_Bill_Per";
                 orderAscendingDirection = true;
             }
             query = from l in context.T59LabExps
-                        //where l.Isdeleted == 0 
+                    where l.RegionCode == RgnCd
                     select new LabBillingModel
                     {
-                        Id = l.Id,                         
-                        LabExp = l.LabExp,
-                        LabBillPer = l.LabBillPer,
-                        UserId = l.UserId,
+                        //Id = l.Id,                         
+                        Lab_Exp = l.LabExp,
+                        Lab_Bill_Per = l.LabBillPer,
+                        User_Id = l.UserId,
                         Datetime = l.Datetime,                                                                     
                         //Isdeleted = l.Isdeleted,
                         //Createdby = l.Createdby,
@@ -85,69 +85,70 @@ namespace IBS.Repositories
             };
 
             dTResult.recordsTotal = query.Count();
-
-            //if (!string.IsNullOrEmpty(searchBy))
-            //    query = query.Where(w => Convert.ToString(w.Contractname).ToLower().Contains(searchBy.ToLower())
-            //    || Convert.ToString(w.Contractdescription).ToLower().Contains(searchBy.ToLower())
-            //    );
-
             dTResult.recordsFiltered = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
         }
 
-        public bool Remove(int Id, int UserID)
+        public bool Remove(string LabBillPer, string strRgn)
         {
-            var _contracts = context.T59LabExps.Find(Convert.ToInt32(Id));
+            //var _contracts = context.T59LabExps.Find(LabBillPer);
+            var _contracts = (from m in context.T59LabExps
+                             where m.LabBillPer == LabBillPer
+                             && m.RegionCode == strRgn
+                             select m).FirstOrDefault();
+
             if (_contracts == null) { return false; }
 
             _contracts.Isdeleted = Convert.ToByte(true);
-            _contracts.Updatedby = Convert.ToInt32(UserID);
+            //_contracts.Updatedby = Convert.ToInt32(UserID);
             _contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
 
-        public int LabBillingDetailsInsertUpdate(LabBillingModel model)
+        public string LabBillingDetailsInsertUpdate(LabBillingModel model)
         {
-            int Id = 0;
-             
-            var _contract = context.T59LabExps.Find(model.Id);
+            var Id = "";
+            model.Lab_Bill_Per = model.LabBillPerYear + model.LabBillPerMon;
+              
+            //var _contract = context.T59LabExps.Find(model.Lab_Bill_Per,model.Region_Code);
+            var _contract = (from m in context.T59LabExps 
+                             where m.LabBillPer == model.Lab_Bill_Per 
+                             && m.RegionCode == model.Region_Code
+                             select m).FirstOrDefault();
+
             #region Contract save
             if (_contract == null)
             {
-                model.LabBillPer = model.LabBillPerYear + model.LabBillPerMon;
                 T59LabExp obj = new T59LabExp();
-                //obj.Id = model.Id;
-                obj.LabBillPer = model.LabBillPer;
-                obj.LabExp = model.LabExp;
+                obj.LabBillPer = model.Lab_Bill_Per;
+                obj.LabExp = model.Lab_Exp;
                 obj.Datetime = model.Datetime;
-                obj.UserId = model.UserId;
-                obj.RegionCode = model.RegionCode; 
+                obj.UserId = model.User_Id;
+                obj.RegionCode = model.Region_Code;
                 obj.Isdeleted = Convert.ToByte(false);
-                obj.Createdby = Convert.ToInt32(model.UserId);
+                obj.Createdby = Convert.ToInt32(model.User_Id);
                 obj.Createddate = DateTime.Now;
-                obj.Updatedby = Convert.ToInt32(model.UserId);
+                //obj.Updatedby = Convert.ToInt32(model.UserId);
                 obj.Updateddate = DateTime.Now;
                 context.T59LabExps.Add(obj);
                 context.SaveChanges();
-                Id = Convert.ToInt32(obj.Id);
+                Id = (obj.LabBillPer);
             }
             else
             {
-                model.LabBillPer = model.LabBillPerYear + model.LabBillPerMon;
-                //_contract.Id = model.Id;
-               _contract.LabBillPer = model.LabBillPer;
-               _contract.LabExp = model.LabExp; 
-               //_contract.RegionCode = model.RegionCode;               
-                //_contract.Updatedby = model.Updatedby;
-               _contract.Updateddate = DateTime.Now;
-                Id = Convert.ToInt32(_contract.Id);
+                //_contract.LabBillPer = model.Lab_Bill_Per;
+                _contract.LabExp = model.Lab_Exp;
+                //_contract.Updatedby = model.UserId;
+                _contract.Updateddate = DateTime.Now;
+                Id = _contract.LabBillPer;
                 context.SaveChanges();
             }
-            #endregion
+            
             return Id;
+            #endregion
         }
     }
 

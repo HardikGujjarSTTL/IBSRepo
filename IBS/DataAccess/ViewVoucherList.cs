@@ -7,7 +7,7 @@ public partial class ViewVoucherList
 {
     public string? VchrNo { get; set; }
 
-    public byte? Sno { get; set; }
+    public int? Sno { get; set; }
 
     public string? AccDesc { get; set; }
 
@@ -24,4 +24,6 @@ public partial class ViewVoucherList
     public string? CaseNo { get; set; }
 
     public string? BankName { get; set; }
+
+    public int BankCd { get; set; }
 }

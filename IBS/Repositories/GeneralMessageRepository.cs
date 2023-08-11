@@ -27,7 +27,7 @@ namespace IBS.Repositories
             {
                 OracleParameter[] par = new OracleParameter[2];
                 par[0] = new OracleParameter("p_MessageId", OracleDbType.Decimal, MessageId, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                //par[1] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 var ds = DataAccessDB.GetDataSet("SP_GET_T96_MESSAGE", par, 1);
 
@@ -37,8 +37,7 @@ namespace IBS.Repositories
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     model = JsonConvert.DeserializeObject<List<GeneralMessageModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
                 }
-
-                
+                 
                 return model;
             }
 

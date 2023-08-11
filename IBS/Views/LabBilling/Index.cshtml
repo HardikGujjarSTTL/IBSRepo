@@ -71,15 +71,15 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "LabBillPer" },
-                    { data: "LabExp" },                                                             
+                    { data: "Lab_Bill_Per" },
+                    { data: "Lab_Exp" },                                                             
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Id = data.Id;
-                            var editUrl = '@Url.Action("Manage", "LabBilling")/' + Id;
+                            var _labBillPer = data.Lab_Bill_Per;
+                            var editUrl = '@Url.Action("Manage", "LabBilling")?_labBillPer=' + _labBillPer;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="LabBillingDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="LabBillingDelete(this._labBillPer); return false;" href="javascript:void(\'0\');" id=\"' + _labBillPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -89,9 +89,9 @@
             });
         }
 
-        function LabBillingDelete(Id) {
+        function LabBillingDelete(_labBillPer) {
             var url = '@Url.Action("Delete", "LabBilling")';
-            $("#btn-delete-yes").attr("href", url + "/" + Id);
+            $("#btn-delete-yes").attr("href", url + "/" + _labBillPer);
             $("#modal-delete-conf").modal("show");
         }
     </script>

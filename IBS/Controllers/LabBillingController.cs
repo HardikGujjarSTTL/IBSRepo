@@ -18,12 +18,12 @@ namespace IBS.Controllers
         {
             return View();
         }
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string _labBillPer)
         {
             LabBillingModel model = new();
-            if (id > 0)
+            if (_labBillPer != null)
             {
-                model = labBillingRepository.FindByID(id);
+                model = labBillingRepository.FindByID(_labBillPer, GetRegionCode);
             }
             return View(model);
         }
@@ -31,15 +31,15 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<LabBillingModel> dTResult = labBillingRepository.GetLabBillingList(dtParameters);
+            DTResult<LabBillingModel> dTResult = labBillingRepository.GetLabBillingList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string LabBillPer)
         {
             try
             {
-                if (labBillingRepository.Remove(id, UserId))
+                if (labBillingRepository.Remove(LabBillPer, GetRegionCode))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -60,14 +60,15 @@ namespace IBS.Controllers
             {
                 string msg = "Lab Bill Inserted Successfully.";
 
-                if (model.Id > 0)
+                if (model.Lab_Bill_Per != null)
                 {
                     msg = "Lab Bill Updated Successfully.";
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = labBillingRepository.LabBillingDetailsInsertUpdate(model);
-                if (i > 0)
+                model.Region_Code = GetRegionCode;
+                var i = labBillingRepository.LabBillingDetailsInsertUpdate(model);
+                if (i != null)
                 {
                     return Json(new { status = true, responseText = msg });
                 }

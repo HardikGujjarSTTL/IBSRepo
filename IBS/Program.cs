@@ -70,6 +70,14 @@ builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<ILabBillingRepository, LabBillingRepository>();
+builder.Services.AddScoped<IExpenditureRepository, ExpenditureRepository>();
+builder.Services.AddScoped<ITechReferenceRepository, TechReferenceRepository>();
+builder.Services.AddScoped<IHighlightsRepository, HighlightsRepository>();
+builder.Services.AddScoped<IBillingOperatingTargetRepository, BillingOperatingRepository>();
+builder.Services.AddScoped<IBillingAdjustmentRepository, BillingAdjustmentRepository>();
+builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRepository>();
+
+
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 var app = builder.Build();
 

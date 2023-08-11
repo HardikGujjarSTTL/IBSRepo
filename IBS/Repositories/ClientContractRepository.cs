@@ -117,7 +117,7 @@ namespace IBS.Repositories
             var _contracts = context.T58ClientContacts.Find(Convert.ToInt32(ContractId));
             if (_contracts == null) { return false; }
 
-            //_contracts.Isdeleted = Convert.ToByte(true);
+             _contracts.Isdeleted = Convert.ToByte(true);
             //_contracts.Updatedby = Convert.ToInt32(UserID);
             //_contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
