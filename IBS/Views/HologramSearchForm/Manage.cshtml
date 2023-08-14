@@ -1,0 +1,65 @@
+﻿@model IBS.Models.HologramSearchFormModel
+
+@{
+    ViewData["Title"] = "Issue of Hologram to IE";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Issue of Hologram to IE</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="HologramSearchForm" asp-action="HologramSearchFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramSearchForm">
+                <input type="hidden" asp-for="HgRegion" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Holograms No. From</label>
+                            <textarea class="input" asp-for="HgNoFr" maxlength="30"> </textarea>
+                            <span asp-validation-for="HgNoFr" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Holograms No. TO</label>
+                            <textarea class="input" asp-for="HgNoTo" maxlength="30"> </textarea>
+                            <span asp-validation-for="HgNoTo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Issued to IE</label>
+                            <input type="text" class="input" asp-for="HgIssueDt" maxlength="30">
+                            <span asp-validation-for="HgIssueDt" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">IE to whom issued</label>
+                            <input type="text" class="input" asp-for="HgIecd" maxlength="30">
+                            <span asp-validation-for="HgIecd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="HologramSearchForm" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmHologramSearchForm").valid()) {
+                $("#frmHologramSearchForm").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/HologramSearchForm/Index";
+        };
+    </script>
+}

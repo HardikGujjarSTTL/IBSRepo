@@ -1,0 +1,54 @@
+﻿@model IBS.Models.MasterItemsPLFormModel
+
+@{
+    ViewData["Title"] = "Master Items PL Form";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Master Items PL Form</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="MasterItemsPLForm" asp-action="MasterItemsPLFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmMasterItemsPLForm">
+                <input type="hidden" asp-for="ItemCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Select Item</label>
+                            <textarea class="input" asp-for="ItemCd" maxlength="30"> </textarea>
+                            <span asp-validation-for="ItemCd" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">PL NO</label>
+                            <textarea class="input" asp-for="PlNo" maxlength="30"> </textarea>
+                            <span asp-validation-for="PlNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                   
+                    <div class="savenext-btn">
+                        <a asp-controller="MasterItemsPLForm" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmMasterItemsPLForm").valid()) {
+                $("#frmMasterItemsPLForm").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/MasterItemsPLForm/Index";
+        };
+    </script>
+}

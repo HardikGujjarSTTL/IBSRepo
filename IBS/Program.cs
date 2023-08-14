@@ -77,6 +77,13 @@ builder.Services.AddScoped<I_IE_CO_Form, IE_CO_Form>();
 builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
 builder.Services.AddScoped<IClusterMaster, ClusterMaster>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<ICityMaster, CityMaster>();
+builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
+builder.Services.AddScoped<IVendorCluster, VendorCluster>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
