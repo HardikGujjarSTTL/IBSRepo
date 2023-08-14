@@ -298,7 +298,7 @@ namespace IBS.Models
                             Value = Convert.ToString(a.Railway)
                         }).OrderBy(c => c.Text).ToList();
             }
-            else if (CoCd != "")
+            else if (CoCd != "" && CoCd != null)
             {
                 return (from a in ModelContext.T12BillPayingOfficers
                         where a.BpoType == CoCd
@@ -315,7 +315,7 @@ namespace IBS.Models
             }
         }
 
-        public static List<SelectListItem> GetMonth(string CoCd)
+        public static List<SelectListItem> GetMonth()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
@@ -383,7 +383,7 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> GetYear(string CoCd)
+        public static List<SelectListItem> GetYear()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
@@ -471,13 +471,13 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> GetRitesOfficerCd(int cocd = 0)
+        public static List<SelectListItem> GetRitesOfficerCd(string CO_REGION,string CO_TYPE)
         {
-            if (cocd == 0)
+            if (CO_TYPE == "D")
             {
                 ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
                 return (from a in ModelContext.T08IeControllOfficers
-                        where (a.CoStatus == null)
+                        where a.CoRegion  == CO_REGION && a.CoType== CO_TYPE
                         select new SelectListItem
                         {
                             Text = Convert.ToString(a.CoName),
@@ -488,7 +488,7 @@ namespace IBS.Models
             {
                 ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
                 return (from a in ModelContext.T08IeControllOfficers
-                        where (a.CoStatus == null) && (a.CoCd == cocd)
+                        where a.CoRegion == CO_REGION
                         select new SelectListItem
                         {
                             Text = Convert.ToString(a.CoName),
@@ -1319,6 +1319,113 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Calibration Records";
             single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetClient()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "RSM";
+            single.Value = "1";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "URM";
+            single.Value = "2";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "JINDAL RAILWAY";
+            single.Value = "3";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "JINDAL NON RAILWAY.";
+            single.Value = "4";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PLATE(BSP)";
+            single.Value = "5";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> GetClientForII()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "RSM";
+            single.Value = "1";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "URM";
+            single.Value = "2";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "JINDAL";
+            single.Value = "3";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PLATE(BSP)";
+            single.Value = "4";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetWeight()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "13M";
+            single.Value = "1";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "26M";
+            single.Value = "2";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "52M";
+            single.Value = "3";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "65M";
+            single.Value = "4";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "86.67M";
+            single.Value = "5";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "87M";
+            single.Value = "6";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "117M";
+            single.Value = "7";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "130M";
+            single.Value = "8";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetLength()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "52kg";
+            single.Value = "1";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "60kg";
+            single.Value = "2";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }

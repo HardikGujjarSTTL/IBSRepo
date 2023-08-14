@@ -31,7 +31,7 @@
 
                     <div class="col-md-4 mb-4">
                         <label for="RitesOfficerCd">CONTROLLING OFFICER</label>
-                        @Html.DropDownListFor(model => model.TechCmCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(0), "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.TechCmCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(null,null), "Value", "Text"),"--Select--")
                         <span asp-validation-for="TechCmCd" class="text-danger"></span>
                     </div>
 
