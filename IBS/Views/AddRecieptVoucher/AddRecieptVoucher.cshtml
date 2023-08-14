@@ -18,17 +18,17 @@
                     <div class="row my-0">
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Voucher No</label>
-                            <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" />
+                            <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="500" />
                             
                         </div>
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Voucher Date</label>
-                            <input type="text" class="input datepicker" asp-for="VCHR_DT" maxlength="300" />
+                            <input type="text" class="input datepicker" asp-for="VCHR_DT" maxlength="500" />
                             <span asp-validation-for="VCHR_DT" class="text-danger"></span>
                         </div>
                         <label for="Reference">Bank/Cash</label>
-                        <select name="lstBank" asp-for="BANK_CD" maxlength="300">
+                        <select name="lstBank" asp-for="BANK_CD" maxlength="500">
                             <option value="0">0000-CASH</option>
                             <option value="85">2100-AXIS BANK, KOLKATA</option>
                             <option value="2">2100-STATE BANK OF INDIA</option>
@@ -48,7 +48,7 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Cheque Date<span class="text-danger"> </label>
-                            <input type="text" class="input datepicker" asp-for="CHQ_DT" mode maxlength="300" />
+                            <input type="text" class="input datepicker" asp-for="CHQ_DT" mode maxlength="500" />
                             <span asp-validation-for="CHQ_DT" class="text-danger"></span>
                         </div>
 
@@ -63,7 +63,7 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Amount</label>
-                            <input type="text" class="input" asp-for="AMOUNT" maxlength="300" />
+                            <input type="text" class="input" asp-for="AMOUNT" maxlength="500" />
                             <span asp-validation-for="AMOUNT" class="text-danger"></span>
                         </div>
 
@@ -76,7 +76,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Account Code</label>
                            
-                            <select name="ACC_CD" asp-for="ACC_CD" maxlength="300">
+                            <select name="ACC_CD" asp-for="ACC_CD" maxlength="500">
                                 <option selected="selected" value="2709">Customer's Advances:2709</option>
                                 <option value="2202">Fee Receivable Foreign Rly:2202</option>
                                 <option value="2203">Fee Receivable Public Sector:2203</option>

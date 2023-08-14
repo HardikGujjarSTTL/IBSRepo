@@ -315,18 +315,214 @@ namespace IBS.Models
             }
         }
 
-        public static List<SelectListItem> GetRitesOfficerCd()
+        public static List<SelectListItem> GetMonth(string CoCd)
         {
-            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            return (from a in ModelContext.T08IeControllOfficers
-                    where a.CoStatus != null
-                    select new SelectListItem
-                    {
-                        Text = Convert.ToString(a.CoName),
-                        Value = Convert.ToString(a.CoCd)
-                    }).OrderBy(c => c.Text).ToList();
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+
+            single = new SelectListItem();
+            single.Text = "January";
+            single.Value = "01";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "February";
+            single.Value = "02";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "March";
+            single.Value = "03";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "April";
+            single.Value = "04";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "May";
+            single.Value = "05";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "June";
+            single.Value = "06";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "July";
+            single.Value = "07";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "August";
+            single.Value = "08";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "September";
+            single.Value = "09";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "October";
+            single.Value = "10";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "November";
+            single.Value = "11";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "December";
+            single.Value = "12";
+            textValueDropDownDTO.Add(single);
+
+            return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> GetYear(string CoCd)
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+
+            single = new SelectListItem();
+            single.Text = "2008";
+            single.Value = "2008";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2009";
+            single.Value = "2009";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2010";
+            single.Value = "2010";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2011";
+            single.Value = "2011";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2012";
+            single.Value = "2012";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2013";
+            single.Value = "2013";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2014";
+            single.Value = "2014";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2015";
+            single.Value = "2015";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2016";
+            single.Value = "2016";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2017";
+            single.Value = "2017";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2018";
+            single.Value = "2018";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2019";
+            single.Value = "2019";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2020";
+            single.Value = "2020";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2021";
+            single.Value = "2021";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2022";
+            single.Value = "2022";
+            textValueDropDownDTO.Add(single);
+
+            single = new SelectListItem();
+            single.Text = "2023";
+            single.Value = "2023";
+            textValueDropDownDTO.Add(single);
+
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetRitesOfficerCd(int cocd = 0)
+        {
+            if (cocd == 0)
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T08IeControllOfficers
+                        where (a.CoStatus == null)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.CoName),
+                            Value = Convert.ToString(a.CoCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T08IeControllOfficers
+                        where (a.CoStatus == null) && (a.CoCd == cocd)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.CoName),
+                            Value = Convert.ToString(a.CoCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+        }
+
+        public static List<SelectListItem> GetInspEngCd(int IeCd = 0)
+        {
+            if (IeCd == 0)
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T09Ies
+                        where (a.IeStatus == null)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.IeName),
+                            Value = Convert.ToString(a.IeCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else 
+            {
+                ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                return (from a in ModelContext.T09Ies
+                        where (a.IeStatus == null) && (a.IeCd == IeCd)
+                        select new SelectListItem
+                        {
+                            Text = Convert.ToString(a.IeName),
+                            Value = Convert.ToString(a.IeCd)
+                        }).OrderBy(c => c.Text).ToList();
+            }
+        }
+        
         public static List<SelectListItem> MAStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -661,6 +857,33 @@ namespace IBS.Models
 
         }
 
+        public static List<SelectListItem> GetIENameWithoutCode()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T09Ies
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.IeName),
+                                      Value = Convert.ToString(a.IeCd)
+                                  }).ToList();
+            return IE;
+
+        }
+        public static List<SelectListItem> GetNCCode()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> NCCODE = ModelContext.T69NcCodes
+                                          .Select(a => new SelectListItem
+                                          {
+                                              Text = a.NcCd + " - " + a.NcDesc,
+                                              Value = a.NcCd
+                                          })
+                                          .ToList();
+            return NCCODE;
+
+        }
+
         public static List<SelectListItem> GetRailPrices()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -931,6 +1154,7 @@ namespace IBS.Models
 
         }
 
+
         public static List<SelectListItem> GetDocType()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1128,7 +1352,7 @@ namespace IBS.Models
             var property = typeof(T).GetProperty(sortColumn);
 
             // Handle nullable properties
-            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+             if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
             }

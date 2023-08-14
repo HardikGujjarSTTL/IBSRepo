@@ -665,3 +665,193 @@ UPDATE T103_VEND_DOCS
    SET ID = T103_VEND_DOCS_seq.nextval;
 ALTER TABLE T103_VEND_DOCS
     MODIFY ID NUMBER(6,0) DEFAULT T103_VEND_DOCS_seq.nextval;
+
+    =================
+
+create or replace PROCEDURE SP_GetVendorDocumentDetails (
+p_VEND_CD IN VARCHAR2,
+p_DOC_TYPE IN VARCHAR2,
+p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT VEND_CD,
+               DOC_TYPE,
+               EQUIP_MK_SL,
+               CALIB_CERT_NO,
+               EQUIP_CLBR_CERT_SNO,
+               EQUIP_NAME,
+               EQUIP_RANGE,
+               CALIBRATED_BY,
+               DT_OF_CALIB,
+               NEXT_DT_CALIB,
+               EQUIP_DESC,
+               NABL_ACC_DET,
+               'DOC/' || VEND_CD || '_||_' || DOC_TYPE || '.PDF' AS V_DOC
+        FROM t104_vend_equip_clbr_cert
+        WHERE VEND_CD = p_VEND_CD
+          AND DOC_TYPE = p_DOC_TYPE
+        ORDER BY DT_OF_CALIB;
+END;
+
+
+=====================
+
+
+CREATE TABLE EmailConfiguration (
+    Id NUMBER(6,0) PRIMARY KEY,
+    Email VARCHAR2(255),
+    DisplayName VARCHAR2(255),
+    Host VARCHAR2(255),
+    Port NUMBER(6,0),
+    Username VARCHAR2(255),
+    Password VARCHAR2(255),
+    EnableSsl NUMBER(1),
+    UseDefaultCredentials NUMBER(1)
+);
+
+CREATE SEQUENCE EmailConfigurationSeq
+    START WITH 1
+    INCREMENT BY 1
+    NOMAXVALUE;
+
+ ==============================
+
+    create or replace PROCEDURE GET_VENDOR_INFO
+(
+    IN_CASE_NO IN VARCHAR2, 
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+    p_VEND_CD NUMBER;
+    p_VEND_NAME VARCHAR2(255);
+    p_VEND_ADDRESS VARCHAR2(255);
+    p_VEND_EMAIL VARCHAR2(255);
+BEGIN
+    SELECT
+        T13.VEND_CD,
+        T05.VEND_NAME,
+        NVL2(T05.VEND_ADD2, T05.VEND_ADD1 || '/' || T05.VEND_ADD2, T05.VEND_ADD1) || '/' || T03.CITY AS VEND_ADDRESS,
+        T05.VEND_EMAIL
+    INTO
+        p_VEND_CD,
+        p_VEND_NAME,
+        p_VEND_ADDRESS,
+        p_VEND_EMAIL
+    FROM
+        T13_PO_MASTER T13
+    JOIN
+        T05_VENDOR T05 ON T13.VEND_CD = T05.VEND_CD
+    JOIN
+        T03_CITY T03 ON T05.VEND_CITY_CD = T03.CITY_CD
+    WHERE
+        T13.CASE_NO = IN_CASE_NO;
+
+    OPEN p_Result FOR
+        SELECT VEND_EMAIL FROM T05_VENDOR WHERE VEND_CD = p_VEND_CD;
+END;
+
+==============================
+CREATE OR REPLACE PROCEDURE GENERATE_REAL_CASE_NO
+(
+    IN_REGION_CD IN CHAR,
+    IN_TEMP_CASE_NO IN CHAR,
+    IN_TEMP_USER_ID IN CHAR,
+    p_Result OUT SYS_REFCURSOR
+)
+IS
+    CURSOR po_detail IS
+    SELECT ITEM_SRNO, CONSIGNEE_CD, BPO_CD
+    FROM T82_PO_DETAIL
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    r1 po_detail%ROWTYPE;
+    w_ctr CHAR(5) := NULL;
+    w_sno CHAR(4) := NULL;
+    w_Case_No CHAR(9) := NULL;
+    w_Purchaser NUMBER(8) := NULL;
+    w_Rly_Cd VARCHAR2(50) := NULL;
+    my_exception EXCEPTION;
+    OUT_ERR_CD NUMBER := 0;
+    OUT_CASE_NO CHAR(9) := NULL;
+    p_Result_Cursor SYS_REFCURSOR;
+BEGIN
+    ---
+    SELECT PURCHASER_CD, TRIM(RLY_CD)
+    INTO w_Purchaser, w_Rly_Cd
+    FROM T80_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
+    
+    IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) = '') OR (TRIM(w_Rly_Cd) IS NULL) THEN
+        OUT_ERR_CD := 2;
+        RAISE my_exception;
+    END IF;
+    ---
+    FOR r1 IN po_detail LOOP
+        IF r1.CONSIGNEE_CD = 0 OR TRIM(r1.BPO_CD) = '0' THEN
+            OUT_ERR_CD := 3;
+            RAISE my_exception;
+            EXIT;
+        END IF;
+    END LOOP;
+    ---
+    SELECT REGION_CODE || TO_CHAR(PO_DT, 'YYMM')
+    INTO w_ctr
+    FROM T80_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+    ---
+    OUT_ERR_CD := 4;
+    OUT_CASE_NO := w_ctr || w_sno;
+    
+    INSERT INTO T13_PO_MASTER
+    SELECT OUT_CASE_NO, PURCHASER_CD, STOCK_NONSTOCK, RLY_NONRLY, PO_OR_LETTER, PO_NO, SUBSTR(PO_NO, LENGTH(PO_NO) - 4, 5),
+           PO_DT, RECV_DT, VEND_CD, RLY_CD, REGION_CODE, IN_TEMP_USER_ID, DATETIME, REMARKS, 'R', POI_CD, 'V', 0
+    FROM T80_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    OUT_ERR_CD := 5;
+    INSERT INTO T14_PO_BPO
+    SELECT UNIQUE OUT_CASE_NO, CONSIGNEE_CD, BPO_CD
+    FROM T82_PO_DETAIL
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    OUT_ERR_CD := 6;
+    INSERT INTO T15_PO_DETAIL
+    SELECT OUT_CASE_NO, ITEM_SRNO, ITEM_DESC, CONSIGNEE_CD, QTY, RATE, UOM_CD, BASIC_VALUE, SALES_TAX_PER, SALES_TAX,
+           EXCISE_TYPE, EXCISE_PER, EXCISE, DISCOUNT_TYPE, DISCOUNT_PER, DISCOUNT, OTHER_CHARGES, VALUE, DELV_DT,
+           EXT_DELV_DT, IN_TEMP_USER_ID, DATETIME, OT_CHARGE_TYPE, OT_CHARGE_PER, ITEM_CD, PL_NO
+    FROM T82_PO_DETAIL
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    OUT_ERR_CD := 7;
+    UPDATE T80_PO_MASTER
+    SET REAL_CASE_NO = OUT_CASE_NO
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    OUT_ERR_CD := 0;
+    COMMIT;
+
+    -- Open the cursor for the result
+    OPEN p_Result_Cursor FOR
+    SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
+    FROM DUAL;
+    p_Result := p_Result_Cursor;
+    
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        ROLLBACK;
+    WHEN NO_DATA_FOUND THEN
+        ROLLBACK;
+    WHEN my_exception THEN
+        ROLLBACK;
+    WHEN OTHERS THEN
+        ROLLBACK;
+END;
+
+
+=======================

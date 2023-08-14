@@ -136,9 +136,7 @@ namespace IBS.Controllers
                     {
                         AlertDanger("Invalid Username or Password");
                     }
-                }
-
-
+                } 
             }
             return View(loginModel);
         }

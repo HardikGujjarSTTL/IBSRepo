@@ -1,0 +1,29 @@
+﻿@model IBS.Models.DEOVendorPurchesOrderModel
+<div class="modal-dialog modal-lg" role="document" style="width: 24%;">
+    <input type="hidden" asp-for="CaseNo" />
+    <input type="hidden" asp-for="PoNo" />
+    <input type="hidden" asp-for="PoDt" />
+    <input type="hidden" asp-for="RlyCd" />
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit Case No.</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Real Case No.</label>
+                    <input type="text" class="input" asp-for="RealCaseNo">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" data-bs-dismiss="modal">Close</button>
+                <button class="save-btn active" id="btnSaveRealCaseNo" onclick="UpdateRealCaseNo()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

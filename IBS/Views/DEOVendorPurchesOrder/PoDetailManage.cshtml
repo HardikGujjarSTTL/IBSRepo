@@ -1,0 +1,442 @@
+﻿@model IBS.Models.PO_MasterDetailsModel
+
+@{
+    ViewData["Title"] = "PO Detail";
+}
+@{
+    var CaseNo = Model.CaseNo;
+    var ItemSrno = 0;
+    var RlyCd = Model.RlyCd;
+    var RlyNonrly = Model.RlyNonrly;
+    var PoDt = Model.PoDt;
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>PO Detail</h2>
+    </div>
+</div>
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="DEOVendorPurchesOrder" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
+            <input type="hidden" asp-for="ItemSrno" />
+            <input type="hidden" asp-for="CaseNo" />
+            
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Ref No.</label>
+                        <input type="text" class="input" asp-for="CaseNo" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">PO Date</label>
+                        <input type="text" class="input" asp-for="PoDt" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Item Serial No.</label>
+                        <input type="text" class="input" asp-for="ItemSrno" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">PL NO.</label>
+                        <input type="text" class="input" asp-for="PlNo">
+                        <span asp-validation-for="PlNo" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Bill Paying Officer/Paying Authority</label>
+                        <input type="text" class="input" asp-for="SBPO" style="width: 61%;">
+                        <button type="button" class="save-btn active" onclick="SearchBPO();">Search BPO</button>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference"></label>
+                        @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="Bpo">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference" style="width: 100%;">Consignee</label>
+                        <input type="text" class="input" asp-for="ConsigneeSearch" style="width: 46%;">
+                        <button type="button" class="save-btn active" onclick="SearchConsignee();">Search Consignee</button>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference"></label>
+                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="Consignee">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Quantity</label>
+                        <input type="text" class="input" asp-for="Qty">
+                        <span asp-validation-for="Qty" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Unit Of Measurment</label>
+                        @Html.DropDownListFor(model => model.UomCd, new SelectList(IBS.Models.Common.GetUnitOfMeasurment() , "Value", "Text"),"--Select--",new { @onchange="GetUOMChanged()" })
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="reference">Value</label>
+                        <input type="text" class="input" asp-for="UOMFactor" style="text-transform: uppercase;" readonly="readonly">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Rate</label>
+                        <input type="text" class="input" asp-for="Rate" onblur="basevalue()">
+                        <span asp-validation-for="Rate" class="text-danger" ></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Base Value</label>
+                        <input type="text" class="input" asp-for="BasicValue" style="text-transform: uppercase;">
+                        <span asp-validation-for="BasicValue" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Discount Type</label>
+                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="Rate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Value</label>
+                        <input type="text" class="input" asp-for="DiscountPer" onblur="discountype();">
+                        <span asp-validation-for="DiscountPer" class="text-danger" ></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Discount</label>
+                        <input type="text" class="input" asp-for="Discount" onblur="discountype();">
+                        <span asp-validation-for="Discount" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Name">Excise Type</label>
+                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="ExciseType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="reference">
+                            <label for="Name">Value</label>
+                            <input type="text" class="input" asp-for="ExcisePer" style="text-transform: uppercase;" onblur="excise();">
+                            <span asp-validation-for="ExcisePer" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="reference">
+                            <label for="Name">Excise</label>
+                            <input type="text" class="input" asp-for="Excise" style="text-transform: uppercase;" onblur="excise();">
+                            <span asp-validation-for="Excise" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <div class="reference">
+                            <label for="Name">GST/Sale Tax(%)</label>
+                            <input type="text" class="input" asp-for="SalesTaxPer" style="text-transform: uppercase;" onblur="saletax();">
+                            <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Sale Tax</label>
+                        <input type="text" class="input" asp-for="SalesTax" style="text-transform: uppercase;" onblur="saletax();">
+                        <span asp-validation-for="SalesTax" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Name">Other Charges Type</label>
+                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="reference">
+                            <label for="Name">Value</label>
+                            <input type="text" class="input" asp-for="OtChargePer" style="text-transform: uppercase;" onblur="othercharges();">
+                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Other Charges (AMT)</label>
+                        <input type="text" class="input" asp-for="OtherCharges" style="text-transform: uppercase;" onblur="saletax();">
+                        <span asp-validation-for="OtherCharges" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Total Value</label>
+                        <input type="text" class="input" asp-for="Value" style="text-transform: uppercase;" onfocus="total();">
+                        <span asp-validation-for="Value" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <div class="reference">
+                            <label for="Name">Last Date of Supply</label>
+                            <input type="text" class="datetime" asp-for="DelvDt" style="text-transform: uppercase;" readonly="readonly" onblur="cpy();">
+                            <span asp-validation-for="DelvDt" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Delivery Deadline Date</label>
+                        <input type="text" class="datetime" asp-for="ExtDelvDt" style="text-transform: uppercase;" readonly="readonly">
+                        <span asp-validation-for="ExtDelvDt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Item Description</label>
+                        <textarea rows="4" asp-for="ItemDesc" style="text-transform: uppercase;"></textarea>
+                        <span asp-validation-for="ItemDesc" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <a asp-controller="DEOVendorPurchesOrder" asp-action="PODetails" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            $('#DelvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#ExtDelvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $("#UomCd").val(3);
+            GetUOMChanged();
+        });
+
+        $(document).ready(function () {
+            
+        });
+
+        function GetUOMChanged() {
+            var UomCd = $('#UomCd').val();
+            $.ajax({
+                url: '@Url.Action("GetUOMChanged", "DEOVendorPurchesOrder")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: UomCd },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        $("#UOMFactor").val(contacts.data[0].UOMFactor);
+                    }
+                }
+            });
+        }
+
+        function SearchBPO()
+        {
+            var SBPO = $("#SBPO").val();
+            $.ajax({
+                url: '@Url.Action("GetBillPayingOfficer", "DEOVendorPurchesOrder")?SBPO=' + SBPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BpoCd").html("");
+                    $("#BpoCd").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+        function SearchConsignee() {
+            var ConsigneeSearch = $("#ConsigneeSearch").val();
+            $.ajax({
+                url: '@Url.Action("GetConsigneeUsingConsignee", "DEOVendorPurchesOrder")?ConsigneeSearch=' + ConsigneeSearch,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ConsigneeCd").html("");
+                    $("#ConsigneeCd").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function basevalue() {
+            var qty;
+            var rate;
+            if ($.trim($('#Qty').val()) === "") {
+                qty = 0;
+            } else {
+                qty = parseFloat($.trim($('#Qty').val()));
+            }
+
+            if ($.trim($('#Rate').val()) === "") {
+                rate = 0;
+            } else {
+                rate = parseFloat($.trim($('#Rate').val()));
+            }
+
+            var uom = parseFloat($.trim($('#UOMFactor').val()));
+            var basevalue = ((qty * rate) / uom);
+            $('#BasicValue').val(Math.round(basevalue * 100) / 100);
+        }
+
+        function cpy() {
+            debugger
+            var delvDateInput = $("#DelvDt").val();
+            var podtInput = $("#PoDt").val();
+
+            if (check_date(delvDateInput)) {
+                if (compareDates(podtInput, delvDateInput, 'Delivery Date Cannot Be Earlier Than PO Date')) {
+                    $("#DelvDt").val(delvDateInput);
+                }
+            }
+        }
+        function saletax() {
+            var saleTaxPre = $.trim($("#SalesTaxPer").val());
+            var discountAmt = $.trim($("#Discount").val());
+            var exciseAmt = $.trim($("#Excise").val());
+
+            if (saleTaxPre !== "") {
+                var discountypeper = parseFloat(discountAmt !== "" ? discountAmt : 0);
+                var excise = parseFloat(exciseAmt !== "" ? exciseAmt : 0);
+                var stper = parseFloat(saleTaxPre);
+                var basevalue = parseFloat($.trim($("#BasicValue").val()));
+                var stamount = ((basevalue - discountypeper) + excise) * stper / 100;
+                $("#SalesTax").val(Math.round(stamount * 100) / 100);
+            } else {
+                $("#SalesTax").val(0);
+            }
+        }
+
+        function excise() {
+            var ddlExciseType = $.trim($("#ExciseType").val());
+            var discountAmt = $.trim($("#Discount").val());
+            var excise = $.trim($("#Excise").val());
+            if (excise == null || excise == "")
+            {
+                excise=0;
+            }
+            if (ddlExciseType === "P") {
+                var discountypeper = parseFloat(discountAmt !== "" ? discountAmt : 0);
+                var exciseper = parseFloat(excise);
+                var basevalue = parseFloat($.trim($("#BasicValue").val()));
+                var exciseamount = ((basevalue - discountypeper) * exciseper) / 100;
+                $("#ExcisePer").val(Math.round(exciseamount * 100) / 100);
+            } else if (ddlExciseType === "L") {
+                $("#ExcisePer").val(excise);
+            } else {
+                $("#ExcisePer").val(0);
+                $("#Excise").val(0);
+            }
+        }
+
+        function discountype() {
+            var ddlDiscountType = $.trim($("#DiscountType").val());
+            var txtDiscountPer = $.trim($("#DiscountPer").val());
+            var txtBaseValue = $.trim($("#BasicValue").val());
+            var txtQty = $.trim($("#txtQty").val());
+
+            if (ddlDiscountType === "P") {
+                var discountypeper = parseFloat(txtDiscountPer);
+                var basevalue = parseFloat(txtBaseValue);
+                var discountamount = (basevalue * discountypeper) / 100;
+                $("#Discount").val(Math.round(discountamount * 100) / 100);
+            } else if (ddlDiscountType === "L") {
+                $("#Discount").val(txtDiscountPer);
+            } else if (ddlDiscountType === "N") {
+                var discountperno = parseFloat(txtDiscountPer);
+                var qty = parseFloat(txtQty);
+                $("#Discount").val(discountperno * qty);
+            } else {
+                $("#Discount").val(0);
+                $("#DiscountPer").val(0);
+            }
+        }
+
+        function othercharges() {
+            var ddlOCType = $.trim($("#OtChargeType").val());
+            var txtOtherCharges = $.trim($("#OtChargePer").val());
+            var txtBaseValue = $.trim($("#BasicValue").val());
+            var txtQty = $.trim($("#txtQty").val());
+
+            if (ddlOCType === "P") {
+                var otherper = parseFloat(txtOtherCharges);
+                var basevalue = parseFloat(txtBaseValue);
+                var otheramount = (basevalue * otherper) / 100;
+                $("#OtherCharges").val(Math.round(otheramount * 100) / 100);
+            } else if (ddlOCType === "L") {
+                $("#OtherCharges").val(txtOtherCharges);
+            } else if (ddlOCType === "N") {
+                var otherperno = parseFloat(txtOtherCharges);
+                var qty = parseFloat(txtQty);
+                $("#OtherCharges").val(otherperno * qty);
+            } else {
+                $("#OtherCharges").val(0);
+                $("#OtChargePer").val(0);
+            }
+        }
+
+        function total() {
+            var txtBaseValue = $.trim($("#BasicValue").val());
+            var txtSaleTaxAmt = $.trim($("#SalesTaxPer").val());
+            var txtExciseAmt = $.trim($("#Excise").val());
+            var txtDiscountAmt = $.trim($("#Discount").val());
+            var txtOtherChargesAmt = $.trim($("#OtherCharges").val());
+
+            var basevalue = parseFloat(txtBaseValue);
+            var saletaxamt = (txtSaleTaxAmt === "") ? 0 : parseFloat(txtSaleTaxAmt);
+            var exciseamt = (txtExciseAmt === "") ? 0 : parseFloat(txtExciseAmt);
+            var discountamt = (txtDiscountAmt === "") ? 0 : parseFloat(txtDiscountAmt);
+            var othercharges = (txtOtherChargesAmt === "") ? 0 : parseFloat(txtOtherChargesAmt);
+
+            var totalvalue1 = basevalue - discountamt;
+            var totalvalue2 = totalvalue1 + exciseamt;
+            var totalvalue3 = totalvalue2 + saletaxamt;
+            var totalvalue = totalvalue3 + othercharges;
+
+            $("#Value").val(Math.round(totalvalue * 100) / 100);
+        }
+
+        function Save() {
+            if ($("#frmPOMasterDetails").valid()) {
+                $("#frmPOMasterDetails").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/DEOVendorPurchesOrder/PODetails?CaseNo=" + '@Model.CaseNo';
+        };
+
+    </script>
+}

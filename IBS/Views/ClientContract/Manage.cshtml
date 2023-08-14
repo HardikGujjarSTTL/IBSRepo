@@ -36,13 +36,13 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Officer Name Contracted<span class="text-danger" style="font-size:smaller">*</span></label>
-                            <input type="text" class="input" asp-for="ClientOfficerName" mode maxlength="300" />
+                            <input type="text" class="input" asp-for="ClientOfficerName" mode maxlength="500" />
                             <span asp-validation-for="ClientOfficerName" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-4 mb-4">
                             <label for="Designation">Designation<span class="text-danger" style="font-size:smaller">*</span></label>
-                            <input type="text" class="input" asp-for="Designation" mode maxlength="300" />
+                            <input type="text" class="input" asp-for="Designation" mode maxlength="500" />
                             <span asp-validation-for="Designation" class="text-danger"></span>
                         </div>
 
@@ -54,13 +54,13 @@
 
                         <div class="col-md-6 mb-4">
                             <label for="Highlights">Highlights of Discussion if Any</label>
-                            <textarea rows="3" type="text" name="Highlights" class="input" asp-for="Highlights" maxlength="300"></textarea>
+                            <textarea rows="3" type="text" name="Highlights" class="input" asp-for="Highlights" maxlength="500"></textarea>
                             <span asp-validation-for="Highlights" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 mb-4">
                             <label for="OverallOutcome">Overall OutCome of the Visit</label>
-                            <textarea rows="3" type="text" name="OverallOutcome" class="input" asp-for="OverallOutcome" maxlength="300"></textarea>
+                            <textarea rows="3" type="text" name="OverallOutcome" class="input" asp-for="OverallOutcome" maxlength="500"></textarea>
                             <span asp-validation-for="OverallOutcome" class="text-danger"></span>
                         </div>
 
@@ -72,11 +72,59 @@
                     </div>
                 </div>
             </form>
-    
+    </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ('@Model.Client' != null) {
+                FillClient('@Model.Client');
+            }
+        });
+    </script>
+
+    <script language="javascript">
+        function validate() {
+            if (trimAll(document.frmClientContractDetails.VisitDt.value) == "") {
+                alert("Select Date of visit");
+                event.returnValue = false;
+            }
+
+            else if (trimAll(document.frmClientContractDetails.ClientType.value) == "") {
+                alert("Select Client Type");
+                event.returnValue = false;
+            }
+            else if (trimAll(document.frmClientContractDetails.Client.value) == "") {
+                alert("Select Client ");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.ClientOfficerName.value == "") {
+                alert("OFFICER NAME CONTACTED CANNOT BE LEFT BLANK");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.Designation.value == "") {
+                alert("DESIGNATION CANNOT BE LEFT BLANK");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.OverallOutcome.value == "") {
+                alert("OUTCOME CANNOT BE LEFT BLANK");
+                event.returnValue = false;
+            }
+            else if (document.frmClientContractDetails.RitesOfficerCd.value == "") {
+                alert("SELECT CONTROLLING OFFICER NAME");
+                event.returnValue = false;
+            }
+            else
+                return;
+
+        }
+        function integersOnly(obj) {
+            obj.value = obj.value.replace(/[^0-9-.]/g, '');
+        }
+    </script>
+    
     <script type="text/javascript">
         function Save() {
             if ($("#frmClientContractDetails").valid()) {
@@ -89,16 +137,18 @@
             window.location.href = "/ClientContract/Index";
         };
 
-        function FillClient() {
+        function FillClient(id) {
             var _drpClientType = $('select#ClientType').val();
-
             $.get("@Url.Action("GetClientByClientType", "ClientContract")", { CoCd: _drpClientType }, function (response) {
                 if (response != null) {
                     $("#Client").empty();
                     $("#Client").append($('<option value="">--Select--</option>'));
                     $.each(response, function (ind, val) {
-                        $("#Client").append($('<option></option>').val(val.Value).html(val.Text));
+                        $("#Client").append($('<option></option>').val(val.Value).html(val.Text)); 
                     });
+                    if (id != null) {
+                        $("#Client").val(id);
+                    }
                 }
             });
         }
