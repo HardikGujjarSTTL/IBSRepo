@@ -117,7 +117,7 @@ namespace IBS.Repositories
             var _contracts = context.T58ClientContacts.Find(Convert.ToInt32(ContractId));
             if (_contracts == null) { return false; }
 
-            //_contracts.Isdeleted = Convert.ToByte(true);
+             _contracts.Isdeleted = Convert.ToByte(true);
             //_contracts.Updatedby = Convert.ToInt32(UserID);
             //_contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
@@ -132,6 +132,7 @@ namespace IBS.Repositories
             if (_contract == null)
             {
                 T58ClientContact obj = new T58ClientContact();
+                obj.VisitDt = Convert.ToDateTime(model.VisitDt.ToString());
                 obj.ClientOfficerName = model.ClientOfficerName;
                 obj.Designation = model.Designation;
                 obj.ClientType = model.ClientType;
@@ -154,7 +155,8 @@ namespace IBS.Repositories
                 ContractId = Convert.ToInt32(obj.Id);
             }
             else
-            {   
+            {  
+               _contract.VisitDt = Convert.ToDateTime(model.VisitDt.ToString());
                _contract.ClientOfficerName = model.ClientOfficerName;
                _contract.Designation = model.Designation;
                _contract.ClientType = model.ClientType;

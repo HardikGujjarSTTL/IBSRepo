@@ -1,0 +1,150 @@
+
+Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+=============================================================================================================================================
+
+-- 1. Create a table with a primary key constraint
+
+
+
+=============================================================================================================================================
+By Vishvaraj Rathod
+=============================================================================================================================================
+
+ALTER TABLE T57_ONGOING_CONTRACTS 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T57_ONGOING_CONTRACTS
+    ADD CreatedBy Number(2,0);
+
+ALTER TABLE T46_CLAIM_DETAIL 
+    ADD UpdatedBy Number(2,0); 
+    
+ALTER TABLE T57_ONGOING_CONTRACTS
+    ADD CreatedDate DATE
+
+ALTER TABLE T57_ONGOING_CONTRACTS
+    ADD UpdatedDate DATE 
+
+ALTER TABLE T57_ONGOING_CONTRACTS 
+    MODIFY CONTRACT_ID  NUMBER(8,0);
+----------------------------------------
+ALTER TABLE T58_CLIENT_CONTACT 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE T58_CLIENT_CONTACT_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+  
+UPDATE T58_CLIENT_CONTACT
+   SET ID = T58_CLIENT_CONTACT_seq.nextval;
+
+ALTER TABLE T58_CLIENT_CONTACT
+    MODIFY ID NUMBER(6,0) DEFAULT T58_CLIENT_CONTACT_seq.nextval;
+
+ALTER TABLE T58_CLIENT_CONTACT
+ADD CONSTRAINT T58_CLIENT_CONTACT_pk  PRIMARY KEY (ID);
+
+
+-----------------------------------------
+
+ALTER TABLE t59_lab_exp 
+ADD ID NUMBER(6,0) ;
+CREATE SEQUENCE t59_lab_exp_seq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 20;
+UPDATE t59_lab_exp
+   SET ID = t59_lab_exp_seq.nextval;
+ALTER TABLE t59_lab_exp
+    MODIFY ID NUMBER(6,0) DEFAULT t59_lab_exp_seq.nextval;
+ALTER TABLE t59_lab_exp
+ADD CONSTRAINT t59_lab_exp_pk  PRIMARY KEY (ID);
+
+
+
+-------------------------------
+
+CREATE OR REPLACE PROCEDURE SP_GETDATA_T66TECHREF
+(   
+    in_tech_id     IN VARCHAR2,
+    in_region_cd   IN VARCHAR2,
+    out_result_set OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN out_result_set FOR
+    SELECT
+        ROW_NUMBER() OVER (ORDER BY TO_CHAR(tr.tech_date, 'dd.mm.yyyy hh:mm:ss')) AS sn,
+        co.co_name AS TechCmName,
+        ie.ie_name AS TechIeName,
+        tr.tech_item_des AS TechItemDes,
+        tr.tech_spec_drg AS TechSpecDrg,
+        tr.tech_letter_no AS TechLetterNo,
+        TO_CHAR(tr.tech_date, 'MM/dd/yyyy hh:mm:ss') AS TechDate,
+        tr.tech_ref_made AS TechRefMade,
+        tr.tech_content AS TechContent,
+        tr.tech_id AS TechId,
+        tr.tech_cm_cd AS TechCmCd,
+        tr.tech_ie_cd AS TechIeCd
+    FROM
+        t66_tech_ref tr
+        JOIN t08_ie_controll_officer co ON tr.tech_cm_cd = co.co_cd
+        JOIN t09_ie ie ON tr.tech_ie_cd = ie.ie_cd
+    WHERE
+        tr.tech_id IS NOT NULL
+        AND tr.region_cd = in_region_cd
+        AND tr.tech_id = in_tech_id;
+END SP_GETDATA_T66TECHREF;
+
+--------------------------------------------
+
+
+
+ALTER TABLE t59_lab_exp
+    ADD CreatedBy Number(2,0);
+
+ALTER TABLE t59_lab_exp 
+    ADD UpdatedBy Number(2,0); 
+    
+ALTER TABLE t59_lab_exp
+    ADD CreatedDate DATE
+
+ALTER TABLE t59_lab_exp
+    ADD UpdatedDate DATE 
+
+ALTER TABLE t59_lab_exp 
+    ADD IsDeleted NUMBER(2,0);
+---------------------------------------
+
+ALTER TABLE t83_be_target 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE t83_be_target
+    ADD CreatedBy CHAR(8,0);
+
+ALTER TABLE t83_be_target 
+    ADD UpdatedBy CHAR(8,0); 
+    
+ALTER TABLE t83_be_target
+    ADD CreatedDate DATE
+
+ALTER TABLE t83_be_target
+    ADD UpdatedDate DATE 
+
+-------------------------------------------
+
+ALTER TABLE t84_outs_ly 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE t84_outs_ly
+    ADD CreatedBy CHAR(8,0);
+
+ALTER TABLE t84_outs_ly 
+    ADD UpdatedBy CHAR(8,0); 
+    
+ALTER TABLE t84_outs_ly
+    ADD CreatedDate DATE
+
+ALTER TABLE t84_outs_ly
+    ADD UpdatedDate DATE

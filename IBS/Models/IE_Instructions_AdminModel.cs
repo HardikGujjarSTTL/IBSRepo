@@ -8,6 +8,8 @@ namespace IBS.Models
 
         public string? LetterNo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime? LetterDt { get; set; }
 
         public string? Message { get; set; }

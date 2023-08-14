@@ -8,6 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using IBS.Helper;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -23,11 +24,20 @@ namespace IBS.Repositories
         public GeneralMessageModel FindByID(int MessageId)
         {
 
+            //string date = "07-07-2023";
+            //OracleParameter[] par1 = new OracleParameter[4];
+            //par1[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, "W", ParameterDirection.Input);
+            //par1[1] = new OracleParameter("IN_PO_DT", OracleDbType.Varchar2, date, ParameterDirection.Input);
+            //par1[2] = new OracleParameter("OUT_CASE_NO", OracleDbType.Char, ParameterDirection.Output);
+            //par1[3] = new OracleParameter("OUT_ERR_CD", OracleDbType.Decimal, ParameterDirection.Output);
+
+            //var ds1 = DataAccessDB.GetDataSet("GENERATE_VEND_CASE_NO", par1, 1);
+
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[2];
                 par[0] = new OracleParameter("p_MessageId", OracleDbType.Decimal, MessageId, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                //par[1] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 var ds = DataAccessDB.GetDataSet("SP_GET_T96_MESSAGE", par, 1);
 
@@ -38,7 +48,7 @@ namespace IBS.Repositories
                     model = JsonConvert.DeserializeObject<List<GeneralMessageModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
                 }
 
-                
+
                 return model;
             }
 

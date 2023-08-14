@@ -40,7 +40,7 @@ namespace IBS.Controllers
             {
                 // username = anet
                 string LoginType = HttpContext.Session.GetString("LoginType").ToString();
-                if (LoginType.ToLower() == "admin")
+                if (LoginType.ToLower() == "admin") 
                 {
                     T02User userMaster = userRepository.FindByLoginDetail(loginModel);
                     if (userMaster != null)
@@ -67,6 +67,8 @@ namespace IBS.Controllers
                         var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
                         HttpContext.SignInAsync(userPrincipal);
+
+                        SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(1);
                         return RedirectToAction("Index", "Dashboard");
                     }
                     else
@@ -80,7 +82,7 @@ namespace IBS.Controllers
                     if (userMaster != null)
                     {
                         UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
+                        userSessionModel.UserID = Convert.ToInt32(userMaster.UserId);
                         userSessionModel.Name = Convert.ToString(userMaster.VendName);
                         userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
                         userSessionModel.LoginType = Convert.ToString(LoginType);
@@ -134,9 +136,7 @@ namespace IBS.Controllers
                     {
                         AlertDanger("Invalid Username or Password");
                     }
-                }
-
-
+                } 
             }
             return View(loginModel);
         }
