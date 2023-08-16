@@ -259,93 +259,97 @@ namespace IBS.Repositories.Vendor
 
         public DTResult<PurchesOrder1LOAModel> GetPODataList(DTParameters dtParameters)
         {
-
             DTResult<PurchesOrder1LOAModel> dTResult = new() { draw = 0 };
             IQueryable<PurchesOrder1LOAModel>? query = null;
-
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-            if (dtParameters.Order != null)
+            try
             {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                var searchBy = dtParameters.Search?.Value;
+                var orderCriteria = string.Empty;
+                var orderAscendingDirection = true;
 
-                if (orderCriteria == "")
+                if (dtParameters.Order != null)
+                {
+                    // in this example we just default sort on the 1st column
+                    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                    if (orderCriteria == "")
+                    {
+                        orderCriteria = "CaseNo";
+                    }
+                    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+                }
+                else
                 {
                     orderCriteria = "CaseNo";
+                    orderAscendingDirection = true;
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+
+                string CaseNo = "", PoDt = "", ItemSrno = "", type = "", ConsigneeCd = "", ItemDesc = "";
+
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+                {
+                    CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ItemSrno"]))
+                {
+                    ItemSrno = Convert.ToString(dtParameters.AdditionalValues["ItemSrno"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+                {
+                    PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["type"]))
+                {
+                    type = Convert.ToString(dtParameters.AdditionalValues["type"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ConsigneeCd"]))
+                {
+                    ConsigneeCd = Convert.ToString(dtParameters.AdditionalValues["ConsigneeCd"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ItemDesc"]))
+                {
+                    ItemDesc = Convert.ToString(dtParameters.AdditionalValues["ItemDesc"]);
+                }
+
+                CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
+                PoDt = Convert.ToDateTime(PoDt).ToString("dd/MM/yyyyy");
+                ItemSrno = ItemSrno.ToString() == "" ? string.Empty : ItemSrno.ToString();
+                type = type.ToString() == "" ? string.Empty : type.ToString();
+                ConsigneeCd = ConsigneeCd.ToString() == "" ? string.Empty : ConsigneeCd.ToString();
+                ItemDesc = ItemDesc.ToString() == "" ? string.Empty : ItemDesc.ToString();
+
+
+                query = from l in context.ViewT15PoDetails
+                        where l.CaseNo == CaseNo && (l.ConsigneeCd == Convert.ToInt32(ConsigneeCd) || l.ConsigneeCd == null)
+                        //&& l.ItemDesc == ItemDesc
+                        select new PurchesOrder1LOAModel
+                        {
+                            CaseNo = l.CaseNo,
+                            ItemSrno = l.ItemSrno,
+                            ItemDesc = l.ItemDesc,
+                            ConsigneeName = l.ConsigneeName,
+                            Qty = l.Qty,
+                            Rate = l.Rate,
+                            Value = l.Value,
+                            PoDt = Convert.ToDateTime(PoDt)
+                        };
+
+                dTResult.recordsTotal = query.Count();
+
+                if (!string.IsNullOrEmpty(searchBy))
+                    query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                    );
+
+                dTResult.recordsFiltered = query.Count();
+
+                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+                dTResult.draw = dtParameters.Draw;
             }
-            else
+            catch(Exception e)
             {
-                orderCriteria = "CaseNo";
-                orderAscendingDirection = true;
+
             }
-
-            string CaseNo = "", PoDt = "", ItemSrno = "", type = "", ConsigneeCd = "", ItemDesc = "";
-
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
-            {
-                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ItemSrno"]))
-            {
-                ItemSrno = Convert.ToString(dtParameters.AdditionalValues["ItemSrno"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
-            {
-                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["type"]))
-            {
-                type = Convert.ToString(dtParameters.AdditionalValues["type"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ConsigneeCd"]))
-            {
-                ConsigneeCd = Convert.ToString(dtParameters.AdditionalValues["ConsigneeCd"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ItemDesc"]))
-            {
-                ItemDesc = Convert.ToString(dtParameters.AdditionalValues["ItemDesc"]);
-            }
-
-            CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            PoDt = Convert.ToDateTime(PoDt).ToString("dd/MM/yyyyy");
-            ItemSrno = ItemSrno.ToString() == "" ? string.Empty : ItemSrno.ToString();
-            type = type.ToString() == "" ? string.Empty : type.ToString();
-            ConsigneeCd = ConsigneeCd.ToString() == "" ? string.Empty : ConsigneeCd.ToString();
-            ItemDesc = ItemDesc.ToString() == "" ? string.Empty : ItemDesc.ToString();
-
-
-            query = from l in context.ViewT15PoDetails
-                    where l.CaseNo == CaseNo && (l.ConsigneeCd == Convert.ToInt32(ConsigneeCd) || l.ConsigneeCd == null)
-                    //&& l.ItemDesc == ItemDesc
-                    select new PurchesOrder1LOAModel
-                    {
-                        CaseNo = l.CaseNo,
-                        ItemSrno = l.ItemSrno,
-                        ItemDesc = l.ItemDesc,
-                        ConsigneeName = l.ConsigneeName,
-                        Qty = l.Qty,
-                        Rate = l.Rate,
-                        Value = l.Value,
-                        PoDt = Convert.ToDateTime(PoDt)
-                    };
-
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
-            dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 
