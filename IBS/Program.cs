@@ -106,6 +106,8 @@ builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRe
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 builder.Services.AddScoped<IVendorDocumentRepository, VendorDocumentRepository>();
 builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
+builder.Services.AddScoped<ICentralQOIRepository, CentralQOIRepository>();
+builder.Services.AddScoped<ICentralQOIIRepository, CentralQOIIRepository>();
 
 
 #region Inspection and Billing

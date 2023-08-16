@@ -22,12 +22,12 @@
 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Month: </label>
-                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonth(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="AdjusmentPerMon" class="text-danger"></span>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Year: </label>
-                                @Html.DropDownListFor(model => model.AdjusmentPerYear, new SelectList(IBS.Models.Common.GetYear(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.AdjusmentPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="AdjusmentPerYear" class="text-danger"></span>
                             </div>
 

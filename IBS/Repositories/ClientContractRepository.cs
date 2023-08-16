@@ -30,26 +30,22 @@ namespace IBS.Repositories
                 model.ClientOfficerName = tenant.ClientOfficerName;
                 model.Designation = tenant.Designation;
                 model.ClientType = tenant.ClientType;
-                model.Client =  tenant.Client;
+                model.Client = tenant.Client;
                 model.RitesOfficerCd = Convert.ToByte(tenant.RitesOfficerCd);
                 model.Highlights = tenant.Highlights;
                 model.OverallOutcome = tenant.OverallOutcome;
-                model.RegionCd =  tenant.RegionCd;
+                model.RegionCd = tenant.RegionCd;
                 model.UserId = tenant.UserId;
                 model.Datetime = tenant.Datetime;
                 model.TypeCb = tenant.TypeCb;
                 model.OutAmt = tenant.OutAmt;
-                //model.Isdeleted = tenant.Isdeleted;
-                //model.Createddate = tenant.Createddate;
-                //model.Createdby = tenant.Createdby;
-                //model.Updateddate = tenant.Updateddate;
-                //model.Updatedby = tenant.Updatedby;
+                model.Isdeleted = tenant.Isdeleted;
                 return model;
             }
         }
 
         public DTResult<ClientContractModel> GetClientContractList(DTParameters dtParameters)
-        { 
+        {
             DTResult<ClientContractModel> dTResult = new() { draw = 0 };
             IQueryable<ClientContractModel>? query = null;
 
@@ -74,8 +70,9 @@ namespace IBS.Repositories
                 orderCriteria = "Id";
                 orderAscendingDirection = true;
             }
+            string TypeCb = dtParameters.AdditionalValues.ToArray().Where(x => x.Key == "Type").FirstOrDefault().Value;
             query = from l in context.T58ClientContacts
-                    //where l.Isdeleted == 0 
+                    where (l.Isdeleted == 0 || l.Isdeleted == null) && l.TypeCb == TypeCb
                     select new ClientContractModel
                     {
                         Id = Convert.ToInt32(l.Id),
@@ -86,25 +83,21 @@ namespace IBS.Repositories
                         Client = l.Client,
                         RitesOfficerCd = l.RitesOfficerCd,
                         Highlights = l.Highlights,
-                        OverallOutcome =  l.OverallOutcome,
+                        OverallOutcome = l.OverallOutcome,
                         RegionCd = l.RegionCd,
                         //UserId = l.UserId,
                         Datetime = Convert.ToDateTime(l.Datetime),
                         TypeCb = l.TypeCb,
-                        OutAmt = l.OutAmt,                                                
-                        //Isdeleted = l.Isdeleted,
-                        //Createdby = l.Createdby,
-                        //Createddate = l.Createddate,
-                        //Updatedby= l.Updatedby,
-                        //Updateddate= l.Updateddate,
-            };
+                        OutAmt = l.OutAmt,
+                        Isdeleted = l.Isdeleted,
+                    };
 
             dTResult.recordsTotal = query.Count();
 
-            //if (!string.IsNullOrEmpty(searchBy))
-            //    query = query.Where(w => Convert.ToString(w.Contractname).ToLower().Contains(searchBy.ToLower())
-            //    || Convert.ToString(w.Contractdescription).ToLower().Contains(searchBy.ToLower())
-            //    );
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.ClientOfficerName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Designation).ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsFiltered = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
@@ -116,10 +109,9 @@ namespace IBS.Repositories
         {
             var _contracts = context.T58ClientContacts.Find(Convert.ToInt32(ContractId));
             if (_contracts == null) { return false; }
-
-             _contracts.Isdeleted = Convert.ToByte(true);
-            //_contracts.Updatedby = Convert.ToInt32(UserID);
-            //_contracts.Updateddate = DateTime.Now;
+            _contracts.Isdeleted = Convert.ToByte(true);
+            _contracts.Updatedby = Convert.ToInt32(UserID);
+            _contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -143,32 +135,35 @@ namespace IBS.Repositories
                 obj.RegionCd = model.RegionCd;
                 obj.UserId = model.UserId;
                 obj.Datetime = model.Datetime;
-                obj.TypeCb = "C";                
-                obj.OutAmt = model.OutAmt;                  
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = Convert.ToInt32(model.UserId);
-                //obj.Createddate = DateTime.Now;
-                //obj.Updatedby = Convert.ToInt32(model.UserId);
-                //obj.Updateddate = DateTime.Now;
+                obj.TypeCb = model.TypeCb;
+                if (obj.TypeCb == "D")
+                {
+                    obj.OutAmt = model.OutAmt;
+                }
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = Convert.ToInt32(model.UserId);
+                obj.Createddate = DateTime.Now;
+
                 context.T58ClientContacts.Add(obj);
                 context.SaveChanges();
                 ContractId = Convert.ToInt32(obj.Id);
             }
             else
-            {  
-               _contract.VisitDt = Convert.ToDateTime(model.VisitDt.ToString());
-               _contract.ClientOfficerName = model.ClientOfficerName;
-               _contract.Designation = model.Designation;
-               _contract.ClientType = model.ClientType;
-               _contract.Client = model.Client;
-               _contract.RitesOfficerCd = model.RitesOfficerCd;
-               _contract.Highlights = model.Highlights;
-               _contract.OverallOutcome = model.OverallOutcome;
-               _contract.RegionCd = model.RegionCd;
+            {
+                _contract.VisitDt = Convert.ToDateTime(model.VisitDt.ToString());
+                _contract.ClientOfficerName = model.ClientOfficerName;
+                _contract.Designation = model.Designation;
+                _contract.ClientType = model.ClientType;
+                _contract.Client = model.Client;
+                _contract.RitesOfficerCd = model.RitesOfficerCd;
+                _contract.Highlights = model.Highlights;
+                _contract.OverallOutcome = model.OverallOutcome;
+                _contract.RegionCd = model.RegionCd;
                 _contract.UserId = model.UserId;
                 _contract.Datetime = model.Datetime;
-               _contract.TypeCb = "C";
-                _contract.OutAmt = model.OutAmt;                 
+                _contract.OutAmt = model.OutAmt;
+                _contract.Updatedby = Convert.ToInt32(model.UserId);
+                _contract.Updateddate = DateTime.Now;
                 ContractId = Convert.ToInt32(_contract.Id);
                 context.SaveChanges();
             }
