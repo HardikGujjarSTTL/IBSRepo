@@ -9,6 +9,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 
 namespace IBS.Repositories
 {
@@ -153,10 +154,12 @@ namespace IBS.Repositories
                 obj.IeCd = Convert.ToByte(model.IE_CD);
                 obj.IcSubmitDt = Convert.ToDateTime(model.IC_SUBMIT_DT);
                 obj.BillNo = model.BILL_NO;
-                obj.UserId = model.USER_ID;
+                obj.UserId = model.USER_NAME;
                 obj.Datetime = DateTime.Now;
                 obj.Remarks = model.REMARKS;
                 obj.RemarksDt = Convert.ToDateTime(model.REMARKS_DT);
+                obj.Createdby = Convert.ToInt32(model.USER_ID);
+                obj.Createddate = DateTime.Now;
                 context.T30IcReceiveds.Add(obj);
                 context.SaveChanges();
                 flag = 1;
@@ -167,10 +170,27 @@ namespace IBS.Repositories
                 _data.SetNo = model.SET_NO;
                 _data.IeCd = Convert.ToByte(model.IE_CD);
                 _data.IcSubmitDt = Convert.ToDateTime(model.IC_SUBMIT_DT);
-                _data.UserId = model.USER_ID;
+                _data.UserId = model.USER_NAME;
                 _data.Datetime = DateTime.Now;
                 _data.Remarks = model.REMARKS;
                 _data.RemarksDt = Convert.ToDateTime(model.REMARKS_DT);
+                _data.Updatedby = Convert.ToInt32(model.USER_ID);
+                context.SaveChanges();
+                flag = 1;
+            }
+            return flag;
+        }
+
+        public int IC_Receipt_Delete(IC_ReceiptModel model)
+        {
+            var flag = 0;
+            var _data = context.T30IcReceiveds.Where(x => x.BkNo == model.BK_NO && x.SetNo == model.SET_NO && x.Region == model.REGION).Select(x => x).FirstOrDefault();
+            //var _data = context.T30IcReceiveds.Find(model.REGION, model.BK_NO, model.SET_NO);
+            if (_data != null)
+            {
+                _data.Isdeleted = 1;
+                _data.Updatedby = model.USER_ID;
+                _data.Updateddate = DateTime.Now;
                 context.SaveChanges();
                 flag = 1;
             }
@@ -181,15 +201,15 @@ namespace IBS.Repositories
         {
             var res = context.T10IcBooksets
                         .Where(x => x.BkNo == model.BK_NO && Convert.ToInt32(x.SetNoFr) >= Convert.ToInt32(model.SET_NO) && Convert.ToInt32(x.SetNoTo) <= Convert.ToInt32(model.SET_NO) && x.IssueToIecd == model.IE_CD)
-                        .Select(x => DateTime.ParseExact(x.IssueDt.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture)).FirstOrDefault().ToString();
-            var myYear = Convert.ToDateTime(model.IC_SUBMIT_DT).Year;
-            var myMonth = Convert.ToDateTime(model.IC_SUBMIT_DT).Month;
-            var myDay = Convert.ToDateTime(model.IC_SUBMIT_DT).Day;
+                        .Select(x => DateTime.ParseExact(x.IssueDt.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString()).FirstOrDefault();
+            string myYear = Convert.ToString(Convert.ToDateTime(model.IC_SUBMIT_DT).Year);
+            string myMonth = Convert.ToString(Convert.ToDateTime(model.IC_SUBMIT_DT).Month);
+            string myDay = Convert.ToString(Convert.ToDateTime(model.IC_SUBMIT_DT).Day);
             var dt = myYear + myMonth + myDay;
 
-            int i = Convert.ToInt32(res) == dt ? 1 : 0;
+            int i = res == dt ? 0 : 1;
 
-            if (res != "")
+            if (res != "" && res != null)
             {
                 if (i > 0)
                 {
@@ -200,12 +220,12 @@ namespace IBS.Repositories
                     var res1 = context.T20Ics
                                 .Where(x => x.BkNo == model.BK_NO && x.SetNo == model.SET_NO && x.CaseNo.Remove(1) == model.REGION)
                                 .Select(x => x.BillNo).FirstOrDefault().ToString();
-                    if(res1 == "" || res1 == null)
+                    if (res1 == "" || res1 == null)
                     {
                         return 1;
                     }
                     else
-                    {   
+                    {
                         return 2;
                     }
                 }
@@ -214,6 +234,246 @@ namespace IBS.Repositories
             {
                 return 0;
             }
+        }
+
+        public DTResult<ICReportModel> Get_UnBilled_IC([FromBody] DTParameters dtParameters, string Region)
+        {
+            DTResult<ICReportModel> dTResult = new() { draw = 0 };
+            IQueryable<ICReportModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "BK_NO";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "BK_NO";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", REGION = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }            
+            if (!string.IsNullOrEmpty(Region))
+            {
+                REGION = Region;
+            }
+
+            FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
+            ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
+            REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);            
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, REGION, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_UNBILLED_IC", par, 1);
+            DataTable dt = ds.Tables[0];
+
+
+            List<ICReportModel> list = dt.AsEnumerable().Select(row => new ICReportModel
+            {
+                SUBMIT_DATE = row["SUBMIT_DATE"].ToString(),
+                IC_SUBMIT_DATE = row["IC_SUBMIT_DATE"].ToString(),
+                IE_NAME = row["IE_NAME"].ToString(),
+                BK_NO = row["BK_NO"].ToString(),
+                SET_NO = row["SET_NO"].ToString(),
+                CLIENT_TYPE = row["CLIENT_TYPE"].ToString(),
+                REMARKS = row["REMARKS"].ToString(),
+                REMARKS_DATE = row["REMARKS_DATE"].ToString(),
+                IC_DATE = row["IC_DATE"].ToString(),                
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region,string UserName, string Ic_Cd)
+        {
+            DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
+            IQueryable<ICIssueNotReceiveModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = false;//true;
+
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
+                }
+                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", REGION = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+            if (!string.IsNullOrEmpty(Region))
+            {
+                REGION = Region;
+            }
+
+            FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
+            ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
+            REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
+
+            var IE_CD = (UserName != "" && UserName != null) ? null : Ic_Cd;
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, REGION, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_IE_CD", OracleDbType.Varchar2, IE_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IC_ISSUED_BY_IE", par, 1);
+            DataTable dt = ds.Tables[0];
+            dt.Columns.Add("IsTIF", typeof(bool));
+            dt.Columns.Add("IsPDF", typeof(bool));            
+
+            List<ICIssueNotReceiveModel> list = dt.AsEnumerable().Select(row => new ICIssueNotReceiveModel
+            {
+                IC_ISSUED_DT= Convert.ToString( row["IC_ISSUED_DT"]),
+                BK_NO= Convert.ToString( row["BK_NO"]),
+                SET_NO= Convert.ToString( row["SET_NO"]),
+                IE_NAME= Convert.ToString( row["IE_NAME"]),
+                CO_NAME= Convert.ToString( row["CO_NAME"]),
+                CASE_NO= Convert.ToString( row["CASE_NO"]),
+                PO_SOURCE= Convert.ToString( row["PO_SOURCE"]),
+                PO_YR= Convert.ToString( row["PO_YR"]),
+                PO_NO= Convert.ToString( row["PO_NO"]),
+                IMMS_RLY_CD= Convert.ToString( row["IMMS_RLY_CD"]),
+                RLY_NONRLY= Convert.ToString( row["RLY_NONRLY"])        
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<IC_ReceiptModel> Get_IC_Status([FromBody] DTParameters dtParameters, string Region)
+        {
+            DTResult<IC_ReceiptModel> dTResult = new() { draw = 0 };
+            IQueryable<IC_ReceiptModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = false;//true;
+
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
+                }
+                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", REGION = "", IE_CD = null;
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IECD"]))
+            {
+                IE_CD = Convert.ToString(dtParameters.AdditionalValues["IECD"]);
+            }
+            if (!string.IsNullOrEmpty(Region))
+            {
+                REGION = Region;
+            }
+
+            FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
+            ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
+            REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
+            
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, REGION, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_IE_CD", OracleDbType.Varchar2, IE_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IC_STATUS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+
+            List<IC_ReceiptModel> list = dt.AsEnumerable().Select(row => new IC_ReceiptModel
+            {
+                IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                BILL_NO = Convert.ToString(row["BILL_NO"])
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
         }
     }
 }

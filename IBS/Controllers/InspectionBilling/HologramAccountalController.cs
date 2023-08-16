@@ -197,9 +197,15 @@ namespace IBS.Controllers.InspectionBilling
                     if (RNO == 0)
                     {
                         int rec_no = hologramaccountRepository.GetRecNo(Model.CASE_NO, Model.CALL_DT, Convert.ToInt32(Model.CONSIGNEE_CD), Convert.ToInt32(Model.CALL_SNO));
-
-                        Model.REC_NO = Convert.ToString(rec_no);
-                        result = hologramaccountRepository.HologramInsertUpdate(Model, RNO);
+                        if (rec_no > 0)
+                        {
+                            Model.REC_NO = Convert.ToString(rec_no);
+                            result = hologramaccountRepository.HologramInsertUpdate(Model, RNO);
+                        }
+                        else
+                        {
+                            message = "Rec no. is missing";
+                        }
                     }
                     else if (RNO > 0)
                     {
@@ -213,6 +219,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             catch (Exception ex)
             {
+                message = "Somthing went wrong";
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "HologramAccountal", "HologramAccountalSave", 1, GetIPAddress());
             }
             return Json(new { _msg = message, _result = result });

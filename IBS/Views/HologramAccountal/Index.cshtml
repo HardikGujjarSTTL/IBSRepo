@@ -16,15 +16,15 @@
                             @*<span asp-validation-for="BK_NO" class="text-danger"></span>*@
                         </div>
 
-                        <div class="col-md-2 mb-4">
+                        <div class="col-md-6 mb-4">
                             <label for="Reference">Set No</label>
                             <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
                             @*<span asp-validation-for="SET_NO" class="text-danger"></span>*@
                         </div>
                         <div class="col-md-6 mb-4 alignBtn">
                             <div class="savenext-btn">
-                                <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
-                                <button type="button" class="reset-btn" id="btnDelete">Delete</button>
+                                @*<button type="button" class="save-btn active" id="btnSubmit">Submit</button>*@
+                                @*<button type="button" class="reset-btn" id="btnDelete">Delete</button>*@
                                 <button type="button" class="reset-btn" id="btnSearch">Search</button>
                             </div>
                         </div>
@@ -84,17 +84,17 @@
                 InitializeDatatable();
             });
 
-            $("#btnDelete").click(function () {
-                GetRegionCode("delete");
-            });
-            $("#btnSubmit").click(function () {
-                GetRegionCode("submit");
-            });
+            //$("#btnDelete").click(function () {
+            //    GetRegionCode("delete");
+            //});
+            //$("#btnSubmit").click(function () {
+            //    GetRegionCode("submit");
+            //});
         });
 
-        function GetRegionCode(type) {
-            var bk_no = $("#BK_NO").val();
-            var set_no = $("#SET_NO").val();
+        function GetRegionCode(bk_no, set_no, type) {
+            //var bk_no = $("#BK_NO").val();
+            //var set_no = $("#SET_NO").val();
             var url = "@Url.Action("GetRegionCode", "HologramAccountal")" + "?BK_NO=" + bk_no + "&SET_NO=" + set_no;
             $.ajax({
                 url: url,
@@ -103,18 +103,21 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
                     if (response == "1") {
                         if (type == "delete") {
+                            ShowHideMsgNew(false, "You are not Authorised to Update/Delete Hologram Data For Other Regions.!!!")
                             alert("You are not Authorised to Update/Delete Hologram Data For Other Regions.!!!");
                         } else if (type == "submit") {
+                            ShowHideMsgNew(false, "You are not Authorised to Add Hologram Data For Other Regions.!!!")
                             alert("You are not Authorised to Add Hologram Data For Other Regions.!!!");
                         }
                     }
                     else if (response == "2") {
-                        Manage();
+                        //Manage();
+                        Manage(bk_no, set_no);
                     }
                     else {
+                        ShowHideMsgNew(false, "No Record Present for Given Book No and Set No in IC Master!!!")
                         alert("No Record Present for Given Book No and Set No in IC Master!!! ");
                     }
                 }
@@ -171,7 +174,9 @@
 
                             gridData = row;
                             var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
-                            html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\"">SELECT</a>';
+                            //html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\"">SELECT</a>';
+                            html += '<a onclick="GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick = "GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'delete\'); " id=\"' + data.BK_NO + '\" class=\"delete\"" > <i class=\"fa fa-trash\" title="Delete" style="margin: 10px;"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -182,7 +187,6 @@
         }
 
         completed = function (response) {
-            debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             //window.location.href = "/HologramAccountal";
@@ -194,13 +198,11 @@
             $("#SET_NO").val(set_no);
         }
 
-        function Manage() {
-            debugger
-            var bk_no = $("#BK_NO").val();
-            var set_no = $("#SET_NO").val();
+        function Manage(bk_no, set_no) {
+            //var bk_no = $("#BK_NO").val();
+            //var set_no = $("#SET_NO").val();
 
             var url = '@Url.Action("Manage", "HologramAccountal")';
-            debugger
             var editUrl = url + "?BK_NO=" + bk_no + "&SET_NO=" + set_no;
             window.location.href = editUrl;
         }
