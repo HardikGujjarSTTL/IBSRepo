@@ -1,45 +1,27 @@
-﻿
-@{
-    string Title = "";
-    if (ViewBag.Type == "C")
-    {
-        Title = "Client Contract List";
-    }
-    else if (ViewBag.Type == "B")
-    {
-        Title = "BD Efforts";
-    }
-    else
-    {
-        Title = "DFO Visit";
-    }
-    ViewData["Title"] = Title;
+﻿@{
+    ViewData["Title"] = "Central QOII List";
 }
 
 <div>
-    <input type="hidden" id="@ViewBag.Type" value="@ViewBag.Type" />
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Client Contract List</h2>
+            <h2>Central QOII List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn"><span class="fa fa-plus"></span> Add New Client Contract</a>
+            <a asp-area="" asp-controller="CentralQOII" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Central QOI</a>
         </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtClientContract" class="table-responsive">
+                <table id="dtCentralQOII" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>#</th>                            
+                            <th>#</th>
                             <th>Client</th>
-                            <th>VisitDt</th>
-                            <th>ClientOfficerName</th>
-                            <th>OverallOutcome</th>
-                            <th>Highlights</th>                            
+                            <th>Qoi Date</th>
+                            <th>Region Code</th>
                             <th>Action</th>
-                            @*<th>View Contract</th>*@
                         </tr>
                     </thead>
                     <tbody>
@@ -54,13 +36,13 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        
+
         $(function () {
             InitializeDatatable();
         });
 
         function InitializeDatatable() {
-            $("#dtClientContract").DataTable({
+            $("#dtCentralQOII").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -77,7 +59,6 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            Type : '@ViewBag.Type'
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -90,19 +71,42 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "Client" },
-                    { data: "VisitDt" },
-                    { data: "ClientOfficerName" },
-                    { data: "OverallOutcome" },
-                    { data: "Highlights" },                                        
+                    //{ data: "Client" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.Id;
-                            var TypeCb = data.TypeCb;
-                            var editUrl = '@Url.Action("Manage", "ClientContract")/' + id;
+                            var Client = data.Client;
+                            var ClientName = "";
+                            if (Client == "1") {
+                                ClientName = "RSM"
+                            }
+                            else if (Client == "2") {
+                                ClientName = "URM"
+                            }
+                            else if (Client == "3") {
+                                ClientName = "JINDAL RAILWAY"
+                            }
+                            else if (Client == "4") {
+                                ClientName = "JINDAL NON RAILWAY."
+                            }
+                            else if (Client == "5") {
+                                ClientName = "PLATE(BSP)"
+                            }
+                            return ClientName;
+                        }
+                    },
+                    { data: "QoiDate" },
+                    { data: "Region" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Client = data.Client;
+                            var QoiDate = data.QoiDate;
+                            var Weight = data.Weight;
+                            var QoiLength = data.QoiLength;
+                            var editUrl = '@Url.Action("Manage", "CentralQOII")/?Client=' + Client + "&QoiDate=" + QoiDate + "&Weight=" + Weight + "&QoiLength=" + QoiLength;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="ClientContractDelete(' + id + ',\'' + TypeCb + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="CentralQOIIDelete(\'' + Client + '\',\'' + QoiDate + '\',\'' + Weight + '\',\'' + QoiLength + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Client + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -112,8 +116,8 @@
             });
         }
 
-        function ClientContractDelete(id, TypeCb) {
-            var url = '@Url.Action("Delete", "ClientContract")?id=' + id + "&Type=" + TypeCb;
+        function CentralQOIIDelete(Client, QoiDate, Weight, QoiLength) {
+            var url = '@Url.Action("Delete", "CentralQOII")/?Client=' + Client + "&QoiDate" + QoiDate + "&Weight" + Weight + "&QoiLength" + QoiLength;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
