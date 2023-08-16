@@ -80,6 +80,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.UserId = Convert.ToString(UserId);
                 int id = contractRepository.ContractDetailsInsertUpdate(model);
                 if (id > 0)
                 {

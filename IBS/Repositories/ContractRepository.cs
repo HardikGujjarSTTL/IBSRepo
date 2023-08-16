@@ -81,7 +81,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T57OngoingContracts
-                    //where l.Isdeleted == 0 
+                    where l.Isdeleted == 0 || l.Isdeleted == null
                     select new ContractModel
                     {
                         ContractId = l.ContractId,                         
@@ -142,7 +142,9 @@ namespace IBS.Repositories
             #region Contract save
             if (_contract == null)
             {
+                int maxID = context.T57OngoingContracts.Max(x => x.ContractId)+1;
                 T57OngoingContract obj = new T57OngoingContract();
+                obj.ContractId = maxID;
                 obj.ContractNo = model.ContractNo;
                 obj.ContractPanalty = model.ContractPanalty;
                 obj.ContractCm = model.ContractCm;

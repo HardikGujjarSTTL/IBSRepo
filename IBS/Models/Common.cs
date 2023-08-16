@@ -522,7 +522,19 @@ namespace IBS.Models
                         }).OrderBy(c => c.Text).ToList();
             }
         }
-        
+
+        public static List<SelectListItem> GetInspEngCdFortech(string IeRegion)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T09Ies
+                    where a.IeRegion == IeRegion
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.IeName),
+                        Value = Convert.ToString(a.IeCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
         public static List<SelectListItem> MAStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();

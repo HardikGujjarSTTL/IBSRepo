@@ -31,11 +31,13 @@ public partial class T66TechRef
 
     public DateTime? Createddate { get; set; }
 
-    public string? Createdby { get; set; }
+    public int? Createdby { get; set; }
 
     public DateTime? Updateddate { get; set; }
 
-    public string? Updatedby { get; set; }
+    public int? Updatedby { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public int Id { get; set; }
 }

@@ -35,6 +35,8 @@ namespace IBS.Helper
             VendorMADocument = 6,
             [Description("/Files/ContractDocument")]
             ContractDocument = 7,
+            [Description("/Files/TechnicalReferences")]
+            TechnicalReferencesDoc = 8,
         }
 
         public enum DocumentCategory : int
@@ -45,6 +47,7 @@ namespace IBS.Helper
             VendorDocument = 4,
             VendorMADoc = 5,
             Contract = 6,
+            TechnicalReferences = 8,
         }
 
 
@@ -58,6 +61,8 @@ namespace IBS.Helper
             Raw_Material_Invoice = 48,
             Calibration_Records = 49,
             Contract_Documents_If_Any = 9,
+            Upload_Tech_Ref = 11,
+            Upload_Tech_Ref_Reply = 12,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int

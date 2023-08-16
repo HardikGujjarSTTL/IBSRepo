@@ -69,19 +69,14 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T67Highlights
-                    where l.RegionCode == RgnCd
+                    where l.RegionCode == RgnCd && (l.Isdeleted == 0 || l.Isdeleted == null)
                     select new HighlightsModel
                     {
                         //Id = l.Id,                         
                         Hight_Text = l.HightText,
                         High_Dt = l.HighDt,
                         User_Id = l.UserId,
-                        Datetime = l.Datetime,                                                                     
-                        //Isdeleted = l.Isdeleted,
-                        //Createdby = l.Createdby,
-                        //Createddate = l.Createddate,
-                        //Updatedby= l.Updatedby,
-                        //Updateddate= l.Updateddate,
+                        Datetime = l.Datetime,   
             };
 
             dTResult.recordsTotal = query.Count();
@@ -91,7 +86,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public bool Remove(string HighDt, string strRgn)
+        public bool Remove(string HighDt, string strRgn,int UserID)
         {
             //var _contracts = context.T59LabExps.Find(LabBillPer);
             var _contracts = (from m in context.T67Highlights
@@ -101,9 +96,9 @@ namespace IBS.Repositories
 
             if (_contracts == null) { return false; }
 
-            //_contracts.Isdeleted = Convert.ToByte(true);
-            //_contracts.Updatedby = Convert.ToInt32(UserID);
-            //_contracts.Updateddate = DateTime.Now;
+            _contracts.Isdeleted = Convert.ToByte(true);
+            _contracts.Updatedby = Convert.ToInt32(UserID);
+            _contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -126,11 +121,9 @@ namespace IBS.Repositories
                 obj.Datetime = model.Datetime;
                 obj.UserId = model.User_Id;
                 obj.RegionCode = model.Region_Code;
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = Convert.ToInt32(model.User_Id);
-                //obj.Createddate = DateTime.Now;
-                //obj.Updatedby = Convert.ToInt32(model.UserId);
-                //obj.Updateddate = DateTime.Now;
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = Convert.ToInt32(model.Createdby);
+                obj.Createddate = DateTime.Now;
                 context.T67Highlights.Add(obj);
                 context.SaveChanges();
                 Id = (obj.HighDt);
@@ -138,8 +131,8 @@ namespace IBS.Repositories
             else
             {
                 _High.HightText = model.Hight_Text;
-                //_High.Updatedby = model.UserId;
-                //_High.Updateddate = DateTime.Now;
+                _High.Updatedby = model.Updatedby;
+                _High.Updateddate = DateTime.Now;
                 Id = _High.HighDt;
                 context.SaveChanges();
             }

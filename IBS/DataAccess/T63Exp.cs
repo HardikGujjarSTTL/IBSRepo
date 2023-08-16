@@ -17,13 +17,13 @@ public partial class T63Exp
 
     public DateTime? Datetime { get; set; }
 
-    public string? Isdeleted { get; set; }
+    public byte? Isdeleted { get; set; }
 
     public DateTime? Createddate { get; set; }
 
-    public string? Createdby { get; set; }
+    public int? Createdby { get; set; }
 
     public DateTime? Updateddate { get; set; }
 
-    public string? Updatedby { get; set; }
+    public int? Updatedby { get; set; }
 }

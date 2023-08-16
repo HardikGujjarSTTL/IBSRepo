@@ -1,15 +1,15 @@
 ﻿
 @{
-    ViewData["Title"] = "Tech Reference List";
+    ViewData["Title"] = "Technical References List";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Contract List</h2>
+            <h2>Technical References List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="TechReference" asp-action="Manage" class="formBtn">Add New TechReference</a>
+            <a asp-area="" asp-controller="TechReference" asp-action="Manage" class="formBtn">Add New Tech Reference</a>
         </div>
     </div>
     <section class="table-section">
@@ -84,10 +84,10 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var _techId = data.TechId;
-                            var editUrl = '@Url.Action("Manage", "TechReference")/?_techId=' + _techId;
+                            var Id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "TechReference")/?ID=' + Id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="TechReferenceDelete(this._techId); return false;" href="javascript:void(\'0\');" id=\"' + _techId + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="TechReferenceDelete(' + Id + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -97,9 +97,9 @@
             });
         }
 
-        function TechReferenceDelete(_techId) {
-            var url = '@Url.Action("Delete", "TechReference")';
-            $("#btn-delete-yes").attr("href", url + "/" + _techId);
+        function TechReferenceDelete(Id) {
+            var url = '@Url.Action("Delete", "TechReference")?ID=' + Id;
+            $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
     </script>

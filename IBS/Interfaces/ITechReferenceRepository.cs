@@ -4,9 +4,9 @@ namespace IBS.Interfaces
 {
     public interface ITechReferenceRepository
     {
-        public TechReferenceModel FindByID(string TechId,string rgn);
+        public TechReferenceModel FindByID(int ID);
         DTResult<TechReferenceModel> GetTechReferenceList(DTParameters dtParameters,string Rgn);        
-        bool Remove(string TechId, string rgn,int UserId);        
-        string TechRefDetailsInsertUpdate(TechReferenceModel model, string Rgn);
+        bool Remove(int ID,int UserId);        
+        int TechRefDetailsInsertUpdate(TechReferenceModel model, string Rgn);
     }
 }
