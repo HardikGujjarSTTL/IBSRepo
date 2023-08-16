@@ -63,7 +63,7 @@ builder.Services.AddScoped<ICallMarkedToIERepository, CallMarkedToIERepository>(
 builder.Services.AddScoped<ILaboratoryMstRepository, LaboratoryMstRepository>();
 
 builder.Services.AddScoped<IUploadDocRepository, IBS.Repositories.Administration.UploadDocRepository>();
-builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
+
 builder.Services.AddScoped<IVendorCallRegisterRepository, IBS.Repositories.Vendor.VendorCallRegisterRepository>();
 builder.Services.AddScoped<IPurchesOrder1LOARepository, IBS.Repositories.Vendor.PurchesOrder1LOARepository>();
 builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.CallRegisterRepository>();
@@ -74,8 +74,13 @@ builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.Vendor
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 
+builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
+builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPhotoEnclosedRepository>();
+builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
+
 
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
+builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
 builder.Services.AddScoped<IUnitOfMeasurements, UnitOfMeasurements>();
 builder.Services.AddScoped<IRitesDesignationMaster, RitesDesignationMaster>();
 builder.Services.AddScoped<IRailwaysDirectory, RailwaysDirectory>();
@@ -89,13 +94,34 @@ builder.Services.AddScoped<IInspectionEngineers, InspectionEngineers>();
 builder.Services.AddScoped<I_IE_CO_Form, IE_CO_Form>();
 builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
 builder.Services.AddScoped<IClusterMaster, ClusterMaster>();
+builder.Services.AddScoped<ILabBillingRepository, LabBillingRepository>();
+builder.Services.AddScoped<IExpenditureRepository, ExpenditureRepository>();
+builder.Services.AddScoped<ITechReferenceRepository, TechReferenceRepository>();
+builder.Services.AddScoped<IHighlightsRepository, HighlightsRepository>();
+builder.Services.AddScoped<IBillingOperatingTargetRepository, BillingOperatingRepository>();
+builder.Services.AddScoped<IBillingAdjustmentRepository, BillingAdjustmentRepository>();
+builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRepository>();
+
+
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
 builder.Services.AddScoped<IVendorDocumentRepository, VendorDocumentRepository>();
+builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
+builder.Services.AddScoped<ICentralQOIRepository, CentralQOIRepository>();
+builder.Services.AddScoped<ICentralQOIIRepository, CentralQOIIRepository>();
+
 
 #region Inspection and Billing
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 #endregion
+builder.Services.AddScoped<ICityMaster, CityMaster>();
+builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
+builder.Services.AddScoped<IVendorCluster, VendorCluster>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
+builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

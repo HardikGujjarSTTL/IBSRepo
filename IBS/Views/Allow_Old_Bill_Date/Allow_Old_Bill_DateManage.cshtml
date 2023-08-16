@@ -60,7 +60,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Allow_Old_Bill_Date/Allow_Old_Bill_DateMaster";
+            //window.location.href = "/Allow_Old_Bill_Date/Allow_Old_Bill_DateMaster";
+            window.location.href = '@Url.Action("Allow_Old_Bill_DateMaster", "Allow_Old_Bill_Date")';
         };
     </script>
 }

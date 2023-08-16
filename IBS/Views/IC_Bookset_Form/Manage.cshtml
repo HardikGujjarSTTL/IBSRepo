@@ -1,0 +1,62 @@
+﻿@model IBS.Models.IC_Bookset_FormModel
+
+@{
+    ViewData["Title"] = "IC Book Set";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>IC Book Set</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="IC_Bookset_Form" asp-action="IC_Bookset_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmIC_Bookset_Form">
+                <input type="hidden" asp-for="BkNo" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Book No</label>
+                            <textarea class="input" asp-for="BkNo" maxlength="30"> </textarea>
+                            <span asp-validation-for="BkNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Set No. From</label>
+                            <textarea class="input" asp-for="SetNoFr" maxlength="30"> </textarea>
+                            <span asp-validation-for="SetNoFr" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">IE to Whom Issued</label>
+                            <input type="text" class="input" asp-for="IssueToIecd" maxlength="30">
+                            <span asp-validation-for="IssueToIecd" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="IC_Bookset_Form" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmIC_Bookset_Form").valid()) {
+                $("#frmIC_Bookset_Form").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/IC_Bookset_Form/Index";
+            window.location.href = '@Url.Action("Index", "IC_Bookset_Form")';
+        };
+    </script>
+}

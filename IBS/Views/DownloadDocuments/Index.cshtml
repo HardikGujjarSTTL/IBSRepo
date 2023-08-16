@@ -11,10 +11,10 @@
         @*<div class="list-btn">
         <a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Add New User</a>
         </div>*@
+        
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Document Type </label>
@@ -33,7 +33,6 @@
                     <span class="text-danger" id="spnErrorLlRef"></span>
                 </div>
             </div>
-
             <div class="col-md-4 mb-3" id="divRegion" style="display:none;">
                 <div class="reference">
                     <label for="Name">Region </label>
@@ -41,17 +40,27 @@
                     <span class="text-danger" id="spnErrorAuthLevl"></span>
                 </div>
             </div>
-
             <div class="col-md-4 mb-3">
                 <label for="Reference">Name of the Document</label>
                 <input type="text" class="input" asp-for="DocumentName" maxlength="50" style="text-transform: uppercase;">
                 <span asp-validation-for="DocumentName" class="text-danger"></span>
             </div>
-
-            <div class="list-btn">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-11 mb-3">
+                <label for="Reference" style="color:#ff0099;">Select Document Type & Its Sub-Type (if applicable) / Part or Full Document Name and Click on [Search] button to search for  desired document----></label>
+            </div>
+            <div class="col-md-1 mb-3">
+                <div class="list-btn">
                 @*<a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Search </a>*@
                 <button type="button" class="formBtn" onclick="Save();">Search</button>
             </div>
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+                <label for="Reference" id="lblDocName" style="color:mediumvioletred; display:none;"></label>
         </div>
     </div>
     <section class="table-section">
@@ -89,6 +98,7 @@
             const actiontype = urlParams.get('actiontype');
             if (actiontype == "CI") {
                 $("#DocType").val('R');
+                
             }
             else {
                 $("#DocType").val("");
@@ -144,11 +154,31 @@
                         $("#DocSubType").val('Q');
                         $("#DocType").attr('disabled', 'disabled');
                         $("#DocSubType").attr('disabled', 'disabled');
+
+                        
                     }
                     else {
                         $("#DocType").removeAttr('disabled');
                         $("#DocSubType").removeAttr('disabled');
                     }
+                var DocType = $("#DocType option:selected").text();
+                var DocName = $("#DocSubType option:selected").text();
+                var Doc_Type_Name = DocType + " - " + DocName;
+                debugger
+                if($("#DocType").val() != "" && $("#DocSubType").val() != ""){
+                    $("#lblDocName").show();
+                    $("#lblDocName").text(Doc_Type_Name);
+                }
+                
+                else if($("#DocType").val() != "")
+                {
+                    $("#lblDocName").show();
+                    $("#lblDocName").text(DocType);
+                }
+                else
+                {
+                    $("#lblDocName").hide();
+                }
                 }
             });
         }
@@ -160,6 +190,24 @@
             var DocType = $("#DocType").val();
             var DocSubType = $("#DocSubType").val();
             var DocSearch = $("#DocumentName").val();
+
+            var DocTypeT = $("#DocType option:selected").text();
+                var DocNameT = $("#DocSubType option:selected").text();
+                var Doc_Type_Name = DocTypeT + " - " + DocNameT;
+                debugger
+                if(DocType != "" && DocSubType != ""){
+                    $("#lblDocName").show();
+                    $("#lblDocName").text(Doc_Type_Name);
+                }
+                else if(DocType != "")
+                {
+                    $("#lblDocName").show();
+                    $("#lblDocName").text(DocTypeT);
+                }
+                else
+                {
+                    $("#lblDocName").hide();
+                }
             
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -206,7 +254,26 @@
                             return data;
                         }
                     },
-                    { data: "FILE_LOCATION" },
+                    //{ data: "FILE_LOCATION" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var fpath = row["FILE_LOCATION"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (FileExists(fpath)) {
+                                html += "<a href='" + fpath + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Testplan/Lab Test Reports</a><br/>";
+                            }
+                            else
+                            {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt' style='color:red;'>No Document Available!!!</span><br/>";
+                            }
+                            
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                            
+
                     //{
                     //    data: null, orderable: false,
                     //    render: function (data, type, row) {
@@ -223,7 +290,23 @@
                 "order": [[0, "asc"]]
             });
         }
+        function FileExists(url) {
+            var exists = false;
 
+            $.ajax({
+                url: url,
+                type: 'HEAD', // Use HEAD request to check if the file exists
+                async: false, // Set to synchronous to wait for the response
+                success: function () {
+                    exists = true;
+                },
+                error: function () {
+                    exists = false;
+                }
+            });
+
+            return exists;
+        }
         function MessageDelete(MessageId) {
             var url = '@Url.Action("Delete", "DownloadDocuments")?MessageId=' + MessageId;
             $("#btn-delete-yes").attr("href", url);

@@ -1,0 +1,736 @@
+﻿@model IBS.Models.VendorPOMAModel
+@{
+    ViewData["Title"] = "AMMENDMENT FORM";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorPOMA" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="center">
+        <div class="tast-list">
+            <h3>History for Case No. - <label id="lblTitleCaseNo"></label></h3>
+            <h4><u>PO DETAILS</u></h4>
+        </div>
+        <input type="hidden" asp-for="CASE_NO" />
+        <input type="hidden" asp-for="VENDOR" />
+        <input type="hidden" asp-for="PO_NO" />
+        <input type="hidden" asp-for="PO_DT" />
+        <input type="hidden" asp-for="RLY_CD" />
+        <input type="hidden" asp-for="REMARKS" />
+        <input type="hidden" asp-for="VEND_CD" />
+        <input type="hidden" asp-for="IMMS_RLY_CD" />
+        <input type="hidden" asp-for="PO_SOURCE" />
+        <input type="hidden" asp-for="VEND_REMARKS" />
+        <div class="right">
+            <button type="button" class="save-btn" id="btnBack">Go Back</button>
+        </div>
+    </div>
+
+
+    <table border="1" width="100%" bgcolor="#D9C9FF">
+        <tr>
+            <td valign="top"><font size="1" face="Verdana" color="dark blue">Case No. <label id="lblCaseNo"></label></font></td>
+            <td valign="top"><font size="1" face="Verdana" color="dark blue">Vendor: <label id="lblVendor"></label></font></td>
+        </tr>
+        <tr>
+            <td valign="top"><font size="1" face="Verdana" color="dark blue">PO No. <label id="lblPoNo"></label>, Dated : <label id="lblPoDt"></label></font></td>
+            <td valign="top"><font size="1" face="Verdana" color="dark blue">Client: <label id="lblClient"></label></font></td>
+        </tr>
+    </table>
+
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListPODetails" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Item Srno</th>
+                            <th>Item Description</th>
+                            <th>Qty Ordered</th>
+                            <th>Qty Passed</th>
+                            <th>Qty Rejected</th>
+                            <th><b>BALANCE QTY</b> (Qty Ordered - Qty Passed)</th>
+                            <th>Delv Period</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="center">
+        <div class="tast-list">
+            <a id="viewPoLink" href="#" style="font-family: Verdana; font-size: 8pt; text-align: center;" target="_blank">
+                <h5>
+                    <font face="Verdana">VIEW PO</font>
+                </h5>
+            </a>
+        </div>
+    </div>
+
+    <div class="center">
+        <div class="tast-list">
+            <h4><u>PO AMMENDMENTS IREPS</u></h4>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListIREPS" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>MA No.</th>
+                            <th>MA Date</th>
+                            <th>MA Field</th>
+                            <th>OLD Value</th>
+                            <th>New Value</th>
+                            <th>Status</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="center">
+        <div class="tast-list">
+            <h4><u>PO AMMENDMENTS VENDOR</u></h4>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListPOVENDOR" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>MA No.</th>
+                            <th>MA Date</th>
+                            <th>MA Field</th>
+                            <th>OLD Value</th>
+                            <th>New Value</th>
+                            <th>Status</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="center">
+        <div class="tast-list">
+            <h4><u>PREVIOUS CALL DETAILS</u></h4>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListPCallDetails" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Call Letter Date</th>
+                            <th>Call Recieving Date</th>
+                            <th>Call Sno</th>
+                            <th>Call Install No.</th>
+                            <th>IE</th>
+                            <th>Status</th>
+                            <th>Cancel Reason</th>
+                            <th>Rejection Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h4><u>Special Remarks: </u></h4>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <table border="1" width="100%" bgcolor="#D9C9FF">
+            <tr>
+                <td valign="top"><font size="1" face="Verdana">PO : <label id="lblPORemark"></label></font></td>
+            </tr>
+            <tr>
+                <td valign="top"><font size="1" face="Verdana">Vendor/Firm: <label id="lblVendorRemark"></label></font></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="center">
+        <div class="tast-list">
+            <h4><u>CONSIGNEE COMPLAINTS</u></h4>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListCComplaints" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Item</th>
+                            <th>Rej Memo Date</th>
+                            <th>Rejection Reason</th>
+                            <th>BK No & Set No.</th>
+                            <th>Consignee</th>
+                            <th>JI Outcome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="center">
+        <div class="tast-list">
+            <h4><u>REJECTIONS AT VENDOR PLACE</u></h4>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListRVendorPlace" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Item</th>
+                            <th>IC Date</th>
+                            <th>Rejection Reason</th>
+                            <th>BK No & Set No.</th>
+                            <th>IE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+    <style>
+        #dtListPODetails td {
+            word-wrap: anywhere;
+        }
+
+        #dtListIREPS td {
+            word-wrap: anywhere;
+        }
+
+        #dtListPOVENDOR td {
+            word-wrap: anywhere;
+        }
+
+        #dtListPCallDetails td {
+            word-wrap: anywhere;
+        }
+
+        #dtListCComplaints td {
+            word-wrap: anywhere;
+        }
+
+        #dtListRVendorPlace td {
+            word-wrap: anywhere;
+        }
+
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            GetData();
+
+            DtPODetails();
+            DtIREPS();
+            DtPOVENDOR();
+            DtPCallDetails();
+            DtCComplaints();
+            DtRVendorPlace();
+        });
+
+        function GetData() {
+            var CaseNo = $("#CASE_NO").val();
+            var Vendor = $("#VENDOR").val();
+            var PoNo = $("#PO_NO").val();
+            var PoDt = $("#PO_DT").val();
+            var RlyCd = $("#RLY_CD").val();
+            var ImmsRlyCd = $("#IMMS_RLY_CD").val();
+
+
+            $("#lblTitleCaseNo").text(CaseNo);
+            $("#lblCaseNo").text(CaseNo);
+            $("#lblVendor").text(Vendor);
+            $("#lblPoNo").text(PoNo);
+            var SetPoDt = formatToDDMMYYYY(PoDt);
+            $("#lblPoDt").text(SetPoDt);
+            $("#lblClient").text(RlyCd);
+
+            var po_yr = extractYearFromDateStr(PoDt);
+            var rly_cd = ImmsRlyCd;
+            var po_no = PoNo;
+            var linkUrl = 'https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/' + po_yr + '/' + rly_cd + '/' + po_no + '.pdf';
+            $('#viewPoLink').attr('href', linkUrl);
+
+
+            var PORemark = $("#REMARKS").val();
+            var VendorRemark = $("#VEND_REMARKS").val();
+            if (PORemark == null || PORemark == "") {
+                $("#lblPORemark").text("Nil");
+            }
+            else {
+                $("#lblPORemark").text(PORemark);
+            }
+            if (VendorRemark == null || VendorRemark == "") {
+                $("#lblVendorRemark").text("Nil");
+            }
+            else {
+                $("#lblVendorRemark").text(PORemark);
+            }
+        }
+
+        function formatToDDMMYYYY(dateStr) {
+            var formattedDate = moment(dateStr, "DD-MM-YYYY HH:mm:ss").format("DD/MM/YYYY");
+            return formattedDate;
+        }
+
+        function formatToYYYYMMDD(dateStr) {
+            var formattedDate = moment(dateStr, "YYYY-MM-DD HH:mm:ss").format("YYYYMMDD");
+            return formattedDate;
+        }
+
+        function extractYearFromDateStr(dateStr) {
+            var parts = dateStr.split(" ");
+            var datePart = parts[0];
+            var year = datePart.split("-")[2];
+            return year;
+        }
+
+        function DtPODetails() {
+            var CaseNo = $("#CASE_NO").val();
+
+            $("#dtListPODetails").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                dom: '<"top"f<"title">Blrtip>',
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {
+                    url: "@Url.Action("LoadTablePODetails", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    { data: "ItemSrno" },
+                    { data: "ItemDesc" },
+                    { data: "Qty" },
+                    { data: "Qty_Passed" },
+                    { data: "Qty_Rejected" },
+                    { data: "Qty_Balance" },
+                    {
+                        data: "ExtDelvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        function DtIREPS() {
+            var CaseNo = $("#CASE_NO").val();
+            var SetPoDt = extractYearFromDateStr($("#PO_DT").val());
+            var po_yr = SetPoDt;
+            var rly_cd = $("#IMMS_RLY_CD").val();
+            var po_no = $("#PO_NO").val();
+
+            $("#dtListIREPS").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                dom: '<"top"f<"title">Blrtip>',
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {
+                    url: "@Url.Action("LoadTableIREPS", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "MA_NO" },
+                    {
+                        data: "MA_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "MA_FLD_DESCR" },
+                    { data: "OLD_VALUE" },
+                    { data: "NEW_VALUE" },
+                    { data: "MA_STATUS" },
+                    //{ data: "NEW_VALUE" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var MaNo = row["MA_NO"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + po_yr + "/" + rly_cd + "/" + po_no + "_" + MaNo + ".pdf" + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>View</a><br/>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        function DtPOVENDOR() {
+            var CaseNo = $("#CASE_NO").val();
+
+
+            $("#dtListPOVENDOR").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                dom: '<"top"f<"title">Blrtip>',
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {
+                    url: "@Url.Action("LoadTablePOVENDOR", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "MA_NO" },
+                    {
+                        data: "MA_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "MA_DESC" },
+                    { data: "OLD_PO_VALUE" },
+                    { data: "NEW_PO_VALUE" },
+                    { data: "MA_STATUS" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var MaNo = row["MA_NO"];
+                            var MaDt = row["MA_DT"];
+                            var SetMaDt = formatToYYYYMMDD(MaDt);
+
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<a href='/MA/" + CaseNo + "_" + MaNo + "_" + SetMaDt + ".pdf" + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>View MA</a><br/>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        function DtPCallDetails() {
+            var CaseNo = $("#CASE_NO").val();
+
+            $("#dtListPCallDetails").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                dom: '<"top"f<"title">Blrtip>',
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {
+                    url: "@Url.Action("LoadTablePCallDetails", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: "CallLetterDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "CallInstallNo" },
+                    { data: "IeName" },
+                    { data: "CallStatus" },
+                    { data: "Reason" },
+                    { data: "ReasonReject" },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        function DtCComplaints() {
+            $("#dtListCComplaints").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                dom: '<"top"f<"title">Blrtip>',
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {
+                    url: "@Url.Action("LoadTableCComplaints", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "ITEM_DESC" },
+                    {
+                        data: "REJ_MEMO_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "REJECTION_REASON" },
+                    { data: "BK_SET_NO" },
+                    { data: "CONSIGNEE" },
+                    { data: "JI_STATUS_DESC" },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        function DtRVendorPlace() {
+            var CaseNo = $("#CASE_NO").val();
+            $("#dtListRVendorPlace").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                dom: '<"top"f<"title">Blrtip>',
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {
+                    url: "@Url.Action("LoadTableRVendorPlace", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "ItemDescPo" },
+                    {
+                        data: "IcDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "ReasonReject" },
+                    { data: "BkNo" },
+                    { data: "IeName" },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        $("#btnBack").click(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var CaseNo = urlParams.get('CaseNo');
+            var MaNo = urlParams.get('MaNo');
+            var MaDt = urlParams.get('MaDt');
+            var MaStatus = urlParams.get('MaStatus');
+            var MaSNo = urlParams.get('MaSNo');
+
+            window.location.href = '@Url.Action("Index", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDt=" + MaDt + "&MaStatus=" + MaStatus + "&MaSNo=" + MaSNo;
+        });
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/VendorPOMA";
+            window.location.href = '@Url.Action("Index", "VendorPOMA")';
+        };
+    </script>
+    }

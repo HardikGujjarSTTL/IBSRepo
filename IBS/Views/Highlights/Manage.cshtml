@@ -1,0 +1,83 @@
+﻿@model IBS.Models.HighlightsModel
+@{
+    ViewData["Title"] = "Manage Highlights";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Highlights</h2>
+    </div>
+</div> 
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="Highlights" asp-action="HighlightsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmHighlightsDetails">
+            <input type="hidden" asp-for="High_Dt" />
+            <div class="accordion-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row"> 
+                            <div class="col-md-2 mb-4">
+                                <label class="lable-control" for="Reference"><b>For the Period : </b></label>
+                            </div> 
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Month: </label>                                 
+                                @Html.DropDownListFor(model => model.HighDtMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
+                                <span asp-validation-for="HighDtMon" class="text-danger"></span>
+                            </div> 
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Year: </label>                                
+                                @Html.DropDownListFor(model => model.HighDtYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
+                                <span asp-validation-for="HighDtYear" class="text-danger"></span>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2 mb-4">
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Highlights</label>
+                                <input type="text" class="input" asp-for="Hight_Text" maxlength="5000" />
+                                <span asp-validation-for="Hight_Text" class="text-danger"></span>
+                            </div>  
+                        </div>
+                    </div> 
+                    <div class="savenext-btn" style="justify-content:center">
+                        <a asp-controller="Highlights" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts 
+{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (@Model.High_Dt > null) {
+                var s = @Model.High_Dt;
+                var year = s.toString().substring(0, 4);
+                var mon = s.toString().substring(4, 6);
+                $("#HighDtMon").val(mon);
+                $("#HighDtYear").val(year);
+            }
+        });
+    </script>
+    <script type="text/javascript"> 
+        function Save() {
+            if ($("#frmHighlightsDetails").valid()) {
+                $("#frmHighlightsDetails").submit();
+            }
+        } 
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/Highlights/Index";
+            window.location.href = '@Url.Action("Index", "Highlights")';
+        }; 
+    </script>
+}

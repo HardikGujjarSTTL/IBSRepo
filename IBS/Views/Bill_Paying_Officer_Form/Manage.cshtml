@@ -55,7 +55,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Bill_Paying_Officer_Form/Index";
+            //window.location.href = "/Bill_Paying_Officer_Form/Index";
+            window.location.href = '@Url.Action("Index", "Bill_Paying_Officer_Form")';
         };
     </script>
 }

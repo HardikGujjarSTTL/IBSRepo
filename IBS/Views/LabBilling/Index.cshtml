@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewData["Title"] = "LAB Billing List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB Billing List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="LabBilling" asp-action="Manage" class="formBtn">Add New Lab Bill</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtLabBilling" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Lab Bill PER</th>
+                            <th>Lab Bill Expences</th>                             
+                            <th>Action</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtLabBilling").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Lab_Bill_Per" },
+                    { data: "Lab_Exp" },                                                             
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var _labBillPer = data.Lab_Bill_Per;
+                            var editUrl = '@Url.Action("Manage", "LabBilling")?_labBillPer=' + _labBillPer;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="LabBillingDelete(this._labBillPer); return false;" href="javascript:void(\'0\');" id=\"' + _labBillPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function LabBillingDelete(_labBillPer) {
+            var url = '@Url.Action("Delete", "LabBilling")';
+            $("#btn-delete-yes").attr("href", url + "/" + _labBillPer);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="row my-0">
-        <div class="list-btn">
-            <button type="button" class="formBtn" onclick="Save();">Save</button>
+            <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
         </div>
        </div>
     </div>
@@ -133,7 +133,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/DailyWorkPlan/DailyWorkPlan";
+            //window.location.href = "/DailyWorkPlan/DailyWorkPlan";
+            window.location.href = '@Url.Action("DailyWorkPlan", "DailyWorkPlan")';
         };
     </script>
     }

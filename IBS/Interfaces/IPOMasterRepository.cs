@@ -15,5 +15,9 @@ namespace IBS.Interfaces
         public PO_MasterDetailsModel FindPODetailsByID(string CASE_NO, string ITEM_SRNO);
         DTResult<PO_MasterDetailsModel> FindByUOMDetail(decimal id);
         int POMasterSubDetailsInsertUpdate(PO_MasterDetailsModel model);
+        string UpdateRealCaseNo(DEOVendorPurchesOrderModel model);
+        string getVendorEmail(string CASE_NO);
+
+        string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO, string USER_ID);
     }
 }
