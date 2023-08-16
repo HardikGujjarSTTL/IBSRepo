@@ -54,17 +54,17 @@ namespace IBS.Repositories.Vendor
                 dt = ds.Tables[0];
                 List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
                 {
-                    CaseNo = row["CASE_NO"].ToString(),
-                    PoNo = row["PO_NO"].ToString(),
-                    PoDt = Convert.ToDateTime(row["PO_DT"]),
-                    CallRecvDt = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                    VendName = row["VENDOR"].ToString(),
-                    CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]),
-                    CallSNo = Convert.ToInt32(row["CALL_SNO"]),
-                    CallStatus = row["CALL_STATUS"].ToString(),
-                    CallLetterNo = row["CALL_LETTER_NO"].ToString(),
-                    Remarks = row["REMARKS"].ToString(),
-                    IE_SName = row["IE_SNAME"].ToString(),
+                    CaseNo = row["CaseNo"].ToString(),
+                    PoNo = row["PoNo"].ToString(),
+                    PoDt = Convert.ToDateTime(row["PoDt"]),
+                    CallRecvDt = Convert.ToDateTime(row["CallRecvDt"]),
+                    VendName = row["VendName"].ToString(),
+                    CallInstallNo = Convert.ToInt32(row["CallInstallNo"]),
+                    CallSNo = Convert.ToInt32(row["CallSNo"]),
+                    CallStatus = row["CallStatus"].ToString(),
+                    CallLetterNo = row["CallLetterNo"].ToString(),
+                    Remarks = row["Remarks"].ToString(),
+                    IE_SName = row["IE_SName"].ToString(),
                 }).ToList();
                 if (list == null)
                     throw new Exception("Record Not found");
@@ -181,7 +181,7 @@ namespace IBS.Repositories.Vendor
                 // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "" && orderCriteria == null)
+                if (orderCriteria == "" || orderCriteria == null)
                 {
                     orderCriteria = "CaseNo";
                 }
