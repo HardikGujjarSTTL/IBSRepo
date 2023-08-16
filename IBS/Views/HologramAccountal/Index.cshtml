@@ -185,7 +185,8 @@
             debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/HologramAccountal";
+            //window.location.href = "/HologramAccountal";
+            window.location.href = '@Url.Action("Index", "HologramAccountal")';
         };
 
         function SelectDetails(bk_no, set_no) {

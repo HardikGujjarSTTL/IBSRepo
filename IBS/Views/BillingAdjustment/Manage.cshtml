@@ -84,7 +84,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/BillingAdjustment/Index";
+            //window.location.href = "/BillingAdjustment/Index";
+            window.location.href = '@Url.Action("Index", "BillingAdjustment")';
         }; 
     </script>
 }

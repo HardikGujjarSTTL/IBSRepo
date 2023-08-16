@@ -120,7 +120,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/AdminUserUploadDoc/UploadDoc";
+            //window.location.href = "/AdminUserUploadDoc/UploadDoc";
+            window.location.href = '@Url.Action("UploadDoc", "AdminUserUploadDoc")';
         };
     </script>
 }

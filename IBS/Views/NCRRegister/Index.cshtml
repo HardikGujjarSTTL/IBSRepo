@@ -270,7 +270,8 @@
             debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/NCRRegister";
+            //window.location.href = "/NCRRegister";
+            window.location.href = '@Url.Action("Index", "NCRRegister")';
         };
 
 

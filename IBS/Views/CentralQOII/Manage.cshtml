@@ -79,7 +79,8 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.responseText != "Selected Period and Client Already Exist") {
-                window.location.href = "/CentralQOII/Index";
+                //window.location.href = "/CentralQOII/Index";
+                window.location.href = '@Url.Action("Index", "CentralQOII")';
             }
         };
     </script>

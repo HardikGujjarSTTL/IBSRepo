@@ -116,6 +116,7 @@ builder.Services.AddScoped<IVendorCluster, VendorCluster>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
+builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
 
 var app = builder.Build();
 

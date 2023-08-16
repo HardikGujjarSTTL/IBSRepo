@@ -435,7 +435,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/DEOVendorPurchesOrder/PODetails?CaseNo=" + '@Model.CaseNo';
+            //window.location.href = "/DEOVendorPurchesOrder/PODetails?CaseNo=" + '@Model.CaseNo';
+            window.location.href = '@Url.Action("PODetails", "DEOVendorPurchesOrder")?CaseNo=' + '@Model.CaseNo';
         };
 
     </script>

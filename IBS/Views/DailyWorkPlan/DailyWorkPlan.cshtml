@@ -133,7 +133,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/DailyWorkPlan/DailyWorkPlan";
+            //window.location.href = "/DailyWorkPlan/DailyWorkPlan";
+            window.location.href = '@Url.Action("DailyWorkPlan", "DailyWorkPlan")';
         };
     </script>
     }

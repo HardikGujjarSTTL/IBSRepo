@@ -119,7 +119,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/AddRecieptVoucher/AddRecieptVoucher";
+            //window.location.href = "/AddRecieptVoucher/AddRecieptVoucher";
+            window.location.href = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")';
         };
     </script>
 }
