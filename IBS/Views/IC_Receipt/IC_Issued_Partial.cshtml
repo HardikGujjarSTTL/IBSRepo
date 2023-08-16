@@ -1,89 +1,255 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtList" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>S.No.</th>                        
-                        <th>IE S.No.</th>
-                        <th>IC Issue Date</th>
-                        <th>IE</th>
-                        <th>CM</th>
-                        <th>BK NO.</th>
-                        <th>SET NO.</th>
-                        <th>Digital IC</th>
-                        <th>PO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+@*<section class="table-section">*@
+<div class="task-listinput">
+    <div class="dash-table">
+        <table id="dtList" class="table-responsive">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>IE S.No.</th>
+                    <th>IC Issue Date</th>
+                    @{
+                        if (ViewBag.Type == "" || ViewBag.Type == "IE Wise")
+                        {
+                            <th id="ietype">IE</th>
+                            <th id="cmtype">CM</th>
+                        }
+                        else
+                        {
+                            <th id="ietype">CM</th>
+                            <th id="cmtype">IE</th>
+                        }
+                    }
+                    <th>BK NO.</th>
+                    <th>SET NO.</th>
+                    <th>Digital IC</th>
+                    <th>PO</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-</section>
+</div>
+@*</section>*@
 
 
 <script type="text/javascript">
+    var rdType = '@ViewBag.Type';
+    $(document).ready(function () {
+
+        if (rdType == "IE Wise" || rdType == "") {
+            $("#ietype").html("IE");
+            $("#cmtype").html("CM");
+        }
+        else {
+            $("#ietype").html("CM");
+            $("#cmtype").html("IE");
+        }
+    });    
+
     function InitializeDatatable() {
-            debugger
-            var FromDate = $("#FromDt").val();
-            var ToDate = $("#ToDt").val();
-            $("#dtList").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                dom: 'Bfrtip',
-                buttons: [
-                    'csv', 'excel', 'print'
-                ],
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("Get_IC_Issue_Not_Receive", "IC_Receipt")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "FromDate": FromDate,
-                            "ToDate": ToDate
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
+        var FromDate = $("#FromDt").val();
+        var ToDate = $("#ToDt").val();
+
+        var partitionSeqNo = 0;
+        var IE_Name = "";
+
+        var rdType = $('input[name="rdbType"]:checked').val();
+
+
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: true,// Searching Setups
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'print',
+                //{ extend: 'csv', exportOptions: { modifier: { page: 'all', search: 'none' } } },
+                //{ extend: 'excel', exportOptions: { modifier: { page: 'all', search: 'none' } }, action: newexportaction },
+                //{ extend: 'print', exportOptions: { modifier: { page: 'all', search: 'none' } }, action: newexportaction },
+
+            ],
+            ajax: {// Ajax Filter
+                url: "@Url.Action("Get_IC_Issue_Not_Receive", "IC_Receipt")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "FromDate": FromDate,
+                        "ToDate": ToDate
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+
+            columns: [
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        if (rdType == "IE Wise") {
+                            if (IE_Name == row.IE_NAME) {
+                                partitionSeqNo = partitionSeqNo + 1;
+                            } else {
+                                IE_Name = row.IE_NAME;
+                                partitionSeqNo = 0
+                                partitionSeqNo = partitionSeqNo + 1;
+                            }
+                        } else {
+                            if (IE_Name == row.CO_NAME) {
+                                partitionSeqNo = partitionSeqNo + 1;
+                            } else {
+                                IE_Name = row.CO_NAME;
+                                partitionSeqNo = 0
+                                partitionSeqNo = partitionSeqNo + 1;
+                            }
+                        }
+                        return partitionSeqNo;// meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "IC_ISSUED_DT" }, //{ data: "IC_SUBMIT_DATE" },
+                rdType == "IE Wise" ? { data: "IE_NAME" } : { data: "CO_NAME" },
+                rdType == "IE Wise" ? { data: "CO_NAME" } : { data: "IE_NAME" },
+                { data: "BK_NO", },
+                { data: "SET_NO" },
+                {
+                    data: "",
+                    render: function (data, type, row, meta) {
+                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
+                        var url = "/RBS/BILL_IC/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+                        html += '<a href="' + url + '" target="_blank">IC</a>';
+                        html += '</div>';
+                        return html;
+                    }
+                },
+                {
+                    data: "",
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        if (rdType == "IE Wise") {
+                            if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
+                                html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + " / " + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>" + row.CASE_NO + " </font></a></div>";
+                            }
+                            else {
+                                if (row.IsTIF == true) {
+                                    html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                                }
+                                else if (row.IsPDF == true) {
+                                    html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                                }
+                                else {
+                                    html = "<div width='10%' valign='top'align='center'> <font size='1' face='Verdana'> " + row.CASE_NO + "</font></div>";
+                                }
+                            }
+                            //if (IE_Name == row.IE_NAME) {
+                            //    if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
+                            //        html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + " / " + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + " </font></a></div>";
+                            //    }
+                            //    else {
+                            //        if (row.IsTIF == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else if (row.IsPDF == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else {
+                            //            html = "<div width='10%' valign='top'align='center'> <font size='1' face='Verdana'> " + row.CASE_NO + "</font></div>";
+                            //        }
+                            //    }
+                            //}
+                            //else {
+                            //    IE_Name = row.IE_NAME;
+                            //    if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
+                            //        html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //    }
+                            //    else {
+                            //        var fpath = true, fpath1 = true;
+                            //        if (row.IsTIF == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else if (row.IsPDF == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else {
 
-                columns: [
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                            //            html = "<div width='10%' valign='top' align='center'> <font size='1' face='Verdana'>" + row.CASE_NO + "</div>";
+                            //        }
+                            //    }
+                            //}
                         }
-                    },
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                        else {
+                            if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
+
+                                html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            }
+                            else {
+                                if (row.IsTIF == true) {
+                                    html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>" + row.CASE_NO + "</font></a></div>";
+                                }
+                                else if (row.IsPDF == true) {
+                                    html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>" + row.CASE_NO + "</font></a></div>";
+                                }
+                                else {
+
+                                    html = "<div width='10%' valign='top' align='center'> <font size='1' face='Verdana'>" + row.CASE_NO + "</font></div>";
+                                }
+                            }
+                            //if (IE_Name == row.CO_NAME) {
+                            //    if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
+                            //        html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + " / " + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + " </font></a> </div>";
+                            //    }
+                            //    else {
+                            //        if (fpath == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else if (fpath1 == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else {
+                            //            html = "<div width='10%' valign='top' align='center'> <font size='1' face='Verdana'> " + row.CASE_NO + "</font></div>";
+                            //        }
+                            //    }
+                            //}
+                            //else {
+                            //    IE_Name = row.CO_NAME;
+                            //    if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
+                            //        html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //    }
+                            //    else {
+                            //        if (fpath == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else if (fpath1 == true) {
+                            //            html = "<div width='10%' valign='top' align='center'><a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a></div>";
+                            //        }
+                            //        else {
+                            //            html = "<div width='10%' valign='top' align='center'> <font size='1' face='Verdana'>" + row.CASE_NO + "</font></div>";
+                            //        }
+                            //    }
+                            //}
                         }
-                    },
-                    { data: "IC_ISSUED_DT" }, //{ data: "IC_SUBMIT_DATE" },
-                    { data: "IE_NAME" },
-                    { data: "CO_NAME" },
-                    { data: "BK_NO", },
-                    { data: "SET_NO" },
-                    { data: "" },
-                    { data: "" },
-                    
-                ],
-                "order": [[0, "asc"]]
-            });
-        }
+                        return html;
+                    }
+                },
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
 </script>
 

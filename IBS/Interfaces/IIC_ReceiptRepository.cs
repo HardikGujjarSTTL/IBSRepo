@@ -16,5 +16,7 @@ namespace IBS.Interfaces
         DTResult<ICReportModel> Get_UnBilled_IC([FromBody] DTParameters dtParameters, string Region);
 
         DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd);
+
+        DTResult<IC_ReceiptModel> Get_IC_Status([FromBody] DTParameters dtParameters, string Region);
     }
 }

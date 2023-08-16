@@ -25,6 +25,7 @@ namespace IBS.Models
         public string? REMARKS_DT { get; set; } //DateTime
 
         public string RDT { get; set; }
+        public string IE_NAME { get; set; }
     }
 
     public class IC_Receipt_Grid_Model
@@ -80,5 +81,8 @@ namespace IBS.Models
         public string PO_NO { get; set; }
         public string IMMS_RLY_CD { get; set; }
         public string RLY_NONRLY { get; set; }
+
+        public bool IsTIF { get; set; }
+        public bool IsPDF{ get; set; }
     }
 }

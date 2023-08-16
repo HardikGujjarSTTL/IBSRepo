@@ -99,11 +99,12 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
                     if (response == "1") {
                         if (type == "delete") {
+                            ShowHideMsgNew(false, "You are not Authorised to Update/Delete Hologram Data For Other Regions.!!!")
                             alert("You are not Authorised to Update/Delete Hologram Data For Other Regions.!!!");
                         } else if (type == "submit") {
+                            ShowHideMsgNew(false, "You are not Authorised to Add Hologram Data For Other Regions.!!!")
                             alert("You are not Authorised to Add Hologram Data For Other Regions.!!!");
                         }
                     }
@@ -112,6 +113,7 @@
                         Manage(bk_no, set_no);
                     }
                     else {
+                        ShowHideMsgNew(false, "No Record Present for Given Book No and Set No in IC Master!!!")
                         alert("No Record Present for Given Book No and Set No in IC Master!!! ");
                     }
                 }
@@ -181,7 +183,6 @@
         }
 
         completed = function (response) {
-            debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/HologramAccountal";
@@ -193,12 +194,10 @@
         }
 
         function Manage(bk_no, set_no) {
-            debugger
             //var bk_no = $("#BK_NO").val();
             //var set_no = $("#SET_NO").val();
 
             var url = '@Url.Action("Manage", "HologramAccountal")';
-            debugger
             var editUrl = url + "?BK_NO=" + bk_no + "&SET_NO=" + set_no;
             window.location.href = editUrl;
         }

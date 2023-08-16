@@ -1,22 +1,28 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Drawing;
 using System.Globalization;
-
+using System.Web;
 namespace IBS.Controllers.InspectionBilling
 {
     public class IC_ReceiptController : BaseController
     {
         #region Variables
         private readonly IIC_ReceiptRepository iC_ReceiptRepository;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _config;
         #endregion
 
-        public IC_ReceiptController(IIC_ReceiptRepository _iC_ReceiptRepository)
+        public IC_ReceiptController(IIC_ReceiptRepository _iC_ReceiptRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             iC_ReceiptRepository = _iC_ReceiptRepository;
+            env = _environment;
+            _config = configuration;
         }
 
         public IActionResult Index()
@@ -147,11 +153,15 @@ namespace IBS.Controllers.InspectionBilling
             return Json(msg);
         }
 
-        public IActionResult ICReceiptDelete(IC_ReceiptModel model)
+        [HttpPost]
+        public IActionResult ICReceiptDelete(string BK_NO, string SET_NO)
         {
             int result = 0;
             try
             {
+                IC_ReceiptModel model = new ();
+                model.BK_NO = BK_NO;
+                model.SET_NO = SET_NO;
                 var REGION = Convert.ToString(GetUserInfo.Region);
                 model.REGION = REGION;
                 model.USER_ID = GetUserInfo.UserID;
@@ -182,6 +192,13 @@ namespace IBS.Controllers.InspectionBilling
             return View();
         }
 
+        public IActionResult IC_Issued_Partial(string Type)
+        {
+            ViewBag.Type = Type;
+            //return View();
+            return PartialView("IC_Issued_Partial");
+        }
+
         public IActionResult Get_UnBilled_IC([FromBody] DTParameters dtParameters)
         {
             DTResult<ICReportModel> dtList = new();
@@ -206,6 +223,14 @@ namespace IBS.Controllers.InspectionBilling
                 var username = GetUserInfo.UserName;
                 var iccd = Convert.ToString(GetUserInfo.IeCd);
                 dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
+                
+                foreach(var row in dtList.data)
+                {                    
+                    var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO+ ".TIF");
+                    var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
+                    row.IsTIF =  System.IO.File.Exists(tifpath) == true ? true : false;
+                    row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
+                }
             }
             catch (Exception ex)
             {
@@ -214,10 +239,27 @@ namespace IBS.Controllers.InspectionBilling
             return Json(dtList);
         }
 
-        //public IActionResult IC_Issued_Partial()
-        //{
 
-        //    return View();
-        //}
+        public IActionResult ICStatus()
+        {
+            var region = GetUserInfo.Region;
+            ViewBag.Region = region;
+            return View();
+        }
+
+        public IActionResult Get_IC_Status([FromBody] DTParameters dTParameters)
+        {
+            DTResult<IC_ReceiptModel> dtList = new();
+            try
+            {
+                var region = GetUserInfo.Region;
+                dtList = iC_ReceiptRepository.Get_IC_Status(dTParameters, region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
     }
 }
