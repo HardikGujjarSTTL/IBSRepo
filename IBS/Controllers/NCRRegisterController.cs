@@ -60,16 +60,25 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SaveRemarksofNCR(NCRRegister models,string serializedModel)
+        public IActionResult SaveRemarksofNCR(NCRRegister model)
         {
-            NCRRegister modelss = JsonConvert.DeserializeObject<NCRRegister>(serializedModel);
-            string msg = "Remarks Inserted Successfully.";
-            //foreach (var model in models)
-            //{
-            //    int i = nCRRegisterRepository.SaveRemarks(model);
-            //}
-            int i = nCRRegisterRepository.Saveupdate(models);
+            bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
+            string extractedText = Request.Form["extractedText"];
+            string msg = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
+
             return Json(new { status = true, responseText = msg });
+        }
+
+        [HttpPost]
+        public IActionResult SaveRemarks([FromBody] List<Remarks> editableColumnDataList)
+        {
+            foreach (var value in editableColumnDataList)
+            {
+                var editableColumn1Value = value.EditableColumn1;
+                var editableColumn2Value = value.EditableColumn2;
+
+            }
+            return Json(new { success = true });
         }
 
     }

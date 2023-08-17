@@ -16,12 +16,14 @@ namespace IBS.Models
         public string IE_SNAME { get; set; }
         public string IC_NO { get; set; }
         public int CALL_SNO { get; set; }
+        public short CALLSNO { get; set; }
         public int ContractNo { get; set; }
         public int QtyPassed { get; set; }
         public int VEND_CD { get; set; }
         public string CONSIGNEE { get; set; }
         public int? CONSIGNEE_CD { get; set; }
         public string Item { get; set; }
+        public byte Item_Srno_no { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? IC_DT { get; set; }
         public DateTime? ToDate { get; set; }
@@ -31,7 +33,9 @@ namespace IBS.Models
         public DateTime? Date { get; set; }
         [NotMapped]
         public string? IeCd { get; set; }
+        public byte? Ie_Cd { get; set; }
         public DateTime? CALL_RECV_DT { get; set; }
+        public DateTime CALLRECVDT { get; set; }
         [NotMapped]
         public string? SetRegionCode { get; set; }
         public string? NCRClass { get; set; }
@@ -42,5 +46,8 @@ namespace IBS.Models
         public string? UserID { get; set; }
         public NCRRegister Model { get; set; }
         public string JsonData { get; set; }
+        public string EditableColumn1 { get; set; }
+        public string EditableColumn2 { get; set; }
+        public string rdononc { get; set; }
     }
 }

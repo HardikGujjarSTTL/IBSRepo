@@ -7,6 +7,6 @@ namespace IBS.Interfaces
         DTResult<NCRRegister> GetDataList(DTParameters dtParameters);
         public NCRRegister FindByIDActionA(string CASE_NO, string BK_NO, string SET_NO,string NCNO);
         int SaveRemarks(NCRRegister model);
-        int Saveupdate(NCRRegister model);
+        string Saveupdate(NCRRegister model,bool isRadioChecked,string extractedText);
     }
 }
