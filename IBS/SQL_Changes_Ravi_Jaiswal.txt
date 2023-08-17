@@ -130,6 +130,13 @@ ALTER TABLE T03_CITY
 
 ALTER TABLE T03_CITY
     ADD UpdatedDate DATE
+
+    ALTER TABLE T03_CITY 
+    ADD Country Number(6,0);
+
+    ALTER TABLE T03_CITY
+MODIFY (COUNTRY  VARCHAR2(50 BYTE));
+
 -------------------------------------------------------
 ALTER TABLE T94_Bank 
     ADD IsDeleted NUMBER(2,0);
@@ -280,6 +287,101 @@ ALTER TABLE T99_CLUSTER_MASTER
 ALTER TABLE T99_CLUSTER_MASTER
 MODIFY (CLUSTER_CODE  NUMBER(6,0));
 -------------------------------------
+CREATE TABLE "IBSDEV"."COUNTRY_MASTER" 
+   (	"ID" NUMBER(2,0) NOT NULL ENABLE, 
+	"COUNTRY_NAME" VARCHAR2(20 BYTE), 
+	"COUNTRY_CODE" NUMBER(2,0), 
+	"ISDELETED" NUMBER(2,0), 
+	"CREATEDBY" NUMBER(6,0), 
+	"CREATEDDATE" DATE, 
+	 CONSTRAINT "COUNTRY_MASTER_PK" PRIMARY KEY ("ID")
+     );
 
+ALTER TABLE country_master 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE country_master
+    ADD CreatedBy Number(6,0);
+    
+    ALTER TABLE country_master
+    ADD CreatedDate DATE
+---------------------------------------
+
+ALTER TABLE T10_IC_BookSET 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T10_IC_BookSET
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T10_IC_BookSET 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T10_IC_BookSET
+    ADD CreatedDate DATE
+
+ALTER TABLE T10_IC_BookSET
+    ADD UpdatedDate DATE
+
+------------------------------------------------
+
+ALTER TABLE T100_vender_cluster 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T100_vender_cluster
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T100_vender_cluster 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T100_vender_cluster
+    ADD CreatedDate DATE
+
+ALTER TABLE T100_vender_cluster
+    ADD UpdatedDate DATE
+-----------------------------------------
+ALTER TABLE T31_HOLOGRAM_ISSUED 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T31_HOLOGRAM_ISSUED
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T31_HOLOGRAM_ISSUED 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T31_HOLOGRAM_ISSUED
+    ADD CreatedDate DATE
+
+ALTER TABLE T31_HOLOGRAM_ISSUED
+    ADD UpdatedDate DATE
+----------------------------------------------
+ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT
+    ADD CreatedDate DATE
+
+ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT
+    ADD UpdatedDate DATE
+-------------------------------------------------
+ALTER TABLE T62_MASTER_ITEM_PLNO 
+    ADD IsDeleted NUMBER(2,0);
+
+ALTER TABLE T62_MASTER_ITEM_PLNO
+    ADD CreatedBy Number(6,0);
+
+ALTER TABLE T62_MASTER_ITEM_PLNO 
+    ADD UpdatedBy Number(6,0); 
+    
+ALTER TABLE T62_MASTER_ITEM_PLNO
+    ADD CreatedDate DATE
+
+ALTER TABLE T62_MASTER_ITEM_PLNO
+    ADD UpdatedDate DATE
 
 

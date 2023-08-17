@@ -232,7 +232,8 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
-                window.location.href = "/VendorProfile/Index";
+                //window.location.href = "/VendorProfile/Index";
+                window.location.href = '@Url.Action("Index", "VendorProfile")';
             }
         };
     </script>

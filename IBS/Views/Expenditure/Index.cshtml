@@ -81,7 +81,7 @@
                             var _ExpPer = data.ExpPer;                            
                             var editUrl = '@Url.Action("Manage", "Expenditure")?_ExpPer=' + _ExpPer;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="ExpenditureDelete(this._ExpPer); return false;" href="javascript:void(\'0\');" id=\"' + _ExpPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="ExpenditureDelete(' + _ExpPer + '); return false;" href="javascript:void(\'0\');" id=\"' + _ExpPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -91,9 +91,9 @@
             });
         }
 
-        function ExpenditureDelete(_ExpPer) { 
-            var url = '@Url.Action("Delete", "Expenditure")'; 
-            $("#btn-delete-yes").attr("href", url + "/" + _ExpPer);
+        function ExpenditureDelete(_ExpPer) {
+            var url = '@Url.Action("Delete", "Expenditure")?_ExpPer=' + _ExpPer;
+            $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
     </script>

@@ -79,7 +79,7 @@
                             var _labBillPer = data.Lab_Bill_Per;
                             var editUrl = '@Url.Action("Manage", "LabBilling")?_labBillPer=' + _labBillPer;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="LabBillingDelete(this._labBillPer); return false;" href="javascript:void(\'0\');" id=\"' + _labBillPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="LabBillingDelete(' + _labBillPer + '); return false;" href="javascript:void(\'0\');" id=\"' + _labBillPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -89,9 +89,9 @@
             });
         }
 
-        function LabBillingDelete(_labBillPer) {
-            var url = '@Url.Action("Delete", "LabBilling")';
-            $("#btn-delete-yes").attr("href", url + "/" + _labBillPer);
+        function LabBillingDelete(LabBillPer) {
+            var url = '@Url.Action("Delete", "LabBilling")?LabBillPer=' + LabBillPer;
+            $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
     </script>

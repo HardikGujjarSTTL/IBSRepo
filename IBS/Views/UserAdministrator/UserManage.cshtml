@@ -217,7 +217,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-                window.location.href = "/UserAdministrator/UserMaster";
+                //window.location.href = "/UserAdministrator/UserMaster";
+            window.location.href = '@Url.Action("UserMaster", "UserAdministrator")';
         };
     </script>
 }

@@ -1,18 +1,19 @@
 ﻿@model IBS.Models.TechReferenceModel
 
 @{
-    ViewData["Title"] = "Manage Tech Ref";
+    ViewData["Title"] = "Manage Technical References";
 }
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Manage Tech Ref</h2>
+        <h2>Manage Technical References</h2>
     </div>
 </div>
-<section>
+<section id="tab-1">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="TechReference" asp-action="TechRefDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmTechRefDetailsSave">
-            <input type="hidden" asp-for="TechId" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-4">
@@ -31,13 +32,13 @@
 
                     <div class="col-md-4 mb-4">
                         <label for="RitesOfficerCd">CONTROLLING OFFICER</label>
-                        @Html.DropDownListFor(model => model.TechCmCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(0), "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.TechCmCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(Model.RegionCd.ToString(),null), "Value", "Text"),"--Select--")
                         <span asp-validation-for="TechCmCd" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="TechIeCd">INSPECTION ENGINEER.</label>
-                        @Html.DropDownListFor(model => model.TechIeCd, new SelectList(IBS.Models.Common.GetInspEngCd(0), "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.TechIeCd, new SelectList(IBS.Models.Common.GetInspEngCdFortech(Model.RegionCd.ToString()), "Value", "Text"),"--Select--")
                         <span asp-validation-for="TechIeCd" class="text-danger"></span>
                     </div>
 
@@ -64,17 +65,12 @@
                         <input type="text" class="input" asp-for="TechContent" maxlength="500" />
                         <span asp-validation-for="TechContent" class="text-danger"></span>
                     </div>
-
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Upload Tech Ref</label><span style="color:orange">(In PDF Only)</span>
-                        @*<input type="text" class="input datepicker" asp-for="OfferDt" readonly="true">
-                        <span asp-validation-for="OfferDt" class="text-danger"></span>*@
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Tech_Ref" />
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Upload Tech Ref Reply</label><span style="color:orange">(In PDF Only)</span>
-                        @*<input type="text" class="input datepicker" asp-for="OfferDt" readonly="true">
-                        <span asp-validation-for="OfferDt" class="text-danger"></span>*@
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.FileUploaderUpload_Tech_Ref_Reply" />
                     </div>
                 </div>
 
@@ -92,13 +88,15 @@
     <script type="text/javascript">
         function Save() {
             if ($("#frmTechRefDetailsSave").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmTechRefDetailsSave").submit();
             }
         }
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/TechReference/Index";
+            //window.location.href = "/TechReference/Index";
+            window.location.href = '@Url.Action("Index", "TechReference")';
         };
     </script>
 }

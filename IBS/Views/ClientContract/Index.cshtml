@@ -1,15 +1,29 @@
 ﻿
 @{
-    ViewData["Title"] = "Client Contract List";
+    string Title = "";
+    if (ViewBag.Type == "C")
+    {
+        Title = "Client Contract List";
+    }
+    else if (ViewBag.Type == "B")
+    {
+        Title = "BD Efforts";
+    }
+    else
+    {
+        Title = "DFO Visit";
+    }
+    ViewData["Title"] = Title;
 }
 
 <div>
+    <input type="hidden" id="@ViewBag.Type" value="@ViewBag.Type" />
     <div class="list-inner">
         <div class="tast-list">
             <h2>Client Contract List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Client Contract</a>
+            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn"><span class="fa fa-plus"></span> Add New Client Contract</a>
         </div>
     </div>
     <section class="table-section">
@@ -63,6 +77,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            Type : '@ViewBag.Type'
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -84,9 +99,10 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.Id;
+                            var TypeCb = data.TypeCb;
                             var editUrl = '@Url.Action("Manage", "ClientContract")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="ClientContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="ClientContractDelete(' + id + ',\'' + TypeCb + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -96,9 +112,9 @@
             });
         }
 
-        function ClientContractDelete(id) {
-            var url = '@Url.Action("Delete", "ClientContract")';
-            $("#btn-delete-yes").attr("href", url + "/" + id);
+        function ClientContractDelete(id, TypeCb) {
+            var url = '@Url.Action("Delete", "ClientContract")?id=' + id + "&Type=" + TypeCb;
+            $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
     </script>

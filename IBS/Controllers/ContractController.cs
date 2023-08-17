@@ -1,17 +1,24 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Helpers;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace IBS.Controllers
 {
     public class ContractController : BaseController
     {
         #region Variables
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
         private readonly IContractRepository contractRepository;
         #endregion
-        public ContractController(IContractRepository _contractRepository)
+        public ContractController(IDocument _iDocumentRepository, IWebHostEnvironment _environment, IContractRepository _contractRepository)
         {
+            iDocument = _iDocumentRepository;
+            env = _environment;
             contractRepository = _contractRepository;
         }
         public IActionResult Index()
@@ -25,6 +32,15 @@ namespace IBS.Controllers
             {
                 model = contractRepository.FindByID(id);
             }
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.Contract, Convert.ToString(id));
+            FileUploaderDTO FileUploaderContract = new FileUploaderDTO();
+            FileUploaderContract.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderContract.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Contract_Documents_If_Any).ToList();
+            FileUploaderContract.OthersSection = false;
+            FileUploaderContract.MaxUploaderinOthers = 5;
+            FileUploaderContract.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Contract_Documents_If_Any = FileUploaderContract;
+
             return View(model);
         }
 
@@ -53,21 +69,27 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ContractDetailsSave(ContractModel model)
+        public IActionResult ContractDetailsSave(ContractModel model, IFormCollection FrmCollection)
         {
             try
             {
                 string msg = "Contract Inserted Successfully.";
-
                 if (model.ContractId > 0)
                 {
                     msg = "Contract Updated Successfully.";
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = contractRepository.ContractDetailsInsertUpdate(model);
-                if (i > 0)
+                model.UserId = Convert.ToString(UserId);
+                int id = contractRepository.ContractDetailsInsertUpdate(model);
+                if (id > 0)
                 {
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Contract_Documents_If_Any };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ContractDocument), env, iDocument, "Contract", string.Empty, DocumentIds);
+                    }
                     return Json(new { status = true, responseText = msg });
                 }
             }
