@@ -1,0 +1,381 @@
+﻿@model IBS.Models.VendorPOMAModel
+@{
+    ViewData["Title"] = "VENDOR MA FORM";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorPOMA" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>VENDOR MA FORM</h2>
+        </div>
+    </div>
+    <div class="accordion-body" id="tab-1">
+        <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Case No.</label>
+                    <input type="text" asp-for="CASE_NO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Po No.</label>
+                    <input type="text" class="input" asp-for="PO_NO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="PO_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO Date</label>
+                    <input type="text" class="input" asp-for="PO_DT" maxlength="100" style="text-transform: uppercase;" placeholder="dd/mm/yyyy" readonly="readonly">
+                    <span asp-validation-for="PO_DT" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">RLY Code.</label>
+                    <input type="text" class="input" asp-for="RLY_CD" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="RLY_CD" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">SNo.</label>
+                    <input type="text" class="input" asp-for="MA_SNO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    @*<span asp-validation-for="MA_SNO" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">BPO Type<span style="color:red">*</span></label>
+                    @Html.DropDownListFor(model => model.RLY_NONRLY, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"),"--Select--" , new { @disabled="disabled"})
+                    <span asp-validation-for="RLY_NONRLY" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO/Offer Letter No.<span style="color:red">*</span></label>
+                    @Html.DropDownListFor(model => model.PO_OR_LETTER, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--", new { @disabled="disabled"})
+                    <span asp-validation-for="PO_OR_LETTER" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA No.<span style="color:red">*</span></label>
+                    <input type="text" class="input" asp-for="MA_NO" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="MA_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA Date (DD/MM/YYYY)<span style="color:red">*</span></label>
+                    <input type="text" class="datepicker" asp-for="MA_DT" maxlength="100" style="text-transform: uppercase;" placeholder="dd/mm/yyyy">
+                    <span asp-validation-for="MA_DT" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Field</label>
+                    <textarea rows="4" asp-for="MA_FIELD" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="MA_FIELD" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">MA Description</label>
+                    <textarea rows="4" asp-for="MA_DESC" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="MA_DESC" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Original PO Entry</label>
+                    <textarea rows="4" asp-for="OLD_PO_VALUE" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="OLD_PO_VALUE" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">Amended PO Entry</label>
+                    <textarea rows="4" asp-for="NEW_PO_VALUE" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="NEW_PO_VALUE" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.VendorMADoc" />
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="VendorPOMA" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" id="btnAddMA" style="display:none;">Save MA</button>
+            <button type="button" class="save-btn active" id="btnUpdateMA" style="display:none;">Update MA</button>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Reference">REMARKS</label>
+                    <textarea rows="4" asp-for="MA_REMARKS" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="MA_REMARKS" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Case Number</th>
+                            <th>Purchase Order Number</th>
+                            <th>Purchase Order Date</th>
+                            <th>MA No.</th>
+                            <th>MA Date</th>
+                            <th>Agency</th>
+                            <th>PO OR Letter</th>
+                            <th>MA Sno</th>
+                            <th>MA Field</th>
+                            <th>MA Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        #dtList td {
+            word-wrap: anywhere;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            setDefaultDate();
+            var urlParams = new URLSearchParams(window.location.search);
+            var Action_T = urlParams.get('Action_T');
+            if (Action_T == "N") {
+                $("#btnUpdateMA").hide();
+                $("#btnAddMA").show();
+            }
+            if (Action_T == "E") {
+                $("#btnUpdateMA").show();
+                $("#btnAddMA").hide();
+            }
+            InitializeDatatable();
+        });
+
+        function setDefaultDate() {
+            $('#MA_DT').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+            });
+        }
+
+        function InitializeDatatable() {
+            var CaseNo = $("#CASE_NO").val();
+            var MaNo = $("#MA_NO").val();
+            var MaDt = $("#MA_DT").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableSub", "VendorPOMA")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "MaNo": MaNo,
+                            "MaDt": MaDt
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CASE_NO" },
+                    { data: "PO_NO" },
+                    {
+                        data: "PO_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "MA_NO" },
+                    {
+                        data: "MA_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var RLY_CD = row["RLY_CD"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<span style='font-family: Verdana; font-size: 8pt; color: blue;'>" + RLY_CD + "</span>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var PO_OR_LETTER = row["PO_OR_LETTER"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<span style='font-family: Verdana; font-size: 8pt; color: blue;'>" + PO_OR_LETTER + "</span>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var MA_SNO = row["MA_SNO"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<span style='font-family: Verdana; font-size: 8pt; color: blue;'>" + MA_SNO + "</span>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var MA_FIELD = row["MA_FIELD"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<span style='font-family: Verdana; font-size: 8pt; color: blue;'>" + MA_FIELD + "</span>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var MA_STATUS = row["MA_STATUS"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<span style='font-family: Verdana; font-size: 8pt; color: blue;'>" + MA_STATUS + "</span>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        $("#btnAddMA").click(function () {
+            SaveSingleDocuments("tab-1");
+
+            var CaseNo = $("#CASE_NO").val();
+            var MaNo = $("#MA_NO").val();
+            //var MaDt = moment($("#MA_DT").val()).format("DD-MM-YYYY");
+            var MaDt = $("#MA_DT").val();
+            debugger
+            var formData = new FormData($("#frmDetails")[0]);
+            debugger
+            $.ajax({
+                url: '@Url.Action("DetailsSave", "VendorPOMA")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        if (response.Status == "1") {
+                            alert("Selected CASE NO,MA NO and MA DATE already Exist!!!");
+                        }
+                        else {
+                            var msg = "Record Insert Successfully.";
+                            var d = confirm(msg);
+                            if (d === true) {
+                                window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&Action=N";
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        $("#btnUpdateMA").click(function () {
+
+            var CaseNo = $("#CASE_NO").val();
+            var MaNo = $("#MA_NO").val();
+            var MaDt = $("#MA_DT").val();
+            var urlParams = new URLSearchParams(window.location.search);
+            var MaStatus = urlParams.get('MaStatus');
+            var MaSNo = urlParams.get('MaSNo');
+
+            var formData = new FormData($("#frmDetails")[0]);
+            debugger
+            $.ajax({
+                url: '@Url.Action("DetailsUpdate", "VendorPOMA")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        //alert("Record is Update!!!");
+                        ShowHideMsgNew(response.success, response.responseText);
+                        window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDt=" + MaDt + "&MaStatus=" + MaStatus + "&MaSNo=" + MaSNo + "&Action_T=E";
+                    }
+                }
+            });
+        });
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/CallRegister";
+            window.location.href = '@Url.Action("Index", "CallRegister")';
+        };
+    </script>
+    }

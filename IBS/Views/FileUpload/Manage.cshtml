@@ -4,7 +4,7 @@
         <h2>Document</h2>
     </div>
 </div>
-<section class="table-section" id="tab-1">
+<section id="tab-1">
     <div class="task-listinput">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="FileUpload" asp-action="FileUploadSave" data-ajax-method="post" data-ajax-complete="completed" id="frmFileDetails">
                 <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
@@ -33,7 +33,8 @@
          completed = function (response) {
             //var res = response.responseJSON;
             //ShowHideMsgNew(res.status, res.responseText);
-                window.location.href = "/FileUpload/Index";
+                //window.location.href = "/FileUpload/Index";
+            window.location.href = '@Url.Action("Index", "FileUpload")';
         };
 
         function Save() {

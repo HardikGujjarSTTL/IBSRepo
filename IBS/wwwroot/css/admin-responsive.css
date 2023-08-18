@@ -1,5 +1,5 @@
 /* ************* Media Queries Tablets ****************** */
-@media only screen and (max-width:1400px) {
+@media only screen and (max-width:1023px) {
 .contentContainer { margin-left: 70px; } 
 }
 @media (max-width:991px) {
@@ -47,14 +47,14 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .leftSidebarNav { width: 100%; position: static; padding: 0; margin: 30px 0 0 0; }
 .menuDisplayNone { margin-left: -70px; visibility: hidden; opacity: 0; }
 .menuCollepase.menuDisplayNone { margin-left: 0; visibility: visible; opacity: 1; }
-.left-side-collapsed #sidebar { display: none; }
+.left-side-collapsed #sidebar, .ipadView #sidebar { display: none; }
 .mobi_logoSection { display: block; position: absolute; top: 8px; left: 15px; z-index: 2; }
 .topLinksAndSearch { background:#081e40; height: 75px; padding: 9px 0; }
 .navbar-toggle { height: 33px; width: 33px;line-height: 37px;font-size: 34px; }
 .navBtn, .left-side-collapsed .navBtn{ right:0;left: 208px; top:21px;  }
 #sidebar{ top: 75px; z-index: 22; }
 .logoSection { position: absolute;top: -70px;left: 15px;display: none; }
-#header { padding: 0px; }
+#header { padding: 0px; display:inherit; }
 .userDetail h4, a.openDrpPopup i, .userDetail p{ color: #fff; }
 .topLinksAndSearch .userTopLinks{  padding: 4px 0; }
 .left-side-opend #sidebar { display: block; }
@@ -88,14 +88,14 @@ tast-date{ margin-top:15px; }
 }
 @media only screen and (max-width:800px) {
 /*Responsive Table*/
-.responsiveTable, .responsiveTable tr, .responsiveTable td, .responsiveTable td:before { display: block; text-align: left; border: none;	/* Converts a table, table row, table column and table column:before into a block element */ }
+.responsiveTable, .responsiveTable tr, .responsiveTable td, .responsiveTable td:before { display: block; text-align: left; border: none; }
 .responsiveTable, .responsiveTable tr, .responsiveTable td:last-child { border-bottom: none; }
-.responsiveTable thead, .responsiveTable tr th { position: absolute;	/* Hides table head but not using display none */ top: -1000em; left: -1000em; }
+.responsiveTable thead, .responsiveTable tr th { position: absolute; top: -1000em; left: -1000em; }
 .responsiveTable tr { border: 1px solid #eeeeee; border-bottom: 2px solid #eeeeee; margin: 0 0 20px; }
-.responsiveTable tr td:nth-child(1) { /* first column of the row */ border-left: none; }
-.responsiveTable tr td:last-child { /* last column of the row */ border-right: none; }
-.responsiveTable tr:last-child .td, .responsiveTable td { /* Column in the last row and column */ border-bottom: 1px solid #eeeeee; }
-.responsiveTable td:before { /* prints the value of data-label attribute before the column data */ font-weight: bold; padding-right: 20px; line-height: 27px; color: #174471; content: " "attr(data-label)"";	/* call the attribute value of data-label and adds a string // */ }
+.responsiveTable tr td:nth-child(1) {  border-left: none; }
+.responsiveTable tr td:last-child {  border-right: none; }
+.responsiveTable tr:last-child .td, .responsiveTable td { border-bottom: 1px solid #eeeeee; }
+.responsiveTable td:before { font-weight: bold; padding-right: 20px; line-height: 27px; color: #174471; content: " "attr(data-label)""; }
 .responsiveTable tbody { display: block; }
 .responsiveTable tr td { padding: 5px 15px; width: auto !important; }
 .chartArea .columnBox9 { width: 100%; }

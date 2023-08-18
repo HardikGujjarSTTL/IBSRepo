@@ -14,17 +14,24 @@ namespace IBS.Controllers
         {
             clientcontractRepository = _clientcontractRepository;
         }
-        public IActionResult Index()
+        public IActionResult Index(string type)
         {
+            ViewBag.Type = type;
             return View();
         }
-        public IActionResult Manage(int id)
+        public IActionResult Manage(int id, string Type)
         {
+            string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
             ClientContractModel model = new();
             if (id > 0)
             {
                 model = clientcontractRepository.FindByID(id);
             }
+            else
+            {
+                model.TypeCb = Type;
+            }
+            model.RegionCd= Region;
             return View(model);
         }
 
@@ -34,7 +41,7 @@ namespace IBS.Controllers
             DTResult<ClientContractModel> dTResult = clientcontractRepository.GetClientContractList(dtParameters);
             return Json(dTResult);
         }
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id,string Type)
         {
             try
             {
@@ -48,7 +55,7 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientContract", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { type= Type });
         }
 
         [HttpPost]

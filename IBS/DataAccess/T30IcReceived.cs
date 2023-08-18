@@ -11,7 +11,7 @@ public partial class T30IcReceived
 
     public string SetNo { get; set; } = null!;
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public DateTime? IcSubmitDt { get; set; }
 
@@ -24,6 +24,16 @@ public partial class T30IcReceived
     public string? Remarks { get; set; }
 
     public DateTime? RemarksDt { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
 
     public virtual T22Bill? BillNoNavigation { get; set; }
 }

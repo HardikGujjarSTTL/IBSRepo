@@ -1,0 +1,84 @@
+﻿@model IBS.Models.LastYearOutstandingModel
+@{
+    ViewData["Title"] = "Manage LastYearOutstanding";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Last Year Outstanding</h2>
+    </div>
+</div> 
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="LastYearOutstanding" asp-action="LastYearOutstandingDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLastYearOutstandingDetails">
+            <input type="hidden" asp-for="Ly_Per" />
+            <div class="accordion-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row"> 
+                            <div class="col-md-2 mb-4">
+                                <label class="lable-control" for="Reference"><b>For the Period : </b></label>
+                            </div>    
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Month: </label>
+                                @Html.DropDownListFor(model => model.LyPerMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
+                                <span asp-validation-for="LyPerMon" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Year: </label>
+                                @Html.DropDownListFor(model => model.LyPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
+                                <span asp-validation-for="LyPerYear" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2 mb-4">
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Outstanding Amount (In Rs.)</label>
+                                <input type="text" class="input" asp-for="Ly_Outs" maxlength="500" />
+                                <span asp-validation-for="Ly_Outs" class="text-danger"></span>
+                            </div> 
+                        </div>
+                    </div> 
+                    <div class="savenext-btn" style="justify-content:center">
+                        <a asp-controller="LastYearOutstanding" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts 
+{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (@Model.Ly_Per > null) {
+                var s = @Model.Ly_Per;
+                var year = s.toString().substring(0, 4);
+                var mon = s.toString().substring(4, 6);
+                $("#LyPerMon").val(mon);
+                $("#LyPerYear").val(year);
+            }
+        });
+    </script>
+    <script type="text/javascript"> 
+        function Save() {
+            if ($("#frmLastYearOutstandingDetails").valid()) {
+                $("#frmLastYearOutstandingDetails").submit();
+            }
+        } 
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/LastYearOutstanding/Index";
+            window.location.href = '@Url.Action("Index", "LastYearOutstanding")';
+        }; 
+    </script>
+}

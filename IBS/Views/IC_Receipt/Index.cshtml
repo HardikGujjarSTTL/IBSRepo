@@ -1,0 +1,295 @@
+﻿@model IBS.Models.IC_ReceiptModel
+@{
+    ViewData["Title"] = "Receipt of book set in Inspection Office";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Receipt of book set in Inspection Office</h2>
+            <form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmICReceipt" style="margin-top: 7px;">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-2 mb-4">
+                            <label for="Reference">Book No.</label>
+                            <input type="text" class="input" asp-for="BK_NO" maxlength="200" tabindex="1" />
+                            <span asp-validation-for="BK_NO" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-2 mb-4">
+                            <label for="Reference">Set No.</label>
+                            <input type="text" class="input" asp-for="SET_NO" maxlength="200" tabindex="2" />
+                            <span asp-validation-for="SET_NO" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-5 mb-4">
+                            <label for="Reference">IE To Whom Issued</label>
+                            @*<input type="text" class="input" asp-for="SET_NO" maxlength="200" />*@
+                            @Html.DropDownListFor(model => model.IE_CD, new SelectList(ViewBag.Status, "Value", "Text"),"--Select--")
+                            <span asp-validation-for="IE_CD" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <label for="Reference">IC Submission Date in RITES</label>
+                            <input type="text" class="input" asp-for="IC_SUBMIT_DT" maxlength="200" style="text-align: center;" readonly tabindex="4" />
+                            <span asp-validation-for="IC_SUBMIT_DT" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0" style="text-align:center;">
+                        <div class="col-md-9 mb-4">
+                            <label for="Reference">Remarks</label>
+                            <input type="text" class="input" asp-for="REMARKS" maxlength="200" tabindex="5" />
+                            @*<span asp-validation-for="REMARKS" class="text-danger"></span>*@
+                        </div>
+
+                        <div class="col-md-3 mb-4">
+                            <label for="Reference">Remarks Date</label>
+                            <input type="text" class="datepicker" asp-for="REMARKS_DT" maxlength="200" style="text-align: center;" tabindex="6" />
+                            @*<input type="text" class="datepicker" asp-for="FromDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">*@
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-4 text-center">
+                            @*<div class="savenext-btn ">*@
+                            <button tabindex="7" type="button" class="reset-btn" id="btnSave" style="background-color:#F66A2F">Save</button>
+                            <button tabindex="9" type="button" class="reset-btn" id="btnSearch" style="background: none;color:#646464">Search</button>
+                            <a asp-controller="IC_Receipt" asp-action="Index" class="reset-btn">Cancel</a>
+                            <button tabindex="10" type="button" class="reset-btn" id="btnReport" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of Unbilled IC's</button>
+                            <button tabindex="11" type="button" class="reset-btn" id="btnIssuedNRec" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of IC's Issued but not Received</button>
+                            <button tabindex="12" type="button" class="reset-btn" id="btnStatusIC" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Status of IC's</button>
+                            @*</div>*@
+                        </div>
+                    </div>
+                    <div class="alert alert-warning center">
+                        To Search/Modify/Delete Book Set -> Enter Book No. & Set No /Inspection Engineer and click on [Search] button and then select the desired item.
+                    </div>
+                    <div class="row my-0">
+                        <strong>
+                            IC's Received but not Billed As on :&nbsp;
+                            <input type="text" class="input" asp-for="RDT" maxlength="10" onblur="check_date(txtRDT);" style="color:DarkBlue;font-family:Verdana;font-size:12pt;width:150px;TEXT-ALIGN: center" />
+                        </strong>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <span id="lblSection" style="display:inline-block;color:DarkMagenta;font-family:Verdana;font-size:12pt;font-weight:bold;width:100%;text-align:center;">UN-BILLED INSPECTION CERTIFICATES</span>
+    <section id="tblSection" class="table-section" style="margin-bottom:10px;">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Book No</th>
+                            <th>Set No.</th>
+                            <th>IE to Whom Issued</th>
+                            <th>IC Submision Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setDefaultDate();
+            var IsDelete = '@ViewBag.IsDelete' == "False" ? false : true;
+            var IsSave = '@ViewBag.IsSave' == "False" ? false : true;
+            $("#lblSection").css("display", "none");
+            //$("#tblSection").css("display", "none");
+            if (IsDelete) { $("#btnDelete").css("display", "block") } else { $("#btnDelete").css("display", "none") };
+            //if (IsSave) { $("#btnSave").css("display", "block") } else { $("#btnSave").css("display", "none") };
+
+            $("#btnSearch").click(function () {
+                BindDataTable();
+                $("#lblSection").css("display", "block");
+                $("#tblSection").css("display", "block");
+            });
+
+            $("#btnSave").click(function () {
+                if ($("#frmICReceipt").valid()) {
+                    Save();
+                }
+            });
+
+            $("#btnDelete").click(function () {
+                if ($("#frmICReceipt").valid()) {
+                    Delete();
+                }
+            });
+
+            $("#btnReport").click(function () {
+                window.location.href = "/IC_Receipt/ICFromToDate?Action=UNBILLEDIC";
+            })
+
+            $("#btnIssuedNRec").click(function () {
+                window.location.href = "/IC_Receipt/ICFromToDate?Action=ICISSUEDNSUB";
+            })
+
+            $("#btnStatusIC").click(function () {
+                window.location.href = "/IC_Receipt/ICStatus";
+            })
+        });
+
+        function setDefaultDate() {
+            $('#REMARKS_DT').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+            });           
+        }
+
+        function Save() {
+            var formData = new FormData($("#frmICReceipt")[0]);
+            $.ajax({
+                url: "@Url.Action("ICReceiptSave", "IC_Receipt")",
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response == "") {
+                        alert("Record Save Successfull");
+                    } else {
+                        alert(response);
+                    }
+                }
+            });
+        }
+
+        function Delete(bk_no, set_no) {
+            debugger
+            //var formData = new FormData($("#frmICReceipt")[0]);
+            var obj = new Object();
+            obj.BK_NO = bk_no;
+            obj.SET_NO = set_no;
+            $.ajax({
+                url: '@Url.Action("ICReceiptDelete", "IC_Receipt")?BK_NO=' + bk_no + '&SET_NO=' + set_no,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                //data: { BK_NO : bk_no, SET_NO: set_no },//
+                //data: function (d) {
+                //    var AdditionalValues = {
+                //        "BK_NO": bk_no,
+                //        "SET_NO": set_no
+                //    };
+                //    d.AdditionalValues = AdditionalValues;
+                //    return JSON.stringify(d);
+                //},
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response > 0) {
+                        ShowHideMsgNew(true, "Record Deleted Successfull")
+                        //alert("Record Deleted Successfull");
+                        BindDataTable();
+                    } else {
+                        ShowHideMsgNew(false, "Record Not Deleted")
+                        //alert("Record Not Deleted");
+                    }
+                }
+            });
+        }
+
+        function BindDataTable() {
+            //var formData = new FormData($("#frmICReceipt")[0]);
+            var BK_NO = $("#BK_NO").val();
+            var SET_NO = $("#SET_NO").val();
+            var IE_CD = "";
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable", "IC_Receipt")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "BK_NO": BK_NO,
+                            "SET_NO": SET_NO,
+                            "IE_CD": IE_CD
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BK_NO" },
+                    { data: "SET_NO" },
+                    { data: "IE_NAME" },
+                    { data: "IC_SUBMIT_DT" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            gridData = row;
+                            var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
+                            html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\');" href="javascript:void(\'0\');" id=\"' + data.BK_NO + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i></a>';
+                            html += '</div>';
+
+                            //var html = '<div align=\"center\" class=\"reportIcon\">';
+                            //html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            ////html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            //html += '</div>';
+                            return html;
+
+
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function SelectDetails(BKNO, SETNO) {
+            $.ajax({
+                //url: '@Url.Action("Get_Selected_IC_Receipt_Detail", "IC_Receipt")?BK_NO=' + BKNO + "&SET_NO=" + SETNO,
+                url: '/IC_Receipt/Get_Selected_IC_Receipt_Detail?BK_NO=' + BKNO + "&SET_NO=" + SETNO,
+                type: "POST",
+                dataType: "JSON",
+                //data: details,
+                //data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    var data = response;
+
+                    if (response != null) {
+                        $("#btnDelete").css("display", "block");
+                        $("#BK_NO").val(data.BK_NO);
+                        $("#SET_NO").val(data.SET_NO);
+                        $("#IC_SUBMIT_DT").val(data.IC_SUBMIT_DT);
+                        $("#REMARKS").val(data.REMARKS);
+                        $("#REMARKS_DT").val(data.REMARKS_DT);
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,102 @@
+﻿@model IBS.Models.TechReferenceModel
+
+@{
+    ViewData["Title"] = "Manage Technical References";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Technical References</h2>
+    </div>
+</div>
+<section id="tab-1">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="TechReference" asp-action="TechRefDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmTechRefDetailsSave">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <label for="TechDate">Letter Date</label>
+                        <input type="text" class="input datepicker" onBlur="check_date(this)" asp-for="TechDate" readonly="true">
+                        <span asp-validation-for="TechDate" class="text-danger"></span>
+                        <asp:label id="Label9" runat="server" Font-Bold="True" Width="289px" ForeColor="DarkMagenta"
+                                   Font-Size="8pt" Font-Names="Verdana">* Enter Date in DD/MM/YYYY Format.</asp:label>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="TechLetterNo">RITES Letter No.</label>
+                        <input type="text" class="input" asp-for="TechLetterNo" maxlength="500" />
+                        <span asp-validation-for="TechLetterNo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="RitesOfficerCd">CONTROLLING OFFICER</label>
+                        @Html.DropDownListFor(model => model.TechCmCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(Model.RegionCd.ToString(),null), "Value", "Text"),"--Select--")
+                        <span asp-validation-for="TechCmCd" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="TechIeCd">INSPECTION ENGINEER.</label>
+                        @Html.DropDownListFor(model => model.TechIeCd, new SelectList(IBS.Models.Common.GetInspEngCdFortech(Model.RegionCd.ToString()), "Value", "Text"),"--Select--")
+                        <span asp-validation-for="TechIeCd" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="TechItemDes">ITEM.</label>
+                        <input type="text" class="input" asp-for="TechItemDes" maxlength="500" />
+                        <span asp-validation-for="TechItemDes" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="TechSpecDrg">SPEC & DRG.</label>
+                        <input type="text" class="input" asp-for="TechSpecDrg" maxlength="500" />
+                        <span asp-validation-for="TechSpecDrg" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="TechRefMade">REFERENCE MADE TO.</label>
+                        <input type="text" class="input" asp-for="TechRefMade" maxlength="500" />
+                        <span asp-validation-for="TechRefMade" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="TechContent">CONTACT OF TECHNICAL REFERENCE IN BRIEF.</label>
+                        <input type="text" class="input" asp-for="TechContent" maxlength="500" />
+                        <span asp-validation-for="TechContent" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Tech_Ref" />
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.FileUploaderUpload_Tech_Ref_Reply" />
+                    </div>
+                </div>
+
+                <div class="savenext-btn">
+                    <a asp-controller="TechReference" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmTechRefDetailsSave").valid()) {
+                SaveSingleDocuments("tab-1");
+                $("#frmTechRefDetailsSave").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/TechReference/Index";
+            window.location.href = '@Url.Action("Index", "TechReference")';
+        };
+    </script>
+}

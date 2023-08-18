@@ -4,115 +4,237 @@
     ViewData["Title"] = "Vendor Profile";
 }
 
+@{
+    int VendCd = 0;
+    if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+    {
+        VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+    }
+    bool isReadOnly = false;
+    if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor" && VendCd == Model.VendCd)
+    {
+        isReadOnly = true;
+    }
+}
+
 <div class="list-inner">
     <div class="tast-list">
         <h2>Vendor Profile</h2>
     </div>
 </div>
-<section>
+<section id="tab-1">
     <div class="task-listinput">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorProfile" asp-action="VendorProfileDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVendorProfileDetails">
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="VendCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorProfile" asp-action="VendorProfileDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVendorProfileDetails">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <input type="hidden" asp-for="VendCd" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    @if (isReadOnly)
+                    {
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Vendor Code</label>
-                            <input type="text" class="input" asp-for="VendCd"  disabled="disabled">
+                            <input type="text" class="input" asp-for="VendCd" disabled="disabled">
                             <span asp-validation-for="VendCd" class="text-danger"></span>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Vendor Name</label>
-                            <input type="text" class="input" asp-for="VendName"  disabled="disabled">
-                            <span asp-validation-for="VendName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">City</label>
-                            @Html.DropDownListFor(model => model.VendCityCd, new SelectList(IBS.Models.Common.GetCity() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="VendCityCd" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Vendor Approval</label>
+                    }
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Vendor Name</label>
+                        @if (isReadOnly)
+                        {
+                            <input type="text" class="input" asp-for="VendName" disabled="disabled">
+                        }
+                        else
+                        {
+                            <input type="text" class="input" asp-for="VendName">
+                        }
+                        <span asp-validation-for="VendName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">City</label>
+                        @Html.DropDownListFor(model => model.VendCityCd, new SelectList(IBS.Models.Common.GetCity() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="VendCityCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Vendor Approval</label>
+                        @if (isReadOnly)
+                        {
                             @Html.DropDownListFor(model => model.VendApproval, new SelectList(IBS.Models.Common.VendorApproval() , "Value", "Text"),"--Select--", new { @disabled="disabled"})
-                            <span asp-validation-for="VendApproval" class="text-danger"></span>
-                        </div>
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.VendApproval, new SelectList(IBS.Models.Common.VendorApproval() , "Value", "Text"),"--Select--")
+                        }
+
+                        <span asp-validation-for="VendApproval" class="text-danger"></span>
                     </div>
-                   
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Approval Period From</label>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Approval Period From</label>
+                        @if (isReadOnly)
+                        {
                             <input type="text" class="input datepicker" asp-for="VendApprovalFr" readonly="true" disabled="disabled">
-                            <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Approval Period To</label>
+                        }
+                        else
+                        {
+                            <input type="text" class="input datepicker" asp-for="VendApprovalFr" readonly="true">
+                        }
+                        <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Approval Period To</label>
+                        @if (isReadOnly)
+                        {
                             <input type="text" class="input datepicker" asp-for="VendApprovalTo" readonly="true" disabled="disabled">
-                            <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Contact Person 1</label>
-                            <input type="text" class="input" asp-for="VendContactPer1" >
-                            <span asp-validation-for="VendContactPer1" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Tel No.</label>
-                            <input type="text" class="input" asp-for="VendContactTel1" >
-                            <span asp-validation-for="VendContactTel1" class="text-danger"></span>
-                        </div>
+                        }
+                        else
+                        {
+                            <input type="text" class="input datepicker" asp-for="VendApprovalTo" readonly="true">
+                        }
+                        <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Contact Person 1</label>
+                        <input type="text" class="input" asp-for="VendContactPer1">
+                        <span asp-validation-for="VendContactPer1" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Tel No.</label>
+                        <input type="text" class="input" asp-for="VendContactTel1">
+                        <span asp-validation-for="VendContactTel1" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Contact Person 2</label>
+                        <input type="text" class="input" asp-for="VendContactPer2">
+                        <span asp-validation-for="VendContactPer2" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Tel No.</label>
+                        <input type="text" class="input" asp-for="VendContactTel2">
+                        <span asp-validation-for="VendContactTel2" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Email</label>
+                        <input type="text" class="input" asp-for="VendEmail">
+                        <span asp-validation-for="VendEmail" class="text-danger"></span>
+                    </div>
+                    @if (!isReadOnly)
+                    {
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Status</label>
+                            @Html.DropDownListFor(model => model.VendStatus, new SelectList(IBS.Models.Common.VendorStatus() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="VendStatus" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Vendor Address</label>
+                        <textarea class="input" asp-for="VendAdd1"></textarea>
+                        <span asp-validation-for="VendAdd1" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Address (Count).</label>
+                        <textarea class="input" asp-for="VendAdd2"></textarea>
+                        <span asp-validation-for="VendAdd2" class="text-danger"></span>
+                    </div>
+                    @if (isReadOnly)
+                    {
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Remarks</label>
+                            <textarea class="input" asp-for="VendRemarks"></textarea>
+                        </div>
+                    }
+                </div>
+                @if (!isReadOnly)
+                {
                     <div class="row my-0">
                         <div class="col-md-3 mb-3">
-                            <label for="Reference">Contact Person 2</label>
-                            <input type="text" class="input" asp-for="VendContactPer2" >
-                            <span asp-validation-for="VendContactPer2" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Tel No.</label>
-                            <input type="text" class="input" asp-for="VendContactTel2" >
-                            <span asp-validation-for="VendContactTel2" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Email</label>
-                            <input type="text" class="input" asp-for="VendEmail" >
-                            <span asp-validation-for="VendEmail" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Vendor Address</label>
-                            <textarea class="input" asp-for="VendAdd1" ></textarea>
-                            <span asp-validation-for="VendAdd1" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="Reference">Address (Count).</label>
-                            <textarea class="input" asp-for="VendAdd2" ></textarea>
-                            <span asp-validation-for="VendAdd2" class="text-danger"></span>
+                            <label for="Reference">Has any item of this Vendor blocked?</label>
+                            <i class="text-danger">* If Yes, kindly enter the details of Blocked Item in Remarks column!!!</i>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownListFor(model => model.VendInspStopped, new SelectList(IBS.Models.Common.ItemBlocked() , "Value", "Text"),"--Select--", new { @disabled="disabled"})
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.VendInspStopped, new SelectList(IBS.Models.Common.ItemBlocked() , "Value", "Text"),"--Select--")
+                            }
+                            <span asp-validation-for="VendInspStopped" class="text-danger"></span>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="Reference">Remarks</label>
-                            <textarea class="input" asp-for="VendRemarks" ></textarea>
+                            <textarea class="input" asp-for="VendRemarks"></textarea>
+                            <span asp-validation-for="VendRemarks" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Vendor Online Call Registration Status (Y/N)</label>
+                            <i class="text-danger">* Select Yes in case the given Vendor Name & Address is given Vendor ID and Password for online Call Registration.</i>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"),"--Select--", new { @disabled="disabled"})
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"),"--Select--")
+                            }
+                            <span asp-validation-for="OnlineCallStatus" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="savenext-btn">
-                        @*<a asp-controller="VendorProfile" asp-action="Index" class="reset-btn">Cancel</a>*@
-                        <button type="button" class="save-btn active" onclick="Save();">Update</button>
+                }
+                @if (!isReadOnly)
+                {
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Vendor_Manufacturer" />
+                        </div>
                     </div>
+                }
+                <div class="savenext-btn">
+                    @*<a asp-controller="VendorProfile" asp-action="Index" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
                 </div>
-            </form>
+            </div>
+        </form>
     </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
+
     <script type="text/javascript">
+        $(function () {
+            $('#VendApprovalFr').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#VendApprovalTo').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+        });
+
         function Save() {
             if ($("#frmVendorProfileDetails").valid()) {
+                if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
+                    SaveSingleDocuments("tab-1");
+                }
                 $("#frmVendorProfileDetails").submit();
             }
         }
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
+            if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
+                //window.location.href = "/VendorProfile/Index";
+                window.location.href = '@Url.Action("Index", "VendorProfile")';
+            }
         };
     </script>
 }

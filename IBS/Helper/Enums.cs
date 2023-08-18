@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -26,12 +27,27 @@ namespace IBS.Helper
             UserRegistration = 2,
             [Description("/Files/AdminUserUploadDoc")]
             AdminUserUploadDoc = 3,
+            [Description("/Files/Vendor")]
+            Vendor = 4,
+            [Description("/Files/VendorDocument")]
+            VendorDocument = 5,
+            [Description("/MA")]
+            VendorMADocument = 6,
+            [Description("/Files/ContractDocument")]
+            ContractDocument = 7,
+            [Description("/Files/TechnicalReferences")]
+            TechnicalReferencesDoc = 8,
         }
 
         public enum DocumentCategory : int
         {
-            UserRegi = 8,
-            AdminUserUploadDoc = 9,
+            UserRegi = 1,
+            AdminUserUploadDoc = 2,
+            Vendor = 3,
+            VendorDocument = 4,
+            VendorMADoc = 5,
+            Contract = 6,
+            TechnicalReferences = 8,
         }
 
 
@@ -39,11 +55,23 @@ namespace IBS.Helper
         {
             Address_Proof_Document = 5,
             Profile_Picture = 6,
+            Document_Vendor_manufacturer_created = 23,
+            Inernal_Records = 45,
+            Firm_Certificate_Like_RDSO_Approval_Type_test_etc = 47,
+            Raw_Material_Invoice = 48,
+            Calibration_Records = 49,
+            Contract_Documents_If_Any = 9,
+            Upload_Tech_Ref = 11,
+            Upload_Tech_Ref_Reply = 12,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
         {
             Browse_the_Document_to_Upload = 7,
+        }
+        public enum DocumentCategory_VendorMADoc : int
+        {
+            VendorMADoc = 8,
         }
 
         public static string GetEnumDescription(object enumValue)

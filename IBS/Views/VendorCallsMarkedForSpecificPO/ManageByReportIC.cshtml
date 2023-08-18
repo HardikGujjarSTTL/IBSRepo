@@ -1,0 +1,524 @@
+﻿@model IBS.Models.VendorCallsForSpecificPOReportModel
+@{
+    ViewData["Title"] = "IC DETAILS FOR SPECIFIC PO REPORT";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallsMarkedForSpecificPO" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2 style="color:#2b368b">IC DETAILS FOR SPECIFIC PO REPORT</h2>
+            <br />
+            <h5 style="color:red">(* IC Issued after 1st March 2013 by Northern Region can also be viewed by Clicking VIEW IC hyperlink in last column)</h5>
+        </div>
+
+        <input type="hidden" asp-for="L5NoPo" />
+        <input type="hidden" asp-for="PoDt" />
+        <input type="hidden" asp-for="RlyNorly" />
+        <input type="hidden" asp-for="RlyCd" />
+        <div class="savenext-btn">
+            <a asp-controller="VendorCallsMarkedForSpecificPO" asp-route-type="I" asp-action="Index" class="reset-btn">Back</a>
+        </div>
+    </div>
+
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>VENDOR</th>
+                            <th>PURCHASER</th>
+                            <th>PO NO.</th>
+                            <th>PO DT.</th>
+                            <th>IC NO.</th>
+                            <th>IC DT.</th>
+                            <th>BK NO.</th>
+                            <th>SET NO.</th>
+                            <th>IE</th>
+                            <th>ITEM DESCRITION</th>
+                            <th>QTY OFF</th>
+                            <th>QTY PASS/REJ</th>
+                            <th>HOLOGRAM OR OTHER</th>
+                            <th>VIEW IC<span style="color:red;">*</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </section>
+    <div class="tast-list">
+        <h2 style="color:#2b368b">CALLS DETAILS FOR SPECIFIC PO WHERE IC IS NOT ENTERED INTO THE SYSTEM</h2>
+        <br />
+        <h5 style="color:#2b368b">Report Sorted on Call Date (Descending)</h5>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList2" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>VENDOR NAME</th>
+                            <th>PURCHASER</th>
+                            <th>ITEM</th>
+                            <th>CALL DATE</th>
+                            <th>ENGINEER DEPUTED</th>
+                            <th>ENGINEER CONTACT NO.</th>
+                            <th>PO NO.</th>
+                            <th>PO DT.</th>
+                            <th>CASE NO.</th>
+                            <th>STATUS</th>
+                            <th>HOLOGRAM OR OTHER</th>
+                            <th>VIEW IC<span style="color:red;">*</span></th>
+                            <th>CONTACT PERSON</th>
+                            <th>CONTACT PERSON PHONE NO.</th>
+                            <th>CALL SERIAL NO.</th>
+                            <th>CONTROLLING MANAGER</th>
+                            <th>REMARKS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+    <style>
+        #dtList td {
+            word-wrap: anywhere;
+        }
+
+        #dtList2 td {
+            word-wrap: anywhere;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            InitializeDatatable();
+            SubInitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            var L5NoPo = $("#L5NoPo").val();
+            var PoDt = $("#PoDt").val();
+            var RlyNorly = $("#RlyNorly").val();
+            var RlyCd = $("#RlyCd").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                //dom: 'Bfrtip',
+                dom: '<"top"f<"title">Brtip>',
+                //buttons: [
+                //    'csv', 'excel', 'print',
+                //    {
+                //        extend: 'print',
+                //        text: 'Print',
+                //        title: 'Your Custom Title'
+                //    }
+                //],
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                //buttons: [
+                //    'csv', 'excel','print',
+                //    {
+                //        extend: 'print',
+                //        text: 'Print',
+                //        title: '<br/><h5 style="color:red;">(* IC Issued after 1st March 2013 by Northern Region can also be viewed by Clicking VIEW IC hyperlink in last column)</h5>'
+                //    }
+
+                //],
+
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableReportIC", "VendorCallsMarkedForSpecificPO")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "L5NoPo": L5NoPo,
+                            "PoDt": PoDt,
+                            "RlyNorly": RlyNorly,
+                            "RlyCd": RlyCd
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Vendor" },
+                    { data: "Purchaser" },
+                    { data: "PoNo" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "IcNo" },
+                    {
+                        data: "IcDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "BkNo" },
+                    { data: "SetNo" },
+                    { data: "IeName" },
+                    { data: "ItemDescPo" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassReject" },
+                    { data: "Hologram" },
+                    //{ data: "IcPhoto" },
+
+                    //{
+                    //    data: null,
+                    //    render: function (data, type, row) {
+                    //        var icPhoto = row["IcPhoto"];
+                    //        var icPhoto1 = row["IcPhotoA1"];
+                    //        var fpath = "/BILL_IC/";
+
+                    //        var html = "<td width='10%' valign='top' align='center'>";
+
+                    //        if (icPhoto && icPhoto !== "") {
+                    //            var icPhotoLink = fpath + icPhoto;
+                    //            html += "<a href='" + icPhotoLink + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC</a>";
+                    //        }
+
+                    //        if (icPhoto1 && icPhoto1 !== "") {
+                    //            var icPhoto1Link = fpath + icPhoto1;
+                    //            html += "<br><a href='" + icPhoto1Link + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC1</a>";
+                    //        }
+
+                    //        // Add more conditions if needed for other values
+
+                    //        if (!icPhoto && !icPhoto1) {
+                    //            html = "<td width='10%' valign='top' align='left'><b><font size='1' face='Verdana'> </font></b></td>";
+                    //        }
+
+                    //        html += "</td>";
+                    //        return html;
+                    //    }
+                    //},
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            //var fpath = "/BILL_IC/" + data;
+                            var icPhoto = row["IcPhoto"];
+                            var icPhoto1 = row["IcPhotoA1"];
+                            var icPhoto2 = row["IcPhotoA2"];
+                            var fpath = "/BILL_IC/";
+                            var fpath3 = "/TESTPLAN/";
+
+                            var fpathAvailable = "/BILL_IC/" + icPhoto;
+                            var fpathAvailable3 = "/TESTPLAN/" + icPhoto;
+
+                            var html = "<td width='10%' valign='top' align='center'>";
+
+                            if (icPhoto && icPhoto !== "") {
+                                if (FileExists(fpathAvailable)) {
+                                    var icPhotoLink = fpath + icPhoto;
+                                    html += "<a href='" + icPhotoLink + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC</a><br/>";
+                                }
+                                if (FileExists(fpathAvailable3)) {
+                                    var icPhotoLink3 = fpath3 + icPhoto;
+                                    html += "<a href='" + icPhotoLink3 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Testplan/Lab Test Reports</a><br/>";
+                                }
+                            }
+
+                            if (icPhoto1 && icPhoto1 !== "") {
+                                if (FileExists(fpathAvailable)) {
+                                    var icPhoto1Link = fpath + icPhoto1;
+                                    html += "<br><a href='" + icPhoto1Link + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC Annex 1</a><br/>";
+                                }
+                            }
+
+                            if (icPhoto2 && icPhoto2 !== "") {
+                                if (FileExists(fpathAvailable)) {
+                                    var icPhoto2Link = fpath + icPhoto2;
+                                    html += "<br><a href='" + icPhoto2Link + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC Annex 2</a>";
+                                }
+                            }
+
+                            if (!icPhoto && !icPhoto1 && !icPhoto2) {
+                                html = "<td width='10%' valign='top' align='left'><b><font size='1' face='Verdana'> </font></b></td>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function SubInitializeDatatable() {
+            var L5NoPo = $("#L5NoPo").val();
+            var PoDt = $("#PoDt").val();
+            var RlyNorly = $("#RlyNorly").val();
+            var RlyCd = $("#RlyCd").val();
+
+            $("#dtList2").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                //dom: 'Bfrtip',
+                dom: '<"top"f<"title">Brtip>',
+
+                buttons: [
+                    'csv', 'excel', 'print',
+                ],
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableReportICSub", "VendorCallsMarkedForSpecificPO")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "L5NoPo": L5NoPo,
+                            "PoDt": PoDt,
+                            "RlyNorly": RlyNorly,
+                            "RlyCd": RlyCd
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var Vendor = row["Vendor"];
+                            var MfgCd = row["MfgCd"];
+                            var Manufacturer = row["Manufacturer"];
+                            var wVendor = "";
+                            if (Vendor == MfgCd) {
+                                wVendor = Vendor;
+                            }
+                            else {
+                                wVendor = Vendor + "<font color='#FF00CC'> <br/>At <br/><font color='#3333FF'>" + Manufacturer;
+                            }
+
+                            return wVendor;
+                        }
+                    },
+                    { data: "Consignee" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var Count = row["Count"];
+                            var ItemDescPo = row["ItemDescPo"];
+                            var QtyToInsp = row["QtyToInsp"];
+                            var wCount = "";
+                            if (Count > 1) {
+                                wCount = ItemDescPo + "<font color='#FF00CC'> <br/>Qty. <br/><font color='#3333FF'>" + QtyToInsp + "<font color='#FF00CC'> and more items as per call";
+                            }
+                            else {
+                                wCount = ItemDescPo + "<font color='#FF00CC'> <br/>Qty. <br/><font color='#3333FF'>" + QtyToInsp;
+                            }
+                            return wCount;
+                        }
+                    },
+                    //{ data: "CallMarkDt" },
+                    {
+                        data: "CallMarkDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "IeName" },
+                    { data: "IePhoneNo" },
+                    { data: "PoNo" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var Colour = row["Colour"];
+                            var CallStatus = row["CallStatus"];
+                            var wColour = "'" + Colour + "'";
+                            var SetColour = "<font color=" + wColour + ">" + CallStatus;
+
+                            return SetColour;
+                        }
+                    },
+                    { data: "Hologram" },
+                    //{ data: "IcPhoto" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            //var fpath = "/BILL_IC/" + data;
+                            var html = "<td width='10%' valign='top' align='center'>";
+
+                            var icPhoto = row["IcPhoto"];
+                            var icPhoto1 = row["IcPhotoA1"];
+                            var icPhoto2 = row["IcPhotoA2"];
+                            var fpath = "/BILL_IC/";
+                            var fpath3 = "/TESTPLAN/";
+
+                            var fpath_jpg = "/BILL_IC/" + icPhoto + ".JPG";
+                            var fpath_pdf = "/BILL_IC/" + icPhoto + ".PDF";
+
+                            var fpath3_jpg = "/TESTPLAN/" + icPhoto + ".JPG";
+                            var fpath3_pdf = "/TESTPLAN/" + icPhoto + ".PDF";
+
+                            var fpath1_jpg = "/BILL_IC/" + icPhoto1 + ".JPG";
+                            var fpath1_pdf = "/BILL_IC/" + icPhoto1 + ".PDF";
+                            var fpath2_jpg = "/BILL_IC/" + icPhoto2 + ".JPG";
+                            var fpath2_pdf = "/BILL_IC/" + icPhoto2 + ".PDF";
+                            if (FileExists(fpath_jpg) && FileExists(fpath_pdf)) {
+                                alert(123);
+                                html = "<td width='10%' valign='top' align='left'><b><font size='1' face='Verdana'> </font></b></td>";
+                            }
+
+                            else {
+
+                                if (icPhoto && icPhoto !== "") {
+                                    if (FileExists(fpath_jpg)) {
+                                        var icPhotoLink = fpath_jpg;
+                                        html += "<br><a href='" + icPhotoLink + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC</a><br/>";
+                                    }
+                                    if (FileExists(fpath_pdf)) {
+                                        var icPdfLink = fpath_pdf;
+                                        html += "<br><a href='" + icPdfLink + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC</a><br/>";
+                                    }
+                                    if (FileExists(fpath_jpg)) {
+                                        var icfpath3ink = fpath3_jpg;
+                                        html += "<br><a href='" + icfpath3ink + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Testplan/Lab Test Reports</a><br/>";
+                                    }
+                                    if (FileExists(fpath_pdf)) {
+                                        var icfpath3pdf = fpath_pdf;
+                                        html += "<br><a href='" + icfpath3pdf + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Testplan/Lab Test Reports</a><br/>";
+                                    }
+                                }
+                                else if (icPhoto1 && icPhoto1 !== "") {
+                                    if (FileExists(fpath1_jpg)) {
+                                        var icfpath1_jpg = fpath1_jpg;
+                                        html += "<br><a href='" + icfpath1_jpg + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC Annex 1</a><br/>";
+                                    }
+                                    if (FileExists(fpath1_pdf)) {
+                                        var icfpath1_pdf = fpath1_pdf;
+                                        html += "<br><a href='" + icfpath1_pdf + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC Annex 1</a><br/>";
+                                    }
+                                }
+                                else if (icPhoto2 && icPhoto2 !== "") {
+                                    if (FileExists(fpath2_jpg)) {
+                                        var icfpath2_jpg = fpath2_jpg;
+                                        html += "<br><a href='" + icfpath2_jpg + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC Annex 2</a><br/>";
+                                    }
+                                    if (FileExists(fpath2_pdf)) {
+                                        var icfpath2_pdf = fpath2_pdf;
+                                        html += "<br><a href='" + icfpath2_pdf + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>IC Annex 2</a><br/>";
+                                    }
+                                }
+                            }
+
+                            if (!icPhoto && !icPhoto1 && !icPhoto2) {
+                                html = "<td width='10%' valign='top' align='left'><b><font size='1' face='Verdana'> </font></b></td>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    { data: "MfgPers" },
+                    { data: "MfgPhone" },
+                    { data: "CallSno" },
+                    { data: "CoName" },
+                    { data: "Remark" },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function FileExists(url) {
+            var exists = false;
+
+            $.ajax({
+                url: url,
+                type: 'HEAD', // Use HEAD request to check if the file exists
+                async: false, // Set to synchronous to wait for the response
+                success: function () {
+                    exists = true;
+                },
+                error: function () {
+                    exists = false;
+                }
+            });
+
+            return exists;
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/PurchesOrder1LOA";
+            window.location.href = '@Url.Action("Index", "PurchesOrder1LOA")';
+        };
+    </script>
+    }

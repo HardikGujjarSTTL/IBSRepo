@@ -1,0 +1,78 @@
+﻿@model IBS.Models.CentralRejectionStatusModel
+
+@{
+    ViewData["Title"] = "Central Rejection Status";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Central Rejection Status</h2>
+    </div>
+</div>
+<section id="tab-1">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="CentralRejectionStatus" asp-action="CentralRejectionStatusSave" data-ajax-method="post" data-ajax-complete="completed" id="frmCentralRejectionStatus">
+            <input type="hidden" asp-for="Id" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">For The Period Month<i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.Month, new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">For The Period year<i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.Year, new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Case No.<i class="text-danger">*</i></label>
+                        <input type="text" class="input" asp-for="CaseNo">
+                        <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee/Railway<i class="text-danger">*</i></label>
+                        <textarea class="input" asp-for="Consignee"> </textarea>
+                        <span asp-validation-for="Consignee" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Description of Complaints<i class="text-danger">*</i></label>
+                        <textarea class="input" asp-for="DesCom"> </textarea>
+                        <span asp-validation-for="DesCom" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Conclusion/Action taken<i class="text-danger">*</i></label>
+                        <textarea class="input" asp-for="Conclusion"> </textarea>
+                        <span asp-validation-for="Conclusion" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="CentralRejectionStatus" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(function () {
+            
+        });
+
+        function Save() {
+            if ($("#frmCentralRejectionStatus").valid()) {
+                $("#frmCentralRejectionStatus").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/CentralRejectionStatus/Index";
+            window.location.href = '@Url.Action("Index", "CentralRejectionStatus")';
+        };
+    </script>
+}

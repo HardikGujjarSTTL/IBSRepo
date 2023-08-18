@@ -1,0 +1,221 @@
+
+Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+
+=============================================================================================================================================
+By Neha Gehlot
+=============================================================================================================================================
+create or replace PROCEDURE GetConsigneeComplaintDetails (
+    p_case_no IN VARCHAR2,
+    p_bk_no IN VARCHAR2,
+    p_set_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_result_cursor FOR
+  SELECT 
+           TRIM(t13.PO_NO) || '   dated- ' || TO_CHAR(t13.PO_DT, 'dd/mm/yyyy') AS PO,
+           t13.RLY_CD,
+           t20.CONSIGNEE_CD,
+           TO_CHAR(t20.IC_DT, 'dd/mm/yyyy') AS IC_DT,
+           v06.CONSIGNEE,
+           t13.VEND_CD,
+           v05.VENDOR,
+           t20.case_no,
+           t20.bk_no,
+           t20.set_no,
+           t20.ic_no,
+           t09.ie_name,
+           v05.vendor,
+           t13.region_code,
+           t08.co_name
+    FROM T13_PO_MASTER t13
+    --JOIN t40_consignee_complaints t40 ON t09.IE_CD = t40.ie_cd
+    JOIN T20_IC t20 ON t13.CASE_NO = t20.CASE_NO
+    JOin T09_IE t09 ON t20.ie_cd = t09.ie_cd
+    JOIN V06_CONSIGNEE v06 ON t20.CONSIGNEE_CD = v06.CONSIGNEE_CD
+    JOIN V05_VENDOR v05 ON t13.VEND_CD = v05.VEND_CD
+    JOIN T08_IE_CONTROLL_OFFICER t08 ON t20.co_cd = t08.co_cd
+    WHERE t20.CASE_NO = p_case_no
+      AND t20.BK_NO = p_bk_no
+      AND t20.SET_NO = p_set_no;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END;
+
+===============================================================================================================================================
+create or replace PROCEDURE GetFilteredConsigneeComplaints (
+    p_po_no_param IN VARCHAR2,
+     p_po_date_param IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT CASE_NO, PO_NO, PO_DT, RLY_CD, VEND_NAME, CONSIGNEE, BK_NO, SET_NO, IC_NO, IC_DATE
+    FROM (
+        SELECT m.CASE_NO, m.PO_NO, m.PO_DT, (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') RLY_CD,
+               (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') VEND_NAME, c.CONSIGNEE, i.BK_NO, i.SET_NO, i.IC_NO, i.IC_DT IC_DATE
+        FROM T13_PO_MASTER m, T05_VENDOR v, V06_CONSIGNEE c, T03_CITY t, T20_IC i
+        WHERE m.VEND_CD = v.VEND_CD AND v.VEND_CITY_CD = t.CITY_CD
+        AND i.CONSIGNEE_CD = c.CONSIGNEE_CD(+) AND m.CASE_NO = i.CASE_NO
+        AND (p_po_no_param IS NULL OR UPPER(TRIM(PO_NO)) LIKE '%' || UPPER(TRIM(p_po_no_param)) || '%')
+          --AND (p_po_date_param IS NULL OR TO_DATE(TO_CHAR(PO_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') = p_po_date_param)
+        AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'dd-MM-yy'))
+        -- Adjust the date comparison
+        MINUS
+        SELECT m.CASE_NO, m.PO_NO, m.PO_DT, (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') RLY_CD,
+               (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') VEND_NAME, c.CONSIGNEE, i.BK_NO, i.SET_NO, i.IC_NO, i.IC_DT AS IC_DATE
+        FROM T13_PO_MASTER m, T05_VENDOR v, V06_CONSIGNEE c, T03_CITY t, T20_IC i, T40_CONSIGNEE_COMPLAINTS comp
+        WHERE m.VEND_CD = v.VEND_CD AND v.VEND_CITY_CD = t.CITY_CD
+        AND i.CONSIGNEE_CD = c.CONSIGNEE_CD(+) AND m.CASE_NO = i.CASE_NO
+        AND i.CASE_NO = comp.CASE_NO AND i.BK_NO = comp.BK_NO AND i.SET_NO = comp.SET_NO
+        AND (p_po_no_param IS NULL OR UPPER(TRIM(PO_NO)) LIKE '%' || UPPER(TRIM(p_po_no_param)) || '%')
+        AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'dd-MM-yy'))
+         --AND (p_po_date_param IS NULL OR TO_DATE(TO_CHAR(PO_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') = p_po_date_param)
+         
+    )
+    ORDER BY CASE_NO, BK_NO, SET_NO,IC_DATE;
+END;
+
+===============================================================================================================================================
+
+create or replace PROCEDURE GetFilterNCR(
+    p_case_no IN VARCHAR2,
+    p_nc_no IN VARCHAR2,
+    p_lstIE IN VARCHAR2,
+    p_frmDt IN DATE DEFAULT NULL,
+    p_toDt IN DATE DEFAULT NULL,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT
+        T41.NC_NO AS NC_NO,
+        T20.CASE_NO AS CASE_NO,
+        T20.BK_NO AS BK_NO,
+        T20.SET_NO AS SET_NO,
+        TO_CHAR(T17.CALL_RECV_DT, 'dd/mm/yyyy') AS CALL_RECV_DATE,
+        T17.CALL_SNO AS CALL_SNO,
+        T09.IE_SNAME AS IE_SNAME,
+        (T06.CONSIGNEE_CD || '-' || NVL2(TRIM(T06.CONSIGNEE_DESIG), TRIM(T06.CONSIGNEE_DESIG) || '/', '') || NVL2(TRIM(T06.CONSIGNEE_DEPT), TRIM(T06.CONSIGNEE_DEPT) || '/', '') || NVL2(TRIM(T06.CONSIGNEE_FIRM), TRIM(T06.CONSIGNEE_FIRM) || '/', '') || NVL2(TRIM(T06.CONSIGNEE_ADD1), TRIM(T06.CONSIGNEE_ADD1) || '/', '') || NVL2(TRIM(T03.LOCATION), TRIM(T03.LOCATION) || ' : ' || TRIM(T03.CITY), TRIM(T03.CITY))) AS CONSIGNEE
+       FROM
+        T17_CALL_REGISTER T17
+        JOIN T20_IC T20 ON T20.CASE_NO = T17.CASE_NO AND T20.CALL_RECV_DT = T17.CALL_RECV_DT AND T20.CALL_SNO = T17.CALL_SNO
+        JOIN T09_IE T09 ON T17.IE_CD = T09.IE_CD
+        JOIN T06_CONSIGNEE T06 ON T20.CONSIGNEE_CD = T06.CONSIGNEE_CD
+        JOIN T03_CITY T03 ON T06.CONSIGNEE_CITY = T03.CITY_CD
+        JOIN T41_NC_MASTER T41 ON T20.BK_NO = T41.BK_NO AND T20.SET_NO = T41.SET_NO AND T20.CONSIGNEE_CD = T41.CONSIGNEE_CD
+    WHERE
+        (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
+        AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
+        AND (p_lstIE IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE))
+        AND (p_frmDt IS NULL OR p_toDt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt AND p_toDt))
+    ORDER BY CALL_RECV_DATE, CASE_NO, BK_NO, SET_NO;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END GetFilterNCR;
+
+===============================================================================================================================================
+
+create or replace PROCEDURE GetForAction_M_NCR (
+    p_nc_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT
+        T41.NC_NO,
+        TO_CHAR(T41.NC_DT, 'dd/mm/yyyy') AS NC_DATE,
+        T41.CONSIGNEE_CD,
+        (TRIM(T06.CONSIGNEE_DESIG) || '/' || TRIM(T06.CONSIGNEE_DEPT) || '/' || TRIM(T06.CONSIGNEE_FIRM) || '/' || T031.CITY) AS CONSIGNEE,
+        T05.VEND_NAME || ',' || T03.CITY AS VENDOR,
+        T41.VEND_CD,
+        T41.PO_NO,
+        TO_CHAR(T41.PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        T41.BK_NO,
+        T41.SET_NO,
+        T41.CASE_NO,
+        TO_CHAR(T41.CALL_RECV_DT, 'dd/mm/yyyy') AS CALL_RECV_DT,
+        T41.CALL_SNO,
+        T41.IE_CD,
+        T41.IC_NO,
+        TO_CHAR(T41.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
+        T09.IE_NAME,
+        T41.ITEM_DESC_PO,
+        T41.ITEM_SRNO_PO,
+        T41.QTY_PASSED
+    FROM
+        T41_NC_MASTER T41
+        JOIN T05_VENDOR T05 ON T41.VEND_CD = T05.VEND_CD
+        JOIN T03_CITY T03 ON T05.VEND_CITY_CD = T03.CITY_CD
+        JOIN T06_CONSIGNEE T06 ON T41.CONSIGNEE_CD = T06.CONSIGNEE_CD
+        JOIN T03_CITY T031 ON T06.CONSIGNEE_CITY = T031.CITY_CD
+        JOIN T09_IE T09 ON T41.IE_CD = T09.IE_CD
+    WHERE
+        T41.NC_NO = p_nc_no;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END GetForAction_M_NCR;
+
+===============================================================================================================================================
+
+create or replace PROCEDURE GetForAction_A_NCR (
+    p_case_no IN VARCHAR2,
+    p_bk_no IN VARCHAR2,
+    p_set_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT
+        T06.CONSIGNEE_CD,
+        (TRIM(T06.CONSIGNEE_DESIG) || '/' || TRIM(T06.CONSIGNEE_DEPT) || '/' || TRIM(T06.CONSIGNEE_FIRM) || '/' || T031.CITY) AS CONSIGNEE,
+        T05.VEND_NAME || ',' || T03.CITY AS VENDOR,
+        T13.VEND_CD,
+        T13.PO_NO,
+        TO_CHAR(T13.PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        T20.BK_NO,
+        T20.SET_NO,
+        T20.CASE_NO,
+        TO_CHAR(T20.CALL_RECV_DT, 'dd/mm/yyyy') AS CALL_RECV_DT,
+        T20.CALL_SNO,
+        T20.IE_CD,
+        T20.IC_NO,
+        TO_CHAR(T20.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
+        T09.IE_NAME
+    FROM
+        T13_PO_MASTER T13
+        JOIN T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
+        JOIN T20_IC T20 ON T20.CASE_NO = T17.CASE_NO AND T20.CALL_RECV_DT = T17.CALL_RECV_DT AND T20.CALL_SNO = T17.CALL_SNO
+        JOIN T05_VENDOR T05 ON T13.VEND_CD = T05.VEND_CD
+        JOIN T03_CITY T03 ON T05.VEND_CITY_CD = T03.CITY_CD
+        JOIN T06_CONSIGNEE T06 ON T20.CONSIGNEE_CD = T06.CONSIGNEE_CD
+        JOIN T03_CITY T031 ON T06.CONSIGNEE_CITY = T031.CITY_CD
+        JOIN T09_IE T09 ON T20.IE_CD = T09.IE_CD
+    WHERE
+        T20.CASE_NO = p_case_no
+        AND T20.BK_NO = p_bk_no
+        AND T20.SET_NO = p_set_no;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END GetForAction_A_NCR;

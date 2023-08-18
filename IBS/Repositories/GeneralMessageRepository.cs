@@ -1,6 +1,14 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using IBS.Helper;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -14,18 +22,21 @@ namespace IBS.Repositories
         }
 
         public GeneralMessageModel FindByID(int MessageId)
-        {   
-            GeneralMessageModel model = new();
-            T96Message message = context.T96Messages.Find(Convert.ToDecimal(MessageId));
-
-            if (message == null)
-                throw new Exception("General Message Not found");
-            else
+        {
+            using (var dbContext = context.Database.GetDbConnection())
             {
-                model.MESSAGE_ID = message.MessageId;
-                model.MESSAGE = message.Message;
-                model.Isdeleted = message.Isdeleted;
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_MessageId", OracleDbType.Decimal, MessageId, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
+                var ds = DataAccessDB.GetDataSet("SP_GET_T96_MESSAGE", par, 1);
+
+                GeneralMessageModel model = new();
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<GeneralMessageModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
+                }
                 return model;
             }
         }

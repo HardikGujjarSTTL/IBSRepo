@@ -1,7 +1,20 @@
 ﻿@model IBS.Models.ClientContractModel
 
 @{
-    ViewData["Title"] = "Manage Client Contract";
+    string Title = "";
+    if (Model.TypeCb == "C")
+    {
+        Title = "Manage Client Contract";
+    }
+    else if (Model.TypeCb == "B")
+    {
+        Title = "Manage BD Efforts";
+    }
+    else
+    {
+        Title = "Manage DFO Visit";
+    }
+    ViewData["Title"] = Title;
 }
 
 <div class="list-inner">
@@ -11,72 +24,105 @@
 </div>
 <section>
     <div class="task-listinput">
-        <div class="accordion-body">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientContractDetails">
-                <input type="hidden" asp-for="Id" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-4">
-                            <label for="VisitDt">Date Of Contract</label>
-                            <input type="text" class="input datepicker" asp-for="VisitDt" readonly="true">
-                            <span asp-validation-for="VisitDt" class="text-danger"></span>
-                        </div>
 
-                        <div class="col-md-4 mb-4">
-                            <label for="ClientType">Client Type</label>
-                            @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.ClientType(), "Value", "Text"),"--Select--", new { @onChange="FillClient()"})
-                            <span asp-validation-for="ClientType" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Client">Select Client</label>
-                            @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClientByClientType(""), "Value", "Text"),"--Select--")
-                            <span asp-validation-for="Client" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Officer Name Contracted<span class="text-danger" style="font-size:smaller">*</span></label>
-                            <input type="text" class="input" asp-for="ClientOfficerName" mode maxlength="300" />
-                            <span asp-validation-for="ClientOfficerName" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Designation">Designation<span class="text-danger" style="font-size:smaller">*</span></label>
-                            <input type="text" class="input" asp-for="Designation" mode maxlength="300" />
-                            <span asp-validation-for="Designation" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="RitesOfficerCd">Rites Controlling Officer</label>
-                            @Html.DropDownListFor(model => model.RitesOfficerCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(), "Value", "Text"),"--Select--")
-                            <span asp-validation-for="RitesOfficerCd" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <label for="Highlights">Highlights of Discussion if Any</label>
-                            <textarea rows="3" type="text" name="Highlights" class="input" asp-for="Highlights" maxlength="300"></textarea>
-                            <span asp-validation-for="Highlights" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <label for="OverallOutcome">Overall OutCome of the Visit</label>
-                            <textarea rows="3" type="text" name="OverallOutcome" class="input" asp-for="OverallOutcome" maxlength="300"></textarea>
-                            <span asp-validation-for="OverallOutcome" class="text-danger"></span>
-                        </div>
-
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientContractDetails">
+            <input type="hidden" asp-for="Id" />
+            <input type="text" class="input datepicker" asp-for="@Model.TypeCb" style="display:none;">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <label for="VisitDt">Date Of Contract</label>
+                        <input type="text" class="input datepicker" asp-for="VisitDt" readonly="true">
+                        <span asp-validation-for="VisitDt" class="text-danger"></span>
                     </div>
 
-                    <div class="savenext-btn">
-                        <a asp-controller="ClientContract" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <div class="col-md-4 mb-4">
+                        <label for="ClientType">Client Type</label>
+                        @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.ClientType(), "Value", "Text"),"--Select--", new { @onChange="FillClient()"})
+                        <span asp-validation-for="ClientType" class="text-danger"></span>
                     </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Client">Select Client</label>
+                        @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClientByClientType(""), "Value", "Text"),"--Select--")
+                        <span asp-validation-for="Client" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Officer Name Contracted<span class="text-danger" style="font-size:smaller">*</span></label>
+                        <input type="text" class="input" asp-for="ClientOfficerName" mode maxlength="500" />
+                        <span asp-validation-for="ClientOfficerName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Designation">Designation<span class="text-danger" style="font-size:smaller">*</span></label>
+                        <input type="text" class="input" asp-for="Designation" mode maxlength="500" />
+                        <span asp-validation-for="Designation" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="RitesOfficerCd">Rites Controlling Officer</label>
+                        @Html.DropDownListFor(model => model.RitesOfficerCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(Model.RegionCd.ToString(),Model.TypeCb.ToString()), "Value", "Text"),"--Select--")
+                        <span asp-validation-for="RitesOfficerCd" class="text-danger"></span>
+                    </div>
+                    @if (Model.TypeCb == "D")
+                    {
+                        <div class="col-md-4 mb-4">
+                            <label for="Designation">Outstanding Amount(In Rs.)<span class="text-danger" style="font-size:smaller">*</span></label>
+                            <input type="text" class="input" asp-for="OutAmt" mode maxlength="500" />
+                            <span asp-validation-for="OutAmt" class="text-danger"></span>
+                        </div>
+                    }
+
+                    <div class="col-md-6 mb-4">
+                        @if (Model.TypeCb == "C")
+                        {
+                            <label for="Highlights">HIGHLIGHTS OF DISCUSSION, if any</label>
+                        }
+                        else if (Model.TypeCb == "B")
+                        {
+                            <label for="Highlights">FEEDBACK FROM CLIENT</label>
+                        }
+                        else
+                        {
+                            <label for="Highlights">FEEDBACK FROM CLIENT</label>
+                        }
+                        <textarea rows="3" type="text" name="Highlights" class="input" asp-for="Highlights" maxlength="500"></textarea>
+                        <span asp-validation-for="Highlights" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label for="OverallOutcome">Overall OutCome of the Visit</label>
+                        <textarea rows="3" type="text" name="OverallOutcome" class="input" asp-for="OverallOutcome" maxlength="500"></textarea>
+                        <span asp-validation-for="OverallOutcome" class="text-danger"></span>
+                    </div>
+
                 </div>
-            </form>
+
+                <div class="savenext-btn">
+                    <a asp-controller="ClientContract" asp-action="Index" asp-route-Type="@Model.TypeCb" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#VisitDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            if ('@Model.Client' != null) {
+                FillClient('@Model.Client');
+            }
+        });
+    </script>
+
     <script type="text/javascript">
         function Save() {
             if ($("#frmClientContractDetails").valid()) {
@@ -86,12 +132,12 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/ClientContract/Index";
+            //window.location.href = "/ClientContract/Index?type=" + '@Model.TypeCb';
+            window.location.href = '@Url.Action("Index", "ClientContract")?type=' + '@Model.TypeCb';
         };
 
-        function FillClient() {
+        function FillClient(id) {
             var _drpClientType = $('select#ClientType').val();
-
             $.get("@Url.Action("GetClientByClientType", "ClientContract")", { CoCd: _drpClientType }, function (response) {
                 if (response != null) {
                     $("#Client").empty();
@@ -99,10 +145,11 @@
                     $.each(response, function (ind, val) {
                         $("#Client").append($('<option></option>').val(val.Value).html(val.Text));
                     });
+                    if (id != null) {
+                        $("#Client").val(id);
+                    }
                 }
             });
         }
-
     </script>
-
 }

@@ -1,0 +1,77 @@
+﻿@model IBS.Models.CentralQOIModel
+
+@{
+    ViewData["Title"] = "Central QOI";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Central QOI</h2>
+    </div>
+</div>
+<section id="tab-1">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="CentralQOI" asp-action="CentralQOIISave" data-ajax-method="post" data-ajax-complete="completed" id="frmCentralQOI">
+            <input type="text" class="input" asp-for="IsEdited" style="display:none;">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">For The Period Month</label>
+                        @Html.DropDownListFor(model => model.Month, new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">For The Period year</label>
+                        @Html.DropDownListFor(model => model.Year, new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Client </label>
+                        @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClient() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="Client" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Tax Amount No. Of IC Issued(Nos.)</label>
+                        <input type="text" class="input" asp-for="NoOfIcIssued">
+                        <span asp-validation-for="NoOfIcIssued" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Tax Amount Total Quantity Dispatched in tonnes(IC Issued Quantity in MT)</label>
+                        <input type="text" class="input" asp-for="TotalQtyDispatched">
+                        <span asp-validation-for="TotalQtyDispatched" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="CentralQOI" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(function () {
+            
+        });
+
+        function Save() {
+            if ($("#frmCentralQOI").valid()) {
+                $("#frmCentralQOI").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.responseText != "Selected Period and Client Already Exist") {
+                //window.location.href = "/CentralQOI/Index";
+                window.location.href = '@Url.Action("Index", "CentralQOI")';
+            }
+        };
+    </script>
+}
