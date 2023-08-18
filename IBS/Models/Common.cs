@@ -729,6 +729,45 @@ namespace IBS.Models
                                     }).ToList();
             return Bank;
         }
+
+        public static List<SelectListItem> GetAccountCode()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> AccountCD = (from a in context.Acccodes
+                                              select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.AccDesc),
+                                        Value = Convert.ToString(a.AccCd)
+                                    }).ToList();
+            return AccountCD;
+        }
+
+        public static List<SelectListItem> GetBankCode()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> BankCD = (from a in context.Bankcodedrpdowns
+                                           select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.BankName),
+                                     Value = Convert.ToString(a.BankCd)
+                                 }).ToList();
+            return BankCD;
+        }
+        public static List<SelectListItem> GetListBPO()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> GetBPO = (from a in context.T12BillPayingOfficers
+                                              select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.BpoName),
+                                        Value = Convert.ToString(a.BpoCd)
+                                    }).ToList();
+            return GetBPO;
+        }
+
     }
     public static class DbContextHelper
     {

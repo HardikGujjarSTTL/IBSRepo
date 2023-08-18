@@ -149,7 +149,7 @@ namespace IBS.Repositories
                     select new FileUpload
                     {
                         Id = l.Id,
-                        Applicationid = Convert.ToInt32(l.Applicationid),
+                        //Applicationid = Convert.ToInt32(l.Applicationid),
                         DocumentCategory = b.Categoryname,
                         DocumentName = c.Documentname
                     };

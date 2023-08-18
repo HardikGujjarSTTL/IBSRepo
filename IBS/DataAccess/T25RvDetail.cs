@@ -7,9 +7,9 @@ public partial class T25RvDetail
 {
     public string? VchrNo { get; set; }
 
-    public byte? Sno { get; set; }
+    public int? Sno { get; set; }
 
-    public byte BankCd { get; set; }
+    public int BankCd { get; set; }
 
     public string ChqNo { get; set; } = null!;
 
@@ -17,7 +17,7 @@ public partial class T25RvDetail
 
     public decimal? Amount { get; set; }
 
-    public byte? AccCd { get; set; }
+    public int? AccCd { get; set; }
 
     public decimal? AmountAdjusted { get; set; }
 

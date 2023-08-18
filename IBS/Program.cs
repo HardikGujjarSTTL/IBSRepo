@@ -70,6 +70,13 @@ builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<ICheckPostingFormRepository,CheckPostingFormRepository>();
+builder.Services.AddScoped<ISearchPaymentsRepository, SearchPaymentRepository>();
+
+builder.Services.AddScoped<IEFTEntryRepository, EFTEntryRepository>();
+builder.Services.AddScoped<IInterUnit_TransferRepository, InterUnit_TransferRepository>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -87,7 +94,13 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
-
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllerRoute(
+//      name: "areas",
+//      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+//    );
+//});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

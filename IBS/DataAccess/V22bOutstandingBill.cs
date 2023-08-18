@@ -61,7 +61,7 @@ public partial class V22bOutstandingBill
 
     public string? ConsigneeCity { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public decimal? BillAmount { get; set; }
 

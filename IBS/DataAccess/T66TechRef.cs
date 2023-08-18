@@ -7,9 +7,9 @@ public partial class T66TechRef
 {
     public string? RegionCd { get; set; }
 
-    public byte? TechCmCd { get; set; }
+    public int? TechCmCd { get; set; }
 
-    public byte? TechIeCd { get; set; }
+    public int? TechIeCd { get; set; }
 
     public string? TechItemDes { get; set; }
 
@@ -28,4 +28,14 @@ public partial class T66TechRef
     public DateTime? Datetime { get; set; }
 
     public string? TechId { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public string? Createdby { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public byte? Isdeleted { get; set; }
 }

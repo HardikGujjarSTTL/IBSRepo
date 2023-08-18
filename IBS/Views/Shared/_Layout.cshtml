@@ -244,13 +244,14 @@
                                 <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Vendor</span></a></li>
                             </ul>
                         </li>
+                      @*
                         <li>
-                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-ico.png" alt="IE" /></i><span class="menu-title">finance</span></a>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-ico.png" alt="arv" /></i><span class="menu-title">Finance</span></a>
                             <ul class="nav nav-second-level">
-                                <li><a asp-action="Index" asp-route-type="C" asp-controller="AddRecieptVoucher"><i class="fa fa-angle-double-right"></i><span class="menu-title">Add Reciept Voucher</span></a></li>
-                                
+                                <li><a asp-action="Index"  asp-controller="AddRecieptVoucher"><i class="fa fa-angle-double-right"></i><span class="menu-title">Add Reciept Voucher</span></a></li>
+                                <li><a asp-action="Index" asp-controller="SearchPayments"><i class="fa fa-angle-double-right"></i><span class="menu-title">Search Payments</span></a></li>
                             </ul>
-                        </li>
+                        </li>*@
 
                         @*}*@
                         @*<li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>*@
@@ -333,7 +334,18 @@
                                 <li><a asp-action="#" asp-controller="#"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
                             </ul>
                         </li>
-                        
+
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Finance</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="Index" asp-controller="AddRecieptVoucher"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add Reciept Voucher</span></a></li>
+                                    <li><a asp-action="SearchPayment" asp-controller="SearchPayments"><i class="fa fa-angle-double-right"></i><span class="menu-title">Search Payments</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="CheckPostingForm"><i class="fa fa-angle-double-right"></i><span class="menu-title">Cheque Posting Form</span></a></li>
+                                    <li><a asp-action="EFTEntry" asp-controller="EFTEntry"><i class="fa fa-angle-double-right"></i><span class="menu-title">EFT Entry</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="InterUnit_Transfer"><i class="fa fa-angle-double-right"></i><span class="menu-title">Inter Unit Transfer</span></a></li>
+
+                                </ul>
+                            </li>
                         
                         @*}*@
                         @*<li><a href="#"><i class="fa fa-fw"><img src="~/images/property-icons.svg" alt="property" /></i><span class="menu-title">Property</span></a></li>*@

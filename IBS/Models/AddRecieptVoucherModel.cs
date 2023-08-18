@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,7 @@ namespace IBS.Models
     public class AddRecieptVoucherModel 
     {
         
-            [Key]
+          
             public string? VCHR_NO { get; set; }
             public string VCHR_DT { get; set; }
             public string BANK_CD { get; set; }
@@ -17,7 +18,7 @@ namespace IBS.Models
            
             public int SNO { get; set; }
             public string CHQ_NO { get; set; }
-            public DateTime CHQ_DT { get; set; }
+            public string CHQ_DT { get; set; }
             public double AMOUNT { get; set; }
             public string ACC_CD { get; set; }
             public double AMOUNT_ADJUSTED { get; set; }
@@ -32,6 +33,9 @@ namespace IBS.Models
             public double AMT_TRANSFERRED { get; set; }
             public string USER_ID { get; set; }
             public DateTime DATETIME { get; set; }
-        
+            public List<BPOlist> BPOList { get; set; }
+             
+            
+
     }
 }

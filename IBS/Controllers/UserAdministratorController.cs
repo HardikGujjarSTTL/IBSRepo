@@ -41,7 +41,7 @@ namespace IBS.Controllers
                 model = userRepository.FindByID(UserId);
             }
 
-            return View(model);
+            return View(model); 
         }
 
         public IActionResult Delete(string UserId)
