@@ -5664,23 +5664,37 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Menurolemapping>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C008599");
+            entity.HasKey(e => e.Id).HasName("SYS_C008692");
 
             entity.ToTable("MENUROLEMAPPING");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnType("NUMBER")
+                .HasPrecision(6)
                 .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Isactive)
                 .HasPrecision(1)
                 .HasColumnName("ISACTIVE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Menuid)
                 .HasPrecision(6)
                 .HasColumnName("MENUID");
             entity.Property(e => e.Roleid)
                 .HasPrecision(6)
                 .HasColumnName("ROLEID");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
         });
 
         modelBuilder.Entity<Migration>(entity =>
@@ -12169,7 +12183,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CHECKSHEET");
             entity.Property(e => e.Cm)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CM");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
@@ -12189,7 +12203,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("DEPARTMENT");
             entity.Property(e => e.Ie)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
@@ -14705,18 +14719,35 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Userrole>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C008603");
+            entity.HasKey(e => e.Id).HasName("SYS_C008690");
 
             entity.ToTable("USERROLES");
 
             entity.Property(e => e.Id)
                 .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"USERROLESSEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.RoleId)
                 .HasPrecision(6)
                 .HasColumnName("ROLE_ID");
-            entity.Property(e => e.UserId)
+            entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
                 .HasColumnName("USER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)
@@ -17760,6 +17791,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
+        modelBuilder.HasSequence("USERROLESSEQ");
         modelBuilder.HasSequence("VENDORDOCUMENT_SEQ");
 
         OnModelCreatingPartial(modelBuilder);

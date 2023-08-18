@@ -155,7 +155,6 @@ namespace IBS.Models
             obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
             return obj;
         }
-        
 
         public static List<SelectListItem> GetCity()
         {
@@ -638,8 +637,6 @@ namespace IBS.Models
 
             return textValueDropDownDTO.ToList();
         }
-
-
 
         public static List<SelectListItem> RegionCode()
         {
@@ -1167,7 +1164,6 @@ namespace IBS.Models
 
         }
 
-
         public static List<SelectListItem> GetDocType()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1441,6 +1437,31 @@ namespace IBS.Models
             single.Value = "2";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetUsers()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.T02Users
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.UserName,
+                                        Value = Convert.ToString(a.Id)
+                                    }).ToList();
+            return city;
+        }
+        public static List<SelectListItem> GetRoles()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.Roles
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.Rolename,
+                                        Value = Convert.ToString(a.RoleId)
+                                    }).ToList();
+            return city;
         }
 
     }
