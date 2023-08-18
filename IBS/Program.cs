@@ -123,6 +123,10 @@ builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
 builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
 builder.Services.AddScoped<ICheckPostingFormRepository, CheckPostingFormRepository>();
 builder.Services.AddScoped<ISearchPaymentsRepository, SearchPaymentRepository>();
+builder.Services.AddScoped<IEFTEntryRepository, EFTEntryRepository>();
+builder.Services.AddScoped<IInterUnit_TransferRepository, InterUnit_TransferRepository>();
+
+
 
 var app = builder.Build();
 
