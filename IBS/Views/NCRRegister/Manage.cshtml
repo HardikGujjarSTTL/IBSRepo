@@ -30,7 +30,7 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">IC Date</label>
-                    <input type="text" class="input" asp-for="ICDate" readonly="true" id="fromdate" required>
+                    <input type="text" class="input" asp-for="ICDate" readonly="true" id="fromdate" asp-format="{0:dd-MM-yyyy}" required>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
@@ -54,7 +54,7 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">	Call Date - SNo.</label>
-                    <input type="text" asp-for="CALL_SNO" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
+                    <input type="text" asp-for="CALL_SNO" maxlength="100" readonly="true" style="text-transform: uppercase;" asp-format="{0:dd-MM-yyyy}" required>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
@@ -66,7 +66,7 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Date</label>
-                    <input type="text" asp-for="PO_DT" class="input" readonly="true" maxlength="100" style="text-transform: uppercase;" required>
+                    <input type="text" asp-for="PO_DT" class="input" readonly="true" maxlength="100" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
@@ -104,14 +104,14 @@
                 <div class="col-md-2 mb-3">
                     <div class="reference">
                         <label for="Reference">NCR No.</label>
-                        <input type="text" asp-for="NC_NO" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
+                        <input type="text" asp-for="NC_NO" maxlength="100" id="NCNO" readonly="true" style="text-transform: uppercase;" required>
                     </div>
                 </div>
             }
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">	NCR Date</label>
-                    <input type="text" asp-for="NCRDate" id="NCRDate" maxlength="100" class="input" readonly="true" style="text-transform: uppercase;" required>
+                    <input type="text" asp-for="NCRDate" id="NCRDate" maxlength="100" class="input" readonly="true" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
                 </div>
             </div>
             @if (ViewBag.ShowNCRButton)
@@ -131,7 +131,6 @@
                     <div class="col-md-5 mb-3" id="ncrcodes">
                         <div class="reference">
                             <label for="Reference">	NCR Code</label>
-                            @*<input type="text" asp-for="NCRCode" maxlength="100" style="text-transform: uppercase;" required>*@
                             @Html.DropDownListFor(model => model.NcCdSno, new SelectList(IBS.Models.Common.GetNCCode(), "Value", "Text"), "--Select--", new { id = "NCcode" })
                             <span asp-validation-for="NCRCode" class="text-danger"></span>
                         </div>
@@ -181,7 +180,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Existing table rows go here -->
                         </tbody>
                     </table>
                 </div>
@@ -199,6 +197,7 @@
  <script>
     $(document).ready(function () {
         debugger
+
         var msg = '@Html.Raw(ViewBag.JsonData1)';
         if(msg != ''){
             alert(msg);
@@ -239,20 +238,19 @@
             url: url,
             type: 'POST',
             data: formData,
-            processData: false, // Prevent jQuery from converting the data to a string
+            processData: false, 
             contentType: false,
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        alert(data.alertMessage); // Show the alert message
-                        window.location.href = '/NCRRegister/Index'; // Replace with your index page URL
+                        alert(data.alertMessage); 
+                        window.location.href = '/NCRRegister/Index'; 
                     }
                 } else {
                     // Handle error case if needed
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
-                // Handle error case if needed
             }
         });
     }
@@ -265,53 +263,106 @@
             url: url,
             type: 'POST',
             data: formData,
-            processData: false, // Prevent jQuery from converting the data to a string
+            processData: false, 
             contentType: false,
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        alert(data.alertMessage); // Show the alert message
-                        window.location.href = '/NCRRegister/Index'; // Replace with your index page URL
+                        debugger
+                        alert(data.alertMessage); 
+                        window.location.href = '/NCRRegister/Index'; 
                     }
                 } else {
-                    // Handle error case if needed
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
-                // Handle error case if needed
             }
         });
     }
    
     function BtnSaveRemarks(){
         debugger
-         var inputValues = [];
+        var inputValues1 = []; 
+        var inputValues2 = [];
+
+        var NCNO = $("#NCNO").val();
+        var UserID = $("#UserID").val();
+        var table = $('#dtNCR').DataTable();
 
         $('.textbox1').each(function () {
             const newValue = $(this).val();
             const row = $(this).data('row');
-            // Update your data or perform any other actions with the newValue and row
-            inputValues.push({ row: row, value: newValue });
+            const uniqueId = 'txt1_' + row;
+
+            if (newValue !== '') {
+                const existingIndex = inputValues1.findIndex(item => item.uniqueId === uniqueId);
+                if (existingIndex !== -1) {
+                    inputValues1[existingIndex].value = newValue;
+                } else {
+                    inputValues1.push({ uniqueId: uniqueId, value: newValue });
+                }
+            }
         });
 
         $('.textbox2').each(function () {
             const newValue = $(this).val();
             const row = $(this).data('row');
-            // Update your data or perform any other actions with the newValue and row
-            inputValues.push({ row: row, value: newValue });
+            const uniqueId = 'txt2_' + row;
+
+            if (newValue !== '') {
+                const existingIndex = inputValues2.findIndex(item => item.uniqueId === uniqueId);
+                if (existingIndex !== -1) {
+                    inputValues2[existingIndex].value = newValue;
+                } else {
+                    inputValues2.push({ uniqueId: uniqueId, value: newValue });
+                }
+            }
         });
-        var inputData = JSON.stringify({ inputValues: inputValues });
+
+        var data = table.data().toArray();
+        var model = [];
+        var formData = new FormData();
+
+        for (var i = 0; i < data.length; i++) {
+
+                var modifiedItem = Object.assign({}, data[i]);
+
+               var input1Index = inputValues1.findIndex(item => item.uniqueId === 'txt1_' + i);
+                if (input1Index !== -1) {
+                    modifiedItem.IeAction1 = inputValues1[input1Index].value;
+                }
+
+                var input2Index = inputValues2.findIndex(item => item.uniqueId === 'txt2_' + i);
+                if (input2Index !== -1) {
+                    modifiedItem.CoFinalRemarks1 = inputValues2[input2Index].value;
+                }
+
+                formData.append('model[' + i + '].NcCd', modifiedItem.NcCd);
+                formData.append('model[' + i + '].NC_DESC', modifiedItem.NC_DESC);
+                formData.append('model[' + i + '].IeAction1', modifiedItem.IeAction1);
+                formData.append('model[' + i + '].IE_ACTION1_DT', modifiedItem.IE_ACTION1_DT);
+                formData.append('model[' + i + '].CO_FINAL_REMARKS1_DT', modifiedItem.CO_FINAL_REMARKS1_DT);
+                formData.append('model[' + i + '].CoFinalRemarks1', modifiedItem.CoFinalRemarks1);
+                formData.append('model[' + i + '].NcCdSno', modifiedItem.NcCdSno);
+            
+        }
+
+        var url = '/NCRRegister/SaveRemarks?NCNO=' + encodeURIComponent(NCNO) + '&UserID=' + encodeURIComponent(UserID);
         $.ajax({
-            url: '/NCRRegister/SaveRemarks',
+            url: url,
             type: 'POST',
-            contentType: 'application/json',
-            data: inputData,
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function (result) {
-                // Handle success response from the controller
-                console.log(result);
+                debugger
+                if (result.redirectToIndex === true) {
+                    alert(result.alertMessage);
+                    window.location.href = '/NCRRegister/Index'; 
+                    }
+                
             },
             error: function (xhr, textStatus, errorThrown) {
-                // Handle error
                 console.log('Error:', textStatus, errorThrown);
             }
         });
@@ -363,12 +414,16 @@
                     { data: "NC_DESC" },
                     {
                         data: "IeAction1",
-                        render: function (data, type, row) {
+                        "targets": [1, 2],
+                        render: function (data, type, row, meta) {
                             if (row.NcCd === "X01") {
                                 return data;
                             } else {
+                                var inputClass = meta.col === 1 ? 'textbox1' : 'textbox2';
+                                var inputId = inputClass + '_' + meta.row; // Use row index to generate unique ID
+
                                 if (data === null) {
-                                    return '<input type="text" name="textbox1" class="textbox1" data-row="' + row + '" value="">';
+                                    return '<input type="text" name="textbox1" data-row="' + meta.row + '" class="textbox1"  value="">';
                                 } else {
                                     return data;
                                 }
@@ -377,12 +432,15 @@
                     },
                     {
                         data: "CoFinalRemarks1",
-                        render: function (data, type, row) {
+                        "targets": [1, 2],
+                        render: function (data, type, row, meta) {
                             if (row.NcCd === "X01") {
                                 return data;
                             } else {
+                                var inputClass = meta.col === 1 ? 'textbox1' : 'textbox2';
+                                var inputId = inputClass + '_' + meta.row; // Use row index to generate unique ID
                                 if (data === null) {
-                                    return '<input type="text" name="textbox2" class="textbox2" data-row="' + row + '" value="">';
+                                    return '<input type="text" name="textbox2" class="textbox2" id="' + inputId + '"  data-row="' + meta.row + '" value="">';
                                 } else {
                                     return data;
                                 }
@@ -394,8 +452,6 @@
         });
     }
 
-   
-    // Function to get entered values
    
     completed = function (response) {
         var res = response.responseJSON;

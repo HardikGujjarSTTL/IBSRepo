@@ -167,6 +167,7 @@ namespace IBS.Repositories
                
             }
 
+            
             if (dt != null)
             {
 
@@ -220,7 +221,6 @@ namespace IBS.Repositories
                         var descvalue = Desc.FirstOrDefault();
 
                         model.CALLSNO = short.Parse(firstRow["CALL_SNO"].ToString());
-                        model.UserID = firstRow["user_id"].ToString();
 
                         model.QtyPassed = Convert.ToInt32(qtyPassed);
                         model.Item = descvalue.ItemDescPo;
@@ -230,6 +230,7 @@ namespace IBS.Repositories
                         model.NCRDate = DateTime.Now;
                     }
                     model.SetRegionCode = firstRow["REGION_CODE"].ToString();
+                    model.UserID = firstRow["user_id"].ToString();
 
                     model.CaseNo = firstRow["case_no"].ToString();
                     model.PO_NO = firstRow["po_no"].ToString();
@@ -297,29 +298,35 @@ namespace IBS.Repositories
             };
         }
 
-        public int SaveRemarks(NCRRegister model)
+        public string SaveRemarks(string NCNO,string UserID, List<Remarks> model)
         {
-            int i = 1;
-            var now = DateTime.Now;
-
-            var ncDetail = context.T42NcDetails
-                .FirstOrDefault(d => d.NcNo == model.NC_NO && d.NcCd == model.NCRCode);
-
-            if (ncDetail != null)
+            string msg = "";
+            
+            foreach (var item in model)
             {
-                ncDetail.CoFinalRemarks1 = model.CoFinalRemarks1;
-                ncDetail.CoFinalRemarks1Dt = now;
-                ncDetail.Datetime = now;
+                if (!string.IsNullOrWhiteSpace(item.CoFinalRemarks1))
+                {
+                    var existingRecord = context.T42NcDetails.FirstOrDefault(record => record.NcNo == NCNO && record.NcCd == item.NcCd && record.NcCdSno == item.NcCdSno);
 
-                context.SaveChanges();
+                    if (existingRecord != null)
+                    {
+                        existingRecord.CoFinalRemarks1 = item.CoFinalRemarks1;
+                        existingRecord.CoFinalRemarks1Dt = DateTime.Now;
+                        existingRecord.UserId = UserID;
+                        existingRecord.IeAction1 = item.IeAction1;
+                        existingRecord.IeAction1Dt = DateTime.Now;
+                        existingRecord.Datetime = DateTime.Now;
+
+                        context.SaveChanges();
+                    }
+                    msg = "Remarks Update Successfully";
+                }
             }
 
-            return i;
+            return msg;
         }
         public string Saveupdate(NCRRegister model,bool isRadioChecked,string extractedText)
         {
-            var now = DateTime.Now;
-
             string msg = "";
 
             DataTable dt = new DataTable();
@@ -330,14 +337,12 @@ namespace IBS.Repositories
             par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("GENERATE_NC_NO_New", par, 1);
             dt = ds.Tables[0];
+
             DataRow firstRow = dt.Rows[0];
             string ErrCD = firstRow["W_ERR_CD"].ToString();
             string genrate_NCNO = firstRow["W_NC_NO"].ToString().Trim();
 
             var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
-
-            //var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
-            //var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
             if (ErrCD == "-1")
             {
@@ -371,35 +376,38 @@ namespace IBS.Repositories
                     context.T41NcMasters.Add(obj);
                     context.SaveChanges();
                     msg = "Record Saved Successfully";
-                    if (isRadioChecked == true)
+
+                    if (extractedText != "-Select--")
                     {
+                        if (isRadioChecked == true)
+                        {
 
-                        T42NcDetail obj1 = new T42NcDetail();
-                        obj1.NcNo = genrate_NCNO;
-                        obj1.NcCd = "X01";
-                        obj1.NcCdSno = true;
-                        obj1.NcDescOthers = "";
-                        obj1.UserId = model.UserID;
-                        obj1.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj1);
-                        context.SaveChanges();
+                            T42NcDetail obj1 = new T42NcDetail();
+                            obj1.NcNo = genrate_NCNO;
+                            obj1.NcCd = "X01";
+                            obj1.NcCdSno = 1;
+                            obj1.NcDescOthers = "";
+                            obj1.UserId = model.UserID;
+                            obj1.Datetime = DateTime.Now;
+                            context.T42NcDetails.Add(obj1);
+                            context.SaveChanges();
 
+                        }
+                        else
+                        {
+
+                            T42NcDetail obj1 = new T42NcDetail();
+                            obj1.NcNo = genrate_NCNO;
+                            obj1.NcCd = model.NcCdSno;
+                            obj1.NcCdSno = 1;
+                            obj1.NcDescOthers = extractedText;
+                            obj1.UserId = model.UserID;
+                            obj1.Datetime = DateTime.Now;
+                            context.T42NcDetails.Add(obj1);
+                            context.SaveChanges();
+
+                        }
                     }
-                    else
-                    {
-
-                        T42NcDetail obj1 = new T42NcDetail();
-                        obj1.NcNo = genrate_NCNO;
-                        obj1.NcCd = model.NcCdSno;
-                        obj1.NcCdSno = true;
-                        obj1.NcDescOthers = extractedText;
-                        obj1.UserId = model.UserID;
-                        obj1.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj1);
-                        context.SaveChanges();
-
-                    }
-
                 }
                 else
                 {
@@ -530,6 +538,20 @@ namespace IBS.Repositories
             if (region == "W") return "wrinspn@rites.com";
             // Return a default sender email for other regions
             return "default@example.com";
+        }
+
+        public int ShouldRemarkDisable(string ncNo)
+        {
+            if (!string.IsNullOrEmpty(ncNo))
+            {
+                int count = context.T42NcDetails
+                            .Where(detail => detail.NcNo == ncNo && detail.NcCd.StartsWith("X"))
+                            .Count();
+
+                return count;
+            }
+
+            return 0;
         }
 
     }

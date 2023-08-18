@@ -49,5 +49,7 @@ namespace IBS.Models
         public string JsonData { get; set; }
         public string rdononc { get; set; }
         public string msg { get; set; }
+
+        public List<Remarks> inputValues { get; set; }
     }
 }

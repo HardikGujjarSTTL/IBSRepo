@@ -3,6 +3,7 @@ using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Protocol.Core.Types;
 using System.Xml.Linq;
 
 namespace IBS.Controllers
@@ -40,9 +41,12 @@ namespace IBS.Controllers
                 }
                 else if (Actions == "M")
                 {
+                    int isButtonDisabled = nCRRegisterRepository.ShouldRemarkDisable(NC_NO);
+                    ViewBag.ShowRemarksButton = isButtonDisabled >= 1 ? false : true;
+
                     ViewBag.ShowNCRButton = false;
                     ViewBag.ShowNCRNO = true;
-                    ViewBag.ShowRemarksButton = true;
+                   
                     ViewBag.ShowSaveButton = false;
                 }
 
@@ -71,15 +75,12 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveRemarks(List<Remarks> inputValues)
+        public IActionResult SaveRemarks(string NCNO,string UserID, [FromForm] List<Remarks> model)
         {
-            //foreach (var value in editableColumnDataList)
-            //{
-            //    var editableColumn1Value = value.EditableColumn1;
-            //    var editableColumn2Value = value.EditableColumn2;
 
-            //}
-            return Json(new { success = true });
+            string msg = nCRRegisterRepository.SaveRemarks(NCNO, UserID,model);
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+
         }
 
         [HttpPost]
