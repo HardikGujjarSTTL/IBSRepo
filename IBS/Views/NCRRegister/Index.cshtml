@@ -73,10 +73,10 @@
                <input type="radio" id="rdocase" name="drone" >
                <label for="rdocase" id="rdoCASENO" val name="rdoCASENO" runat="server">By Case No.</label>
            </div>
-           <div class="col-md-7 mb-2">
-               <input type="radio" id="rdoie" name="drone" >
-               <label for="rdoie" id="rdoIE" name="rdoIE" runat="server">By IE</label>
-           </div>
+                <div class="col-md-7 mb-2">
+                    <input type="radio" id="rdoie" name="drone">
+                    <label for="rdoie" id="rdoIE" name="rdoIE" runat="server">By IE</label>
+                </div>
     </div>
     <div class="col-md-3 mb-3">
         <label for="PropertyId">IE</label>
@@ -85,7 +85,6 @@
     </div>
     <div class="col-md-3 mb-3">
         <label for="Reference">Date From.</label>
-        <label for="Reference">From</label>
                 <input type="text" class="input datepicker" asp-for="FromDate" readonly="true" id="FromDate" required>
                 <span asp-validation-for="FromDate" class="text-danger"></span>
     </div>
@@ -274,6 +273,13 @@
             window.location.href = '@Url.Action("Index", "NCRRegister")';
         };
 
+        $(document).ready(function () {
+            $('#rdoIE').on('click', function () {
+                $('#rdoie').prop('checked', true);
+                $("#BYIE").show();
+                $("#BYCaseNo").hide();
+            });
+        });
 
          function InitializeDatatable() {
             debugger
@@ -359,7 +365,6 @@
              } else if (selectedValue === "rdoie") {
                 $("#BYCaseNo").hide();
                 $("#BYIE").show();
-                $("#dewey").prop("checked", true);
              }
             });
           });

@@ -49,6 +49,7 @@ namespace IBS.Controllers
                 model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo, NC_NO);
 
                 ViewBag.JsonData = model.JsonData;
+                ViewBag.JsonData1 = model.msg;
             }
             catch (Exception ex)
             {
@@ -60,25 +61,34 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SaveRemarksofNCR(NCRRegister model)
+        public IActionResult SaveUpdateNCR(NCRRegister model)
         {
             bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
             string extractedText = Request.Form["extractedText"];
             string msg = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
 
-            return Json(new { status = true, responseText = msg });
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
 
         [HttpPost]
-        public IActionResult SaveRemarks([FromBody] List<Remarks> editableColumnDataList)
+        public IActionResult SaveRemarks(List<Remarks> inputValues)
         {
-            foreach (var value in editableColumnDataList)
-            {
-                var editableColumn1Value = value.EditableColumn1;
-                var editableColumn2Value = value.EditableColumn2;
+            //foreach (var value in editableColumnDataList)
+            //{
+            //    var editableColumn1Value = value.EditableColumn1;
+            //    var editableColumn2Value = value.EditableColumn2;
 
-            }
+            //}
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SendToIE(NCRRegister nCRRegister)
+        {
+            bool msg = nCRRegisterRepository.SendEmail(nCRRegister);
+
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
 
     }

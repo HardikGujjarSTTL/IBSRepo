@@ -9,7 +9,7 @@ public partial class T41NcMaster
 
     public DateTime? NcDt { get; set; }
 
-    public string CaseNo { get; set; } = null!;
+    public string CaseNo { get; set; }
 
     public DateTime CallRecvDt { get; set; }
 

@@ -2,7 +2,7 @@
 {
     public class Remarks
     {
-        public string EditableColumn1 { get; set; }
-        public string EditableColumn2 { get; set; }
+        public int Row { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Globalization;
+using System.Net.Mail;
+using System.Net;
 using System.Numerics;
 
 namespace IBS.Repositories
@@ -19,10 +21,12 @@ namespace IBS.Repositories
     public class NCRRegisterRepository : INCRRegisterRepository
     {
         private readonly ModelContext context;
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public NCRRegisterRepository(ModelContext context)
+        public NCRRegisterRepository(ModelContext context, ISendMailRepository pSendMailRepository)
         {
             this.context = context;
+            this.pSendMailRepository = pSendMailRepository;
         }
         public DTResult<NCRRegister> GetDataList(DTParameters dtParameters)
         {
@@ -141,7 +145,7 @@ namespace IBS.Repositories
         {
             NCRRegister model = new NCRRegister();
             DataTable dt = new DataTable();
-
+            string msg = "";
             if (NCNO != "" && NCNO != null)
             {
                 OracleParameter[] par = new OracleParameter[2];
@@ -166,117 +170,102 @@ namespace IBS.Repositories
             if (dt != null)
             {
 
-                //var result = from t18 in context.T18CallDetails
-                //             join t20 in context.T20Ics
-                //             on new
-                //             {
-                //                 CaseNo = t18.CaseNo,
-                //                 CallRecvDt = t18.CallRecvDt,
-                //                 CallSno = t18.CallSno,
-                //                 ConsigneeCd = t18.ConsigneeCd
-                //             } equals new
-                //             {
-                //                 CaseNo = t20.CaseNo,
-                //                 CallRecvDt = t20.CallRecvDt,
-                //                 CallSno = t20.CallSno,
-                //                 ConsigneeCd = t20.ConsigneeCd
-                //             } into t20Joined
-                //             from t20 in t20Joined.DefaultIfEmpty()
-                //             join t20i in context.T20Ics on t18.CaseNo equals t20i.CaseNo
-                //             where t20.CaseNo == "N18120364" && t20.BkNo == "3510" && t20.SetNo == "036"
-                //             select new
-                //             {
-                //                 t18.ItemSrnoPo,
-                //                 t20.ItemDescPo,
-                //             };
-
-
-                DataRow firstRow = dt.Rows[0]; // Get the first row of the DataTable
-                DateTime callRecvDate;
-
-                if (!firstRow.IsNull("CALL_RECV_DT"))
+                if (dt.Rows.Count > 0)
                 {
-                    if (DateTime.TryParseExact(firstRow["CALL_RECV_DT"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out callRecvDate))
+                DataRow firstRow = dt.Rows[0];
+
+                    DateTime callRecvDate;
+
+                    if (!firstRow.IsNull("CALL_RECV_DT"))
                     {
-                        model.CALL_RECV_DT = callRecvDate;
+                        if (DateTime.TryParseExact(firstRow["CALL_RECV_DT"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out callRecvDate))
+                        {
+                            model.CALL_RECV_DT = callRecvDate;
+                            model.CALLRECVDT = callRecvDate;
+                        }
                     }
-                }
 
-                if (NCNO != "" && NCNO != null)
-                {
-                    model.QtyPassed = Convert.ToInt32(firstRow["QTY_PASSED"]);
-                    model.Item = firstRow["ITEM_DESC_PO"].ToString();
-                    if (!firstRow.IsNull("NC_DATE"))
+                    if (NCNO != "" && NCNO != null)
                     {
-                        model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
+                        model.QtyPassed = Convert.ToInt32(firstRow["QTY_PASSED"]);
+                        model.Item = firstRow["ITEM_DESC_PO"].ToString();
+                        if (!firstRow.IsNull("NC_DATE"))
+                        {
+                            model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
+                        }
+                    }
+                    else
+                    {
+                        var qtyresult = context.T18CallDetails
+                                  .Where(cd =>
+                                      cd.CaseNo == CASE_NO &&
+                                      cd.CallRecvDt == DateTime.ParseExact(firstRow["CALL_RECV_DT"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
+                                      cd.CallSno == Convert.ToInt32(firstRow["CALL_SNO"]))
+                                  .Select(cd => new
+                                  {
+                                      QTY_PASSED = cd.QtyPassed ?? 0
+                                  })
+                                  .FirstOrDefault();
+
+                        decimal qtyPassed = qtyresult?.QTY_PASSED ?? 0;
+
+                        var Desc = from t18 in context.T18CallDetails
+                                   join t20 in context.T20Ics on t18.CaseNo equals t20.CaseNo
+                                   where t20.CaseNo == CASE_NO && t20.BkNo == BK_NO && t20.SetNo == SET_NO
+                                   select new
+                                   {
+                                       t18.ItemSrnoPo,
+                                       t18.ItemDescPo
+                                   };
+                        var descvalue = Desc.FirstOrDefault();
+
+                        model.CALLSNO = short.Parse(firstRow["CALL_SNO"].ToString());
+                        model.UserID = firstRow["user_id"].ToString();
+
+                        model.QtyPassed = Convert.ToInt32(qtyPassed);
+                        model.Item = descvalue.ItemDescPo;
+                        model.Item_Srno_no = descvalue.ItemSrnoPo;
+                        model.Ie_Cd = (byte?)(int)firstRow["IE_CD"];
+
+                        model.NCRDate = DateTime.Now;
+                    }
+                    model.SetRegionCode = firstRow["REGION_CODE"].ToString();
+
+                    model.CaseNo = firstRow["case_no"].ToString();
+                    model.PO_NO = firstRow["po_no"].ToString();
+                    model.BKNo = firstRow["bk_no"].ToString();
+                    model.SetNo = firstRow["set_no"].ToString();
+                    model.CONSIGNEE = firstRow["CONSIGNEE"].ToString();
+                    model.CONSIGNEE_CD = Convert.ToInt32(firstRow["CONSIGNEE_CD"]);
+                    model.CONSIGNEECD = (byte?)(int)firstRow["CONSIGNEE_CD"];
+                    model.Vendor = firstRow["vendor"].ToString();
+                    model.VEND_CD = Convert.ToInt32(firstRow["VEND_CD"]);
+                    model.CALL_SNO = Convert.ToInt32(firstRow["CALL_SNO"]);
+
+                    // Parse CALL_RECV_DT if it's not null
+
+
+                    model.IeCd = Convert.ToString(firstRow["IE_CD"]);
+                    model.IE_SNAME = firstRow["IE_NAME"].ToString();
+
+                    // Parse IC_DATE if it's not null
+                    if (!firstRow.IsNull("IC_DATE"))
+                    {
+                        model.ICDate = Convert.ToDateTime(firstRow["IC_DATE"]);
+                    }
+
+                    model.IC_NO = firstRow["IC_NO"].ToString();
+
+                    // Parse PO_DT if it's not null
+                    if (!firstRow.IsNull("PO_DT"))
+                    {
+                        model.PO_DT = Convert.ToDateTime(firstRow["PO_DT"]);
                     }
                 }
                 else
                 {
-                    var qtyresult = context.T18CallDetails
-                              .Where(cd =>
-                                  cd.CaseNo == CASE_NO &&
-                                  cd.CallRecvDt == DateTime.ParseExact(firstRow["CALL_RECV_DT"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                                  cd.CallSno == Convert.ToInt32(firstRow["CALL_SNO"]))
-                              .Select(cd => new
-                              {
-                                  QTY_PASSED = cd.QtyPassed ?? 0
-                              })
-                              .FirstOrDefault();
-
-                    decimal qtyPassed = qtyresult?.QTY_PASSED ?? 0;
-
-                    var Desc = from t18 in context.T18CallDetails
-                                 join t20 in context.T20Ics on t18.CaseNo equals t20.CaseNo
-                                 where t20.CaseNo == CASE_NO && t20.BkNo == BK_NO && t20.SetNo == SET_NO
-                                 select new
-                                 {
-                                     t18.ItemSrnoPo,
-                                     t18.ItemDescPo
-                                 };
-                    var descvalue = Desc.FirstOrDefault();
-
-                    model.SetRegionCode = firstRow["REGION_CODE"].ToString();
-
-                    model.QtyPassed = Convert.ToInt32(qtyPassed);
-                    model.Item = descvalue.ItemDescPo;
-                    model.Item_Srno_no = descvalue.ItemSrnoPo;
-                    model.Ie_Cd = (byte?)(int)firstRow["IE_CD"];
-
-                    model.NCRDate = DateTime.Now;
+                    msg = "Data Not Found";
                 }
-
-
-                model.CaseNo = firstRow["case_no"].ToString();
-                model.PO_NO = firstRow["po_no"].ToString();
-                model.BKNo = firstRow["bk_no"].ToString();
-                model.SetNo = firstRow["set_no"].ToString();
-                model.CONSIGNEE = firstRow["CONSIGNEE"].ToString();
-                model.CONSIGNEE_CD = Convert.ToInt32(firstRow["CONSIGNEE_CD"]);
-                model.Vendor = firstRow["vendor"].ToString();
-                model.VEND_CD = Convert.ToInt32(firstRow["VEND_CD"]);
-                model.CALL_SNO = Convert.ToInt32(firstRow["CALL_SNO"]);
-
-                // Parse CALL_RECV_DT if it's not null
-               
-
-                model.IeCd = Convert.ToString(firstRow["IE_CD"]);
-                model.IE_SNAME = firstRow["IE_NAME"].ToString();
-
-                // Parse IC_DATE if it's not null
-                if (!firstRow.IsNull("IC_DATE"))
-                {
-                    model.ICDate = Convert.ToDateTime(firstRow["IC_DATE"]);
-                }
-
-                model.IC_NO = firstRow["IC_NO"].ToString();
-
-                // Parse PO_DT if it's not null
-                if (!firstRow.IsNull("PO_DT"))
-                {
-                    model.PO_DT = Convert.ToDateTime(firstRow["PO_DT"]);
-                }
-
             }
 
             var query = from t69 in context.T69NcCodes
@@ -303,7 +292,8 @@ namespace IBS.Repositories
             return new NCRRegister
             {
                 Model = model,
-                JsonData = jsonData
+                JsonData = jsonData,
+                msg = msg
             };
         }
 
@@ -342,7 +332,12 @@ namespace IBS.Repositories
             dt = ds.Tables[0];
             DataRow firstRow = dt.Rows[0];
             string ErrCD = firstRow["W_ERR_CD"].ToString();
-            string genrate_NCNO = firstRow["W_NC_NO"].ToString();
+            string genrate_NCNO = firstRow["W_NC_NO"].ToString().Trim();
+
+            var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
+
+            //var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
+            //var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
             if (ErrCD == "-1")
             {
@@ -350,7 +345,6 @@ namespace IBS.Repositories
             }
             else
             {
-                var NCRMaster = (from r in context.T41NcMasters where r.NcNo == model.NC_NO select r).FirstOrDefault();
                 if (NCRMaster == null)
                 {
                     T41NcMaster obj = new T41NcMaster();
@@ -358,11 +352,12 @@ namespace IBS.Repositories
                     obj.NcDt = model.NCRDate;
                     obj.CaseNo = model.CaseNo;
                     obj.CallRecvDt = model.CALLRECVDT;
+                    obj.ItemDescPo = model.Item;
                     obj.CallSno = model.CALLSNO;
                     obj.BkNo = model.BKNo;
                     obj.SetNo = model.SetNo;
                     obj.VendCd = model.VEND_CD;
-                    obj.ConsigneeCd = model.CONSIGNEE_CD;
+                    obj.CoCd = model.CONSIGNEECD;
                     obj.QtyPassed = model.QtyPassed;
                     obj.PoNo = model.PO_NO;
                     obj.PoDt = model.PO_DT;
@@ -375,44 +370,166 @@ namespace IBS.Repositories
                     obj.RegionCode = model.SetRegionCode;
                     context.T41NcMasters.Add(obj);
                     context.SaveChanges();
-                    msg = "Record Save Successfully";
-                }
-
-                if (isRadioChecked == true)
-                {
-                    var NCDetail = (from r in context.T42NcDetails where r.NcNo == model.NC_NO select r).FirstOrDefault();
-                    if (NCDetail == null)
+                    msg = "Record Saved Successfully";
+                    if (isRadioChecked == true)
                     {
-                        T42NcDetail obj = new T42NcDetail();
-                        obj.NcNo = genrate_NCNO;
-                        obj.NcCd = "X01";
-                        obj.NcCdSno = true;
-                        obj.NcDescOthers = "";
-                        obj.UserId = model.UserID;
-                        obj.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj);
+
+                        T42NcDetail obj1 = new T42NcDetail();
+                        obj1.NcNo = genrate_NCNO;
+                        obj1.NcCd = "X01";
+                        obj1.NcCdSno = true;
+                        obj1.NcDescOthers = "";
+                        obj1.UserId = model.UserID;
+                        obj1.Datetime = DateTime.Now;
+                        context.T42NcDetails.Add(obj1);
                         context.SaveChanges();
+
                     }
+                    else
+                    {
+
+                        T42NcDetail obj1 = new T42NcDetail();
+                        obj1.NcNo = genrate_NCNO;
+                        obj1.NcCd = model.NcCdSno;
+                        obj1.NcCdSno = true;
+                        obj1.NcDescOthers = extractedText;
+                        obj1.UserId = model.UserID;
+                        obj1.Datetime = DateTime.Now;
+                        context.T42NcDetails.Add(obj1);
+                        context.SaveChanges();
+
+                    }
+
                 }
                 else
                 {
-                    var NCDetail = (from r in context.T42NcDetails where r.NcNo == model.NC_NO select r).FirstOrDefault();
-                    if (NCDetail == null)
-                    {
-                        T42NcDetail obj = new T42NcDetail();
-                        obj.NcNo = genrate_NCNO;
-                        obj.NcCd = model.NCRCode;
-                        obj.NcCdSno = true;
-                        obj.NcDescOthers = extractedText;
-                        obj.UserId = model.UserID;
-                        obj.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj);
-                        context.SaveChanges();
-                    }
+                    msg = "Record already exists.";
+
                 }
             }      
            
             return msg;
+        }
+
+        public bool SendEmail(NCRRegister nCRRegister)
+        {
+            string msg = "";
+
+            string region = nCRRegister.SetRegionCode; 
+            string wRegion = GetRegionDetails(region);
+            string rsender = GetSenderEmail(region);
+
+            DataTable dt = new DataTable();
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_NC_NO", OracleDbType.Varchar2, nCRRegister.NC_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_NCR_Email", par, 1);
+            dt = ds.Tables[0];
+
+            int j = 0;
+            string NC_REASONS = "";
+
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["NC_CLASS"].ToString() == "C")
+                {
+                    j = 1;
+                }
+                if (string.IsNullOrEmpty(NC_REASONS))
+                {
+                    NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n";
+                    NC_REASONS += $"Case No. {row["CASE_NO"]}\n";
+                    NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n";
+                    NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n";
+                    NC_REASONS += $"IE: {row["IE_NAME"]}\n";
+                    NC_REASONS += $"CM: {row["CO_NAME"]}\n";
+                }
+
+                NC_REASONS += $"NCR Code: {row["NC_CD"]}-{row["NC_DESC"]}\n";
+                if (!string.IsNullOrEmpty(row["IE_ACTION1"].ToString()))
+                {
+                    NC_REASONS += $"IE Corrective and Preventive Action: {row["IE_ACTION1"]}\n";
+                }
+                if (!string.IsNullOrEmpty(row["CO_FINAL_REMARKS1"].ToString()))
+                {
+                    NC_REASONS += $"Controlling Remarks: {row["CO_FINAL_REMARKS1"]}\n";
+                }
+            }
+
+            int ieCdFromDataRow = Convert.ToInt32(ds.Tables[0].Rows[0]["IE_CD"]);
+
+            var emailQuery = (from t09 in context.T09Ies
+                              join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
+                              where t09.IeCd == ieCdFromDataRow
+                              select t09.IeEmail + ";" + t08.CoEmail).FirstOrDefault();
+
+            string emailAddresses = emailQuery ?? string.Empty;
+
+            MailMessage mail1 = new MailMessage();
+
+            // Add each recipient address to the To field
+            //foreach (string address in recipientAddresses)
+            //{
+            //    mail1.To.Add(address);
+            //}
+
+            if (j == 1 && nCRRegister.SetRegionCode == "N")
+            {
+                mail1.CC.Add("sbu.ninsp@rites.com");
+            }
+
+            mail1.From = new MailAddress("nrinspn@gmail.com");
+            mail1.Subject = "Non Conformities Register";
+            mail1.Body = NC_REASONS + "\n" + wRegion;
+
+            SendMailModel sendMailModel = new SendMailModel();
+            rsender = rsender;
+            sendMailModel.From = rsender;
+            sendMailModel.To = emailAddresses;
+            sendMailModel.Subject = "Non Conformities Register";
+            sendMailModel.Message = NC_REASONS + "\n" + wRegion; ;
+
+            bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+
+            return isSend;
+        }
+
+        private string GetRegionDetails(string region)
+        {
+            string wRegion = string.Empty;
+
+            if (region == "N")
+            {
+                wRegion = "NORTHERN REGION \n 12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 \n Phone : +918800018691-95 \n Fax : 011-22024665";
+            }
+            else if (region == "S")
+            {
+                wRegion = "SOUTHERN REGION \n CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 \n Phone : 044-28292807/044- 28292817 \n Fax : 044-28290359";
+            }
+            else if (region == "E")
+            {
+                wRegion = "EASTERN REGION \n CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  \n Fax : 033-22348704";
+            }
+            else if (region == "W")
+            {
+                wRegion = "WESTERN REGION \n 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 \n Phone : 022-68943400/68943445";
+            }
+            else if (region == "C")
+            {
+                wRegion = "Central Region";
+            }
+
+            return wRegion;
+        }
+
+        private string GetSenderEmail(string region)
+        {
+            if (region == "N") return "nrinspn@rites.com";
+            if (region == "S") return "srinspn@rites.com";
+            if (region == "E") return "erinspn@rites.com";
+            if (region == "W") return "wrinspn@rites.com";
+            // Return a default sender email for other regions
+            return "default@example.com";
         }
 
     }

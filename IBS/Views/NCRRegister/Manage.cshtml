@@ -10,15 +10,17 @@
     </div>
 </div>
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
+<form data-ajax="true" asp-antiforgery="true" asp-controller="SaveUpdateNCR" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
     <div class="accordion-body">
         <div class="row my-0">
             <input type="text" asp-for="SetRegionCode" id="SetRegionCode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
             <input type="text" asp-for="VEND_CD" id="vendcd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-            <input type="text" asp-for="CALL_RECV_DT" id="CALL_RECV_DT" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-            <input type="text" asp-for="CONSIGNEE_CD" id="CONSIGNEE_CD" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+            <input type="text" asp-for="CALLRECVDT" id="CALLRECVDT" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+            <input type="text" asp-for="CONSIGNEECD" id="CONSIGNEECD" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
             <input type="text" asp-for="Item_Srno_no" id="Item_Srno_no" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
             <input type="text" asp-for="Ie_Cd" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+            <input type="text" asp-for="CALLSNO" id="CALLSNO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+            <input type="text" asp-for="UserID" id="UserID" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">IC NO.</label>
@@ -161,60 +163,75 @@
                 {
                     <button type="button" class="save-btn active btncls" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
                 }
-            <button type="button" class="save-btn active btncls" id="btnsendIE">Send To IE</button>
+                <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
                 <button type="button" class="save-btn active btncls" onclick="cancelAction()">Cancel</button>
+            </div>
         </div>
+        <section class="table-section" id="tableNCR">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtNCR" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>NC Code Sn.</th>
+                                <th>NC Code</th>
+                                <th>NC Description</th>
+                                <th>IE Corrective & Preventive Action1</th>
+                                <th>Controlling Remarks1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Existing table rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        </div>
+        </section>
+       
     </div>
+    
 </form>
-<section class="table-section" id="tableNCR">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtNCR" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>NC Code Sn.</th>
-                        <th>NC Code</th>
-                        <th>NC Description</th>
-                        <th>IE Corrective & Preventive Action1</th>
-                        <th>Controlling Remarks1</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Existing table rows go here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</section>
 
 
-@*@section script{
-
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
-
-    <script type="text/javascript">
-     
-        </script>
- }*@
 <partial name="_DataTablesScriptsPartial" />
 <partial name="_ValidationScriptsPartial" />
  <script>
     $(document).ready(function () {
+        debugger
+        var msg = '@Html.Raw(ViewBag.JsonData1)';
+        if(msg != ''){
+            alert(msg);
+        }
         InitializeDatatable();
+    });
+
+    $('#NCcode').change(function () {
+        debugger
+        var selectedText = $("#NCcode").find("option:selected").text();
+        var indexOfHyphen = selectedText.indexOf("-");
+        var extractedText = selectedText.substr(indexOfHyphen + 1).trim();
+        if(extractedText == "Others"){
+            $('#nccodeother').show();
+        }else{
+            $('#nccodeother').hide();
+        }
     });
 
     function Save() {
         debugger
         var formData = new FormData($("#frmNCRDetails")[0]);
-        var url = '@Url.Action("SaveRemarksofNCR", "NCRRegister")';
+        var url = '@Url.Action("SaveUpdateNCR", "NCRRegister")';
         var isRadioChecked = $("#rdononc").is(":checked");
         var selectedText = $("#NCcode").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");
-        var extractedText = selectedText.substr(indexOfHyphen + 1).trim();
+
+        var otherdesc = $("#nccodeother").val();
+        if(otherdesc != ""){
+            var extractedText = otherdesc;
+        }else{
+            var extractedText = selectedText.substr(indexOfHyphen + 1).trim();
+        }
 
         formData.append("IsRadioChecked", isRadioChecked);
         formData.append("extractedText", extractedText);
@@ -224,27 +241,78 @@
             data: formData,
             processData: false, // Prevent jQuery from converting the data to a string
             contentType: false,
-            success: function (result) {
-                // Handle the result if needed
+            success: function (data) {
+                if (data.status === true) {
+                    if (data.redirectToIndex === true) {
+                        alert(data.alertMessage); // Show the alert message
+                        window.location.href = '/NCRRegister/Index'; // Replace with your index page URL
+                    }
+                } else {
+                    // Handle error case if needed
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
+                // Handle error case if needed
             }
         });
     }
 
+    function SendEmail(){
+        var formData = new FormData($("#frmNCRDetails")[0]);
+        var url = '@Url.Action("SendToIE", "NCRRegister")';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false, // Prevent jQuery from converting the data to a string
+            contentType: false,
+            success: function (data) {
+                if (data.status === true) {
+                    if (data.redirectToIndex === true) {
+                        alert(data.alertMessage); // Show the alert message
+                        window.location.href = '/NCRRegister/Index'; // Replace with your index page URL
+                    }
+                } else {
+                    // Handle error case if needed
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                // Handle error case if needed
+            }
+        });
+    }
    
     function BtnSaveRemarks(){
-        GetInputFieldValues();
+        debugger
+         var inputValues = [];
+
+        $('.textbox1').each(function () {
+            const newValue = $(this).val();
+            const row = $(this).data('row');
+            // Update your data or perform any other actions with the newValue and row
+            inputValues.push({ row: row, value: newValue });
+        });
+
+        $('.textbox2').each(function () {
+            const newValue = $(this).val();
+            const row = $(this).data('row');
+            // Update your data or perform any other actions with the newValue and row
+            inputValues.push({ row: row, value: newValue });
+        });
+        var inputData = JSON.stringify({ inputValues: inputValues });
         $.ajax({
-            type: 'POST',
             url: '/NCRRegister/SaveRemarks',
-            data: JSON.stringify(valuesToSend), 
+            type: 'POST',
             contentType: 'application/json',
-            success: function (response) {
-                // Handle the success response
+            data: inputData,
+            success: function (result) {
+                // Handle success response from the controller
+                console.log(result);
             },
-            error: function (error) {
-                // Handle the error response
+            error: function (xhr, textStatus, errorThrown) {
+                // Handle error
+                console.log('Error:', textStatus, errorThrown);
             }
         });
     }
@@ -275,22 +343,7 @@
         window.location.href = '@Url.Action("Index", "NCRRegister")';
     }
 
-    function GetInputFieldValues() {
-        var inputValues = [];
-        debugger
-        $('#dtNCR tbody').on('input', '.textbox1, .textbox2', function () {
-            var row = table.row($(this).closest('tr')).index();
-            var columnName = $(this).hasClass('textbox1') ? 'CO_FINAL_REMARKS1' : 'CO_FINAL_REMARKS1';
-            var newValue = $(this).val();
-
-            // Update the corresponding data object in the 'data' array
-            data[row][columnName] = newValue;
-        });
-
-        // Now inputValues array contains the values of the input fields for each row
-        console.log(inputValues);
-    }
-
+    
     function InitializeDatatable(){
        
         var jsonData = '@Html.Raw(ViewBag.JsonData)';
@@ -309,21 +362,41 @@
                     { data: "NcCd" },
                     { data: "NC_DESC" },
                     {
-                        data: null,
+                        data: "IeAction1",
                         render: function (data, type, row) {
-                            return '<input type="text" name="textbox1" class="textbox1" data-row="' + row + '" value="' + (data.CO_FINAL_REMARKS1 || '') + '">';
+                            if (row.NcCd === "X01") {
+                                return data;
+                            } else {
+                                if (data === null) {
+                                    return '<input type="text" name="textbox1" class="textbox1" data-row="' + row + '" value="">';
+                                } else {
+                                    return data;
+                                }
+                            }
                         }
                     },
                     {
-                        data: null,
+                        data: "CoFinalRemarks1",
                         render: function (data, type, row) {
-                            return '<input type="text" name="textbox2" class="textbox2" data-row="' + row + '" value="' + (data.CO_FINAL_REMARKS1 || '') + '">';
+                            if (row.NcCd === "X01") {
+                                return data;
+                            } else {
+                                if (data === null) {
+                                    return '<input type="text" name="textbox2" class="textbox2" data-row="' + row + '" value="">';
+                                } else {
+                                    return data;
+                                }
+                            }
                         }
                     }
                 ]
             });
         });
     }
+
+   
+    // Function to get entered values
+   
     completed = function (response) {
         var res = response.responseJSON;
         ShowHideMsgNew(res.status, res.responseText);

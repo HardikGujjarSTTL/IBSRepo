@@ -154,7 +154,9 @@ BEGIN
         T09.IE_NAME,
         T41.ITEM_DESC_PO,
         T41.ITEM_SRNO_PO,
-        T41.QTY_PASSED
+        T09.user_id,
+        T41.QTY_PASSED,
+        t41.region_code
     FROM
         T41_NC_MASTER T41
         JOIN T05_VENDOR T05 ON T41.VEND_CD = T05.VEND_CD
@@ -198,7 +200,9 @@ BEGIN
         T20.IE_CD,
         T20.IC_NO,
         TO_CHAR(T20.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
-        T09.IE_NAME
+        T09.IE_NAME,
+        T09.user_id,
+        t17.region_code
     FROM
         T13_PO_MASTER T13
         JOIN T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
@@ -219,3 +223,92 @@ EXCEPTION
         ROLLBACK;
         RAISE;
 END GetForAction_A_NCR;
+
+=====================================================================================================================================================================
+
+create or replace PROCEDURE GET_NCR_Email
+(
+    p_NC_NO IN VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT
+        T41.IC_NO,
+        TO_CHAR(T41.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
+        T41.NC_NO,
+        TO_CHAR(NC_DT, 'dd/mm/yyyy') AS NC_DT,
+        T41.CASE_NO,
+        T41.BK_NO,
+        T41.SET_NO,
+        T41.PO_NO,
+        TO_CHAR(T41.PO_DT, 'dd/mm/yyyy') AS PO_DATE,
+        T41.ITEM_SRNO_PO,
+        T41.ITEM_DESC_PO,
+        T41.IE_CD,
+        T41.USER_ID,
+        T42.NC_CD,
+        T42.IE_ACTION1,
+        CO_FINAL_REMARKS1,
+        NVL2(
+            T42.NC_DESC_OTHERS,
+            T69.NC_DESC || '-' || T42.NC_DESC_OTHERS,
+            T69.NC_DESC
+        ) AS NC_DESC,
+        T69.NC_CLASS,
+        T09.IE_NAME,
+        T08.CO_NAME,
+        T09.IE_EMAIL || ';' || T08.CO_EMAIL AS EMAIL
+    FROM
+        T41_NC_MASTER T41,
+        T42_NC_DETAIL T42,
+        T69_NC_CODES T69,
+        T09_IE T09,
+        T08_IE_CONTROLL_OFFICER T08
+    WHERE
+        T41.NC_NO = T42.NC_NO
+        AND T42.NC_CD = T69.NC_CD
+        AND T41.IE_CD = T09.IE_CD
+        AND T41.CO_CD = T08.CO_CD
+        AND T41.NC_NO = p_NC_NO;
+END GET_NCR_Email;
+
+==========================================================================================================================================================
+
+create or replace PROCEDURE GENERATE_NC_NO_New(
+    IN_REGION_CD IN VARCHAR2,
+    IN_NC_DT IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno CHAR(100) := NULL;
+    W_ERR_CD NUMBER := -1;
+    w_NC_NO VARCHAR2(500) := NULL;
+    my_exception EXCEPTION;
+
+BEGIN
+    w_ctr := IN_REGION_CD || SUBSTR(IN_NC_DT, 9, 2);
+
+    -- Get the next sequence number for the given region and NC_DT
+
+
+    SELECT lpad(nvl(max(to_number(nvl(substr(NC_NO,5,8),0))),0)+1,4,'0')
+    INTO w_sno
+    FROM T41_NC_MASTER
+    WHERE SUBSTR(NC_NO, 1, 3) = w_ctr;
+    w_NC_NO := TRIM(w_NC_NO);
+    -- Construct the generated case number
+    w_NC_NO := w_ctr || '-' || w_sno;
+   
+    IF LENGTH(w_NC_NO) <> 8 THEN
+        W_ERR_CD := -2;
+        
+    END IF;
+
+    -- Open the ref cursor and fetch the result set
+    OPEN p_result_cursor FOR
+    SELECT w_NC_NO AS w_NC_NO, W_ERR_CD AS W_ERR_CD FROM DUAL;
+
+
+END;

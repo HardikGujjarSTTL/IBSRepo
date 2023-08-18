@@ -7,9 +7,9 @@ namespace IBS.Models
         public string Action { get; set; } // "M" for Modify, "A" for Add
         public string SelectedOption { get; set; } // Selected radio button option
         public string CaseNo { get; set; }
-        public string BKNo { get; set; }
+        public string? BKNo { get; set; }
         public string PO_NO { get; set; }
-        public string SetNo { get; set; }
+        public string? SetNo { get; set; }
         public string? NC_NO { get; set; }
         public string Vendor { get; set; }
         public string InspectingEr { get; set; }
@@ -22,6 +22,7 @@ namespace IBS.Models
         public int VEND_CD { get; set; }
         public string CONSIGNEE { get; set; }
         public int? CONSIGNEE_CD { get; set; }
+        public byte? CONSIGNEECD { get; set; }
         public string Item { get; set; }
         public byte Item_Srno_no { get; set; }
         public DateTime? FromDate { get; set; }
@@ -46,8 +47,7 @@ namespace IBS.Models
         public string? UserID { get; set; }
         public NCRRegister Model { get; set; }
         public string JsonData { get; set; }
-        public string EditableColumn1 { get; set; }
-        public string EditableColumn2 { get; set; }
         public string rdononc { get; set; }
+        public string msg { get; set; }
     }
 }
