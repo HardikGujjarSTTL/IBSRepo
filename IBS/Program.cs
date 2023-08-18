@@ -108,6 +108,13 @@ builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 #endregion
+builder.Services.AddScoped<ICityMaster, CityMaster>();
+builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
+builder.Services.AddScoped<IVendorCluster, VendorCluster>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
