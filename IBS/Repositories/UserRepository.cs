@@ -76,10 +76,40 @@ namespace IBS.Repositories
             }
         }
 
-        public T02User FindByLoginDetail(LoginModel model)
+        public UserSessionModel FindByLoginDetail(LoginModel model)
         {
+            UserSessionModel userSessionModel = new UserSessionModel();
+            //userSessionModel = (from u in context.T02Users
+            //                    join ur in context.Userroles on u.Id equals ur.UserId into userRolesGroup
+            //                    from ur in userRolesGroup.DefaultIfEmpty()
+            //                    where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
+            //                    select new UserSessionModel
+            //                    {
+            //                        UserID = Convert.ToInt32(u.Id),
+            //                        Name = Convert.ToString(u.UserName),
+            //                        UserName = Convert.ToString(u.UserId),
+            //                        Region = Convert.ToString(u.Region),
+            //                        AuthLevl = Convert.ToString(u.AuthLevl),
+            //                        RoleId = Convert.ToInt32(ur.RoleId),
+            //                        RoleName = Convert.ToString((from r in context.Roles where r.RoleId == ur.RoleId select r.Rolename).FirstOrDefault())
+            //                        // Assign other properties of UserSessionModel here
+            //                    }).FirstOrDefault();
+            userSessionModel = (from u in context.T02Users
+                                where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
+                                select new UserSessionModel
+                                {
+                                    UserID = Convert.ToInt32(u.Id),
+                                    Name = Convert.ToString(u.UserName),
+                                    UserName = Convert.ToString(u.UserId),
+                                    Region = Convert.ToString(u.Region),
+                                    AuthLevl = Convert.ToString(u.AuthLevl),
+                                    RoleId = Convert.ToInt32((from ur in context.Userroles where ur.UserId == u.Id select ur.RoleId).FirstOrDefault()),
+                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where ur.UserId == u.Id select r.Rolename).FirstOrDefault()),
+                                }).FirstOrDefault();
+            return userSessionModel;
+
             //return context.UserMasters.FirstOrDefault(p => p.UserName.Trim() == model.UserName.Trim() && p.Password.Trim() == model.Password.Trim() && p.IsActive.HasValue && p.IsActive.Value);
-            return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == model.UserName.Trim() && p.Password.Trim() == model.Password.Trim());
+            //return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == model.UserName.Trim() && p.Password.Trim() == model.Password.Trim());
             //return new T02User();
         }
 

@@ -1,0 +1,432 @@
+﻿@model IBS.Models.SearchPaymentsModel
+@{
+    ViewData["Title"] = "Contract List";
+}
+
+<style>
+    #showPayment {
+        max-height: 600px;
+        / Set the maximum height for the scrolling area / overflow-y: auto;
+        / Enable vertical scrolling if content exceeds max-height /
+    }
+
+    tr:nth-child(even) {
+        background-color: #f0f8ff;
+        / Light Blue /
+    }
+
+    / Style for table cells /
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de;
+        / Add top border / background-color: #f0f8ff;
+        margin-bottom: 20px;
+        / Add margin at the bottom for spacing /
+    }
+
+    / Style for table cells /
+    td {
+        height: 50px;
+        / Adjust the height of table cells / padding: 5px;
+        vertical-align: top;
+    }
+
+    / Style for labels /
+    label {
+        display: block;
+        / Make labels block-level to occupy the whole cell width / font-weight: bold;
+    }
+
+    / Style for input fields /
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box;
+        / Ensure the padding is included in the width /
+    }
+
+    / Style for error message /
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    / Style for left-aligned button /
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    / Style for right-aligned button /
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    / Clear floating elements /
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ / Set the desired height / overflow-y: auto;
+        / Enable vertical scrollbar if table exceeds height /
+    }
+
+    / Set table width to 100% and disable horizontal scrollbar /
+    #searchpayment {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    / Style table header cells /
+    #searchpayment th {
+        background-color: #f2f2f2;
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    / Style table body cells /
+    #searchpayment td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    / Add custom scrollbar style for the table section /
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div id="BankNameDropdown" class="col-md-4 mb-4">
+                            <label for="Reference">Bank</label>
+                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { id = "BankNameDropdown" })
+                      
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Instrument No.</label>
+                            <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
+                          
+                        </div>
+
+                      
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Instrument Date</label>
+                            <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT">
+                           
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Instrument Amount<span class="text-danger"></label>
+                            <input type="text" id="AMOUNT" class="input" asp-for="AMOUNT" mode maxlength="300" />
+                           @* <span asp-validation-for="AMOUNT" class="text-danger"></span>*@
+                        </div>
+
+                      
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Case No.</label>
+                            <input type="text" id="CASE_NO" class="input" asp-for="CASE_NO" maxlength="300" />
+                           @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Narration/Vendor Name</label>
+                            <input type="text" id="NARRATION" class="input" asp-for="NARRATION" maxlength="300">
+                           
+
+
+                        </div>
+
+                    
+                    </div>
+
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="Save();">Search</button>
+                    @*<button type="submit" onclick="find();">Search2</button>*@
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<div>
+    <div class="list-inner">
+        
+        <div class="list-btn">
+      
+        </div>
+    </div>
+    <div id="showPayment">
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="searchpayment" class="table-responsive">
+                        <thead>
+                            <tr>
+                         
+                                <th>Action</th>
+                                <th>Voucher No.</th>
+                                <th>Voucher Date</th>
+                                <th>Bank</th>
+                                <th>Instrument No</th>
+                                <th>Instrument Date</th>
+                                <th>Instrument Amount</th>
+                                <th>Account CD</th>
+                                <th>Amt Adjusted</th>
+                                <th>Amt Transferred</th>
+                                <th>Suspense / unadjusted advance</th>
+                                <th>BPO</th>
+                                <th>Narration</th>
+                                <th>Case No.</th>
+                            
+                                @*<th>View Contract</th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+
+        $(function () {
+            //$("#dtlab").hide();
+            $("#searchpayment").css("display", "none");
+        });
+
+       function Save(){
+            if ($('#CASE_NO').val() == null || $('#CASE_NO').val() == "") {
+               alert('Pleae fill Case No');
+                SearchPayment();
+            }
+            else
+            {
+            SearchPayment();
+            }
+       }
+
+        function SearchPayment() {
+           
+            $("#searchpayment").css("display", "block");
+            var AMOUNT = $("#AMOUNT").val();
+            var NARRATION = $('#NARRATION').val();
+            var CASE_NO = $('#CASE_NO').val();
+            var BankNameDropdown = $('#BankNameDropdown').val();
+            var CHQ_NO = $('#CHQ_NO').val();
+            var CHQ_DT = $('#CHQ_DT').val();
+            var VCHR_DT = $('#VCHR_DT').val();
+            var ACC_CD = $('#ACC_CD').val();
+            //var PaymentDT = $("#txtpydt").val();
+            //var Lab = $("#ddlpylab").val();
+            $.ajax({
+                url: '/SearchPayments/PaymentList', // Replace with your actual endpoint URL
+                type: 'POST',
+                dataType: 'json',
+                data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BankNameDropdown: BankNameDropdown, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },
+                success: function (data) {
+                    debugger;
+                    // Once data is successfully received, populate the table
+                    var tableBody = $('#tableBody');
+                    tableBody.empty(); // Clear existing rows (if any)
+                    for (i = 0; i < data.data.length; i++) {
+
+                        var row = $('<tr>');
+                        //row.append($('<td>').text(data[i].SNO)); // SRNo.
+                        var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+                        snoLink.hover(
+                            function () {
+                                $(this).css('text-decoration', 'underline'); // Add underline on hover
+                            },
+                            function () {
+                                $(this).css('text-decoration', 'none');      // Remove underline on hover out
+                            }
+                        );
+                        var snoCell = $('<td>').append(snoLink);
+                        row.append(snoCell);
+                        row.append($('<td>').text(data.data[i].VCHR_NO));
+                        row.append($('<td>').text(data.data[i].VCHR_DT));
+                        row.append($('<td>').text(data.data[i].BANK_NAME));
+                        row.append($('<td>').text(data.data[i].CHQ_NO));
+                        row.append($('<td>').text(data.data[i].CHQ_DT));
+                        row.append($('<td>').text(data.data[i].AMOUNT));
+                        row.append($('<td>').text(data.data[i].ACC_CD));
+                        row.append($('<td>').text(data.data[i].AMOUNT_ADJUSTED));
+                        row.append($('<td>').text(data.data[i].AMT_TRANSFERRED));
+                        row.append($('<td>').text(data.data[i].SUSPENSE_AMT));
+                        row.append($('<td>').text(data.data[i].BPO));
+                        row.append($('<td>').text(data.data[i].NARRATION));
+                        row.append($('<td>').text(data.data[i].CASE_NO));
+                        tableBody.append(row);
+
+                        var CHQ_NO = data.data[i].CHQ_NO;
+                        var CHQ_DT = data.data[i].CHQ_DT;
+                        var BANK_CD = data.data[i].BANK_CD;
+
+                        (function (CHQ_NO, CHQ_DT, BANK_CD) {
+                            snoLink.click(function (event) {
+
+
+                               
+
+                                var edit = event.currentTarget.id;
+                                var newURL = "/CheckPostingForm/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DT + '&BankNameDropdown=' + BANK_CD;
+                                window.location.href = newURL;
+                            });
+                        })(CHQ_NO, CHQ_DT, BANK_CD);
+                    }
+
+                    
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+
+        //function find() {
+        //    debugger;
+        //    $.ajax({
+        //        url: '/SearchPayments/PaymentList',
+        //        type: 'POST',
+        //        dataType: 'json',
+        //        success: function (data) {
+        //            debugger;
+        //            var tableBody = $('#tableBody');
+        //            tableBody.empty();
+
+        //            for (var i = 0; i < data.length; i++) {
+        //                var row = $('<tr>');
+
+        //                // ... Populate row data as before ...
+
+        //                // Create a link element for each row
+        //                var snoLink = $('<a>').text('Select');
+        //                snoLink.attr('data-regno', data[i].SampleRegNo);
+        //                snoLink.attr('data-sno', data[i].SNO);
+
+        //                var actionColumn = $('<td>').append(snoLink);
+        //                row.append(actionColumn);
+        //                tableBody.append(row);
+        //            }
+
+        //            // Bind click event to the links
+        //            $('#tableBody').on('click', 'a[data-sno]', function () {
+        //                var regNo = $(this).attr('data-regno');
+        //                var sno = $(this).attr('data-sno');
+        //                LabDtlModify(regNo, sno);
+        //            });
+        //        },
+        //        error: function () {
+        //            // Handle error if needed
+        //        }
+        //    });
+        //}
+
+        //function InitializeDatatable() {
+        //    //alert('here');
+        //    //alert('aagya initialize table me ');
+        //    $("#searchpayment").DataTable({
+        //        stateSave: false,// Design Assets
+        //        autoWidth: true,
+        //        scrollX: true,
+        //        scrollCollapse: true,
+        //        processing: false, // ServerSide Setups
+        //        serverSide: true,
+        //        destroy: true,
+        //        paging: false,// Paging Setups
+        //        searching: false,// Searching Setups   
+        //        ajax: {// Ajax Filter
+        //            url: "@Url.Action("PaymentList")",
+        //            type: "POST",
+        //            contentType: "application/json; charset=utf-8",
+        //            dataType: "json",
+        //            data:{}
+        //        },
+        //        columns: [// Columns Setups
+                    
+        //            { data: "VCHR_NO" },
+        //            { data: "VCHR_DT" },
+        //            { data: "BANK_NAME" },
+        //            { data: "CHQ_NO" },
+        //            { data: "CHQ_DT" },
+        //            { data: "AMOUNT" },
+        //            { data: "ACC_CD" },
+        //            { data: "AMOUNT_ADJUSTED" },
+        //            { data: "AMT_TRANSFERRED" },
+        //            { data: "SUSPENSE_AMT" },
+        //            { data: "BPO" },
+        //            { data: "NARRATION" },
+        //            { data: "CASE_NO" }
+
+
+        //        ],
+        //        "order": [[0, "asc"]]
+        //    });
+        //}
+
+
+
+
+    </script>
+}

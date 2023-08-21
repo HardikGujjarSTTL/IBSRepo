@@ -22,4 +22,14 @@ public partial class T32ClientLogin
     public string? OrgnType { get; set; }
 
     public string? Unit { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public byte? Isdeleted { get; set; }
 }

@@ -41,6 +41,9 @@ namespace IBS.Models
         public DateTime? Updateddate { get; set; }
 
         public int? Updatedby { get; set; }
+        public int? Id { get; set; }
 
+        public string? OUT_TECH_ID { get; set; }
+        public string? OUT_ERR_CD { get; set; }
     }
 }

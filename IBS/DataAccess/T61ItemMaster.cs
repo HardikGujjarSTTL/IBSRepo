@@ -19,9 +19,9 @@ public partial class T61ItemMaster
 
     public DateTime? Datetime { get; set; }
 
-    public byte? Ie { get; set; }
+    public int? Ie { get; set; }
 
-    public byte? Cm { get; set; }
+    public int? Cm { get; set; }
 
     public DateTime? CreationRevDt { get; set; }
 

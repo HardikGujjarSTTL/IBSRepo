@@ -159,14 +159,16 @@
             <div class="contentContainer">
                 <!--leftSidebarNav-->
                 <aside id="sidebar" class="navbar-default navbar-static-side">
-                    @*@Html.Partial("~/Views/Shared/Menu.cshtml")*@
-                    <div class="sidebar-collapse menu-scroll">
+                    @Html.Partial("~/Views/Shared/Menu.cshtml")
+                    @*<div class="sidebar-collapse menu-scroll">
                         <ul id="side-menu" class="nav">
                             <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-agreement-ico.png" alt="tenant" /></i><span class="menu-title">Master</span></a>
                                 <ul class="nav nav-second-level">
                                     <li><a asp-action="Index" asp-controller="Role"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Role</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="UserRole"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User Role</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MenuRoleMapping"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Menu Role Mapping</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -208,8 +210,7 @@
 
                                 </ul>
                             </li>
-                            @*@if(LoginType == "vendor")
-                            {*@
+                            
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/vendor-ico.png" alt="tenant" /></i><span class="menu-title">Vendor Details</span></a>
                                 <ul class="nav nav-second-level">
@@ -312,7 +313,17 @@
                                     <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Finance</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="Index" asp-controller="AddRecieptVoucher"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add Reciept Voucher</span></a></li>
+                                    <li><a asp-action="SearchPayment" asp-controller="SearchPayments"><i class="fa fa-angle-double-right"></i><span class="menu-title">Search Payments</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="CheckPostingForm"><i class="fa fa-angle-double-right"></i><span class="menu-title">Cheque Posting Form</span></a></li>
+                                    <li><a asp-action="EFTEntry" asp-controller="EFTEntry"><i class="fa fa-angle-double-right"></i><span class="menu-title">EFT Entry</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="InterUnit_Transfer"><i class="fa fa-angle-double-right"></i><span class="menu-title">Inter Unit Transfer</span></a></li>
 
+                                </ul>
+                            </li>
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Reports</span></a>
                                 <ul class="nav nav-second-level">
@@ -355,14 +366,10 @@
                                 </ul>
                             </li>
 
-                            @*<li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>*@
                         </ul>
-                    </div>
+                    </div>*@
                 </aside>
-
                 <!--leftSidebarNav-->
-
-
                 <div class="adminInnerContent">
                     <main role="main" class="pb-3">
                         @RenderBody()
