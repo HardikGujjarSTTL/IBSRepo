@@ -3,9 +3,12 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
+using IBS.Interfaces.IE_Reports;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
+using IBS.Repositories.IE_Report;
+using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -121,6 +124,12 @@ builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
 builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
+
+#region IE Report
+builder.Services.AddScoped<IIE_PerfomanceRepository, IE_PerformanceRepository>();
+#endregion
+
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 
 var app = builder.Build();
 

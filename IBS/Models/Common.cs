@@ -155,7 +155,7 @@ namespace IBS.Models
             obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
             return obj;
         }
-        
+
 
         public static List<SelectListItem> GetCity()
         {
@@ -471,13 +471,13 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> GetRitesOfficerCd(string CO_REGION,string CO_TYPE)
+        public static List<SelectListItem> GetRitesOfficerCd(string CO_REGION, string CO_TYPE)
         {
             if (CO_TYPE == "D")
             {
                 ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
                 return (from a in ModelContext.T08IeControllOfficers
-                        where a.CoRegion  == CO_REGION && a.CoType== CO_TYPE
+                        where a.CoRegion == CO_REGION && a.CoType == CO_TYPE
                         select new SelectListItem
                         {
                             Text = Convert.ToString(a.CoName),
@@ -510,7 +510,7 @@ namespace IBS.Models
                             Value = Convert.ToString(a.IeCd)
                         }).OrderBy(c => c.Text).ToList();
             }
-            else 
+            else
             {
                 ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
                 return (from a in ModelContext.T09Ies
@@ -522,7 +522,7 @@ namespace IBS.Models
                         }).OrderBy(c => c.Text).ToList();
             }
         }
-        
+
         public static List<SelectListItem> MAStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -832,12 +832,12 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> complaint = (from a in ModelContext.T08IeControllOfficers
-                                         select
-                                    new SelectListItem
-                                    {
-                                        Text = Convert.ToString(a.CoName),
-                                        Value = Convert.ToString(a.CoCd)
-                                    }).ToList();
+                                              select
+                                         new SelectListItem
+                                         {
+                                             Text = Convert.ToString(a.CoName),
+                                             Value = Convert.ToString(a.CoCd)
+                                         }).ToList();
             return complaint;
 
         }
@@ -855,7 +855,6 @@ namespace IBS.Models
                                       Value = Convert.ToString(a.IeCd)
                                   }).ToList();
             return IE;
-
         }
 
         public static List<SelectListItem> GetIENameWithoutCode()
@@ -1233,12 +1232,12 @@ namespace IBS.Models
 
 
             List<SelectListItem> objdata = (from a in obj
-                                         select
-                                    new SelectListItem
-                                    {
-                                        Text = a.BpoCd + "-" + a.Bpo,
-                                        Value = a.BpoCd
-                                    }).ToList();
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.BpoCd + "-" + a.Bpo,
+                                           Value = a.BpoCd
+                                       }).ToList();
             return objdata;
         }
 
@@ -1431,6 +1430,43 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> GetIENameIsStatusNull(string RegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T09Ies
+                                       orderby a.IeName
+                                       where a.IeRegion == RegionCode && a.IeStatus == null
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.IeName),
+                                      Value = Convert.ToString(a.IeCd)
+                                  }).ToList();
+            return IE;
+        }
+
+        public static List<SelectListItem> GetOfficerIsCoStatusIsNull(string REGION)
+        {
+
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T08IeControllOfficers
+                    where a.CoRegion == REGION && a.CoStatus == null
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.CoName),
+                        Value = Convert.ToString(a.CoCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static string DateConcate(string date) // Date formate is dd/MM/yyyy to Convert yyyyMMdd
+        {
+            string myYear = date.Substring(6, 4);
+            string myMonth = date.Substring(3, 2);
+            string myDay = date.Substring(0, 2);
+            string date_out = myYear + myMonth + myDay;
+            return date_out;
+        }
+
     }
     public static class DbContextHelper
     {
@@ -1460,7 +1496,7 @@ namespace IBS.Models
             var property = typeof(T).GetProperty(sortColumn);
 
             // Handle nullable properties
-             if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
             }
@@ -1481,8 +1517,6 @@ namespace IBS.Models
             return query.Provider.CreateQuery<T>(resultExpression);
 
         }
-
-
     }
 }
 
