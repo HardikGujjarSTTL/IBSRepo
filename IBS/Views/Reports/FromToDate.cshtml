@@ -1,19 +1,18 @@
 ﻿@model IBS.Models.ICFromToModel
 
 @{
-    ViewData["Title"] = "IC From To Date";
+    ViewData["Title"] = "From To Date";
     string partialView = ViewBag.PartialView;
 }
 
-<div class="list-inner">
-    <div class="tast-list">
-        @*<h2>Call Details For Specific PO</h2>*@
+@*<div class="list-inner">
+    <div class="tast-list">        
         <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;"> </label>IC RECEIVED IN OFFICE BUT NOT BILLED</h2>
     </div>
-</div>
-<form data-ajax="true" asp-antiforgery="true" asp-controller="IC_Receipt" asp-action="ICFromToDate" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+</div>*@
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Reports" asp-action="FromToDate" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
     <div class="list-inner">
-        <div class="tast-list">           
+        <div class="tast-list">
             <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;"></label></h2>
         </div>
     </div>
@@ -57,7 +56,7 @@
     </div>
     <section class="table-section" id="tblsection">
         @Html.Partial(@partialView)
-    </section>    
+    </section>
 </form>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -73,26 +72,27 @@
 }
 
 <script>
+    var action = "@ViewBag.Action";
     $(document).ready(function () {
         if ("@ViewBag.Action" == "ICISSUEDNSUB") {
-            $('input[type=radio][id=rdbType]').change(function () {   
+            $('input[type=radio][id=rdbType]').change(function () {
                 var dataTable = $("#dtList").dataTable();
                 dataTable.fnClearTable();
                 dataTable.fnDraw();
                 dataTable.fnDestroy();
-                
+
                 var rdbType = $('input[name="rdbType"]:checked').val();
                 var obj = new Object();
                 obj.Type = rdbType;
-                
+
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("IC_Issued_Partial","IC_Receipt")',//'@Url.Content("~/IC_Receipt/IC_Issued_Partial")',
                     data: obj,
-                    success: function (data) {                        
+                    success: function (data) {
                         $('#tblsection').html(data)
                     }
-                });                                
+                });
 
             });
         }
@@ -100,6 +100,7 @@
         $("#btnSearch").click(function () {
             InitializeDatatable();
         });
+        setTitle(action);
     });
 
     function setDefaultDate() {
@@ -113,6 +114,15 @@
             changeYear: true,
             dateFormat: 'dd/mm/yy',
         });
+    }
 
+    function setTitle(action){
+        if (action == "ICISSUEDNSUB") {
+
+        } else if (action == "UNBILLEDIC") {
+
+        } else if (action == "PJI") {
+            $("#lblTitle").html("PENDING JI CASES");
+        }
     }
 </script>
