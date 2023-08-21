@@ -159,8 +159,8 @@
             <div class="contentContainer">
                 <!--leftSidebarNav-->
                 <aside id="sidebar" class="navbar-default navbar-static-side">
-                    @*@Html.Partial("~/Views/Shared/Menu.cshtml")*@
-                    <div class="sidebar-collapse menu-scroll">
+                    @Html.Partial("~/Views/Shared/Menu.cshtml")
+                    @*<div class="sidebar-collapse menu-scroll">
                         <ul id="side-menu" class="nav">
                             <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
                             <li>
@@ -210,8 +210,7 @@
 
                                 </ul>
                             </li>
-                            @*@if(LoginType == "vendor")
-                            {*@
+                            
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/vendor-ico.png" alt="tenant" /></i><span class="menu-title">Vendor Details</span></a>
                                 <ul class="nav nav-second-level">
@@ -261,13 +260,7 @@
                                     <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Vendor</span></a></li>
                                 </ul>
                             </li>
-                            @*<li>
-                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/transaction-ico.png" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
-                            <ul class="nav nav-second-level">
-                            <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Daily Work Plan</span></a></li>
-                            <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Pending JI Complaints for IE Remarks</span></a></li>
-                            </ul>
-                            </li>*@
+                           
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Directories</span></a>
                                 <ul class="nav nav-second-level">
@@ -356,14 +349,10 @@
                                 </ul>
                             </li>
 
-                            @*<li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>*@
                         </ul>
-                    </div>
+                    </div>*@
                 </aside>
-
                 <!--leftSidebarNav-->
-
-
                 <div class="adminInnerContent">
                     <main role="main" class="pb-3">
                         @RenderBody()

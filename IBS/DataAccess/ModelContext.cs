@@ -5654,7 +5654,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("SORTORDER");
             entity.Property(e => e.Title)
-                .HasMaxLength(50)
+                .HasMaxLength(250)
                 .HasColumnName("TITLE");
 
             entity.HasOne(d => d.Role).WithMany(p => p.MenuMasters)
@@ -7131,7 +7131,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T02_USERS");
 
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(12)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -7175,8 +7175,8 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("EMP_NO");
             entity.Property(e => e.Id)
+                .HasPrecision(6)
                 .HasDefaultValueSql("\"IBSDEV\".\"T02_USERS_SEQ\".\"NEXTVAL\"")
-                .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
             entity.Property(e => e.Isdeleted)
                 .HasColumnType("NUMBER(38)")
@@ -8944,6 +8944,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CountDt)
                 .HasPrecision(1)
                 .HasColumnName("COUNT_DT");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -9049,6 +9056,13 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("UPDATE_ALLOWED");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -10829,14 +10843,14 @@ public partial class ModelContext : DbContext
                 .HasPrecision(5)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.BkNo)
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("BK_NO");
             entity.Property(e => e.CoCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CO_CD");
             entity.Property(e => e.ConsigneeCd)
                 .HasPrecision(8)
@@ -10852,7 +10866,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.ItemDescPo)
                 .HasMaxLength(400)
@@ -10915,7 +10929,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("NC_NO");
             entity.Property(e => e.NcCdSno)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("NC_CD_SNO");
             entity.Property(e => e.CoFinalRemarks1)
                 .HasMaxLength(500)
@@ -14746,8 +14760,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
+                .HasPrecision(6)
                 .HasColumnName("USER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)
