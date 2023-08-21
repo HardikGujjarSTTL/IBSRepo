@@ -5,16 +5,16 @@
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Voucher List</h2>
+            <h2>EFT Voucher List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn">Add New Voucher</a>
+            <a asp-area="" asp-controller="EFTEntry" asp-action="AddEFTVoucher" class="formBtn">Add EFT Voucher</a>
         </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtListVoucher" class="table-responsive">
+                <table id="dtEFTVoucher" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -50,7 +50,7 @@
 
         function InitializeDatatable() {
             debugger;
-            $("#dtListVoucher").DataTable({
+            $("#dtEFTVoucher").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -61,7 +61,7 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("VoucherList")",
+                    url: "@Url.Action("ListVoucher")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -77,7 +77,7 @@
                         data: '', orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
-                                ;
+                            ;
                         }
                     },
                     //{ data: "SNO" },
@@ -97,9 +97,9 @@
                             var CHQ_NO = data.CHQ_NO;
                             var CHQ_DT = data.CHQ_DT;
 
-                            var editUrl = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
+                            var editUrl = '@Url.Action("AddEFTVoucher", "EFTEntry")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                           // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -109,6 +109,6 @@
             });
         }
 
-        
+
     </script>
 }

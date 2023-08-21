@@ -114,13 +114,19 @@ builder.Services.AddScoped<ICentralQOIIRepository, CentralQOIIRepository>();
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 #endregion
-builder.Services.AddScoped<ICityMaster, CityMaster>();
-builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
-builder.Services.AddScoped<IVendorCluster, VendorCluster>();
-builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
-builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
-builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
-builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
+builder.Services.AddScoped<ICityMaster,CityMaster>();
+builder.Services.AddScoped<I_IC_Bookset_Form,IC_Bookset_Form>();
+builder.Services.AddScoped<IVendorCluster,VendorCluster>();
+builder.Services.AddScoped<IHologramSearchForm,HologramSearchForm>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLForm,MasterItemsPLForm>();
+builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
+builder.Services.AddScoped<ICheckPostingFormRepository,CheckPostingFormRepository>();
+builder.Services.AddScoped<ISearchPaymentsRepository,SearchPaymentRepository>();
+builder.Services.AddScoped<IEFTEntryRepository,EFTEntryRepository>();
+builder.Services.AddScoped<IInterUnit_TransferRepository,InterUnit_TransferRepository>();
+
+
 
 var app = builder.Build();
 
@@ -139,7 +145,13 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
-
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllerRoute(
+//      name: "areas",
+//      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+//    );
+//});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

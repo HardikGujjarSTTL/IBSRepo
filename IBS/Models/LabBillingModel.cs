@@ -1,4 +1,5 @@
-﻿using System.Composition;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Composition;
 
 namespace IBS.Models
 {
@@ -8,10 +9,12 @@ namespace IBS.Models
 
         public string Lab_Bill_Per { get; set; }
 
+        [Required]
         public string LabBillPerMon { get; set; }
 
+        [Required]
         public string LabBillPerYear { get; set; }
-
+        [Required]
         public decimal? Lab_Exp { get; set; }
 
         public string? User_Id { get; set; }
