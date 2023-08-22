@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-    public class ComplaintApprovalController : Controller
+    public class ComplaintApprovalController : BaseController
     {
         #region Variables
         private readonly IComplaintApprovalRepository complaintApprovalRepository ;
@@ -21,7 +21,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-            {
+        {
             DTResult<OnlineComplaints> dTResult = complaintApprovalRepository.GetRejComplaints(dtParameters);
             return Json(dTResult);
         }
@@ -29,8 +29,31 @@ namespace IBS.Controllers
         public IActionResult Manage(string TEMP_COMPLAINT_ID,string SetNo,string BKNo,string CaseNo)
         {
             OnlineComplaints model = new();
-            model = complaintApprovalRepository.FindByID(TEMP_COMPLAINT_ID, SetNo, BKNo, CaseNo);
+
+            try
+            {
+                model = complaintApprovalRepository.FindByID(TEMP_COMPLAINT_ID, SetNo, BKNo, CaseNo);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlineComplaints", "ComplaintsSave", 1, GetIPAddress());
+            }
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult RejectComplaint(OnlineComplaints model)
+        {
+            string msg = "";
+            try
+            {
+                 msg = complaintApprovalRepository.RejectComp(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlineComplaints", "ComplaintsSave", 1, GetIPAddress());
+            }
+            return Json(new { status = true, responseText = msg });
         }
     }
 }

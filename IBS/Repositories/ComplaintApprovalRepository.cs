@@ -18,6 +18,7 @@ using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Globalization;
+using System.Net.Mail;
 using System.Xml;
 using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -27,10 +28,12 @@ namespace IBS.Repositories
     public class ComplaintApprovalRepository : IComplaintApprovalRepository
     {
         private readonly ModelContext context;
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public ComplaintApprovalRepository(ModelContext context)
+        public ComplaintApprovalRepository(ModelContext context, ISendMailRepository pSendMailRepository)
         {
             this.context = context;
+            this.pSendMailRepository = pSendMailRepository;
         }
 
         public DTResult<OnlineComplaints> GetRejComplaints(DTParameters dtParameters)
@@ -131,6 +134,7 @@ namespace IBS.Repositories
 
                 model.BKNo = dt.Rows[0]["BK_NO"].ToString();
                 model.SetNo = dt.Rows[0]["SET_NO"].ToString();
+                model.Regioncode = dt.Rows[0]["region_code"].ToString();
                 model.Contract = dt.Rows[0]["PO_NO"].ToString();
 
                 if (DateTime.TryParse(dt.Rows[0]["IC_DATE"].ToString(), out DateTime icDt))
@@ -161,9 +165,87 @@ namespace IBS.Repositories
 
                 model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
 
+                if (DateTime.TryParse(dt.Rows[0]["rej_memo_dt"].ToString(), out DateTime memodt))
+                {
+                    model.RejMemodate = memodt;
+                }
+                model.RejMemono = dt.Rows[0]["rej_memo_no"].ToString();
+
 
                 return model;
             }
+        }
+
+        public string RejectComp(OnlineComplaints model)
+        {
+            string msg = "";
+            var complaint = context.TempOnlineComplaints.SingleOrDefault(c => c.TempComplaintId == model.TEMP_COMPLAINT_ID);
+
+            if (complaint != null)
+            {
+                complaint.Status = "R";
+                complaint.TempCompRejReason = model.Reasonforreject;
+                context.SaveChanges();
+                msg = "Reject Successfully!";
+            }
+
+            send_Consignee_Email_for_Rejected_Complaints(model);
+
+            return msg;
+        }
+
+        public void send_Consignee_Email_for_Rejected_Complaints(OnlineComplaints model)
+        {
+            string wRegion = "";
+            string sender = "";
+
+            if(model.Regioncode == "N")
+            {
+                wRegion = "NORTHERN REGION \n 12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 \n Phone : +918800018691-95 \n Fax : 011-22024665";
+                sender = "nrinspn@rites.com";
+            }
+            else if(model.Regioncode == "S")
+            {
+                wRegion = "SOUTHERN REGION \n CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 \n Phone : 044-28292807/044- 28292817 \n Fax : 044-28290359";
+                sender = "srinspn@rites.com";
+            }
+            else if(model.Regioncode == "E")
+            {
+                wRegion = "EASTERN REGION \n CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  \n Fax : 033-22348704";
+                sender = "erinspn@rites.com";
+            }
+            else if(model.Regioncode == "W")
+            {
+                wRegion = "WESTERN REGION \n 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT, NARIMAN POINT,MUMBAI-400021 \n Phone : 022-68943400/68943445";
+                sender = "wrinspn@rites.com";
+            }
+            else if(model.Regioncode == "C")
+            {
+                wRegion = "Central Region";
+            }
+
+            var complaint = context.TempOnlineComplaints.SingleOrDefault(c => c.TempComplaintId == model.TEMP_COMPLAINT_ID);
+
+            if (complaint != null)
+            {
+                string consignee = complaint.ConsigneeName;
+                string consigneeEmail = complaint.ConsigneeEmail;
+                string rejMemoNo = complaint.RejMemoNo;
+                string callLetterDt = complaint.RejMemoDt.HasValue
+                ? complaint.RejMemoDt.Value.ToString("dd/MM/yyyy")
+                : "NIL";
+            }
+
+            string mailBody = "Dear Sir/Madam,\n\n Online Consignee Complaint vide Rej Memo Letter dated:  " + complaint.RejMemoNo + " for JI of material against PO No. - " + model.Contract + " dated - " + model.Date + ", on date: " + complaint.TempComplaintDt + ". The Complaint is rejected due to following Reason:- " + model.Reasonforreject + ", so Complaint not registered. \n\n Thanks for using RITES Inspection Services. \n NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). \n\n" + wRegion + ".";
+
+            SendMailModel SendMailModel = new SendMailModel();
+            SendMailModel.To = complaint.ConsigneeEmail; ;
+            SendMailModel.From = "nrinspn@gmail.com"; ;
+            SendMailModel.Subject = "Your Consignee Complaint For RITES";
+            SendMailModel.Message = mailBody;
+
+            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+
         }
     }
 }

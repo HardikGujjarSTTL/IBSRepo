@@ -237,6 +237,70 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> NOJIReasons()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "DP Expired";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Validity of IC Expired";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Recieved in Damaged/Broken Condition";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Rejection &lt;5%";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Rejection issued after 90 Days of reciept of material";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Guarantee Claim";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Wrong Dispatch";
+            single.Value = "G";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Material not stamped (partial/full)";
+            single.Value = "H";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Material received in excess of ordered quantity";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Material lifted/rectified/replaced (Partially/Fully) before issue of Rejection Advice";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Reason(s) of rejection, beyond scope of inspection";
+            single.Value = "K";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> Inspectionrequired()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Yes";
+            single.Value = "Y";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "No";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> VendorStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
