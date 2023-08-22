@@ -209,7 +209,7 @@
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
                             var CallSno = data.CallSno;
-                            var CallRecvDt = data.CallRecvDt;
+                            var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
                             var editUrl = '@Url.Action("VendorCallRegisterDetail", "VendorCallRegister")?Action=M' + "&CaseNo=" + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';

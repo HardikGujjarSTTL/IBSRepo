@@ -25,7 +25,7 @@ namespace IBS.Controllers
             Configuration = configuration;
         }
 
-        public IActionResult Index(string type = "ielogin")
+        public IActionResult Index(string type = "admin")
         {
             HttpContext.Session.SetString("LoginType", type);
 

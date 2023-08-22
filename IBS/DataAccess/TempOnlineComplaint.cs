@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class TempOnlineComplaint
 {
-    public string? TempComplaintId { get; set; }
+    public string TempComplaintId { get; set; } = null!;
 
     public DateTime? TempComplaintDt { get; set; }
 
@@ -27,9 +27,9 @@ public partial class TempOnlineComplaint
 
     public int? ConsigneeCd { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
-    public byte? CoCd { get; set; }
+    public int? CoCd { get; set; }
 
     public string? InspRegion { get; set; }
 

@@ -234,6 +234,7 @@ namespace GSDMWeb.Controllers.Master
             //d.Add(".txt", "text/plain");
             //Compressed Folders'
             d.Add(".zip", "504B");
+            d.Add(".rar", "526172211A0700CF907300000D00000000000000");
             //Audio'
             d.Add(".ogg", "4F67675300020000000000000000");
             d.Add(".mp3", "494433");
@@ -333,6 +334,7 @@ namespace GSDMWeb.Controllers.Master
             d.Add(".txt", "text/plain");
             //Compressed Folders'
             d.Add(".zip", "application/zip");
+            d.Add(".rar", "application/octet-stream");
             //Audio'
             d.Add(".ogg", "application/ogg");
             d.Add(".mp3", "audio/mpeg");

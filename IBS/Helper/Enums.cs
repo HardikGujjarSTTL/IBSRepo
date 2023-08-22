@@ -33,6 +33,8 @@ namespace IBS.Helper
             VendorDocument = 5,
             [Description("/MA")]
             VendorMADocument = 6,
+            [Description("/MASTER_ITEMS_CHECKSHEETS")]
+            MasterItemDoc = 7,
         }
 
         public enum DocumentCategory : int
@@ -42,6 +44,7 @@ namespace IBS.Helper
             Vendor = 3,
             VendorDocument = 4,
             VendorMADoc = 5,
+            MasterItemDoc = 7,
         }
 
 
@@ -63,6 +66,11 @@ namespace IBS.Helper
         public enum DocumentCategory_VendorMADoc : int
         {
             VendorMADoc = 8,
+        }
+
+        public enum DocumentCategory_MasterDoc : int
+        {
+            MasterItemDoc = 10,
         }
 
         public static string GetEnumDescription(object enumValue)

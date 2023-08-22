@@ -253,7 +253,7 @@
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Maximum Call Limit Form</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items List Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="IE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items List Form</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items PL Form</span></a></li>
                                     <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Call Date</span></a></li>
                                     <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Vendor</span></a></li>
@@ -289,7 +289,7 @@
                                     <li><a asp-action="Index" asp-controller="VendorCluster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="IE_MaximumCallLimitForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Maximum Call Limit Form</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items List Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="D"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items List Form</span></a></li>
                                     <li><a asp-action="Index" asp-controller="MasterItemsPLForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items PL Form</span></a></li>
                                   
                                 </ul>
@@ -306,10 +306,16 @@
                             <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
                             <ul class="nav nav-second-level">
                                 <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="menu-title">Daily Work Plan</span></a></li>
-                                <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IEJIRemarksPending"><i class="fa fa-angle-double-right"></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
                                     <li><a asp-action="Index" asp-controller="ICPhotoEnclosed"><i class="fa fa-angle-double-right"></i><span class="menu-title">Download/View Photo Enclosed</span></a></li>
                                     <li><a asp-action="Index" asp-route-allowdl="Y" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Documents</span></a></li>
                                     <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="IE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Master Items List</span></a></li>
+
+                                    <li><a asp-action="QAVideoGeneral" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video General</span></a></li>
+                                    <li><a asp-action="QAVideoMechanical" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Mechanical</span></a></li>
+                                    <li><a asp-action="QAVideoEletrical" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Electrical</span></a></li>
+                                    <li><a asp-action="QAVideoCivil" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Civil</span></a></li>
                             </ul>
                         </li>
 
