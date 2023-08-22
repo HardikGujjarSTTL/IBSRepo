@@ -1,0 +1,192 @@
+﻿@model IBS.Models.OnlineComplaints
+<div class="list-inner">
+    <div class="tast-list">
+        <h3>ONLINE REJECTION ADVICE REGISTERATION FORM</h3>
+    </div>
+</div>
+
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="OnlineComplaints" asp-action="ComplaintsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <input type="text" asp-for="ItemSrnoPo" id="ItemSrnoPo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="UomCd" id="UomCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="Rate" id="Rate" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="RejectionValue" id="RejectionValue" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CaseNo" id="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="VendCd" id="VendCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="ConsigneeCd" id="ConsigneeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="IeCd" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CoCd" id="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="ITEM_DESC_PO" id="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <label id="datetimeLabel" asp-for="Registrationdt"></label>
+                    <p><u><b>Consignee Details</b></u></p>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Name</label>
+                        <input type="text" class="input" ASP-FOR="Name" maxlength="300" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Designation</label>
+                        <input type="text" class="input" ASP-FOR="Designation" maxlength="300" required/>
+                        <span asp-validation-for="Designation" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Email</label>
+                        <input type="text" class="input" ASP-FOR="Email" maxlength="300" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Mobile No.</label>
+                        <input type="text" class="input" ASP-FOR="MobileNO" maxlength="10" required />
+                        <span asp-validation-for="MobileNO" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <p><u><b>Rejection Details</b></u></p>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Book No.</label>
+                        <input type="text" class="input" ASP-FOR="BKNo" maxlength="300" id="bkno" required />
+                        <span asp-validation-for="BKNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Set No.</label>
+                        <input type="text" class="input" ASP-FOR="SetNo" maxlength="300" id="setno" required />
+                        <span asp-validation-for="SetNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="InspRegion">Inspection Region</label>
+                        @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Item">Item</label>
+                        <select id="Item" asp-for="Item" class="form-control" required></select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Qty. as per IC</label>
+                        <input type="text" class="input" ASP-FOR="QtyperIC" id="QtyperIC" maxlength="300" required />
+                        <span asp-validation-for="QtyperIC" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Qty. Rejected</label>
+                        <input type="text" class="input" ASP-FOR="QtyRejected" maxlength="300" required />
+                        <span asp-validation-for="QtyRejected" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Reasons of Rejection</label>
+                        <input type="text" class="input" ASP-FOR="RejectionReason" maxlength="300" required/>
+                        <span asp-validation-for="RejectionReason" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Remarks (If Any)</label>
+                        <input type="text" class="input" ASP-FOR="Remarks" maxlength="300" />
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Rejection Memo No.</label>
+                        <input type="text" class="input" ASP-FOR="RejMemono" maxlength="300" required />
+                        <span asp-validation-for="RejMemono" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Rejection Memo Date</label>
+                        <input type="text" class="input datepicker" ASP-FOR="RejMemodate" maxlength="300" required />
+                        <span asp-validation-for="RejMemodate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
+                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" required>
+                    </div>
+                    <div class="savenext-btn" style="margin-left:80%;">
+                        <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+               
+            </div>
+        </form>
+    </div>
+</section>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var currentDateTime = new Date();
+            var formattedDate = currentDateTime.getDate().toString().padStart(2, '0') + "/" +
+                (currentDateTime.getMonth() + 1).toString().padStart(2, '0') + "/" +
+                currentDateTime.getFullYear();
+
+            $("#datetimeLabel").text("Registration Date  :  " + formattedDate);
+        });
+
+        $("#InspRegionDropdown").change(function () {
+            debugger
+            var InspRegionDropdown = $(this).val();
+            var bkno = $("#bkno").val();
+            var setno = $("#setno").val();
+
+            $.ajax({
+                url: '/OnlineComplaints/GetItems',
+                type: 'GET',
+                data: { InspRegionDropdown: InspRegionDropdown, bkno: bkno, setno: setno },
+                success: function (data) {
+                    var Item = $("#Item");
+                    Item.empty();
+                    Item.append($('<option>').text('--Select--').val(''));
+
+                    var items = JSON.parse(data);
+
+                    Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
+                }
+            });
+        });
+
+        $("#Item").change(function () {
+            debugger
+            var ItemSno = $(this).val();
+            var InspRegionDropdown = $("#InspRegionDropdown").val();
+            var bkno = $("#bkno").val();
+            var setno = $("#setno").val();
+
+            $.ajax({
+                url: '/OnlineComplaints/GetItems',
+                type: 'GET',
+                data: { ItemSno: ItemSno, bkno: bkno, setno: setno, InspRegionDropdown: InspRegionDropdown },
+                success: function (data) {
+                    var Item = $("#Item");
+                    Item.empty();
+
+                    var items = JSON.parse(data);
+                    Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
+                    $("#QtyperIC").val(items[0].QTY_TO_INSP);
+                    $("#ITEM_DESC_PO").val(items[0].ITEM_DESC_PO);
+                    $("#ItemSrnoPo").val(items[0].ITEM_SRNO_PO);
+                    $("#UomCd").val(items[0].UOM_CD);
+                    $("#RejectionValue").val(items[0].UOM_S_DESC);
+                    $("#Rate").val(items[0].RATE);
+                    $("#CaseNo").val(items[0].CASE_NO);
+                    $("#VendCd").val(items[0].VEND_CD);
+                    $("#ConsigneeCd").val(items[0].CONSIGNEE_CD);
+                    $("#IeCd").val(items[0].IE_CD);
+                    $("#CoCd").val(items[0].CO_CD);
+                }
+            });
+        });
+
+        function Save(){
+            if ($("#frmComplaints").valid()) {
+                $("#frmComplaints").submit();
+            }
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = '@Url.Action("Index", "OnlineComplaints")';
+        };
+
+    </script>
+}

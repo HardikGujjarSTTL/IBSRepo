@@ -322,3 +322,37 @@ ALTER TABLE T41_NC_MASTER
     
 ALTER TABLE T41_NC_MASTER 
     MODIFY CO_CD  NUMBER(6,0);
+
+ ALTER TABLE TEMP_ONLINE_COMPLAINTS ADD (
+  CONSTRAINT TEMP_ONLINE_COMPLAINTS_pk PRIMARY KEY (TEMP_COMPLAINT_ID));
+
+========================================================================================================================================
+
+create or replace PROCEDURE GENERATE_TEMP_COMPLAINT_NO(
+    IN_TEMP_COMPLAINT_DT IN char,
+    p_result_cursor OUT SYS_REFCURSOR
+) IS
+	w_ctr char(2) :=null;
+	w_sno char(5) :=null;
+     W_ERR_CD NUMBER := -1;
+    w_compid varchar2(500) :=null;
+	my_exception exception;
+BEGIN
+	W_ERR_CD := -1;
+	---
+	if to_number(substr(IN_TEMP_COMPLAINT_DT,4,2)) > 3 then
+	   w_ctr := lpad(substr(IN_TEMP_COMPLAINT_DT,9,2),2,'0');
+	else
+	   w_ctr := lpad(substr(IN_TEMP_COMPLAINT_DT,9,2)-1,2,'0');
+	end if;
+	Select lpad(nvl(max(to_number(nvl(trim(substr(TEMP_COMPLAINT_ID,4,5)),'0'))),0)+1,5,'0') into w_sno
+	From TEMP_ONLINE_COMPLAINTS where substr(TEMP_COMPLAINT_ID,1,2)=w_ctr;
+	---
+	w_compid:=trim(w_ctr||'-'||w_sno);
+	if length(w_compid) <> 8 then
+	   W_ERR_CD := -2;
+	end if;
+	---
+	OPEN p_result_cursor FOR
+ SELECT w_compid AS w_compid, W_ERR_CD AS W_ERR_CD FROM DUAL;
+END;

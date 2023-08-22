@@ -22,4 +22,12 @@ public partial class Menurolemapping
     public DateTimeOffset? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public bool? Isadd { get; set; }
+
+    public bool? Isedit { get; set; }
+
+    public bool? Isdelete { get; set; }
+
+    public bool? Isview { get; set; }
 }

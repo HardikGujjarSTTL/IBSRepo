@@ -187,7 +187,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.Userroles
-                    join u in context.T02Users on l.UserId equals u.Id.ToString()
+                    join u in context.T02Users on l.UserId equals u.Id
                     join r in context.Roles on l.RoleId equals r.RoleId
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RoleModel
