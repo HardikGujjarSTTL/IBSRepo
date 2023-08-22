@@ -31,7 +31,7 @@ public partial class T03City
 
     public int? CountryCd { get; set; }
 
-    public string? Country { get; set; }
+    public string? CountryName { get; set; }
 
     public virtual T92State? StateCdNavigation { get; set; }
 
