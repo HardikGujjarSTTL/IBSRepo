@@ -36,7 +36,7 @@ namespace IBS.Repositories
 			}
 		}
 
-		public DTResult<UOMModel> GetUOMList(DTParameters dtParameters)
+		public DTResult<UOMModel>GetUOMList(DTParameters dtParameters)
 		{
 
 			DTResult<UOMModel> dTResult = new() { draw = 0 };
@@ -83,8 +83,8 @@ namespace IBS.Repositories
 			dTResult.recordsTotal = query.Count();
 
 			 if (!string.IsNullOrEmpty(searchBy))
-				query = query.Where(w => Convert.ToString(w.UomSDesc).ToLower().Contains(searchBy.ToLower())
-				|| Convert.ToString(w.UomFactor).ToLower().Contains(searchBy.ToLower())
+				query = query.Where(w => Convert.ToString(w.UomLDesc).ToLower().Contains(searchBy.ToLower())
+				|| Convert.ToString(w.UomSDesc).ToLower().Contains(searchBy.ToLower())
 				);
 
 			dTResult.recordsFiltered = query.Count();

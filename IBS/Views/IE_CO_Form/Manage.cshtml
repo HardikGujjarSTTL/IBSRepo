@@ -14,18 +14,13 @@
             <form data-ajax="true" asp-antiforgery="true" asp-controller="IE_CO_Form" asp-action="IE_CO_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmIE_CO_Form">
                 <input type="hidden" asp-for="CoCd" />
                 <div class="accordion-body">
-            @*<div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Controlling Officer Code</label>
-                            <textarea class="input" asp-for="CoCd" maxlength="30"> </textarea>
-                            <span asp-validation-for="CoCd" class="text-danger"></span>
-                        </div>
-            </div>*@
+           
                     <div class="row my-0">
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Designation</label>
-                            <input type="text" class="input" asp-for="CoDesig" maxlength="30">
-                            <span asp-validation-for="CoDesig" class="text-danger"></span>
+                            @* <input type="text" class="input" asp-for="CoDesig" maxlength="30"> *@
+                    @Html.DropDownListFor(model => model.CoDesig, new SelectList(IBS.Models.Common.GetDesignation() , "Value", "Text"),"--Select--",new { @onchange="CoDesigChanged()" })
+                           <span asp-validation-for="CoDesig" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Phone No.</label>
@@ -46,6 +41,19 @@
                     <label for="Reference">Controlling Officer Name</label>
                     <textarea class="input" asp-for="CoName" maxlength="30"> </textarea>
                     <span asp-validation-for="CoName" class="text-danger"></span>
+                </div>
+                <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                        <label for="Reference">Controlling Officer Status</label>
+                        @* <textarea class="input" asp-for="CoStatus" maxlength="30"> </textarea> *@
+                        @Html.DropDownListFor(model => model.CoStatus, new SelectList(IBS.Models.Common.GetStatus() , "Value", "Text"),"--Select--",new { @onchange="CoStatusChanged()" })
+                        <span asp-validation-for="CoStatus" class="text-danger"></span>
+                </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Status Date (DD/MM/YYYY)</label>
+                        <textarea class="input" asp-for="CoStatusDt" maxlength="30"> </textarea>
+                        <span asp-validation-for="CoStatusDt" class="text-danger"></span>
+                    </div>
                 </div>
                     </div>
                     <div class="savenext-btn">

@@ -13,6 +13,12 @@
             <form data-ajax="true" asp-antiforgery="true" asp-controller="RailwaysDirectory" asp-action="RailwaysDirectoryDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRailwaysDirectory">
                 <input type="hidden" asp-for="RlyCd" />
                 <div class="accordion-body">
+                <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Railways Codes</label>
+                    <textarea class="input" asp-for="RlyCd" maxlength="30"> </textarea>
+                    <span asp-validation-for="RlyCd" class="text-danger"></span>
+                </div>
                     <div class="row my-0">
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Railway/Production Unit</label>

@@ -4,26 +4,27 @@ using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace IBS.Controllers
 {
-	public class RailwaysDirectoryController : BaseController
-	{
-		private readonly IRailwaysDirectory railwaysDirectory;
-        public RailwaysDirectoryController(IRailwaysDirectory _railwaysDirectory)
+    public class ClientEntryFormController : BaseController
+    {
+        private readonly IClientEntryForm clientEntryForm;
+
+        public ClientEntryFormController(IClientEntryForm _clientEntryForm)
         {
-            railwaysDirectory = _railwaysDirectory;
-		}
+            clientEntryForm = _clientEntryForm;
+        }
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Manage(int id)
         {
-            RailwaysDirectoryModel model = new();
+            ClientEntryFormModel model = new();
             if (id > 0)
             {
-                model = railwaysDirectory.FindByID(id);
+                model = clientEntryForm.FindByID(id);
             }
             return View(model);
         }
@@ -31,21 +32,21 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<RailwaysDirectoryModel> dTResult = railwaysDirectory.GetRMList(dtParameters);
+            DTResult<ClientEntryFormModel> dTResult = clientEntryForm.GetClientEntryFormList(dtParameters);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)
         {
             try
             {
-                if (railwaysDirectory.Remove(id, UserId))
+                if (clientEntryForm.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "RailwaysDirectory", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientEntryForm", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("Index");
@@ -53,19 +54,19 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RailwaysDirectoryDetailsSave(RailwaysDirectoryModel model)
+        public IActionResult ClientEntryFormDetailsSave(ClientEntryFormModel model)
         {
             try
             {
-                string msg = "RailwaysDirectory Inserted Successfully.";
+                string msg = "Client Entry Form Inserted Successfully.";
 
-                if (model.Id > 0)
+               // if (model.Mobile > 0) 
                 {
-                    msg = "RailwaysDirectory Updated Successfully.";
+                    msg = "Client Entry Form Updated Successfully.";
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = railwaysDirectory.RailwaysDirectoryDetailsInsertUpdate(model);
+                int i = clientEntryForm.ClientEntryFormDetailsInsertUpdate(model);
                 if (i > 0)
                 {
                     return Json(new { status = true, responseText = msg });
@@ -73,13 +74,10 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "RailwaysDirectory", "RailwaysDirectoryDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientEntryForm", "ClientEntryFormDetailsSave", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
     }
 }
-
-
-

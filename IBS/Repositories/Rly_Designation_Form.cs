@@ -34,7 +34,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<Rly_Designation_FormModel> GetRly_Designation_FormList(DTParameters dtParameters)
+        public DTResult<Rly_Designation_FormModel>GetRly_Designation_FormList(DTParameters dtParameters)
         {
 
             DTResult<Rly_Designation_FormModel> dTResult = new() { draw = 0 };

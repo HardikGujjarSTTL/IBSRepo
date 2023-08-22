@@ -114,7 +114,7 @@ builder.Services.AddScoped<IVendorCluster, VendorCluster>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
-
+builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

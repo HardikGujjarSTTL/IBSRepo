@@ -124,11 +124,11 @@ namespace IBS.Models
 
             Tblexception objexception = new Tblexception();
 
-            objexception.Controllername = ControllerName;
+             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
             objexception.Exception = exceptionmsg;
-            objexception.Createdby = CreatedBy;
+             objexception.Createdby = CreatedBy;
             objexception.Createip = CreatedIP;
             objexception.Createddate = DateTime.Now;
             context.Tblexceptions.Add(objexception);
@@ -169,7 +169,54 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
-
+        public static List<SelectListItem> GetState()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> state = (from a in context.T92States
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.StateName,
+                                        Value = Convert.ToString(a.StateName)
+                                    }).ToList();
+            return state;
+        }
+        public static List<SelectListItem> GetCountry()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> country = (from a in context.CountryMasters
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = a.CountryName,
+                                         Value = Convert.ToString(a.CountryName)
+                                     }).ToList();
+            return country;
+        }
+        public static List<SelectListItem>GetDesignation()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> country = (from a in context.T08IeControllOfficers
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.CoDesig),
+                                           Value = Convert.ToString(a.CoDesig)
+                                       }).ToList();
+            return country;
+        }
+        public static List<SelectListItem> GetStatus()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> country = (from a in context.T08IeControllOfficers
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.CoStatus,
+                                           Value = Convert.ToString(a.CoStatus)
+                                       }).ToList();
+            return country;
+        }
         public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -497,7 +544,7 @@ namespace IBS.Models
             }
         }
 
-        public static List<SelectListItem> GetInspEngCd(int IeCd = 0)
+        public static List<SelectListItem>GetInspEngCd(int IeCd = 0)
         {
             if (IeCd == 0)
             {

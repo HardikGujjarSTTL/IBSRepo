@@ -21,20 +21,23 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="Reference">City Name</label>
-                            <textarea class="input" asp-for="City" maxlength="30"> </textarea>
+                            @* <textarea class="input" asp-for="City" maxlength="30"> </textarea> *@
+                            @Html.DropDownListFor(model => model.CityCd, new SelectList(IBS.Models.Common.GetCity() , "Value", "Text"),"--Select--",new { @onchange="CityCdChanged()" })
                             <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row my-0">
                         <div class="col-md-4 mb-3">
                             <label for="Reference">States</label>
-                            <input type="text" class="input" asp-for="StateCd" maxlength="30">
+                            @* <input type="text" class="input" asp-for="StateCd" maxlength="30"> *@
+                            @Html.DropDownListFor(model => model.StateCd, new SelectList(IBS.Models.Common.GetState() , "Value", "Text"),"--Select--",new { @onchange="StateCdChanged()" })
                             <span asp-validation-for="StateCd" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="Reference">Country</label>
-                            <input type="text" class="input" asp-for="Country" maxlength="30">
-                            <span asp-validation-for="Country" class="text-danger"></span>
+                            <label for="Reference">Country Name</label>
+                            @* <input type="text" class="input" asp-for="Country" maxlength="30"> *@
+                            @Html.DropDownListFor(model => model.CountryName, new SelectList(IBS.Models.Common.GetCountry() , "Value", "Text"),"--Select--",new { @onchange="CountryCDChanged()" })
+                            <span asp-validation-for="CountryName" class="text-danger"></span>
                         </div>
 
                     </div>

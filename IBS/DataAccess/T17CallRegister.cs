@@ -99,6 +99,14 @@ public partial class T17CallRegister
 
     public byte? ClusterCode { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
     public virtual T09Ie? IeCdNavigation { get; set; }
 
     public virtual T05Vendor? MfgCdNavigation { get; set; }

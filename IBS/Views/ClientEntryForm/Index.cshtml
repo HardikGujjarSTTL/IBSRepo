@@ -1,29 +1,30 @@
 ﻿@{
-    ViewData["Title"] = "City Master";
+    ViewData["Title"] = "Client Entry Form";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>City Master</h2>
+            <h2>Client Entry Form</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="CityMaster" asp-action="Manage" class="formBtn"> Add New City Master</a>
+            <a asp-area="" asp-controller="ClientEntryForm" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Form</a>
         </div>
 
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtCM" class="table-responsive">
+                <table id="dtCEF" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>City Code</th>
-                            <th>Location</th>
-                            <th>City Name</th>
-                            <th>State Code</th>
-                            <th>Country Name</th>
+                            <th>Client Name</th>
+                            <th>Organisation</th>
+                            <th>Client Designation</th>
+                            <th>Moble:</th>
+                            <th>Email Id:</th>
+                            <th>Unit</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -45,7 +46,7 @@
         });
 
         function InitializeDatatable() {
-            $("#dtCM").DataTable({
+            $("#dtCEF").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -74,18 +75,19 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CityCd" },
-                    { data: "Location" },
-                    { data: "City" },
-                    { data: "StateCd" },
-                    { data: "CountryName" },
+                    { data: "UserName" },
+                    { data: "Organisation" },
+                    { data: "Designation" },
+                    { data: "Mobile" },
+                    { data: "Email" },
+                    { data: "Unit" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.UomCd;
-                            var editUrl = '@Url.Action("Manage", "CityMaster")/' + id;
+                            var id = data.Mobile;
+                            var editUrl = '@Url.Action("Manage", "ClientEntryForm")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="CMDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="CEFDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -95,8 +97,8 @@
             });
         }
 
-        function CMDelete(id) {
-            var url = '@Url.Action("Delete", "CityMaster")';
+        function CEFDelete(id) {
+            var url = '@Url.Action("Delete", "ClientEntryForm")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }

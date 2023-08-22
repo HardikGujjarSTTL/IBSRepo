@@ -28,4 +28,14 @@ public partial class TraineeEmployeeMaster
     public string? QualInstitute { get; set; }
 
     public string? Region { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
+    public DateTime? Createddate { get; set; }
 }

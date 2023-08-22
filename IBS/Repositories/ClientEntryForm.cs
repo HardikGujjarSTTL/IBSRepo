@@ -1,32 +1,32 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
+
 namespace IBS.Repositories
 {
-    public class CityMaster : ICityMaster
+    public class ClientEntryForm : IClientEntryForm
     {
         private readonly ModelContext context;
 
-        public CityMaster(ModelContext context)
+        public ClientEntryForm(ModelContext context)
         {
             this.context = context;
         }
-        public CityMasterModel FindByID(int CityCd)
+        public ClientEntryFormModel FindByID(int Mobile)
         {
-            CityMasterModel model = new();
-            T03City role = context.T03Cities.Find(Convert.ToByte(CityCd));
+            ClientEntryFormModel model = new();
+            T32ClientLogin role = context.T32ClientLogins.Find(Convert.ToByte(Mobile));
 
             if (role == null)
                 throw new Exception("Role Record Not found");
             else
             {
-                model.CityCd = role.CityCd;
-                model.Location = role.Location;
-                model.City = role.City;
-                model.StateCd = role.StateCd;
-                model.CountryName = role.CountryName;
-                model.UserId = role.UserId;
+                model.UserName = role.UserName;
+                model.Organisation = role.Organisation;
+                model.Designation = role.Designation;
+                model.Mobile = role.Mobile;
+                model.Email = role.Email;
+                model.Unit = role.Unit;
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
                 model.Createddate = model.Createddate;
@@ -35,11 +35,11 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<CityMasterModel>GetCityMasterList(DTParameters dtParameters)
+        public DTResult<ClientEntryFormModel>GetClientEntryFormList(DTParameters dtParameters)
         {
 
-            DTResult<CityMasterModel> dTResult = new() { draw = 0 };
-            IQueryable<CityMasterModel>? query = null;
+            DTResult<ClientEntryFormModel> dTResult = new() { draw = 0 };
+            IQueryable<ClientEntryFormModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -52,26 +52,26 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "CityCd";
+                    orderCriteria = "Mobile";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CityCd";
+                orderCriteria = "Mobile";
                 orderAscendingDirection = true;
             }
-            query = from l in context.T03Cities
+            query = from l in context.T32ClientLogins
                     where l.Isdeleted == 0 || l.Isdeleted == null
-                    select new CityMasterModel
+                    select new ClientEntryFormModel
                     {
-                        CityCd = l.CityCd,
-                        Location = l.Location,
-                        StateCd = l.StateCd,
-                        City = l.City,
-                        CountryName = l.CountryName,
-                        UserId = l.UserId,
+                        UserName = l.UserName,
+                        Organisation = l.Organisation,
+                        Designation = l.Designation,
+                        Mobile = l.Mobile,
+                        Email = l.Email,
+                        Unit = l.Unit,
                         Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,
                         Createdby = l.Createdby,
@@ -82,8 +82,8 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.Location).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.City).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.Mobile).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.UserName).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -94,9 +94,9 @@ namespace IBS.Repositories
 
             return dTResult;
         }
-        public bool Remove(int CityCd, int UserID)
+        public bool Remove(int Mobile, int UserID)
         {
-            var roles = context.T03Cities.Find(Convert.ToByte(CityCd));
+            var roles = context.T32ClientLogins.Find(Convert.ToByte(Mobile));
             if (roles == null) { return false; }
 
             roles.Isdeleted = Convert.ToByte(true);
@@ -106,36 +106,40 @@ namespace IBS.Repositories
             return true;
         }
 
-        public int CityMasterDetailsInsertUpdate(CityMasterModel model)
+        public int ClientEntryFormDetailsInsertUpdate(ClientEntryFormModel model)
         {
             int RoleId = 0;
-            var CM = context.T03Cities.Where(x => x.CityCd == model.CityCd).FirstOrDefault();
+            var CEF = context.T32ClientLogins.Where(x => x.Mobile == model.Mobile).FirstOrDefault();
             #region Role save
-            if (CM == null || CM.CityCd == 0)
-            {
-                T03City obj = new T03City();
+            //if (CEF == null || CEF.Mobile == 0)
+                if (CEF == null )
+                {
+                T32ClientLogin obj = new T32ClientLogin();
 
-                obj.Location = model.Location;
-                obj.City = model.City;
-                obj.StateCd = model.StateCd;
-                obj.CountryName = model.CountryName;
-                obj.Updateddate = DateTime.Now;
+                obj.Organisation = model.Organisation;
+                obj.Designation = model.Designation;
+                obj.UserName = model.UserName;
+                obj.Unit = model.Unit;
+                obj.Email = model.Email;
+                obj.Mobile = model.Mobile;
                 obj.Createdby = model.Createdby;
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createddate = DateTime.Now;
-                context.T03Cities.Add(obj);
+                context.T32ClientLogins.Add(obj);
                 context.SaveChanges();
-                RoleId = Convert.ToInt32(obj.CityCd);
+                RoleId = Convert.ToInt32(obj.Mobile);
             }
             else
             {
-                CM.Location = model.Location;
-                CM.City = model.City;
-                CM.StateCd = model.StateCd;
-                CM.Updatedby = model.Updatedby;
-                CM.Updateddate = DateTime.Now;
+                CEF.Organisation = model.Organisation;
+                CEF.Designation = model.Designation;
+                CEF.UserName = model.UserName;
+                CEF.Email = model.Email;
+                CEF.Unit = model.Unit;
+                CEF.Updatedby = model.Updatedby;
+                CEF.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                RoleId = Convert.ToInt32(CM.CityCd);
+                RoleId = Convert.ToInt32(CEF.Mobile);
             }
             #endregion
             return RoleId;
