@@ -6,6 +6,7 @@ using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
+using System.Net.NetworkInformation;
 
 namespace IBS.Controllers.Vendor
 {
@@ -163,19 +164,113 @@ namespace IBS.Controllers.Vendor
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult DetailsSave(VenderCallRegisterModel model)
         {
             try
             {
+                DateTime? Dt1 = model.CallRecvDt;
+                DateTime? Dt2 = model.DtInspDesire;
+                int w_no_of_days = 0;
+                string i = "";
                 string msg = "Message Inserted Successfully.";
-                //if (model.MfgCd > 0)
-                //{
-                //    msg = "Message Updated Successfully.";
-                //}
 
-                int i = venderRepository.RegiserCallSave(model);
-                if (i > 0)
+                if (model.RegionCode == "Northern")
+                {
+                    model.SetRegionCode = "N";
+                }
+                else if (model.RegionCode == "Eastern")
+                {
+                    model.SetRegionCode = "E";
+                }
+                else if (model.RegionCode == "Western")
+                {
+                    model.SetRegionCode = "W";
+                }
+                else if (model.RegionCode == "Southern")
+                {
+                    model.SetRegionCode = "S";
+                }
+                else if (model.RegionCode == "Central")
+                {
+                    model.SetRegionCode = "C";
+                }
+                else if (model.RegionCode == "CO QA Division")
+                {
+                    model.SetRegionCode = "Q";
+                }
+
+                if (Dt1.HasValue && Dt2.HasValue)
+                {
+                    TimeSpan ts = Dt2.Value - Dt1.Value;
+
+                    int differenceInDays = ts.Days;
+
+                    if (differenceInDays > 5)
+                    {
+                        w_no_of_days = 1;
+                    }
+                    else
+                    {
+                        w_no_of_days = 0;
+                    }
+                }
+                if (w_no_of_days == 1)
+                {
+                    AlertDanger("Expected Date of Inspection cannot be more then 5 days from Call Registration Date!!!");
+                }
+                else if (model.SetRegionCode == "R" && model.IrfcFunded == "")
+                {
+                    AlertDanger("Select The project is IRFC Funded [Yes/No] !!!");
+                }
+                else
+                {
+                    model.UserId = UserName;
+                    model.Createdby = UserName;
+                    i = venderRepository.RegiserCallSave(model);
+                }
+                if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
+                {
+                    if (model.callval == 0)
+                    {
+                        AlertDanger("Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!");
+                    }
+                    else
+                    {
+                        AlertDanger("Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name);
+                    }
+                }
+                else
+                {
+                    if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                    {
+                        AlertDanger("Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!");
+                    }
+                    else if (model.wMat_value < 1000)
+                    {
+                        AlertDanger("Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!");
+                    }
+                    else if (model.desire_dt > 0)
+                    {
+                        AlertDanger("Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!");
+                    }
+                }
+                if (model.e_status == 1 && model.callval != 0)
+                {
+                    //send_IE_sms(callval);
+                    //send_Vendor_Email(callval);
+
+                    Task<string> smsResult = venderRepository.send_IE_smsAsync(model);
+                    AlertDanger("SMS Send Success...");
+
+                    string emailResult = venderRepository.send_Vendor_Email(model);
+                    if (emailResult == "success")
+                    {
+                        AlertDanger("Mail Send Success...");
+                    }
+                }
+
+
+                if (i != null)
                 {
                     return Json(new { status = true, responseText = msg, Id = i });
                 }
@@ -187,44 +282,48 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        //[HttpPost]
-        //public IActionResult VendorCallRegisterDetail([FromBody] VenderCallRegisterModel model)
-        //{
-        //    try
-        //    {
-        //        var entity = context.CallRegisterEntities.FirstOrDefault(e => e.CaseNumber == model.CaseNumber && e.CallReceiveDate == model.CallDate && e.CallSerialNumber == model.CallSerialNumber);
+        [HttpPost]
+        public IActionResult DetailsDelete(VenderCallRegisterModel model)
+        {
+            try
+            {
+                string i = "";
+                string msg = "Message Delete Successfully.";
+                if(model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
+                {
+                    model.UserId = UserName;
+                    model.Createdby = UserName;
+                    i = venderRepository.RegiserCallDelete(model);
+                }
+                if (i != null)
+                {
+                    return Json(new { status = true, responseText = msg, Id = i });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VenderCallRegisterModel", "DetailsDelete", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
 
-        //        if (entity == null)
-        //        {
-        //            // Handle the case when the record is not found
-        //            return NotFound();
-        //        }
+        public IActionResult PrintCallletter(string CaseNo, string CallRecvDt, int CallSno)
+        {
+            VendorCallRegPrintReport model = new();
 
-        //        // Update the entity with the new values from the model
-        //        entity.CallLetterNumber = model.CallNumber;
-        //        entity.CallLetterDate = model.CallDate;
-        //        entity.MarkDate = model.MarkDate;
-        //        entity.InspectionDesireDate = model.InspectionDesireDate;
-        //        entity.CallStatusDate = model.CallStatusDate;
-        //        entity.CallRemarkStatus = model.CallRemarkStatus;
-        //        entity.CallInstallNumber = model.CallInstallNumber;
-        //        entity.Remarks = model.Remarks;
-        //        entity.ManufacturerCode = model.ManufacturerCode;
-        //        entity.ManufacturerPlace = model.ManufacturerPlace;
-        //        entity.UserID = model.UserID;
-        //        entity.DateTime = DateTime.Now;
+            if (CaseNo != null && CallRecvDt != null && CallSno != null)
+            {
+                model = venderRepository.FindByPrintReport(CaseNo, CallRecvDt, CallSno, UserName);
+            }
 
-        //        // Save changes to the database
-        //        dbContext.SaveChanges();
+            return View(model);
+        }
 
-        //        // Return a success response
-        //        return Ok("Your Record Has Been Saved!!!");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exceptions, log the error, etc.
-        //        return StatusCode(500, "An error occurred while updating the record.");
-        //    }
-        //}
+        [HttpPost]
+        public IActionResult LoadTableReport([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = venderRepository.GetDataListReport(dtParameters);
+            return Json(dTResult);
+        }
     }
 }

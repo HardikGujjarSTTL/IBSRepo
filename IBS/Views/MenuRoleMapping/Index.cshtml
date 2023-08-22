@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Menu Role Mapping List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Menu Role Mapping List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="MenuRoleMapping" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Menu Role Mapping</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtMenuRoleMappingMain" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Role Name</th>
+                            <th>Menu Details</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+        function InitializeDatatable() {
+            $("#dtMenuRoleMappingMain").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "rolename" },
+                    { data: "titles" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Roleid;
+                            var editUrl = '@Url.Action("Manage", "MenuRoleMapping")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="UserRoleMappingDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function UserRoleMappingDelete(id) {
+            var url = '@Url.Action("Delete", "MenuRoleMapping")?id=' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

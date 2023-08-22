@@ -77,7 +77,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/IE_CO_Form/Index";
+            //window.location.href = "/IE_CO_Form/Index";
+            window.location.href = '@Url.Action("Index", "IE_CO_Form")';
         };
     </script>
 }

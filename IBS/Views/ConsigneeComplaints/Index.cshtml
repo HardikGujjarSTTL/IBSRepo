@@ -96,7 +96,8 @@
             debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/ConsigneeComplaints";
+            //window.location.href = "/ConsigneeComplaints";
+            window.location.href = '@Url.Action("Index", "ConsigneeComplaints")';
         };
 
         function InitializeDatatable() {

@@ -21,7 +21,7 @@
                             </div>
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Year: </label>
-                                @Html.DropDownListFor(model => model.Be_Per, new SelectList(IBS.Models.Common.GetYear(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.Be_Per, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="Be_Per" class="text-danger"></span>
                             </div>
                         </div>
@@ -81,7 +81,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/BillingOperatingTarget/Index";
+            //window.location.href = "/BillingOperatingTarget/Index";
+            window.location.href = '@Url.Action("Index", "BillingOperatingTarget")';
         };
     </script>
 }

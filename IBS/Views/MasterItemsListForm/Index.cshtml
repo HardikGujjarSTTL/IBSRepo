@@ -5,10 +5,10 @@
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Railway Designation Master</h2>
+            <h2>Master Items List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="MasterItemsListForm" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Form</a>
+            <a asp-area="" asp-controller="MasterItemsListForm" asp-action="Manage" asp-route-actiontype="D" class="formBtn" id="btnAddNew"><span class="fa fa-plus"></span> Add New Form</a>
         </div>
 
     </div>
@@ -24,7 +24,7 @@
                             <th>Descipline</th>
                             <th>No of Days For IC</th>
                             <th>Checksheet</th>
-                            <th>Action</th>
+                            @*<th>Action</th>*@
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +41,17 @@
     <script type="text/javascript">
 
         $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('actiontype');
+            if(actiontype == "D")
+            {
+                $("#btnAddNew").show();
+            }
+            else
+            {
+                $("#btnAddNew").hide();
+            }
+
             InitializeDatatable();
         });
 
@@ -74,26 +85,110 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "ItemCd" },
-                    { data: "ItemDesc" },
-                    { data: "Department" },
-                    { data: "TimeForInsp" },
-                    { data: "Checksheet" },
-
+                    //{ data: "ItemCd" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.RlyDesigCd;
-                            var editUrl = '@Url.Action("Manage", "MasterItemsListForm")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="RDFDelete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var ItemCd = data.ItemCd;
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            
+
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const actiontype = urlParams.get('actiontype');
+                            var editUrl = '@Url.Action("Manage", "MasterItemsListForm")?id=' + ItemCd + "&actiontype=" + actiontype;
+                            if (actiontype == "D") {
+                                html += "<a href='" + editUrl + "' Font-Names='Verdana' Font-Size='8pt'>" + ItemCd + "</a><br/>";
+                            }
+                            else
+                            {
+                                html += ItemCd;
+                            }
                             html += '</div>';
                             return html;
                         }
                     },
+                    { data: "ItemDesc" },
+                    //{ data: "Department" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var Department = row["Department"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (Department == "M") {
+                                html = "<td>" + "Mechanical" + "</b></td>";
+                            }
+                            else if (Department == "E") {
+                                html = "<td>" + "Electrical" + "</b></td>";
+                            }
+                            else if (Department == "C") {
+                                html = "<td>" + "Civil" + "</b></td>";
+                            }
+                            else if (Department == "T") {
+                                html = "<td>" + "Textiles" + "</b></td>";
+                            }
+                            else if (Department == "Z") {
+                                html = "<td>" + "M & P" + "</b></td>";
+                            }
+                            else {
+                                html = "<td width='10%' valign='top' align='left'><b><font size='1' face='Verdana'>No Data</font></b></td>";
+                            }
+
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    { data: "TimeForInsp" },
+                    //{ data: "Checksheet" },
+
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            debugger
+                            var Checksheet = row["FilePath"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (FileExists(Checksheet)) {
+                                html += "<a href='" + Checksheet + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Download</a><br/>";
+                            }
+                            else {
+                                html = "<td width='10%' valign='top' align='left'><font size='1' face='Verdana' color='red'> No Checksheet</font></td>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var id = data.RlyDesigCd;
+                    //        var editUrl = '@Url.Action("Manage", "MasterItemsListForm")/' + id;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        //html += '<a onclick="RDFDelete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function FileExists(url) {
+            var exists = false;
+
+            $.ajax({
+                url: url,
+                type: 'HEAD',
+                async: false,
+                success: function () {
+                    exists = true;
+                },
+                error: function () {
+                    exists = false;
+                }
+            });
+
+            return exists;
         }
 
         function RDFDelete(id) {

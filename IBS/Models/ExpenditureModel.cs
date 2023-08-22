@@ -1,4 +1,5 @@
-﻿using System.Composition;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Composition;
 
 namespace IBS.Models
 {
@@ -7,13 +8,13 @@ namespace IBS.Models
         public string RegionCode { get; set; } = null!;
 
         public string ExpPer { get; set; } = null!;
-
+        [Required]
         public string ExpPerMonth { get; set; } = null!;
-
+        [Required]
         public string ExpPerYear { get; set; } = null!;
-
+        [Required]
         public decimal? ExpAmt { get; set; }
-         
+        [Required]
         public decimal? TaxAmt { get; set; }
 
         public string? UserId { get; set; }

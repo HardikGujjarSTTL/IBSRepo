@@ -69,7 +69,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T59LabExps
-                    where l.RegionCode == RgnCd
+                    where l.RegionCode == RgnCd && (l.Isdeleted == 0 || l.Isdeleted == null)
                     select new LabBillingModel
                     {
                         //Id = l.Id,                         
@@ -91,7 +91,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public bool Remove(string LabBillPer, string strRgn)
+        public bool Remove(string LabBillPer, string strRgn,int UserID)
         {
             //var _contracts = context.T59LabExps.Find(LabBillPer);
             var _contracts = (from m in context.T59LabExps
@@ -102,7 +102,7 @@ namespace IBS.Repositories
             if (_contracts == null) { return false; }
 
             _contracts.Isdeleted = Convert.ToByte(true);
-            //_contracts.Updatedby = Convert.ToInt32(UserID);
+            _contracts.Updatedby = Convert.ToInt32(UserID);
             _contracts.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
@@ -129,9 +129,9 @@ namespace IBS.Repositories
                 obj.UserId = model.User_Id;
                 obj.RegionCode = model.Region_Code;
                 obj.Isdeleted = Convert.ToByte(false);
-                obj.Createdby = Convert.ToInt32(model.User_Id);
+                obj.Createdby = Convert.ToInt32(model.Createdby);
                 obj.Createddate = DateTime.Now;
-                //obj.Updatedby = Convert.ToInt32(model.UserId);
+                obj.Updatedby = Convert.ToInt32(model.Updatedby);
                 obj.Updateddate = DateTime.Now;
                 context.T59LabExps.Add(obj);
                 context.SaveChanges();
@@ -141,7 +141,7 @@ namespace IBS.Repositories
             {
                 //_contract.LabBillPer = model.Lab_Bill_Per;
                 _contract.LabExp = model.Lab_Exp;
-                //_contract.Updatedby = model.UserId;
+                _contract.Updatedby = model.Updatedby;
                 _contract.Updateddate = DateTime.Now;
                 Id = _contract.LabBillPer;
                 context.SaveChanges();

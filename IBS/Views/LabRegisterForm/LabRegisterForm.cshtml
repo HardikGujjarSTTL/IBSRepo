@@ -5,155 +5,907 @@
 }
 
 
+<style>
+    tr:nth-child(even) {
+    background-color: #f0f8ff; /* Light Blue */
+}
 
+/* Style for table cells */
+td {
+    height: 50px;
+    padding: 10px;
+    border: 1px solid #b0c4de;
+    vertical-align: top;
+}
+    table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid #b0c4de; /* Add top border */
+  background-color: #f0f8ff;
+  margin-bottom: 20px; /* Add margin at the bottom for spacing */
+}
 
-<div class="list-inner">
-    <div class="tast-list">
-        <h2>@ViewData["Title"]</h2>
-    </div>
-</div>
-<div class="boxRadius">
-<form asp-controller="YourController" asp-action="YourAction" method="post">
+/* Style for table cells */
+td {
+  height: 50px; /* Adjust the height of table cells */
+  padding: 5px;
+  vertical-align: top;
+}
 
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+/* Style for labels */
+label {
+  display: block; /* Make labels block-level to occupy the whole cell width */
+  font-weight: bold;
+}
+
+/* Style for input fields */
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  padding: 5px;
+  box-sizing: border-box; /* Ensure the padding is included in the width */
+}
+
+/* Style for error message */
+.text-danger {
+  color: red;
+  margin-left: 6%;
+}
+
+/* Style for left-aligned button */
+.left-button {
+  float: left;
+  margin-right: 10px;
+}
+
+/* Style for right-aligned button */
+.right-button {
+  float: right;
+  margin-left: 10px;
+}
+
+/* Clear floating elements */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+    .table-responsive {
+    overflow-x: auto;
+    height:190px;
+}
+    .custom-textarea {
+    width: 400px;
+    height:auto; 
+}
+.table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtlabregdtl {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    /* Style table header cells */
+    #dtlabregdtl th {
+        background-color: #f2f2f2;
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    /* Style table body cells */
+    #dtlabregdtl td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+</style>
+<h2>@ViewData["Title"]</h2>
+
+@*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
+    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
+           bgColor="#f0f8ff" border="1">
+        <tr>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Sample Registration No.</label>
-                <div class="d-flex">
-                <label asp-for="SampleRegNo" class="control-label" id="lblRNo"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblRNo"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Sample Registration Date</label>
-                <input asp-for="SampleRegDate" class="form-control" />
-                <span asp-validation-for="SampleRegDate" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input class="input datepicker" id="dtregdt" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;"/>
+                <span class="text-danger" id="spnregdt" style="margin-left:6%;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">CaseNo</label>
-                <div class="d-flex">
-                <label asp-for="CaseNo" class="control-label" id="lblCaseNo"></label>
-                </div>
-
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            </td>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblCaseNo"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Call Date & Sno</label>
-                <div class="d-flex">
-                <label asp-for="CallDateAndSno" class="control-label" id="lblCallDT"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblCallDT"></label>&nbsp;&amp;
+                <label  class="control-label" id="lblCallSno"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label asp-for="Vendor" class="control-label"></label>
-                <div class="d-flex">
-                <label asp-for="Vendor" class="control-label" id="lblVend"></label>
+            </td>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
+                <label  class="control-label" id="lblVend"></label>
                 <label asp-for="VendorCode" class="control-label" id="lblVENDCD" style="display:none;"></label>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label asp-for="IE" class="control-label"></label>
-                <div class="d-flex">
-                <label asp-for="IE" class="control-label" id="lblIE"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lblIE"></label>
                 <label asp-for="IECode" class="control-label" id="lblIECD" style="display:none;"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Date of Dispatch of Sample</label>
-                <div class="d-flex">
-                <input asp-for="SampleDispatchDate" class="form-control" />
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="input" id="dtdispatch" />
                 <span asp-validation-for="SampleDispatchDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Date of Drawal of Sample</label>
-                <div class="d-flex">
-                <input asp-for="SampleDrawalDate" class="form-control" />
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="input" id="dtdrawal"  />
                 <span asp-validation-for="SampleDrawalDate" class="text-danger"></span>
-                </div>
-            </div>
-            </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Date of Receipt of Sample</label>
-                <div class="d-flex">
-                <input asp-for="SampleReceiptDate" class="form-control" />
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="input" id="dtreceipt" />
                 <span asp-validation-for="SampleReceiptDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+        </tr>
+        <tr>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Testing Type</label>
-                <div class="d-flex">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
                 <label>
-                    @Html.RadioButtonFor(m => m.TestingType, "Normal", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "5" })
+                @Html.RadioButtonFor(m => m.TestingType, "Normal", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "5",@id = "N",@onchange = "ToggleInfo(this);" ,@disabled = "disabled"})
                     Normal
                 </label>
                 <label>
-                    @Html.RadioButtonFor(m => m.TestingType, "Re-Testing", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" })
+                @Html.RadioButtonFor(m => m.TestingType, "Re-Testing", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "RT",@onchange = "ToggleInfo(this);",@disabled = "disabled"})
                     Re-Testing
                 </label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Total Testing Fee</label>
-                <div class="d-flex">
-                <label asp-for="TotalTestingFee" class="control-label" id="lbltotf"></label>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lbltotf"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Total Handling Charges</label>
-                <div class="d-flex">
-                <label asp-for="TotalHandlingCharges" class="control-label" id="lblthc"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblthc"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Total Service Tax</label>
-                <div class="d-flex">
-                <label asp-for="TotalServiceTax" class="control-label" id="lblservicetax"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblservicetax"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Total Lab Charges</label>
-                <label asp-for="TotalLabCharges" class="control-label" id="lbltolc"></label>
-            </div>
-            </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lbltolc"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Total TDS</label>
-                <div class="d-flex">
-                <label asp-for="TotalTDS" class="control-label" id="lbltotds"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lbltotds"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Amount Recieved</label>
-                <div class="d-flex">
-                <label asp-for="AmountRecieved" class="control-label" id="lblar"></label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                @Html.Label("Label34", "Total Amount Cleared", new { @class = "" })
-            <div class="d-flex">
-            @Html.LabelFor(m => m.TotalAmountCleared, new { @class = "" })
-                </div>
-        </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3"><label class="control-label">Code No</label>
-                <input asp-for="CodeNo" class="form-control" />
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblar"></label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                @Html.Label("Label34", "Total Amount Cleared", new { @class = "text-darkblue font-bold font-size-8pt" })
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lbltotalamtcl"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Code No	</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input type="text" class="form-control" id="txtcodeno"/>
                 <span asp-validation-for="CodeNo" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
                 <label class="control-label">Code Date</label>
-                <input asp-for="CodeDate" class="form-control" />
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input class="input datepicker" id="dtcode" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;"/>
                 <span asp-validation-for="CodeDate" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr style="display:none">
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Invoice No</label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label" id="lblinvno"></label>
+            </td>
+            <td style="width: 25%; height: 21px" valign="top">
+                <label class="control-label">Invoice Dt</label>
+            </td>
+            <td style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 25%; COLOR: darkblue; FONT-FAMILY: Verdana; HEIGHT: 21px"
+                valign="top">
+                <label class="control-label" id="lblinvdt"></label>
+            </td>
+        </tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top"></td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top"></td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top"></td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top"></td>
+        <tr>
+        
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+                <label class="control-label" id="lblSno" style="display:none;"></label>
+            <label>Item</label>
+            @*@Html.DropDownListFor(model => model.Item, Common.GetCity(), new { })*@
+             @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.GetItem(@Model.CaseNo,Model.CallRecDt,Model.CallSNO) , "Value", "Text"),"",new { @id = "ddlitem", @class = "form-control" })
+            <span class="fa fa-caret-down" style="position: absolute; right: 35px; top: 952px; transform: translateY(-50%); pointer-events: none;"></span>
+        </td>
+        </tr>
+        <tr>
+        
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">               
+               <textarea asp-for="ItemNm" class="form-control custom-textarea" id="txtitemnm"></textarea>
+            </td>
+        
+        </tr>
+       
+        <tr>
+        
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label>No. Of Samples</label>
+               <input asp-for="NofSample" class="form-control" id="txtnofsm"></input>
+            </td>
+        
+        
+        
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label>Test Category</label>
+            @*@Html.DropDownListFor(model => model.Item, Common.GetCity(), new { })*@
+             @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.GetTestCat() , "Value", "Text"),"",new { @id = "ddlcat", @class = "form-control" })
+            <span class="fa fa-caret-down" style="position: absolute; right: 41%; top: 1133px; transform: translateY(-50%); pointer-events: none;"></span>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5"> 
+                <label>Test to be Conducted</label>
+               <textarea asp-for="TestTobeCon" class="form-control custom-textarea" id="txttesttobeCon"></textarea>
+            </td>
+        </tr>
+        <tr>
+        
+            
+        
+        </tr>
+        <tr>
+        
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+            <label>Lab</label>
+            @*@Html.DropDownListFor(model => model.Item, Common.GetCity(), new { })*@
+             @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.GetLab() , "Value", "Text"),"",new { @id = "ddllab", @class = "form-control" })
+            <span class="fa fa-caret-down" style="position: absolute; right: 2%; top: 1252px; transform: translateY(-50%); pointer-events: none;"></span>
+        </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Date of Sample Dispatched to Lab</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input class="input datepicker" id="dtofdistolab" />
+                <span asp-validation-for="DtofDisToLab" class="text-danger"></span>
+            </td>
+            
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Date of Test Report Required</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input class="input datepicker" id="dtofrr" />
+                <span asp-validation-for="DtofRR" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Date of Receipt of Test Report</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input class="input datepicker" id="dtoftestr" />
+                <span asp-validation-for="DtofTestR" class="text-danger"></span>
+            </td>
+       
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Testing Fee</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input asp-for="TestingFee" class="form-control" id="testingfee" />
+                <span asp-validation-for="TestingFee" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Service Tax</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input asp-for="ServiceTax" class="form-control" id="sertax" />
+                <span asp-validation-for="ServiceTax" class="text-danger"></span>
+            </td>
+       
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Handling Charges</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input asp-for="HandlingCharges" class="form-control" id="handlingcharges" />
+                <span asp-validation-for="HandlingCharges" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+            <label>Testing Result</label>
+            @*@Html.DropDownListFor(model => model.Item, Common.GetCity(), new { })*@
+             @Html.DropDownListFor(model => model.TestingResult, new SelectList(IBS.Models.Common.GetStatus() , "Value", "Text"),"",new { @id = "ddlstatus", @class = "form-control" })
+            <span class="fa fa-caret-down" style="position: absolute; right: 2%; top: 65%; transform: translateY(-50%); pointer-events: none;"></span>
+        </td>
+        <tr>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5"> 
+                <label>Remarks</label>
+               <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks"></textarea>
+            </td>
+                 
+        </tr>
+       
+    </table>
+    <button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;" onclick="SaveDetails();">Save</button>
+    <br />
+<h5 style="text-align:center;display:none;" id="gridh">LAB REGISTER DETAILS</h5>
+<div id="gridshow" style="display:none;">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtlabregdtl" class="table">
+                    <thead>
+                        <tr>
+                            
+                            <th style="width:5%;">SRNo.</th>
+                            <th style="width:40%;">Item</th>
+                            <th style="width:11%;">No. Of Samples</th>
+                            <th style="width:12%;">Test</th>
+                            <th>Lab</th>
+                            <th style="width:9%;">Testing Fee</th>
+                            <th>Remarks</th>
+                            @*<th style="width:6%;">Action</th>*@
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
             </div>
         </div>
-   
-        <div class="savenext-btn">
-            <a type="button" class="reset-btn">Cancel</a>
-            <button type="submit" class="save-btn active">Save</button>
-        </div>
-</form>
+    </section>
 </div>
+<br />
+<h5 style="text-align:center;display:none;" id="grid1h">LAB PAYMENT RECIEVED AGAINST ABOVE CASE NO. OR VENDOR</h5>
+<div id="gridshow1" style="display:none;">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                 <div class="table-responsive">
+                <table id="dtlabregdtl" class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th style="width:7%;">Chq No.</th>
+                            <th style="width:9%;">Chq Date</th>
+                            <th style="width:20%;">Bank</th>
+                            <th>Amount</th>
+                            <th style="width:11%">Suspense Amt</th>
+                            <th style="width:9%;">Case No.</th>
+                            <th style="width:30%">Remarks</th>
+                            
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody1">
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+    <button type="button" class="btn btn-primary" style="width:auto;margin-left:44%;" onclick="cancel();">Cancel</button>
+    <button type="button" class="btn btn-primary" style="width:auto;margin-left:52%;display:none;margin-top:-3%;" id="btnpostamt" onclick="PostAmt();">Post Amount</button>
+<button type="button" class="btn btn-primary" style="width:auto;margin-left:52%;margin-top:-5%;" id="btninvoice" onclick="PrintInvoice();">Generate Invoice</button>
+@*</form>*@
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+         function InitializeDatatable() {
+        
+            $("#dtlabregdtl").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                           
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "SNO" },
+                    { data: "ITEM_DESC" },
+                    { data: "QTY" },
+                    { data: "TEST" },
+                    { data: "LAB_ID" },
+                    { data: "TESTING_FEE" },
+                    { data: "REMARKS" },
+                    
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        return data.Status ? "Active" : "InActive";
+                    //    }
+                    //},
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Id = data.LabId;
+                            var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")?LabId=' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+        
+        function grid(SrNo){
+            
+           var RegNo = '@ViewBag.RegNo';
+           var SNO = SrNo[0].innerHTML;
+            $.ajax({
+                url: '/LabRegisterForm/LoadTable', // Replace with your actual endpoint URL
+                type: 'POST',
+                dataType: 'json',
+                data:{RegNo: RegNo,SNO: SNO},
+                success: function(data) {
+                    
+                    // Once data is successfully received, populate the table
+                    var tableBody = $('#tableBody');
+                    tableBody.empty(); // Clear existing rows (if any)
+                    for (i = 0; i < data.length; i++) {
+                       
+                       var row = $('<tr>');
+                        //row.append($('<td>').text(data[i].SNO)); // SRNo.
+                        var snoLink = $('<a href="#ddlitem">').text(data[i].SNO).attr('id',"editButton").css({'color': 'blue','text-decoration': 'none'});
+                        snoLink.hover(
+                    function () {
+                        $(this).css('text-decoration', 'underline'); // Add underline on hover
+                    },
+                    function () {
+                        $(this).css('text-decoration', 'none');      // Remove underline on hover out
+                    }
+                );
+                var snoCell = $('<td>').append(snoLink);
+                row.append(snoCell);
+                        row.append($('<td>').text(data[i].ItemDesc));
+                        row.append($('<td>').text(data[i].Qty));
+                        row.append($('<td>').text(data[i].Test));
+                        row.append($('<td>').text(data[i].LabName));
+                        row.append($('<td>').text(data[i].TestingFee));
+                        row.append($('<td>').text(data[i].Remarks));
+
+                        // Add the action column (if needed)
+                        //var actionColumn = $('<td>');
+                        //var editButton = $('<a>').text('Select').attr('id',"editButton");                        
+                        //actionColumn.append(editButton);                       
+                        //row.append(actionColumn);
+                        tableBody.append(row);
+                       
+                            var regNo1 = data[i].SampleRegNo;
+                         var sno1 = data[i].SNO; 
+                    }
+                   //editButton.click(function(event) {
+                    snoLink.click(function (event) {
+                         var regNo = regNo1;
+                         var sno = sno1; 
+                        LabDtlModify(regNo, sno);
+                    });
+                   
+                },
+                error: function() {
+                    
+                }
+            });
+        
+        }
+        function grid1(CaseNo,VCode){
+                      
+            $.ajax({
+                url: '/LabRegisterForm/LabPaymentModify', // Replace with your actual endpoint URL
+                type: 'POST',
+                dataType: 'json',
+                data:{CaseNo: CaseNo,VCode: VCode},
+                success: function(data) {
+                    
+                    // Once data is successfully received, populate the table
+                    var tableBody = $('#tableBody1');
+                    tableBody.empty(); // Clear existing rows (if any)
+                    for (i = 0; i < data.length; i++) {
+                       
+                       var row = $('<tr>');
+                        var actionColumn = $('<td>'); 
+                        //var editButton = $('<a>').text('Select').attr('id',"editButton");
+                        //var editButton = $('<input>').attr({'type': 'radio' });
+                        var editButton = $('<input>').attr({ 'type': 'radio', 'data-bnkcd': data[i].BANK_CD, 'data-susamt': data[i].SUSPENSE_AMT, 'data-chqno': data[i].CHQ_NO, 'data-chqdt': data[i].CHQ_DATE, 'data-amt': data[i].AMOUNT });
+                        actionColumn.append(editButton);                       
+                        row.append(actionColumn);
+                        row.append($('<td>').text(data[i].CHQ_NO)); // SRNo.
+                        row.append($('<td>').text(data[i].CHQ_DATE));
+                        row.append($('<td>').text(data[i].BANK_NAME));
+                        row.append($('<td>').text(data[i].AMOUNT));
+                        row.append($('<td>').text(data[i].SUSPENSE_AMT));
+                        row.append($('<td>').text(data[i].CASE_NO));
+                        row.append($('<td>').text(data[i].NARRATION));
+
+                        // Add the action column (if needed)
+                        
+                        tableBody.append(row);
+                       
+                         //   var regNo1 = data[i].SampleRegNo;
+                         //var sno1 = data[i].SNO; 
+                    }
+                   //editButton.click(function(event) {
+                    
+                   //      var regNo = regNo1;
+                   //      var sno = sno1; 
+                   //     LabDtlModify(regNo, sno);
+                   // });
+                   
+                },
+                error: function() {
+                    
+                }
+            });
+        
+        }
+        $(function () {
+            
+            $('#N').prop('checked', true);
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+            var today = new Date();
+             //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+            $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
+            LoaddataModify();
+            
+             // grid();
+             //$("#grid").load('/LabRegisterForm/LabRegDtl');
+           //InitializeDatatable();
+        });
+        $("#ddlitem").change(function(){
+           
+            var name = $("#ddlitem option:selected").text();
+              $("#txtitemnm").val(name);
+          })
+          function ToggleInfo(el) {
+            var result = el.value;            
+        }
+        function cancel(){
+             window.location.href = "/LabRegisterForm/Index";
+        }
+
+        function LoaddataModify(){
+            
+            var RegNo = '@ViewBag.RegNo';
+            $("#lblRNo").text(RegNo).css("color", "red");
+            $.ajax({
+                url: '/LabRegisterForm/LoaddataModify',
+                type: "POST",
+                dataType: "JSON",
+                data: { RegNo: RegNo },
+
+                success: function (success) {
+                 
+                  if(success.SampleRegNo != null){
+                        //$("#dtregdt").val(success.SampleRegDate);
+                        $("#spnregdt").text(success.SampleRegDate);
+                        $("#dtdispatch").text(success.SampleDispatchDate).css("color", "red");
+                        $("#dtdrawal").text(success.SampleDrawalDate).css("color", "red");
+                        $("#dtreceipt").text(success.SampleReceiptDate).css("color", "red");
+                        $("#txtcodeno").val(success.CodeNo);
+                        // Set the values for labels and apply red color
+                        $("#lblCaseNo").text(success.CaseNo).css("color", "red");
+                        $("#lblCallDT").text(success.CallDateAndSno).css("color", "red");
+                        $("#lblVend").text(success.Vendor).css("color", "red");
+                        $("#lblIE").text(success.IE).css("color", "red");
+                        $("#lbltotf").text(success.TotalTestingFee).css("color", "red");
+                        $("#lblthc").text(success.TotalHandlingCharges).css("color", "red");
+                        $("#lblservicetax").text(success.TotalServiceTax).css("color", "red");
+                        $("#lbltolc").text(success.TotalLabCharges).css("color", "red");
+                        $("#lbltotds").text(success.TotalTDS).css("color", "red");
+                        $("#lblar").text(success.AmountRecieved).css("color", "red");
+                        $("#dtcode").val(success.CodeDate);
+                        $("#lblCallSno").text(success.CallSNO).css("color", "red");
+                        $("#lbltotalamtcl").text(parseInt(success.AmountRecieved) + parseInt(success.TotalTDS)).css("color", "red");
+                        var SrNo = $("#lblSno").text(success.SNO);
+                        var VCode = (success.VendorCode);
+                        var CaseNo = (success.CaseNo);
+                        var CallDT = (success.CallDateAndSno);
+                        var CallSNO = (success.CallSNO);
+                        sessionStorage.setItem('CaseNo', CaseNo);
+                        sessionStorage.setItem('CallDT', CallDT);
+                        sessionStorage.setItem('CallSNO', CallSNO);
+                        grid(SrNo);
+                        $("#gridh").css("display", "block");
+                        $("#gridshow").css("display", "block");
+                      }
+                    
+                    if (parseInt(success.AmountRecieved) < parseInt(success.TotalLabCharges)){
+                        grid1(CaseNo, VCode);
+                        $("#grid1h").css("display", "block");
+                        $("#gridshow1").css("display", "block");
+                        $("#btnpostamt").css("display", "block");
+                        $("#btninvoice").css("display", "none");
+                    }
+                       
+                }
+
+            });
+        }
+         function LabDtlModify(regNo, sno){
+                  
+            $.ajax({
+                url: '/LabRegisterForm/LabDtlModify',
+                type: "POST",
+                dataType: "JSON",
+                data: { RegNo: regNo ,SNO: sno},
+
+                success: function(data)  {
+                  
+                  $("#txtitemnm").val(data.ItemDesc);
+                    $("#txtnofsm").val(data.Qty);
+            $("#ddlcat").val(data.TestCategoryCode);
+             $("#txttesttobeCon").val(data.Test);
+             $("#ddllab").val(data.LabID);
+             $("#dtofdistolab").val(data.SampleDispatchLabDate);
+                    $("#dtofrr").val(data.TestReportReceiveDate);
+             $("#dtoftestr").val(data.SampleDispatchLabDate);
+             $("#testingfee").val(data.TestingFee);
+             $("#sertax").val(data.ServiceTax);
+             $("#handlingcharges").val(data.HandlingCharges);
+             $("#ddlstatus").val(data.TestStatus);
+             $("#txtremarks").val(data.Remarks);
+                }
+
+            });
+        }
+
+        function SaveDetails(){
+            
+            var LABREGISTERModel = {
+                SampleRegNo: $("#lblRNo").text(),
+                SNO: $("#lblSno").text(),
+                ItemDesc: $("#txtitemnm").val(),
+                Qty: $("#txtnofsm").val(),
+                TestCategoryCode: $("#ddlcat").val(),
+                Test: $("#txttesttobeCon").val(),
+                LabID: $("#ddllab").val(),
+                DTestingFee: $("#testingfee").val(),
+                DServiceTax: $("#sertax").val(),
+                DHandlingCharges: $("#handlingcharges").val(),
+                TestReportRequestDate: $("#dtofrr").val(),
+                TestReportReceiveDate: $("#dtoftestr").val(),
+                TestStatus: $("#ddlstatus").val(),
+                DRemarks: $("#txtremarks").val(),
+                SampleDispatchLabDate: $("#dtofdistolab").val(),
+                TotalTestingFee: $("#lbltotf").text(),
+                TotalServiceTax: $("#lblservicetax").text(),
+                TotalHandlingCharges: $("#lblthc").text(),
+                TotalLabCharges: $("#lbltolc").text()
+            };
+
+            //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                url: "/LabRegisterForm/SaveDataDetails",
+                dataType: "json",
+                data: JSON.stringify(LABREGISTERModel),
+                success: function (res) {
+                    
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                        //$.unblockUI({});
+                        //hideLoader();
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+
+
+                },
+                error: function (res) {
+                   
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+
+        }
+
+        function PrintInvoice(){
+            
+            var RegNo = '@ViewBag.RegNo';
+            $.ajax({
+                url: '/LabRegisterForm/PrintInvoice',
+                type: "POST",
+                dataType: "JSON",
+                data: { RegNo: RegNo },
+
+                success: function (success) {
+
+                    window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                }
+
+            });
+        }
+        function PostAmt() {
+            debugger;
+            var selectednkcd = [];
+            var selectedsusamt = [];
+            var selectedchqno = [];
+            var selectedschqdt = [];
+            var selectedamt = [];
+            $("input[type='radio'][data-bnkcd]:checked").each(function () {
+                var Bnkcd = $(this).data("bnkcd");
+                var susamt = $(this).data("susamt");
+                var chqno = $(this).data("chqno");
+                var chqdt = $(this).data("chqdt");
+                var amt = $(this).data("amt");
+                selectednkcd.push(Bnkcd);
+                selectedsusamt.push(Susamt);
+                selectedchqno.push(chqno);
+                selectedschqdt.push(chqdt);
+                selectedamt.push(amt);
+            });
+            var BankCd = selectedsrno.join(',');
+            var SusAmt = selectedregno.join(',');
+            var ChqNo = selectedregno.join(',');
+            var ChqDt = selectedregno.join(',');
+            var Amt = selectedregno.join(',');
+
+            var RegNo = $("#lblRNo").text();
+            var LABREGISTERModel = {
+                BANK_CD: BankCd,
+                SUSPENSE_AMT: SusAmt,
+                CHQ_NO: ChqNo,
+                CHQ_DATE: ChqDt,
+                AMOUNT: Amt,
+                SampleRegNo: RegNo
+            };
+            $.ajax({
+                url: '/LabRegisterForm/PostAmount',
+                type: "POST",
+                dataType: "JSON",
+                data: JSON.stringify(LABREGISTERModel),
+
+                success: function (success) {
+
+                    window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                }
+
+            });
+        }
+    </script>
+}
+

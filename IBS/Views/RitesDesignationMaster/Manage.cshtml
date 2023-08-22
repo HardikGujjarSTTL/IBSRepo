@@ -45,7 +45,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/RitesDesignationMaster/Index";
+            //window.location.href = "/RitesDesignationMaster/Index";
+            window.location.href = '@Url.Action("Index", "RitesDesignationMaster")';
         };
     </script>
 }

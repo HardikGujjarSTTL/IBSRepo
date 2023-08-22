@@ -87,7 +87,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/IE_Instructions_Admin/IE_InstructionsMaster";
+            //window.location.href = "/IE_Instructions_Admin/IE_InstructionsMaster";
+            window.location.href = '@Url.Action("IE_InstructionsMaster", "IE_Instructions_Admin")';
         };
     </script>
 }

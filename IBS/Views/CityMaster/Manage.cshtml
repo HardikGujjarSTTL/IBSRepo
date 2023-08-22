@@ -62,7 +62,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/CityMaster/Index";
+            //window.location.href = "/CityMaster/Index";
+            window.location.href = '@Url.Action("Index", "CityMaster")';
         };
     </script>
 }

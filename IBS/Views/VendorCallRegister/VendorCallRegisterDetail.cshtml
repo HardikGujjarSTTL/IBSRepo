@@ -13,6 +13,8 @@
         <input type="hidden" asp-for="CaseNo" />
         <input type="hidden" asp-for="CallRecvDt" />
         <input type="hidden" asp-for="CallSno" />
+        <input type="hidden" asp-for="ActionType" />
+        <input type="hidden" asp-for="FOS" />
     </div>
     <div class="accordion-body">
         <div class="row my-0">
@@ -226,7 +228,7 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Name">Does PO specified staggered DP</label>
                     @*<input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">*@
@@ -244,28 +246,29 @@
                     <span asp-validation-for="StaggeredDp" class="text-danger"></span>
                 </div>
             </div>
+            <div class="row my-0" id="divDPDetails">
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Name">If yes, details of lot size and staggered DP</label>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Name">1. Lot Size & DP</label>
+                        <input type="text" class="input" asp-for="LotDp1">
+                        <span asp-validation-for="LotDp1" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Name">2. Lot Size & DP</label>
+                        <input type="text" class="input" asp-for="LotDp2">
+                        <span asp-validation-for="LotDp2" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row my-0" id="divDPDetails">
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name">If yes, details of lot size and staggered DP</label>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name">1. Lot Size & DP</label>
-                    <input type="text" class="input" asp-for="LotDp1">
-                    <span asp-validation-for="LotDp1" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name">2. Lot Size & DP</label>
-                    <input type="text" class="input" asp-for="LotDp2">
-                    <span asp-validation-for="LotDp2" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
+
 
     </div>
     <div class="row my-0">
@@ -307,6 +310,7 @@
         </div>
         <div class="row my-0">
             <div class="col-md-12 mb-3">
+                <label for="Name">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
                 <div class="savenext-btn">
                     @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd) , "Value", "Text"),"--Select--")
                 </div>
@@ -394,7 +398,7 @@
                 <div class="company-checkbox">
                     <div class="remember">
                         <div class="remecheckbox">
-                            <input type="checkbox" class="input" name="IsNewVender">
+                            <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
                             <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>
                         </div>
                     </div>
@@ -433,22 +437,28 @@
 
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
-            </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
                 <label for="Name" style="color:red">* Click on Register Call Button Once only</label>
-                <br/>
+                <br />
                 <label for="Name" style="color:red">* Enter the Quantity Offered Now of All the Items Which You want to be Inspected in this call.</label>
-                <br/>
+                <br />
+                <input type="checkbox" class="input" name="IsAccept" id="IsAccept">
+                I hereby accept all the
+                <a href="\RBS\TermsandConditions.aspx"> Terms and Conditions</a>.
+                <br />
+                <br />
                 <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="btnRegiserCallSave">Register Call</button>
+                    <button type="button" class="save-btn" id="btnDelete">Delete</button>
+                    <button type="button" class="save-btn" id="btnPrint">Print Call Letter</button>
                     <a asp-controller="VendorCallRegisterDetail" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" id="btnRegiserCallSave">Save</button>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-            </div>
         </div>
-        
+
+    </div>
+
+    <div class="accordion-body">
     </div>
 </form>
 @section scripts{
@@ -464,7 +474,11 @@
 
             DateFormate();
             InitializeDatatable();
-
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('Action');
+            const FOS = urlParams.get('FOS');
+            $("#ActionType").val(actiontype);
+            $("#FOS").val(FOS);
 
         });
 
@@ -481,10 +495,6 @@
             });
         }
 
-        //function UpdateMDetails() {
-        //    alert(1);
-        //}
-
         function Save() {
             if ($("#frmDetails").valid()) {
                 $("#frmDetails").submit();
@@ -494,7 +504,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/VendorCallRegister/VendorCallRegister";
+            //window.location.href = "/VendorCallRegister/VendorCallRegister";
+            window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
         };
 
         function InitializeDatatable() {
@@ -718,27 +729,61 @@
             return false;
         });
 
-
         $("#btnRegiserCallSave").click(function () {
-            var formData = {
-                //MfgCd: $("#MfgCd").val(),
-                //VendCd: $("#VendCd").val(),
-                //VendAdd1: $("#VendAdd1").val(),
-                //VendContactPer1: $("#VendContactPer1").val(),
-                //VendEmail: $("#VendEmail").val(),
-                //VendContactTel1: $("#VendContactTel1").val(),
-                //VendContactTel1: $("#VendContactTel1").val(),
-                //VendContactTel1: $("#VendContactTel1").val(),
-                //VendContactTel1: $("#VendContactTel1").val(),
+
+
+            if ($("#MfgCd").is(":hidden")) {
+                alert("Please select Manufacturer first and then save it");
             }
-            $.post("@Url.Action("DetailsSave", "VendorCallRegister")", { model: formData }, function (response) {
+
+            else if ($("#ItemRdsoY").prop("checked") && $("#VendRdso").prop("checked") && ($("#VendApprovalFr").val() == "" || $("#VendApprovalTo").val() == "")) {
+                alert("Plz Enter Vendor Approval [From] & [To] Date");
+            }
+            else if ($("#StaggeredDp").prop("checked") && ($("#LotDp1").val() == "" && $("#LotDp2").val() == "")) {
+                alert("Plz Enter Lot Size & DP");
+            }
+            else if (!$("#IsAccept").prop("checked")) {
+                alert("Kindly [Select or Check] the declaration before you click on Register Call button.");
+            }
+            else if ($("#CallRemarkStatus").val() == "") {
+                alert("Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
+            }
+            else {
+
+
+                event.preventDefault();
+                $("#MfgCd").prop("disabled", "");
+
+                var formData = $("#frmDetails").serialize();
+                $.post("@Url.Action("DetailsSave", "VendorCallRegister")", formData, function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.status) {
+                    }
+                });
+            }
+            return false;
+        });
+
+        $("#btnDelete").click(function () {
+            event.preventDefault();
+            $("#MfgCd").prop("disabled", "");
+
+            var formData = $("#frmDetails").serialize();
+            $.post("@Url.Action("DetailsDelete", "VendorCallRegister")", formData, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
                 }
             });
-
             return false;
         });
 
+        $("#btnPrint").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            const urlParams = new URLSearchParams(window.location.search);
+            var CallSno = urlParams.get('CallSno');
+            
+            window.location.href = '@Url.Action("PrintCallletter", "VendorCallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSno;
+        });
     </script>
 }

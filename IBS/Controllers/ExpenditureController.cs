@@ -39,7 +39,7 @@ namespace IBS.Controllers
         {
             try
             {
-                if (expenditureRepository.Remove(_ExpPer, GetRegionCode))
+                if (expenditureRepository.Remove(_ExpPer, GetRegionCode,UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -66,6 +66,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.UserId = Convert.ToString(UserId);
                 model.RegionCode = GetRegionCode;
                 var i = expenditureRepository.ExpenditureDetailsInsertUpdate(model);
                 if (i != null)

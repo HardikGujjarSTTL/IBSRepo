@@ -6,12 +6,12 @@
 
 @{
     int VendCd = 0;
-    if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+    if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
     {
         VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
     }
     bool isReadOnly = false;
-    if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor" && VendCd == Model.VendCd)
+    if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor" && VendCd == Model.VendCd)
     {
         isReadOnly = true;
     }
@@ -222,7 +222,7 @@
 
         function Save() {
             if ($("#frmVendorProfileDetails").valid()) {
-                if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
+                if ('@IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower()' != "vendor") {
                     SaveSingleDocuments("tab-1");
                 }
                 $("#frmVendorProfileDetails").submit();
@@ -231,8 +231,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
-                window.location.href = "/VendorProfile/Index";
+            if ('@IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower()' != "vendor") {
+                //window.location.href = "/VendorProfile/Index";
+                window.location.href = '@Url.Action("Index", "VendorProfile")';
             }
         };
     </script>

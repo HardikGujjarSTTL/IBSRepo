@@ -1,0 +1,592 @@
+﻿@model IBS.Models.LabSampleInfoModel
+
+@{
+    ViewData["Title"] = "LAB SAMPLE INFORMATION DETAIL";
+}
+
+
+<style>
+    tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de; /* Add top border */
+        background-color: #f0f8ff;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px; /* Adjust the height of table cells */
+        padding: 5px;
+        vertical-align: top;
+    }
+
+    /* Style for labels */
+    label {
+        display: block; /* Make labels block-level to occupy the whole cell width */
+        font-weight: bold;
+    }
+
+    /* Style for input fields */
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box; /* Ensure the padding is included in the width */
+    }
+
+    /* Style for error message */
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    /* Style for left-aligned button */
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    /* Style for right-aligned button */
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    /* Clear floating elements */
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtlabregdtl {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        /* Style table header cells */
+        #dtlabregdtl th {
+            background-color: #f2f2f2;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table body cells */
+        #dtlabregdtl td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style>
+<h2>@ViewData["Title"]</h2>
+
+@*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
+<table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
+       bgColor="#f0f8ff" border="1">
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">Case No.</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblcno"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">Call Date & Sno</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblCallDT"></label>&nbsp;&amp;
+            <label class="control-label" id="lblCallSno"></label>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label asp-for="Vendor" class="control-label"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
+            <label class="control-label" id="lblVend"></label>
+            <label class="control-label" id="lblVENDCD" style="display:none;"></label>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label asp-for="IE" class="control-label"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
+            <label class="control-label" id="lblIE"></label>
+            <label class="control-label" id="lblIECD" style="display:none;"></label>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">Net Testing Charges Paid</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input type="text" class="input" id="txttesfee" />
+            <span class="text-danger"></span>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">TDS (If Any)</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input type="text" class="input" id="txttdsany" />
+            <span class="text-danger"></span>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">UTR NO</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input type="text" class="input" id="txtutrno" />
+            <span class="text-danger"></span>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">UTR Date</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <input type="text" class="input datepicker" id="dtutr" />
+            <span class="text-danger"></span>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">Upload Payment Report <a style="color:red;">(In PDF Only)</a></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="2">
+            <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
+            @*<input type="file" class="control-label" id="upload"></input>*@
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
+           
+            @*<asp:hyperlink id="HyperLink1" runat="server"  Target="_blank">HyperLink</asp:hyperlink>*@
+            <a id="HyperLink1" href="" download></a>
+            @*<input type="file" class="control-label" id="upload"></input>*@
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label asp-for="IE" class="control-label">Payment Status By Finance (RITES)	</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
+            <label class="control-label" id="lblpstatus"></label>
+        </td>
+    </tr>
+
+</table>
+<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
+<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;display:none;" onclick="UpdateDetails()" id="btnupdate">Update</button>
+<br />
+
+@*</form>*@
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function InitializeDatatable() {
+
+            $("#dtlabregdtl").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "SNO" },
+                    { data: "ITEM_DESC" },
+                    { data: "QTY" },
+                    { data: "TEST" },
+                    { data: "LAB_ID" },
+                    { data: "TESTING_FEE" },
+                    { data: "REMARKS" },
+
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        return data.Status ? "Active" : "InActive";
+                    //    }
+                    //},
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Id = data.LabId;
+                            var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")?LabId=' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+        const reader = new FileReader();
+        const fileByteArray = [];
+        var encode = function (d, a, e, b, c, f) { c = ""; for (a = e = b = 0; a < 4 * d.length / 3; f = b >> 2 * (++a & 3) & 63, c += String.fromCharCode(f + 71 - (f < 26 ? 6 : f < 52 ? 0 : f < 62 ? 75 : f ^ 63 ? 90 : 87)) + (75 == (a - 1) % 76 ? "\r\n" : ""))a & 3 ^ 3 && (b = b << 8 ^ d[e++]); for (; a++ & 3;)c += "="; return c };
+
+        $('#upload').change(function (e) {
+            //var tmppath = URL.createObjectURL(e.target.files[0]);
+            reader.readAsArrayBuffer(e.target.files[0]);
+            reader.onloadend = (evt) => {
+                if (evt.target.readyState === FileReader.DONE) {
+                    const arrayBuffer = evt.target.result,
+                        array = new Uint8Array(arrayBuffer);
+                    for (const a of array) {
+                        fileByteArray.push(a);
+                    }
+                    console.log(fileByteArray)
+                }
+            }
+        });
+        $(function () {
+
+            $("#lblpslip").text("Not Uploaded").css("color", "red");
+            $("#lblps").text("Not Approved").css("color", "red");
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+            var today = new Date();
+            //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+            $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
+            LoadSampleDtl();
+            $('#HyperLink1').on('click', function (e) {
+               
+                e.preventDefault(); // Prevent the default behavior of following the link
+
+                var pdfUrl = sessionStorage.getItem("link"); // Replace with the actual URL of your PDF file
+                downloadPDF(pdfUrl);
+            });
+            function downloadPDF(pdfUrl) {
+               
+                var link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = pdfUrl.split('/').pop(); // Get the filename from the URL
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            
+        });
+        $("#ddlitem").change(function () {
+
+            var name = $("#ddlitem option:selected").text();
+            $("#txtitemnm").val(name);
+        })
+       
+        
+        function LoadSampleDtl() {
+
+            var CaseNo = '@ViewBag.CaseNo';
+            var CallRdt = '@ViewBag.CallRdt';
+            var CallSno = '@ViewBag.Sno';
+
+            $.ajax({
+                url: '/VendorLabSampleForm/SampleDtlData',
+                type: "POST",
+                dataType: "JSON",
+                data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
+
+                success: function (success) {
+
+                    if (success.UTRDT != null && success.UTRDT != "") {
+                        var originalDateString = success.UTRDT;
+                        var dateTimeParts = originalDateString.split(' ');
+
+
+                        var dateParts = dateTimeParts[0].split('-');
+
+                        var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+
+
+                        var newMonth = dateObject.getMonth() + 1;
+                        var newDay = dateObject.getDate();
+                        var newYear = dateObject.getFullYear();
+
+
+                        var formattedMonth = (newMonth < 10 ? '0' : '') + newMonth;
+                        var formattedDay = (newDay < 10 ? '0' : '') + newDay;
+
+
+                        var formattedDateString = formattedMonth + '/' + formattedDay + '/' + newYear;
+
+                        $("#dtutr").val(formattedDateString);
+                        $("#lblpstatus").text(success.PaymentStatus).css("color", "red");
+                        $("#btnsave").css("display", "none");
+                        $("#btnupdate").css("display", "");
+                       
+                        if (success.File != "False") {
+                            $("#HyperLink1").text(success.FileNm);
+                            var pdfUrl = success.FileLink;
+                            sessionStorage.setItem("link",pdfUrl);
+                            
+                        }
+                      
+                    }
+                    else {
+                        $("#dtutr").val('');
+                    }
+
+                    $("#lblcno").text(success.CaseNo).css("color", "red");
+                    $("#lblCallDT").text(success.CallRecDt).css("color", "red");
+                    $("#lblCallSno").text(success.CallSNO).css("color", "red");
+                    $("#lblVend").text(success.VendorName).css("color", "red");
+                    $("#lblIE").text(success.IEName).css("color", "red");
+                    $("#txttesfee").val(success.NetTesting);
+                    $("#txttdsany").val(success.TDS);
+                    $("#txtutrno").val(success.UTRNO);
+
+
+                    sessionStorage.setItem("IEcode", success.IE);
+
+                }
+
+            });
+        }
+
+
+        function SaveDetails() {
+
+            if ($("#txttesfee").val() == '') {
+                alert("Please Enter Testing Charges")
+                return false;
+            }
+            else if ($("#txttdsany").val() == '') {
+                alert("Please Enter TDS")
+                return false;
+            }
+            else if ($("#txtutrno").val() == '') {
+                alert("Please Enter UTR NO")
+                return false;
+            }
+            else if ($("#dtutr").val() == '') {
+                alert("Please Enter UTR Date")
+                return false;
+            }
+
+            var parts = $("#lblCallDT").text().split('/');
+            var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+            var iecd = sessionStorage.getItem("IEcode");
+            //var LabSampleInfoModel = {
+            //    CaseNo: $("#lblcno").text(),
+            //    CallRecDt: convertedDate,
+            //    CallSNO: $("#lblCallSno").text(),
+            //    IE: iecd,
+            //    Status: $("#ddlstatus").val(),
+            //    DateofRecSample: $("#dtrecsam").val(),
+            //    TotalTFee: $("#txttesfee").val(),
+            //    LikelyDt: $("#dtlike").val(),
+            //    Remarks: $("#txtremark").val()
+            //};
+            var formData = new FormData();
+            formData.append("UploadPayment", $("#upload")[0].files[0]);
+            formData.append("CaseNo", $("#lblcno").text());
+            formData.append("CallRecDt", convertedDate);
+            formData.append("CallSNO", $("#lblCallSno").text());
+            formData.append("NetTesting", $("#txttesfee").val());
+            formData.append("TDS", $("#txttdsany").val());
+            formData.append("UTRNO", $("#txtutrno").val());
+            formData.append("UTRDT", $("#dtutr").val());
+
+            //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                //contentType: "application/json",
+                url: "/VendorLabSampleForm/SaveDataDetails",
+                dataType: "json",
+                data: formData,
+                success: function (res) {
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabSampleInfo", "VendorLabSampleForm")";
+                        //$.unblockUI({});
+                        //hideLoader();
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+
+
+                },
+                error: function (res) {
+
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabSampleInfo", "VendorLabSampleForm")";
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+
+        }
+        function UpdateDetails() {
+            if ($("#txttesfee").val() == '') {
+                alert("Please Enter Testing Charges")
+                return false;
+            }
+            else if ($("#txttdsany").val() == '') {
+                alert("Please Enter TDS")
+                return false;
+            }
+            else if ($("#txtutrno").val() == '') {
+                alert("Please Enter UTR NO")
+                return false;
+            }
+            else if ($("#dtutr").val() == '') {
+                alert("Please Enter UTR Date")
+                return false;
+            }
+
+            var parts = $("#lblCallDT").text().split('/');
+            var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+
+            //var files = [];
+            //files.push($('input[type=file]').val());
+            var formData = new FormData();
+            formData.append("UploadPayment", $("#upload")[0].files[0]);
+            formData.append("CaseNo", $("#lblcno").text());
+            formData.append("CallRecDt", convertedDate);
+            formData.append("CallSNO", $("#lblCallSno").text());
+            formData.append("NetTesting", $("#txttesfee").val());
+            formData.append("TDS", $("#txttdsany").val());
+            formData.append("UTRNO", $("#txtutrno").val());
+            formData.append("UTRDT", $("#dtutr").val());
+
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: "/VendorLabSampleForm/UpdateDetails",
+                dataType: "json",
+                data: formData,
+                success: function (res) {
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabSampleInfo", "VendorLabSampleForm")";
+                        //$.unblockUI({});
+                        //hideLoader();
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+
+
+                },
+                error: function (res) {
+
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabSampleInfo", "VendorLabSampleForm")";
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+
+        }
+    </script>
+}
+

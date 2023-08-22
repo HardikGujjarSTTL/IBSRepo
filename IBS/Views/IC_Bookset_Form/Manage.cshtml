@@ -55,7 +55,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/IC_Bookset_Form/Index";
+            //window.location.href = "/IC_Bookset_Form/Index";
+            window.location.href = '@Url.Action("Index", "IC_Bookset_Form")';
         };
     </script>
 }

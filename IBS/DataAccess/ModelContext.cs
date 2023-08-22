@@ -215,6 +215,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T102IeMaximumCallLimit> T102IeMaximumCallLimits { get; set; }
 
+    public virtual DbSet<T102IeMaximumCallLimitHistory> T102IeMaximumCallLimitHistories { get; set; }
+
     public virtual DbSet<T103VendDoc> T103VendDocs { get; set; }
 
     public virtual DbSet<T104VendEquipClbrCert> T104VendEquipClbrCerts { get; set; }
@@ -7895,6 +7897,49 @@ public partial class ModelContext : DbContext
                 .HasColumnName("USER_ID");
         });
 
+        modelBuilder.Entity<T102IeMaximumCallLimitHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008749");
+
+            entity.ToTable("T102_IE_MAXIMUM_CALL_LIMIT_HISTORY");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.MaximumCall)
+                .HasPrecision(3)
+                .HasColumnName("MAXIMUM_CALL");
+            entity.Property(e => e.RegionCode)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("REGION_CODE");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+        });
+
         modelBuilder.Entity<T103VendDoc>(entity =>
         {
             entity.HasKey(e => new { e.VendCd, e.DocType }).HasName("T103_VEND_DOCS");
@@ -12690,6 +12735,16 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .ValueGeneratedNever()
                 .HasColumnName("IE_CD");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Region)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -12698,6 +12753,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UnregCalls)
                 .HasPrecision(4)
                 .HasColumnName("UNREG_CALLS");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.YrMth)
                 .HasMaxLength(6)
                 .IsUnicode(false)
