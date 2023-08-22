@@ -27,9 +27,9 @@ public partial class TempOnlineComplaint
 
     public int? ConsigneeCd { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
-    public byte? CoCd { get; set; }
+    public int? CoCd { get; set; }
 
     public string? InspRegion { get; set; }
 

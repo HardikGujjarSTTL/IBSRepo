@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "QA Vidoes Civil";
+}
+
+<div class="list-inner landLordIdflex">
+    <div class="tast-list">
+        <h2>QA Video Civil</h2>
+    </div>
+    @*<a asp-action="Index" asp-controller="TransactionQAVideos" class="formBtn viewall-btn">View All</a>*@
+</div>
+<div class="custom-tab">
+    <ul class="nav nav-tabs d-none d-lg-flex" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation" style="pointer-events: unset;">
+            <button class="nav-link active" id="tab-1-tab" data-bs-toggle="tab" data-bs-target="#tab-1" type="button" role="tab" aria-controls="tab-1" aria-selected="true">Instructional Video-1 on Points and Crossings</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-2-tab" data-bs-toggle="tab" data-bs-target="#tab-2" type="button" role="tab" aria-controls="tab-2" aria-selected="false">Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-3-tab" data-bs-toggle="tab" data-bs-target="#tab-3" type="button" role="tab" aria-controls="tab-3" aria-selected="false">Glued Insulated Rail Joint</button>
+        </li>
+    </ul>
+
+    <div class="tab-content accordion" id="myTabContent">
+        <!-- Instructional Video-1 on Points and Crossings -->
+        <div class="tab-pane fade show active accordion-item" id="tab-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Instructional Video-1 on Points and Crossings</button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Instructional Video-1 on Points and Crossings</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V21.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseOne" class="accordion-collapse collapse show  d-lg-block" aria-labelledby="headingOne" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners -->
+        <div class="tab-pane fade accordion-item" id="tab-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V25.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Glued Insulated Rail Joint -->
+        <div class="tab-pane fade accordion-item" id="tab-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Glued Insulated Rail Joint </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Glued Insulated Rail Joint</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V65.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tab-1-tab").css("pointer-events", "all");
+            $("#tab-2-tab").css("pointer-events", "all");
+            $("#tab-3-tab").css("pointer-events", "all");
+        });
+    </script>
+}
+
+
+
+
+

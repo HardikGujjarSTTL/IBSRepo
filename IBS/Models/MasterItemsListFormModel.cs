@@ -1,4 +1,7 @@
-﻿namespace IBS.Models
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class MasterItemsListFormModel
     {
@@ -29,8 +32,22 @@
 
         public DateTime? Updateddate { get; set; }
 
-        public DateTime? CreationRevDt { get; set; }
         
+        public int? IeCd { get; set; }
+
+        public string? IeName { get; set; }
+
+        public int? CoCd { get; set; }
+
+        public string? CoName { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CreationRevDt { get; set; }
+
+        public string Region { get; set; }
+
+        public string? FilePath { get; set; }
 
     }
 }

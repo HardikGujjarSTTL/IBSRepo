@@ -78,8 +78,7 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.SetNoFr).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.IssueToIecd).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.BkNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();

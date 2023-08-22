@@ -1,5 +1,6 @@
 ﻿using IBS.Interfaces;
 using IBS.Interfaces.IE;
+using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.IE
@@ -18,6 +19,13 @@ namespace IBS.Controllers.IE
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<IEJIRemarksPendingModel> dTResult = iejiRepository.GetDataList(dtParameters, GetRegionCode, Convert.ToString(UserId), GetIeCd);
+            return Json(dTResult);
         }
     }
 }

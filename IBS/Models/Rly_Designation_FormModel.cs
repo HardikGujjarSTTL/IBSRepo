@@ -4,7 +4,7 @@
     {
         public string RlyDesigCd { get; set; } = null!;
 
-        public string? RlyDesigDesc { get; set; }
+        public string RlyDesigDesc { get; set; }
 
         public string? UserId { get; set; }
 

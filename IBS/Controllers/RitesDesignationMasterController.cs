@@ -47,7 +47,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Role", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "RitesDesignationMaster", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("Index");
