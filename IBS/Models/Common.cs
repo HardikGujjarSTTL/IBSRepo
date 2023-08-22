@@ -331,18 +331,6 @@ namespace IBS.Models
             return AccountCD;
         }
 
-        public static List<SelectListItem> GetBankCode()
-        {
-            ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> BankCD = (from a in context.Bankcodedrpdowns
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.BankName),
-                                     Value = Convert.ToString(a.BankCd)
-                                 }).ToList();
-            return BankCD;
-        }
         public static List<SelectListItem> CallStatus()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -956,7 +944,7 @@ namespace IBS.Models
             return IE;
 
         }
-        public static List<SelectListItem> GetItem(string CaseNo,string CallRecDt,string CallSNO)
+        public static List<SelectListItem> GetItem(string CaseNo, string CallRecDt, string CallSNO)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> IE = (from a in ModelContext.T18CallDetails
@@ -968,7 +956,7 @@ namespace IBS.Models
                                       Value = Convert.ToString(a.ItemSrnoPo)
                                   }).ToList();
             return IE;
-
+        }
         public static List<SelectListItem> GetIENameWithoutCode()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1006,6 +994,7 @@ namespace IBS.Models
                                           })
                                           .ToList();
             return NCCODE;
+        }
         public static List<SelectListItem> GetLab()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1078,8 +1067,6 @@ namespace IBS.Models
             single.Value = "O";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
-        }
-
         }
 
         public static List<SelectListItem> GetRailPrices()
@@ -1422,18 +1409,18 @@ namespace IBS.Models
             return Bank;
         }
 
-        public static List<SelectListItem> GetAccountCode()
-        {
-            ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> AccountCD = (from a in context.Acccodes
-                                              select
-                                    new SelectListItem
-                                    {
-                                        Text = Convert.ToString(a.AccDesc),
-                                        Value = Convert.ToString(a.AccCd)
-                                    }).ToList();
-            return AccountCD;
-        }
+        //public static List<SelectListItem> GetAccountCode()
+        //{
+        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+        //    List<SelectListItem> AccountCD = (from a in context.Acccodes
+        //                                      select
+        //                            new SelectListItem
+        //                            {
+        //                                Text = Convert.ToString(a.AccDesc),
+        //                                Value = Convert.ToString(a.AccCd)
+        //                            }).ToList();
+        //    return AccountCD;
+        //}
 
         public static List<SelectListItem> GetBankCode()
         {
@@ -1451,12 +1438,12 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> GetBPO = (from a in context.T12BillPayingOfficers
-                                              select
-                                    new SelectListItem
-                                    {
-                                        Text = Convert.ToString(a.BpoName),
-                                        Value = Convert.ToString(a.BpoCd)
-                                    }).ToList();
+                                           select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.BpoName),
+                                     Value = Convert.ToString(a.BpoCd)
+                                 }).ToList();
             return GetBPO;
         }
 
