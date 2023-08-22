@@ -159,8 +159,8 @@
             <div class="contentContainer">
                 <!--leftSidebarNav-->
                 <aside id="sidebar" class="navbar-default navbar-static-side">
-                    @*@Html.Partial("~/Views/Shared/Menu.cshtml")*@
-                    <div class="sidebar-collapse menu-scroll">
+                    @Html.Partial("~/Views/Shared/Menu.cshtml")
+                    @*<div class="sidebar-collapse menu-scroll">
                         <ul id="side-menu" class="nav">
                             <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
                             <li>
@@ -210,8 +210,7 @@
 
                                 </ul>
                             </li>
-                            @*@if(LoginType == "vendor")
-                            {*@
+                            
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/vendor-ico.png" alt="tenant" /></i><span class="menu-title">Vendor Details</span></a>
                                 <ul class="nav nav-second-level">
@@ -326,6 +325,17 @@
                                 </ul>
                             </li>
                             <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Reports</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="Index" asp-controller="IEPerformance"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Performance</span></a></li>
+                                    <li><a asp-action="Index" asp-route-actiontype="I" asp-controller="IEWorkPlan"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE WorkPlan Report</span></a></li>
+                                    <li><a asp-action="FromToDate" asp-route-actiontype="PJI" asp-controller="Reports"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Pending JI Cases</span></a></li>
+                                    <li><a asp-action="IEDairy" asp-controller="Reports"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Dairy</span></a></li>
+                                    @*<li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>*@
+                                </ul>
+                            </li>
+
+                            <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="tenant" /></i><span class="menu-title">Lab</span></a>
                                 <ul class="nav nav-second-level">
                                     <li><a asp-action="LaboratoryMaster" asp-controller="LaboratoryMaster"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Laboratory Master</span></a></li>
@@ -357,14 +367,10 @@
                                 </ul>
                             </li>
 
-                            @*<li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>*@
                         </ul>
-                    </div>
+                    </div>*@
                 </aside>
-
                 <!--leftSidebarNav-->
-
-
                 <div class="adminInnerContent">
                     <main role="main" class="pb-3">
                         @RenderBody()
