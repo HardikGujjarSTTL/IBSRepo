@@ -13,9 +13,9 @@ public partial class T09Ie
 
     public string? IeEmpNo { get; set; }
 
-    public byte? IeDesig { get; set; }
+    public int? IeDesig { get; set; }
 
-    public byte? IeSealNo { get; set; }
+    public int? IeSealNo { get; set; }
 
     public string? IeDepartment { get; set; }
 
@@ -23,7 +23,7 @@ public partial class T09Ie
 
     public string? IePhoneNo { get; set; }
 
-    public byte? IeCoCd { get; set; }
+    public int? IeCoCd { get; set; }
 
     public DateTime? IeJoinDt { get; set; }
 

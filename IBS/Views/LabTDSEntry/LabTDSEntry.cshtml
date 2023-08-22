@@ -5,19 +5,19 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-controller="YourController" asp-action="YourAction" method="post">
+
     <table style="width: 90%; height: 40px; border-color: #b0c4de; cellspacing: 0; cellpadding: 1;"
            width="625" align="center" bgcolor="#f0f8ff" border="1">
         <tr align="center">
-            <td align="center" style="width: 25%"><label asp-for="SampleRegNo" class="control-label"></label></td>
+            <td align="center" style="width: 25%"><label class="control-label">Sample Reg No.</label></td>
             <td style="width: 25%">
-                <input asp-for="SampleRegNo" class="form-control" />
+                <input asp-for="SampleRegNo" class="form-control" id="txtSRNO" />
                 <br />
-                <button type="submit" class="btn btn-primary" style="width:auto;">Search</button>
+            <button type="submit" class="btn btn-primary" style="width:auto;" onclick="SearchRegNo();">Search</button>
             </td>
             <td style="width: 25%"><label asp-for="CaseNo" class="control-label"></label></td>
             <td style="width: 25%">
-                <label asp-for="CaseNo" class="control-label" id="lblCNo"></label>
+                <label class="control-label" id="lblCNo"></label>
             </td>
         </tr>
         <tr>
@@ -25,7 +25,7 @@
                 <label asp-for="AmountReceived" class="control-label"></label>
             </td>
             <td style="width: 25%; height: 22px" align="center">
-                <label asp-for="TDSAmount" class="control-label"></label>
+                <label  class="control-label">TDS Amount</label>
             </td>
             <td style="width: 25%; height: 22px" align="center">
                 <label asp-for="TDSDate" class="control-label"></label>
@@ -36,23 +36,95 @@
         </tr>
         <tr>
             <td style="width: 25%" align="center">
-                <label asp-for="AmountReceived" class="control-label" id="lblAmtRec"></label>
+                <label  class="control-label" id="lblAmtRec"></label>
             </td>
             <td style="width: 25%" align="center">
-                <input asp-for="TDSAmount" class="form-control" />
+                <input asp-for="TDSAmount" class="form-control" id="lbltsdamt" />
             </td>
             <td style="width: 25%" align="center">
-                <input asp-for="TDSDate" class="form-control" />
+                <input asp-for="TDSDate" class="form-control" id="lbltdsdate" />
             </td>
             <td align="center" style="width: 25%">
-                <label asp-for="TotalLabCharges" class="control-label" id="lblTotLabCharges"></label>
+                <label class="control-label" id="lblTotLabCharges"></label>
             </td>
         </tr>
     </table>
     <label style="padding-left:6%;"> * To Add New Record Fill Values and Click on Save </label>
     <tr>
-        <button type="submit" class="btn btn-primary" style="width:auto;">Save</button>
-        <button type="button" class="btn btn-secondary" style="width:auto;">Cancel</button>
+    <button type="submit" class="btn btn-primary" style="width:auto;" onclick="Save();">Save</button>
+    <button type="button" class="btn btn-secondary" style="width:auto;" onclick="resetFields()">Cancel</button>
     </tr>
    
-</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+    //function Validation(){
+    //    if ("#txtSRNO").val() == ""){
+    //        alert("Please Enter Sample Registration No.");
+    //        return false;
+    //    }
+    //    SearchRegNo();
+    //}
+        function resetFields(){
+            location.reload();
+        }
+    function SearchRegNo() {
+        var RegNo = $("#txtSRNO").val();
+            var TDSAmt = $("#lbltsdamt").val();
+            var TDSDate = $("#lbltdsdate").val();
+        $.ajax({
+                url: '/LabTDSEntry/SearchRegNo',
+            type: "POST",
+            dataType: "JSON",
+            data: { RegNo: RegNo },
+
+            success: function (success) {
+                if (success.SampleRegNo == null){
+                        $("#lblCNo").text('');
+                        $("#lblAmtRec").text('');
+                        $("#lblTotLabCharges").text('');
+                        $("#lbltsdamt").val('');
+                        $("#lbltdsdate").val('');
+                    alert("InValid Sample Registration No.");
+                    return false;
+                }
+                else
+                {
+                    $("#lblCNo").text(success.CaseNo).css("color", "red");
+                    $("#lblAmtRec").text(success.AmountReceived).css("color", "red");
+                    $("#lblTotLabCharges").text(success.TotalLabCharges).css("color", "red");
+                    $("#lbltsdamt").val(success.TDSAmount);
+                    $("#lbltdsdate").val(success.TDSDate);
+                }
+               
+            }
+
+        });
+
+    }
+        function Save() {
+            var RegNo = $("#txtSRNO").val();
+            $.ajax({
+                url: '/LabTDSEntry/SaveTDSEntry',
+                type: "POST",
+                dataType: "JSON",
+                data: { RegNo: RegNo },
+
+                success: function (success) {
+                  if(success == true){
+                        alert("YOUR RECORD IS SAVED");
+                        location.reload();
+                  }
+                  else
+                  {
+                        alert("An unexpected error occurred while saving. Please try again later or contact the system administrator.");
+                  }
+
+                }
+
+            });
+
+        }
+</script>
+}

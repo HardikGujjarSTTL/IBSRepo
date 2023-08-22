@@ -29,5 +29,15 @@ public partial class T10IcBookset
 
     public string? CutOffSet { get; set; }
 
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public DateTime? Updateddate { get; set; }
+
     public virtual T09Ie? IssueToIecdNavigation { get; set; }
 }

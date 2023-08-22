@@ -39,11 +39,11 @@ public partial class T80PoMaster
 
     public string? PoOrLetter { get; set; }
 
-    public string? Createdby { get; set; }
+    public int? Createdby { get; set; }
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public string? Updatedby { get; set; }
+    public int? Updatedby { get; set; }
 
     public DateTimeOffset? Updateddate { get; set; }
 
@@ -54,8 +54,6 @@ public partial class T80PoMaster
     public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
     public virtual T01Region? RegionCodeNavigation { get; set; }
-
-    public virtual ICollection<T82PoDetail> T82PoDetails { get; set; } = new List<T82PoDetail>();
 
     public virtual T05Vendor? VendCdNavigation { get; set; }
 }

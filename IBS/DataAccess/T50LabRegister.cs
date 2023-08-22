@@ -15,7 +15,7 @@ public partial class T50LabRegister
 
     public DateTime? SampleDispatchDt { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public string? CaseNo { get; set; }
 

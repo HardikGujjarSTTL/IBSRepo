@@ -71,6 +71,17 @@ builder.Services.AddScoped<IBankMaster, BankMaster>();
 
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<ILabTDSEntryRepository, LabTDSEntryRepository>();
+builder.Services.AddScoped<ILabRegFormRepository, LabRegiFormRepository>();
+builder.Services.AddScoped<ILabRecieptVoucherRepository, LabRecieptVoRepository>();
+builder.Services.AddScoped<ILabPaymentFormRepository, LabPaymentRRepository>();
+builder.Services.AddScoped<ILabSampleInfoRepository, LabSampleRepository>();
+builder.Services.AddScoped<ILabBillFinalisationRepository, LabBillFinalRepository>();
+builder.Services.AddScoped<IVendorLabSampleInfoRepository, VendorLabSampleRepository>();
+builder.Services.AddScoped<ILabPaymentListRepository, LabPaymentListRRepository>();
+builder.Services.AddScoped<ILabInvoiceDownloadRepository, LabInvoiceDownloadRRepository>();
+builder.Services.AddScoped<ILabSamplePaymentRptRepository, LabSamplePaymentRptRRepository>();
+builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

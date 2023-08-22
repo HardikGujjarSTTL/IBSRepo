@@ -29,6 +29,10 @@ public partial class T03City
 
     public DateTime? Updateddate { get; set; }
 
+    public int? CountryCd { get; set; }
+
+    public string? Country { get; set; }
+
     public virtual T92State? StateCdNavigation { get; set; }
 
     public virtual ICollection<T05Vendor> T05Vendors { get; set; } = new List<T05Vendor>();

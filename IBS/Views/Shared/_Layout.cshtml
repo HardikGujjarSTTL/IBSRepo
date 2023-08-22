@@ -177,6 +177,16 @@
                                 <li><a asp-action="Index" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">ClientContract</span></a></li>
                             </ul>
                         </li>
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Finance</span></a>
+                                <ul class="nav nav-second-level">
+                                   
+                                    <li><a asp-action="LabPaymentList" asp-controller="LabPaymentList"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Sample Payment Approval Form</span></a></li>
+                                    <li><a asp-action="LabSamplePaymentReport" asp-controller="LabSamplePaymentReport"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Sample Payment Approval Report</span></a></li>
+
+
+                                </ul>
+                            </li>
                         <li>
                             <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Administrator</span></a>
                             <ul class="nav nav-second-level">
@@ -213,9 +223,9 @@
                                 <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call/IC Status</span></a></li>
                                 <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO Call Status</span></a></li>
                                 <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Specific PO IC Status</span></a></li>
-                                <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Invoice</span></a></li>
+                                    <li><a asp-action="LabInvoiceDownload" asp-controller="LabInvoiceDownload"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Invoice</span></a></li>
                                 <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add MA</span></a></li>
-                                <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Sample Payment</span></a></li>
+                                    <li><a asp-action="LabSampleInfo" asp-controller="VendorLabSampleForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Lab Sample Payment</span></a></li>
                             </ul>
                         </li>
 
@@ -239,7 +249,11 @@
                             <ul class="nav nav-second-level">
                                 <li><a asp-action="LaboratoryMaster" asp-controller="LaboratoryMaster"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Laboratory Master</span></a></li>
                                 <li><a asp-action="LabTDSEntry" asp-controller="LabTDSEntry"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab TDS Entry</span></a></li>
-                                <li><a asp-action="LabRegisterForm" asp-controller="LabRegisterForm"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Register Form</span></a></li>
+                                <li><a asp-action="Index" asp-controller="LabRegisterForm"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Register Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="LabRecieptVoucher"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Add RECIEPT VOUCHER</span></a></li>
+                                    <li><a asp-action="LabPaymentForm" asp-controller="LabPaymentsForm"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Payments</span></a></li>
+                                    <li><a asp-action="LabSampleInfo" asp-controller="LabSampleInfo"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Sample Info Form</span></a></li>
+                                    <li><a asp-action="LabBillFinalisationForm" asp-controller="LabBillFinalisation"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Invoice Finalisation</span></a></li>
                             </ul>
                         </li>
                         
