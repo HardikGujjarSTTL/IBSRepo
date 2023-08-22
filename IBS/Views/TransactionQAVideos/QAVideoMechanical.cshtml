@@ -1,0 +1,820 @@
+﻿@{
+    ViewData["Title"] = "QA Vidoes Mechanical";
+}
+
+<div class="list-inner landLordIdflex">
+    <div class="tast-list">
+        <h2>QA Video Mechanical</h2>
+    </div>
+    @*<a asp-action="Index" asp-controller="TransactionQAVideos" class="formBtn viewall-btn">View All</a>*@
+</div>
+<div class="custom-tab">
+    <ul class="nav nav-tabs d-none d-lg-flex" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation" style="pointer-events: unset;">
+            <button class="nav-link active" id="tab-a-tab" data-bs-toggle="tab" data-bs-target="#tab-a" type="button" role="tab" aria-controls="tab-a" aria-selected="true">Fire Retardant Toxicity</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-b-tab" data-bs-toggle="tab" data-bs-target="#tab-b" type="button" role="tab" aria-controls="tab-b" aria-selected="false">Inspection of fire Retardant Properties limiting of Oxygen</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-c-tab" data-bs-toggle="tab" data-bs-target="#tab-c" type="button" role="tab" aria-controls="tab-c" aria-selected="false">Inspection of Axle For The Wheel Disc of Rail Coach & Wagon</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-d-tab" data-bs-toggle="tab" data-bs-target="#tab-d" type="button" role="tab" aria-controls="tab-d" aria-selected="false">Inspection of Wheel disc for Railway rolling stock</button>
+        </li>
+
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-1-tab" data-bs-toggle="tab" data-bs-target="#tab-1" type="button" role="tab" aria-controls="tab-1" aria-selected="false">Inspection of Wheel Set (Two wheel and one Axle) for Railway rolling stock</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-2-tab" data-bs-toggle="tab" data-bs-target="#tab-2" type="button" role="tab" aria-controls="tab-2" aria-selected="false">About welding symbols</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-3-tab" data-bs-toggle="tab" data-bs-target="#tab-3" type="button" role="tab" aria-controls="tab-3" aria-selected="false">Inspection on compressor</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-4-tab" data-bs-toggle="tab" data-bs-target="#tab-4" type="button" role="tab" aria-controls="tab-4" aria-selected="false">Instructional Video on Limits , Tolerances , Fits and Deviation</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-5-tab" data-bs-toggle="tab" data-bs-target="#tab-5" type="button" role="tab" aria-controls="tab-5" aria-selected="false">Instructional video on working of BIO-TOILETs on Passenger coaches of Indian Railways</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-6-tab" data-bs-toggle="tab" data-bs-target="#tab-6" type="button" role="tab" aria-controls="tab-6" aria-selected="false">LHB spring manufacturing</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-7-tab" data-bs-toggle="tab" data-bs-target="#tab-7" type="button" role="tab" aria-controls="tab-7" aria-selected="false">Manufacturing and inspection of Graphite mould block</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-8-tab" data-bs-toggle="tab" data-bs-target="#tab-8" type="button" role="tab" aria-controls="tab-8" aria-selected="false">Manufacturing Process and testing-Inspection of Spheroidal Graphite Cast Iron Inserts (SGCI) Inserts</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-9-tab" data-bs-toggle="tab" data-bs-target="#tab-9" type="button" role="tab" aria-controls="tab-9" aria-selected="false">Manufcature ,Testing and Inspection of Base for Point machine</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-10-tab" data-bs-toggle="tab" data-bs-target="#tab-10" type="button" role="tab" aria-controls="tab-10" aria-selected="false">Sidewall undulation</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-11-tab" data-bs-toggle="tab" data-bs-target="#tab-11" type="button" role="tab" aria-controls="tab-11" aria-selected="false">Solid Railway Gear Wheel Blank Gear  Pinion Blank Forgings  Proof Machined Gear</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-12-tab" data-bs-toggle="tab" data-bs-target="#tab-12" type="button" role="tab" aria-controls="tab-12" aria-selected="false">Special  Process- Laser seam welding of Rail Coach Side wall sheets and its validation</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-13-tab" data-bs-toggle="tab" data-bs-target="#tab-13" type="button" role="tab" aria-controls="tab-13" aria-selected="false">Special process</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-14-tab" data-bs-toggle="tab" data-bs-target="#tab-14" type="button" role="tab" aria-controls="tab-14" aria-selected="false">Surface finish</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-15-tab" data-bs-toggle="tab" data-bs-target="#tab-15" type="button" role="tab" aria-controls="tab-15" aria-selected="false">Testing and Inspection Methods of the Ready Mixed Paint (Red Oxide Primer)</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-16-tab" data-bs-toggle="tab" data-bs-target="#tab-16" type="button" role="tab" aria-controls="tab-16" aria-selected="false">Thick Web Switch</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-17-tab" data-bs-toggle="tab" data-bs-target="#tab-17" type="button" role="tab" aria-controls="tab-17" aria-selected="false">HRR</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-18-tab" data-bs-toggle="tab" data-bs-target="#tab-18" type="button" role="tab" aria-controls="tab-18" aria-selected="false">Inspection spur gear</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-19-tab" data-bs-toggle="tab" data-bs-target="#tab-19" type="button" role="tab" aria-controls="tab-19" aria-selected="false">Inspection and testing of Coil Spring for Fiat bogies of LHB  Coaches</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-20-tab" data-bs-toggle="tab" data-bs-target="#tab-20" type="button" role="tab" aria-controls="tab-20" aria-selected="false">Inspection of Fire retardant Properties Spread of Flame</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-21-tab" data-bs-toggle="tab" data-bs-target="#tab-21" type="button" role="tab" aria-controls="tab-21" aria-selected="false">Inspection of girder during welding fabrication</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-22-tab" data-bs-toggle="tab" data-bs-target="#tab-22" type="button" role="tab" aria-controls="tab-22" aria-selected="false">INSPECTION OF GIRDERS- Inspection Before Welding Fabrication</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-23-tab" data-bs-toggle="tab" data-bs-target="#tab-23" type="button" role="tab" aria-controls="tab-23" aria-selected="false">Girder inspection after welding fabrication</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-24-tab" data-bs-toggle="tab" data-bs-target="#tab-24" type="button" role="tab" aria-controls="tab-24" aria-selected="false">Good Manufacturing Practices in Rail coach Body Building</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-25-tab" data-bs-toggle="tab" data-bs-target="#tab-25" type="button" role="tab" aria-controls="tab-25" aria-selected="false">Welding Procedure Specificaion WPS</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-26-tab" data-bs-toggle="tab" data-bs-target="#tab-26" type="button" role="tab" aria-controls="tab-26" aria-selected="false">Heat treatment</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-27-tab" data-bs-toggle="tab" data-bs-target="#tab-27" type="button" role="tab" aria-controls="tab-27" aria-selected="false">Honing and testing</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-28-tab" data-bs-toggle="tab" data-bs-target="#tab-28" type="button" role="tab" aria-controls="tab-28" aria-selected="false">Chemical testing</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-29-tab" data-bs-toggle="tab" data-bs-target="#tab-29" type="button" role="tab" aria-controls="tab-29" aria-selected="false">Coating Failures & Defects</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-30-tab" data-bs-toggle="tab" data-bs-target="#tab-30" type="button" role="tab" aria-controls="tab-30" aria-selected="false">Deterioration of  Visibility due to smoke</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-31-tab" data-bs-toggle="tab" data-bs-target="#tab-31" type="button" role="tab" aria-controls="tab-31" aria-selected="false">Do & Dont's of IEs'</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="tab-32-tab" data-bs-toggle="tab" data-bs-target="#tab-32" type="button" role="tab" aria-controls="tab-32" aria-selected="false">About steel bridge girders</button>
+        </li>
+    </ul>
+
+    <div class="tab-content accordion" id="myTabContent">
+        <!-- Fire Retardant Toxicity -->
+        <div class="tab-pane fade show active accordion-item" id="tab-a" role="tabpanel" aria-labelledby="tab-a" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Fire Retardant Toxicity</button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Fire Retardant Toxicity</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V1.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseOne" class="accordion-collapse collapse show  d-lg-block" aria-labelledby="headingOne" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection of fire Retardant Properties limiting of Oxygen -->
+        <div class="tab-pane fade accordion-item" id="tab-b" role="tabpanel" aria-labelledby="tab-b" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Inspection of fire Retardant Properties limiting of Oxygen </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection of fire Retardant Properties limiting of Oxygen</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V2.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection of Axle For The Wheel Disc of Rail Coach & Wagon -->
+        <div class="tab-pane fade accordion-item" id="tab-c" role="tabpanel" aria-labelledby="tab-c" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Inspection of Axle For The Wheel Disc of Rail Coach & Wagon </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection of Axle For The Wheel Disc of Rail Coach & Wagon</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V3.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+        </div>
+        <!-- Inspection of Wheel disc for Railway rolling stock -->
+        <div class="tab-pane fade accordion-item" id="tab-d" role="tabpanel" aria-labelledby="tab-d" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"> Inspection of Wheel disc for Railway rolling stock </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Migration to standard check sheets in railway & non inspections</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V5.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseFour" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingFour" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection of Wheel Set (Two wheel and one Axle) for Railway rolling stock -->
+        <div class="tab-pane fade accordion-item" id="tab-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive"> Inspection of Wheel Set (Two wheel and one Axle) for Railway rolling stock </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection of Wheel Set (Two wheel and one Axle) for Railway rolling stock</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V6.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseFive" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingFive" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- About welding symbols -->
+        <div class="tab-pane fade accordion-item" id="tab-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix"> About welding symbols </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>About welding symbols</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V11.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseSix" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingSix" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection on compressor -->
+        <div class="tab-pane fade accordion-item" id="tab-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven"> Inspection on compressor </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection on compressor</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V17.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseSeven" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingSeven" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Instructional Video on Limits , Tolerances , Fits and Deviation -->
+        <div class="tab-pane fade accordion-item" id="tab-4" role="tabpanel" aria-labelledby="tab-4" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingEight">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight"> Instructional Video on Limits , Tolerances , Fits and Deviation </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Instructional Video on Limits , Tolerances , Fits and Deviation</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V19.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseEight" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingEight" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Instructional video on working of BIO-TOILETs on Passenger coaches of Indian Railways -->
+        <div class="tab-pane fade accordion-item" id="tab-5" role="tabpanel" aria-labelledby="tab-5" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Instructional video on working of BIO-TOILETs on Passenger coaches of Indian Railways </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Instructional video on working of BIO-TOILETs on Passenger coaches of Indian Railways</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V20.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- LHB spring manufacturing -->
+        <div class="tab-pane fade accordion-item" id="tab-6" role="tabpanel" aria-labelledby="tab-6" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> LHB spring manufacturing </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>LHB spring manufacturing</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V23.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Manufacturing and inspection of Graphite mould block -->
+        <div class="tab-pane fade accordion-item" id="tab-7" role="tabpanel" aria-labelledby="tab-7" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Manufacturing and inspection of Graphite mould block </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Manufacturing and inspection of Graphite mould block</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V26.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Manufacturing Process and testing-Inspection of Spheroidal Graphite Cast Iron Inserts (SGCI) Inserts -->
+        <div class="tab-pane fade accordion-item" id="tab-8" role="tabpanel" aria-labelledby="tab-8" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Manufacturing Process and testing-Inspection of Spheroidal Graphite Cast Iron Inserts (SGCI) Inserts </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Manufacturing Process and testing-Inspection of Spheroidal Graphite Cast Iron Inserts (SGCI) Inserts</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V27.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Manufcature ,Testing and Inspection of Base for Point machine -->
+        <div class="tab-pane fade accordion-item" id="tab-9" role="tabpanel" aria-labelledby="tab-9" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Manufcature ,Testing and Inspection of Base for Point machine </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Manufcature ,Testing and Inspection of Base for Point machine</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V28.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Sidewall undulation -->
+        <div class="tab-pane fade accordion-item" id="tab-10" role="tabpanel" aria-labelledby="tab-10" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Sidewall undulation </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Sidewall undulation</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V35.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Solid Railway Gear Wheel Blank Gear  Pinion Blank Forgings  Proof Machined Gear -->
+        <div class="tab-pane fade accordion-item" id="tab-11" role="tabpanel" aria-labelledby="tab-11" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Solid Railway Gear Wheel Blank Gear  Pinion Blank Forgings  Proof Machined Gear </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Solid Railway Gear Wheel Blank Gear  Pinion Blank Forgings  Proof Machined Gear</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V36.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Special  Process- Laser seam welding of Rail Coach Side wall sheets and its validation -->
+        <div class="tab-pane fade accordion-item" id="tab-12" role="tabpanel" aria-labelledby="tab-12" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Special  Process- Laser seam welding of Rail Coach Side wall sheets and its validation </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Special  Process- Laser seam welding of Rail Coach Side wall sheets and its validation</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V37.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Special process -->
+        <div class="tab-pane fade accordion-item" id="tab-13" role="tabpanel" aria-labelledby="tab-13" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Special process </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Special process</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V39.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Surface finish -->
+        <div class="tab-pane fade accordion-item" id="tab-14" role="tabpanel" aria-labelledby="tab-14" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Surface finish </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Surface finish</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V40.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Testing and Inspection Methods of the Ready Mixed Paint (Red Oxide Primer) -->
+        <div class="tab-pane fade accordion-item" id="tab-15" role="tabpanel" aria-labelledby="tab-15" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Testing and Inspection Methods of the Ready Mixed Paint (Red Oxide Primer) </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Testing and Inspection Methods of the Ready Mixed Paint (Red Oxide Primer)</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V42.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Thick Web Switch -->
+        <div class="tab-pane fade accordion-item" id="tab-16" role="tabpanel" aria-labelledby="tab-16" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Thick Web Switch </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Thick Web Switch</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V45.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- HRR -->
+        <div class="tab-pane fade accordion-item" id="tab-17" role="tabpanel" aria-labelledby="tab-17" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> HRR </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>HRR</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V46.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection spur gear -->
+        <div class="tab-pane fade accordion-item" id="tab-18" role="tabpanel" aria-labelledby="tab-18" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Inspection spur gear </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection spur gear</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V49.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection and testing of Coil Spring for Fiat bogies of LHB  Coaches -->
+        <div class="tab-pane fade accordion-item" id="tab-19" role="tabpanel" aria-labelledby="tab-19" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Inspection and testing of Coil Spring for Fiat bogies of LHB  Coaches </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection and testing of Coil Spring for Fiat bogies of LHB  Coaches</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V50.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection of Fire retardant Properties Spread of Flame -->
+        <div class="tab-pane fade accordion-item" id="tab-20" role="tabpanel" aria-labelledby="tab-20" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Inspection of Fire retardant Properties Spread of Flame </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection of Fire retardant Properties Spread of Flame</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V54.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection of girder during welding fabrication -->
+        <div class="tab-pane fade accordion-item" id="tab-21" role="tabpanel" aria-labelledby="tab-21" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Inspection of girder during welding fabrication </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection of girder during welding fabrication</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V55.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- INSPECTION OF GIRDERS- Inspection Before Welding Fabrication -->
+        <div class="tab-pane fade accordion-item" id="tab-22" role="tabpanel" aria-labelledby="tab-22" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> INSPECTION OF GIRDERS- Inspection Before Welding Fabrication </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>INSPECTION OF GIRDERS- Inspection Before Welding Fabrication</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V56.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Girder inspection after welding fabrication -->
+        <div class="tab-pane fade accordion-item" id="tab-23" role="tabpanel" aria-labelledby="tab-23" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Girder inspection after welding fabrication </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Girder inspection after welding fabrication</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V59.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Good Manufacturing Practices in Rail coach Body Building -->
+        <div class="tab-pane fade accordion-item" id="tab-24" role="tabpanel" aria-labelledby="tab-24" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Good Manufacturing Practices in Rail coach Body Building </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Good Manufacturing Practices in Rail coach Body Building</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V60.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Welding Procedure Specificaion WPS -->
+        <div class="tab-pane fade accordion-item" id="tab-25" role="tabpanel" aria-labelledby="tab-25" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Welding Procedure Specificaion WPS </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Welding Procedure Specificaion WPS</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V64.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Heat treatment -->
+        <div class="tab-pane fade accordion-item" id="tab-26" role="tabpanel" aria-labelledby="tab-26" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Heat treatment </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Heat treatment</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V69.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Honing and testing -->
+        <div class="tab-pane fade accordion-item" id="tab-27" role="tabpanel" aria-labelledby="tab-27" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Honing and testing </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Honing and testing</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V71.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Chemical testing -->
+        <div class="tab-pane fade accordion-item" id="tab-28" role="tabpanel" aria-labelledby="tab-28" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Chemical testing </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Chemical testing</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V76.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Coating Failures & Defects -->
+        <div class="tab-pane fade accordion-item" id="tab-29" role="tabpanel" aria-labelledby="tab-29" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Coating Failures & Defects </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Coating Failures & Defects</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V77.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Deterioration of  Visibility due to smoke -->
+        <div class="tab-pane fade accordion-item" id="tab-30" role="tabpanel" aria-labelledby="tab-30" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Deterioration of  Visibility due to smoke </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Deterioration of  Visibility due to smoke</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V78.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Do & Dont's of IE's -->
+        <div class="tab-pane fade accordion-item" id="tab-31" role="tabpanel" aria-labelledby="tab-31" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Do & Dont's of IE's </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Do & Dont's of IE's</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V79.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- About steel bridge girders -->
+        <div class="tab-pane fade accordion-item" id="tab-32" role="tabpanel" aria-labelledby="tab-32" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> About steel bridge girders </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>About steel bridge girders</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V8.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tab-a-tab").css("pointer-events", "all");
+            $("#tab-b-tab").css("pointer-events", "all");
+            $("#tab-c-tab").css("pointer-events", "all");
+            $("#tab-d-tab").css("pointer-events", "all");
+
+            $("#tab-1-tab").css("pointer-events", "all");
+            $("#tab-2-tab").css("pointer-events", "all");
+            $("#tab-3-tab").css("pointer-events", "all");
+            $("#tab-4-tab").css("pointer-events", "all");
+            $("#tab-5-tab").css("pointer-events", "all");
+            $("#tab-6-tab").css("pointer-events", "all");
+            $("#tab-7-tab").css("pointer-events", "all");
+            $("#tab-8-tab").css("pointer-events", "all");
+            $("#tab-9-tab").css("pointer-events", "all");
+            $("#tab-10-tab").css("pointer-events", "all");
+            $("#tab-11-tab").css("pointer-events", "all");
+            $("#tab-12-tab").css("pointer-events", "all");
+            $("#tab-13-tab").css("pointer-events", "all");
+            $("#tab-14-tab").css("pointer-events", "all");
+            $("#tab-15-tab").css("pointer-events", "all");
+            $("#tab-16-tab").css("pointer-events", "all");
+            $("#tab-17-tab").css("pointer-events", "all");
+            $("#tab-18-tab").css("pointer-events", "all");
+            $("#tab-19-tab").css("pointer-events", "all");
+            $("#tab-20-tab").css("pointer-events", "all");
+            $("#tab-21-tab").css("pointer-events", "all");
+            $("#tab-22-tab").css("pointer-events", "all");
+            $("#tab-23-tab").css("pointer-events", "all");
+            $("#tab-24-tab").css("pointer-events", "all");
+            $("#tab-25-tab").css("pointer-events", "all");
+            $("#tab-26-tab").css("pointer-events", "all");
+            $("#tab-27-tab").css("pointer-events", "all");
+            $("#tab-28-tab").css("pointer-events", "all");
+            $("#tab-29-tab").css("pointer-events", "all");
+            $("#tab-30-tab").css("pointer-events", "all");
+            $("#tab-31-tab").css("pointer-events", "all");
+            $("#tab-32-tab").css("pointer-events", "all");
+        });
+    </script>
+}

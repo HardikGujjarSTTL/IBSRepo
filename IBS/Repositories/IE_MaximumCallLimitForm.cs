@@ -15,7 +15,7 @@ namespace IBS.Repositories
         public IE_MaximumCallLimitFormModel FindByID(string RegionCode)
         {
             IE_MaximumCallLimitFormModel model = new();
-            T102IeMaximumCallLimit role = context.T102IeMaximumCallLimits.Find(Convert.ToByte(RegionCode));
+            var role = context.T102IeMaximumCallLimits.Where(x => x.RegionCode == RegionCode).FirstOrDefault();
 
             if (role == null)
                 throw new Exception("Role Record Not found");
@@ -32,7 +32,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<IE_MaximumCallLimitFormModel>GetIE_MaximumCallLimitFormList(DTParameters dtParameters)
+        public DTResult<IE_MaximumCallLimitFormModel> GetIE_MaximumCallLimitFormList(DTParameters dtParameters, string GetRegionCode)
         {
 
             DTResult<IE_MaximumCallLimitFormModel> dTResult = new() { draw = 0 };
@@ -60,7 +60,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T102IeMaximumCallLimits
-                    where l.Isdeleted == 0 || l.Isdeleted == null
+                    where l.Isdeleted == 0 || l.Isdeleted == null && l.RegionCode == GetRegionCode
                     select new IE_MaximumCallLimitFormModel
                     {
                         RegionCode = l.RegionCode,
@@ -100,35 +100,49 @@ namespace IBS.Repositories
             return true;
         }
 
-        public int IE_MaximumCallLimitFormDetailsInsertUpdate(IE_MaximumCallLimitFormModel model)
+        public string IE_MaximumCallLimitFormDetailsInsertUpdate(IE_MaximumCallLimitFormModel model)
         {
-            int RoleId = 0;
+            string RegionID = "";
             var MCL = context.T102IeMaximumCallLimits.Where(x => x.RegionCode == model.RegionCode).FirstOrDefault();
-            #region Role save
-            //if (MCL == null || MCL.RegionCode == 0)
-                if (MCL == null )
-                {
+
+            #region Region save
+            if (MCL == null)
+            {
                 T102IeMaximumCallLimit obj = new T102IeMaximumCallLimit();
 
                 obj.RegionCode = model.RegionCode;
                 obj.MaximumCall = model.MaximumCall;
+                obj.UserId = Convert.ToString(model.Createdby);
+                obj.Datetime = DateTime.Now;
+                obj.Isdeleted = 0;
                 obj.Createdby = model.Createdby;
-                obj.Isdeleted = Convert.ToByte(false);
                 obj.Createddate = DateTime.Now;
                 context.T102IeMaximumCallLimits.Add(obj);
                 context.SaveChanges();
-                RoleId = Convert.ToInt32(obj.RegionCode);
+                RegionID = obj.RegionCode;
             }
             else
             {
                 MCL.MaximumCall = model.MaximumCall;
+                MCL.Isdeleted = 0;
                 MCL.Updatedby = model.Updatedby;
                 MCL.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                RoleId = Convert.ToInt32(MCL.RegionCode);
+
+                T102IeMaximumCallLimitHistory obj1 = new T102IeMaximumCallLimitHistory();
+                obj1.RegionCode = model.RegionCode;
+                obj1.MaximumCall = model.MaximumCall;
+                obj1.UserId = Convert.ToString(model.Createdby);
+                obj1.Datetime = DateTime.Now;
+                obj1.Isdeleted = 0;
+                obj1.Createdby = model.Createdby;
+                obj1.Createddate = DateTime.Now;
+                context.T102IeMaximumCallLimitHistories.Add(obj1);
+                context.SaveChanges();
+                RegionID = MCL.RegionCode;
             }
             #endregion
-            return RoleId;
+            return RegionID;
         }
     }
 

@@ -157,7 +157,7 @@
             <!--header-->
             <!--contentContainer-->
             <div class="contentContainer">
-                <!--leftSidebarNav-->
+                <!--leftSidebarNav 1-->
                 <aside id="sidebar" class="navbar-default navbar-static-side">
                     @Html.Partial("~/Views/Shared/Menu.cshtml")
                     @*<div class="sidebar-collapse menu-scroll">
@@ -231,90 +231,95 @@
                     </ul>
                     </li>
 
-                    <li>
-                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-ico.png" alt="IE" /></i><span class="menu-title">IE Details</span></a>
-                    <ul class="nav nav-second-level">
-                    <li><a asp-action="Index" asp-controller="UnitOfMeasurementsMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Unit of Measurements Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="RitesDesignationMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Rites Designation Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="RailwaysDirectory"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railways Directory</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Rly_Designation_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railway Designation Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">City  Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="IE_CO_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Controlling Officers of Inspecting Engineers</span></a></li>
-                    <li><a asp-action="Index" asp-controller="InspectionEngineers"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Inspection Engineers</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IC Book Set</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IC Book Set Search</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor/Manufacturer Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Consignee_PMForm"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Consignee/Purchaser Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Consignee/ Purchaser Entry</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Bill_Paying_Officer_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Bill Paying Officer (BPO)</span></a></li>
-                    <li><a asp-action="Index" asp-controller="BankMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Bank Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="AccountCodesDirectory"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Account Codes Directory</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Search of Hologram to IE</span></a></li>
-                    <li><a asp-action="Index" asp-controller="ClusterMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Cluster Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Cluster</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Cluster</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Maximum Call Limit Form</span></a></li>
-                    <li><a asp-action="Index" asp-controller="MasterItemsListForm"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items List Form</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items PL Form</span></a></li>
-                    <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Call Date</span></a></li>
-                    <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Vendor</span></a></li>
-                    </ul>
-                    </li>
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-ico.png" alt="IE" /></i><span class="menu-title">IE Details</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="Index" asp-controller="UnitOfMeasurementsMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Unit of Measurements Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="RitesDesignationMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Rites Designation Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="RailwaysDirectory"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railways Directory</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Rly_Designation_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railway Designation Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">City  Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IE_CO_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Controlling Officers of Inspecting Engineers</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="InspectionEngineers"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Inspection Engineers</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IC Book Set</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IC Book Set Search</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor/Manufacturer Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Consignee_PMForm"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Consignee/Purchaser Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Consignee/ Purchaser Entry</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Bill_Paying_Officer_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Bill Paying Officer (BPO)</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="BankMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Bank Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="AccountCodesDirectory"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Account Codes Directory</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Search of Hologram to IE</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="ClusterMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Cluster Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Cluster</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Cluster</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Maximum Call Limit Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="IE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items List Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items PL Form</span></a></li>
+                                    <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Call Date</span></a></li>
+                                    <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Vendor</span></a></li>
+                                </ul>
+                            </li>
+                            @*<li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/transaction-ico.png" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Daily Work Plan</span></a></li>
+                                    <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Pending JI Complaints for IE Remarks</span></a></li>
+                                </ul>
+                            </li>*@
+                            <li>
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Directories</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="Index" asp-controller="UnitOfMeasurementsMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Unit of Measurements Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="RitesDesignationMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Rites Designation Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="RailwaysDirectory"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railways Directory</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Rly_Designation_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railway Designation Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="CityMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">City Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IE_CO_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Controlling Officers of Inspecting Engineers</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="InspectionEngineers"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Inspection Engineers</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IC_Bookset_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IC Book Set</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IC Book Set Search</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor/Manufacturer Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Consignee_PMForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Consignee/Purchaser Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Consignee/ Purchaser Entry</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Bill_Paying_Officer_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Bill Paying Officer (BPO)</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="BankMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Bank Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="AccountCodesDirectory"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Account Codes Directory</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="HologramSearchForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Issue of Hologram to IE</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="ClusterMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Cluster Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="VendorCluster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Cluster</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Cluster</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IE_MaximumCallLimitForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Maximum Call Limit Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="D"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items List Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsPLForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items PL Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="ClientEntryForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Client Entry form</span></a></li>
+                                  
+                                </ul>
+                            </li>
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Call Status</span></a>
+                            <ul class="nav nav-second-level">
+                                
+                                <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Call Date</span></a></li>
+                                <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Vendor</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="menu-title">Daily Work Plan</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IEJIRemarksPending"><i class="fa fa-angle-double-right"></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="ICPhotoEnclosed"><i class="fa fa-angle-double-right"></i><span class="menu-title">Download/View Photo Enclosed</span></a></li>
+                                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Documents</span></a></li>
+                                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="IE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Master Items List</span></a></li>
 
-                    <li>
-                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Directories</span></a>
-                    <ul class="nav nav-second-level">
-                    <li><a asp-action="Index" asp-controller="UnitOfMeasurementsMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Unit of Measurements Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="RitesDesignationMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Rites Designation Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="RailwaysDirectory"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railways Directory</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Rly_Designation_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railway Designation Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="CityMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">City Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="IE_CO_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Controlling Officers of Inspecting Engineers</span></a></li>
-                    <li><a asp-action="Index" asp-controller="InspectionEngineers"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Inspection Engineers</span></a></li>
-                    <li><a asp-action="Index" asp-controller="IC_Bookset_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IC Book Set</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IC Book Set Search</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor/Manufacturer Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Consignee_PMForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Consignee/Purchaser Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Consignee/ Purchaser Entry</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Bill_Paying_Officer_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Bill Paying Officer (BPO)</span></a></li>
-                    <li><a asp-action="Index" asp-controller="BankMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Bank Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="AccountCodesDirectory"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Account Codes Directory</span></a></li>
-                    <li><a asp-action="Index" asp-controller="HologramSearchForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Issue of Hologram to IE</span></a></li>
-                    <li><a asp-action="Index" asp-controller="ClusterMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Cluster Master</span></a></li>
-                    <li><a asp-action="Index" asp-controller="VendorCluster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Cluster</span></a></li>
-                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Cluster</span></a></li>
-                    <li><a asp-action="Index" asp-controller="IE_MaximumCallLimitForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Maximum Call Limit Form</span></a></li>
-                    <li><a asp-action="Index" asp-controller="MasterItemsListForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items List Form</span></a></li>
-                    <li><a asp-action="Index" asp-controller="MasterItemsPLForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items PL Form</span></a></li>
-
-                    </ul>
-                    </li>
-                    <li>
-                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Call Status</span></a>
-                    <ul class="nav nav-second-level">
-
-                    <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Call Date</span></a></li>
-                    <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Vendor</span></a></li>
-                    </ul>
-                    </li>
-                    <li>
-                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
-                    <ul class="nav nav-second-level">
-                    <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="menu-title">Daily Work Plan</span></a></li>
-                    <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
-                    <li><a asp-action="Index" asp-controller="ICPhotoEnclosed"><i class="fa fa-angle-double-right"></i><span class="menu-title">Download/View Photo Enclosed</span></a></li>
-                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Documents</span></a></li>
-                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
-                    </ul>
-                    </li>
-                    <li>
-                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Finance</span></a>
-                    <ul class="nav nav-second-level">
-                    <li><a asp-action="Index" asp-controller="AddRecieptVoucher"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add Reciept Voucher</span></a></li>
-                    <li><a asp-action="SearchPayment" asp-controller="SearchPayments"><i class="fa fa-angle-double-right"></i><span class="menu-title">Search Payments</span></a></li>
-                    <li><a asp-action="Index" asp-controller="CheckPostingForm"><i class="fa fa-angle-double-right"></i><span class="menu-title">Cheque Posting Form</span></a></li>
-                    <li><a asp-action="EFTEntry" asp-controller="EFTEntry"><i class="fa fa-angle-double-right"></i><span class="menu-title">EFT Entry</span></a></li>
-                    <li><a asp-action="Index" asp-controller="InterUnit_Transfer"><i class="fa fa-angle-double-right"></i><span class="menu-title">Inter Unit Transfer</span></a></li>
+                                    <li><a asp-action="QAVideoGeneral" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video General</span></a></li>
+                                    <li><a asp-action="QAVideoMechanical" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Mechanical</span></a></li>
+                                    <li><a asp-action="QAVideoEletrical" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Electrical</span></a></li>
+                                    <li><a asp-action="QAVideoCivil" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Civil</span></a></li>
+                            </ul>
+                        </li>
 
                                 </ul>
                             </li>

@@ -82,6 +82,7 @@ builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWo
 builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPhotoEnclosedRepository>();
 builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
 builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.ComplaintApprovalRepository>();
+builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
 
 
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
@@ -150,6 +151,13 @@ builder.Services.AddScoped<ILabPaymentListRepository, LabPaymentListRRepository>
 builder.Services.AddScoped<ILabInvoiceDownloadRepository, LabInvoiceDownloadRRepository>();
 builder.Services.AddScoped<ILabSamplePaymentRptRepository, LabSamplePaymentRptRRepository>();
 builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRRepository>();
+builder.Services.AddScoped<ICityMaster, CityMaster>();
+builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
+builder.Services.AddScoped<IVendorCluster, VendorCluster>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
+builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
