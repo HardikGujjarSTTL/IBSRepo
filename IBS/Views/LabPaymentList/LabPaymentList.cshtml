@@ -1,0 +1,138 @@
+﻿@{
+    ViewData["Title"] = "LAB SAMPLE PAYMENT SUBMITTED BY VENDORS AWAITING FOR APPROVAL OF FINANCE";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB SAMPLE PAYMENT SUBMITTED BY VENDORS AWAITING FOR APPROVAL OF FINANCE</h2>
+        </div>
+        
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtpylist" class="table-responsive">
+                    <thead>
+                        <tr>
+                            
+                            <th>Case Number</th>
+                            <th>Call Recv Date</th>
+                            <th>SNo</th>
+                            <th>Gross Testing Charges(Submitted by LAB official)</th>
+                            <th>Gross Testing Charges(Submitted By Vendor)</th>
+                            <th>Net Testing Charges(Submitted by Vendor)</th>
+                            <th>TDS (If Any)</th>
+                            <th>Payment Reciept(Uploaded by Vendor)</th>
+                            <th>Status</th>
+                            <th>Vendor/Contractor</th>
+                            <th>Manufacturer</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+           
+            $("#dtpylist").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "CaseNo" },
+                    { data: "CallRecvDt" },
+                    { data: "CallSno" },
+                    { data: "GrossTestingChargesLab" },
+                    { data: "GrossVendor" },
+                    { data: "NetTestingChargesVend" },
+                    { data: "TDS" },
+                    { data: "PaymentRecUpload" },
+                    { data: "DocStatusFin" },
+                    { data: "Vendor" },
+                    { data: "Mfg" },
+                    
+                    
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                           
+                            var CaseNo = data.CaseNo;
+                            var CallSno = data.CallSno;
+                            var CallRecvDt = data.CallRecvDt;
+                            //var editUrl = '@Url.Action("LabPaymentApproval", "LabPaymentList")';
+                            var editUrl = '@Url.Action("LabPaymentApproval", "LabPaymentList")' + '?CaseNo=' + CaseNo + '&CallSno=' + CallSno + '&CallRecvDt=' + CallRecvDt;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"select\"><i class=\"fa fa-pencil\" title="Select"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
+                ],
+                //columnDefs: [
+                //    { width: '100px', targets: [0, 1, 2] }, // Adjust the width and targets as needed
+                //    { width: '150px', targets: [3, 4, 5] }, // Adjust the width and targets as needed
+                //    // ... Add more as needed
+                //],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        //function UserDelete(UserId) {
+        //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+        //    $("#btn-delete-yes").attr("href", url);
+        //    $("#modal-delete-conf").modal("show");
+        //}
+
+    </script>
+}
