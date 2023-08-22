@@ -456,6 +456,7 @@ else
     }
 
     function OnFileUpload(ControlID, DocumentID, e, IsSignleFile) {
+        debugger
         var files = e.files;
         var filesize = $(e).attr("data-filesize");
         if (files.length > 0) {

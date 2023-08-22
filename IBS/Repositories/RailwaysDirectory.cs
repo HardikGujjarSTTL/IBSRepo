@@ -32,7 +32,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<RailwaysDirectoryModel> GetRMList(DTParameters dtParameters)
+        public DTResult<RailwaysDirectoryModel>GetRMList(DTParameters dtParameters)
         {
 
             DTResult<RailwaysDirectoryModel> dTResult = new() { draw = 0 };
@@ -93,7 +93,7 @@ namespace IBS.Repositories
         }
         public bool Remove(int RlyCd, int UserID)
         {
-            var roles = context.T91Railways.Find(Convert.ToByte(RlyCd));
+            var roles = context.T91Railways.Find(RlyCd);
             if (roles == null) { return false; }
 
             roles.Isdeleted = Convert.ToByte(true);
@@ -136,10 +136,6 @@ namespace IBS.Repositories
             return RoleId;
         }
 
-        public int RailwaysDirectoryInsertUpdate(RailwaysDirectoryModel model)
-        {
-            throw new NotImplementedException();
-        }
-    }
+           }
 
 }

@@ -1,0 +1,398 @@
+﻿@model IBS.Models.VendorCallRegPrintReport
+@{
+    ViewData["Title"] = "INSPECTION CALL";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    @*<div class="list-inner">
+    <div class="tast-list">
+    <h2>INSPECTION CALL</h2>
+    </div>
+    </div>*@
+    <input type="hidden" asp-for="CaseNo" />
+    <input type="hidden" asp-for="CallRecvDt" />
+    <input type="hidden" asp-for="CallSno" />
+
+    <div class="accordion-body" id="divToPrint">
+        <div class="row my-0">
+            @*<div class="center">
+                @if (Model.OnlineCall == "Y")
+                    {
+                        <span style="font-size: 14"><font face="Verdana" size="2"><b>ONLINE INSPECTION CALL</b></font></span>
+                    }
+                    else
+                    {
+                        <span style="font-size: 14"><Font face="Verdana" size="2"><B>INSPECTION CALL</B></Font></span>
+                    }
+            </div>*@
+            <table border="0">
+                <tr class="center">
+                    @if (Model.OnlineCall == "Y")
+                    {
+                        <td colspan="2" align="center" class="center"><font face="Verdana" size="2"><span style="font-size: 14"><b>ONLINE INSPECTION CALL</b></span></font></td>
+                    }
+                    else
+                    {
+                        <td colspan=2 align="center"><Font face="Verdana" size="2"><span style="font-size: 14"><B>INSPECTION CALL</B></span></Font></td>
+                    }
+                </tr>
+                
+                <tr>
+                    @if (Model.FinalOrStage == "S")
+                    {
+                        <td colspan=2 align="center"><Font face="Verdana" size="2"><span style="font-size: 14"><B>STAGE CALL</B></span></Font></td>
+                    }
+                </tr>
+                <tr>
+                    <td colspan=2><Font face="Verdana" size="1"><span style="font-size:medium;"><B>From.</B><br> @Model.VendName <br> @Model.VendAdd </span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2><Font face="Verdana" size="1"><span style="font-size:medium;"><B>Ref No.</B> @Model.CallLetterNo </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><B>Date: </B> @Model.CallLetterDt </span></Font></td>
+                    @if (Model.IeName != "")
+                    {
+                        <td align=right width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><B>Call Marked to: </B> @Model.IeName </Font></td>
+                    }
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    @if (Model.CaseNo.Substring(0, 1).ToString() == "N")
+                    {
+                        <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Northern Region <br> 12th Floor, Core-II, <br> Scope Minar, Laxmi Nagar, <br> Delhi-110092 </p></span> </Font></td>
+                    }
+                    @if (Model.CaseNo.Substring(0, 1).ToString() == "E")
+                    {
+                        <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Eastern Region <br> CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE, 3rd FLOOR, <br> KOLKATA-700 012 </p></span> </Font></td>
+                    }
+                    @if (Model.CaseNo.Substring(0, 1).ToString() == "W")
+                    {
+                        <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Western Region <br> 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT, NARIMAN POINT, MUMBAI-400021 </p></span> </Font></td>
+                    }
+                    @if (Model.CaseNo.Substring(0, 1).ToString() == "S")
+                    {
+                        <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Southern Region <br> CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD, <br> CHENNAI - 600 006 </p></span> </Font></td>
+                    }
+                    @if (Model.CaseNo.Substring(0, 1).ToString() == "C")
+                    {
+                        <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Central Region <br> 50, EXPANSION BUIDING,BHILAI STEEL PLANT AREA <br> BHILAI -490001 </p></span> </Font></td>
+                    }
+                    @if (Model.CaseNo.Substring(0, 1).ToString() == "Q")
+                    {
+                        <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> CO QA Division <br> RITES BHAWAN, 1, SECTOR-29, GURGAON <br> HARYANA -122001 </p></span> </Font></td>
+                    }
+                    <td align=right width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><B> CALL DATED:</B> @Model.CallRecvDt  <B> CALL SNO. </B> @Model.CallSno <br><B>CASE NO. </B> @Model.CaseNo </span> <span>(PO SOURCE: @Model.Source)</span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;"><br>Dear Sir,<br /></span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Please arrange to inspect following goods lying ready with us. It is certified that the stores offered have been inspected by us and found to conform to the governing specifications.<br></span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">1. Purchase Order No. and Date </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.PoNo Dated:@Model.PoDt </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">2. Purchaser </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.Purchaser </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font Face="Verdana"><span style="font-size:12;">3. Consignee </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">4. Manufacturer's Name </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.MfgName </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">5. Place of Inspection with address </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.MfgAdd </span></Font></td>
+                </tr>
+                <tr>
+                    <td align="left"><Font face="Verdana" size="1"><span style="font-size:medium;">6. Person to be contacted, Phone No. with E-mail id </span></Font></td>
+                    <td align="right"><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendContactPer1, @Model.VendContactTel1, @Model.VendEmail </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">7. Description of Stores </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">8. State whether the items is on RDSO Vendor Directory </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.ItemRdso </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">9. If Yes, whether the vendor is RDSO Aprroved. Indicate validity of approval </span></Font></td>
+                    @if (Model.VendRdso == "Yes")
+                    {
+                        <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendRdso, From: @Model.VendAppFr TO: @Model.VendAppTo </span></Font></td>
+                    }
+                    else
+                    {
+                        <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendRdso </span></Font></td>
+                    }
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">10. Quantity on Order </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">11. Quantity Now Offered </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">12. Installmant Number </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.CallInstallNo </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">13. Quantity already inspected and passed </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">14. Delivery period as per P.O./Amendment </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a. Does PO specified staggered DP: </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.StagDp </Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b. If yes, details of lot size and staggered DP </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">1. Lot Size & DP: @Model.LotDp1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"></span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">2. Lot Size & DP2: @Model.LotDp2 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">15. Bill Paying authority </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">16. IRFC Funded Project </span></Font></td>
+                    @if (Model.IrfcFunded == "Y")
+                    {
+                        <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> Yes </span></Font></td>
+                    }
+                    else
+                    {
+                        <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> No </span></Font></td>
+                    }
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">17. Inspection Fee Payment details for cases </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"></span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> Where advance inspection fee is to be paid </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"></span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1">
+                        <span style="font-size:medium;">I hereby accept all the 
+                        @*<a href='javascript: void(0)' onclick=javascript:window.open('TermsandConditions.aspx','CustomPopUp','fullscreen =no,scrollbars =yes','width =700,height =800,menubar =no,resizable =no,alwaysRaised =true');return false; Font-Names='Verdana' Font-Size='8pt'>Terms and Conditions</a>. *@
+                        </span>
+                        </Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Thanking you,<br></span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Yours Faithfully, </span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Name<br></span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendContactPerPO1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> Mobile <br></span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendContactTelPO1 </span></Font></td>
+                </tr>
+                <tr>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Vend Email <br></span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendPOEmail </span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> Designation </span></Font></td>
+                </tr>
+                <tr>
+                    <td colspan=2></td>
+                </tr>
+                <tr>
+                    <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> Authorised Signatory </span></Font></td>
+                </tr>
+                <tr class="center">
+                    <td colspan="2" align="center" class="center"><B>Annexure-1 (INSPECTION CALL ITEM DETAILS)</B></td>
+                </tr>
+                @*<tr>
+                    <td colspan=2>
+                        <Font Face="Verdana" size="2">
+                            <span style="font-size: 14;">
+                                <B>Annexure-1 (INSPECTION CALL ITEM DETAILS)</B>
+                            </span>
+                        </Font>
+                    </td>
+                </tr>*@
+            </table>
+            <section class="table-section">
+                <div class="task-listinput">
+                    <div class="dash-table">
+                        <table id="dtListPrint">
+                            <thead>
+                                <tr>
+                                    <th>Sno.</th>
+                                    <th>Consignee</th>
+                                    <th>Description of Stores</th>
+                                    <th>Quantity on Order</th>
+                                    <th>Quantity Now Offered</th>
+                                    <th>Quantity already inspected and passed</th>
+                                    <th>Delivery period as per P.O./Amendment</th>
+                                    <th>Bill Paying authority</th>
+                                    <th>Master Item Checksheet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <table border="0">
+                <tr>
+                    @if (Model.Remarks != "")
+                    {
+                        <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;"><B>REMARKS: @Model.Remarks </b></span></Font></td>
+                    }
+                </tr>
+            </table>
+        </div>
+        <div class="savenext-btn">
+             <button type="button" class="save-btn active" id="btnPrint">Print</button>
+        </div>
+    </div>
+</form>
+
+@*$("#btnPrint").hide();
+var contentToPrint = $("#divToPrint").html();
+var newWin = window.open('', '_blank');
+newWin.document.open();
+newWin.document.write('<html><body>' + contentToPrint + '</body></html>');
+newWin.document.close();
+newWin.print();*@
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <style>
+        #dtListPrint td {
+            word-wrap: anywhere;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            InitializeDatatable();
+        });
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+
+            $("#dtListPrint").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                dom:"r",
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableReport", "VendorCallRegister")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "CallRecvDt": CallRecvDt,
+                            "CallSno": CallSno,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    { data: "Consignee" },
+                    { data: "ItemDescPo" },
+                    { data: "QtyOrdered" },
+                    { data: "QtyToInsp" },
+                    { data: "CumQtyPrevOffered" },
+                    
+                    {
+                        data: "DelvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Bpo" },
+                    { data: "ItemCd" },
+
+                ],
+                "order": [[1, "asc"]]
+            });
+        }
+
+        $("#btnPrint").click(function () {
+            
+        });
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/PurchesOrder1LOA";
+        };
+    </script>
+    }
