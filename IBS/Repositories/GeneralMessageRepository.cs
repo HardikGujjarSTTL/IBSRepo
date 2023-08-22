@@ -8,6 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using IBS.Helper;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -22,7 +23,6 @@ namespace IBS.Repositories
 
         public GeneralMessageModel FindByID(int MessageId)
         {
-
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[2];
@@ -37,26 +37,8 @@ namespace IBS.Repositories
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     model = JsonConvert.DeserializeObject<List<GeneralMessageModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
                 }
-
-                
                 return model;
             }
-
-
-            //GeneralMessageModel model = new();
-            //T96Message message = context.T96Messages.Find(Convert.ToDecimal(MessageId));
-
-            //if (message == null)
-            //    throw new Exception("General Message Not found");
-            //else
-            //{
-            //    model.MESSAGE_ID = message.MessageId;
-            //    model.MESSAGE = message.Message;
-            //    model.Isdeleted = message.Isdeleted;
-
-            //    return model;
-            //}
-
         }
 
         public DTResult<GeneralMessageModel> GetMessageList(DTParameters dtParameters)

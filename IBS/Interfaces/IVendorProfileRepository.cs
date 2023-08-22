@@ -6,6 +6,8 @@ namespace IBS.Interfaces
     public interface IVendorProfileRepository
     {
         public VendorModel FindByID(int VendCd);
-        int VendorDetailsInsertUpdate(VendorModel model);
+        DTResult<VendorlistModel> GetVendorList(DTParameters dtParameters);
+        bool Remove(int VEND_CD, int UserID);
+        int VendorDetailsInsertUpdate(VendorModel model,bool isSameVendor);
     }
 }

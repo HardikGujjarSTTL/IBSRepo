@@ -1,0 +1,66 @@
+﻿@model IBS.Models.CityMasterModel
+@{
+    ViewData["Title"] = "City Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>City Master</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="CityMaster" asp-action="CityMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmCityMaster">
+                <input type="hidden" asp-for="CityCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Location</label>
+                            <textarea class="input" asp-for="Location" maxlength="30"> </textarea>
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">City Name</label>
+                            <textarea class="input" asp-for="City" maxlength="30"> </textarea>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">States</label>
+                            <input type="text" class="input" asp-for="StateCd" maxlength="30">
+                            <span asp-validation-for="StateCd" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Country</label>
+                            <input type="text" class="input" asp-for="Country" maxlength="30">
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="CityMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmCityMaster").valid()) {
+                $("#frmCityMaster").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/CityMaster/Index";
+            window.location.href = '@Url.Action("Index", "CityMaster")';
+        };
+    </script>
+}

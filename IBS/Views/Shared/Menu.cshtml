@@ -1,0 +1,49 @@
+﻿@using System.Web;
+@{
+    List<MenuMasterModel> menuList = IBS.Helper.SessionHelper.MenuModelDTO;
+}
+<div class="sidebar-collapse menu-scroll">
+    <ul id="side-menu" class="nav">
+        <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
+        @*<li><a asp-action="Index" asp-controller="Landlord"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Landlord</span></a></li>*@
+
+
+        @if (menuList != null)
+        {
+            foreach (var mp in menuList.Where(p => p.ParentId == 0))
+            {
+                <li>
+                    @{
+                        string urlMain = "#"; 
+                        string classMain = "fa arrow"; 
+                        if(mp.ActionName != null && mp.ControllerName != null)
+                        {
+                            urlMain = Url.Action(mp.ActionName,mp.ControllerName );
+                            classMain = "fa";
+                        }
+                    }
+                    <a href="@Html.Raw(@HttpUtility.UrlDecode(urlMain))"><span class="@classMain"></span><i class="fa  fa-fw"><img src="@mp.IconPath" alt="tenant" /></i><span class="menu-title"> @mp.Title </span></a>
+
+                    @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)
+                    {
+                        @:<ul class="nav nav-second-level">
+                    }
+                    @foreach (var cp in menuList.Where(p => p.ParentId == mp.MenuId))
+                    {
+
+                        string url = Url.Action(cp.ActionName,cp.ControllerName );
+                        @:<li><a href="@Html.Raw(@HttpUtility.UrlDecode(url))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a></li>
+                    }
+
+                    @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)
+                    {
+                    @:</ul>
+                    }
+                </li>
+            }
+        }
+        
+    </ul>
+</div>
+
+

@@ -21,5 +21,9 @@
         public DateTime? Updateddate { get; set; }
 
         public decimal? Updatedby { get; set; }
+
+        public int? User_ID { get; set; }
+        public string? UserName { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -1,0 +1,77 @@
+﻿@model IBS.Models.InspectionEngineersModel
+
+@{
+    ViewData["Title"] = "Inspection Engineers";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Inspection Engineers</h2>
+    </div>
+</div>
+
+    <div class="task-listinput">
+        
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="InspectionEngineers" asp-action="InspectionEngineersDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInspectionEngineers">
+                <input type="hidden" asp-for="IeCd" />
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">IE Full Name</label>
+                            <textarea class="input" asp-for="IeName" maxlength="30"> </textarea>
+                            <span asp-validation-for="IeName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">IE Short Name</label>
+                            <textarea class="input" asp-for="IeSname" maxlength="30"> </textarea>
+                            <span asp-validation-for="IeSname" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Employee No</label>
+                            <input type="text" class="input" asp-for="IeEmpNo" maxlength="30">
+                            <span asp-validation-for="IeEmpNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Designation</label>
+                            <input type="text" class="input" asp-for="IeDesig" maxlength="30">
+                            <span asp-validation-for="IeDesig" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">IE Seal No</label>
+                            <input type="text" class="input" asp-for="IeSealNo" maxlength="30">
+                            <span asp-validation-for="IeSealNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">IE Region</label>
+                            <input type="text" class="input" asp-for="IeDepartment" maxlength="30">
+                            <span asp-validation-for="IeDepartment" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="InspectionEngineers" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    </div>
+                </div>
+            </form>
+        
+    </div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmInspectionEngineers").valid()) {
+                $("#frmInspectionEngineers").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/InspectionEngineers/Index";
+            window.location.href = '@Url.Action("Index", "InspectionEngineers")';
+        };
+    </script>
+}

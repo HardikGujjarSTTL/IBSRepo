@@ -1,7 +1,8 @@
 ﻿
 @{
-    ViewData["Title"] = "Contract List";
+    ViewData["Title"] = "Payment List";
 }
+
 
 <div>
     <div class="list-inner">
@@ -9,7 +10,7 @@
             <h2>Contract List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="Contract" asp-action="Manage" class="formBtn">Add New Contract</a>
+            <a asp-area="" asp-controller="Contract" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Contract</a>
         </div>
     </div>
     <section class="table-section">
@@ -19,7 +20,6 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Contract Code</th>
                             <th>Client</th>
                             <th>Contract No</th>
                             <th>Rate of Insp Fee</th>
@@ -77,7 +77,6 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "ContractId" },
                     { data: "ClientName" },
                     { data: "ContractNo" },
                     { data: "ContInspFee" },

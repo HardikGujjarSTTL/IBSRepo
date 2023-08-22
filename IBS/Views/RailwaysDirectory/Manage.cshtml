@@ -8,9 +8,8 @@
         <h2>Railways Directory</h2>
     </div>
 </div>
-<section class="table-section">
+
     <div class="task-listinput">
-        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="RailwaysDirectory" asp-action="RailwaysDirectoryDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRailwaysDirectory">
                 <input type="hidden" asp-for="RlyCd" />
                 <div class="accordion-body">
@@ -33,9 +32,8 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
-</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -48,7 +46,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/RailwaysDirectory/Index";
+            //window.location.href = "/RailwaysDirectory/Index";
+            window.location.href = '@Url.Action("Index", "RailwaysDirectory")';
         };
     </script>
 }

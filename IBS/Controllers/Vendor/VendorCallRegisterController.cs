@@ -134,33 +134,6 @@ namespace IBS.Controllers.Vendor
             return Json(Common.GetVendor_City(id));
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult VoucherDetailsSave(AddRecieptVoucherModel model)
-        //{
-        //    try
-        //    {
-        //        string msg = "Voucher Inserted Successfully.";
-
-        //        if (model.VCHR_NO != "")
-        //        {
-        //            msg = "Voucher Updated Successfully.";
-
-        //        }
-        //        int i = addVoucherRepository.VoucherDetailsSave(model, GetUserInfo.Region.ToString());
-        //        if (i > 0)
-        //        {
-        //            return Json(new { status = true, responseText = msg });
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //         Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "VendorCallRegisterUpdate", 1, GetIPAddress());
-        //    }
-        //    return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        //}
-
         [HttpPost]
         public IActionResult UpdateDetails(VenderCallRegisterModel model)
         {

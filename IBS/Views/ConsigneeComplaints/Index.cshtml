@@ -1,0 +1,184 @@
+﻿@model IBS.Models.ConsigneeComplaints
+@{
+    ViewData["Title"] = "ConsigneeComplaints";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Consignee Complaints</h2>
+        </div>
+       
+    </div>
+    
+        <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneeComplaints" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaintDetails">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="reference">Po/offer letter no.</label>
+                        <input type="text" class="input" asp-for="PO_NO" maxlength="50" id="PoNo">
+                            <span asp-validation-for="PO_NO" class="text-danger"></span>
+                        </div>
+                       
+                        <div class="col-md-4 mb-3">
+                            <label for="reference">Po Date</label>
+                        <input type="text" class="input datepicker" asp-for="PO_DT" readonly="true" id="PoDt">
+                        </div>
+                        <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="Search();">search</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtComplaints" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Case Number</th>
+                                <th>Bk No.</th>
+                                <th>Set No.</th>
+                                <th>Purchase Order Number</th>
+                                <th>Purchase Order Date</th>
+                                <th>Agency</th>
+                                <th>Vendor</th>
+                                <th>Consignee</th>
+                                <th>IC No.</th>
+                                <th>IC Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        </div>
+    
+</div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            setDefaultDate();
+            //InitializeDatatable();
+        });
+
+        var dataTableInstance;
+        function Search() {
+            if ($("#frmComplaintDetails").valid()) {
+                $("#frmComplaintDetails").submit();
+            }
+            InitializeDatatable();
+        }
+        //$(function () {
+        //    InitializeDatatable();
+        //});
+        function setDefaultDate() {
+            $('#PoDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+           
+
+
+        }
+
+        completed = function (response) {
+            debugger
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/ConsigneeComplaints";
+            window.location.href = '@Url.Action("Index", "ConsigneeComplaints")';
+        };
+
+        function InitializeDatatable() {
+           
+            debugger
+            var PoNo = $("#PoNo").val();
+            var PoDt = $("#PoDt").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+             $("#dtComplaints").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        debugger
+                        var AdditionalValues = {
+                            "PoNo": PoNo,
+                            "PoDt": PoDt
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+
+                    { data: "CASE_NO" },
+                    { data: "BK_NO" },
+                    { data: "SET_NO" },
+                    { data: "PO_NO" },
+                    {
+                        data: "PO_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Railway" },
+                    { data: "VEND_NAME"},
+                    { data: "Consignee"},
+                    { data: "IC_NO"},
+                    {
+                        data: "IC_DATE",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CASE_NO;
+                            var bkNo = data.BK_NO;
+                            var setNo = data.SET_NO;
+                            var editUrl = '@Url.Action("Manage", "ConsigneeComplaints")?CASE_NO=' + CaseNo + '&BK_NO=' + bkNo + '&SET_NO=' + setNo;;
+
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+       
+    </script>
+}

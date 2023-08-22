@@ -85,33 +85,37 @@ namespace IBS.Controllers
             {
                 // username = anet
                 string LoginType = HttpContext.Session.GetString("LoginType").ToString();
-                if (LoginType.ToLower() == "admin")
+                if (LoginType.ToLower() == "admin") 
                 {
-                    T02User userMaster = userRepository.FindByLoginDetail(loginModel);
+                    UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                     if (userMaster != null)
                     {
-                        UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
-                        userSessionModel.Name = Convert.ToString(userMaster.UserName);
-                        userSessionModel.UserName = Convert.ToString(userMaster.UserName);
-                        userSessionModel.Region = Convert.ToString(userMaster.Region);
-                        userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
-                        userSessionModel.LoginType = Convert.ToString(LoginType);
+                        //UserSessionModel userSessionModel = new UserSessionModel();
+                        //userSessionModel.UserID = Convert.ToInt32(userMaster.UserID);
+                        //userSessionModel.Name = Convert.ToString(userMaster.UserName);
+                        //userSessionModel.UserName = Convert.ToString(userMaster.UserName);
+                        //userSessionModel.Region = Convert.ToString(userMaster.Region);
+                        //userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
+                        //userSessionModel.LoginType = Convert.ToString(LoginType);
+                        //userSessionModel.LoginType = Convert.ToString(LoginType);
 
-                        SetUserInfo = userSessionModel;
+                        SetUserInfo = userMaster;
                         var userClaims = new List<Claim>()
                         {
-                            new Claim("UserId", userSessionModel.UserID.ToString()),
-                            new Claim("UserName", Convert.ToString(userSessionModel.UserName)),
-                            new Claim("UserID", userSessionModel.UserID.ToString()),
-                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
-
-                            new Claim("Region", userSessionModel.Region.ToString()),
-                            new Claim("AuthLevl", userSessionModel.AuthLevl.ToString()),
+                            new Claim("Name", Convert.ToString(userMaster.Name)),
+                            new Claim("UserName", Convert.ToString(userMaster.UserName)),
+                            new Claim("UserID", userMaster.UserID.ToString()),
+                            //new Claim("LoginType", userMaster.LoginType.ToString()),
+                            new Claim("Region", userMaster.Region != null ? userMaster.Region.ToString() : ""),
+                            new Claim("AuthLevl", userMaster.AuthLevl != null ? userMaster.AuthLevl.ToString() : ""),
+                            new Claim("RoleId", Convert.ToString(userMaster.RoleId)),
+                            new Claim("RoleName", userMaster.RoleName != null ? Convert.ToString(userMaster.RoleName) : ""),
                          };
                         var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
                         HttpContext.SignInAsync(userPrincipal);
+
+                        SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(userMaster.RoleId);
                         return RedirectToAction("Index", "Dashboard");
                     }
                     else
@@ -125,7 +129,7 @@ namespace IBS.Controllers
                     if (userMaster != null)
                     {
                         UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
+                        userSessionModel.UserID = Convert.ToInt32(userMaster.UserId);
                         userSessionModel.Name = Convert.ToString(userMaster.VendName);
                         userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
                         userSessionModel.LoginType = Convert.ToString(LoginType);
@@ -179,9 +183,7 @@ namespace IBS.Controllers
                     {
                         AlertDanger("Invalid Username or Password");
                     }
-                }
-
-
+                } 
             }
             return View(loginModel);
         }

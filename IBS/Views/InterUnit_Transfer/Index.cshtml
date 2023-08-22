@@ -1,0 +1,299 @@
+﻿@model IBS.Models.InterUnit_TransferModel
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnit_Transfer" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmUnitTransfer">
+                <div class="accordion-body">
+                    <div class="row my-0">
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Bank</label>
+                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { @id = "BankNameDropdown" })
+                            <span asp-validation-for="BANK_NAME" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Cheque No.</label>
+                            <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
+
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Cheque Date</label>
+                            <input type="text" id="CHQ_DATE" class="input datepicker" asp-for="CHQ_DT" maxlength="300" />
+
+                        </div>
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">RV Voucher No.</label>
+                            <input type="text" id="vchrNo" class="input" asp-for="VCHR_NO" maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">RV Voucher Date</label>
+                            <input type="text" id="vchrDT" class="input" asp-for="VCHR_DT" maxlength="300" />
+
+                        </div>
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">JV No.</label>
+                            <input type="text" id="JVNo" class="input" asp-for="JV_NO" maxlength="300" />
+
+                        </div>
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">JV Date.</label>
+                            <input type="text" id="JVDT" class="input" asp-for="JV_DT" maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Cheque Amount</label>
+                            <input type="text" id="chq_amt" class="input" asp-for="CHQ_AMOUNT" maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Amount Transferred to other units</label>
+                            <input type="text" id="amt_transferred" class="input"  maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Available Amount</label>
+                            <input type="text" id="avl_amt" class="input" asp-for="AVL_AMOUNTS" maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Paying Authority</label>
+                            <input type="text" id="paying_authority" class="input" asp-for="PAYING_AUTHORITY" maxlength="300" />
+
+                        </div>
+
+
+                        <table id="dtInterUnit" class="table-responsive">
+                            <thead>
+                                <tr>
+
+                                    @*<th>S NO</th>*@
+
+                                    <th>#</th>
+                                    <th>Region to which Transferred</th>
+                                    <th>Amount</th>
+                                    <th>Narration</th>
+                                    <th>Inter Unit Advice No.	</th>
+                                    <th>Inter Unit Advice Date</th>
+                                    <th>Action</th>
+
+
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Region to which Transferred</label>
+                            <select name="lstACD" id="lstACD" tabindex="6" style="color:DarkBlue;font-family:Verdana;font-size:8pt;width:100%;">
+                                <option selected="selected" value="3008">Eastern Region</option>
+                                <option value="3009">Southern Region</option>
+                                <option value="3006">Western Region</option>
+                                <option value="3066">Central Region</option>
+                                <option value="9999">Bill Adjustment of Old System</option>
+                                <option value="9998">Miscelleanous Adjustments</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Amount</label>
+                            <input type="text" id="Amount" class="input" asp-for="AMOUNT" maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Narration</label>
+                            <input type="text" id="Narration" class="input" asp-for="NARRATION" maxlength="300" />
+
+                        </div>
+
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="BtnSearch" onclick="Save();">Search</button>
+                            <button type="button" class="hide1 save-btn active" id="BtnAdd" onclick="BtnAddNew();">Add New </button>
+                            <button type="button" class="hide1 save-btn active" onclick="">Save</button>
+                            <button type="button" class="hide1 save-btn active" onclick="">Delete</button>
+                            <button type="button" class="hide1 save-btn active" onclick="">Cancel</button>
+
+                            @*<button type="submit" onclick="find();">Search2</button>*@
+                        </div>
+
+                    </div>  
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () 
+        {
+            $(".hide1").css("display", "none");
+            $("#dtInterUnit").css("display", "none");
+            
+        });
+
+        function Save()
+        {
+
+
+            if ($("#CHQ_NO").val() == null || $("#CHQ_NO").val() == "") {
+                alert('all fields are mandatory');
+
+            }
+            else {
+                $(".hide1").css("display", "block");
+                $("#BtnSearch").css("display", "none ");
+                var BankNameDropdown = $("#BankNameDropdown").val();
+                var CHQ_NO = $("#CHQ_NO").val();
+                var CHQ_DATE = $("#CHQ_DATE").val();
+                //var JV_NO = sessionStorage.getItem("JVno");
+                GetValue(BankNameDropdown, CHQ_NO, CHQ_DATE);
+                GetJVValue(BankNameDropdown, CHQ_NO, CHQ_DATE);
+               
+            }
+        }
+
+        function GetValue(BankNameDropdown, CHQ_NO, CHQ_DATE) {
+            var parts = CHQ_DATE.split('-');
+            var convertedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
+
+            $.ajax({
+                url: '/InterUnit_Transfer/GetValue',
+                type: "POST",
+                dataType: "JSON",
+                data: { BankNameDropdown: BankNameDropdown, CHQ_NO: CHQ_NO, CHQ_DATE: convertedDate },
+
+                success: function (success) {
+                   
+                    $("#vchrNo").val(success.VCHR_NO);
+                    $("#vchrDT").val(success.VCHR_DT);
+                    $("#chq_amt").val(success.AMOUNT);
+                    $("#amt_transferred").val(success.AMT_TRANSFERRED);
+                    $("#avl_amt").val(success.AVL_AMOUNTS);
+                    $("#paying_authority").val(success.BPO);
+                  
+                     
+
+                }
+
+            });
+        }
+
+
+        function GetJVValue(BankNameDropdown, CHQ_NO, CHQ_DATE) {
+
+
+            var parts = CHQ_DATE.split('-');
+            var convertedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
+
+            $.ajax({
+                url: '/InterUnit_Transfer/GetJVValue',
+
+                type: "POST",
+                dataType: "JSON",
+                data: { BankNameDropdown: BankNameDropdown, CHQ_NO: CHQ_NO, CHQ_DATE: convertedDate },
+
+                success: function (success) {
+                   
+                    $("#JVNo").val(success.VCHR_NO);
+                    $("#JVDT").val(success.VCHR_DT);
+                    var JV_NO = success.VCHR_NO;    
+                    InitializeDatatable(JV_NO);
+                }
+
+            });
+        }
+
+        function InitializeDatatable(JV_NO)
+        {
+           
+            $("#dtInterUnit").css("display", "block");
+            $("#dtInterUnit").DataTable({
+                stateSave: true,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadGrid")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            JV_NO: JV_NO
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "ACC_DESC" },
+                    { data: "AMOUNT" },
+                    { data: "NARRATION" },
+                    { data: "IU_ADV_NO" },
+                    { data: "IU_ADV_DT" },
+                    {
+                        data: null,
+                        orderable: false,
+                        width: '5%',
+                        render: function (data, type, row) {
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;'); 
+                            return '<button class="btn btn-sm btn-primary" onclick="editRow(' + escapedRow + ')">Edit</button>';
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function editRow(escapedRow) {
+            $("#lstACD").val(escapedRow.ACC_DESC);
+            $("#Amount").val(escapedRow.AMOUNT);
+            $("#Narration").val(escapedRow.NARRATION);
+           
+           
+        }
+
+        function BtnAddNew()
+        {
+            debugger;
+            $("#lstACD").val("");
+            $("#Amount").val("");
+            $("#Narration").val("");
+        }
+
+    </script>
+}

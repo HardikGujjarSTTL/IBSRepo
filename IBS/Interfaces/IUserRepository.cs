@@ -11,7 +11,7 @@ namespace IBS.Interfaces
 
         public void Update(UserModel model);
 
-        public T02User FindByLoginDetail(LoginModel model);
+        public UserSessionModel FindByLoginDetail(LoginModel model);
 
         public void ChangePassword(int UserId, String NewPassword);
 
@@ -28,6 +28,8 @@ namespace IBS.Interfaces
         public VendorModel FindVendorLoginDetail(LoginModel model);
 
         public IELoginModel FindIELoginDetail(LoginModel model);
+
+        public List<MenuMasterModel> GenerateMenuListByRoleId(int RoleID);
 
     }
 }

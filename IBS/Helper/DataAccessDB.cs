@@ -42,7 +42,7 @@ namespace IBS.Helper
                 context.Database.CloseConnection();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 context.Database.CloseConnection();
             }

@@ -35,7 +35,7 @@ namespace IBS.Repositories
                     }
                     else
                     {
-                        orderCriteria = "CallMarkDt";
+                        orderCriteria = "Vendor";
                     }
                     
                 }

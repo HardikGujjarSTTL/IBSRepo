@@ -1,0 +1,354 @@
+﻿@model IBS.Models.ICPhotoEnclosedModel
+@{
+    ViewData["Title"] = "PHOTOS SUBMITTED BY IE OF INSPECTIONS";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="ICPhotoEnclosed" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2 style="color:#2b368b">PHOTOS SUBMITTED BY IE OF INSPECTIONS</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Case No.</label>
+                    <input type="text" class="input" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Call Recieve Date</label>
+                    <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="CallRecvDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Call SNO.</label>
+                    <input type="text" class="input" asp-for="CallSno" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="CallSno" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Book No.</label>
+                    <input type="text" class="input" asp-for="BkNo" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="BkNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Set No.</label>
+                    <input type="text" class="input" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-vaslidation-for="SetNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <a asp-controller="ICPhotoEnclosed" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn Active" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call Sno.</th>
+                            <th>Book No.</th>
+                            <th>Set No.</th>
+                            <th>Photo 1</th>
+                            <th>Photo 2</th>
+                            <th>Photo 3</th>
+                            <th>Photo 4</th>
+                            <th>Photo 5</th>
+                            <th>Photo 6</th>
+                            <th>Photo 7</th>
+                            <th>Photo 8</th>
+                            <th>Photo 9</th>
+                            <th>Photo 10</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+    <style>
+        #dtList td {
+            word-wrap: anywhere;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            setDefaultDate();
+            InitializeDatatable();
+        });
+
+        function setDefaultDate() {
+            $('#CallRecvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+            });
+
+
+        }
+
+        $("#btnSearch").click(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+            var BkNo = $("#BkNo").val();
+            var SetNo = $("#SetNo").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                //dom: '<"top"f<"title">Blrtip>',
+                //buttons: [
+                //    'csv', 'excel', 'print',
+                //],
+                ajax: {
+                    url: "@Url.Action("LoadTable", "ICPhotoEnclosed")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "CallRecvDt": CallRecvDt,
+                            "CallSno": CallSno,
+                            "BkNo": BkNo,
+                            "SetNo": SetNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "BkNo" },
+                    { data: "SetNo" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File1 = row["File1"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File1 && File1 !== "") {
+                                html += "<a href='" + File1 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 1</a><br/>";
+                            }
+                            else{
+                                html += "<span Font-Names='Verdana' Font-Size='8pt' color='red'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File2 = row["File2"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File2 && File2 !== "") {
+                                html += "<a href='" + File2 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 2</a><br/>";
+                            }
+                            else {
+                                html += "<span>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File3 = row["File3"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File3 && File3 !== "") {
+                                html += "<a href='" + File3 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 3</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File4 = row["File4"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File4 && File4 !== "") {
+                                html += "<a href='" + File4 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 4</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File5 = row["File5"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File5 && File5 !== "") {
+                                html += "<a href='" + File5 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 5</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File6 = row["File6"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File6 && File6 !== "") {
+                                html += "<a href='" + File6 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 6</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File7 = row["File7"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File7 && File7 !== "") {
+                                html += "<a href='" + File7 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 7</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File8 = row["File8"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File8 && File8 !== "") {
+                                html += "<a href='" + File8 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 8</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File9 = row["File9"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (File9 && File9 !== "") {
+                                html += "<a href='" + File9 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 9</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var File10 = row["File10"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+
+                            if (File10 && File10 !== "") {
+                                html += "<a href='" + File10 + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Photo 10</a><br/>";
+                            }
+                            else {
+                                html += "<span Font-Names='Verdana' Font-Size='8pt'>No Photo</span><br/>";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+
+            });
+
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/BillRegister";
+        };
+    </script>
+    }
