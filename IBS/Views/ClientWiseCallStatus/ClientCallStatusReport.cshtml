@@ -1,0 +1,194 @@
+﻿@model IBS.Models.ClientCallRptModel
+
+@{
+    ViewData["Title"] = "CLIENT WISE CALL DETAILS";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>
+                LAB SAMPLE INFO DETAILS
+            </h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+
+            <div class="col-md-3 mb-3">
+                <label><b>Complaints Recieved in The Period</b></label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">From Date</label>
+                <input class="input datepicker" id="dtfrom" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">To date</label>
+                <input class="input datepicker" id="dtto" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
+                <span class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Report Status</label>
+                @Html.DropDownListFor(model => model.CallCode, new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"),"All",new { @id = "ddlstatus", @class = "form-control" })
+                <span class="fa fa-caret-down" style="position: absolute; right: 35px; top: 952px; transform: translateY(-50%); pointer-events: none;"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="savenext-btn" style="margin-right:50%;">
+        <button type="button" class="save-btn active" onclick="show();">Submit</button>
+    </div>
+    <div id="hide" style="display:none;">
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtlistr" class="table-responsive">
+                        <thead>
+                            <tr>
+
+                                <th>S.NO.</th>
+                                <th>Vendor</th>
+                                <th>PO NO.</th>
+                                <th>PO Date</th>
+                                <th>Item</th>
+                                <th>Qty Offered</th>
+                                <th>Qty Rejected</th>
+                                <th>Reason For Rejection</th>
+                                <th>IC Date</th>
+                                <th>IE</th>
+                                <th>Book No.</th>
+                                <th>Set No.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            InitializeDatatable();
+            $("#hide").css("display", "block");
+        }
+        $(function () {
+            $("#rb1").prop("checked", true);
+            if ($("#rb1").val() == true) {
+
+                sessionStorage.setItem("rb", true);
+            }
+            else {
+
+                sessionStorage.setItem("rb", true);
+            }
+
+
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+            // InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtlistr").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate: $("#dtfrom").val(),
+                            ToDate: $("#dtto").val(),
+                            ReportStatus: $("#ddlstatus").val(),
+                            RadioButton: sessionStorage.getItem("rb")
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "VendorName" },
+                    { data: "PO_NO" },
+                    { data: "PO_DT" },
+                    { data: "ITEM_DESC" },
+                    { data: "QTY_TO_INSP" },
+                    { data: "QTY_REJECTED" },
+                    { data: "REASON_REJECT" },
+                    { data: "IC_DT" },
+                    { data: "IE_NAME" },
+                    { data: "BK_NO" },
+                    { data: "SET_NO" },
+                    
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+
+                    //        var CaseNo = data.CaseNo;
+                    //        var CallSno = data.CallSno;
+                    //        var CallRecvDt = data.CallRecvDt;
+                    //        //var editUrl = '@Url.Action("LabPaymentApproval", "LabPaymentList")';
+                    //        var editUrl = '@Url.Action("LabPaymentApproval", "LabPaymentList")' + '?CaseNo=' + CaseNo + '&CallSno=' + CallSno + '&CallRecvDt=' + CallRecvDt;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"select\"><i class=\"fa fa-pencil\" title="Select"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+
+                ],
+                //columnDefs: [
+                //    { width: '100px', targets: [0, 1, 2] }, // Adjust the width and targets as needed
+                //    { width: '150px', targets: [3, 4, 5] }, // Adjust the width and targets as needed
+                //    // ... Add more as needed
+                //],
+                "order": [[0, "asc"]]
+            });
+        }
+
+                        //function UserDelete(UserId) {
+                        //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                        //    $("#btn-delete-yes").attr("href", url);
+                        //    $("#modal-delete-conf").modal("show");
+                        //}
+
+    </script>
+}

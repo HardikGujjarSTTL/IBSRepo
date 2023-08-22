@@ -1,0 +1,324 @@
+﻿@model IBS.Models.LabPaymentFormModel
+
+@{
+    ViewData["Title"] = "LAB BILLS FINALISATION FOR THE PERIOD";
+}
+<style>
+    #showPayment1 {
+        max-height: 300px; /* Set the maximum height for the scrolling area */
+        overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    }
+
+    tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de; /* Add top border */
+        background-color: #f0f8ff;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px; /* Adjust the height of table cells */
+        padding: 5px;
+        vertical-align: top;
+    }
+
+    /* Style for labels */
+    label {
+        display: block; /* Make labels block-level to occupy the whole cell width */
+        font-weight: bold;
+    }
+
+    /* Style for input fields */
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box; /* Ensure the padding is included in the width */
+    }
+
+    /* Style for error message */
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    /* Style for left-aligned button */
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    /* Style for right-aligned button */
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    /* Clear floating elements */
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtPayment {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        /* Style table header cells */
+        #dtPayment th {
+            background-color: #f2f2f2;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table body cells */
+        #dtPayment td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style>
+@*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"] </h2>
+    </div>
+
+</div>
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-2 mb-3">
+            <label for="Reference">From</label>
+            <input type="text" class="input datepicker" id="dtfrom" style="text-transform">
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="Reference">To</label>
+            <input type="text" class="input datepicker" id="dtto" style="text-transform">
+            <span class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="savenext-btn" style="margin-right:50%;">
+    <button type="button" class="save-btn active" onclick="GetLabBill();">Submit</button>
+</div>
+
+<div id="showPayment" style="display:none;">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtPayment" class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:4%;"></th>
+                            <th>Bill No.</th>
+                            <th style="width:9%;">Bill Dt</th>
+                            <th style="width:9%;">Testing Fee</th>
+                            <th style="width:6%;">SGST</th>
+                            <th style="width:6%;">CGST</th>
+                            <th style="width:7%;">IGST</th>
+                            <th style="width:10%;">Bill Amount</th>
+                            <th style="width:25%;">CLIENT NAME</th>
+                            <th>GSTIN No.</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+<br />
+<div class="savenext-btn" style="margin-right:46%;">
+    <button type="button" class="save-btn active" style="display:none;" id="btnupdate" onclick="Update();">Update</button>
+</div>
+
+@*</form>*@
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
+            });
+
+        });
+
+        function GetLabBill() {
+
+            var FromDate = $("#dtfrom").val();
+            var ToDate = $("#dtto").val();
+            $.ajax({
+                url: '/LabBillFinalisation/LoadTable', // Replace with your actual endpoint URL
+                type: 'POST',
+                dataType: 'json',
+                data: { FromDate: FromDate, ToDate: ToDate },
+                success: function (data) {
+                   
+                    if (data.length == 0) {
+
+                    }
+                    else {
+
+                        $("#showPayment").css("display", "block");
+                        $("#btnupdate").css("display","block");
+                        // Once data is successfully received, populate the table
+                        var tableBody = $('#tableBody');
+                        tableBody.empty(); // Clear existing rows (if any)
+                        for (i = 0; i < data.length; i++) {
+
+                            var row = $('<tr>');
+                            //row.append($('<td>').text(data[i].SNO)); // SRNo.
+                            //var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+                            var snoLink = $('<input>').attr({ 'type': 'checkbox', 'data-sno': data[i].InvoiceNo });
+
+                            var snoCell = $('<td>').append(snoLink);
+                            row.append(snoCell);
+                            row.append($('<td>').text(data[i].InvoiceNo));
+                            row.append($('<td>').text(data[i].InvoiceDate));
+                            row.append($('<td>').text(data[i].TotalAmount));
+                            row.append($('<td>').text(data[i].InvoiceSGST));
+                            row.append($('<td>').text(data[i].InvoiceCGST));
+                            row.append($('<td>').text(data[i].InvoiceIGST));
+                            row.append($('<td>').text(data[i].InvoiceAmount));
+                            row.append($('<td>').text(data[i].BPO_NAME));
+                            row.append($('<td>').text(data[i].RecipientGSTINNo));
+
+
+                            tableBody.append(row);
+                            var BIllNO = data[i].InvoiceNo;
+                        }
+
+                        //editButton.click(function(event) {
+                        snoLink.click(function (event) {
+                            //var regNo = regNo1;
+                            //var sno = sno1;
+                            //LabDtlModify(regNo, sno);
+                        });
+                    }
+                },
+                error: function () {
+
+                }
+
+            });
+        }
+
+
+        function Update() {
+            debugger;
+            var selectedsrno = [];
+           
+            $("input[type='checkbox'][data-sno]:checked").each(function () {
+                var sno = $(this).data("sno");                
+                selectedsrno.push(sno);
+                
+            });
+            var billno = selectedsrno.join(',');
+
+            if (selectedsrno.length > 0) {
+                var LabBillFinalisationModel = {
+                    InvoiceNo: billno
+                };
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/json",
+                    url: "/LabBillFinalisation/UpdateBill",
+                    dataType: "json",
+                    data: JSON.stringify(LabBillFinalisationModel),
+                    success: function (result) {
+
+                       
+                        if (result == true) {
+
+                            alert('Data Saved Successfully!');
+                            
+                            window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                        }
+                        else {
+
+                            alert('Error Occurred. Contact Your admin!');
+                            //alert(error);
+                        }
+
+                    },
+                    error: function (result) {
+
+
+                        if (result == true) {
+
+                            alert('Data Saved Successfully!');
+                            
+                            window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                        }
+                        else {
+                            alert('Error Occurred. Contact Your admin!');
+                            //alert(error);
+                        }
+
+                    }
+                });
+            }
+            else {
+                alert("Select atleast One Bill No. to process the Lab Bill.");
+            }
+        }
+
+
+    </script>
+}
