@@ -33,8 +33,12 @@ namespace IBS.Helper
             VendorDocument = 5,
             [Description("/MA")]
             VendorMADocument = 6,
+            [Description("/Files/ContractDocument")]
+            ContractDocument = 7,
+            [Description("/Files/TechnicalReferences")]
+            TechnicalReferencesDoc = 8,
             [Description("/MASTER_ITEMS_CHECKSHEETS")]
-            MasterItemDoc = 7,
+            MasterItemDoc = 9,
         }
 
         public enum DocumentCategory : int
@@ -44,7 +48,9 @@ namespace IBS.Helper
             Vendor = 3,
             VendorDocument = 4,
             VendorMADoc = 5,
-            MasterItemDoc = 7,
+            Contract = 6,
+            TechnicalReferences = 8,
+            MasterItemDoc = 9,
         }
 
 
@@ -57,6 +63,9 @@ namespace IBS.Helper
             Firm_Certificate_Like_RDSO_Approval_Type_test_etc = 47,
             Raw_Material_Invoice = 48,
             Calibration_Records = 49,
+            Contract_Documents_If_Any = 9,
+            Upload_Tech_Ref = 11,
+            Upload_Tech_Ref_Reply = 12,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int

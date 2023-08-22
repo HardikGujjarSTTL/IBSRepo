@@ -1,0 +1,347 @@
+﻿@model IBS.Models.LabPaymentFormModel
+
+@{
+    ViewData["Title"] = "LAB PAYMENT VOUCHER("+Model.Regin+")";
+}
+<style>
+    #showPayment {
+        max-height: 400px; /* Set the maximum height for the scrolling area */
+        overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    }
+    tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de; /* Add top border */
+        background-color: #f0f8ff;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px; /* Adjust the height of table cells */
+        padding: 5px;
+        vertical-align: top;
+    }
+
+    /* Style for labels */
+    label {
+        display: block; /* Make labels block-level to occupy the whole cell width */
+        font-weight: bold;
+    }
+
+    /* Style for input fields */
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box; /* Ensure the padding is included in the width */
+    }
+
+    /* Style for error message */
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    /* Style for left-aligned button */
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    /* Style for right-aligned button */
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    /* Clear floating elements */
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtPayment {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        /* Style table header cells */
+    #dtPayment th {
+            background-color: #f2f2f2;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table body cells */
+    #dtPayment td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style>
+@*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
+    
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"] </h2>
+        </div>
+        
+    </div>
+    <div class="accordion-body">
+    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
+           bgColor="#f0f8ff" border="1">
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Voucher No.</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lblvno"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Dated:</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="dtdt"></label>
+
+                <span class="text-danger" id="spnregdt" style="margin-left:6%;"></span>
+            </td>
+            
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">CHQ No.</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lblcno"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Dated:</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lbldt"></label>
+
+                <span class="text-danger" id="spnregdt" style="margin-left:6%;"></span>
+            </td>
+
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Bank:</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lblbnk"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Amount:</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lblamt"></label>
+
+                <span class="text-danger" id="spnregdt" style="margin-left:6%;"></span>
+            </td>
+
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Laboratory:</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lbllab"></label>
+            </td>
+            
+        </tr>
+       
+        
+    </table>
+    <table border="1" width="100%">
+        <tbody>
+            <tr>
+                <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Account Code</font></td>
+                <td width="20%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Sub Code</font></td>
+                <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">SBU Code</font></td>
+                <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Project Code</font></td>
+                <td width="15%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Sample Reg No</font></td>
+                <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Amount</font></td>
+            </tr>
+            <tr>
+                <td width="5%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label>642</label></td>
+                <td width="35%" valign="top" align="left" style="padding: 10px; border: 1px solid #b0c4de;"> <label></label></td>
+                <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label>20</label></td>
+                <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label></label></td>
+                <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label id="lblregno"></label></td>
+                <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label id="lbliamt"></label></td>
+            </tr>
+
+
+        </tbody>
+    </table>
+    <div class="savenext-btn" style="margin-right:46%;">       
+        <button type="button" class="save-btn active" onclick="printPage();">Print</button>
+        <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>
+    </div>
+    </div>
+
+@*</form>*@
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+           var pyid = sessionStorage.getItem("pytid");
+           
+            Print(pyid);
+        });
+        function printPage() {
+            // Use the print() function of the window object to initiate printing
+            window.print();
+        }
+        function cancel() {
+            window.location.href = "/LabPaymentsForm/LabPaymentForm";
+        }
+        function SearchPayment(){
+            $("#showPayment").css("display","block");
+           var PaymentID= $("#txtpyid").val();
+            var PaymentDT = $("#txtpydt").val();
+            var Lab = $("#ddlpylab").val();
+            $.ajax({
+                url: '/LabPaymentsForm/LoadTable', // Replace with your actual endpoint URL
+                type: 'POST',
+                dataType: 'json',
+                data: { PaymentID: PaymentID, PaymentDT: PaymentDT, Lab: Lab },
+                success: function (data) {
+
+                    // Once data is successfully received, populate the table
+                    var tableBody = $('#tableBody');
+                    tableBody.empty(); // Clear existing rows (if any)
+                    for (i = 0; i < data.length; i++) {
+
+                        var row = $('<tr>');
+                        //row.append($('<td>').text(data[i].SNO)); // SRNo.
+                        var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+                        snoLink.hover(
+                            function () {
+                                $(this).css('text-decoration', 'underline'); // Add underline on hover
+                            },
+                            function () {
+                                $(this).css('text-decoration', 'none');      // Remove underline on hover out
+                            }
+                        );
+                        var snoCell = $('<td>').append(snoLink);
+                        row.append(snoCell);
+                        row.append($('<td>').text(data[i].PaymentID));
+                        row.append($('<td>').text(data[i].PaymentDt));
+                        row.append($('<td>').text(data[i].Lab));
+                        row.append($('<td>').text(data[i].Amount));
+                       
+
+                        // Add the action column (if needed)
+                        //var actionColumn = $('<td>');
+                        //var editButton = $('<a>').text('Select').attr('id',"editButton");
+                        //actionColumn.append(editButton);
+                        //row.append(actionColumn);
+                        tableBody.append(row);
+
+                    }
+                    //editButton.click(function(event) {
+                    snoLink.click(function (event) {
+                        //var regNo = regNo1;
+                        //var sno = sno1;
+                        //LabDtlModify(regNo, sno);
+                    });
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+        
+        function Add() {
+            window.location.href = '@Url.Action("LabPayment", "LabPaymentsForm")';
+        }
+        function Print(pyid) {
+
+            var VOUCHER_NO = pyid;
+            $.ajax({
+                url: '/LabPaymentsForm/PrintLapPayments',
+                type: "POST",
+                dataType: "JSON",
+                data: { VOUCHER_NO: VOUCHER_NO },
+
+                success: function (success) {
+
+                    debugger;
+                    //$("#dtregdt").val(success.SampleRegDate);
+                    $("#lblvno").text(success.PaymentID);
+                    $("#dtdt").text(success.PaymentDt);
+                    $("#lblcno").text(success.CHQ_NO);
+                    $("#lbldt").text(success.CHQ_DT);
+                    $("#lblbnk").text(success.Bank);
+                    $("#lblamt").text(success.Amount);
+                    $("#lbllab").text(success.Lab);
+                    $("#lblregno").text(success.SAMPLE_REG_NO);
+                    $("#lbliamt").text(success.IAMOUNT);
+
+                }
+
+            });
+        }
+        //completed = function (response) {
+        //    var res = response.responseJSON;
+        //    ShowHideMsgNew(res.status, res.responseText);
+        //    window.location.href = "/LaboratoryMaster/LaboratoryMaster";
+        //};
+    </script>
+}

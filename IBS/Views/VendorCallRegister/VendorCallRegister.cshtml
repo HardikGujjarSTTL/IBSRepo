@@ -225,7 +225,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/VendorCallRegister/VendorCallRegister";
+            //window.location.href = "/VendorCallRegister/VendorCallRegister";
+            window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
         };
     </script>
     }

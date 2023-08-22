@@ -5,7 +5,7 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Highlights</h2>
+        <h2>Manage Highlights</h2>
     </div>
 </div> 
 <section>
@@ -76,7 +76,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Highlights/Index";
+            //window.location.href = "/Highlights/Index";
+            window.location.href = '@Url.Action("Index", "Highlights")';
         }; 
     </script>
 }

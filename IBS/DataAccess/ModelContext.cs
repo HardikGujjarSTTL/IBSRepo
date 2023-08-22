@@ -12735,6 +12735,16 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .ValueGeneratedNever()
                 .HasColumnName("IE_CD");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Region)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -12743,6 +12753,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UnregCalls)
                 .HasPrecision(4)
                 .HasColumnName("UNREG_CALLS");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.YrMth)
                 .HasMaxLength(6)
                 .IsUnicode(false)

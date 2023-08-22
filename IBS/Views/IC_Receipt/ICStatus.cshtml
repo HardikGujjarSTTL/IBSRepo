@@ -1,0 +1,196 @@
+﻿@model IBS.Models.ICFromToModel
+
+@{
+    ViewData["Title"] = "IC Status";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;"> </label>IC STATUS REPORT</h2>
+    </div>
+</div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="IC_Receipt" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            @*<h2>Call Details For Specific PO</h2>*@
+            <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;"></label></h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" asp-for="FromDt" maxlength="100" style="text-transform: uppercase;" >
+                    <span asp-validation-for="FromDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" asp-for="ToDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <span asp-validation-for="ToDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="Name">Status of IE</label>
+                    @Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE'S
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0" style="text-align:left;display: none;" id="IEStatus">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">IE</label>
+                    @Html.DropDownList("IE", new SelectList(IBS.Models.Common.GetIEName(@ViewBag.Region) , "Value", "Text"),"--Select--")
+                    @*<span asp-validation-for="IeCd" class="text-danger"></span>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <a asp-controller="IC_Receipt" asp-action="Index" class="reset-btn">Back</a>
+                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*@Html.Partial(@partialView)*@
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>IC Submit Date</th>
+                            <th>IE</th>
+                            <th>BK NO.</th>
+                            <th>SET NO.</th>
+                            <th>BILL NO.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+}
+
+<script>
+    $(document).ready(function () {
+        setDefaultDate();        
+
+        $('input[type=radio][id=rdType]').change(function () {
+            var value = $(this).val();            
+
+            if (value == "AllIES") {                
+                $("#IEStatus").css("display", "none");
+            } else {
+                $("#IEStatus").css("display", "block");
+            }
+            var dt = $("#dtList").dataTable();
+            dt.fnClearTable();
+            dt.fnDraw();
+            dt.fnDestroy();
+
+        });
+        $("#btnSearch").click(function () {            
+            InitializeDatatable();
+        });
+    });
+
+    function setDefaultDate() {
+        $('#FromDt').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        });
+        $('#ToDt').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        });
+
+    }
+
+    function InitializeDatatable() {
+        var FromDate = $("#FromDt").val();
+        var ToDate = $("#ToDt").val();
+        var IECD = "";
+
+        var rdType = $('input[name="rdType"]:checked').val();
+        if (rdType == "AllIES") {
+            IECD = "";
+        }else{
+            IECD = $("#IE").val();
+        }
+        
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: true,// Searching Setups
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'print'
+            ],
+            ajax: {// Ajax Filter
+                url: "@Url.Action("Get_IC_Status", "IC_Receipt")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "FromDate": FromDate,
+                        "ToDate": ToDate,
+                        "IECD": IECD
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+
+            columns: [
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "IC_SUBMIT_DT" },
+                { data: "IE_NAME" },
+                { data: "BK_NO", },
+                { data: "SET_NO" },
+                { data: "BILL_NO" },
+
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+</script>

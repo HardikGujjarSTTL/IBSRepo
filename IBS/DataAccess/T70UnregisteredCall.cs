@@ -13,5 +13,15 @@ public partial class T70UnregisteredCall
 
     public string? Region { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
     public virtual T09Ie IeCdNavigation { get; set; } = null!;
 }

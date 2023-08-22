@@ -132,7 +132,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/ClientContract/Index?type=" + '@Model.TypeCb';
+            //window.location.href = "/ClientContract/Index?type=" + '@Model.TypeCb';
+            window.location.href = '@Url.Action("Index", "ClientContract")?type=' + '@Model.TypeCb';
         };
 
         function FillClient(id) {

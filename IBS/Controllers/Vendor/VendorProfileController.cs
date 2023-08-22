@@ -32,7 +32,7 @@ namespace IBS.Controllers.Vendor
         public IActionResult Manage(int VEND_CD)
         {
             int VendCd = 0;
-            if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+            if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
             {
                 VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
             }
@@ -47,7 +47,7 @@ namespace IBS.Controllers.Vendor
             }
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.Vendor, Convert.ToString(VendCd));
             FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
-            if ((VendCd == model.VendCd && IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor"))
+            if ((VendCd == model.VendCd && IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor"))
             {
                 FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.View;
             }
@@ -95,8 +95,8 @@ namespace IBS.Controllers.Vendor
             {
                 string msg = "";
                 int VendCd = 0;
-                string userType = IBS.Helper.SessionHelper.UserModelDTO.LoginType;
-                if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+                string userType = IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower();
+                if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
                 {
                     VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 }

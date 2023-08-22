@@ -39,7 +39,7 @@ namespace IBS.Controllers
         {
             try
             {
-                if (labBillingRepository.Remove(LabBillPer, GetRegionCode))
+                if (labBillingRepository.Remove(LabBillPer, GetRegionCode,UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -66,6 +66,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.User_Id = Convert.ToString(UserId);
                 model.Region_Code = GetRegionCode;
                 var i = labBillingRepository.LabBillingDetailsInsertUpdate(model);
                 if (i != null)

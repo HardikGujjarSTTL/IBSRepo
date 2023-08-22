@@ -86,7 +86,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/LaboratoryMaster/LaboratoryMaster";
+            //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
+            window.location.href = '@Url.Action("LaboratoryMaster", "LaboratoryMaster")';
         };
     </script>
 }

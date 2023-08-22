@@ -481,7 +481,7 @@
 		else { $('body').removeClass('ipad'); }
 
 	}
-
+	$(".select2").select2();
 })(jQuery);
 
 

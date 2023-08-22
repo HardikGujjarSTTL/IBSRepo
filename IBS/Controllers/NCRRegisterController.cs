@@ -3,6 +3,7 @@ using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Protocol.Core.Types;
 using System.Xml.Linq;
 
 namespace IBS.Controllers
@@ -40,15 +41,19 @@ namespace IBS.Controllers
                 }
                 else if (Actions == "M")
                 {
+                    int isButtonDisabled = nCRRegisterRepository.ShouldRemarkDisable(NC_NO);
+                    ViewBag.ShowRemarksButton = isButtonDisabled >= 1 ? false : true;
+
                     ViewBag.ShowNCRButton = false;
                     ViewBag.ShowNCRNO = true;
-                    ViewBag.ShowRemarksButton = true;
+                   
                     ViewBag.ShowSaveButton = false;
                 }
 
                 model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo, NC_NO);
 
                 ViewBag.JsonData = model.JsonData;
+                ViewBag.JsonData1 = model.msg;
             }
             catch (Exception ex)
             {
@@ -60,16 +65,31 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SaveRemarksofNCR(NCRRegister models,string serializedModel)
+        public IActionResult SaveUpdateNCR(NCRRegister model)
         {
-            NCRRegister modelss = JsonConvert.DeserializeObject<NCRRegister>(serializedModel);
-            string msg = "Remarks Inserted Successfully.";
-            //foreach (var model in models)
-            //{
-            //    int i = nCRRegisterRepository.SaveRemarks(model);
-            //}
-            int i = nCRRegisterRepository.Saveupdate(models);
-            return Json(new { status = true, responseText = msg });
+            bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
+            string extractedText = Request.Form["extractedText"];
+            string msg = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
+
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+        }
+
+        [HttpPost]
+        public IActionResult SaveRemarks(string NCNO,string UserID, [FromForm] List<Remarks> model)
+        {
+
+            string msg = nCRRegisterRepository.SaveRemarks(NCNO, UserID,model);
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SendToIE(NCRRegister nCRRegister)
+        {
+            bool msg = nCRRegisterRepository.SendEmail(nCRRegister);
+
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
 
     }

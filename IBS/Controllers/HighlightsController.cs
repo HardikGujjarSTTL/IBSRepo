@@ -35,11 +35,11 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Delete(string _highDt)
+        public IActionResult Delete(string _highDt,string RegionCode)
         {
             try
             {
-                if(highlightsRepository.Remove(_highDt, GetRegionCode))
+                if(highlightsRepository.Remove(_highDt, GetRegionCode, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -66,6 +66,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.User_Id =Convert.ToString(UserId);
                 model.Region_Code = GetRegionCode;
                 var i = highlightsRepository.HighlightsDetailsInsertUpdate(model);
                 if (i != null)

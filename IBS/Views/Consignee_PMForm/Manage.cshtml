@@ -71,7 +71,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Consignee_PMForm/Index";
+            //window.location.href = "/Consignee_PMForm/Index";
+            window.location.href = '@Url.Action("Index", "Consignee_PMForm")';
         };
     </script>
 }

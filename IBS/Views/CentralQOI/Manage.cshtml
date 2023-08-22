@@ -11,7 +11,7 @@
 </div>
 <section id="tab-1">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="CentralQOI" asp-action="CentralQOISave" data-ajax-method="post" data-ajax-complete="completed" id="frmCentralQOI">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="CentralQOI" asp-action="CentralQOIISave" data-ajax-method="post" data-ajax-complete="completed" id="frmCentralQOI">
             <input type="text" class="input" asp-for="IsEdited" style="display:none;">
             <div class="accordion-body">
                 <div class="row my-0">
@@ -69,7 +69,8 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.responseText != "Selected Period and Client Already Exist") {
-                window.location.href = "/CentralQOI/Index";
+                //window.location.href = "/CentralQOI/Index";
+                window.location.href = '@Url.Action("Index", "CentralQOI")';
             }
         };
     </script>

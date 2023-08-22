@@ -9,6 +9,11 @@ using System.Text;
 using IBS.Helper;
 using IBS.DataAccess;
 
+using IBS.Repositories;
+using Microsoft.AspNetCore.Hosting;
+
+using System.Data;
+
 namespace IBS.Controllers
 {
     public class HomeController : BaseController
@@ -16,13 +21,16 @@ namespace IBS.Controllers
         #region Variables
         private readonly IUserRepository userRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly ILabInvoiceDownloadRepository LabInvoiceDownloadRepository;
         public IConfiguration Configuration { get; }
         #endregion
-        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration)
+        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration, ILabInvoiceDownloadRepository _LabInvoiceDownloadRepository)
         {
             userRepository = _userRepository;
             _env = env;
             Configuration = configuration;
+            LabInvoiceDownloadRepository = _LabInvoiceDownloadRepository;
+            
         }
 
         public IActionResult Index(string type = "admin")
@@ -31,44 +39,83 @@ namespace IBS.Controllers
 
             return View();
         }
+        //public IActionResult Download()
+        //{
+        //    //string Regin = GetRegionCode;
+        //    //DataSet dTResult = LabInvoiceDownloadRepository.Download(CaseNo, RegNo, InvoiceNo, TranNo);
+        //    string CaseNo= "N22050400", RegNo= "N/22/0780", InvoiceNo= "R0608L22/00001",  TranNo="";
+        //    string Srno = LabInvoiceDownloadRepository.GetSrNo(InvoiceNo);
+        //    LabInvoiceDownloadModel dtreg = LabInvoiceDownloadRepository.Getdtreg(InvoiceNo);
+        //    ReportDocument rd = new ReportDocument();
+        //    string reportPath = "";
+        //    if (Convert.ToInt32(Srno) > 3)
+        //    {
+        //        //reportPath = Server.MapPath("~/Reports/LAB_INVOICE_GEN_NEW.rpt");
+        //        reportPath = Path.Combine(_env.WebRootPath, "Reports", "LAB_INVOICE_GEN_NEW.rpt");
+
+        //    }
+        //    else if ((Convert.ToInt32(dtreg.INVOICE_DT) >= 202207) && (dtreg.Resign == "N"))
+        //    {
+        //        // reportPath = Server.MapPath("~/Reports/LAB_INVOICE_GEN_HR.rpt");
+        //        reportPath = Path.Combine(_env.WebRootPath, "Reports", "LAB_INVOICE_GEN_HR.rpt");
+        //    }
+        //    else
+        //    {
+        //        //reportPath = Server.MapPath("~/Reports/LAB_INVOICE_GEN.rpt");
+        //        reportPath = Path.Combine(_env.WebRootPath, "Reports", "LAB_INVOICE_GEN.rpt");
+        //    }
+        //    rd.Load(reportPath);
+
+        //    // Replace with your data retrieval logic
+        //    DataSet dsCustom = LabInvoiceDownloadRepository.Getdata(CaseNo, RegNo, InvoiceNo, TranNo);
+        //    rd.SetDataSource(dsCustom);
+
+        //    Stream stream = rd.ExportToStream(ExportFormatType.PortableDocFormat);
+        //    stream.Seek(0, SeekOrigin.Begin);
+
+        //    return File(stream, "application/pdf", "CustomerList.pdf");
+        //}
 
         [HttpPost, ValidateAntiForgeryToken]
         //[ValidateDNTCaptcha(ErrorMessage = "Invalid security code.", CaptchaGeneratorLanguage = Language.English, CaptchaGeneratorDisplayMode = DisplayMode.ShowDigits)]
         public ActionResult Index(LoginModel loginModel)
         {
+            //return RedirectToAction("Download");
             if (ModelState.IsValid)
             {
                 // username = anet
                 string LoginType = HttpContext.Session.GetString("LoginType").ToString();
                 if (LoginType.ToLower() == "admin") 
                 {
-                    T02User userMaster = userRepository.FindByLoginDetail(loginModel);
+                    UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                     if (userMaster != null)
                     {
-                        UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.Id);
-                        userSessionModel.Name = Convert.ToString(userMaster.UserName);
-                        userSessionModel.UserName = Convert.ToString(userMaster.UserName);
-                        userSessionModel.Region = Convert.ToString(userMaster.Region);
-                        userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
-                        userSessionModel.LoginType = Convert.ToString(LoginType);
+                        //UserSessionModel userSessionModel = new UserSessionModel();
+                        //userSessionModel.UserID = Convert.ToInt32(userMaster.UserID);
+                        //userSessionModel.Name = Convert.ToString(userMaster.UserName);
+                        //userSessionModel.UserName = Convert.ToString(userMaster.UserName);
+                        //userSessionModel.Region = Convert.ToString(userMaster.Region);
+                        //userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
+                        //userSessionModel.LoginType = Convert.ToString(LoginType);
+                        //userSessionModel.LoginType = Convert.ToString(LoginType);
 
-                        SetUserInfo = userSessionModel;
+                        SetUserInfo = userMaster;
                         var userClaims = new List<Claim>()
                         {
-                            new Claim("UserId", userSessionModel.UserID.ToString()),
-                            new Claim("UserName", Convert.ToString(userSessionModel.UserName)),
-                            new Claim("UserID", userSessionModel.UserID.ToString()),
-                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
-
-                            new Claim("Region", userSessionModel.Region.ToString()),
-                            new Claim("AuthLevl", userSessionModel.AuthLevl.ToString()),
+                            new Claim("Name", Convert.ToString(userMaster.Name)),
+                            new Claim("UserName", Convert.ToString(userMaster.UserName)),
+                            new Claim("UserID", userMaster.UserID.ToString()),
+                            //new Claim("LoginType", userMaster.LoginType.ToString()),
+                            new Claim("Region", userMaster.Region != null ? userMaster.Region.ToString() : ""),
+                            new Claim("AuthLevl", userMaster.AuthLevl != null ? userMaster.AuthLevl.ToString() : ""),
+                            new Claim("RoleId", Convert.ToString(userMaster.RoleId)),
+                            new Claim("RoleName", userMaster.RoleName != null ? Convert.ToString(userMaster.RoleName) : ""),
                          };
                         var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
                         HttpContext.SignInAsync(userPrincipal);
 
-                        SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(1);
+                        SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(userMaster.RoleId);
                         return RedirectToAction("Index", "Dashboard");
                     }
                     else

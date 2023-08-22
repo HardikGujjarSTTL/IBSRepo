@@ -1,0 +1,124 @@
+﻿<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>ONLINE REJECTIONS APPROVAL FORM</h2>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtcomplaintapproval" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Registration No.</th>
+                            <th>Registration Date</th>
+                            <th>Consignee Name</th>
+                            <th>Designation</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Case No.</th>
+                            <th>BK No.</th>
+                            <th>SET No.</th>
+                            <th>Inspecting Region</th>
+                            <th>Rej Momo No.</th>
+                            <th>Rej Memo Date</th>
+                            <th>Value of Qty Rejected</th>
+                            <th>Reason for Rejection</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtcomplaintapproval").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    { data: "TEMP_COMPLAINT_ID" },
+                    {
+                        data: "TempComplaintDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Name" },
+                    { data: "Designation" },
+                    { data: "Email" },
+                    { data: "MobileNO" },
+                    { data: "CaseNo" },
+                    { data: "BKNo" },
+                    { data: "SetNo" },
+                    { data: "InspRegion" },
+                    { data: "RejMemono" },
+                    {
+                        data: "RejMemodate",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "RejectionValue" },
+                    { data: "RejectionReason" },
+                    { data: "Remarks" },
+                  
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            debugger
+                            var TEMP_COMPLAINT_ID = data.TEMP_COMPLAINT_ID;
+                            var SetNo = data.SetNo;
+                            var BKNo = data.BKNo;
+                            var CaseNo = data.CaseNo;
+                            var editUrl = '/ComplaintApproval/Manage/' + '?SetNo=' + encodeURIComponent(SetNo) + '&BKNo=' + encodeURIComponent(BKNo) + '&CaseNo=' + encodeURIComponent(CaseNo) + '&TEMP_COMPLAINT_ID=' + encodeURIComponent(TEMP_COMPLAINT_ID);
+                            //var editUrl = '@Url.Action("Manage", "ComplaintApproval")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}

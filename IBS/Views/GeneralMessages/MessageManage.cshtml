@@ -38,7 +38,8 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/GeneralMessages/MessageMaster";
+            //window.location.href = "/GeneralMessages/MessageMaster";
+            window.location.href = '@Url.Action("MessageMaster", "GeneralMessages")';
         };
     </script>
 }

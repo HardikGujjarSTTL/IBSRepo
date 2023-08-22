@@ -23,58 +23,31 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-         
-        public TechReferenceModel FindByID(string TechId, string rgnCode)
-        {
-            using (var dbContext = context.Database.GetDbConnection())
-            {
-                OracleParameter[] par = new OracleParameter[3];
-                par[0] = new OracleParameter("in_tech_id", OracleDbType.Varchar2, TechId, ParameterDirection.Input);
-                par[1] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, rgnCode, ParameterDirection.Input);
-                par[2] = new OracleParameter("out_result_set", OracleDbType.RefCursor, ParameterDirection.Output);
-                var ds = DataAccessDB.GetDataSet("SP_GETDATA_T66TECHREF", par, 1);
 
-                TechReferenceModel model = new();
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    model = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                }
+        public TechReferenceModel FindByID(int ID)
+        {
+            TechReferenceModel model = new();
+            var _TechReference = (from m in context.T66TechRefs
+                                  where m.Id == ID
+                                  select m).FirstOrDefault();
+
+            if (_TechReference == null)
+                throw new Exception("Record Not found");
+            else
+            {
+                model.RegionCd = _TechReference.RegionCd;
+                model.TechCmCd = _TechReference.TechCmCd;
+                model.TechIeCd = _TechReference.TechIeCd;
+                model.TechItemDes = _TechReference.TechItemDes;
+                model.TechSpecDrg = _TechReference.TechSpecDrg;
+                model.TechLetterNo = _TechReference.TechLetterNo;
+                model.TechDate = _TechReference.TechDate;
+                model.TechRefMade = _TechReference.TechRefMade;
+                model.TechContent = _TechReference.TechContent;
+                model.TechId = _TechReference.TechId;
+                model.UserId = _TechReference.UserId;
                 return model;
             }
-
-            // TechReferenceModel model = new();
-            //T66TechRef tenant = context.T66TechRefs.Find(TechId);
-            //if (tenant == null)
-            //   throw new Exception("Tech Reference Record Not found");
-            // else
-            //{
-                //model.ContractId = tenant.ContractId;
-                //model.ContractNo = tenant.ContractNo;
-                //model.ContractPanalty = tenant.ContractPanalty;
-                //model.ContractCm = tenant.ContractCm;
-                //model.ExpOr =  tenant.ExpOr;
-                //model.ClientName = tenant.ClientName;
-                //model.ContInspFee = tenant.ContInspFee;
-                //model.ContPerFrom = Convert.ToDateTime(tenant.ContPerFrom);
-                //model.Status =  tenant.Status;
-                //model.ContractSpecialCondn = tenant.ContractSpecialCondn;
-                //model.Datetime = tenant.Datetime;
-                //model.OfferDt = tenant.OfferDt;
-                //model.ContPerTo = tenant.ContPerTo;
-                //model.RegionCode = tenant.RegionCode;
-                //model.ContractFee = tenant.ContractFee;
-                //model.ContractFeeNum = tenant.ContractFeeNum;
-                //model.ScopeOfWork = tenant.ScopeOfWork;
-                //model.UserId= tenant.UserId;
-                //model.ContSignDt = tenant.ContSignDt;
-                //model.Isdeleted = tenant.Isdeleted;
-                //model.Createddate = tenant.Createddate;
-                //model.Createdby = tenant.Createdby;
-                //model.Updateddate = tenant.Updateddate;
-                //model.Updatedby = tenant.Updatedby;
-                //return model;
-             //}
         }
 
         public DTResult<TechReferenceModel> GetTechReferenceList(DTParameters dtParameters, string strRgn)
@@ -107,7 +80,7 @@ namespace IBS.Repositories
             query = (from tr in context.T66TechRefs
                      join ie in context.T09Ies on tr.TechIeCd equals ie.IeCd
                      join co in context.T08IeControllOfficers on tr.TechCmCd equals co.CoCd
-                     where tr.TechId != null && tr.RegionCd == strRgn
+                     where tr.TechId != null && tr.RegionCd == strRgn && (tr.Isdeleted == 0 || tr.Isdeleted == null)
                      orderby tr.TechDate
                      select new TechReferenceModel
                      {
@@ -120,7 +93,8 @@ namespace IBS.Repositories
                          TechDate = Convert.ToDateTime(tr.TechDate).Date,
                          TechRefMade = tr.TechRefMade,
                          TechContent = tr.TechContent,
-                         TechId = tr.TechId
+                         TechId = tr.TechId,
+                         Id = tr.Id
                      });
 
             dTResult.recordsTotal = query.Count();
@@ -151,7 +125,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        private string GenerateTechRefID(string ToDt,string rgnCode)
+        private string GenerateTechRefID(string ToDt, string rgnCode)
         {
             try
             {
@@ -160,30 +134,21 @@ namespace IBS.Repositories
 
                 using (var dbContext = context.Database.GetDbConnection())
                 {
-                        List<TechReferenceModel> result = new();
-                    
-                        OracleParameter[] par = new OracleParameter[3];
-                        par[0] = new OracleParameter("IN_TECH_DT", OracleDbType.Decimal, techDate, ParameterDirection.Input);
-                        par[1] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, regionCode, ParameterDirection.Input);
-                        par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                        //par[2] = new OracleParameter("OUT_TECH_ID", OracleDbType.Char, ParameterDirection.Output);
-                        //par[3] = new OracleParameter("OUT_ERR_CD", OracleDbType.NChar, ParameterDirection.Output);
-                        var ds = DataAccessDB.GetDataSet("TEST_SP ", par, 1);
-                     
-                        if (ds != null && ds.Tables.Count > 0)
-                        {
-                            string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                            result = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
-                        }
+                    List<TechReferenceModel> result = new();
 
-                    //if (result.Count > 0 && result[0].OUT_ERR_CD == -1)
-                    //{
-                    //    return "-1";
-                    //}
-                    //else
-                    //{
-                    //    return result[0].OUT_TECH_ID;
-                    //}
+                    OracleParameter[] par = new OracleParameter[3];
+                    par[0] = new OracleParameter("IN_TECH_DT", OracleDbType.Decimal, techDate, ParameterDirection.Input);
+                    par[1] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, regionCode, ParameterDirection.Input);
+                    par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                    //par[2] = new OracleParameter("OUT_TECH_ID", OracleDbType.Char, ParameterDirection.Output);
+                    //par[3] = new OracleParameter("OUT_ERR_CD", OracleDbType.NChar, ParameterDirection.Output);
+                    var ds = DataAccessDB.GetDataSet("TEST_SP ", par, 1);
+
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                        result = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                    }
                     return result[0].ToString();
                 }
             }
@@ -195,26 +160,11 @@ namespace IBS.Repositories
                 return "-1";
             }
         }
-         
-        public bool Remove(string TechId, string regn,int UserId)
-        {
-            var _TechReference = new TechReferenceModel();
-            using (var dbContext = context.Database.GetDbConnection())
-            {
-                OracleParameter[] par = new OracleParameter[3];
-                par[0] = new OracleParameter("in_tech_id", OracleDbType.Varchar2, TechId, ParameterDirection.Input);
-                par[1] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, regn, ParameterDirection.Input);
-                par[2] = new OracleParameter("out_result_set", OracleDbType.RefCursor, ParameterDirection.Output);
-                var ds = DataAccessDB.GetDataSet("SP_GETDATA_T66TECHREF", par, 1);
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    _TechReference = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                }
-            }
-            
-            if (_TechReference == null) { return false; }
 
+        public bool Remove(int ID, int UserId)
+        {
+            var _TechReference = context.T66TechRefs.Where(x => x.Id == ID).FirstOrDefault();
+            if (_TechReference == null) { return false; }
             _TechReference.Isdeleted = Convert.ToByte(true);
             _TechReference.Updatedby = Convert.ToInt32(UserId);
             _TechReference.Updateddate = DateTime.Now;
@@ -222,39 +172,27 @@ namespace IBS.Repositories
             return true;
         }
 
-        public string TechRefDetailsInsertUpdate(TechReferenceModel model,string rgn)
+        public int TechRefDetailsInsertUpdate(TechReferenceModel model, string rgn)
         {
-            string _TechRefId = string.Empty;
+            int Id=0;
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("IN_TECH_DT", OracleDbType.Varchar2, model.TechDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.RegionCd, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            //int count = context.T66TechRefs.Where(tr => tr.TechDate == model.TechDate &&
-            //    tr.RegionCd == model.RegionCd && tr.TechCmCd == model.TechCmCd && tr.TechIeCd == model.TechIeCd 
-            //    && tr.TechLetterNo == model.TechLetterNo).Count();
-
-            var _TechRef = new TechReferenceModel();
-
-            //var _TechRef = context.T66TechRefs.Find(model.TechId);
-
-            using (var dbContext = context.Database.GetDbConnection())
+            var ds = DataAccessDB.GetDataSet("GENERATE_TR_ID_New", par, 1);
+            TechReferenceModel model1 = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-                OracleParameter[] par = new OracleParameter[3];
-                par[0] = new OracleParameter("in_tech_id", OracleDbType.Varchar2, model.TechId, ParameterDirection.Input);
-                par[1] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, rgn, ParameterDirection.Input);
-                par[2] = new OracleParameter("out_result_set", OracleDbType.RefCursor, ParameterDirection.Output);
-                var ds = DataAccessDB.GetDataSet("SP_GETDATA_T66TECHREF", par, 1);                 
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    _TechRef = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                }                
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model1 = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
             }
-
-            var TechId = "";             
+            var _TechRef= context.T66TechRefs.Where(x=>x.Id == model.Id).FirstOrDefault();
             #region Tech save and update
             if (_TechRef == null)
             {
-                TechId = GenerateTechRefID(model.TechDate.ToString(), model.RegionCd);
-
                 T66TechRef obj = new T66TechRef();
+                obj.TechId = model1.OUT_TECH_ID.Trim();
                 obj.RegionCd = model.RegionCd;
                 obj.TechCmCd = model.TechCmCd;
                 obj.TechIeCd = model.TechIeCd;
@@ -266,15 +204,12 @@ namespace IBS.Repositories
                 obj.TechContent = model.TechContent;
                 obj.UserId = model.UserId;
                 obj.Datetime = model.Datetime;
-                obj.TechId = model.TechId;       
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = Convert.ToInt32(model.UserId);
-                //obj.Createddate = DateTime.Now;
-                //obj.Updatedby = Convert.ToInt32(model.UserId);
-                //obj.Updateddate = DateTime.Now;
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = Convert.ToInt32(model.Createdby);
+                obj.Createddate = DateTime.Now;
                 context.T66TechRefs.Add(obj);
                 context.SaveChanges();
-                _TechRefId =  obj.TechId;
+                Id = Convert.ToInt16(obj.Id);
             }
             else
             {
@@ -290,11 +225,13 @@ namespace IBS.Repositories
                 _TechRef.UserId = model.UserId;
                 _TechRef.Datetime = model.Datetime;
                 _TechRef.TechId = model.TechId;
-                _TechRefId = _TechRef.TechId;
+                _TechRef.Updatedby = Convert.ToInt32(_TechRef.Updatedby);
+                _TechRef.Updateddate = DateTime.Now;
                 context.SaveChanges();
+                Id = Convert.ToInt16(_TechRef.Id);
             }
             #endregion
-            return _TechRefId;
+            return Id;
         }
     }
 
