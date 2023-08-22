@@ -207,18 +207,18 @@ namespace IBS.Models
                                        }).ToList();
             return country;
         }
-        public static List<SelectListItem> GetStatus()
-        {
-            ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> country = (from a in context.T08IeControllOfficers
-                                            select
-                                       new SelectListItem
-                                       {
-                                           Text = a.CoStatus,
-                                           Value = Convert.ToString(a.CoStatus)
-                                       }).ToList();
-            return country;
-        }
+        //public static List<SelectListItem> GetStatus()
+        //{
+        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+        //    List<SelectListItem> country = (from a in context.T08IeControllOfficers
+        //                                    select
+        //                               new SelectListItem
+        //                               {
+        //                                   Text = a.CoStatus,
+        //                                   Value = Convert.ToString(a.CoStatus)
+        //                               }).ToList();
+        //    return country;
+        //}
         public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
