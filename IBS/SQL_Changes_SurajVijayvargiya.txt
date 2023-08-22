@@ -20,7 +20,68 @@ CREATE SEQUENCE T65_LABORATORY_MASTER_seq
   INCREMENT BY 1
   CACHE 20;
   
+   ALTER TABLE T50_LAB_REGISTER
+MODIFY IE_CD NUMBER(6,0) ;
+
 ALTER TABLE T65_LABORATORY_MASTER
     MODIFY LAB_ID NUMBER(6,0) DEFAULT T65_LABORATORY_MASTER_seq.nextval;
 
     ALTER INDEX PK_LAB_ID RENAME TO T65_LABORATORY_MASTER_PK;
+
+
+    1) Tds Entry
+    create or replace PROCEDURE SP_GET_SearchRegNo
+(
+  p_SAMPLE_REG_NO IN VARCHAR2, -- IN parameter to accept txtBNO.Text value
+  p_REGION IN VARCHAR2,         -- If "Session['Region']" is passed, otherwise remove this parameter
+  p_CURSOR OUT SYS_REFCURSOR    -- OUT parameter to return the result set
+)
+AS
+BEGIN
+  OPEN p_CURSOR FOR
+    SELECT SAMPLE_REG_NO,
+           CASE_NO,
+           NVL(TDS, 0) AS TDS,
+           NVL(TOTAL_LAB_CHARGES, 0) AS TOTAL_CHARGES,
+           NVL(AMOUNT_RECIEVED, 0) AS AMT_REC,
+           TO_CHAR(TDS_DT, 'dd/mm/yyyy') AS TDS_DT
+    FROM T50_LAB_REGISTER
+    WHERE SAMPLE_REG_NO = p_SAMPLE_REG_NO
+      AND (p_REGION IS NULL OR SUBSTR(CASE_NO, 1, 1) = p_REGION)
+      AND NVL(AMOUNT_RECIEVED, 0) < NVL(TOTAL_LAB_CHARGES, 0);
+END;
+2) Lab Register Form
+create or replace PROCEDURE SP_LabRegLoadData
+(
+  p_SAMPLE_REG_NO IN VARCHAR2, -- IN parameter to accept txtBNO.Text value
+  p_CURSOR OUT SYS_REFCURSOR    -- OUT parameter to return the result set
+)
+AS
+BEGIN
+  OPEN p_CURSOR FOR
+    SELECT SAMPLE_REG_NO,
+         to_char(SAMPLE_REG_DT, 'dd/mm/yyyy') SAMPLE_REG_DATE,
+         to_char(SAMPLE_DRAWL_DT, 'dd/mm/yyyy') SAMPLE_DRAWL_DATE,
+         to_char(SAMPLE_RECIEPT_DT, 'dd/mm/yyyy') SAMPLE_RECIEPT_DATE,
+         to_char(SAMPLE_DISPATCH_DT, 'dd/mm/yyyy') SAMPLE_DISPATCH_DATE,
+         T09.IE_CD,
+         T09.IE_NAME,
+         V05.VENDOR,
+         V05.VEND_CD,
+         CASE_NO,
+         to_char(CALL_RECV_DT, 'dd/mm/yyyy') CALL_DT,
+         CALL_SNO,
+         NVL(TESTING_TYPE, 'X') TESTING_TYPE,
+         TOTAL_LAB_CHARGES,
+         TOTAL_TESTING_FEE,
+         TOTAL_SERVICE_TAX,
+         TOTAL_HANDLING_CHARGES,
+         NVL(TDS, 0) TDS,
+         NVL(AMOUNT_RECIEVED, 0) AMOUNT_RECIEVED,
+         CODE_NO,
+         to_char(CODE_DT, 'dd/mm/yyyy') CODE_DATE
+  FROM T50_LAB_REGISTER T50, V05_VENDOR V05, T09_IE T09
+  WHERE T50.SAMPLE_REG_NO = p_SAMPLE_REG_NO
+    AND T50.IE_CD = T09.IE_CD
+    AND T50.VEND_CD = V05.VEND_CD;
+END;
