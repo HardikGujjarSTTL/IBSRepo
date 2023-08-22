@@ -395,7 +395,12 @@ namespace IBS.Repositories
                 Menurolemapping obj = new Menurolemapping();
                 obj.Id = maxID;
                 obj.Roleid = model.Roleid;
-                obj.Menuid = model.Menuid; 
+                obj.Menuid = model.Menuid;
+                obj.Isadd = model.Isadd;
+                obj.Isedit = model.Isedit;
+                obj.Pisdelete = model.PIsdelete;
+                obj.Isview = model.Isview;
+                obj.Menuid = model.Menuid;
                 obj.Isactive = model.Isactive;
                 obj.Createdby = Convert.ToInt32(model.Createdby);
                 obj.Isdeleted = Convert.ToByte(false);
@@ -412,15 +417,16 @@ namespace IBS.Repositories
         {
             var roles = context.Menurolemappings.Where(x => x.Roleid == RoleId).ToList();
             if (roles == null) { return false; }
-
-            foreach (var role in roles)
-            {
-                role.Isdeleted = Convert.ToByte(true);
-                role.Isactive = false;
-                role.Updatedby = Convert.ToInt32(UserID);
-                role.Updateddate = DateTime.Now;
-                context.SaveChanges();
-            }
+            context.Menurolemappings.RemoveRange(roles);
+            context.SaveChanges();
+            //foreach (var role in roles)
+            //{
+            //    role.Isdeleted = Convert.ToByte(true);
+            //    role.Isactive = false;
+            //    role.Updatedby = Convert.ToInt32(UserID);
+            //    role.Updateddate = DateTime.Now;
+            //    context.SaveChanges();
+            //}
             return true;
         }
         #endregion

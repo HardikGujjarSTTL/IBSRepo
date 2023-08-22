@@ -35,8 +35,7 @@ namespace IBS.Controllers
 
         public IActionResult Index(string type = "admin")
         {
-            HttpContext.Session.SetString("LoginType", type);
-
+            //HttpContext.Session.SetString("LoginType", type);
             return View();
         }
         //public IActionResult Download()
@@ -84,9 +83,9 @@ namespace IBS.Controllers
             if (ModelState.IsValid)
             {
                 // username = anet
-                string LoginType = HttpContext.Session.GetString("LoginType").ToString();
-                if (LoginType.ToLower() == "admin") 
-                {
+                //string LoginType = HttpContext.Session.GetString("LoginType").ToString();
+                //if (LoginType.ToLower() == "admin") 
+                //{
                     UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                     if (userMaster != null)
                     {
@@ -122,68 +121,68 @@ namespace IBS.Controllers
                     {
                         AlertDanger("Invalid Username or Password");
                     }
-                }
-                else if (LoginType.ToLower() == "vendor")
-                {
-                    VendorModel userMaster = userRepository.FindVendorLoginDetail(loginModel);
-                    if (userMaster != null)
-                    {
-                        UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.UserId);
-                        userSessionModel.Name = Convert.ToString(userMaster.VendName);
-                        userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
-                        userSessionModel.LoginType = Convert.ToString(LoginType);
+                //}
+                //else if (LoginType.ToLower() == "vendor")
+                //{
+                //    VendorModel userMaster = userRepository.FindVendorLoginDetail(loginModel);
+                //    if (userMaster != null)
+                //    {
+                //        UserSessionModel userSessionModel = new UserSessionModel();
+                //        userSessionModel.UserID = Convert.ToInt32(userMaster.UserId);
+                //        userSessionModel.Name = Convert.ToString(userMaster.VendName);
+                //        userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
+                //        userSessionModel.LoginType = Convert.ToString(LoginType);
 
-                        SetUserInfo = userSessionModel;
-                        var userClaims = new List<Claim>()
-                        {
-                            new Claim("UserName", Convert.ToString(userMaster.VendCd)),
-                            new Claim("UserID", userSessionModel.UserID.ToString()),
-                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
-                         };
-                        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                        HttpContext.SignInAsync(userPrincipal);
-                        return RedirectToAction("Index", "Dashboard");
-                    }
-                    else
-                    {
-                        AlertDanger("Invalid Username or Password");
-                    }
-                }
-                else if (LoginType.ToLower() == "ielogin")
-                {
-                    IELoginModel userMaster = userRepository.FindIELoginDetail(loginModel);
-                    if (userMaster != null)
-                    {
-                        UserSessionModel userSessionModel = new UserSessionModel();
-                        userSessionModel.UserID = Convert.ToInt32(userMaster.IeEmpNo);
-                        userSessionModel.Name = Convert.ToString(userMaster.IeName);
-                        userSessionModel.UserName = Convert.ToString(userMaster.IeName);
-                        userSessionModel.LoginType = Convert.ToString(LoginType);
+                //        SetUserInfo = userSessionModel;
+                //        var userClaims = new List<Claim>()
+                //        {
+                //            new Claim("UserName", Convert.ToString(userMaster.VendCd)),
+                //            new Claim("UserID", userSessionModel.UserID.ToString()),
+                //            new Claim("LoginType", userSessionModel.LoginType.ToString()),
+                //         };
+                //        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                //        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+                //        HttpContext.SignInAsync(userPrincipal);
+                //        return RedirectToAction("Index", "Dashboard");
+                //    }
+                //    else
+                //    {
+                //        AlertDanger("Invalid Username or Password");
+                //    }
+                //}
+                //else if (LoginType.ToLower() == "ielogin")
+                //{
+                //    IELoginModel userMaster = userRepository.FindIELoginDetail(loginModel);
+                //    if (userMaster != null)
+                //    {
+                //        UserSessionModel userSessionModel = new UserSessionModel();
+                //        userSessionModel.UserID = Convert.ToInt32(userMaster.IeEmpNo);
+                //        userSessionModel.Name = Convert.ToString(userMaster.IeName);
+                //        userSessionModel.UserName = Convert.ToString(userMaster.IeName);
+                //        userSessionModel.LoginType = Convert.ToString(LoginType);
 
-                        userSessionModel.IeCd = Convert.ToInt32(userMaster.IeCd);
-                        userSessionModel.Region = Convert.ToString(userMaster.IeRegion);
+                //        userSessionModel.IeCd = Convert.ToInt32(userMaster.IeCd);
+                //        userSessionModel.Region = Convert.ToString(userMaster.IeRegion);
 
-                        SetUserInfo = userSessionModel;
-                        var userClaims = new List<Claim>()
-                        {
-                            new Claim("UserName", Convert.ToString(userMaster.IeName)),
-                            new Claim("UserID", userSessionModel.UserID.ToString()),
-                            new Claim("LoginType", userSessionModel.LoginType.ToString()),
-                            new Claim("Region", userSessionModel.Region.ToString()),
-                            new Claim("IeCd", userSessionModel.IeCd.ToString()),
-                         };
-                        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                        HttpContext.SignInAsync(userPrincipal);
-                        return RedirectToAction("IE_Instructions", "Dashboard");
-                    }
-                    else
-                    {
-                        AlertDanger("Invalid Username or Password");
-                    }
-                } 
+                //        SetUserInfo = userSessionModel;
+                //        var userClaims = new List<Claim>()
+                //        {
+                //            new Claim("UserName", Convert.ToString(userMaster.IeName)),
+                //            new Claim("UserID", userSessionModel.UserID.ToString()),
+                //            new Claim("LoginType", userSessionModel.LoginType.ToString()),
+                //            new Claim("Region", userSessionModel.Region.ToString()),
+                //            new Claim("IeCd", userSessionModel.IeCd.ToString()),
+                //         };
+                //        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                //        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+                //        HttpContext.SignInAsync(userPrincipal);
+                //        return RedirectToAction("IE_Instructions", "Dashboard");
+                //    }
+                //    else
+                //    {
+                //        AlertDanger("Invalid Username or Password");
+                //    }
+                //} 
             }
             return View(loginModel);
         }
@@ -335,6 +334,11 @@ namespace IBS.Controllers
             HttpContext.SignOutAsync("CookieAuthentication");
             return RedirectToAction("Index");
         }
-        
+
+        [HttpGet]
+        public ActionResult UserAccessDenied()
+        {
+            return View();
+        }
     }
 }
