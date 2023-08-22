@@ -17,7 +17,7 @@
                     <input type="text" asp-for="CaseNo" id="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="VendCd" id="VendCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ConsigneeCd" id="ConsigneeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="IeCd" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="IE_CD" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="CoCd" id="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ITEM_DESC_PO" id="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <label id="datetimeLabel" asp-for="Registrationdt"></label>
@@ -90,15 +90,15 @@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Rejection Memo Date</label>
-                        <input type="text" class="input datepicker" ASP-FOR="RejMemodate" maxlength="300" required />
+                        <input type="text" class="input datepicker" ASP-FOR="RejMemodate" id="memodate" maxlength="300" required />
                         <span asp-validation-for="RejMemodate" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    @*<div class="col-md-4 mb-4">
                         <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
-                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" required>
-                    </div>
+                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
+                    </div>*@
                     <div class="savenext-btn" style="margin-left:80%;">
-                        <a asp-controller="Role" asp-action="Index" class="reset-btn">Cancel</a>
+                        <a class="reset-btn" onclick="btnredirect();">Cancel</a>
                         <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                 success: function (data) {
                     var Item = $("#Item");
                     Item.empty();
-
+                    debugger
                     var items = JSON.parse(data);
                     Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
                     $("#QtyperIC").val(items[0].QTY_TO_INSP);
@@ -175,6 +175,10 @@
                 }
             });
         });
+
+        function btnredirect(){
+            window.location.href = "http://www.ritesinsp.com";
+        }
 
         function Save(){
             if ($("#frmComplaints").valid()) {

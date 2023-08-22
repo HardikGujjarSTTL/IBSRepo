@@ -27,7 +27,7 @@ public partial class Menurolemapping
 
     public bool? Isedit { get; set; }
 
-    public bool? Isdelete { get; set; }
+    public bool? Pisdelete { get; set; }
 
     public bool? Isview { get; set; }
 }

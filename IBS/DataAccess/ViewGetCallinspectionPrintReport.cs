@@ -7,7 +7,7 @@ public partial class ViewGetCallinspectionPrintReport
 {
     public string? PoNo { get; set; }
 
-    public string? PoDt { get; set; }
+    public DateTime? PoDt { get; set; }
 
     public string? MfgName { get; set; }
 
@@ -19,7 +19,7 @@ public partial class ViewGetCallinspectionPrintReport
 
     public string CaseNo { get; set; } = null!;
 
-    public string? CallRecvDate { get; set; }
+    public DateTime CallRecvDt { get; set; }
 
     public short CallSno { get; set; }
 
@@ -69,7 +69,7 @@ public partial class ViewGetCallinspectionPrintReport
 
     public string? Bpo { get; set; }
 
-    public string? DelvDt { get; set; }
+    public DateTime? DelvDt { get; set; }
 
     public string? ItemCd { get; set; }
 

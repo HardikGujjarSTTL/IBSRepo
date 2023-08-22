@@ -52,12 +52,12 @@ namespace IBS.Repositories
         {
             string msg = "";
             TempOnlineComplaint complaint = null;
-            if (complaintFile != null && Path.GetExtension(complaintFile.FileName).ToUpper() == ".PDF")
-            {
-                // Save the uploaded file
-                string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-                string uploadedFileName = Guid.NewGuid().ToString() + Path.GetExtension(complaintFile.FileName);
-                string filePath = Path.Combine(uploadsPath, uploadedFileName);
+            //if (complaintFile != null && Path.GetExtension(complaintFile.FileName).ToUpper() == ".PDF")
+            //{
+            //    // Save the uploaded file
+            //    string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            //    string uploadedFileName = Guid.NewGuid().ToString() + Path.GetExtension(complaintFile.FileName);
+            //    string filePath = Path.Combine(uploadsPath, uploadedFileName);
 
                 //using (var stream = new FileStream(filePath, FileMode.Create))
                 //{
@@ -102,17 +102,17 @@ namespace IBS.Repositories
                     CaseNo = onlineComplaints.CaseNo,
                     VendCd = onlineComplaints.VendCd,
                     ConsigneeCd = onlineComplaints.ConsigneeCd,
-                    IeCd = onlineComplaints.IeCd,
+                    IeCd = onlineComplaints.IE_CD,
                     CoCd = onlineComplaints.CoCd,
                 };
                 msg = "Complaint is registered";
-                SendEmail(onlineComplaints);
+                //SendEmail(onlineComplaints);
 
-            }
-            else
-            {
-                msg = "Please select a PDF file to upload.";
-            }
+            //}
+            //else
+            //{
+            //    msg = "Please select a PDF file to upload.";
+            //}
 
 
             context.TempOnlineComplaints.Add(complaint);
