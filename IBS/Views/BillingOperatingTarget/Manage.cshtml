@@ -1,14 +1,24 @@
 ﻿@model IBS.Models.BillingOperatingTargetModel
 @{
     ViewData["Title"] = "Manage Billing Operating Target";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.Be_Per != null)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Billing & Operating Target</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="BillingOperatingTarget" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="BillingOperatingTarget" asp-action="BillingOperatingDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBillingOperatingDetails">
             <input type="hidden" asp-for="Be_Per" />
@@ -52,7 +62,7 @@
                         </div>
                     </div>
                     <div class="savenext-btn" style="justify-content:center">
-                        <a asp-controller="BillingOperatingTarget" asp-action="Index" class="reset-btn">Cancel</a>
+                        @*<a asp-controller="BillingOperatingTarget" asp-action="Index" class="reset-btn">Cancel</a>*@
                         <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
                 </div>
@@ -81,8 +91,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/BillingOperatingTarget/Index";
-            window.location.href = '@Url.Action("Index", "BillingOperatingTarget")';
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "BillingOperatingTarget")';
+            }
         };
     </script>
 }

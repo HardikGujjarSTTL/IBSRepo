@@ -8,7 +8,7 @@
             <h2>Menu Role Mapping List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="MenuRoleMapping" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Menu Role Mapping</a>
+            <a asp-area="" asp-controller="MenuRoleMapping" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Menu Role Mapping</a>
         </div>
     </div>
     <section class="table-section">
@@ -76,8 +76,8 @@
                         render: function (data, type, row) {
                             var id = data.Roleid;
                             var editUrl = '@Url.Action("Manage", "MenuRoleMapping")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="UserRoleMappingDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="UserRoleMappingDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
