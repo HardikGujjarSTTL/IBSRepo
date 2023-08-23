@@ -34,6 +34,34 @@ namespace IBS.Models
         public string ITEM_DESC { get; set; }
         public string QTY_TO_INSP { get; set; }
         public string QTY_REJECTED { get; set; }
+
+
+        public string Vendor { get; set; }
+        public string Manufacturer { get; set; }
+        public string VEND_CD { get; set; }
+        public string MFG_CD { get; set; }
+        public string Consignee { get; set; }
+        public string ITEM_DESC_PO { get; set; }
+        
+        public string CALL_MARK_DT { get; set; }
+        
+        public string IE_PHONE_NO { get; set; }
+        
+        public string PO_DATE { get; set; }
+        public string CASE_NO { get; set; }
+        public string REMARK { get; set; }
+        public string DESIRE_DT { get; set; }
+        public string CALL_STATUS { get; set; }
+        public string COLOUR { get; set; }
+        public string MFG_PERS { get; set; }
+        public string MFG_PHONE { get; set; }
+        public string CALL_SNO { get; set; }
+        public string HOLOGRAM { get; set; }
+        public string IC_PHOTO { get; set; }
+        public string IC_PHOTO_A1 { get; set; }
+        public string IC_PHOTO_A2 { get; set; }
+        public int COUNT { get; set; }
+        public string CO_NAME { get; set; }
     }
 
 }

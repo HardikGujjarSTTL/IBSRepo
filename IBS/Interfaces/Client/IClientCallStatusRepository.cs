@@ -6,6 +6,7 @@ namespace IBS.Interfaces
     public interface IClientCallStatusRepository
     {
 
-        DTResult<ClientCallRptModel> GetCallStatus(DTParameters dtParameters);
+        DTResult<ClientCallRptModel> GetCallStatusR(DTParameters dtParameters);
+        DTResult<ClientCallRptModel> GetCallStatusC(DTParameters dtParameters);
     }
 }

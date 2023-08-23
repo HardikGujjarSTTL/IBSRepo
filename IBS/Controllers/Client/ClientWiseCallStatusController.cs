@@ -19,14 +19,24 @@ namespace IBS.Controllers.Client
         }
         public IActionResult ClientCallStatusReport()
         {
-
+            string actionValue = HttpContext.Request.Query["Action"];
+            ViewBag.Action = actionValue;
             return View();
         }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            //string Regin = GetRegionCode;
-            DTResult<ClientCallRptModel> dTResult = ClientCallStatusRepository.GetCallStatus(dtParameters);
+            var Action = dtParameters.AdditionalValues?.GetValueOrDefault("Action");
+            DTResult<ClientCallRptModel> dTResult = new DTResult<ClientCallRptModel>();
+            if (Action == "R")
+            {
+                 dTResult = ClientCallStatusRepository.GetCallStatusR(dtParameters);
+            }
+            else
+            {
+                 dTResult = ClientCallStatusRepository.GetCallStatusC(dtParameters);
+            }
+
             return Json(dTResult);
         }
 
