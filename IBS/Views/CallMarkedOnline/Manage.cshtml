@@ -1,0 +1,108 @@
+﻿@model IBS.Models.CallMarkedOnlineModel
+
+<div class="row">
+    <form asp-action="Manage">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Case No</label>
+                    <input type="text" asp-for="CASE_NO" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO NO</label>
+                    <input type="text" asp-for="PO_NO" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="PO_NO" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Call Date - SNO.</label>
+                    <input type="text" asp-for="DATE_TIME" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="DATE_TIME" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Contract No</label>
+                    <input type="text" asp-for="CASE_NO" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                </div>
+            </div>            
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Date</label>
+                    <input type="text" asp-for="DATE_TIME" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="DATE_TIME" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Vendor</label>
+                    <input type="text" asp-for="VENDOR" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="VENDOR" class="text-danger"></span>
+                </div>
+            </div>           
+            @*<div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO NO</label>
+                    <input type="text" asp-for="PO_NO" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="PO_NO" class="text-danger"></span>
+                </div>
+            </div>*@
+        </div>
+        <div class="row my-0">
+            <div class="col-md-8 mb-3">
+                <div class="reference">
+                    <label for="Reference">Manufacturer/Place of Inspection</label>
+                    <input type="text" asp-for="VENDOR" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="VENDOR" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-8 mb-3">
+                <div class="reference">
+                    <label for="Reference">Remarks</label>
+                    <input type="text" asp-for="VENDOR" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="VENDOR" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-8 mb-3">
+                <div class="reference">
+                    <label for="Reference">Inspecting Er.</label>
+                    <input type="text" asp-for="VENDOR" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="VENDOR" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-8 mb-3">
+                <div class="reference">
+                    <label for="Reference">Item</label>
+                    <input type="text" asp-for="VENDOR" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="VENDOR" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <a asp-action="Index" class="reset-btn">Back</a>
+                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+

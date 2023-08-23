@@ -1485,3 +1485,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination li.previous a:befor
 input[type="datetime-local"]{ height:43px;}
 /*.navbar-toggle.active .fa-bars:before{ content:"\f00d"!important; font-family:FontAwesome; color:#F66A2F;}*/
 
+.navbar-static-side ul li a span.menu-title{ display:inline-block; margin-left:0;}
+.navbar-static-side ul li a i.fa{ position:absolute; left:10px;}
+.navbar-static-side ul li a .arrow{ position:absolute; right:10px;}
+.navbar-static-side ul li a{ padding:15px 35px;}

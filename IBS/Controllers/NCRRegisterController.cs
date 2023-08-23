@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace IBS.Controllers
 {
-    public class NCRRegisterController : Controller
+    public class NCRRegisterController : BaseController
     {
         private readonly INCRRegisterRepository nCRRegisterRepository;
         public NCRRegisterController(INCRRegisterRepository _nCRRegisterRepository)
@@ -57,7 +57,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "Manage", 1, GetIPAddress());
             }
 
             return View(model.Model);
