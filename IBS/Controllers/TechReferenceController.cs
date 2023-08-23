@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class TechReferenceController : BaseController
     {
         #region Variables
@@ -21,10 +23,12 @@ namespace IBS.Controllers
             env = _environment;
             techReferenceRepository = _techReferenceRepository;
         }
+        [Authorization("TechReference", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("TechReference", "Index", "view")]
         public IActionResult Manage(int ID)
         {
             TechReferenceModel model = new();
@@ -60,6 +64,7 @@ namespace IBS.Controllers
             DTResult<TechReferenceModel> dTResult = techReferenceRepository.GetTechReferenceList(dtParameters, GetRegionCode);
             return Json(dTResult);
         }
+        [Authorization("TechReference", "Index", "delete")]
         public IActionResult Delete(int ID)
         {
             try
@@ -79,6 +84,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("TechReference", "Index", "add")]
         public IActionResult TechRefDetailsSave(TechReferenceModel model, IFormCollection FrmCollection)
         {
             try

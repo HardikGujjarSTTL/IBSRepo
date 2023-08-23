@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using NuGet.Packaging.Signing;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class MenuRoleMappingController : BaseController
     {
         #region Variables
@@ -16,10 +18,12 @@ namespace IBS.Controllers
         {
             roleRepository = _roleRepository;
         }
+        [Authorization("MenuRoleMapping", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("MenuRoleMapping", "Index", "view")]
         public IActionResult Manage(int id)
         {
             MenuroleMappingModel model = new();
@@ -46,6 +50,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         //public IActionResult MenuRoleMappingSave(string IDs, string Id, string RoleId)
+        [Authorization("MenuRoleMapping", "Index", "add")]
         public IActionResult MenuRoleMappingSave(string Id, string RoleId, string dataModel)
         {
             try
@@ -84,6 +89,7 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        [Authorization("MenuRoleMapping", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

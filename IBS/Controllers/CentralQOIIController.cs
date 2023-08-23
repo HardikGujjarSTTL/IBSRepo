@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class CentralQOIIController : BaseController
     {
         #region Variables
@@ -15,10 +17,12 @@ namespace IBS.Controllers
         {
             centralQOIIRepository = _centralQOIIRepository;
         }
+        [Authorization("CentralQOII", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("CentralQOII", "Index", "view")]
         public IActionResult Manage(string Client, string QoiDate, string Weight, string QoiLength)
         {
             CentralQOIIModel model = new();
@@ -38,6 +42,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("CentralQOII", "Index", "delete")]
         public IActionResult Delete(string Client, string QoiDate, string Weight, string QoiLength)
         {
             try
@@ -57,6 +62,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("CentralQOII", "Index", "add")]
         public IActionResult CentralQOISave(CentralQOIIModel model)
         {
             try

@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class LastYearOutstanding : BaseController
     {
         #region Variables
@@ -14,10 +16,12 @@ namespace IBS.Controllers
         {
             LastYearOutstandingRepository = _lastYearOutstandingRepository;
         }
+        [Authorization("LastYearOutstanding", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("LastYearOutstanding", "Index", "view")]
         public IActionResult Manage(string _LyPer)
         {
             LastYearOutstandingModel model = new();
@@ -34,7 +38,7 @@ namespace IBS.Controllers
             DTResult<LastYearOutstandingModel> dTResult = LastYearOutstandingRepository.GetLastYearOutstandingList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
-
+        [Authorization("LastYearOutstanding", "Index", "delete")]
         public IActionResult Delete(string _LyPer)
         {
             try
@@ -54,6 +58,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("LastYearOutstanding", "Index", "add")]
         public IActionResult LastYearOutstandingDetailsSave(LastYearOutstandingModel model)
         {
             try
