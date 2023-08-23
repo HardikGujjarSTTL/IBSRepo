@@ -2,6 +2,7 @@
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NuGet.Packaging.Signing;
 
 namespace IBS.Controllers
@@ -44,13 +45,14 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult MenuRoleMappingSave(string IDs, string Id, string RoleId)
+        //public IActionResult MenuRoleMappingSave(string IDs, string Id, string RoleId)
+        public IActionResult MenuRoleMappingSave(string Id, string RoleId, string dataModel)
         {
             try
             {
+                List<MenuroleMappingAjaxData> selectedItems = JsonConvert.DeserializeObject<List<MenuroleMappingAjaxData>>(dataModel);
                 MenuroleMappingModel model = new MenuroleMappingModel();
                 int Rid = 0;
-                string[] idArray = IDs.Split(',');
                 string msg = "Menu Role Mapping Inserted Successfully.";
                 if (Convert.ToInt32(Id) > 0)
                 {
@@ -59,10 +61,15 @@ namespace IBS.Controllers
                 }
                 model.Createdby = UserId;
                 model.Roleid = Convert.ToInt32(RoleId);
-                for (int i = 0; i < idArray.Length; i++)
+                foreach (var item in selectedItems)
                 {
-                    model.Menuid = Convert.ToInt32(idArray[i]);
-                    model.Isactive =true;
+                    model.Menuid =Convert.ToInt32(item.ID);
+                    model.detail = item.detail;
+                    model.Isadd = item.Isadd;
+                    model.Isedit = item.Isedit;
+                    model.PIsdelete = item.Pisdelete;
+                    model.Isview = item.Isview;
+                    model.Isactive = true;
                     Rid = roleRepository.MenuRoleMappingInsertUpdate(model);
                 }
                 if (Rid > 0)

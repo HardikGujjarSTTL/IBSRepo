@@ -54,6 +54,13 @@ namespace IBS.Controllers
                 return Convert.ToInt32(GetUserInfo.IeCd);
             }
         }
+        public string GetAuthType
+        {
+            get
+            {
+                return GetUserInfo.AuthLevl;
+            }
+        }
 
         public string UserName
         {

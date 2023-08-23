@@ -323,7 +323,11 @@ namespace IBS.Repositories
                         ControllerName = row.Field<string>("CONTROLLERNAME"),
                         ActionName = row.Field<string>("ACTIONNAME"),
                         IconPath = row.Field<string>("ICONPATH"),
-                        Role_Id = row.Field<Int32>("ROLE_ID")
+                        Role_Id = row.Field<Int32>("ROLE_ID"),
+                        AddAccess = row.Field<decimal>("IsAdd") == 1 ? true :false,
+                        EditAccess = row.Field<decimal>("IsEdit") == 1 ? true : false,
+                        DeleteAccess = row.Field<decimal>("PIsDelete") == 1 ? true : false,
+                        ViewAccess = row.Field<decimal>("IsView") == 1 ? true : false,
                     }));
                 }
             }

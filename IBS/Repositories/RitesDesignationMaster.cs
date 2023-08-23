@@ -15,7 +15,7 @@ namespace IBS.Repositories
         public RDMModel FindByID(int RdmCd)
         {
             RDMModel model = new();
-            T07RitesDesig role = context.T07RitesDesigs.Find(Convert.ToByte(RdmCd));
+            T07RitesDesig role = context.T07RitesDesigs.Find(RdmCd);
 
             if (role == null)
                 throw new Exception("Role Record Not found");
@@ -32,7 +32,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<RDMModel> GetRDMList(DTParameters dtParameters)
+        public DTResult<RDMModel>GetRDMList(DTParameters dtParameters)
         {
 
             DTResult<RDMModel> dTResult = new() { draw = 0 };
@@ -63,7 +63,7 @@ namespace IBS.Repositories
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RDMModel
                     {
-                        RDesigCd = (byte)l.RDesigCd,
+                        RDesigCd = l.RDesigCd,
                         RDesignation = l.RDesignation,
                         Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,
@@ -89,7 +89,7 @@ namespace IBS.Repositories
         }
         public bool Remove(int RdmCd, int UserID)
         {
-            var roles = context.T07RitesDesigs.Find(Convert.ToByte(RdmCd));
+            var roles = context.T07RitesDesigs.Find(RdmCd);
             if (roles == null) { return false; }
 
             roles.Isdeleted = Convert.ToByte(true);
@@ -107,6 +107,7 @@ namespace IBS.Repositories
             if (RDM == null || RDM.RDesigCd == 0)
             {
                 T07RitesDesig obj = new T07RitesDesig();
+
                 obj.RDesigCd = model.RDesigCd;
                 obj.RDesignation = model.RDesignation;
                 obj.Createdby = model.Createdby;

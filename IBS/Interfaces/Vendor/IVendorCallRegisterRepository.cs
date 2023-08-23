@@ -16,6 +16,16 @@ namespace IBS.Interfaces.Vendor
 
         int DetailsInsertUpdate(VenderCallRegisterModel model);
 
-        int RegiserCallSave(VenderCallRegisterModel model);
+        string RegiserCallSave(VenderCallRegisterModel model);
+
+        Task<string> send_IE_smsAsync(VenderCallRegisterModel model);
+
+        string send_Vendor_Email(VenderCallRegisterModel model);
+
+        string RegiserCallDelete(VenderCallRegisterModel model);
+
+        public VendorCallRegPrintReport FindByPrintReport(string CaseNo, string CallRecvDt, int CallSno, string UserName);
+
+        DTResult<VenderCallRegisterModel> GetDataListReport(DTParameters dtParameters);
     }
 }

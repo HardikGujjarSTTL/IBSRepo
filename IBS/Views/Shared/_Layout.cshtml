@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using IBS.Helper;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -157,79 +158,79 @@
             <!--header-->
             <!--contentContainer-->
             <div class="contentContainer">
-                <!--leftSidebarNav-->
+                <!--leftSidebarNav 1-->
                 <aside id="sidebar" class="navbar-default navbar-static-side">
                     @Html.Partial("~/Views/Shared/Menu.cshtml")
                     @*<div class="sidebar-collapse menu-scroll">
-                        <ul id="side-menu" class="nav">
-                            <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-agreement-ico.png" alt="tenant" /></i><span class="menu-title">Master</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="Index" asp-controller="Role"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Role</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="UserRole"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User Role</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="MenuRoleMapping"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Menu Role Mapping</span></a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-ico.png" alt="tenant" /></i><span class="menu-title">PCDO Master</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="Index" asp-controller="Contract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Contract</span></a></li>
-                                    <li><a asp-action="Index" asp-route-Type="C" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Client Contract</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="LabBilling"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Billing</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Expenditure"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Expenditure</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="TechReference"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Tech Reference</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Highlights"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Highlights</span></a></li>
-                                    <li><a asp-action="Index" asp-route-Type="B" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">BD Efforts</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="CentralQOI"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Central Quality Of Inspection 1</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="CentralQOII"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Central Quality Of Inspection 2</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="CentralRejectionStatus"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Central Rejection Status</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="BillingOperatingTarget"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">BE Target</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="BillingAdjustment"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Billing Adjustment</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="LastYearOutstanding"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Last Year Outstanding</span></a></li>
-                                    <li><a asp-action="Index" asp-route-Type="D" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">DFO Visit</span></a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Administrator</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="UserMaster" asp-controller="UserAdministrator"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User</span></a></li>
-                                    <li><a asp-action="MessageMaster" asp-controller="GeneralMessages"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">General Message</span></a></li>
-                                    <li><a asp-action="Allow_Old_Bill_DateMaster" asp-controller="Allow_Old_Bill_Date"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">ALLOW OLD BILL DATE FORM</span></a></li>
-                                    <li><a asp-action="MasterTableStatusList" asp-controller="MasterTableStatus"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Tables Status</span></a></li>
-                                    <li><a asp-action="IE_InstructionsMaster" asp-controller="IE_Instructions_Admin"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Instructions for Inspection Engineer</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="DEOVendorPurchesOrder"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Purchase Order Submitted By Vendors Awaiting Allocation Of Case No.</span></a></li>
-                                    <li><a asp-action="UploadDoc" asp-controller="AdminUserUploadDoc"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Upload Documents</span></a></li>
-                                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Documents</span></a></li>
-                                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
-                                    <li><a asp-action="#" asp-controller="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Purchase Order Submitted By Vendors Awaiting Allocation Of Case No.</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="DEOCRISPurchesOrderMA"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Registered In RITES.</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="MAapprove"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Approval For MA</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="DEOCRISPurchesOrderMAWCaseNo"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Not Registered In RITES.(Under Testing)</span></a></li>
+                    <ul id="side-menu" class="nav">
+                    <li><a asp-action="Index" asp-controller="Dashboard"><i class="fa fa-fw"><img src="~/images/dashboard-ico.png" alt="dashboard" /></i><span class="menu-title">Dashboard</span></a></li>
+                    <li>
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-agreement-ico.png" alt="tenant" /></i><span class="menu-title">Master</span></a>
+                    <ul class="nav nav-second-level">
+                    <li><a asp-action="Index" asp-controller="Role"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Role</span></a></li>
+                    <li><a asp-action="Index" asp-controller="UserRole"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User Role</span></a></li>
+                    <li><a asp-action="Index" asp-controller="MenuRoleMapping"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Menu Role Mapping</span></a></li>
+                    </ul>
+                    </li>
+                    <li>
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/master-ico.png" alt="tenant" /></i><span class="menu-title">PCDO Master</span></a>
+                    <ul class="nav nav-second-level">
+                    <li><a asp-action="Index" asp-controller="Contract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Contract</span></a></li>
+                    <li><a asp-action="Index" asp-route-Type="C" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Client Contract</span></a></li>
+                    <li><a asp-action="Index" asp-controller="LabBilling"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Billing</span></a></li>
+                    <li><a asp-action="Index" asp-controller="Expenditure"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Expenditure</span></a></li>
+                    <li><a asp-action="Index" asp-controller="TechReference"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Tech Reference</span></a></li>
+                    <li><a asp-action="Index" asp-controller="Highlights"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Highlights</span></a></li>
+                    <li><a asp-action="Index" asp-route-Type="B" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">BD Efforts</span></a></li>
+                    <li><a asp-action="Index" asp-controller="CentralQOI"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Central Quality Of Inspection 1</span></a></li>
+                    <li><a asp-action="Index" asp-controller="CentralQOII"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Central Quality Of Inspection 2</span></a></li>
+                    <li><a asp-action="Index" asp-controller="CentralRejectionStatus"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Central Rejection Status</span></a></li>
+                    <li><a asp-action="Index" asp-controller="BillingOperatingTarget"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">BE Target</span></a></li>
+                    <li><a asp-action="Index" asp-controller="BillingAdjustment"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Billing Adjustment</span></a></li>
+                    <li><a asp-action="Index" asp-controller="LastYearOutstanding"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Last Year Outstanding</span></a></li>
+                    <li><a asp-action="Index" asp-route-Type="D" asp-controller="ClientContract"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">DFO Visit</span></a></li>
+                    </ul>
+                    </li>
+                    <li>
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="tenant" /></i><span class="menu-title">Administrator</span></a>
+                    <ul class="nav nav-second-level">
+                    <li><a asp-action="UserMaster" asp-controller="UserAdministrator"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">User</span></a></li>
+                    <li><a asp-action="MessageMaster" asp-controller="GeneralMessages"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">General Message</span></a></li>
+                    <li><a asp-action="Allow_Old_Bill_DateMaster" asp-controller="Allow_Old_Bill_Date"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">ALLOW OLD BILL DATE FORM</span></a></li>
+                    <li><a asp-action="MasterTableStatusList" asp-controller="MasterTableStatus"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Tables Status</span></a></li>
+                    <li><a asp-action="IE_InstructionsMaster" asp-controller="IE_Instructions_Admin"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Instructions for Inspection Engineer</span></a></li>
+                    <li><a asp-action="Index" asp-controller="DEOVendorPurchesOrder"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Purchase Order Submitted By Vendors Awaiting Allocation Of Case No.</span></a></li>
+                    <li><a asp-action="UploadDoc" asp-controller="AdminUserUploadDoc"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Upload Documents</span></a></li>
+                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Documents</span></a></li>
+                    <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
+                    <li><a asp-action="#" asp-controller="#"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Purchase Order Submitted By Vendors Awaiting Allocation Of Case No.</span></a></li>
+                    <li><a asp-action="Index" asp-controller="DEOCRISPurchesOrderMA"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Registered In RITES.</span></a></li>
+                    <li><a asp-action="Index" asp-controller="MAapprove"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Approval For MA</span></a></li>
+                    <li><a asp-action="Index" asp-controller="DEOCRISPurchesOrderMAWCaseNo"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">MA Issued against CRIS Purchase Orders Not Registered In RITES.(Under Testing)</span></a></li>
 
 
-                                </ul>
-                            </li>
-                            
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/vendor-ico.png" alt="tenant" /></i><span class="menu-title">Vendor Details</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Profile</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor list</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="VendorDocument"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Document</span></a></li>
+                    </ul>
+                    </li>
 
-                                    <li><a asp-action="Index" asp-controller="POMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">PO/Contracts Registration</span></a></li>
-                                    <li><a asp-action="VendorCallRegister" asp-controller="VendorCallRegister"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Call For Inspection</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="PurchesOrder1LOA"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Add New Items in Already Registered LOA</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="CallRegister"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Registered Pending Calls Off Qty Enhancement Form</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="DownloadInspectionFeeBill"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Inspection Fee Bill</span></a></li>
-                                    <li><a asp-action="Index" asp-route-type="C" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Specific PO Call Status</span></a></li>
-                                    <li><a asp-action="Index" asp-route-type="I" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Specific PO IC Status</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Invoice</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="VendorPOMA"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Add MA</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Sample Payment</span></a></li>
-                                </ul>
-                            </li>
+                    <li>
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/vendor-ico.png" alt="tenant" /></i><span class="menu-title">Vendor Details</span></a>
+                    <ul class="nav nav-second-level">
+                    <li><a asp-action="Manage" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Profile</span></a></li>
+                    <li><a asp-action="Index" asp-controller="VendorProfile"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor list</span></a></li>
+                    <li><a asp-action="Index" asp-controller="VendorDocument"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Document</span></a></li>
+
+                    <li><a asp-action="Index" asp-controller="POMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">PO/Contracts Registration</span></a></li>
+                    <li><a asp-action="VendorCallRegister" asp-controller="VendorCallRegister"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Call For Inspection</span></a></li>
+                    <li><a asp-action="Index" asp-controller="PurchesOrder1LOA"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Add New Items in Already Registered LOA</span></a></li>
+                    <li><a asp-action="Index" asp-controller="CallRegister"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Registered Pending Calls Off Qty Enhancement Form</span></a></li>
+                    <li><a asp-action="Index" asp-controller="DownloadInspectionFeeBill"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Inspection Fee Bill</span></a></li>
+                    <li><a asp-action="Index" asp-route-type="C" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Specific PO Call Status</span></a></li>
+                    <li><a asp-action="Index" asp-route-type="I" asp-controller="VendorCallsMarkedForSpecificPO"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Specific PO IC Status</span></a></li>
+                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Invoice</span></a></li>
+                    <li><a asp-action="Index" asp-controller="VendorPOMA"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Add MA</span></a></li>
+                    <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Lab Sample Payment</span></a></li>
+                    </ul>
+                    </li>
 
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-ico.png" alt="IE" /></i><span class="menu-title">IE Details</span></a>
@@ -254,19 +255,19 @@
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Vendor Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Maximum Call Limit Form</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items List Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="IE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items List Form</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Master Items PL Form</span></a></li>
                                     <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Call Date</span></a></li>
                                     <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Sorted On Vendor</span></a></li>
                                 </ul>
                             </li>
                             @*<li>
-                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/transaction-ico.png" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
-                            <ul class="nav nav-second-level">
-                            <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Daily Work Plan</span></a></li>
-                            <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Pending JI Complaints for IE Remarks</span></a></li>
-                            </ul>
-                            </li>* end comment
+                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/transaction-ico.png" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
+                                <ul class="nav nav-second-level">
+                                    <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Daily Work Plan</span></a></li>
+                                    <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Pending JI Complaints for IE Remarks</span></a></li>
+                                </ul>
+                            </li>
                             <li>
                                 <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Directories</span></a>
                                 <ul class="nav nav-second-level">
@@ -290,37 +291,36 @@
                                     <li><a asp-action="Index" asp-controller="VendorCluster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Vendor Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Cluster</span></a></li>
                                     <li><a asp-action="Index" asp-controller="IE_MaximumCallLimitForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">IE Maximum Call Limit Form</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items List Form</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="D"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items List Form</span></a></li>
                                     <li><a asp-action="Index" asp-controller="MasterItemsPLForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Master Items PL Form</span></a></li>
-
+                                    <li><a asp-action="Index" asp-controller="ClientEntryForm"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Client Entry form</span></a></li>
+                                  
                                 </ul>
                             </li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Call Status</span></a>
-                                <ul class="nav nav-second-level">
-
-                                    <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Call Date</span></a></li>
-                                    <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Vendor</span></a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="menu-title">Daily Work Plan</span></a></li>
-                                    <li><a asp-action="#" asp-controller="#"><i class="fa fa-angle-double-right"></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Call Status</span></a>
+                            <ul class="nav nav-second-level">
+                                
+                                <li><a asp-action="CallsMarkedToIE" asp-route-type="C" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Call Date</span></a></li>
+                                <li><a asp-action="CallsMarkedToIE" asp-route-type="V" asp-controller="CallsMarkedToIE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Sorted On Vendor</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">IE Transaction</span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a asp-action="DailyWorkPlan" asp-controller="DailyWorkPlan"><i class="fa fa-angle-double-right"></i><span class="menu-title">Daily Work Plan</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="IEJIRemarksPending"><i class="fa fa-angle-double-right"></i><span class="menu-title">Pending JI Complaints for IE Remarks</span></a></li>
                                     <li><a asp-action="Index" asp-controller="ICPhotoEnclosed"><i class="fa fa-angle-double-right"></i><span class="menu-title">Download/View Photo Enclosed</span></a></li>
                                     <li><a asp-action="Index" asp-route-allowdl="Y" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Documents</span></a></li>
                                     <li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/tenant-icons.svg" alt="IE" /></i><span class="menu-title">Finance</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="Index" asp-controller="AddRecieptVoucher"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Add Reciept Voucher</span></a></li>
-                                    <li><a asp-action="SearchPayment" asp-controller="SearchPayments"><i class="fa fa-angle-double-right"></i><span class="menu-title">Search Payments</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="CheckPostingForm"><i class="fa fa-angle-double-right"></i><span class="menu-title">Cheque Posting Form</span></a></li>
-                                    <li><a asp-action="EFTEntry" asp-controller="EFTEntry"><i class="fa fa-angle-double-right"></i><span class="menu-title">EFT Entry</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="InterUnit_Transfer"><i class="fa fa-angle-double-right"></i><span class="menu-title">Inter Unit Transfer</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="MasterItemsListForm" asp-route-actiontype="IE"><i class="fa fa-angle-double-right"></i><span class="menu-title">Master Items List</span></a></li>
+
+                                    <li><a asp-action="QAVideoGeneral" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video General</span></a></li>
+                                    <li><a asp-action="QAVideoMechanical" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Mechanical</span></a></li>
+                                    <li><a asp-action="QAVideoEletrical" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Electrical</span></a></li>
+                                    <li><a asp-action="QAVideoCivil" asp-controller="TransactionQAVideos"><i class="fa fa-angle-double-right"></i><span class="menu-title">QA Video Civil</span></a></li>
+                            </ul>
+                        </li>
 
                                 </ul>
                             </li>
@@ -330,7 +330,8 @@
                                     <li><a asp-action="Index" asp-controller="IEPerformance"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Performance</span></a></li>
                                     <li><a asp-action="Index" asp-route-actiontype="I" asp-controller="IEWorkPlan"><i class="fa fa-angle-double-right"></i><span class="submenu-title">IE WorkPlan Report</span></a></li>
                                     <li><a asp-action="FromToDate" asp-route-actiontype="PJI" asp-controller="Reports"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Pending JI Cases</span></a></li>
-                                    <li><a asp-action="IEDairy" asp-controller="Reports"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Dairy</span></a></li>                                   
+                                    <li><a asp-action="IEDairy" asp-controller="Reports"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">IE Dairy</span></a></li>
+                                    @*<li><a asp-action="Index" asp-route-allowdl="Y" asp-route-actiontype="CI" asp-controller="DownloadDocuments"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Download Corporate Instructions</span></a></li>
                                 </ul>
                             </li>
 
@@ -345,27 +346,28 @@
 
                             <li><a asp-action="Index" asp-controller="ConsigneeComplaints"><i class="fa fa-angle-double-right"></i><span class="menu-title">Consignee Complaints</span></a></li>
                             <li><a asp-action="Index" asp-controller="NCRRegister"><i class="fa fa-angle-double-right"></i><span class="menu-title">NCR Register</span></a></li>
+                            <li><a asp-action="Index" asp-controller="OnlineComplaints"><i class="fa fa-angle-double-right"></i><span class="menu-title">Online Complaints</span></a></li>
                             <li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>
 
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="tenant" /></i><span class="menu-title">Reports</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li>
-                                        <a asp-action="Index" asp-controller="BillRegister"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Bill Register</span></a>
-                                    </li>
+                    <li>
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="tenant" /></i><span class="menu-title">Reports</span></a>
+                    <ul class="nav nav-second-level">
+                    <li>
+                    <a asp-action="Index" asp-controller="BillRegister"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Bill Register</span></a>
+                    </li>
 
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="IE" /></i><span class="menu-title">Inspection & Billing</span></a>
-                                <ul class="nav nav-second-level">
-                                    <li><a asp-action="Index" asp-controller="HologramAccountal"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Hologram Accountal</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="IC_Receipt"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Receipt of Bookset in Inspection Office</span></a></li>
+                    </ul>
+                    </li>
+                    <li>
+                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="IE" /></i><span class="menu-title">Inspection & Billing</span></a>
+                    <ul class="nav nav-second-level">
+                    <li><a asp-action="Index" asp-controller="HologramAccountal"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Hologram Accountal</span></a></li>
+                    <li><a asp-action="Index" asp-controller="IC_Receipt"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Receipt of Bookset in Inspection Office</span></a></li>
 
-                                </ul>
-                            </li>
+                    </ul>
+                    </li>
 
-                        </ul>
+                    </ul>
                     </div>*@
                 </aside>
                 <!--leftSidebarNav-->
@@ -382,9 +384,7 @@
             </footer>
             <!--footer-->
 
-        </section>
         <!--mainContainer-->
-    </div>
     <!--Wrapper-->
     <!-- <div class="overlay">
         <div class="spinner"></div>
@@ -399,6 +399,37 @@
     <script src="~/js/functions.js"></script>
     <script src="~/js/admin-general.js"></script>
 
+    <script type="text/javascript">
+    $(document).ready(function () {
+        HideShowByPermission();
+    });
+    function HideShowByPermission()
+    {
+        @if (SessionHelper.CurrentAccess != null)
+        {
+            @if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
+            {
+                @:$(".Permission_Add").css("display", "none");
+            }
+            @if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
+            {
+                @:$(".Permission_Save").css("display", "none");
+            }
+            @if (Convert.ToBoolean(SessionHelper.CurrentAccess.EditAccess) == false)
+            {
+                @:$(".Permission_EditView").removeClass("fa-pencil").addClass("fa-eye");
+                @:$(".Permission_Update").css("display", "none");
+                @:$(".Permission_View").addClass("disableform");
+            }
+            @if (Convert.ToBoolean(SessionHelper.CurrentAccess.DeleteAccess) == false)
+            {
+                @:$(".Permission_Delete").css("display", "none");
+            }
+        }
+    }
+    $(document).ajaxComplete(function () {
+        HideShowByPermission();
+    });
+    </script>
 </body>
-
 </html>

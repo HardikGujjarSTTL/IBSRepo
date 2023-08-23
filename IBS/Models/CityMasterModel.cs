@@ -12,7 +12,8 @@ namespace IBS.Models
 
         public byte? StateCd { get; set; }
 
-        public string? Country { get; set; }
+        public string? CountryName { get; set; }
+        public byte? CountryCode { get; set; }
 
         public string? UserId { get; set; }
 
