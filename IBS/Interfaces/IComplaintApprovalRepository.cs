@@ -6,6 +6,9 @@ namespace IBS.Interfaces
     {
         DTResult<OnlineComplaints> GetRejComplaints(DTParameters dtParameters);
         public OnlineComplaints FindByID(string TEMP_COMPLAINT_ID, string SetNo, string BKNo, string CaseNo);
+        string AcceptComplaint(OnlineComplaints model);
+        string SubmitAcceptRecord(OnlineComplaints model);
         string RejectComp(OnlineComplaints model);
+        string GetItems(string InspRegionDropdown);
     }
 }

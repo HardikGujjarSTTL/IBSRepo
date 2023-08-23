@@ -13,10 +13,14 @@ namespace IBS.Models
         public string? SetNo { get; set; }
         public string? Contract { get; set; }
         public DateTime? IC_DT { get; set; }
+        public DateTime? JiFixDt { get; set; }
         public string? IC_NO { get; set; }
         public string? InspRegion { get; set; }
+        public string? JiRequired { get; set; }
         public string? NoJIReason { get; set; }
+        public byte? JiIeCd { get; set; }
         public string Item { get; set; }
+        public string UserId { get; set; }
         public decimal? QtyperIC { get; set; }
         public decimal? Rate { get; set; }
         public decimal? QtyRejected { get; set; }
@@ -44,5 +48,6 @@ namespace IBS.Models
         public DateTime? Registrationdt { get; set; }
         public DateTime? RejMemodate { get; set; }
         public IFormFile ComplaintFile { get; set; }
+        public string ComplaintID { get; set; }
     }
 }

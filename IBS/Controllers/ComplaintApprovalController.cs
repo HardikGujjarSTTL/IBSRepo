@@ -2,6 +2,7 @@
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 
 namespace IBS.Controllers
 {
@@ -53,7 +54,28 @@ namespace IBS.Controllers
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlineComplaints", "ComplaintsSave", 1, GetIPAddress());
             }
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+        }
+
+        public ActionResult GetItems(string InspRegionDropdown)
+        {
+            var json = complaintApprovalRepository.GetItems(InspRegionDropdown);
+
+            return Json(json);
+        }
+
+        [HttpPost]
+        public ActionResult AcceptComplaint(OnlineComplaints model)
+        {
+            string msg = complaintApprovalRepository.AcceptComplaint(model);
             return Json(new { status = true, responseText = msg });
+        }
+
+        [HttpPost]
+        public ActionResult Submit(OnlineComplaints model)
+        {
+            string msg = complaintApprovalRepository.SubmitAcceptRecord(model);
+            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
     }
 }

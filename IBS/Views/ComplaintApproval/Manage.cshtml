@@ -21,6 +21,7 @@
                     <input type="text" asp-for="CoCd" id="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ITEM_DESC_PO" id="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="Regioncode" id="Regioncode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CaseNo" id="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Temp Rejection ID</label>
                         <input type="text" class="input" ASP-FOR="TEMP_COMPLAINT_ID" id="TEMP_COMPLAINT_ID" maxlength="300" readonly />
@@ -107,6 +108,7 @@
                         <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" required>
                     </div>*@
+                    
                     <div class="col-md-2 mb-2" id="rejno">
                         <label>Rejection Memo Id</label>
                         <input type="text" class="input" ASP-FOR="RejMemono" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly/>
@@ -124,12 +126,12 @@
                         @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
                     </div>
                     <div class="col-md-2 mb-2" id="JIDate">
-                        <label>JI Date (Date on Which IE Will Attend JI)</label>
-                        <input type="text" class="input datepicker" @*ASP-FOR="JIDate"*@ id="rejecttext" maxlength="300" />
+                        <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
+                        <input type="text" class="input datepicker" asp-format="{0:dd-MM-yyyy}" ASP-FOR="JIDate" maxlength="300" />
                     </div>
                     <div class="col-md-2 mb-2" id="JointInspection">
-                        <label>Joint Inspection Engineer</label>
-                        @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                        <label for="Jointisp">Joint Inspection Engineer</label>
+                        <select id="Jointisp" asp-for="InspER" class="form-control" required></select>
                     </div>
                     <div class="col-md-2 mb-2" id="NOJIReason">
                         <label>Joint Inspection Engineer</label>
@@ -144,7 +146,6 @@
                     <button type="button" class="save-btn active" id="rejectbtn" onclick="Reject();">Reject</button>
                     <button type="button" class="save-btn active" onclick="Submit();">Submit</button>
                     <a asp-controller="ComplaintApproval" asp-action="Index" class="reset-btn">Cancel</a>
-                    @*<button type="button" class="save-btn active" onclick="Save();">Save</button>*@
                 </div>
                 
             </div>
@@ -192,7 +193,51 @@
             $("#acceptbtn").hide();
         }
 
+        function Submit(){
+            debugger
+            var formData = $("#frmComplaints").serialize();
+            var ComplaintID = $("#ComplaintID").val();
+            
+            $.ajax({
+                url: '/ComplaintApproval/Submit',
+                type: 'POST',
+                data: formData,
+                success: function (dataToSend) {
+                    if (dataToSend.status === true) {
+                        if (dataToSend.redirectToIndex === true) {
+                            alert(dataToSend.alertMessage);
+                            window.location.href = '/ComplaintApproval/Index';
+                        }
+                    } else {
+                        // Handle error case if needed
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+
         function Accept(){
+           
+            var formData = $("#frmComplaints").serialize();
+
+            $.ajax({
+                url: '/ComplaintApproval/AcceptComplaint',
+                type: 'POST',
+                data: formData,
+                success: function (dataToSend) {
+                    if (dataToSend.status === true) {
+                        if (dataToSend.redirectToIndex === true) {
+                            alert(dataToSend.alertMessage);
+                        }
+                    } else {
+                        // Handle error case if needed
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+
             $("#rejectbtn").hide();
             $("#rejno").show();
             $("#rejdt").show();
@@ -205,10 +250,6 @@
             var RejectValue = $("#rejecttext").val();
 
             var formData = $("#frmComplaints").serialize();
-            var dataToSend = {
-                formData: formData,
-                RejectValue: RejectValue
-            };
 
             $.ajax({
                 url: '/ComplaintApproval/RejectComplaint',
@@ -228,5 +269,31 @@
                 }
             });
         }
+
+        $("#InspRegionDropdown").change(function () {
+            debugger
+            var InspRegionDropdown = $(this).val();
+
+            $.ajax({
+                url: '/ComplaintApproval/GetItems',
+                type: 'GET',
+                data: { InspRegionDropdown: InspRegionDropdown },
+                success: function (data) {
+                    debugger
+                    var Item = $("#Jointisp");
+                    Item.empty();
+                    debugger
+                    var items = JSON.parse(data);
+
+                    for (var i = 0; i < items.length; i++) {
+                        var option = $("<option>")
+                            .text(items[i].IeName)
+                            .val(items[i].IeCd);
+
+                        Item.append(option);
+                    }
+                }
+            });
+        });
     </script>
 }
