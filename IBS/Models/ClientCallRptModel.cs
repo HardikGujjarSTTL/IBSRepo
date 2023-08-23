@@ -4,6 +4,9 @@ namespace IBS.Models
 {
     public class ClientCallRptModel
     {
+        public string L5NO_PO { get; set; }
+        public string RLY_NONRLY { get; set; }
+        
         public string CallCode { get; set; }
         public string BILL_NO { get; set; }
         public string BILL_DT { get; set; }

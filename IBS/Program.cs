@@ -148,6 +148,7 @@ builder.Services.AddScoped<ILabPaymentListRepository, LabPaymentListRRepository>
 builder.Services.AddScoped<ILabInvoiceDownloadRepository, LabInvoiceDownloadRRepository>();
 builder.Services.AddScoped<ILabSamplePaymentRptRepository, LabSamplePaymentRptRRepository>();
 builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRRepository>();
+builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
