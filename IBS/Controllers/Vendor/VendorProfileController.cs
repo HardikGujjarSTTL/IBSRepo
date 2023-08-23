@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers.Vendor
 {
+    [Authorization]
     public class VendorProfileController : BaseController
     {
         #region Variables
@@ -23,12 +25,12 @@ namespace IBS.Controllers.Vendor
             env = _environment;
             _config = configuration;
         }
-
+        [Authorization("VendorProfile", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
-
+        [Authorization("VendorProfile", "Index", "view")]
         public IActionResult Manage(int VEND_CD)
         {
             int VendCd = 0;
@@ -69,7 +71,7 @@ namespace IBS.Controllers.Vendor
             DTResult<VendorlistModel> dTResult = vendorProfileRepository.GetVendorList(dtParameters);
             return Json(dTResult);
         }
-
+        [Authorization("VendorProfile", "Index", "delete")]
         public IActionResult Delete(int VEND_CD)
         {
             try
@@ -89,6 +91,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("VendorProfile", "Index", "add")]
         public IActionResult VendorProfileDetailsSave(VendorModel model, IFormCollection FrmCollection)
         {
             try

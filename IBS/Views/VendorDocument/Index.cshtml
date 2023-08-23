@@ -2,13 +2,20 @@
 
 @{
     ViewData["Title"] = "Vendor Document";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.VendCd > 0)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
         <h2>Vendor Document</h2>
     </div>
 </div>
-<section id="tab-1">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorDocument" asp-action="SaveVendorDocument" data-ajax-method="post" data-ajax-complete="completed" id="frmRoleDetails">
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
@@ -29,7 +36,7 @@
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="VendorDocument" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
                 </div>
                 <div id="dvCalibrationRecordsVendDocumentList" style="display:none;">
                     <partial name="_CalibrationRecordsVendDocumentList" />

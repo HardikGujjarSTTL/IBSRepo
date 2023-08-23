@@ -2,14 +2,24 @@
 
 @{
     ViewData["Title"] = "Central QOI";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.IsEdited == false)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Central QOI</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="CentralQOI" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section id="tab-1">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="CentralQOI" asp-action="CentralQOIISave" data-ajax-method="post" data-ajax-complete="completed" id="frmCentralQOI">
             <input type="text" class="input" asp-for="IsEdited" style="display:none;">
@@ -44,8 +54,8 @@
                     
                 </div>
                 <div class="savenext-btn">
-                    <a asp-controller="CentralQOI" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    @*<a asp-controller="CentralQOI" asp-action="Index" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
@@ -69,8 +79,9 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.responseText != "Selected Period and Client Already Exist") {
-                //window.location.href = "/CentralQOI/Index";
-                window.location.href = '@Url.Action("Index", "CentralQOI")';
+                if (res.status) {
+                    window.location.href = '@Url.Action("Index", "CentralQOI")';
+                }
             }
         };
     </script>
