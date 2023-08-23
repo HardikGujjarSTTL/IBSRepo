@@ -45,4 +45,24 @@
         //public string BK_NO { get; set; }
         //public string SET_NO { get; set; }
     }
+
+    public class IEDairyModel
+    {
+        public string IE_NAME { get; set; }
+        public string PO { get; set; }
+        public string CASE_NO { get; set; }
+        public string CALL { get; set; }
+        public string VEND { get; set; }
+        public string DT_OF_VISIT { get; set; }
+        public string ITEM_DESC_PO { get; set; }
+        public string QTY_TO_INSP { get; set; }
+        public string CALL_INSTALL_NO { get; set; }
+        public string BK_NO { get; set; }
+        public string IC_ISSUE_DT { get; set; }
+        public string CONSIGNEE { get; set; }
+        public string MATERIAL_VALUE { get; set; }
+        public string SUBMIT_DT { get; set; }
+        public string INSP_FEE { get; set; }
+        //public string MyProperty { get; set; }
+    }
 }

@@ -4,10 +4,12 @@ using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
 using IBS.Interfaces.IE_Reports;
+using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
+using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
 using Microsoft.EntityFrameworkCore;
@@ -116,6 +118,8 @@ builder.Services.AddScoped<ICentralQOIIRepository, CentralQOIIRepository>();
 #region Inspection and Billing
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
+builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineRepository>();
+
 #endregion
 builder.Services.AddScoped<ICityMaster,CityMaster>();
 builder.Services.AddScoped<I_IC_Bookset_Form,IC_Bookset_Form>();
