@@ -187,7 +187,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.Userroles
-                    join u in context.T02Users on l.UserId equals u.Id
+                    join u in context.T02Users on l.UserId.ToString() equals u.UserId.ToString()
                     join r in context.Roles on l.RoleId equals r.RoleId
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RoleModel
@@ -235,7 +235,7 @@ namespace IBS.Repositories
                 int maxID = context.Userroles.Max(x => x.Id) + 1;
                 Userrole obj = new Userrole();
                 obj.Id = maxID;
-                obj.UserId = model.User_ID;
+                obj.UserId = Convert.ToString(model.User_ID);
                 obj.RoleId = Convert.ToInt32(model.RoleId);
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = Convert.ToInt32(model.Createdby);

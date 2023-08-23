@@ -21,5 +21,5 @@ public partial class Userrole
 
     public byte? Isdeleted { get; set; }
 
-    public int? UserId { get; set; }
+    public string? UserId { get; set; }
 }
