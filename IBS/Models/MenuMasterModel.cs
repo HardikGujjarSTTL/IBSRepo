@@ -10,6 +10,9 @@
         public string ActionName { get; set; }
         public string IconPath { get; set; }
         public int Role_Id { get; set; }
-
+        public bool? AddAccess { get; set; }
+        public bool? EditAccess { get; set; }
+        public bool? DeleteAccess { get; set; }
+        public bool? ViewAccess { get; set; }
     }
 }

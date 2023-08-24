@@ -1,0 +1,72 @@
+﻿@model IBS.Models.ClientEntryFormModel
+
+@{
+    ViewData["Title"] = "Client Entry Form";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Client Entry Form</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientEntryForm" asp-action="ClientEntryFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientEntryForm">
+        <input type="hidden" asp-for="Mobile" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Client Name</label>
+                    <textarea class="input" asp-for="UserName" maxlength="30"> </textarea>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Organisation</label>
+                    <textarea class="input" asp-for="Organisation" maxlength="30"> </textarea>
+                    <span asp-validation-for="Organisation" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Client Designation</label>
+                    <input type="text" class="input" asp-for="Designation" maxlength="30">
+                    <span asp-validation-for="Designation" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Mobile:</label>
+                    <input type="text" class="input" asp-for="Mobile" maxlength="30">
+                    <span asp-validation-for="Mobile" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Email Id:</label>
+                    <input type="text" class="input" asp-for="Email" maxlength="30">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Unit</label>
+                    <input type="text" class="input" asp-for="Unit" maxlength="30">
+                    <span asp-validation-for="Unit" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="ClientEntryForm" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmClientEntryForm").valid()) {
+                $("#frmClientEntryForm").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/ClientEntryForm/Index";
+        };
+    </script>
+}

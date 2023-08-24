@@ -10,5 +10,7 @@ namespace IBS.Models
         public string Subject { get; set; }
         public string? Message { get; set; }
         public string? CC { get; set; }
+        public string? Bcc { get; set;}
+        public string? BodyFormat { get; set;}
     }
 }

@@ -2,13 +2,23 @@
 
 @{
     ViewData["Title"] = "Manage User Role";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.Id > 0)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
         <h2>Manage User Role</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="UserRole" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="UserRole" asp-action="UserRoleSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserRole">
             <input type="hidden" asp-for="Id" />
@@ -26,8 +36,8 @@
                     </div>
                 </div>
                 <div class="savenext-btn">
-                    <a asp-controller="UserRole" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    @*<a asp-controller="UserRole" asp-action="Index" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
@@ -47,7 +57,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = '@Url.Action("Index", "UserRole")';
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "UserRole")';
+            }
         };
     </script>
 }

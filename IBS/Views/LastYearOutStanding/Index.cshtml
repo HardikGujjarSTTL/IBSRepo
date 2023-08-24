@@ -9,7 +9,7 @@
             <h2>Last Year Outstanding List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="LastYearOutstanding" asp-action="Manage" class="formBtn">Add New LY OutStanding</a>
+            <a asp-area="" asp-controller="LastYearOutstanding" asp-action="Manage" class="formBtn Permission_Add">Add New LY OutStanding</a>
         </div>
     </div>
     <section class="table-section">
@@ -78,8 +78,8 @@
                         render: function (data, type, row) {
                             var _LyPer = data.Ly_Per;
                             var editUrl = '@Url.Action("Manage", "LastYearOutstanding")?_LyPer=' + _LyPer;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="LastYearOutstandingDelete(this._LyPer); return false;" href="javascript:void(\'0\');" id=\"' + _LyPer + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="LastYearOutstandingDelete(this._LyPer); return false;" href="javascript:void(\'0\');" id=\"' + _LyPer + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

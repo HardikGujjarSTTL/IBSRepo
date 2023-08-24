@@ -28,7 +28,10 @@ namespace IBS.Models
         public string? RejMemoNo { get; set; }
         public string? Railway { get; set; }
         public DateTime? RejMemoDt { get; set; }
+        public DateTime? JIDate { get; set; }
+        public DateTime? JiFixDt { get; set; }
         public string? InspRegion { get; set; }
+        public string? UserId { get; set; }
         public string? ItemDesc { get; set; }
         public decimal? QtyOffered { get; set; }
         public decimal? QtyRejected { get; set; }
@@ -36,6 +39,11 @@ namespace IBS.Models
         public string? RejectionReason { get; set; }
         public string? InspectionBy { get; set; }
         public string CoName { get; set; }
+        public string JiRequired { get; set; }
+        public string NoJiReason { get; set; }
+        public string NoJiOther { get; set; }
+        public string JiSno { get; set; }
+        public byte? JiIeCd { get; set; }
         [NotMapped]
         public SelectList ControllingManagers { get; set; }
         public decimal? Updatedby { get; set; }

@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using NuGet.Protocol.Plugins;
 using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
@@ -113,6 +114,8 @@ namespace IBS.Models
 
         public string? Bpo { get; set; }
 
+        public string? ItemCd { get; set; }
+
         public string? RecipientGstinNo { get; set; }
 
         public string? NewVendor { get; set; }
@@ -197,7 +200,128 @@ namespace IBS.Models
 
         public string? Consignee { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? DelvDt { get; set; }
+
         public string? DelvDate { get; set; }
+
+        public string ActionType { get; set; }
+
+        public string FOS { get; set; }
+
+        public string IsNewVender { get; set;}
+
+        public string? Createdby { get; set; }
+
+        public int callval { get; set; }
+
+        public decimal wMat_value { get; set; }
+
+        public int desire_dt { get; set; }  
+
+        public string CaseNoNoFound { get; set; } 
+        
+        public int e_status { get; set; }
+
+        public string IE_name { get; set; }
+
+    }
+
+    public class VendorCallRegPrintReport
+    {
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public string? MfgName { get; set; }
+
+        public string? MfgAdd { get; set; }
+
+        public string? Purchaser { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short CallSno { get; set; }
+
+        public string? CallLetterNo { get; set; }
+
+        public string? CallLetterDt { get; set; }
+
+        public byte? CallInstallNo { get; set; }
+
+        public string? OnlineCall { get; set; }
+
+        public string? FinalOrStage { get; set; }
+
+        public string? Remarks { get; set; }
+
+        public string? ItemRdso { get; set; }
+
+        public string? VendRdso { get; set; }
+
+        public string? VendAppFr { get; set; }
+
+        public string? VendAppTo { get; set; }
+
+        public string? StagDp { get; set; }
+
+        public string? LotDp1 { get; set; }
+
+        public string? LotDp2 { get; set; }
+
+        public string? IeName { get; set; }
+
+        public string? ItemDescPo { get; set; }
+
+        public decimal? QtyOrdered { get; set; }
+
+        public decimal? QtyToInsp { get; set; }
+
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        public string? VendContactPer1 { get; set; }
+
+        public string? VendContactTel1 { get; set; }
+
+        public string? VendEmail { get; set; }
+
+        public string? Bpo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime? DelvDt { get; set; }
+
+        public string? ItemCd { get; set; }
+
+        public string? IrfcFunded { get; set; }
+
+        public int? VendCd { get; set; }
+
+        public string? VendName { get; set; }
+
+        public string? VendAdd { get; set; }
+
+        public string? VendEmailPO { get; set; }
+
+        public string? VendContactPerPO1 { get; set; }
+
+        public string? VendContactTelPO1 { get; set; }
+
+        public string? Source { get; set; }
+
+        public string? VendPOEmail { get; set; }
+
 
     }
 }

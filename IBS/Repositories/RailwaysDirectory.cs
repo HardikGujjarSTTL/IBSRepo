@@ -27,12 +27,12 @@ namespace IBS.Repositories
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
                 model.Createddate = model.Createddate;
-                model.Isdeleted = role.Isdeleted;
+                //model.Isdeleted = role.Isdeleted;
                 return model;
             }
         }
 
-        public DTResult<RailwaysDirectoryModel> GetRMList(DTParameters dtParameters)
+        public DTResult<RailwaysDirectoryModel>GetRMList(DTParameters dtParameters)
         {
 
             DTResult<RailwaysDirectoryModel> dTResult = new() { draw = 0 };
@@ -60,7 +60,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T91Railways
-                    where l.Isdeleted == 0 || l.Isdeleted == null
+                    //where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RailwaysDirectoryModel
                     {
                         Railway = l.Railway,
@@ -69,7 +69,7 @@ namespace IBS.Repositories
                         UserId = l.UserId,
                         Datetime = l.Datetime,
                         ImmsRlyCd = l.ImmsRlyCd,
-                        Isdeleted = l.Isdeleted,
+                        //Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,
                         Createdby = l.Createdby,
                         Updateddate = l.Updateddate,
@@ -93,10 +93,10 @@ namespace IBS.Repositories
         }
         public bool Remove(int RlyCd, int UserID)
         {
-            var roles = context.T91Railways.Find(Convert.ToByte(RlyCd));
+            var roles = context.T91Railways.Find(RlyCd);
             if (roles == null) { return false; }
 
-            roles.Isdeleted = Convert.ToByte(true);
+            //roles.Isdeleted = Convert.ToByte(true);
             roles.Updatedby = Convert.ToInt32(UserID);
             roles.Updateddate = DateTime.Now;
             context.SaveChanges();
@@ -117,7 +117,7 @@ namespace IBS.Repositories
                 obj.Railway = model.Railway;
                 obj.HeadQuarter = model.HeadQuarter;
                 obj.Createdby = model.Createdby;
-                obj.Isdeleted = Convert.ToByte(false);
+                //obj.Isdeleted = Convert.ToByte(false);
                 obj.Createddate = DateTime.Now;
                 context.T91Railways.Add(obj);
                 context.SaveChanges();
@@ -136,10 +136,6 @@ namespace IBS.Repositories
             return RoleId;
         }
 
-        public int RailwaysDirectoryInsertUpdate(RailwaysDirectoryModel model)
-        {
-            throw new NotImplementedException();
-        }
-    }
+           }
 
 }

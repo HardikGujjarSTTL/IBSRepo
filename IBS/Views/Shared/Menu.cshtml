@@ -22,7 +22,7 @@
                             classMain = "fa";
                         }
                     }
-                    <a href="@Html.Raw(@HttpUtility.UrlDecode(urlMain))"><span class="@classMain"></span><i class="fa  fa-fw"><img src="@mp.IconPath" alt="tenant" /></i><span class="menu-title"> @mp.Title </span></a>
+                    <a href="@Html.Raw(@HttpUtility.UrlDecode(urlMain))"><span class="@classMain"></span><i class="fa  fa-fw"><img src="@Url.Content("~/"+ mp.IconPath)" alt="tenant" /></i><span class="menu-title"> @mp.Title </span></a>
 
                     @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)
                     {

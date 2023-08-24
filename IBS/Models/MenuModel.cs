@@ -38,5 +38,12 @@ namespace IBS.Models
         public string? ParentTitle { get; set; }
         public string? ChildTitle { get; set; }
         public string? Selected { get; set; }
+        public bool? Isadd { get; set; }
+
+        public bool? Isedit { get; set; }
+
+        public bool? Pisdelete { get; set; }
+
+        public bool? Isview { get; set; }
     }
 }
