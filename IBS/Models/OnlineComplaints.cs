@@ -13,14 +13,20 @@ namespace IBS.Models
         public string? SetNo { get; set; }
         public string? Contract { get; set; }
         public DateTime? IC_DT { get; set; }
+        public DateTime? JiFixDt { get; set; }
         public string? IC_NO { get; set; }
         public string? InspRegion { get; set; }
+        public string? JiRequired { get; set; }
+        public string? NoJIReason { get; set; }
+        public byte? JiIeCd { get; set; }
         public string Item { get; set; }
+        public string UserId { get; set; }
         public decimal? QtyperIC { get; set; }
         public decimal? Rate { get; set; }
         public decimal? QtyRejected { get; set; }
         public decimal? RejectionValue { get; set; }
         public string? RejectionReason { get; set; }
+        public string? Reasonforreject { get; set; }
         public string? Remarks { get; set; }
         public string? CaseNo { get; set; }
         public int? VendCd { get; set; }
@@ -30,14 +36,18 @@ namespace IBS.Models
         public string? RejMemono { get; set; }
         public string? InspER { get; set; }
         public string? ITEM_DESC_PO { get; set; }
+        public string? Regioncode { get; set; }
+        public string? AcceptRejornot { get; set; }
         public byte? ItemSrnoPo { get; set; }
         public byte? UomCd { get; set; }
         public byte? IE_CD { get; set; }
         public byte? CoCd { get; set; }
         public DateTime? TempComplaintDt { get; set; }
         public DateTime? Date { get; set; }
+        public DateTime? JIDate { get; set; }
         public DateTime? Registrationdt { get; set; }
         public DateTime? RejMemodate { get; set; }
         public IFormFile ComplaintFile { get; set; }
+        public string ComplaintID { get; set; }
     }
 }

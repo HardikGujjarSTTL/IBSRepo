@@ -7,6 +7,6 @@ namespace IBS.Interfaces
         public RailwaysDirectoryModel FindByID(int UomCd);
         DTResult<RailwaysDirectoryModel> GetRMList(DTParameters dtParameters);
         bool Remove(int RlyCd, int UserID);
-        int RailwaysDirectoryInsertUpdate(RailwaysDirectoryModel model);
+        int RailwaysDirectoryDetailsInsertUpdate(RailwaysDirectoryModel model);
     }
 }

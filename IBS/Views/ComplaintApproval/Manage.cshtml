@@ -20,9 +20,11 @@
                     <input type="text" asp-for="IE_CD" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="CoCd" id="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ITEM_DESC_PO" id="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="Regioncode" id="Regioncode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CaseNo" id="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Temp Rejection ID</label>
-                        <input type="text" class="input" ASP-FOR="TEMP_COMPLAINT_ID" maxlength="300" readonly />
+                        <input type="text" class="input" ASP-FOR="TEMP_COMPLAINT_ID" id="TEMP_COMPLAINT_ID" maxlength="300" readonly />
                         <span asp-validation-for="TEMP_COMPLAINT_ID" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -43,12 +45,12 @@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Contract No.</label>
-                        <input type="text" class="input" ASP-FOR="Contract" maxlength="300" id="setno" readonly />
+                        <input type="text" class="input" ASP-FOR="Contract" id="PONO" maxlength="300" id="setno" readonly />
                         <span asp-validation-for="Contract" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Date</label>
-                        <input type="text" class="input" ASP-FOR="Date" maxlength="300" asp-format="{0:dd-MM-yyyy}" id="setno" readonly />
+                        <input type="text" class="input" ASP-FOR="Date" id="PODT" maxlength="300" asp-format="{0:dd-MM-yyyy}" id="setno" readonly />
                         <span asp-validation-for="Date" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
@@ -66,7 +68,7 @@
                         <input type="text" class="input" ASP-FOR="Consignee" maxlength="300" id="setno" readonly />
                         <span asp-validation-for="Consignee" class="text-danger"></span>
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-4 mb-4">
                         <label for="Reference">Vendor</label>
                         <input type="text" class="input" ASP-FOR="Vendor" maxlength="300" id="setno" readonly />
                         <span asp-validation-for="Vendor" class="text-danger"></span>
@@ -76,18 +78,18 @@
                         <input type="text" class="input" ASP-FOR="InspER" maxlength="300" id="setno" readonly />
                         <span asp-validation-for="InspER" class="text-danger"></span>
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-4 mb-4">
                         <label for="Reference">Item</label>
                         <input type="text" class="input" ASP-FOR="Item" maxlength="300" id="setno" readonly />
                         <span asp-validation-for="Item" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-1 mb-1">
                         <label for="Reference">Qty. as per IC</label>
                         <input type="text" class="input" ASP-FOR="QtyperIC" id="QtyperIC" maxlength="300" readonly />
                         <span asp-validation-for="QtyperIC" class="text-danger"></span>
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-1 mb-1">
                         <label for="Reference">Qty. Rejected</label>
                         <input type="text" class="input" ASP-FOR="RejectionValue" maxlength="300" readonly />
                         <span asp-validation-for="RejectionValue" class="text-danger"></span>
@@ -97,16 +99,201 @@
                         <input type="text" class="input" ASP-FOR="RejectionReason" maxlength="300" readonly />
                         <span asp-validation-for="RejectionReason" class="text-danger"></span>
                     </div>
-                   @* <div class="col-md-4 mb-4">
+                    <div class="col-md-10 mb-10" id="rejectvalue">
+                        <label for="Reference">Reason for not accepting Rejection (250 CHARS ONLY)</label>
+                        <input type="text" class="input" ASP-FOR="Reasonforreject" id="rejecttext" maxlength="300" />
+                        <span asp-validation-for="Reasonforreject" class="text-danger"></span>
+                    </div>   
+                    @* <div class="col-md-4 mb-4">
                         <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" required>
                     </div>*@
-                    <div class="savenext-btn" style="margin-left:80%;">
-                        <a asp-controller="ComplaintApproval" asp-action="Index" class="reset-btn">Cancel</a>
-                        @*<button type="button" class="save-btn active" onclick="Save();">Save</button>*@
+                    
+                    <div class="col-md-2 mb-2" id="rejno">
+                        <label>Rejection Memo Id</label>
+                        <input type="text" class="input" ASP-FOR="RejMemono" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly/>
+                    </div>
+                    <div class="col-md-2 mb-2" id="rejdt">
+                        <label>Rejection Memo Date </label>
+                        <input type="text" class="input" ASP-FOR="RejMemodate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
+                    </div>
+                    <div class="col-md-2 mb-2" id="inspreq">
+                        <label>Joint Inspection Required</label>
+                        @Html.DropDownListFor(model => model.AcceptRejornot, new SelectList(IBS.Models.Common.Inspectionrequired() , "Value", "Text"),"--Select--", new { id = "Inspectionrequired" })
+                    </div>
+                    <div class="col-md-2 mb-2" id="inspregion">
+                        <label> Region Doing Joint Inspection</label>
+                        @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                    </div>
+                    <div class="col-md-2 mb-2" id="JIDate">
+                        <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
+                        <input type="text" class="input datepicker" asp-format="{0:dd-MM-yyyy}" ASP-FOR="JIDate" maxlength="300" />
+                    </div>
+                    <div class="col-md-2 mb-2" id="JointInspection">
+                        <label for="Jointisp">Joint Inspection Engineer</label>
+                        <select id="Jointisp" asp-for="InspER" class="form-control" required></select>
+                    </div>
+                    <div class="col-md-2 mb-2" id="NOJIReason">
+                        <label>Joint Inspection Engineer</label>
+                        @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"))
                     </div>
                 </div>
+                <br/>
+                <br/>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="acceptbtn" onclick="Accept();">Accept</button>
+                    <button type="button" class="save-btn active" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
+                    <button type="button" class="save-btn active" id="rejectbtn" onclick="Reject();">Reject</button>
+                    <button type="button" class="save-btn active" onclick="Submit();">Submit</button>
+                    <a asp-controller="ComplaintApproval" asp-action="Index" class="reset-btn">Cancel</a>
+                </div>
+                
             </div>
         </form>
     </div>
 </section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+       
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#rejectvalue").hide();
+            $("#sendemailbtn").hide();
+            $("#rejno").hide();
+            $("#rejdt").hide();
+            $("#inspregion").hide();
+            $("#inspreq").hide();
+            $("#JIDate").hide();
+            $("#JointInspection").hide();
+            $("#NOJIReason").hide();
+        });
+
+        $("#Inspectionrequired").change(function () {
+            debugger
+            var selectedValue = $(this).val();
+            if(selectedValue == "Y"){
+                $("#JIDate").show();
+                $("#JointInspection").show();
+                $("#inspregion").show();
+            }else{
+                $("#JIDate").hide();
+                $("#JointInspection").hide();
+                $("#inspregion").hide();
+                $("#NOJIReason").show();
+            }
+        });
+        
+
+        function Reject(){
+            $("#rejectvalue").show();
+            $("#sendemailbtn").show();
+            $("#acceptbtn").hide();
+        }
+
+        function Submit(){
+            debugger
+            var formData = $("#frmComplaints").serialize();
+            var ComplaintID = $("#ComplaintID").val();
+            
+            $.ajax({
+                url: '/ComplaintApproval/Submit',
+                type: 'POST',
+                data: formData,
+                success: function (dataToSend) {
+                    if (dataToSend.status === true) {
+                        if (dataToSend.redirectToIndex === true) {
+                            alert(dataToSend.alertMessage);
+                            window.location.href = '/ComplaintApproval/Index';
+                        }
+                    } else {
+                        // Handle error case if needed
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+
+        function Accept(){
+           
+            var formData = $("#frmComplaints").serialize();
+
+            $.ajax({
+                url: '/ComplaintApproval/AcceptComplaint',
+                type: 'POST',
+                data: formData,
+                success: function (dataToSend) {
+                    if (dataToSend.status === true) {
+                        if (dataToSend.redirectToIndex === true) {
+                            alert(dataToSend.alertMessage);
+                        }
+                    } else {
+                        // Handle error case if needed
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+
+            $("#rejectbtn").hide();
+            $("#rejno").show();
+            $("#rejdt").show();
+            $("#inspreq").show();
+
+        }
+
+        function Send_Email(){
+            $("#rejectvalue").show();
+            var RejectValue = $("#rejecttext").val();
+
+            var formData = $("#frmComplaints").serialize();
+
+            $.ajax({
+                url: '/ComplaintApproval/RejectComplaint',
+                type: 'POST',
+                data: formData,
+                success: function (dataToSend) {
+                    if (dataToSend.status === true) {
+                        if (dataToSend.redirectToIndex === true) {
+                            alert(dataToSend.alertMessage);
+                            window.location.href = '/ComplaintApproval/Index';
+                        }
+                    } else {
+                        // Handle error case if needed
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+
+        $("#InspRegionDropdown").change(function () {
+            debugger
+            var InspRegionDropdown = $(this).val();
+
+            $.ajax({
+                url: '/ComplaintApproval/GetItems',
+                type: 'GET',
+                data: { InspRegionDropdown: InspRegionDropdown },
+                success: function (data) {
+                    debugger
+                    var Item = $("#Jointisp");
+                    Item.empty();
+                    debugger
+                    var items = JSON.parse(data);
+
+                    for (var i = 0; i < items.length; i++) {
+                        var option = $("<option>")
+                            .text(items[i].IeName)
+                            .val(items[i].IeCd);
+
+                        Item.append(option);
+                    }
+                }
+            });
+        });
+    </script>
+}

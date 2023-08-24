@@ -33,6 +33,26 @@ namespace IBS.Helper
             }
         }
 
+        public static MenuMasterModel CurrentAccess
+        {
+            get
+            {
+                string _currentaccess = httpContextAccessor.HttpContext.Session.GetString("MenuMasterModel");
+                if (!string.IsNullOrWhiteSpace(_currentaccess))
+                {
+                    MenuMasterModel currentaccess = JsonSerializer.Deserialize<MenuMasterModel>(_currentaccess);
+
+                    if (currentaccess != null)
+                        return currentaccess;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("MenuMasterModel", JsonSerializer.Serialize(value));
+            }
+        }
+
         public static List<MenuMasterModel> MenuModelDTO
         {
             get

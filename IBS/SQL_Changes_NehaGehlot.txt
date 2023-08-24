@@ -422,3 +422,71 @@ BEGIN
 
     -- You can return the result cursor to the calling code
 END GET_REJECTIONCOMPLAINT_DETAILS;
+
+====================================================================================================================================
+
+create or replace PROCEDURE GENERATE_JI_SNO(
+   IN_INSP_REGION IN varchar2,
+   IN_JI_REGION IN varchar2,
+   IN_COMPLAINT_DT IN varchar2,
+   p_result_cursor OUT SYS_REFCURSOR
+) IS
+	w_ctr char(9) :=null;
+	w_sno char(4) :=null;
+        W_ERR_CD NUMBER := -1;
+        w_jisno varchar2(13) :=null;
+	my_exception exception;
+BEGIN
+	W_ERR_CD := -1;
+	---
+	if to_number(substr(IN_COMPLAINT_DT,4,2)) > 3 then
+	   w_ctr := IN_INSP_REGION||IN_JI_REGION||'/'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2)+1,2,'0')||'/';
+	else
+	   w_ctr := IN_INSP_REGION||IN_JI_REGION||'/'||lpad(substr(IN_COMPLAINT_DT,9,2)-1,2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'/';
+	end if;
+	Select lpad(nvl(max(to_number(nvl(trim(substr(JI_SNO,10,4)),'0'))),0)+1,4,'0') into w_sno
+	From T40_CONSIGNEE_COMPLAINTS where substr(JI_SNO,1,9)=w_ctr;
+	---
+	w_jisno := trim(w_ctr||w_sno);
+	if length(w_jisno) <> 13 then
+	    W_ERR_CD := -2;
+	    raise my_exception;
+	end if;
+	---
+	OPEN p_result_cursor FOR
+ SELECT w_jisno AS w_jisno, W_ERR_CD AS W_ERR_CD FROM DUAL;
+END;
+
+===================================================================================================================================================
+
+create or replace PROCEDURE GENERATE_COMPLAINT_NO(
+      IN_REGION_CD IN varchar2,
+      IN_COMPLAINT_DT IN varchar2,
+     p_result_cursor OUT SYS_REFCURSOR
+) IS
+	w_ctr char(8) :=null;
+	w_sno char(4) :=null;
+	w_compid varchar2(12) :=null;   
+	OUT_ERR_CD NUMBER := -1;
+	my_exception exception;
+BEGIN
+	OUT_ERR_CD := -1;
+	---
+	if to_number(substr(IN_COMPLAINT_DT,4,2)) > 3 then
+	   w_ctr := IN_REGION_CD||'/'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2)+1,2,'0')||'/';
+	else
+	   w_ctr :=   IN_REGION_CD||'/'||lpad(substr(IN_COMPLAINT_DT,9,2)-1,2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'/';
+	end if;
+	Select lpad(nvl(max(to_number(nvl(trim(substr(COMPLAINT_ID,9,4)),'0'))),0)+1,4,'0') into w_sno
+	From T40_CONSIGNEE_COMPLAINTS where substr(COMPLAINT_ID,1,8)=w_ctr;
+   	---
+	w_compid:=trim(w_ctr||w_sno);
+	if length(w_compid) <> 12 then
+	    OUT_ERR_CD := -2;
+	    raise my_exception;
+	end if;
+	---
+	OPEN p_result_cursor FOR
+ SELECT w_compid AS w_compid, OUT_ERR_CD AS OUT_ERR_CD FROM DUAL;
+
+END;

@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class BillingOperatingTarget : BaseController
     {
         #region Variables
@@ -14,10 +16,12 @@ namespace IBS.Controllers
         {
             billingOperatingTargetRepository = _billingOperatingTargetRepository;
         }
+        [Authorization("BillingOperatingTarget", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("BillingOperatingTarget", "Index", "view")]
         public IActionResult Manage(string _BePer)
         {
             BillingOperatingTargetModel model = new();
@@ -34,7 +38,7 @@ namespace IBS.Controllers
             DTResult<BillingOperatingTargetModel> dTResult = billingOperatingTargetRepository.GetBillingOperatingTargetList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
-
+        [Authorization("BillingOperatingTarget", "Index", "delete")]
         public IActionResult Delete(string _highDt)
         {
             try
@@ -54,6 +58,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("BillingOperatingTarget", "Index", "add")]
         public IActionResult BillingOperatingDetailsSave(BillingOperatingTargetModel model)
         {
             try

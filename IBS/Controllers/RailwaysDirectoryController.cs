@@ -65,7 +65,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = railwaysDirectory.RailwaysDirectoryInsertUpdate(model);
+                int i = railwaysDirectory.RailwaysDirectoryDetailsInsertUpdate(model);
                 if (i > 0)
                 {
                     return Json(new { status = true, responseText = msg });

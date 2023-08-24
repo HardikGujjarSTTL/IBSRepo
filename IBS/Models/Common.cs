@@ -126,11 +126,11 @@ namespace IBS.Models
 
             Tblexception objexception = new Tblexception();
 
-            objexception.Controllername = ControllerName;
+             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
             objexception.Exception = exceptionmsg;
-            objexception.Createdby = CreatedBy;
+             objexception.Createdby = CreatedBy;
             objexception.Createip = CreatedIP;
             objexception.Createddate = DateTime.Now;
             context.Tblexceptions.Add(objexception);
@@ -171,7 +171,54 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
-
+        public static List<SelectListItem> GetState()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> state = (from a in context.T92States
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.StateName,
+                                        Value = Convert.ToString(a.StateName)
+                                    }).ToList();
+            return state;
+        }
+        public static List<SelectListItem> GetCountry()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> country = (from a in context.CountryMasters
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = a.CountryName,
+                                         Value = Convert.ToString(a.CountryName)
+                                     }).ToList();
+            return country;
+        }
+        public static List<SelectListItem>GetDesignation()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> country = (from a in context.T08IeControllOfficers
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.CoDesig),
+                                           Value = Convert.ToString(a.CoDesig)
+                                       }).ToList();
+            return country;
+        }
+        //public static List<SelectListItem> GetStatus()
+        //{
+        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+        //    List<SelectListItem> country = (from a in context.T08IeControllOfficers
+        //                                    select
+        //                               new SelectListItem
+        //                               {
+        //                                   Text = a.CoStatus,
+        //                                   Value = Convert.ToString(a.CoStatus)
+        //                               }).ToList();
+        //    return country;
+        //}
         public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -233,6 +280,70 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Southern Region";
             single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> NOJIReasons()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "DP Expired";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Validity of IC Expired";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Recieved in Damaged/Broken Condition";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Rejection &lt;5%";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Rejection issued after 90 Days of reciept of material";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Guarantee Claim";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Wrong Dispatch";
+            single.Value = "G";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Material not stamped (partial/full)";
+            single.Value = "H";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Material received in excess of ordered quantity";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Material lifted/rectified/replaced (Partially/Fully) before issue of Rejection Advice";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Reason(s) of rejection, beyond scope of inspection";
+            single.Value = "K";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> Inspectionrequired()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Yes";
+            single.Value = "Y";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "No";
+            single.Value = "N";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -577,7 +688,7 @@ namespace IBS.Models
             }
         }
 
-        public static List<SelectListItem> GetInspEngCd(int IeCd = 0)
+        public static List<SelectListItem>GetInspEngCd(int IeCd = 0)
         {
             if (IeCd == 0)
             {
@@ -1782,7 +1893,7 @@ namespace IBS.Models
                                     new SelectListItem
                                     {
                                         Text = a.UserName,
-                                        Value = Convert.ToString(a.Id)
+                                        Value = Convert.ToString(a.UserId)
                                     }).ToList();
             return city;
         }
