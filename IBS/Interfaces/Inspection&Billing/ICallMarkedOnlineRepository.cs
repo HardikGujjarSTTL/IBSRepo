@@ -13,5 +13,6 @@ namespace IBS.Interfaces.Inspection_Billing
         bool Call_Rejected(CallMarkedOnlineFilter obj);
 
         VendorDetailModel Get_Vendor_For_Send_Mail(CallMarkedOnlineFilter obj);
+        bool Call_Marked_Online_Save(CallMarkedOnlineModel model, UserSessionModel uModel);
     }
 }

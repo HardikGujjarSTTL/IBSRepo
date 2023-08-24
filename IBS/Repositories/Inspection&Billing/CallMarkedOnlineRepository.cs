@@ -293,7 +293,7 @@ namespace IBS.Repositories.Inspection_Billing
                                     .Select(x => x).FirstOrDefault();
                     if (_callReg != null)
                     {
-                        _callReg.Isdeleted = 1;
+                        _callReg.Isdeleted = Convert.ToByte(1);
                         context.SaveChanges();
                         flag = true;
 
@@ -352,14 +352,30 @@ namespace IBS.Repositories.Inspection_Billing
                     if (cl_exist == 0)
                     {
                         T100VenderCluster insObj = new T100VenderCluster();
-                        //insObj.VendorCode = model.
-                        //string myInsertQuery_Cluster = "INSERT into T100_VENDER_CLUSTER values('" + lblManuf.Text + "', '" + ddlDept.SelectedValue + "'," + lstIE.SelectedValue + ",'" + Session["UName"] + "',to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'))";
-                        //OracleCommand myInsertCommand_Cluster = new OracleCommand(myInsertQuery_Cluster);
-                        //myInsertCommand_Cluster.Transaction = myTrans;
-                        //myInsertCommand_Cluster.Connection = conn1;
-                        //myInsertCommand_Cluster.ExecuteNonQuery();
+                        insObj.VendorCode = Convert.ToInt32(model.MFG_CD);
+                        insObj.DepartmentName = model.DEPT_DROPDOWN;
+                        insObj.ClusterCode = Convert.ToByte(model.IE_NAME);
+                        insObj.UserId = uModel.UserName;
+                        insObj.Datetime = DateTime.Now;
+                        insObj.Createdby = uModel.UserID;
+                        insObj.Createddate = DateTime.Now;
+                        context.T100VenderClusters.Add(insObj);
+                        context.SaveChanges();
                     }
+                    var ietopoicount = (from mapping in context.T60IePoiMappings
+                                        where mapping.IeCd == 0 && mapping.PoiCd == Convert.ToInt32("46040")
+                                        select mapping).Count();
 
+                    if(ietopoicount == 0)
+                    {
+                        T60IePoiMapping insObj = new T60IePoiMapping();
+                        insObj.IeCd = IE.Value;
+                        insObj.PoiCd = Convert.ToInt32(model.MFG_CD);
+                        context.T60IePoiMappings.Add(insObj);
+                        context.SaveChanges();
+                    }
+                    flag = true;
+                    trans.Commit();
                 }
                 catch (Exception)
                 {

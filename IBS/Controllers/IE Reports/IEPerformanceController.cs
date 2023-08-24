@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces.IE;
+﻿using IBS.Filters;
+using IBS.Interfaces.IE;
 using IBS.Interfaces.IE_Reports;
 using IBS.Models;
 using IBS.Repositories;
@@ -8,6 +9,7 @@ using Microsoft.Build.Framework;
 
 namespace IBS.Controllers.IE_Reports
 {
+    [Authorization]
     public class IEPerformanceController : BaseController
     {
         #region Variables
@@ -19,6 +21,7 @@ namespace IBS.Controllers.IE_Reports
             iE_PerfomanceRepository = _iE_PerfomanceRepository;
         }
 
+        [Authorization("IEPerformance", "Index", "view")]
         // GET: IEPerformanceController
         public IActionResult Index()
         {
