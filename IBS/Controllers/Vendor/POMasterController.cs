@@ -233,6 +233,7 @@ namespace IBS.Controllers.Vendor
             return View(model);
         }
 
+        [Authorization("POMaster", "Index", "view")]
         public IActionResult PODetails(string CaseNo)
         {
             PO_MasterModel model = new();
@@ -292,6 +293,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("POMaster", "Index", "add")]
         public IActionResult POMasterDetailsSave(PO_MasterDetailsModel model)
         {
             try
