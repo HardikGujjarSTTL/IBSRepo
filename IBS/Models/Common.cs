@@ -345,6 +345,10 @@ namespace IBS.Models
             single.Text = "No";
             single.Value = "N";
             textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Cancelled";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
 
