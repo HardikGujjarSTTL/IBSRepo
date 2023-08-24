@@ -46,6 +46,7 @@
                     <thead>
                         <tr>
                             <th>S.No.</th>
+                            <th>Action</th>
                             <th>Case No.</th>
                             <th>PO NO.</th>
                             <th>PO Date</th>
@@ -88,9 +89,9 @@
 
 <script type="text/javascript">
 
-    
+
     $(document).ready(function () {
-            $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+        $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
         setDefaultDate();
 
         $("#btnSubmit").click(function () {
@@ -126,8 +127,8 @@
         debugger
         var Date = $("#txtDate").val();
         var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "true" : "false";
-        var Rdb2 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "true" : "false";
-        var Rdb3 = $("#rdbAllCallUnMarked").is(':checked') == true ? "true" : "false";
+        var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "true" : "false";
+        var Rdb3 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "true" : "false";
         $("#dtList").DataTable({
             stateSave: false,// Design Assets
             autoWidth: true,
@@ -144,15 +145,15 @@
                 {
                     extend: 'print',
                     //text: 'ButtonLabelHere',
-                    title: 'Pending JI Cases',// + FromDate + ' To ' + ToDate,
-                    exportOptions: {
-                        modifier: {
-                            selected: null
-                        }
-                    },
-                    customize: function (win) {
-                        $(win.document.body).find('h1').css('text-align', 'center');
-                    },
+                    title: 'Pending JI Cases'// + FromDate + ' To ' + ToDate,
+                    //exportOptions: {
+                    //    modifier: {
+                    //        selected: null
+                    //    }
+                    //},
+                    //customize: function (win) {
+                    //    $(win.document.body).find('h1').css('text-align', 'center');
+                    //},
 
                 }
             ],
