@@ -34,7 +34,7 @@
         <section class="table-section">
             <div class="task-listinput">
                 <div class="dash-table">
-                    <table id="dtComplaints" class="table-responsive">
+                    <table id="dtConsignee" class="table-responsive">
                         <thead>
                             <tr>
                                 <th>Case Number</th>
@@ -56,8 +56,33 @@
                 </div>
             </div>
         </section>
-        </div>
-    
+            <section class="table-section" id="complaint">
+                <div class="task-listinput">
+                    <div class="dash-table">
+                        <table id="dtComplaints" class="table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Complaint ID</th>
+                                    <th>JI Unique Sno</th>
+                                    <th>Case Number</th>
+                                    <th>Bk No.</th>
+                                    <th>Set No.</th>
+                                    <th>Po No.</th>
+                                    <th>Po Date</th>
+                                    <th>IC No.</th>
+                                    <th>IC Date</th>
+                                    <th>Rejection Memo No.</th>
+                                    <th>Rejection Memo Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+    </div>
 </div>
 
 
@@ -68,7 +93,6 @@
 
         $(function () {
             setDefaultDate();
-            //InitializeDatatable();
         });
 
         var dataTableInstance;
@@ -78,25 +102,19 @@
             }
             InitializeDatatable();
         }
-        //$(function () {
-        //    InitializeDatatable();
-        //});
+      
         function setDefaultDate() {
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-           
-
-
         }
 
         completed = function (response) {
             debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/ConsigneeComplaints";
             window.location.href = '@Url.Action("Index", "ConsigneeComplaints")';
         };
 
@@ -105,78 +123,269 @@
             debugger
             var PoNo = $("#PoNo").val();
             var PoDt = $("#PoDt").val();
+            var ajaxUrl = "@Url.Action("GetCombinedData")";
 
-            var ajaxUrl = "@Url.Action("LoadTable")";
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: { poNo: PoNo, poDt: PoDt },
+                success: function (response) {
+                    debugger
+                    var list1 = response.dTResult;
+                    var list2 = response.dTResult1;
 
-             $("#dtComplaints").DataTable({
-                stateSave: false,
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                paging: true,
-                searching: true,
-                ajax: {
-                    url: ajaxUrl,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        debugger
-                        var AdditionalValues = {
-                            "PoNo": PoNo,
-                            "PoDt": PoDt
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    },
+                    var tableConsignee = $('#dtConsignee').DataTable();
+                    tableConsignee.destroy();
+
+                    var tableComplaints = $('#dtComplaints').DataTable();
+                    tableComplaints.destroy();
+
+                    $('#dtConsignee').DataTable({
+                        data: list1,
+                        columns: [
+
+                            { data: "CASE_NO" },
+                            { data: "BK_NO" },
+                            { data: "SET_NO" },
+                            { data: "PO_NO" },
+                            {
+                                data: "PO_DT",
+                                render: function (data, type, row) {
+                                    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                        return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                    }
+                                    return data;
+                                }
+                            },
+                            { data: "Railway" },
+                            { data: "VEND_NAME"},
+                            { data: "Consignee"},
+                            { data: "IC_NO"},
+                            {
+                                data: "IC_DATE",
+                                render: function (data, type, row) {
+                                    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                        return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                data: null, orderable: false,
+                                render: function (data, type, row) {
+                                    var CaseNo = data.CASE_NO;
+                                    var bkNo = data.BK_NO;
+                                    var setNo = data.SET_NO;
+                                    var editUrl = '@Url.Action("Manage", "ConsigneeComplaints")?CASE_NO=' + CaseNo + '&BK_NO=' + bkNo + '&SET_NO=' + setNo;;
+
+                                    var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                                    html += '</div>';
+                                    return html;
+                                }
+                            },
+                        ],
+                    });
+
+                    $('#dtComplaints').DataTable({
+                        data: list2,
+                        columns: [
+                            {
+                                data: "ComplaintId",
+                                //className: "complaint-id-link",
+                                //render: function (data, type, row) {
+                                //    return '<a href="#" class="edit-link">' + data + '</a>';
+                                //}
+                            },
+                            { data: "JiSno" },
+
+                            { data: "CASE_NO" },
+                            { data: "BK_NO" },
+                            { data: "SET_NO" },
+                            { data: "PO_NO" },
+                            {
+                                data: "PO_DT",
+                                render: function (data, type, row) {
+                                    if (type === "display" || type === "filter") {
+                                        return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                    }
+                                    return data;
+                                }
+                            },
+                            
+                            { data: "IC_NO" },
+                            {
+                                data: "IC_DATE",
+                                render: function (data, type, row) {
+                                    if (type === "display" || type === "filter") {
+                                        return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                    }
+                                    return data;
+                                }
+                            },
+                            { data: "RejMemoNo" },
+
+                            {
+                                data: "RejMemoDt",
+                                render: function (data, type, row) {
+                                    if (type === "display" || type === "filter") {
+                                        return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                    }
+                                    return data;
+                                }
+                            },
+
+                        ],
+                    });
                 },
-                columns: [
-
-                    { data: "CASE_NO" },
-                    { data: "BK_NO" },
-                    { data: "SET_NO" },
-                    { data: "PO_NO" },
-                    {
-                        data: "PO_DT",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "Railway" },
-                    { data: "VEND_NAME"},
-                    { data: "Consignee"},
-                    { data: "IC_NO"},
-                    {
-                        data: "IC_DATE",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CASE_NO;
-                            var bkNo = data.BK_NO;
-                            var setNo = data.SET_NO;
-                            var editUrl = '@Url.Action("Manage", "ConsigneeComplaints")?CASE_NO=' + CaseNo + '&BK_NO=' + bkNo + '&SET_NO=' + setNo;;
-
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
-                ],
-                "order": [[0, "asc"]]
+                error: function (xhr, status, error) {
+                    // Handle error
+                }
             });
+
+
+            //$("#dtConsignee").DataTable({
+            //    stateSave: false,
+            //    autoWidth: true,
+            //    scrollX: true,
+            //    scrollCollapse: true,
+            //    processing: true,
+            //    serverSide: true,
+            //    destroy: true,
+            //    paging: true,
+            //    searching: true,
+            //    ajax: {
+            //        url: ajaxUrl,
+            //        type: "POST",
+            //        contentType: "application/json; charset=utf-8",
+            //        dataType: "json",
+            //        data: function (d) {
+            //            debugger
+
+            //            var AdditionalValues = {
+            //                "PoNo": PoNo,
+            //                "PoDt": PoDt
+            //            };
+            //            d.AdditionalValues = AdditionalValues;
+            //            return JSON.stringify(d);
+            //        },
+            //    },
+            //    columns: [
+
+            //        { data: "CASE_NO" },
+            //        { data: "BK_NO" },
+            //        { data: "SET_NO" },
+            //        { data: "PO_NO" },
+            //        {
+            //            data: "PO_DT",
+            //            render: function (data, type, row) {
+            //                if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+            //                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+            //                }
+            //                return data;
+            //            }
+            //        },
+            //        { data: "Railway" },
+            //        { data: "VEND_NAME"},
+            //        { data: "Consignee"},
+            //        { data: "IC_NO"},
+            //        {
+            //            data: "IC_DATE",
+            //            render: function (data, type, row) {
+            //                if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+            //                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+            //                }
+            //                return data;
+            //            }
+            //        },
+            //        {
+            //            data: null, orderable: false,
+            //            render: function (data, type, row) {
+            //                var CaseNo = data.CASE_NO;
+            //                var bkNo = data.BK_NO;
+            //                var setNo = data.SET_NO;
+            //                var editUrl = '@Url.Action("Manage", "ConsigneeComplaints")?CASE_NO=' + CaseNo + '&BK_NO=' + bkNo + '&SET_NO=' + setNo;;
+
+            //                var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+            //                html += '</div>';
+            //                return html;
+            //            }
+            //        },
+            //    ],
+            //    "order": [[0, "asc"]]
+            //});
+
+            //$("#dtComplaints").DataTable({
+            //    stateSave: false,
+            //    autoWidth: true,
+            //    scrollX: true,
+            //    scrollCollapse: true,
+            //    processing: true,
+            //    serverSide: true,
+            //    destroy: true,
+            //    paging: true,
+            //    searching: true,
+            //    ajax: {
+            //        url: ajaxUrl,
+            //        type: "POST",
+            //        contentType: "application/json; charset=utf-8",
+            //        dataType: "json",
+            //        data: function (d) {
+            //            debugger
+            //            var AdditionalValues = {
+            //                "PoNo": PoNo,
+            //                "PoDt": PoDt
+            //            };
+            //            d.AdditionalValues = AdditionalValues;
+            //            return JSON.stringify(d);
+            //        },
+            //    },
+            //    columns: [
+
+            //        { data: "CASE_NO" },
+            //        { data: "BK_NO" },
+            //        { data: "SET_NO" },
+            //        { data: "PO_NO" },
+            //        {
+            //            data: "PO_DT",
+            //            render: function (data, type, row) {
+            //                if (type === "display" || type === "filter") {
+            //                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+            //                }
+            //                return data;
+            //            }
+            //        },
+            //        {
+            //            data: "ComplaintId",
+            //            //className: "complaint-id-link",
+            //            //render: function (data, type, row) {
+            //            //    return '<a href="#" class="edit-link">' + data + '</a>';
+            //            //}
+            //        },
+            //        { data: "RejMemoNo" },
+            //        { data: "JiSno" },
+            //        { data: "IC_NO" },
+            //        {
+            //            data: "IC_DATE",
+            //            render: function (data, type, row) {
+            //                if (type === "display" || type === "filter") {
+            //                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+            //                }
+            //                return data;
+            //            }
+            //        },
+            //        {
+            //            data: "RejMemoDt",
+            //            render: function (data, type, row) {
+            //                if (type === "display" || type === "filter") {
+            //                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+            //                }
+            //                return data;
+            //            }
+            //        },
+                   
+            //    ],
+            //    "order": [[0, "asc"]]
+            //});
         }
 
        

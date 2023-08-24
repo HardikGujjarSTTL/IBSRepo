@@ -1,10 +1,22 @@
 ﻿@model IBS.Models.ConsigneeComplaints
+@{
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    //if (Model.ComplaintId > 0)
+    //{
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    //}
+}
 <div class="list-inner">
     <div class="tast-list">
         <h2>CONSIGNEE COMPLAINT</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="ConsigneeComplaints" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
             <input type="hidden" asp-for="ComplaintId" />

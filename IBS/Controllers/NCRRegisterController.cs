@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace IBS.Controllers
         {
             nCRRegisterRepository = _nCRRegisterRepository;
         }
+        [Authorization("NCRRegister", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -27,6 +29,7 @@ namespace IBS.Controllers
            return Json(dTResult);
         }
 
+        [Authorization("NCRRegister", "Index", "view")]
         public IActionResult Manage(string CaseNo, string BKNo, string SetNo, string NC_NO, string Actions)
         {
             NCRRegister model = new();
@@ -65,6 +68,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("NCRRegister", "Index", "add")]
         public IActionResult SaveUpdateNCR(NCRRegister model)
         {
             bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
@@ -75,6 +79,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("NCRRegister", "Index", "add")]
         public IActionResult SaveRemarks(string NCNO,string UserID, [FromForm] List<Remarks> model)
         {
 

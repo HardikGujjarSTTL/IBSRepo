@@ -2,15 +2,30 @@
 
 @{
     ViewData["Title"] = "Create NCR";
+    string clsSaveCase = "Permission_Save";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.NC_NO != null)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
+    if(Model.CaseNo != null){
+        clsSaveCase = "Permission_Update";        
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h3>NON CONFORMITY FORM</h3>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="NCRRegister" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-
-<form data-ajax="true" asp-antiforgery="true" asp-controller="SaveUpdateNCR" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
+<section class="@clsView">
+    <div class="task-listinput">
+    <form data-ajax="true" asp-antiforgery="true" asp-controller="SaveUpdateNCR" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
     <div class="accordion-body">
         <div class="row my-0">
             <input type="text" asp-for="SetRegionCode" id="SetRegionCode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
@@ -156,14 +171,13 @@
             <div class="savenext-btn">
                 @if (ViewBag.ShowSaveButton)
                 {
-                    <button type="button" class="save-btn active btncls" id="btnsave" onclick="Save()">Save</button>
+                    <button type="button" class="save-btn active btncls @clsSaveCase" id="btnsave" onclick="Save()">Save</button>
                 }
                 @if (ViewBag.ShowRemarksButton)
                 {
-                    <button type="button" class="save-btn active btncls" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
+                            <button type="button" class="save-btn active btncls @clsSave" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
                 }
                 <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
-                <button type="button" class="save-btn active btncls" onclick="cancelAction()">Cancel</button>
             </div>
         </div>
         <section class="table-section" id="tableNCR">
@@ -190,7 +204,8 @@
     </div>
     
 </form>
-
+    </div>
+</section>
 
 <partial name="_DataTablesScriptsPartial" />
 <partial name="_ValidationScriptsPartial" />
@@ -390,10 +405,6 @@
             }
         });
     });
-    function cancelAction() {
-        window.location.href = '@Url.Action("Index", "NCRRegister")';
-    }
-
     
     function InitializeDatatable(){
        
