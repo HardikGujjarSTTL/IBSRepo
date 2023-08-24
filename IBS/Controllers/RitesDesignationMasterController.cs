@@ -7,14 +7,14 @@ namespace IBS.Controllers
 {
     public class RitesDesignationMasterController : BaseController
     {
-        #region Variables
-        private readonly IRitesDesignationMaster ritesDesignationMaster;
-        #endregion
-        public RitesDesignationMasterController(IRitesDesignationMaster _ritesDesignationMaster)
+        private readonly IRitesDesignationMasterRepository ritesDesignationMasterRepository;
+
+        public RitesDesignationMasterController(IRitesDesignationMasterRepository _ritesDesignationMasterRepository)
         {
 
-            ritesDesignationMaster = _ritesDesignationMaster;
+            ritesDesignationMasterRepository = _ritesDesignationMasterRepository;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -25,7 +25,34 @@ namespace IBS.Controllers
             RDMModel model = new();
             if (id > 0)
             {
-                model = ritesDesignationMaster.FindByID(id);
+                model = ritesDesignationMasterRepository.FindByID(id);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Manage(RDMModel model)
+        {
+            try
+            {
+                if (model.RDesigCd == 0)
+                {
+                    model.Createdby = UserId;
+                    ritesDesignationMasterRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    ritesDesignationMasterRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "UnitOfMeasurements", "Manage", 1, GetIPAddress());
             }
             return View(model);
         }
@@ -33,14 +60,15 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<RDMModel> dTResult = ritesDesignationMaster.GetRDMList(dtParameters);
+            DTResult<RDMModel> dTResult = ritesDesignationMasterRepository.GetRDMList(dtParameters);
             return Json(dTResult);
         }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (ritesDesignationMaster.Remove(id, UserId))
+                if (ritesDesignationMasterRepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -51,33 +79,6 @@ namespace IBS.Controllers
                 AlertDanger();
             }
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult RitesDesignationMasterDetailsSave(RDMModel model)
-        {
-            try
-            {
-                string msg = "Role Inserted Successfully.";
-
-                if (model.RDesigCd > 0)
-                {
-                    msg = "Role Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = ritesDesignationMaster.RDMDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Role", "RoleDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
     }
