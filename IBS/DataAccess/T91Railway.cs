@@ -17,8 +17,6 @@ public partial class T91Railway
 
     public string? ImmsRlyCd { get; set; }
 
-    public byte? Isdeleted { get; set; }
-
     public int? Createdby { get; set; }
 
     public int? Updatedby { get; set; }
