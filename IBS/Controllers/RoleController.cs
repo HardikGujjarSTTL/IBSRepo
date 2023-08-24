@@ -61,7 +61,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorization("Role", "Index", "add")]
+        [Authorization("Role", "Index", "edit")]
         public IActionResult RoleDetailsSave(RoleModel model)
         {
             try
@@ -72,17 +72,10 @@ namespace IBS.Controllers
                 {
                     msg = "Role Updated Successfully.";
                     model.Updatedby = UserId;
-                    if (!RoleWisePermissionHelper.ActionIsAccesibleOrNot("Role", "Index", "edit"))
-                    {
-                        return Json(new { status = false, responseText = Common.AccessDeniedMessage });
-                    }
-                }
-                else
-                {
-                    if (!RoleWisePermissionHelper.ActionIsAccesibleOrNot("Role", "Index", "add"))
-                    {
-                        return Json(new { status = false, responseText = Common.AccessDeniedMessage });
-                    }
+                    //if (!RoleWisePermissionHelper.ActionIsAccesibleOrNot("Role", "Index", "edit"))
+                    //{
+                    //    return Json(new { status = false, responseText = Common.AccessDeniedMessage });
+                    //}
                 }
                 model.Createdby =UserId;
                 int i = roleRepository.RoleDetailsInsertUpdate(model);
