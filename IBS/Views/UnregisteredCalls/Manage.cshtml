@@ -1,0 +1,54 @@
+﻿@model IBS.Models.UnregisteredCallsModel
+
+@{
+    ViewData["Title"] = "Manage Unregistered Calls";
+    bool IsReadOnly = Model != null & Model.IeCd > 0;
+}
+
+<form role="form" asp-controller="UnregisteredCalls" asp-action="Manage" method="post" id="frmUnregisteredCalls">
+    <input type="hidden" asp-for="Region" />
+    <input type="hidden" asp-for="IsNew" />
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Manage Unregistered Calls</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">IE Name</label>
+                @Html.DropDownListFor(model => model.IeCd, IBS.Models.Common.GetIENameForUnregCall(Model.Region, IsReadOnly), "--Select--", IsReadOnly ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "" })
+                <span asp-validation-for="IeCd" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Year - Month</label> <br />
+                @Html.DropDownListFor(model => model.Year, IBS.Models.Common.GetYears(), new { @class = "", @style = "width: 45%;" })
+                @Html.DropDownListFor(model => model.Month, IBS.Models.Common.GetMonths(), new { @class = "", @style = "width: 45%;" })
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">No. Of Unregistered Calls</label>
+                <input type="text" class="input" asp-for="UnregCalls" onkeypress="return isNumber(event)" maxlength="4">
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="UnregisteredCalls" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="SubmitUnregisteredCalls();">Save</button>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function SubmitUnregisteredCalls() {
+            if ($("#frmUnregisteredCalls").valid()) {
+                $('select').prop('disabled', false);
+                $("#frmUnregisteredCalls").submit();
+            }
+        }
+
+    </script>
+
+}
