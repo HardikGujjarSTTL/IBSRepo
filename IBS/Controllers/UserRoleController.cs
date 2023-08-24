@@ -59,7 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("UserRole", "Index", "add")]
+        [Authorization("UserRole", "Index", "edit")]
         public IActionResult UserRoleSave(RoleModel model)
         {
             try

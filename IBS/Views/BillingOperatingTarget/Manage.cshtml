@@ -1,11 +1,9 @@
 ﻿@model IBS.Models.BillingOperatingTargetModel
 @{
     ViewData["Title"] = "Manage Billing Operating Target";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.Be_Per != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -63,7 +61,7 @@
                     </div>
                     <div class="savenext-btn" style="justify-content:center">
                         @*<a asp-controller="BillingOperatingTarget" asp-action="Index" class="reset-btn">Cancel</a>*@
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>

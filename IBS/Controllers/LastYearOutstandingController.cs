@@ -58,7 +58,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("LastYearOutstanding", "Index", "add")]
+        [Authorization("LastYearOutstanding", "Index", "edit")]
         public IActionResult LastYearOutstandingDetailsSave(LastYearOutstandingModel model)
         {
             try

@@ -91,7 +91,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("VendorProfile", "Index", "add")]
+        [Authorization("VendorProfile", "Index", "edit")]
         public IActionResult VendorProfileDetailsSave(VendorModel model, IFormCollection FrmCollection)
         {
             try

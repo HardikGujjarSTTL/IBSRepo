@@ -74,7 +74,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("Contract", "Index", "add")]
+        [Authorization("Contract", "Index", "edit")]
         public IActionResult ContractDetailsSave(ContractModel model, IFormCollection FrmCollection)
         {
             try
