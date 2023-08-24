@@ -1,30 +1,31 @@
 ﻿@model IBS.Models.CallMarkedOnlineModel
 
 <div class="row">
-    <form asp-action="Manage">
+    <form asp-action="Manage" id="frmCallMarked">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="CASE_NO" />
-        <input type="hidden" asp-for="CASE_NO" />
-        <input type="hidden" asp-for="CASE_NO" />
-        <input type="hidden" asp-for="CASE_NO" />
-        <input type="hidden" asp-for="CASE_NO" />
-
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Case No :</label>
                 <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="CASE_NO" />
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">Call Date - SNO :</label>
-                <span id="lblCallDate" style="text-transform: uppercase; color:red;"></span> 
+                <span id="lblCallDate" style="text-transform: uppercase; color:red;"></span>
                 <span id="lblRegTime" style="text-transform: uppercase; color:red;"></span> -
                 <span id="lblSNo" style="text-transform: uppercase; color:red;"></span>
+                <input type="hidden" asp-for="CALL_RECV_DT" />
+                <input type="hidden" asp-for="REG_TIME" />
+                <input type="hidden" asp-for="CALL_SNO" />
             </div>
             <div class="col-md-5 mb-3">
                 <label for="Reference" style="padding-right:10px;">Contract No :</label>
                 <label id="lblContractNo" style="text-transform: uppercase; color:red;"></label>
                 <label id="lblL5noPo" style="text-transform: uppercase; color:red;"></label>
                 <label id="lblRly" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="PO_NO" />
+                <input type="hidden" asp-for="L5NO_PO" />
+                <input type="hidden" asp-for="RLY" />
             </div>
         </div>
         <div class="row my-0">
@@ -32,17 +33,22 @@
                 <label for="" style="padding-right:36px;">Date :</label>
                 <label id="lblDate" style="text-transform: uppercase; color:red;"></label>
                 <input type="text" id="txtCALLLETTERDT" />
+                <input type="hidden" asp-for="PO_DT" />
+                <input type="hidden" asp-for="LETTER_DT" />
             </div>
             <div class="col-md-9 mb-3">
                 <label for="Reference" style="padding-right:71px;">Vendor :</label>
                 <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="VEND_NAME" />
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-12 mb-3">
                 <label for="Reference" style="padding-right: 20px;">Manufacturer/Place of Inspection : </label>
                 <label id="lblMFG" style="text-transform: uppercase; color:red;"></label>
-                <label id="MFG_CD" style="text-transform: uppercase;"></label>
+                <label id="lblManuf" style="text-transform: uppercase;"></label>
+                <input type="hidden" asp-for="MFG" />
+                <input type="hidden" asp-for="MFG_CD" />
             </div>
         </div>
         <div class="row my-0">
@@ -64,6 +70,7 @@
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Item</label>
                     <label id="lblItem" style="text-transform: uppercase; color:red;"></label>
+                    <input type="hidden" asp-for="ITEM_DESC_PO" />
                 </div>
             </div>
         </div>
@@ -71,34 +78,39 @@
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Staggered DP :</label>
                 <label id="lblStaggered" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="STAGG_DP" />
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">1. Lot Size & DP :</label>
                 <label id="lblLotSize1" style="text-transform: uppercase; color:red;"></label>
-
+                <input type="hidden" asp-for="LOT_DP_1" />
             </div>
             <div class="col-md-5 mb-3">
                 <label for="Reference" style="padding-right:10px;">2. Lot Size & DP :</label>
                 <label id="lblLotSize2" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="LOT_DP_2" />
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Quantity Ordered :</label>
                 <label id="lblQtyOrder" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="QTY_ORDERED" />
             </div>
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Quantity Offered :</label>
                 <label id="lblQtyOffer" style="text-transform: uppercase; color:red;"></label>
-
+                <input type="hidden" asp-for="QTY_TO_INSP" />
             </div>
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Call Material Value :</label>
                 <label id="lblCallMaterialValue" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="CALL_MATERIAL_VALUE" />
             </div>
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Desire Date :</label>
                 <label id="lblDesireDate" style="text-transform: uppercase; color:red;"></label>
+                <input type="hidden" asp-for="INSP_DESIRE_DATE" />
             </div>
         </div>
         <div class="row my-0">
@@ -106,13 +118,14 @@
                 <div class="reference">
                     <label for="Reference">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
                     @Html.DropDownListFor(Model => Model.DEPT_DROPDOWN, new SelectList(@ViewBag.InspectedList , "Value", "Text"),"--Select--")
-                    <label id="lblDept_CD"></label>
-                    <label id="lblDepartment"></label>
+                    <label id="lblDept_CD"></label> <input type="hidden" asp-for="DEPARTMENT_CODE" />
+                    <label id="lblDepartment"></label> <input type="hidden" asp-for="DEPARTMENT" />
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">Final Or Stage Inspection</label>
                 <label id="lblFinalStageInspection" style="text-transform: uppercase; color:red;">test</label>
+                <input type="hidden" asp-for="FINAL_OR_STAGE" />
             </div>
         </div>
         <div class="alert alert-warning center" style="text-align:center;">
@@ -156,6 +169,10 @@
 
 <script>
     $(document).ready(function () {
+        $("#btnSave").click(function () {
+            SaveCallMarkedDetail();
+        });
+
         $("#btnRejectCall").click(function () {
             $("#rejectCall").css("display", "block");
         });
@@ -164,11 +181,11 @@
             window.location.href = "@Url.Action("Index","CallMarkedOnline")";
         });
 
-        
+
         $("#lblContractNo").html("@Model.PO_NO");
         $("#lblDate").html("@Model.PO_DT");
         $("#lblVendor").html("@Model.VEND_NAME");
-        if ("@Model.VEND_REMARKS" != ""){
+        if ("@Model.VEND_REMARKS" != "") {
             $("#lblVendor").html("<br><font color='crimson'> Remarks: @Model.VEND_REMARKS");
         }
         $("#lblCaseNo").html("@Model.CASE_NO");
@@ -197,5 +214,20 @@
         $("#lblDepartment").html("@Model.DEPARTMENT");
         $("#lblFinalStageInspection").html("@Model.FINAL_OR_STAGE");
     });
+
+    function SaveCallMarkedDetail() {
+        var formData = new FormData($("#frmCallMarked")[0]);
+        $.ajax({
+            url: '@Url.Action("Call_Marked_Online_Save", "CallMarkedOnline")',
+            type: "POST",
+            dataType: "JSON",
+            data: formData,
+            processData: false, // Prevent jQuery from converting the data to a string
+            contentType: false,
+            success: function (response) {
+                console.log("success");
+            }
+        });
+    }
 </script>
 

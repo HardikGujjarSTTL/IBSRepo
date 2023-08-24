@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using System.Net.Mail;
+using IBS.Filters;
 
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class CallMarkedOnlineController : BaseController
     {
         #region Variables
@@ -25,6 +27,8 @@ namespace IBS.Controllers.InspectionBilling
             _config = configuration;
         }
 
+
+        [Authorization("CallMarkedOnline", "Index", "view")]
         public IActionResult Index()
         {
             var region = GetUserInfo.Region;
@@ -174,17 +178,22 @@ namespace IBS.Controllers.InspectionBilling
             return Json(result); 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("Role", "Index", "add")]
         public IActionResult Call_Marked_Online_Save(CallMarkedOnlineModel Model)
         {
+            var result = false;
             try
             {
-
+                result = callMarkedOnlineRepository.Call_Marked_Online_Save(Model, GetUserInfo);
             }
             catch (Exception ex)
             {
+                result = false;
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "Call_Marked_Online_Save", 1, GetIPAddress());
             }
-            return Json(Model);
+            return Json(result);
         }
 
     }
