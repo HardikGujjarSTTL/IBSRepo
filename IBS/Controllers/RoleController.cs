@@ -4,6 +4,7 @@ using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using IBS.Helpers;
 
 namespace IBS.Controllers
 {
@@ -60,7 +61,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("Role", "Index", "add")]
+        //[Authorization("Role", "Index", "add")]
         public IActionResult RoleDetailsSave(RoleModel model)
         {
             try
@@ -71,6 +72,17 @@ namespace IBS.Controllers
                 {
                     msg = "Role Updated Successfully.";
                     model.Updatedby = UserId;
+                    if (!RoleWisePermissionHelper.ActionIsAccesibleOrNot("Role", "Index", "edit"))
+                    {
+                        return Json(new { status = false, responseText = Common.AccessDeniedMessage });
+                    }
+                }
+                else
+                {
+                    if (!RoleWisePermissionHelper.ActionIsAccesibleOrNot("Role", "Index", "add"))
+                    {
+                        return Json(new { status = false, responseText = Common.AccessDeniedMessage });
+                    }
                 }
                 model.Createdby =UserId;
                 int i = roleRepository.RoleDetailsInsertUpdate(model);
