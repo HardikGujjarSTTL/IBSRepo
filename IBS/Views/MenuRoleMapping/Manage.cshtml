@@ -38,7 +38,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th><input type="checkbox" class="selectAll" value="Select All" title="Select All" /></th>
-                                        <th>Add/Edit/Delete/View</th>
+                                        <th>Edit/Delete/View</th>
                                         <th>Parent Title</th>
                                         <th>Child Title</th>
                                     </tr>
@@ -76,12 +76,12 @@
             var isCheckedDetail = checkboxDetail.checked;
 
             if (isCheckedDetail) {
-                var checkboxAdd = $(this).find(".Isadd")[0];
+                //var checkboxAdd = $(this).find(".Isadd")[0];
                 var checkboxEdit = $(this).find(".Isedit")[0];
                 var checkboxDelete = $(this).find(".Isdelete")[0];
                 var checkboxView = $(this).find(".Isview")[0];
 
-                var isCheckedAdd = checkboxAdd.checked;
+                var isCheckedAdd = false;
                 var isCheckedEdit = checkboxEdit.checked;
                 var isCheckedDelete = checkboxDelete.checked;
                 var isCheckedView = checkboxView.checked;
@@ -205,8 +205,8 @@
                     {
                         "data": null, "defaultContent": '', bSortable: false, "orderable": false,
                         "mRender": function (data, type, row) {
-                                        var html= '<input type="checkbox" class="Isadd" value="' + data.ID + '" ' + (data.Isadd === true ? 'checked' : '') + '/>';
-                                            html +=' | '+ '<input type="checkbox" class="Isedit" value="' + data.ID + '" ' + (data.Isedit === true ? 'checked' : '') + '/>';
+                                        //var html= '<input type="checkbox" class="Isadd" value="' + data.ID + '" ' + (data.Isadd === true ? 'checked' : '') + '/>';
+                                    var html = '<input type="checkbox" class="Isedit" value="' + data.ID + '" ' + (data.Isedit === true ? 'checked' : '') + '/>';
                                                 html +=' | '+ '<input type="checkbox" class="Isdelete" value="' + data.ID + '" ' + (data.Pisdelete === true ? 'checked' : '') + '/>';
                                             html +=' | '+ '<input type="checkbox" class="Isview" value="' + data.ID + '" ' + (data.Isview === true ? 'checked' : '') + '/>';
                             return html;
