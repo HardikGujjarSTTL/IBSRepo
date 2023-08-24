@@ -1489,6 +1489,5 @@ input[type="datetime-local"]{ height:43px;}
 .navbar-static-side ul li a i.fa{ position:absolute; left:10px;}
 .navbar-static-side ul li a .arrow{ position:absolute; right:10px;}
 .navbar-static-side ul li a{ padding:15px 35px;}
-/*.navbar-toggle.active .fa-bars:before{ content:"\f00d"!important; font-family:FontAwesome; color:#F66A2F;}*/
 
 .actionCenter {text-align: center;}
