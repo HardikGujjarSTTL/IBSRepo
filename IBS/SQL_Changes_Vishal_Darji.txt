@@ -3,3 +3,5 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 =============================================================================================================================================
 
 alter table T91_RAILWAYS drop column ISDELETED;
+
+update menu_master set controllername = 'RailwaysDesignation' where controllername = 'Rly_Designation_Form'
