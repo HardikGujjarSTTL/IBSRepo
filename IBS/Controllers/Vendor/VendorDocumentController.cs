@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers.Vendor
 {
+    [Authorization]
     public class VendorDocumentController : BaseController
     {
         private readonly IDocument iDocument;
@@ -21,6 +23,7 @@ namespace IBS.Controllers.Vendor
             _config = configuration;
             pVendorDocumentRepository = _pVendorDocumentRepository;
         }
+        [Authorization("VendorDocument", "Index", "view")]
         public IActionResult Index(string id)
         {
             VendEquipClbrCertModel model = new();
@@ -30,6 +33,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("VendorDocument", "Index", "view")]
         public IActionResult SaveVendorDocument(VendEquipClbrCertModel model, IFormCollection FrmCollection)
         {
             try

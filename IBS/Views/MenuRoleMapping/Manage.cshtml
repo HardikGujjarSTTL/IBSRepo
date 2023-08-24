@@ -2,13 +2,23 @@
 
 @{
     ViewData["Title"] = "Manage Menu Role Mapping";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.Id > 0)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
         <h2>Manage Menu Role Mapping</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="MenuRoleMapping" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <input type="hidden" asp-for="Id" />
         <div class="accordion-body">
@@ -28,6 +38,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th><input type="checkbox" class="selectAll" value="Select All" title="Select All" /></th>
+                                        <th>Add/Edit/Delete/View</th>
                                         <th>Parent Title</th>
                                         <th>Child Title</th>
                                     </tr>
@@ -40,145 +51,186 @@
                 </section>
             </div>
             <div class="savenext-btn">
-                <a asp-controller="MenuRoleMapping" asp-action="Index" class="reset-btn">Cancel</a>
-                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                @*<a asp-controller="MenuRoleMapping" asp-action="Index" class="reset-btn">Cancel</a>*@
+                <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
             </div>
         </div>
     </div>
 </section>
 @section scripts{
-        <partial name="_DataTablesScriptsPartial" />
-        <partial name="_ValidationScriptsPartial" />
-        <script type="text/javascript">
-            $(".select2").select2();
+<partial name="_DataTablesScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
+<script type="text/javascript">
 
-            function Save() {
-                var RoleId = $('#Roleid').val();
-                if (RoleId == "") {
-                    ShowHideMsgNew(false, 'Please select Role Name');
-                    return false;
-                }
-                var selectedVal = 0;
-                var IDs = 0;
-                $('.detail').each(function (i, selected) {
-                    if ($(this).prop('checked') == true) {
-                        selectedVal = 1;
-                        if (IDs == 0) {
-                            IDs = $(this).val();
-                        }
-                        else {
-                            IDs = IDs + ',' + $(this).val();
-                        }
-                    }
+    function Save() {
+        var RoleId = $('#Roleid').val();
+        if (RoleId == "") {
+            ShowHideMsgNew(false, 'Please select Role Name');
+            return false;
+        }
+                        
+        var formData = new FormData();
+        var menuItems = [];
+        $("#dtMenu tbody tr").each(function() {
+            var checkboxDetail = $(this).find(".detail")[0];
+            var isCheckedDetail = checkboxDetail.checked;
+
+            if (isCheckedDetail) {
+                var checkboxAdd = $(this).find(".Isadd")[0];
+                var checkboxEdit = $(this).find(".Isedit")[0];
+                var checkboxDelete = $(this).find(".Isdelete")[0];
+                var checkboxView = $(this).find(".Isview")[0];
+
+                var isCheckedAdd = checkboxAdd.checked;
+                var isCheckedEdit = checkboxEdit.checked;
+                var isCheckedDelete = checkboxDelete.checked;
+                var isCheckedView = checkboxView.checked;
+                var value = checkboxDetail.value;
+
+                menuItems.push({
+                    ID: value,
+                    detail: isCheckedDetail,
+                    Isadd: isCheckedAdd,
+                    Isedit: isCheckedEdit,
+                    Pisdelete: isCheckedDelete,
+                    Isview: isCheckedView
                 });
-                if (selectedVal == "0") {
-                    ShowHideMsgNew(false, 'Please select atleast one menu');
-                    return false;
-                }
-                else {
-
-                    var Id = $('#Id').val();
-
-                    $.ajax({
-                        url: '@Url.Action("MenuRoleMappingSave", "MenuRoleMapping")',
-                        type: "POST",
-                        data: {
-                            'IDs': IDs,
-                            'Id': Id,
-                            'RoleId': RoleId
-                        },
-                        success: function (response) {
-                            if (response.status) {
-                                ShowHideMsgNew(response.status, response.responseText);
-                                window.location.href = '@Url.Action("Index", "MenuRoleMapping")';
-                            }
-                        }
-                    });
-                }
-
             }
-            completed = function (response) {
-                var res = response.responseJSON;
-                ShowHideMsgNew(res.status, res.responseText);
-                window.location.href = '@Url.Action("Index", "UserRole")';
-            };
+        });
+        //var selectedVal = 0;
+        //var IDs = 0;
+        //$('.detail').each(function (i, selected) {
+        //    if ($(this).prop('checked') == true) {
+        //        selectedVal = 1;
+        //        if (IDs == 0) {
+        //            IDs = $(this).val();
+        //        }
+        //        else {
+        //            IDs = IDs + ',' + $(this).val();
+        //        }
+        //    }
+        //});
+        if (menuItems.length === 0) {
+            ShowHideMsgNew(false, 'Please select atleast one menu');
+            return false;
+        } 
+        else 
+        {
+            var Id = $('#Id').val();
+            formData.append('Id', Id);
+            formData.append('RoleId', RoleId);
+            formData.append('dataModel', JSON.stringify(menuItems));
 
-            $(function () {
-                $('.selectAll').change(function () {
-                    var checked = $(this).prop('checked');
-                    $('#dtMenu .detail').each(function () {
-                        $(this).prop('checked', checked);
-                    });
-                });
-                InitializeDatatable();
+            $.ajax({
+                url: '@Url.Action("MenuRoleMappingSave", "MenuRoleMapping")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.status) {
+                        ShowHideMsgNew(response.status, response.responseText);
+                        window.location.href = '@Url.Action("Index", "MenuRoleMapping")';
+                    }
+                }
             });
-
-            function singleCheckBoxChecked() {
-                var check = true;
-                $('.detail').each(function () {
-                    if ($(this).prop('checked') == false) {
-                        check = false;
-                    }
-                });
-                $('.selectAll').prop('checked', check);
+        }
+    }
+    completed = function (response) {
+        var res = response.responseJSON;
+        ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "UserRole")';
             }
+    };
 
-            function InitializeDatatable() {
-                var Roleid = '@Model.Roleid';
-                $("#dtMenu").DataTable({
-                    stateSave: false,// Design Assets
-                    autoWidth: true,
-                    scrollX: true,
-                    scrollCollapse: true,
-                    processing: true, // ServerSide Setups
-                    serverSide: true,
-                    destroy: true,
-                    paging: true,// Paging Setups
-                    searching: true,// Searching Setups
-                    ajax: {// Ajax Filter
-                        url: "@Url.Action("LoadMenuTable")",
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        data: function (d) {
-                            var AdditionalValues = {
-                                Roleid: Roleid
-                            };
-                            d.AdditionalValues = AdditionalValues;
-                            return JSON.stringify(d);
+    $(function () {
+        $('.selectAll').change(function () {
+            var checked = $(this).prop('checked');
+            $('#dtMenu .detail').each(function () {
+                $(this).prop('checked', checked);
+            });
+        });
+        InitializeDatatable();
+    });
+
+    function singleCheckBoxChecked() {
+        var check = true;
+        $('.detail').each(function () {
+            if ($(this).prop('checked') == false) {
+                check = false;
+            }
+        });
+        $('.selectAll').prop('checked', check);
+    }
+
+    function InitializeDatatable() {
+        var Roleid = '@Model.Roleid';
+        $("#dtMenu").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: true,// Searching Setups
+            ajax: {// Ajax Filter
+                url: "@Url.Action("LoadMenuTable")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        Roleid: Roleid
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',bSortable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    "data": null, "defaultContent": '', bSortable: false, "orderable": false,
+                    "mRender": function (data, type, row) {
+                        return '<input type="checkbox" class="detail" onchange="singleCheckBoxChecked();" value="' + data.ID + '" ' + (data.Selected === 'True' ? 'checked' : '') + '/>';
+                    }
+                },
+                    {
+                        "data": null, "defaultContent": '', bSortable: false, "orderable": false,
+                        "mRender": function (data, type, row) {
+                                        var html= '<input type="checkbox" class="Isadd" value="' + data.ID + '" ' + (data.Isadd === true ? 'checked' : '') + '/>';
+                                            html +=' | '+ '<input type="checkbox" class="Isedit" value="' + data.ID + '" ' + (data.Isedit === true ? 'checked' : '') + '/>';
+                                                html +=' | '+ '<input type="checkbox" class="Isdelete" value="' + data.ID + '" ' + (data.Pisdelete === true ? 'checked' : '') + '/>';
+                                            html +=' | '+ '<input type="checkbox" class="Isview" value="' + data.ID + '" ' + (data.Isview === true ? 'checked' : '') + '/>';
+                            return html;
                         }
                     },
-                    columns: [// Columns Setups
-                        {
-                            data: '', orderable: false, width: '5%',bSortable: false,
-                            render: function (data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
-                            "data": null, "defaultContent": '', bSortable: false, "orderable": false,
-                            "mRender": function (data, type, row) {
-                                return '<input type="checkbox" class="detail" onchange="singleCheckBoxChecked();" value="' + data.ID + '" ' + (data.Selected === 'True' ? 'checked' : '') + '/>';
-                            }
-                        },
-                        {
-                            "data": null, "defaultContent": '', bSortable: false, "orderable": false,
-                            "mRender": function (data, type, row) {
-                            if(data.ChildTitle == "" || data.ChildTitle == null)
-                            {
-                                return data.ParentTitle;
-                            }
-                            else
-                            {
-                                return ""; 
-                            }
-                            }
-                        },
-                        //{ data: "ParentTitle" },
-                        { data: "ChildTitle" },
-                    ],
-                    "order": [[0, "asc"]]
-                });
-            }
-        </script>
+                {
+                    "data": null, "defaultContent": '', bSortable: false, "orderable": false,
+                    "mRender": function (data, type, row) {
+                    if(data.ChildTitle == "" || data.ChildTitle == null)
+                    {
+                        return data.ParentTitle;
+                    }
+                    else
+                    {
+                        return ""; 
+                    }
+                    }
+                },
+                //{ data: "ParentTitle" },
+                { data: "ChildTitle" },
+            ],
+            "order": [[0, "asc"]],
+                "pageLength": 250
+        });
+    }
+</script>
 }

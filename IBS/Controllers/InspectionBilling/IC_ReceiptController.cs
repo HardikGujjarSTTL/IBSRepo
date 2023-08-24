@@ -173,24 +173,7 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptDelete", 1, GetIPAddress());
             }
             return Json(result);
-        }
-
-        public IActionResult ICFromToDate()
-        {
-            var action = Request.Query["Action"];
-            ViewBag.Action = action;
-            var partialView = "IC_Unbilled_Partial";
-            if(action == "UNBILLEDIC")
-            {
-                partialView = "IC_Unbilled_Partial";
-            }
-            else if(action == "ICISSUEDNSUB")
-            {
-                partialView = "IC_Issued_Partial";
-            }
-            ViewBag.PartialView = partialView;
-            return View();
-        }
+        }        
 
         public IActionResult IC_Issued_Partial(string Type)
         {

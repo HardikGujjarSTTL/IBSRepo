@@ -592,8 +592,8 @@ END;
 
 CREATE TABLE USERROLES (
     ID NUMBER(6) PRIMARY KEY,
-    ROLE_ID NUMBER(6) NOT NULL,
-    USER_ID VARCHAR2(20 BYTE) NOT NULL,
+    ROLE_ID NUMBER(6,0) NOT NULL,
+    USER_ID NUMBER(6,0) ,
     USERTYPE VARCHAR2(20 BYTE),
     CREATEDBY  NUMBER(6,0),
     CREATEDDATE TIMESTAMP(6) WITH TIME ZONE,
@@ -642,7 +642,11 @@ CREATE TABLE MenuRoleMapping (
     CREATEDDATE TIMESTAMP(6) WITH TIME ZONE,
     UPDATEDBY  NUMBER(6,0),
     UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE,
-    ISDELETED NUMBER(2,0)
+    ISDELETED NUMBER(2,0),
+    IsAdd NUMBER(1),
+    IsEdit NUMBER(1),
+    IsDelete NUMBER(1),
+    IsView NUMBER(1)
 );
 
 
@@ -660,7 +664,11 @@ BEGIN
                c.CONTROLLERNAME AS ControllerName,
                c.ACTIONNAME AS ActionName,
                c.ICONPATH AS IconPath,
-               mrm.ROLEID AS Role_Id
+               mrm.ROLEID AS Role_Id,
+               COALESCE(mrm.IsAdd, 0) AS IsAdd,
+                COALESCE(mrm.IsEdit, 0) AS IsEdit,
+                COALESCE(mrm.PIsDelete, 0) AS PIsDelete,
+                COALESCE(mrm.IsView, 0) AS IsView
         FROM Menu_Master c
         INNER JOIN MenuRoleMapping mrm ON mrm.MENUID = c.ID
         WHERE TO_CHAR(mrm.MENUID) = TO_CHAR(c.ID)
@@ -1026,7 +1034,11 @@ BEGIN
             CASE
                 WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
                 ELSE 'False'
-            END AS Selected
+            END AS Selected,
+            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
+            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
+            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
+            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
         FROM MENU_MASTER m
         WHERE m.PARENTID IS NULL
         CONNECT BY PRIOR m.ID = m.PARENTID
@@ -1043,7 +1055,11 @@ BEGIN
             CASE
                 WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
                 ELSE 'False'
-            END AS Selected
+            END AS Selected,
+            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
+            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
+            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
+            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
         FROM MENU_MASTER p
         JOIN MENU_MASTER c ON p.ID = c.PARENTID
         CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID

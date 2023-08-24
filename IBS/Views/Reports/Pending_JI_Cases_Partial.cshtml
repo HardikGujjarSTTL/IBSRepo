@@ -1,0 +1,154 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@*<section class="table-section">*@
+<div class="task-listinput">
+    <div class="dash-table">
+        <table id="dtList" class="table-responsive">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Complaint ID</th>
+                    <th>Firm</th>
+                    <th>PO NO.</th>
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Consignee</th>
+                    <th>IE</th>
+                    <th>Qty Offered</th>
+                    <th>Qty Rejected</th>
+                    <th>Value of Rejected Stores</th>
+                    <th>Date of 1st Reference</th>
+                    <th>Reason of Rejection</th>
+                    <th>Status(Decision taken by JI Committe)</th>
+                    <th>Date of JI</th>
+                    <th>Date of IC</th>
+                    <th>JI CASE</th>
+                    <th>JI REPORT</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+@*</section>*@
+
+@*<style>
+    th, td {
+        white-space: nowrap;
+    }
+</style>*@
+
+<script type="text/javascript">
+    function InitializeDatatable() {
+        debugger
+        var FromDate = $("#FromDt").val();
+        var ToDate = $("#ToDt").val();
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', //'print'
+                {
+                    extend: 'print',
+                    //text: 'ButtonLabelHere',
+                    title: 'Pending JI Cases',// + FromDate + ' To ' + ToDate,
+                    exportOptions: {
+                        modifier: {
+                            selected: null
+                        }
+                    },
+                    customize: function (win) {
+                        $(win.document.body).find('h1').css('text-align', 'center');
+                    },
+                                        
+                }
+            ],
+            ajax: {// Ajax Filter
+                url: "@Url.Action("Get_Pending_JI_Cases", "Reports")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "FromDate": FromDate,
+                        "ToDate": ToDate
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "COMPLAINT_ID" }, //{ data: "IC_SUBMIT_DATE" },
+                { data: "VENDOR" },
+                { data: "PO_NO" },
+                { data: "PO_DATE" },
+                { data: "ITEM_DESC" },
+                { data: "CONSIGNEE" },
+                { data: "IE_NAME" },
+                { data: "QTY_OFF" },
+                { data: "QTY_REJECTED" },
+                { data: "REJECTION_VALUE" },
+                { data: "COMPLAINT_DATE" },
+                { data: "REJECTION_REASON" },
+                { data: "STATUS" },
+                { data: "JI_DATE" },
+                { data: "IC_DATE" },
+                {
+                    data: "",
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        if (row.IsCaseTIF == false && row.IsCasePDF == false) {
+                            html = "<div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>";
+                        }
+                        else if (row.IsCaseTIF == false && row.IsCasePDF == true) {
+                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>";
+                        }
+                        else {
+
+                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>";
+
+                        }
+                        return html;
+                    }
+                },
+                {
+                    data: "",
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        if (row.IsReportTIF == false && row.IsReportPDF == false) {
+                            html = "<div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>";
+                        }
+                        else if (row.IsReportTIF == false && row.IsReportPDF == true) {
+                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_REPORT/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>";
+                        }
+                        else {
+
+                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_REPORT/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>";
+
+                        }
+                        return html;
+                    }
+                },
+
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+</script>

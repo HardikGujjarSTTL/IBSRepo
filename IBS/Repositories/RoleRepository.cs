@@ -154,7 +154,7 @@ namespace IBS.Repositories
             else
             {
                 model.RoleId = role.RoleId;
-                //model.User_ID = role.UserId;
+                model.User_ID = Convert.ToInt32(role.UserId);
                 return model;
             }
         }
@@ -186,18 +186,18 @@ namespace IBS.Repositories
                 orderCriteria = "Rolename";
                 orderAscendingDirection = true;
             }
-            //query = from l in context.Userroles
-            //        join u in context.T02Users on l.UserId equals u.Id.ToString()
-            //        join r in context.Roles on l.RoleId equals r.RoleId
-            //        where l.Isdeleted == 0 || l.Isdeleted == null
-            //        select new RoleModel
-            //        {
-            //            RoleId = l.RoleId,
-            //            Rolename = r.Rolename,
-            //            User_ID = l.UserId,
-            //            UserName = u.UserName,
-            //            Id = l.Id
-            //        };
+            query = from l in context.Userroles
+                    join u in context.T02Users on l.UserId.ToString() equals u.UserId.ToString()
+                    join r in context.Roles on l.RoleId equals r.RoleId
+                    where l.Isdeleted == 0 || l.Isdeleted == null
+                    select new RoleModel
+                    {
+                        RoleId = l.RoleId,
+                        Rolename = r.Rolename,
+                        User_ID = l.UserId,
+                        UserName = u.UserName,
+                        Id = l.Id
+                    };
 
             dTResult.recordsTotal = query.Count();
 
@@ -235,7 +235,7 @@ namespace IBS.Repositories
                 int maxID = context.Userroles.Max(x => x.Id) + 1;
                 Userrole obj = new Userrole();
                 obj.Id = maxID;
-                //obj.UserId = model.User_ID;
+                obj.UserId = Convert.ToString(model.User_ID);
                 obj.RoleId = Convert.ToInt32(model.RoleId);
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = Convert.ToInt32(model.Createdby);
@@ -395,7 +395,12 @@ namespace IBS.Repositories
                 Menurolemapping obj = new Menurolemapping();
                 obj.Id = maxID;
                 obj.Roleid = model.Roleid;
-                obj.Menuid = model.Menuid; 
+                obj.Menuid = model.Menuid;
+                obj.Isadd = model.Isadd;
+                obj.Isedit = model.Isedit;
+                obj.Pisdelete = model.PIsdelete;
+                obj.Isview = model.Isview;
+                obj.Menuid = model.Menuid;
                 obj.Isactive = model.Isactive;
                 obj.Createdby = Convert.ToInt32(model.Createdby);
                 obj.Isdeleted = Convert.ToByte(false);
@@ -412,15 +417,16 @@ namespace IBS.Repositories
         {
             var roles = context.Menurolemappings.Where(x => x.Roleid == RoleId).ToList();
             if (roles == null) { return false; }
-
-            foreach (var role in roles)
-            {
-                role.Isdeleted = Convert.ToByte(true);
-                role.Isactive = false;
-                role.Updatedby = Convert.ToInt32(UserID);
-                role.Updateddate = DateTime.Now;
-                context.SaveChanges();
-            }
+            context.Menurolemappings.RemoveRange(roles);
+            context.SaveChanges();
+            //foreach (var role in roles)
+            //{
+            //    role.Isdeleted = Convert.ToByte(true);
+            //    role.Isactive = false;
+            //    role.Updatedby = Convert.ToInt32(UserID);
+            //    role.Updateddate = DateTime.Now;
+            //    context.SaveChanges();
+            //}
             return true;
         }
         #endregion

@@ -2,13 +2,23 @@
 
 @{
     ViewData["Title"] = "PO Master";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.CaseNo != null)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
         <h2>PO Master</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="POMaster" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
             <input type="hidden" asp-for="Id" />
@@ -181,8 +191,8 @@
                     </div>
                 </div>
                 <div class="savenext-btn">
-                    <a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    @*<a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
@@ -229,8 +239,10 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/POMaster/Index";
-            window.location.href = '@Url.Action("Index", "POMaster")';
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "POMaster")';
+            }
+            
         };
 
         function LOASubmit() {

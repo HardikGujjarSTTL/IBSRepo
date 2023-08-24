@@ -127,11 +127,13 @@
             });
 
             $("#btnReport").click(function () {
-                window.location.href = "/IC_Receipt/ICFromToDate?Action=UNBILLEDIC";
+                //window.location.href = "/IC_Receipt/ICFromToDate?Action=UNBILLEDIC";
+                window.location.href = "/Reports/FromToDate?actiontype=UNBILLEDIC";
             })
 
             $("#btnIssuedNRec").click(function () {
-                window.location.href = "/IC_Receipt/ICFromToDate?Action=ICISSUEDNSUB";
+                //window.location.href = "/IC_Receipt/ICFromToDate?Action=ICISSUEDNSUB";
+                window.location.href = "/Reports/FromToDate?actiontype=ICISSUEDNSUB";
             })
 
             $("#btnStatusIC").click(function () {

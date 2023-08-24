@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = "Call Marked Online";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Reports" asp-action="FromToDate" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+        </div>
+    </div>
+    <div class="accordion-body" id="body">
+        <div class="row my-0" style="text-align:left;">
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                @Html.RadioButton("rdbCall", "Show All Online Calls Marked on", new { @class = "text-darkblue font-bold font-size-8pt", @id="rdbAllCallMarked" }) Show All Online Calls Marked on
+            </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                @Html.RadioButton("rdbCall", "Show Only Un-Marked Online Calls for", new { @class = "text-darkblue font-bold font-size-8pt", @id="rdbOnlyCallUnMarked" }) Show Only Un-Marked Online Calls for
+            </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                @Html.RadioButton("rdbCall", "Show All Un-Marked Online Calls As on Date", new { @class = "text-darkblue font-bold font-size-8pt", @id="rdbAllCallUnMarked" , @checked = true }) Show All Un-Marked Online Calls As on Date
+            </div>
+        </div>
+        <div class="row my-0" style="text-align:left;">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Date</label>
+                    <input type="text" class="datepicker" id="txtDate" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    @*<a asp-controller="CallMarkedOnline" asp-action="Manage" class="reset-btn" id="btnSubmit">Cancel</a>*@
+                    <button type="button" class="reset-btn" id="btnManage">Call Manage</button>
+                    <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section" id="tblsection">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Case No.</th>
+                            <th>PO NO.</th>
+                            <th>PO Date</th>
+                            <th>Call Date</th>
+                            <th>Call SNo.</th>
+                            <th>Call Install No.</th>
+                            <th>IE</th>
+                            <th>Vendor</th>
+                            <th>Status</th>
+                            <th>Call Letter No/Dispatch Ref No.</th>
+                            <th>Remarks</th>
+                            <th>DateTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section class="table-section" id="frmParial" style="display:none;">
+    </section>
+</form>
+
+
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+}
+
+<script type="text/javascript">
+
+    
+    $(document).ready(function () {
+            $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+        setDefaultDate();
+
+        $("#btnSubmit").click(function () {
+            InitializeDatatable();
+        });
+
+        $("#btnManage").click(function () {
+            $("#body").css("display", "none");
+            $("#tblsection").css("display", "none");
+            $("#frmParial").css("display", "block");
+            //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023",
+                //data: obj,
+                success: function (data) {
+                    $('#frmParial').html(data)
+                }
+            });
+        });
+    });
+
+    function setDefaultDate() {
+        $('#txtDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        });
+    }
+
+    function InitializeDatatable() {
+        debugger
+        var Date = $("#txtDate").val();
+        var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "true" : "false";
+        var Rdb2 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "true" : "false";
+        var Rdb3 = $("#rdbAllCallUnMarked").is(':checked') == true ? "true" : "false";
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', //'print'
+                {
+                    extend: 'print',
+                    //text: 'ButtonLabelHere',
+                    title: 'Pending JI Cases',// + FromDate + ' To ' + ToDate,
+                    exportOptions: {
+                        modifier: {
+                            selected: null
+                        }
+                    },
+                    customize: function (win) {
+                        $(win.document.body).find('h1').css('text-align', 'center');
+                    },
+
+                }
+            ],
+            ajax: {// Ajax Filter
+                url: "@Url.Action("Get_Call_Marked_Online", "CallMarkedOnline")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "Date": Date,
+                        "Rdb1": Rdb1,
+                        "Rdb2": Rdb2,
+                        "Rdb3": Rdb3
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [
+                {
+                    data: '',
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        html += '<a onclick="GetDetail(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                        return html;
+                    }
+                },
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "CASE_NO" },
+                { data: "PO_NO" },
+                { data: "PO_DATE" },
+                { data: "CALL_RECV_DT" },
+                { data: "CALL_SNO" },
+                { data: "CALL_INSTALL_NO" },
+                { data: "IE_NAME" },
+                { data: "VENDOR" },
+                { data: "CALL_STATUS" },
+                { data: "CALL_LETTER_NO" },
+                { data: "REMARKS" },
+                { data: "DATE_TIME" },
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function GetDetail(case_no, call_recv_dt, call_sno, check_select, run_dt) {
+        window.location.href = "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+    }
+</script>
+

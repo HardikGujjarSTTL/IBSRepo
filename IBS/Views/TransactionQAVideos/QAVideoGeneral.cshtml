@@ -1,0 +1,425 @@
+﻿@{
+    ViewData["Title"] = "QA Vidoes General";
+}
+
+<div class="list-inner landLordIdflex">
+    <div class="tast-list">
+        <h2>QA Video General</h2>
+    </div>
+    @*<a asp-action="Index" asp-controller="TransactionQAVideos" class="formBtn viewall-btn">View All</a>*@
+</div>
+<div class="custom-tab">
+    <ul class="nav nav-tabs d-none d-lg-flex" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation" style="pointer-events: unset;">
+            <button class="nav-link active" id="Instruction-Video-tab" data-bs-toggle="tab" data-bs-target="#Instruction-video" type="button" role="tab" aria-controls="Instruction-Video" aria-selected="true">Instructional video on Calibration</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Inspection-PIPE-tab" data-bs-toggle="tab" data-bs-target="#Inspection-PIPE" type="button" role="tab" aria-controls="Inspection-PIPE" aria-selected="false">Inspection of HDPE PIPE</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Micrometer-tab" data-bs-toggle="tab" data-bs-target="#Micrometer" type="button" role="tab" aria-controls="Micrometer" aria-selected="false">Micrometer</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Migration-Standard-tab" data-bs-toggle="tab" data-bs-target="#Migration-Standard" type="button" role="tab" aria-controls="Migration-Standard" aria-selected="false">Migration to standard check sheets in railway & non inspections</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="NDT-tab" data-bs-toggle="tab" data-bs-target="#NDT" type="button" role="tab" aria-controls="NDT" aria-selected="false">NDT</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Pie-Tape-tab" data-bs-toggle="tab" data-bs-target="#Pie-Tape" type="button" role="tab" aria-controls="Pie-Tape" aria-selected="false">Pie tape instructional video</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Sampling-tab" data-bs-toggle="tab" data-bs-target="#Sampling" type="button" role="tab" aria-controls="Sampling" aria-selected="false">Sampling, Inspection & Testing procedures</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Special-Test-tab" data-bs-toggle="tab" data-bs-target="#Special-Test" type="button" role="tab" aria-controls="Special-Test" aria-selected="false">Special Test Plans</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Teaser-launch-tab" data-bs-toggle="tab" data-bs-target="#Teaser-launch" type="button" role="tab" aria-controls="Teaser-launch" aria-selected="false">Teaser for launch of E Book on Painting process</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="ICF-Innovations-tab" data-bs-toggle="tab" data-bs-target="#ICF-Innovations" type="button" role="tab" aria-controls="ICF-Innovations" aria-selected="false">ICF Innovations Continue Forever</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Vendor-Assesment-tab" data-bs-toggle="tab" data-bs-target="#Vendor-Assesment" type="button" role="tab" aria-controls="Vendor-Assesment" aria-selected="false">Vendor Assesment carried out By RITES for NSIC</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Hardness-tab" data-bs-toggle="tab" data-bs-target="#Hardness" type="button" role="tab" aria-controls="Hardness" aria-selected="false">Hardness test</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="HDPE-pipe-tab" data-bs-toggle="tab" data-bs-target="#HDPE-pipe" type="button" role="tab" aria-controls="HDPE-pipe" aria-selected="false">HDPE pipe Mfg process</button>
+        </li>
+
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Highlights-tab" data-bs-toggle="tab" data-bs-target="#Highlights" type="button" role="tab" aria-controls="Highlights" aria-selected="false">Highlights</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="HPCR-tab" data-bs-toggle="tab" data-bs-target="#HPCR" type="button" role="tab" aria-controls="HPCR" aria-selected="false">HPCR</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Drg-tab" data-bs-toggle="tab" data-bs-target="#Drg" type="button" role="tab" aria-controls="Drg" aria-selected="false">Drg altn revn</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="ED-QA-tab" data-bs-toggle="tab" data-bs-target="#ED-QA" type="button" role="tab" aria-controls="ED-QA" aria-selected="false">ED-QA New Year message</button>
+        </li>
+        <li class="nav-item" role="presentation" style="pointer-events: none;">
+            <button class="nav-link" id="Fad-Compressors-tab" data-bs-toggle="tab" data-bs-target="#Fad-Compressors" type="button" role="tab" aria-controls="Fad-Compressors" aria-selected="false">Fad of compressors</button>
+        </li>
+    </ul>
+
+    <div class="tab-content accordion" id="myTabContent">
+        <!-- Instruction video on Calibration -->
+        <div class="tab-pane fade show active accordion-item" id="Instruction-video" role="tabpanel" aria-labelledby="Instruction-video" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Instruction video</button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Instructional video on Calibration</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V7.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseOne" class="accordion-collapse collapse show  d-lg-block" aria-labelledby="headingOne" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Inspection of HDPE PIPE -->
+        <div class="tab-pane fade accordion-item" id="Inspection-PIPE" role="tabpanel" aria-labelledby="Inspection-PIPE" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Bank Details </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Inspection of HDPE PIPE</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V13.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Micrometer -->
+        <div class="tab-pane fade accordion-item" id="Micrometer" role="tabpanel" aria-labelledby="Micrometer" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Micrometer </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Micrometer</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V29.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+        </div>
+        <!-- MIGRATION TO STANDARD -->
+        <div class="tab-pane fade accordion-item" id="Migration-Standard" role="tabpanel" aria-labelledby="Migration-Standard" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"> Migration to standard check sheets in railway & non inspections </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Migration to standard check sheets in railway & non inspections</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V30.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseFour" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingFour" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- NDT -->
+        <div class="tab-pane fade accordion-item" id="NDT" role="tabpanel" aria-labelledby="NDT" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive"> NDT </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>NDT</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V31.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseFive" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingFive" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Pie-Tape -->
+        <div class="tab-pane fade accordion-item" id="Pie-Tape" role="tabpanel" aria-labelledby="Pie-Tape" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix"> Pie tape instructional video </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Pie tape instructional video</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V32.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseSix" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingSix" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Sampling -->
+        <div class="tab-pane fade accordion-item" id="Sampling" role="tabpanel" aria-labelledby="Sampling" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven"> Sampling, Inspection & Testing Procedures </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Sampling, Inspection & Testing Procedures</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V34.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseSeven" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingSeven" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Special Test Plans -->
+        <div class="tab-pane fade accordion-item" id="Special-Test" role="tabpanel" aria-labelledby="Special-Test" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingEight">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight"> Special Test Plans </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Special Test Plans</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V38.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseEight" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingEight" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Teaser-launch -->
+        <div class="tab-pane fade accordion-item" id="Teaser-launch" role="tabpanel" aria-labelledby="Teaser-launch" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Teaser for launch of E Book on Painting process </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Teaser for launch of E Book on Painting process</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V41.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- ICF-Innovations -->
+        <div class="tab-pane fade accordion-item" id="ICF-Innovations" role="tabpanel" aria-labelledby="ICF-Innovations" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> ICF Innovations Continue Forever </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>ICF Innovations Continue Forever</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V47.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Vendor Assesment -->
+        <div class="tab-pane fade accordion-item" id="Vendor-Assesment" role="tabpanel" aria-labelledby="Vendor-Assesment" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Vendor Assesment carried out By RITES for NSIC </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Vendor Assesment carried out By RITES for NSIC</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V62.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Vendor Assesment -->
+        <div class="tab-pane fade accordion-item" id="Hardness" role="tabpanel" aria-labelledby="Hardness" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Hardness test </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Hardness test</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V66.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- HDPE pipe -->
+        <div class="tab-pane fade accordion-item" id="HDPE-pipe" role="tabpanel" aria-labelledby="HDPE-pipe" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> HDPE pipe Mfg process </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>HDPE pipe Mfg process</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V67.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Highlights -->
+        <div class="tab-pane fade accordion-item" id="Highlights" role="tabpanel" aria-labelledby="Highlights" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Highlights </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Highlights</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V70.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- HPCR -->
+        <div class="tab-pane fade accordion-item" id="HPCR" role="tabpanel" aria-labelledby="HPCR" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> HPCR </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>HPCR</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V72.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Drg -->
+        <div class="tab-pane fade accordion-item" id="Drg" role="tabpanel" aria-labelledby="Drg" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Drg altn revn </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Drg altn revn</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V80.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+
+
+        <!-- ED-QA -->
+        <div class="tab-pane fade accordion-item" id="ED-QA" role="tabpanel" aria-labelledby="ED-QA" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> ED-QA New Year message </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>ED-QA New Year message</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V81.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+        <!-- Drg -->
+        <div class="tab-pane fade accordion-item" id="Fad-Compressors" role="tabpanel" aria-labelledby="Fad-Compressors" tabindex="0">
+            <h2 class="accordion-header d-lg-none" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> >Fad of compressors </button>
+            </h2>
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h4>Fad of compressors</h4>
+                </div>
+                <td style="WIDTH: 675px">
+                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
+                        <SOURCE SRC="/Videos/V83.mp4" TYPE="VIDEO/MP4" />
+                    </VIDEO>
+                </td>
+            </div>
+            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Instruction-Video-tab").css("pointer-events", "all");
+            $("#Inspection-PIPE-tab").css("pointer-events", "all");
+            $("#Micrometer-tab").css("pointer-events", "all");
+            $("#Migration-Standard-tab").css("pointer-events", "all");
+            $("#NDT-tab").css("pointer-events", "all");
+            $("#Pie-Tape-tab").css("pointer-events", "all");
+            $("#Sampling-tab").css("pointer-events", "all");
+            $("#Special-Test-tab").css("pointer-events", "all");
+            $("#Teaser-launch-tab").css("pointer-events", "all");
+            $("#ICF-Innovations-tab").css("pointer-events", "all");
+            $("#Vendor-Assesment-tab").css("pointer-events", "all");
+            $("#Hardness-tab").css("pointer-events", "all");
+            $("#HDPE-pipe-tab").css("pointer-events", "all");
+            $("#Highlights-tab").css("pointer-events", "all");
+            $("#HPCR-tab").css("pointer-events", "all");
+            $("#Drg-tab").css("pointer-events", "all");
+            $("#ED-QA-tab").css("pointer-events", "all");
+            $("#Fad-Compressors-tab").css("pointer-events", "all");
+        });
+    </script>
+}
