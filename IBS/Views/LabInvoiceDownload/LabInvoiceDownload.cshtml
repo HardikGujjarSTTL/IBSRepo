@@ -53,7 +53,7 @@
 </div>
 <div class="savenext-btn" style="margin-right:50%;">
     <button type="button" class="save-btn active" onclick="show();">Search</button>
-    <button type="button" class="save-btn active" onclick="Download();" >Download Lab Invoice</button>
+    <button type="button" class="save-btn active" onclick="Download();">Download Lab Invoice</button>
 </div>
     </div>
     <div id="hide" style="display:none">
@@ -214,20 +214,34 @@
             var RegNo = $("#txtregno").val();
             var InvoiceNo = $("#txtinno").val();
             var TranNo = $("#txttrno").val();
-                       
-            $.ajax({
-                url: '/LabInvoiceDownload/Download',
-                type: "POST",
-                dataType: "JSON",
-                data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
+            //var QueryString="RptFlag=1&Invoice="+InvoiceNo;
+            var QueryString = "RptFlag=1" +
+                "&Invoice=" + encodeURIComponent(InvoiceNo) +
+                "&CaseNo=" + encodeURIComponent(CaseNo) +
+                "&RegNo=" + encodeURIComponent(RegNo) +
+                "&TranNo=" + encodeURIComponent(TranNo);
 
-                success: function (success) {
+            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
+            //$.ajax({
+            //    url: '/LabInvoiceDownload/Download',
+            //    type: "POST",
+            //    dataType: "JSON",
+            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
+
+            //    success: function (success) {
 
                     
 
-                }
+            //    }
 
-            });
+            //});
        
         }
         //function UserDelete(UserId) {

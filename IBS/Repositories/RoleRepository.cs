@@ -154,7 +154,7 @@ namespace IBS.Repositories
             else
             {
                 model.RoleId = role.RoleId;
-                model.User_ID = role.UserId;
+                model.User_ID = Convert.ToInt32(role.UserId);
                 return model;
             }
         }
