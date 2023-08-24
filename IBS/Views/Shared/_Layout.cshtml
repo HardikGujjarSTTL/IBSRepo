@@ -21,6 +21,8 @@
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/js/crypto-js.js"></script>
     <script src="~/js/aes.js"></script>
+    <script src="~/lib/moment.js/moment.min.js"></script>
+    <script src="~/lib/jquery.mask/jquery.mask.min.js"></script>
 </head>
 
 <body class="noJS">
@@ -238,7 +240,7 @@
                                     <li><a asp-action="Index" asp-controller="UnitOfMeasurementsMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Unit of Measurements Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="RitesDesignationMaster"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Rites Designation Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="RailwaysDirectory"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railways Directory</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Rly_Designation_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railway Designation Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="RailwaysDesignation"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Railway Designation Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="Role"><i class="fa fa-angle-double-right"></i><span class="submenu-title">City  Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="IE_CO_Form"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Controlling Officers of Inspecting Engineers</span></a></li>
                                     <li><a asp-action="Index" asp-controller="InspectionEngineers"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Inspection Engineers</span></a></li>
@@ -274,7 +276,7 @@
                                     <li><a asp-action="Index" asp-controller="UnitOfMeasurementsMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Unit of Measurements Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="RitesDesignationMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Rites Designation Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="RailwaysDirectory"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railways Directory</span></a></li>
-                                    <li><a asp-action="Index" asp-controller="Rly_Designation_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railway Designation Master</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="RailwaysDesignation"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Railway Designation Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="CityMaster"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">City Master</span></a></li>
                                     <li><a asp-action="Index" asp-controller="IE_CO_Form"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Controlling Officers of Inspecting Engineers</span></a></li>
                                     <li><a asp-action="Index" asp-controller="InspectionEngineers"><i class="fa fa-fw"><img src="~/images/landlord-icons.svg" alt="landlord" /></i><span class="menu-title">Inspection Engineers</span></a></li>
@@ -348,14 +350,14 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="IE" /></i><span class="menu-title">Inspection & Billing</span></a>
+                                <a href="javascript:void(0)"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="~/images/inspection-payment-ico.png" alt="IE" /></i><span class="menu-title">Inspection & Billing</span></a>
                                 <ul class="nav nav-second-level">
                                     <li><a asp-action="Index" asp-controller="HologramAccountal"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Hologram Accountal</span></a></li>
                                     <li><a asp-action="Index" asp-controller="IC_Receipt"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Receipt of Bookset in Inspection Office</span></a></li>
-
+                                    <li><a asp-action="Index" asp-controller="UnregisteredCalls"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">Unregistered Calls</span></a></li>
+                                    <li><a asp-action="Index" asp-controller="InspectionFeeBill"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">View Inspection Bill / Payments Received against the Bill</span></a></li>
                                 </ul>
                             </li>
-
                             @*<li><a href="#"><i class="fa  fa-fw"><img src="~/images/reports-ico.png" alt="reports" /></i><span class="menu-title">Reports</span></a></li>*@
                         </ul>
                     </div>

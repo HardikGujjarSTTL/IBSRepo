@@ -1,7 +1,11 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class Rly_Designation_FormModel
     {
+        [Display (Name = "Designation Code")]
+        [Required]
         public string RlyDesigCd { get; set; } = null!;
 
         public string? RlyDesigDesc { get; set; }
@@ -20,7 +24,7 @@
 
         public DateTime? Updateddate { get; set; }
 
-        
+        public bool IsNew { get; set; } = true;
 
     }
 }

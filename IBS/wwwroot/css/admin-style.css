@@ -1484,3 +1484,5 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination li.previous a:befor
 .pagination li.disabled a{color:#999;}
 input[type="datetime-local"]{ height:43px;}
 /*.navbar-toggle.active .fa-bars:before{ content:"\f00d"!important; font-family:FontAwesome; color:#F66A2F;}*/
+
+.actionCenter {text-align: center;}

@@ -52,6 +52,7 @@ namespace IBS.Controllers
                         userSessionModel.Region = Convert.ToString(userMaster.Region);
                         userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
                         userSessionModel.LoginType = Convert.ToString(LoginType);
+                        userSessionModel.USER_ID = Convert.ToString(userMaster.UserId);
 
                         SetUserInfo = userSessionModel;
                         var userClaims = new List<Claim>()

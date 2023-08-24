@@ -1,4 +1,4 @@
-﻿using IBS.DataAccess;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -8,9 +8,16 @@ namespace IBS.Models
 
         public string? Location { get; set; }
 
+        [Required]
         public string? City { get; set; }
 
+        [Display (Name ="State")]
+        [Required]
         public byte? StateCd { get; set; }
+
+        public string? State { get; set; }
+
+        public int? CountryCd { get; set; }
 
         public string? Country { get; set; }
 
@@ -18,6 +25,8 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [Display(Name = "Pin Code")]
+        [Required]
         public string? PinCode { get; set; }
 
         public byte? Isdeleted { get; set; }
@@ -29,11 +38,5 @@ namespace IBS.Models
         public DateTime? Createddate { get; set; }
 
         public DateTime? Updateddate { get; set; }
-
-        public virtual T92State? StateCdNavigation { get; set; }
-
-        public virtual ICollection<T05Vendor> T05Vendors { get; set; } = new List<T05Vendor>();
-
-        public virtual ICollection<T06Consignee> T06Consignees { get; set; } = new List<T06Consignee>();
     }
 }

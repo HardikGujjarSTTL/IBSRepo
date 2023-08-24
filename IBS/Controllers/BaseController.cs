@@ -63,6 +63,22 @@ namespace IBS.Controllers
             }
         }
 
+        public string Region
+        {
+            get
+            {
+                return (GetUserInfo.Region);
+            }
+        }
+
+        public string USER_ID
+        {
+            get
+            {
+                return (GetUserInfo.USER_ID);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))
