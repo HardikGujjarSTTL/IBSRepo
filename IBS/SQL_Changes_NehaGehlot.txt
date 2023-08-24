@@ -490,3 +490,33 @@ BEGIN
  SELECT w_compid AS w_compid, OUT_ERR_CD AS OUT_ERR_CD FROM DUAL;
 
 END;
+
+======================================================================================================================================
+
+create or replace PROCEDURE GetConsigneeComplaint (
+    p_PONo       VARCHAR2,
+    p_PODate     VARCHAR2,
+    p_ResultSet  OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+    SELECT
+        c.COMPLAINT_ID,
+        c.JI_SNO,
+        c.CASE_NO,
+        c.BK_NO,
+        c.SET_NO,
+        m.PO_NO,
+        m.PO_DT,
+        c.IC_NO,
+        c.IC_DT,
+        c.REJ_MEMO_NO,
+        c.REJ_MEMO_DT
+    FROM T13_PO_MASTER m
+    JOIN V40_CONSIGNEE_COMPLAINTS c ON m.CASE_NO = c.CASE_NO
+    WHERE
+        UPPER(TRIM(m.PO_NO)) LIKE UPPER(TRIM('%' || p_PONo || '%'))
+        AND TO_CHAR(m.PO_DT, 'dd-mm-yyyy') = p_PODate
+    ORDER BY c.CASE_NO, c.COMPLAINT_ID ASC;
+END GetConsigneeComplaint;

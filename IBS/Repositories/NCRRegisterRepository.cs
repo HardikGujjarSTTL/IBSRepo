@@ -383,38 +383,44 @@ namespace IBS.Repositories
                     context.T41NcMasters.Add(obj);
                     context.SaveChanges();
                     msg = "Record Saved Successfully";
+
+                    if (extractedText != "-Select--")
+                    {
+                        if (isRadioChecked == true)
+                        {
+
+                            T42NcDetail obj1 = new T42NcDetail();
+                            obj1.NcNo = genrate_NCNO;
+                            obj1.NcCd = "X01";
+                            obj1.NcCdSno = 1;
+                            obj1.NcDescOthers = "";
+                            obj1.UserId = model.UserID;
+                            obj1.Datetime = DateTime.Now;
+                            context.T42NcDetails.Add(obj1);
+                            context.SaveChanges();
+                            msg = "Save Successfull";
+                        }
+                        else
+                        {
+
+                            T42NcDetail obj1 = new T42NcDetail();
+                            obj1.NcNo = genrate_NCNO;
+                            obj1.NcCd = model.NcCdSno;
+                            obj1.NcCdSno = 1;
+                            obj1.NcDescOthers = extractedText;
+                            obj1.UserId = model.UserID;
+                            obj1.Datetime = DateTime.Now;
+                            context.T42NcDetails.Add(obj1);
+                            context.SaveChanges();
+                            msg = "Save Successfull";
+                        }
+                    }
                 }
-                if (extractedText != "-Select--")
+                else
                 {
-                    if (isRadioChecked == true)
-                    {
-
-                        T42NcDetail obj1 = new T42NcDetail();
-                        obj1.NcNo = genrate_NCNO;
-                        obj1.NcCd = "X01";
-                        obj1.NcCdSno = 1;
-                        obj1.NcDescOthers = "";
-                        obj1.UserId = model.UserID;
-                        obj1.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj1);
-                        context.SaveChanges();
-                        msg = "Save Successfull";
-                    }
-                    else
-                    {
-
-                        T42NcDetail obj1 = new T42NcDetail();
-                        obj1.NcNo = genrate_NCNO;
-                        obj1.NcCd = model.NcCdSno;
-                        obj1.NcCdSno = 1;
-                        obj1.NcDescOthers = extractedText;
-                        obj1.UserId = model.UserID;
-                        obj1.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj1);
-                        context.SaveChanges();
-                        msg = "Save Successfull";
-                    }
+                    msg = "already Exist";
                 }
+               
             }      
            
             return msg;
