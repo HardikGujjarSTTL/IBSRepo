@@ -5,11 +5,13 @@ using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
 using IBS.Interfaces.IE_Reports;
 using IBS.Interfaces.Inspection_Billing;
+using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
+using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Localization;
@@ -74,6 +76,10 @@ builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPho
 builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
 builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.ComplaintApprovalRepository>();
 builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
+
+builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
+
+
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
 builder.Services.AddScoped<IUnitOfMeasurementsRepository, UnitOfMeasurementsRepository>();

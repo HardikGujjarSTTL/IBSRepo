@@ -61,7 +61,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("POMaster", "Index", "add")]
+        [Authorization("POMaster", "Index", "edit")]
         public IActionResult POMasterSave(PO_MasterModel model)
         {
             try
@@ -293,7 +293,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("POMaster", "Index", "add")]
+        [Authorization("POMaster", "Index", "edit")]
         public IActionResult POMasterDetailsSave(PO_MasterDetailsModel model)
         {
             try

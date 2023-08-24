@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "Vendor Document";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.VendCd > 0)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -36,7 +34,7 @@
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="VendorDocument" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
                 <div id="dvCalibrationRecordsVendDocumentList" style="display:none;">
                     <partial name="_CalibrationRecordsVendDocumentList" />

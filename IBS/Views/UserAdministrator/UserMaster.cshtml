@@ -8,7 +8,7 @@
             <h2>Authorized users of the System</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn"><span class="fa fa-plus"></span> Add New User</a>
+            <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New User</a>
         </div>
     </div>
     <section class="table-section">
@@ -94,8 +94,8 @@
                         render: function (data, type, row) {
                             var Id = data.UserId;
                             var editUrl = '@Url.Action("UserManage", "UserAdministrator")?UserId=' + Id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

@@ -355,21 +355,29 @@ namespace IBS.Repositories.Vendor
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
             DataTable dt = ds.Tables[0];
 
-            List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
-            {
-                CallStatus = row["STATUS"].ToString(),
-                ItemSrNoPo = Convert.ToInt32(row["ITEM_SRNO_PO"]),
-                ItemDescPo = row["ITEM_DESC_PO"].ToString(),
+            //List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
+            //{
+            //    CallStatus = row["STATUS"].ToString(),
+            //    ItemSrNoPo = Convert.ToInt32(row["ITEM_SRNO_PO"]),
+            //    ItemDescPo = row["ITEM_DESC_PO"].ToString(),
 
-                QtyOrdered = Convert.ToInt32(row["QTY_ORDERED"]),
-                CumQtyPrevOffered = Convert.ToInt32(row["CUM_QTY_PREV_OFFERED"]),
-                CumQtyPrevPassed = Convert.ToInt32(row["CUM_QTY_PREV_PASSED"]),
-                QtyToInsp = Convert.ToInt32(row["QTY_TO_INSP"]),
-                QtyPassed = Convert.ToInt32(row["QTY_PASSED"]),
-                QtyRejected = Convert.ToInt32(row["QTY_REJECTED"]),
-                QtyDue = Convert.ToInt32(row["QTY_DUE"]),
-                Consignee = row["CONSIGNEE"].ToString(),
-            }).ToList();
+            //    QtyOrdered = Convert.ToInt32(row["QTY_ORDERED"]),
+            //    CumQtyPrevOffered = Convert.ToInt32(row["CUM_QTY_PREV_OFFERED"]),
+            //    CumQtyPrevPassed = Convert.ToInt32(row["CUM_QTY_PREV_PASSED"]),
+            //    QtyToInsp = Convert.ToInt32(row["QTY_TO_INSP"]),
+            //    QtyPassed = Convert.ToInt32(row["QTY_PASSED"]),
+            //    QtyRejected = Convert.ToInt32(row["QTY_REJECTED"]),
+            //    QtyDue = Convert.ToInt32(row["QTY_DUE"]),
+            //    Consignee = row["CONSIGNEE"].ToString(),
+            //}).ToList();
+
+            CallRegisterModel model = new();
+            List<CallRegisterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<CallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
             query = list.AsQueryable();
 

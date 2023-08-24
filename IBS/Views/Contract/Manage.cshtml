@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "Manage Contract";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.ContractId > 0)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -138,7 +136,7 @@
 
                     <div class="savenext-btn">
                         @*<a asp-controller="Contract" asp-action="Index" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </form>

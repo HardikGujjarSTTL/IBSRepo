@@ -61,7 +61,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("CentralQOI", "Index", "add")]
+        [Authorization("CentralQOI", "Index", "edit")]
         public IActionResult CentralQOIISave(CentralQOIModel model)
         {
             try

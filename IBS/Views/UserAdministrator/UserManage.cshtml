@@ -2,209 +2,155 @@
 
 @{
     ViewData["Title"] = "Manage User";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.UserId != null)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="UserAdministrator" asp-action="UserDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserDetails">
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="UserAdministrator" asp-action="UserDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserDetails">
-    
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>@ViewData["Title"] </h2>
-        </div>
-        <input type="hidden" asp-for="ID" />
+            <div class="list-inner">
+                <div class="tast-list">
+                    <h2>@ViewData["Title"] </h2>
+                </div>
+                <div>
+                    <a asp-action="UserMaster" asp-controller="UserAdministrator" class="formBtn viewall-btn">View List</a>
+                </div>
+                <input type="hidden" asp-for="ID" />
+            </div>
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">User Id</label>
+                        <input type="text" class="input" asp-for="UserId" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">User Name</label>
+                        <input type="text" class="input" asp-for="UserName" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Employee No.</label>
+                        <input type="text" class="input" asp-for="EmpNo" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="EmpNo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="PropertyId">Region</label>
+                        @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
+                        <span asp-validation-for="Region" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Name">Role </label>
+                            @Html.DropDownListFor(model => model.AuthLevl, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
+                            <span class="text-danger" id="spnErrorAuthLevl"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Status</label>
+                        <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
+                            <option value="">--Select--</option>
+                            <option value="A">Active</option>
+                            <option value="I">InActive</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="custom-readio">
+                            <label for="Reference">Allow PO Entry (Y/N)</label>
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" asp-for="AllowPo" value="Y" id="AllowPo_Y" />
+                                        <label for="AllowPo_Y">Yes</label>
+                                        &nbsp;&nbsp;
+                                        <input type="radio" asp-for="AllowPo" value="N" id="AllowPo_N" />
+                                        <label for="AllowPo_N">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="custom-readio">
+                            <label for="Reference">Allow download of checksheets (Y/N)</label>
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" asp-for="AllowDnChksht" value="Y" id="AllowDnChksht_Y" />
+                                        <label for="AllowDnChksht_Y">Yes</label>
+                                        &nbsp;&nbsp;
+                                        <input type="radio" asp-for="AllowDnChksht" value="N" id="AllowDnChksht_N" />
+                                        <label for="AllowDnChksht_N">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="custom-readio">
+                            <label for="Reference">Call Marking (Y/N)</label>
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" asp-for="CallMarking" value="Y" id="CallMarking_Y" />
+                                        <label for="CallMarking_Y">Yes</label>
+                                        &nbsp;&nbsp;
+                                        <input type="radio" asp-for="CallMarking" value="N" id="CallMarking_N" />
+                                        <label for="CallMarking_N">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="custom-readio">
+                            <label for="Reference">Call Re-marking (Y/N)</label>
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" asp-for="CallRemarking" value="Y" id="CallRemarking_Y" />
+                                        <label for="CallRemarking_Y">Yes</label>
+                                        &nbsp;&nbsp;
+                                        <input type="radio" asp-for="CallRemarking" value="N" id="CallRemarking_N" />
+                                        <label for="CallRemarking_N">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">User Type</label>
+                        <select id="ddlUserType" class="form-control col-md-8" name="UserType" asp-for="UserType">
+                            <option value="">--Select--</option>
+                            <option value="U">User</option>
+                            <option value="C">CM</option>
+                            <option value="G">GM</option>
+                            <option value="S">SBU HEAD</option>
+                        </select>
+                        <span asp-validation-for="UserType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="UserAdministrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="accordion-body">
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <label for="Reference">User Id</label>
-                <input type="text" class="input" asp-for="UserId" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">User Name</label>
-                <input type="text" class="input" asp-for="UserName" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Employee No.</label>
-                <input type="text" class="input" asp-for="EmpNo" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="EmpNo" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label for="PropertyId">Region</label>
-                @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
-                <span asp-validation-for="Region" class="text-danger"></span>
-            </div>
-            
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Name">Role </label>
-                    @Html.DropDownListFor(model => model.AuthLevl, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
-                    <span class="text-danger" id="spnErrorAuthLevl"></span>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Status</label>
-                <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
-                    <option value="">--Select--</option>
-                    <option value="A">Active</option>
-                    <option value="I">InActive</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="custom-readio">
-                    <label for="Reference">Allow PO Entry (Y/N)</label>
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" asp-for="AllowPo" value="Y" id="AllowPo_Y" />
-                                <label for="AllowPo_Y">Yes</label>
-                                &nbsp;&nbsp;
-                                <input type="radio" asp-for="AllowPo" value="N" id="AllowPo_N" />
-                                <label for="AllowPo_N">No</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="custom-readio">
-                    <label for="Reference">Allow download of checksheets (Y/N)</label>
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" asp-for="AllowDnChksht" value="Y" id="AllowDnChksht_Y" />
-                                <label for="AllowDnChksht_Y">Yes</label>
-                                &nbsp;&nbsp;
-                                <input type="radio" asp-for="AllowDnChksht" value="N" id="AllowDnChksht_N" />
-                                <label for="AllowDnChksht_N">No</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="custom-readio">
-                    <label for="Reference">Call Marking (Y/N)</label>
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" asp-for="CallMarking" value="Y" id="CallMarking_Y" />
-                                <label for="CallMarking_Y">Yes</label>
-                                &nbsp;&nbsp;
-                                <input type="radio" asp-for="CallMarking" value="N" id="CallMarking_N" />
-                                <label for="CallMarking_N">No</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="custom-readio">
-                    <label for="Reference">Call Re-marking (Y/N)</label>
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" asp-for="CallRemarking" value="Y" id="CallRemarking_Y" />
-                                <label for="CallRemarking_Y">Yes</label>
-                                &nbsp;&nbsp;
-                                <input type="radio" asp-for="CallRemarking" value="N" id="CallRemarking_N" />
-                                <label for="CallRemarking_N">No</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @*<div class="col-md-4 mb-3">
-            <div class="custom-readio">
-            <label for="Reference">Allow PO Entry(Y/N)</label>
-            <div class="company-checkbox">
-            @foreach (var val in IBS.Models.Common.GetYesNoCommon())
-            {
-            <div class="remember">
-            <div class="remecheckbox">
-            <input type="radio" name="AllowPo" asp-for="AllowPo" value="@val.Value" id="AllowPo@(val.Value)" />
-            <label for="AllowPo@(val.Value)">@val.Text</label>
-            </div>
-            </div>
-            }
-            </div>
-            </div>
-            </div>
-            <div class="col-md-4 mb-3">
-            <div class="custom-readio">
-            <label for="Reference">Allow download of checksheets (Y/N)</label>
-            <div class="company-checkbox">
-            @foreach (var val in IBS.Models.Common.GetYesNoCommon())
-            {
-            <div class="remember">
-            <div class="remecheckbox">
-            <input type="radio" name="AllowDnChksht" asp-for="AllowDnChksht" value="@val.Value" id="AllowDnChksht@(val.Value)" />
-            <label for="AllowDnChksht@(val.Value)">@val.Text</label>
-            </div>
-            </div>
-            }
-            </div>
-            </div>
-            </div>
-            <div class="col-md-4 mb-3">
-            <div class="custom-readio">
-            <label for="Reference">Call Marking(Y/N)</label>
-            <div class="company-checkbox">
-            @foreach (var val in IBS.Models.Common.GetYesNoCommon())
-            {
-            <div class="remember">
-            <div class="remecheckbox">
-            <input type="radio" name="CallMarking" asp-for="CallMarking" value="@val.Value" id="CallMarking@(val.Value)" />
-            <label for="CallMarking@(val.Value)">@val.Text</label>
-            </div>
-            </div>
-            }
-            </div>
-            </div>
-            </div>
-            <div class="col-md-4 mb-3">
-            <div class="custom-readio">
-            <label for="Reference">Call Re-marking(Y/N)</label>
-            <div class="company-checkbox">
-            @foreach (var val in IBS.Models.Common.GetYesNoCommon())
-            {
-            <div class="remember">
-            <div class="remecheckbox">
-            <input type="radio" name="CallRemarking" asp-for="CallRemarking" value="@val.Value" id="CallRemarking@(val.Value)" />
-            <label for="CallRemarking@(val.Value)">@val.Text</label>
-            </div>
-            </div>
-            }
-            </div>
-            </div>
-            </div>*@
-
-
-            <div class="col-md-4 mb-3">
-                <label for="Reference">User Type</label>
-                <select id="ddlUserType" class="form-control col-md-8" name="UserType" asp-for="UserType">
-                    <option value="">--Select--</option>
-                    <option value="U">User</option>
-                    <option value="C">CM</option>
-                    <option value="G">GM</option>
-                    <option value="S">SBU HEAD</option>
-                </select>
-                <span asp-validation-for="UserType" class="text-danger"></span>
-            </div>
-
-        </div>
-        <div class="savenext-btn">
-            <a asp-controller="UserAdministrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
-        </div>
-    </div>
-</form>
+</section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -217,8 +163,10 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-                //window.location.href = "/UserAdministrator/UserMaster";
-            window.location.href = '@Url.Action("UserMaster", "UserAdministrator")';
+            //window.location.href = '@Url.Action("UserMaster", "UserAdministrator")';
+            if (res.status) {
+                window.location.href = '@Url.Action("UserMaster", "UserAdministrator")';
+            }
         };
     </script>
 }

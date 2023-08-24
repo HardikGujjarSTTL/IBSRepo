@@ -1460,6 +1460,26 @@ namespace IBS.Models
             return contacts;
         }
 
+        public static List<SelectListItem> GetCluster(string GetRegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
+                                             join t101 in ModelContext.T101IeClusters on t99.ClusterCode equals t101.ClusterCode
+                                             join t09 in ModelContext.T09Ies on t101.IeCode equals t09.IeCd
+                                             where t99.RegionCode == GetRegionCode && t09.IeStatus == null
+                                             orderby t99.ClusterName, t09.IeName
+
+                                             select new SelectListItem
+                                             {
+                                                 Text = t99.ClusterName + " (" + t09.IeName + ")",
+                                                 Value = Convert.ToString(t99.ClusterCode)
+
+                                             }).ToList();
+
+            return contacts;
+        }
+
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
