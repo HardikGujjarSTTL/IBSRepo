@@ -227,6 +227,10 @@ namespace IBS.Models
 
         public string VendInspStopped { get; set; }
 
+        public string InspectingAgency { get; set; }
+
+        public string VendRemarks { get; set; }
+
 
 
     }

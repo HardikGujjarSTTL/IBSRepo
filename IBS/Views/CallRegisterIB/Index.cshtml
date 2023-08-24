@@ -15,58 +15,48 @@
                 <div class="reference">
                     <label for="Reference">Case No.</label>
                     <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CaseNo" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <div class="reference">
-                    <label for="Reference">PO No.</label>
-                    <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="PoNo" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
-                    <label for="Reference">PO Date</label>
-                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    <span asp-validation-for="PoDt" class="text-danger"></span>
+                    <label for="Reference">Call Date</label>
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Call SNo.</label>
                     <input type="text" class="input" asp-for="CallSno" maxlength="100" style="text-transform: uppercase;">
-                    @*<span asp-validation-for="CallSNo" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">PO No.</label>
+                    <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
-                    <label for="Reference">Call Date</label>
-                    <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    @*<span asp-validation-for="CallRecvDt" class="text-danger"></span>*@
+                    <label for="Reference">PO Date</label>
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                 </div>
             </div>
+
         </div>
-        @*<div class="row my-0">
-        </div>*@
         <div class="row my-0">
             <div class="col-md-6 mb-3">
                 <div class="reference">
                     <label for="Reference">Vendor Name</label>
                     <input type="text" class="input" asp-for="Vendor" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="Vendor" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-6 mb-3">
                 <div class="reference">
                     <label for="Reference">Call Letter No./Dispatch Ref No.</label>
                     <input type="text" class="input" asp-for="CallLetterNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CallLetterNo" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        @*<div class="row my-0">
-        </div>*@
         <div class="alert alert-warning center">
             To Search a Case-> Enter Case No. or Call Date or Part or Full PO No. or PO DT or Vendor Name or Call Letter No./Dispatch Ref No. and Click on Search ButtonTo Edit/Delete or To Register New Call --> Enter Case No & Call Date and then Click on desired Button
         </div>
@@ -116,11 +106,12 @@
 
     <script type="text/javascript">
         $(function () {
-            //setDefaultDate();
+            setDefaultDate();
             //InitializeDatatable();
         });
 
         $("#btnSearch").click(function () {
+            debugger
             InitializeDatatable();
         });
 
@@ -128,16 +119,16 @@
             //InitializeDatatable();
         }
         function setDefaultDate() {
-            //$('#PoDt').datepicker({
-            //    changeMonth: true,
-            //    changeYear: true,
-            //    dateFormat: 'dd-mm-yy',
-            //});
-            //$('#CallRecvDt').datepicker({
-            //    changeMonth: true,
-            //    changeYear: true,
-            //    dateFormat: 'dd-mm-yy',
-            //});
+            $('#PoDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#CallRecvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
         }
 
         function InitializeDatatable() {
@@ -236,7 +227,12 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
-            debugger
+            var CaseNo = $("#CaseNo").val();
+            if (CaseNo == null || CaseNo == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
+            }
+
             var w_itemBlocked = "";
             var w_remarksVend = "";
             $.ajax({
@@ -299,81 +295,49 @@
             });
         });
 
+        $("#btnNewCall").click(function () {
+            debugger
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
 
 
-        //$("#btnModify").click(function () {
-        //    var CaseNo = $("#CaseNo").val();
-        //    var CallRecvDt = $("#CallRecvDt").val();
-        //    var CallSno = $("#CallSno").val();
+            if (CaseNo == null || CaseNo == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
+            }
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
 
-        //    debugger
-        //    var w_itemBlocked = "";
-        //    var w_remarksVend = "";
-        //    $.ajax({
-        //        url: '@Url.Action("GetModifyClick", "CallRegister")',
-        //        type: "GET",
-        //        dataType: "JSON",
-        //        data: { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno },
-        //        success: function (contacts) {
-        //            if (contacts.data && contacts.data.length > 0) {
-        //                // Get the values from the response
-        //                var vendCd = contacts.data[0].VendCd;
-        //                var VendInspStopped = contacts.data[0].VendInspStopped;
-        //                var VendRemarks = contacts.data[0].VendRemarks;
-        //                // Redirect to the URL with parameters
-        //                w_itemBlocked = "Y";
-        //                //w_itemBlocked = VendInspStopped;
-        //                w_remarksVend = VendRemarks;
-
-        //                $.ajax({
-        //                    url: '@Url.Action("GetMatch", "CallRegister")',
-        //                    type: "GET",
-        //                    dataType: "JSON",
-        //                    data: { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSNo": CallSNo },
-        //                    success: function (contacts) {
-        //                        if (contacts.data && contacts.data.length > 0) {
-        //                            // Get the values from the response
-        //                            var VendCd = contacts.data[0].VendCd;
-        //                            var MfgCd = contacts.data[0].MfgCd;
-        //                            var CallStatus = contacts.data[0].CallStatus;
-        //                            // Redirect to the URL with parameters
-        //                            var Check = "";
-        //                            if (VendCd == "0" && MfgCd == "0") {
-        //                                Check = "0";
-        //                                alert('No Record Present for the Given Case No, Call Date and Call SNo!!!');
-        //                            }
-        //                            //else if ((VendCd == VendCd || MfgCd == MfgCd) && CallStatus == "M") {
-        //                            else if (VendCd == VendCd || MfgCd == MfgCd && CallStatus == "M") {
-        //                                Check = "2";
-        //                            }
-        //                            else {
-        //                                Check = "1";
-        //                                alert('You are not Authorised to Update The Call For Other Vendors OR For Call Status Other than Pending.!!!');
-        //                                return;
-        //                            }
-        //                            if (Check == "2") {
-        //                                if (w_itemBlocked == "Y") {
-        //                                    var msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + w_remarksVend + "\\nDo You Still Want to Register/Update This Call?";
-        //                                    var d = confirm(msg);
-        //                                    if (d === false) {
-        //                                        window.location.href = '@Url.Action("Index", "CallRegister")';
-        //                                    } else {
-        //                                        window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&CallStatus=M";
-        //                                    }
-        //                                }
-        //                                else {
-        //                                    //window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&CallStatus=M";
-        //                                }
-
-        //                            }
-
-        //                        }
-        //                    }
-        //                });
-        //            }
-        //        }
-        //    });
-        //});
+            $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                //success: function (response) {
+                if (response.status) {
+                    if (response.w_itemBlocked == "Y") {
+                        var msg = response.responseText;
+                        var d = confirm(msg);
+                        if (d === false) {
+                            window.location.href = '@Url.Action("Index", "CallRegisterIB")';
+                        } else {
+                            window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                        }
+                    }
+                    else
+                    {
+                        window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                    }
+                }
+                //},
+                //error: function () {
+                //    // Handle error if needed
+                //}
+            });
+        });
 
         completed = function (response) {
             var res = response.responseJSON;

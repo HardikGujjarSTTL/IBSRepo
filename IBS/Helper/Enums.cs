@@ -39,6 +39,8 @@ namespace IBS.Helper
             TechnicalReferencesDoc = 8,
             [Description("/MASTER_ITEMS_CHECKSHEETS")]
             MasterItemDoc = 9,
+            [Description("/CALLS_DOCUMENTS")]
+            CallRegistrationDoc = 10,
         }
 
         public enum DocumentCategory : int
@@ -51,6 +53,7 @@ namespace IBS.Helper
             Contract = 6,
             TechnicalReferences = 8,
             MasterItemDoc = 9,
+            CallRegistrationDoc = 10,
         }
 
 
@@ -66,11 +69,13 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
+            
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
         {
             Browse_the_Document_to_Upload = 7,
+            CallRegistrationDoc = 13,
         }
         public enum DocumentCategory_VendorMADoc : int
         {

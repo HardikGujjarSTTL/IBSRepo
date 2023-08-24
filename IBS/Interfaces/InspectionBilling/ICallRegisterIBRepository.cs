@@ -14,7 +14,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public string GetRegionValue(string CaseNo, string CallRecvDt, string CallSno);
 
-        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string UserName);
+        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno,string ActionType, string UserName);
 
         DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd,string CaseNo);
 
@@ -25,5 +25,12 @@ namespace IBS.Interfaces.InspectionBilling
         string send_Vendor_Email(VenderCallRegisterModel model);
 
         string RegiserCallDelete(VenderCallRegisterModel model);
+
+        public VenderCallRegisterModel FindAddDetails(string CaseNo);
+
+        public string GetMatch(string CaseNo,string GetRegionCode);
+
+        public int show2(string CaseNo,string CallRecvDt,int CallSno);
+
     }
 }
