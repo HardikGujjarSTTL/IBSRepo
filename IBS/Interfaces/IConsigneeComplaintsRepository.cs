@@ -7,7 +7,8 @@ namespace IBS.Interfaces
         public ConsigneeComplaints FindByID(string CASE_NO,string BK_NO,string SET_NO);
         //DTResult<ConsigneeComplaints> GetconsigneeComplaintsList(DTParameters dtParameters);
         //List<ConsigneeComplaints> serachconsigneeComplaintsList(string PONO, string PODT);
-        DTResult<ConsigneeComplaints> GetDataList(DTParameters dtParameters);
+        List<ConsigneeComplaints> GetDataListConsignee(string poNo, string poDt);
+        List<ConsigneeComplaints> GetDataListComplaint(string poNo, string poDt);
         //int ComplaintsDetailsInsertUpdate(ConsigneeComplaints model);
     }
 }

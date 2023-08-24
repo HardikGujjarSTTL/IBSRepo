@@ -111,7 +111,7 @@
                             var CaseNo = data.CaseNo;
                             var editUrl = '/ComplaintApproval/Manage/' + '?SetNo=' + encodeURIComponent(SetNo) + '&BKNo=' + encodeURIComponent(BKNo) + '&CaseNo=' + encodeURIComponent(CaseNo) + '&TEMP_COMPLAINT_ID=' + encodeURIComponent(TEMP_COMPLAINT_ID);
                             //var editUrl = '@Url.Action("Manage", "ComplaintApproval")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }

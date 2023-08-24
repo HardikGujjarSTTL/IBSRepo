@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.Protocol.Plugins;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -21,11 +23,12 @@ namespace IBS.Controllers
         {
             consigneeComplaints = _ConsigneeComplaintsRepository;
         }
+        [Authorization("ConsigneeComplaints", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
-
+        [Authorization("ConsigneeComplaints", "Index", "view")]
         public IActionResult Manage(string CASE_NO, string BK_NO,string SET_NO)
         {
             ConsigneeComplaints model = new();
@@ -46,10 +49,11 @@ namespace IBS.Controllers
 
 
         [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        public ActionResult GetCombinedData(string poNo, string poDt)
         {
-            DTResult<ConsigneeComplaints> dTResult = consigneeComplaints.GetDataList(dtParameters);
-            return Json(dTResult);
+            List<ConsigneeComplaints> dTResult = consigneeComplaints.GetDataListConsignee(poNo, poDt);
+            List<ConsigneeComplaints> dTResult1 = consigneeComplaints.GetDataListComplaint(poNo, poDt);
+            return Json(new { dTResult = dTResult, dTResult1 = dTResult1 });
         }
 
         //[HttpPost]

@@ -27,7 +27,7 @@ namespace IBS.Repositories
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
                 model.Createddate = model.Createddate;
-                //model.Isdeleted = role.Isdeleted;
+                //model.Isdeleted = Convert.ToByte(role.Isdeleted);
                 return model;
             }
         }
@@ -96,7 +96,7 @@ namespace IBS.Repositories
             var roles = context.T91Railways.Find(RlyCd);
             if (roles == null) { return false; }
 
-            //roles.Isdeleted = Convert.ToByte(true);
+           // roles.Isdeleted = Convert.ToByte(true);
             roles.Updatedby = Convert.ToInt32(UserID);
             roles.Updateddate = DateTime.Now;
             context.SaveChanges();
@@ -117,7 +117,7 @@ namespace IBS.Repositories
                 obj.Railway = model.Railway;
                 obj.HeadQuarter = model.HeadQuarter;
                 obj.Createdby = model.Createdby;
-                //obj.Isdeleted = Convert.ToByte(false);
+               // obj.Isdeleted = Convert.ToByte(false);
                 obj.Createddate = DateTime.Now;
                 context.T91Railways.Add(obj);
                 context.SaveChanges();
