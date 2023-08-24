@@ -27,6 +27,7 @@ namespace IBS.Models
         public string Organisation { get; set; }
         public string OrgnType { get; set; }
         public string RoleName { get; set; }
+        public string USER_ID { get; set; }
     }
 
     public class ForgotPasswordModel

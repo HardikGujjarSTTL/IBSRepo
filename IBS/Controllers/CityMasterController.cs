@@ -1,18 +1,19 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
     public class CityMasterController : BaseController
     {
-        #region Variables
-        private readonly ICityMaster cityMaster;
-        #endregion
-        public CityMasterController(ICityMaster _cityMaster)
+        private readonly ICityRepository cityRepository;
+
+        public CityMasterController(ICityRepository _cityRepository)
         {
-            cityMaster = _cityMaster;
+            cityRepository = _cityRepository;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -23,7 +24,7 @@ namespace IBS.Controllers
             CityMasterModel model = new();
             if (id > 0)
             {
-                model = cityMaster.FindByID(id);
+                model = cityRepository.FindByID(id);
             }
             return View(model);
         }
@@ -31,14 +32,44 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<CityMasterModel> dTResult = cityMaster.GetCityMasterList(dtParameters);
+            DTResult<CityMasterModel> dTResult = cityRepository.GetCityMasterList(dtParameters);
             return Json(dTResult);
         }
+
+        [HttpPost]
+        public IActionResult Manage(CityMasterModel model)
+        {
+            try
+            {
+                if (model.CityCd == 0)
+                {
+                    model.Createdby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    cityRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    cityRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CityMaster", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (cityMaster.Remove(id, UserId))
+                if (cityRepository.Remove(id))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -49,33 +80,6 @@ namespace IBS.Controllers
                 AlertDanger();
             }
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CityMasterDetailsSave(CityMasterModel model)
-        {
-            try
-            {
-                string msg = "City Master Inserted Successfully.";
-
-                if (model.CityCd > 0)
-                {
-                    msg = "City Master Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = cityMaster.CityMasterDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "CityMaster", "CityMasterDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
     }

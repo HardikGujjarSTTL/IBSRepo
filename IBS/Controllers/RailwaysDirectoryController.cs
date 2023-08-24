@@ -1,29 +1,63 @@
-﻿using IBS.DataAccess;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace IBS.Controllers
 {
-	public class RailwaysDirectoryController : BaseController
-	{
-		private readonly IRailwaysDirectory railwaysDirectory;
-        public RailwaysDirectoryController(IRailwaysDirectory _railwaysDirectory)
+    public class RailwaysDirectoryController : BaseController
+    {
+        private readonly IRailwaysDirectoryRepository railwaysDirectoryRepository;
+
+        public RailwaysDirectoryController(IRailwaysDirectoryRepository _railwaysDirectoryRepository)
         {
-            railwaysDirectory = _railwaysDirectory;
-		}
+            railwaysDirectoryRepository = _railwaysDirectoryRepository;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Manage(int id)
         {
             RailwaysDirectoryModel model = new();
             if (id > 0)
             {
-                model = railwaysDirectory.FindByID(id);
+                model = railwaysDirectoryRepository.FindByID(id);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Manage(RailwaysDirectoryModel model)
+        {
+            try
+            {
+                if (!railwaysDirectoryRepository.IsDuplicate(model))
+                {
+                    if (model.Id == 0)
+                    {
+                        model.Createdby = UserId;
+                        model.UserId = USER_ID.Substring(0, 8);
+                        railwaysDirectoryRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Added Successfully.");
+                    }
+                    else
+                    {
+                        model.Updatedby = UserId;
+                        model.UserId = USER_ID.Substring(0, 8);
+                        railwaysDirectoryRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                else
+                    AlertAlreadyExist();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "RailwaysDirectory", "Manage", 1, GetIPAddress());
             }
             return View(model);
         }
@@ -31,17 +65,26 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<RailwaysDirectoryModel> dTResult = railwaysDirectory.GetRMList(dtParameters);
+            DTResult<RailwaysDirectoryModel> dTResult = railwaysDirectoryRepository.GetRMList(dtParameters);
             return Json(dTResult);
         }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (railwaysDirectory.Remove(id, UserId))
-                    AlertDeletedSuccess();
+                string RailwayCode = railwaysDirectoryRepository.IsExistsRailwayCode(id);
+                if (RailwayCode != "")
+                {
+                    AlertDanger("You Cannot Delete this Raliway Code, because there is a record present for this Railway Code in " + RailwayCode + "!!!");
+                }
                 else
-                    AlertDanger();
+                {
+                    if (railwaysDirectoryRepository.Remove(id))
+                        AlertDeletedSuccess();
+                    else
+                        AlertDanger();
+                }
             }
             catch (Exception ex)
             {
@@ -51,35 +94,5 @@ namespace IBS.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult RailwaysDirectoryDetailsSave(RailwaysDirectoryModel model)
-        {
-            try
-            {
-                string msg = "RailwaysDirectory Inserted Successfully.";
-
-                if (model.Id > 0)
-                {
-                    msg = "RailwaysDirectory Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = railwaysDirectory.RailwaysDirectoryDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "RailwaysDirectory", "RailwaysDirectoryDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
     }
 }
-
-
-
