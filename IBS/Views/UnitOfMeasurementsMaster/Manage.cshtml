@@ -1,59 +1,53 @@
 ﻿@model IBS.Models.UOMModel
 
 @{
-    ViewData["Title"] = "Unit Of Measurements Master";
+    ViewData["Title"] = "Manage Unit Of Measurements";
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Unit Of Measurements Master</h2>
+        <h2>Unit Of Measurements</h2>
     </div>
 </div>
-
-    <div class="task-listinput">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="UnitOfMeasurementsMaster" asp-action="UnitOfMeasurementsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUnitOfMeasurements">
-                <input type="hidden" asp-for="UomCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">UOM Short Description</label>
-                            <textarea class="input" asp-for="UomSDesc" maxlength="30"> </textarea>
-                            <span asp-validation-for="UomSDesc" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">UOM Long Description</label>
-                            <textarea class="input" asp-for="UomLDesc" maxlength="30"> </textarea>
-                            <span asp-validation-for="UomLDesc" class="text-danger"></span>
-                        </div>
-                   
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Division Factor</label>
-                            <input type="text" class="input" asp-for="UomFactor" maxlength="30">
-                            <span asp-validation-for="UomFactor" class="text-danger"></span>
-                        </div>
-                        
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="UnitOfMeasurementsMaster" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form role="form" asp-controller="UnitOfMeasurementsMaster" asp-action="Manage" method="post" id="frmUnitOfMeasurements">
+        <input type="hidden" asp-for="UomCd" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">UOM Short Description <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="UomSDesc" maxlength="10">
+                    <span asp-validation-for="UomSDesc" class="text-danger"></span>
                 </div>
-            </form>
-    </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">UOM Long Description <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="UomLDesc" maxlength="25">
+                    <span asp-validation-for="UomLDesc" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Division Factor <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="UomFactor" onkeypress="return isNumberWithDot(event)">
+                    <span asp-validation-for="UomFactor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="UnitOfMeasurementsMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitUOM();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        function SubmitUOM() {
             if ($("#frmUnitOfMeasurements").valid()) {
                 $("#frmUnitOfMeasurements").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/UnitOfMeasurementsMaster/Index";
-            window.location.href = '@Url.Action("Index", "UnitOfMeasurementsMaster")';
-        };
+
     </script>
 }

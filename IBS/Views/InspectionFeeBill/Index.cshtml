@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "View Inspection Bill";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>View Inspection Bill</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="reference">
+                    <label for="CompanyId">Bill No </label>
+                    <input type="text" class="input" id="BillNo" />
+                    <span class="text-danger" id="spnErrorMsgBillNo"></span>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <label>&nbsp;</label>
+                <div class="savenext-btn" style="justify-content: left">
+                    <button type="button" class="save-btn active" id="btnViewBill">View Bill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $('#btnViewBill').click(function () {
+            $("spnErrorMsgBillNo").html("");
+
+            var BillNo = $("#BillNo").val();
+
+            if (BillNo == ""){
+                $("#spnErrorMsgBillNo").html("The Bill No field is required.");
+                return;
+            }
+
+            var url = '@Html.Raw(Url.Action("GetBillDetails", "InspectionFeeBill", new { BillNo = "_BillNo" }))';
+            url = url.replace("_BillNo", BillNo);
+
+            window.location.href = url;
+           
+        });
+
+    </script>
+}

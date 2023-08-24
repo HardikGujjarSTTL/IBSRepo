@@ -175,8 +175,8 @@
                             gridData = row;
                             var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
                             //html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\"">SELECT</a>';
-                            html += '<a onclick="GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick = "GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'delete\'); " id=\"' + data.BK_NO + '\" class=\"delete\"" > <i class=\"fa fa-trash\" title="Delete" style="margin: 10px;"></i></a>';
+                            html += '<a onclick="GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"edit\""><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick = "GetRegionCode(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'delete\'); " id=\"' + data.BK_NO + '\" class=\"delete\"" > <i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin: 10px;"></i></a>';
                             html += '</div>';
                             return html;
                         }

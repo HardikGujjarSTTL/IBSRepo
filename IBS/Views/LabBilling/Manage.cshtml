@@ -1,11 +1,9 @@
 ﻿@model IBS.Models.LabBillingModel
 @{
     ViewData["Title"] = "Manage Lab Billing";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.Lab_Bill_Per != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -54,7 +52,7 @@
                     </div> 
                     <div class="savenext-btn" style="justify-content:center">
                         @*<a asp-controller="LabBilling" asp-action="Index" class="reset-btn">Cancel</a>*@
-                        <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>

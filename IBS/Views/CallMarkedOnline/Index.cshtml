@@ -87,20 +87,25 @@
 }
 
 <script type="text/javascript">
+
+    
     $(document).ready(function () {
+            $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
         setDefaultDate();
 
-        $("#btnSubmit").click(function(){
+        $("#btnSubmit").click(function () {
             InitializeDatatable();
         });
 
-        $("#btnManage").click(function(){
+        $("#btnManage").click(function () {
             $("#body").css("display", "none");
             $("#tblsection").css("display", "none");
             $("#frmParial").css("display", "block");
+            //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+
             $.ajax({
-                type: 'POST',
-                url: '@Url.Action("Manage","CallMarkedOnline")',//'@Url.Content("~/IC_Receipt/IC_Issued_Partial")',
+                type: 'GET',
+                url: "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023",
                 //data: obj,
                 success: function (data) {
                     $('#frmParial').html(data)
@@ -119,7 +124,7 @@
 
     function InitializeDatatable() {
         debugger
-        var Date = $("#txtDate").val();        
+        var Date = $("#txtDate").val();
         var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "true" : "false";
         var Rdb2 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "true" : "false";
         var Rdb3 = $("#rdbAllCallUnMarked").is(':checked') == true ? "true" : "false";
@@ -169,12 +174,20 @@
             },
             columns: [
                 {
+                    data: '',
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        html += '<a onclick="GetDetail(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                        return html;
+                    }
+                },
+                {
                     data: '', orderable: false, width: '5%',
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
-                { data: "CASE_NO" }, 
+                { data: "CASE_NO" },
                 { data: "PO_NO" },
                 { data: "PO_DATE" },
                 { data: "CALL_RECV_DT" },
@@ -189,6 +202,10 @@
             ],
             "order": [[0, "asc"]]
         });
+    }
+
+    function GetDetail(case_no, call_recv_dt, call_sno, check_select, run_dt) {
+        window.location.href = "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
     }
 </script>
 

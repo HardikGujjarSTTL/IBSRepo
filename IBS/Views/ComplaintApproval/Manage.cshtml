@@ -1,11 +1,25 @@
 ﻿@model IBS.Models.OnlineComplaints
+
+@{
+    ViewData["Title"] = "Create NCR";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.CaseNo != null)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
+}
 <div class="list-inner">
     <div class="tast-list">
         <h3>ONLINE REJECTIONS APPROVAL FORM</h3>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="ComplaintApproval" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
 
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ComplaintApproval" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
             <div class="accordion-body">
@@ -141,11 +155,10 @@
                 <br/>
                 <br/>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" id="acceptbtn" onclick="Accept();">Accept</button>
-                    <button type="button" class="save-btn active" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
+                    <button type="button" class="save-btn active @clsSave" id="acceptbtn" onclick="Accept();">Accept</button>
+                    <button type="button" class="save-btn active @clsSave" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
                     <button type="button" class="save-btn active" id="rejectbtn" onclick="Reject();">Reject</button>
-                    <button type="button" class="save-btn active" onclick="Submit();">Submit</button>
-                    <a asp-controller="ComplaintApproval" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active @clsSave" id="btnsubmit" onclick="Submit();">Submit</button>
                 </div>
                 
             </div>
@@ -191,12 +204,16 @@
             $("#rejectvalue").show();
             $("#sendemailbtn").show();
             $("#acceptbtn").hide();
+            $("#btnsubmit").hide;
+            $("#rejectbtn").hide;
         }
 
         function Submit(){
             debugger
+
+            $("#acceptbtn").hide;
+
             var formData = $("#frmComplaints").serialize();
-            var ComplaintID = $("#ComplaintID").val();
             
             $.ajax({
                 url: '/ComplaintApproval/Submit',

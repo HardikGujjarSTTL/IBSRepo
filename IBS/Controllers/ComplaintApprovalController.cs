@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace IBS.Controllers
         {
             complaintApprovalRepository = _complaintApprovalRepository;
         }
+        [Authorization("ComplaintApproval", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -27,6 +29,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("ComplaintApproval", "Index", "view")]
         public IActionResult Manage(string TEMP_COMPLAINT_ID,string SetNo,string BKNo,string CaseNo)
         {
             OnlineComplaints model = new();
@@ -43,6 +46,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult RejectComplaint(OnlineComplaints model)
         {
             string msg = "";
@@ -65,6 +69,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult AcceptComplaint(OnlineComplaints model)
         {
             string msg = complaintApprovalRepository.AcceptComplaint(model);
@@ -72,6 +77,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult Submit(OnlineComplaints model)
         {
             string msg = complaintApprovalRepository.SubmitAcceptRecord(model);

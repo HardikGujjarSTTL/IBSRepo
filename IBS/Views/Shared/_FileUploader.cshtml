@@ -97,7 +97,7 @@
                     <span class="rightAction" id="@("File_" + uniqueId)" style="width:100% !important">
                         @if (!string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName))
                         {
-                                        <a class="aTag" target="_blank" href="@(Url.Content(Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
+                            <a class="aTag" target="_blank" href="@(Url.Content("~"+ Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
 
                             if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                             {

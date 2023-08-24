@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "PO Master";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.CaseNo != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -192,7 +190,7 @@
                 </div>
                 <div class="savenext-btn">
                     @*<a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
