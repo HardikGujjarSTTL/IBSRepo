@@ -2,11 +2,16 @@
 
 namespace IBS.Interfaces
 {
-    public interface ICityMaster
+    public interface ICityRepository
     {
         public CityMasterModel FindByID(int CityCd);
+
         DTResult<CityMasterModel>GetCityMasterList(DTParameters dtParameters);
-        bool Remove(int CityCd, int UserID);
-        int CityMasterDetailsInsertUpdate(CityMasterModel model);
+
+        public int SaveDetails(CityMasterModel model);
+
+        public int GetMaxCityCd();
+
+        public bool Remove(int CityCd);
     }
 }

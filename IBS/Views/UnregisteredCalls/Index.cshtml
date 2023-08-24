@@ -1,27 +1,24 @@
 ﻿@{
-    ViewData["Title"] = "Controlling Officers of Inspecting Engineers";
+    ViewData["Title"] = "Unregistered Calls";
 }
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Controlling Officers of Inspecting Engineers</h2>
+        <h2>Unregistered Calls</h2>
     </div>
     <div class="list-btn">
-        <a asp-area="" asp-controller="IE_CO_Form" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+        <a asp-area="" asp-controller="UnregisteredCalls" asp-action="Manage" class="formBtn"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Unregistered Calls</a>
     </div>
 </div>
 <section class="table-section">
     <div class="task-listinput">
         <div class="dash-table">
-            <table id="dtCO" class="table-responsive">
+            <table id="dtUnregisteredCallsList" class="table-responsive">
                 <thead>
                     <tr>
-                        <th>Controlling Officer Code</th>
-                        <th>Controlling Officer Name</th>
-                        <th>Designation</th>
-                        <th>Phone No.</th>
-                        <th>Email</th>
-                        <th>Type</th>
+                        <th>IE Name</th>
+                        <th>Year & Month</th>
+                        <th>No. of Unregistered Calls</th>
                         <th style="text-align:center">View Details</th>
                     </tr>
                 </thead>
@@ -33,8 +30,8 @@
 </section>
 
 @section scripts{
+
     <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
 
@@ -43,7 +40,8 @@
         });
 
         function InitializeDatatable() {
-            $("#dtCO").DataTable({
+
+            $("#dtUnregisteredCallsList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -66,19 +64,16 @@
                     }
                 },
                 columns: [// Columns Setups
-                    { data: "CoCd" },
-                    { data: "CoName" },
-                    { data: "CoDesig" },
-                    { data: "CoPhoneNo" },
-                    { data: "CoEmail" },
-                    { data: "CoTypeName" },
+                    { data: "IeName" },
+                    { data: "YrMth" },
+                    { data: "UnregCalls" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.CoCd;
-                            var editUrl = '@Url.Action("Manage", "IE_CO_Form")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="Deelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var id = data.IeCd;
+                            var editUrl = '@Url.Action("Manage", "UnregisteredCalls")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete del-admin\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -88,8 +83,8 @@
             });
         }
 
-        function Deelete(id) {
-            var url = '@Url.Action("Delete", "IE_CO_Form")';
+        function Delete(id) {
+            var url = '@Url.Action("Delete", "UnregisteredCalls")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
