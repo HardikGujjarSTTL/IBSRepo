@@ -507,6 +507,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
+    public virtual DbSet<ViewGetCallRegCancellation> ViewGetCallRegCancellations { get; set; }
+
     public virtual DbSet<ViewGetCallinspectionPrintReport> ViewGetCallinspectionPrintReports { get; set; }
 
     public virtual DbSet<ViewGetCallinspectionPrintSubReport> ViewGetCallinspectionPrintSubReports { get; set; }
@@ -12735,16 +12737,6 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .ValueGeneratedNever()
                 .HasColumnName("IE_CD");
-            entity.Property(e => e.Createdby)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("CREATEDBY");
-            entity.Property(e => e.Createddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
-                .HasColumnName("CREATEDDATE");
-            entity.Property(e => e.Isdeleted)
-                .HasColumnType("NUMBER(38)")
-                .HasColumnName("ISDELETED");
             entity.Property(e => e.Region)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -12753,13 +12745,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UnregCalls)
                 .HasPrecision(4)
                 .HasColumnName("UNREG_CALLS");
-            entity.Property(e => e.Updatedby)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("UPDATEDBY");
-            entity.Property(e => e.Updateddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
-                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.YrMth)
                 .HasMaxLength(6)
                 .IsUnicode(false)
@@ -16868,6 +16853,60 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SwachhBharatCess)
                 .HasColumnType("NUMBER")
                 .HasColumnName("SWACHH_BHARAT_CESS");
+        });
+
+        modelBuilder.Entity<ViewGetCallRegCancellation>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_CALL_REG_CANCELLATION");
+
+            entity.Property(e => e.CallInstallNo)
+                .HasPrecision(4)
+                .HasColumnName("CALL_INSTALL_NO");
+            entity.Property(e => e.CallLetterNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("CALL_LETTER_NO");
+            entity.Property(e => e.CallRecvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_RECV_DT");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(5)
+                .HasColumnName("CALL_SNO");
+            entity.Property(e => e.CallStatus)
+                .HasMaxLength(110)
+                .IsUnicode(false)
+                .HasColumnName("CALL_STATUS");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.IeSname)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("IE_SNAME");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.RegionCode)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("REGION_CODE");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.Vendor)
+                .HasMaxLength(205)
+                .IsUnicode(false)
+                .HasColumnName("VENDOR");
         });
 
         modelBuilder.Entity<ViewGetCallinspectionPrintReport>(entity =>

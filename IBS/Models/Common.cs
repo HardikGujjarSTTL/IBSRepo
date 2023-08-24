@@ -326,30 +326,30 @@ namespace IBS.Models
             if (rolecd == "5")
             {
                 ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                 AccountCD = (from a in context.T95AccountCodes
-                                                  where (a.AccCd == 2210 || a.AccCd == 2212)
-                                                  orderby a.AccDesc
-                                                  select
-                                        new SelectListItem
-                                        {
-                                            Text = Convert.ToString(a.AccDesc),
-                                            Value = Convert.ToString(a.AccCd)
-                                        }).ToList();
+                AccountCD = (from a in context.T95AccountCodes
+                             where (a.AccCd == 2210 || a.AccCd == 2212)
+                             orderby a.AccDesc
+                             select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.AccDesc),
+                       Value = Convert.ToString(a.AccCd)
+                   }).ToList();
             }
             else
             {
                 ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                 AccountCD = (from a in context.T95AccountCodes
-                                                  where a.AccCd < 3000
-                                                  orderby a.AccDesc
-                                                  select
-                                        new SelectListItem
-                                        {
-                                            Text = Convert.ToString(a.AccDesc),
-                                            Value = Convert.ToString(a.AccCd)
-                                        }).ToList();
+                AccountCD = (from a in context.T95AccountCodes
+                             where a.AccCd < 3000
+                             orderby a.AccDesc
+                             select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.AccDesc),
+                       Value = Convert.ToString(a.AccCd)
+                   }).ToList();
             }
-            
+
             return AccountCD;
         }
 
@@ -357,12 +357,12 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> call = (from a in context.T21CallStatusCodes
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.CallStatusDesc),
-                                     Value = Convert.ToString(a.CallStatusCd)
-                                 }).ToList();
+                                         select
+                               new SelectListItem
+                               {
+                                   Text = Convert.ToString(a.CallStatusDesc),
+                                   Value = Convert.ToString(a.CallStatusCd)
+                               }).ToList();
             return call;
         }
         public static IEnumerable<SelectListItem> GetClientByClientType(string CoCd)
@@ -1342,6 +1342,26 @@ namespace IBS.Models
             return contacts;
         }
 
+        public static List<SelectListItem> GetCluster(string GetRegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
+                                             join t101 in ModelContext.T101IeClusters on t99.ClusterCode equals t101.ClusterCode
+                                             join t09 in ModelContext.T09Ies on t101.IeCode equals t09.IeCd
+                                             where t99.RegionCode == GetRegionCode && t09.IeStatus == null
+                                             orderby t99.ClusterName, t09.IeName
+
+                                             select new SelectListItem
+                                             {
+                                                 Text = t99.ClusterName + " (" + t09.IeName + ")",
+                                                 Value = Convert.ToString(t99.ClusterCode)
+
+                                             }).ToList();
+
+            return contacts;
+        }
+
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1438,10 +1458,11 @@ namespace IBS.Models
 
         public static List<SelectListItem> labRVGetBank()
         {
-            
+
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-                                         where a.BankCd < 990 orderby a.BankName
+                                         where a.BankCd < 990
+                                         orderby a.BankName
                                          select
                                     new SelectListItem
                                     {
@@ -1455,7 +1476,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-                                         
+
                                          select
                                     new SelectListItem
                                     {
@@ -1468,12 +1489,12 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-                                         where a.FmisBankCd !=null
+                                         where a.FmisBankCd != null
                                          orderby a.BankName
                                          select
                                     new SelectListItem
                                     {
-                                        Text =  a.BankName,
+                                        Text = a.BankName,
                                         Value = Convert.ToString(a.BankCd)
                                     }).ToList();
             return Bank;

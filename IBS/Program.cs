@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
 using IBS.Interfaces.IE_Reports;
+using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
@@ -83,6 +84,8 @@ builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPho
 builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
 builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.ComplaintApprovalRepository>();
 builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
+
+builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 
 
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
