@@ -21,6 +21,7 @@ namespace IBS.Models
 {
     public static class Common
     {
+
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
         public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
@@ -129,23 +130,16 @@ namespace IBS.Models
 
             Tblexception objexception = new Tblexception();
 
-             objexception.Controllername = ControllerName;
+            objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
             objexception.Exception = exceptionmsg;
-             objexception.Createdby = CreatedBy;
+            objexception.Createdby = CreatedBy;
             objexception.Createip = CreatedIP;
             objexception.Createddate = DateTime.Now;
             context.Tblexceptions.Add(objexception);
             context.SaveChanges();
         }
-
-        //public static IEnumerable<SelectListItem> GetRegionType()
-        //{
-        //    var obj = EnumUtility<List<SelectListItem>>.GetEnumList(typeof(Enums.RegionType)).ToList();
-        //    obj.Insert(0, new SelectListItem { Text = "--Select--", Value = "" });
-        //    return obj;
-        //}
 
         public static List<SelectListItem> GetRegionType()
         {
@@ -161,7 +155,6 @@ namespace IBS.Models
             return obj;
         }
 
-
         public static List<SelectListItem> GetCity()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -174,31 +167,34 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
+
         public static List<SelectListItem> GetState()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> state = (from a in context.T92States
-                                         select
-                                    new SelectListItem
-                                    {
-                                        Text = a.StateName,
-                                        Value = Convert.ToString(a.StateName)
-                                    }).ToList();
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = a.StateName,
+                                         Value = Convert.ToString(a.StateName)
+                                     }).ToList();
             return state;
         }
+
         public static List<SelectListItem> GetCountry()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> country = (from a in context.CountryMasters
-                                          select
-                                     new SelectListItem
-                                     {
-                                         Text = a.CountryName,
-                                         Value = Convert.ToString(a.CountryName)
-                                     }).ToList();
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.CountryName,
+                                           Value = Convert.ToString(a.CountryName)
+                                       }).ToList();
             return country;
         }
-        public static List<SelectListItem>GetDesignation()
+
+        public static List<SelectListItem> GetDesignation()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> country = (from a in context.T08IeControllOfficers
@@ -210,18 +206,7 @@ namespace IBS.Models
                                        }).ToList();
             return country;
         }
-        //public static List<SelectListItem> GetStatus()
-        //{
-        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
-        //    List<SelectListItem> country = (from a in context.T08IeControllOfficers
-        //                                    select
-        //                               new SelectListItem
-        //                               {
-        //                                   Text = a.CoStatus,
-        //                                   Value = Convert.ToString(a.CoStatus)
-        //                               }).ToList();
-        //    return country;
-        //}
+
         public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -424,6 +409,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> GetAccountCode()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -436,36 +422,37 @@ namespace IBS.Models
                                     }).ToList();
             return AccountCD;
         }
+
         public static List<SelectListItem> LabRVGetAccountCode(string rolecd)
         {
             List<SelectListItem> AccountCD = null;
             if (rolecd == "5")
             {
                 ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                 AccountCD = (from a in context.T95AccountCodes
-                                                  where (a.AccCd == 2210 || a.AccCd == 2212)
-                                                  orderby a.AccDesc
-                                                  select
-                                        new SelectListItem
-                                        {
-                                            Text = Convert.ToString(a.AccDesc),
-                                            Value = Convert.ToString(a.AccCd)
-                                        }).ToList();
+                AccountCD = (from a in context.T95AccountCodes
+                             where (a.AccCd == 2210 || a.AccCd == 2212)
+                             orderby a.AccDesc
+                             select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.AccDesc),
+                       Value = Convert.ToString(a.AccCd)
+                   }).ToList();
             }
             else
             {
                 ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                 AccountCD = (from a in context.T95AccountCodes
-                                                  where a.AccCd < 3000
-                                                  orderby a.AccDesc
-                                                  select
-                                        new SelectListItem
-                                        {
-                                            Text = Convert.ToString(a.AccDesc),
-                                            Value = Convert.ToString(a.AccCd)
-                                        }).ToList();
+                AccountCD = (from a in context.T95AccountCodes
+                             where a.AccCd < 3000
+                             orderby a.AccDesc
+                             select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.AccDesc),
+                       Value = Convert.ToString(a.AccCd)
+                   }).ToList();
             }
-            
+
             return AccountCD;
         }
 
@@ -473,14 +460,15 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> call = (from a in context.T21CallStatusCodes
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.CallStatusDesc),
-                                     Value = Convert.ToString(a.CallStatusCd)
-                                 }).ToList();
+                                         select
+                               new SelectListItem
+                               {
+                                   Text = Convert.ToString(a.CallStatusDesc),
+                                   Value = Convert.ToString(a.CallStatusCd)
+                               }).ToList();
             return call;
         }
+
         public static IEnumerable<SelectListItem> GetClientByClientType(string CoCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -693,7 +681,7 @@ namespace IBS.Models
             }
         }
 
-        public static List<SelectListItem>GetInspEngCd(int IeCd = 0)
+        public static List<SelectListItem> GetInspEngCd(int IeCd = 0)
         {
             if (IeCd == 0)
             {
@@ -764,6 +752,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> ReportStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -809,7 +798,6 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-
 
         public static List<SelectListItem> RailwaysTypes()
         {
@@ -1082,6 +1070,7 @@ namespace IBS.Models
             return IE;
 
         }
+
         public static List<SelectListItem> GetItem(string CaseNo, string CallRecDt, string CallSNO)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1095,6 +1084,7 @@ namespace IBS.Models
                                   }).ToList();
             return IE;
         }
+
         public static List<SelectListItem> GetIENameWithoutCode()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1108,6 +1098,7 @@ namespace IBS.Models
             return IE;
 
         }
+
         public static List<SelectListItem> GetTestCat()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1121,6 +1112,7 @@ namespace IBS.Models
             return Role;
 
         }
+
         public static List<SelectListItem> GetNCCode()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1133,6 +1125,7 @@ namespace IBS.Models
                                           .ToList();
             return NCCODE;
         }
+
         public static List<SelectListItem> GetLab()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1148,6 +1141,7 @@ namespace IBS.Models
             return Role;
 
         }
+
         public static List<SelectListItem> PaymentStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1166,6 +1160,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> GetStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1184,6 +1179,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> LabSmapleStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1475,7 +1471,6 @@ namespace IBS.Models
             return contacts;
         }
 
-
         public static VendorModel Getvendor_status(int VendCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1555,10 +1550,11 @@ namespace IBS.Models
 
         public static List<SelectListItem> labRVGetBank()
         {
-            
+
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-                                         where a.BankCd < 990 orderby a.BankName
+                                         where a.BankCd < 990
+                                         orderby a.BankName
                                          select
                                     new SelectListItem
                                     {
@@ -1568,11 +1564,12 @@ namespace IBS.Models
                                     }).ToList();
             return Bank;
         }
+
         public static List<SelectListItem> GetBank()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-                                         
+
                                          select
                                     new SelectListItem
                                     {
@@ -1581,33 +1578,21 @@ namespace IBS.Models
                                     }).ToList();
             return Bank;
         }
+
         public static List<SelectListItem> GetBankPayment()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-                                         where a.FmisBankCd !=null
+                                         where a.FmisBankCd != null
                                          orderby a.BankName
                                          select
                                     new SelectListItem
                                     {
-                                        Text =  a.BankName,
+                                        Text = a.BankName,
                                         Value = Convert.ToString(a.BankCd)
                                     }).ToList();
             return Bank;
         }
-
-        //public static List<SelectListItem> GetAccountCode()
-        //{
-        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
-        //    List<SelectListItem> AccountCD = (from a in context.Acccodes
-        //                                      select
-        //                            new SelectListItem
-        //                            {
-        //                                Text = Convert.ToString(a.AccDesc),
-        //                                Value = Convert.ToString(a.AccCd)
-        //                            }).ToList();
-        //    return AccountCD;
-        //}
 
         public static List<SelectListItem> GetBankCode()
         {
@@ -1899,6 +1884,48 @@ namespace IBS.Models
             return city;
         }
 
+        public static List<SelectListItem> GetIENameIsStatusNull(string RegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T09Ies
+                                       orderby a.IeName
+                                       where a.IeRegion == RegionCode && a.IeStatus == null
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.IeName),
+                                      Value = Convert.ToString(a.IeCd)
+                                  }).ToList();
+            return IE;
+        }
+
+        public static List<SelectListItem> GetOfficerIsCoStatusIsNull(string REGION)
+        {
+
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T08IeControllOfficers
+                    where a.CoRegion == REGION && a.CoStatus == null
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.CoName),
+                        Value = Convert.ToString(a.CoCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static string DateConcate(string date) // Date formate is dd/MM/yyyy to Convert yyyyMMdd
+        {
+            string myYear = date.Substring(6, 4);
+            string myMonth = date.Substring(3, 2);
+            string myDay = date.Substring(0, 2);
+            string date_out = myYear + myMonth + myDay;
+            return date_out;
+        }
+
+        public static string ConvertDateFormat(this DateTime dt)
+        {
+            return dt.ToString(Common.CommonDateFormate1);
+        }
+
         public static IEnumerable<SelectListItem> GetIENameForUnregCall(string RegionCode, bool IsReadOnly)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -1952,11 +1979,6 @@ namespace IBS.Models
             IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Percentage Basis", Value = "P" } };
 
             return item1.Concat(item2).Concat(item3).Concat(item4);
-        }
-
-        public static string ConvertDateFormat(this DateTime dt)
-        {
-            return dt.ToString(Common.CommonDateFormate1);
         }
 
         public static IEnumerable<SelectListItem> GetTaxType()

@@ -42,14 +42,6 @@ builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinu
 
 builder.Services.AddHttpContextAccessor();
 
-//builder.Services.AddAuthentication("CookieAuthentication")
-//                 .AddCookie("CookieAuthentication", config =>
-//                 {
-//                     config.Cookie.Name = "UserLoginCookie"; // Name of cookie   
-//                     config.LoginPath = "/Home/Index"; // Path for the redirect to user login page  
-//                     config.AccessDeniedPath = "/User/UserAccessDenied";
-//                 });
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IVendorProfileRepository, VendorProfileRepository>();
@@ -76,16 +68,12 @@ builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vend
 builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Repositories.Vendor.VendorCallsMarkedForSpecificPORepository>();
 builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
 builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
-
-
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
 builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPhotoEnclosedRepository>();
 builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
 builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.ComplaintApprovalRepository>();
 builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
-
-
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
 builder.Services.AddScoped<IUnitOfMeasurementsRepository, UnitOfMeasurementsRepository>();
@@ -117,7 +105,6 @@ builder.Services.AddScoped<ICentralQOIIRepository, CentralQOIIRepository>();
 builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalRepository>();
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineRepository>();
-
 #endregion
 builder.Services.AddScoped<ICityRepository,CityRepository>();
 builder.Services.AddScoped<I_IC_Bookset_Form,IC_Bookset_Form>();
@@ -138,7 +125,6 @@ builder.Services.AddScoped<IIE_PerfomanceRepository, IE_PerformanceRepository>()
 #endregion
 
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
-
 builder.Services.AddScoped<ILabTDSEntryRepository, LabTDSEntryRepository>();
 builder.Services.AddScoped<ILabRegFormRepository, LabRegiFormRepository>();
 builder.Services.AddScoped<ILabRecieptVoucherRepository, LabRecieptVoRepository>();
@@ -150,7 +136,7 @@ builder.Services.AddScoped<ILabPaymentListRepository, LabPaymentListRRepository>
 builder.Services.AddScoped<ILabInvoiceDownloadRepository, LabInvoiceDownloadRRepository>();
 builder.Services.AddScoped<ILabSamplePaymentRptRepository, LabSamplePaymentRptRRepository>();
 builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRRepository>();
-builder.Services.AddScoped<ICityMaster, CityMaster>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
 builder.Services.AddScoped<IVendorCluster, VendorCluster>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
@@ -158,6 +144,7 @@ builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>()
 builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -189,13 +176,6 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapControllerRoute(
-//      name: "areas",
-//      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-//    );
-//});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
