@@ -58,7 +58,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("BillingAdjustment", "Index", "add")]
+        [Authorization("BillingAdjustment", "Index", "edit")]
         public IActionResult BillingAdjustmentDetailsSave(BillingAdjustmentModel model)
         {
             try

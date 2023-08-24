@@ -84,7 +84,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("TechReference", "Index", "add")]
+        [Authorization("TechReference", "Index", "edit")]
         public IActionResult TechRefDetailsSave(TechReferenceModel model, IFormCollection FrmCollection)
         {
             try

@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "Central QOII";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.IsEdited == false)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -63,7 +61,7 @@
                 </div>
                 <div class="savenext-btn">
                     @*<a asp-controller="CentralQOII" asp-action="Index" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>

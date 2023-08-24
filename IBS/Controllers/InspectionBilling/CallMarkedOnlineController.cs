@@ -180,7 +180,7 @@ namespace IBS.Controllers.InspectionBilling
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("Role", "Index", "add")]
+        [Authorization("Role", "Index", "edit")]
         public IActionResult Call_Marked_Online_Save(CallMarkedOnlineModel Model)
         {
             var result = false;

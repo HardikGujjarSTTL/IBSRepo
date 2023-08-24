@@ -59,7 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("Expenditure", "Index", "add")]
+        [Authorization("Expenditure", "Index", "edit")]
         public IActionResult ExpenditureDetailsSave(ExpenditureModel model)
         {
             try
