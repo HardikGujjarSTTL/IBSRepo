@@ -44,4 +44,6 @@ public partial class T02User
     public decimal? Isdeleted { get; set; }
 
     public int? Id { get; set; }
+
+    public string? Migtype { get; set; }
 }

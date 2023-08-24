@@ -1,0 +1,259 @@
+﻿@model IBS.Models.ClientCallRptModel
+
+@{
+    ViewData["Title"] = "CALL DETAILS FOR SPECIFIC PO";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>
+                CALL DETAILS FOR SPECIFIC PO
+            </h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+
+            <div class="col-md-3 mb-3">
+                <label><b>PO Date</b></label>
+            </div>
+            <div class="col-md-3 mb-3">
+               @* <label for="PropertyId">PO Date</label>*@
+                <input class="input datepicker" id="DTPO" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+       
+
+    </div>
+    <div class="savenext-btn" style="margin-left:35%;">
+        <button type="button" class="save-btn active" onclick="show();" id="btnsave">Submit</button>
+        <button type="button" class="save-btn active" id="btnback" style="display:none;">Back</button>
+    </div>
+
+    <div id="hide1" style="display:none;">
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtindexlist" class="table-responsive">
+                        <thead>
+                            <tr>
+
+                                <th>Select</th>
+                                <th>PO No.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+        <div id="hide" style="display:none;">
+            <section class="table-section">
+                <div class="task-listinput">
+                    <div class="dash-table">
+                        <table id="dtlistr" class="table-responsive">
+                            <thead>
+                                <tr>
+
+                                    <th>SNO</th>
+                                    <th>VENDOR NAME	</th>
+                                    <th>PURCHASER</th>
+                                    <th>ITEM</th>
+                                    <th>CALL DATE</th>
+                                    <th>DESIRE DATE/MATERIAL READINESS DATE</th>
+                                    <th>ENGINEER DEPUTED</th>
+                                    <th>ENGINEER CONTACT NO.</th>
+                                    <th>PONO</th>
+                                    <th>PO DATE</th>
+                                    <th>CASE NO	</th>
+                                    <th>STATUS</th>
+                                    <th>HOLOGRAM OR OTHER</th>
+                                    <th>VIEW IC</th>
+                                    <th>CONTACT PERSON</th>
+                                    <th>CONTACT PERSON PHONE NO.</th>
+                                    <th>CALL SERIAL NO.</th>
+                                    <th>CONTROLLING MANAGER</th>
+                                    <th>
+                                        REMARKS
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+   
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            InitializeDatatable1();
+            $("#hide1").css("display", "block");
+            $("#hide").css("display", "none");
+        }
+        $(function () {
+            
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+            // InitializeDatatable();
+        });
+
+        function InitializeDatatable(PONO, PODT, RLYNONRLY, RLY_CD) {
+            
+                $("#dtlistr").DataTable({
+                    stateSave: false,// Design Assets
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true, // ServerSide Setups
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,// Paging Setups
+                    searching: true,// Searching Setups
+                    ajax: {// Ajax Filter
+                        url: "@Url.Action("LoadTable1")",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                            PONO: PONO,
+                            PODT:PODT,
+                            RLYNONRLY: RLYNONRLY,
+                            RLY_CD: RLY_CD
+                        };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        }
+                    },
+
+                    columns: [// Columns Setups
+                        {
+                            data: '', orderable: false, width: '5%',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+
+                        { data: "Vendor" },
+                        { data: "Consignee" },
+                        { data: "ITEM_DESC_PO" },
+                        { data: "CALL_MARK_DT" },
+                        { data: "DESIRE_DT" },
+                        { data: "IE_NAME" },
+                        { data: "IE_PHONE_NO" },
+                        { data: "PO_NO" },
+                        { data: "PO_DATE" },
+                        { data: "CASE_NO" },
+                        { data: "CALL_STATUS" },
+                        { data: "HOLOGRAM" },
+                        { data: "IC_PHOTO" },
+                        { data: "MFG_PERS" },
+                        { data: "MFG_PHONE" },
+                        { data: "CALL_SNO" },
+                        { data: "CO_NAME" },
+                        { data: "REMARK" },
+
+                    ],
+                    
+                    "order": [[0, "asc"]]
+                });
+            }
+
+        function InitializeDatatable1() {
+
+            $("#dtindexlist").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            PODate: $("#DTPO").val(),
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row) {
+
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = 'Select';
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+
+                    { data: "PO_NO" },
+
+                ],
+
+                "order": [[0, "asc"]]
+            });
+        }
+        function editRow(escapedRow) {
+            
+            $("#hide1").css("display", "none");
+            var PONO = escapedRow.L5NO_PO;
+            var PODT = escapedRow.PO_DT;
+            var RLYNONRLY = escapedRow.RLY_NONRLY;
+            var RLY_CD = escapedRow.RLY_CD;
+            InitializeDatatable(PONO, PODT, RLYNONRLY, RLY_CD);
+            $("#hide").css("display", "block");
+            $("#btnback").css("display", "block");
+            $("#btnsave").css("display", "none");
+            
+        }
+        $("#btnback").click(function(){
+            $("#hide").css("display", "none");
+            $("#hide1").css("display", "block");
+            $("#btnsave").css("display", "block");
+            $("#btnback").css("display", "none");
+        })
+                                //function UserDelete(UserId) {
+                                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                                //    $("#btn-delete-yes").attr("href", url);
+                                //    $("#modal-delete-conf").modal("show");
+                                //}
+
+    </script>
+}

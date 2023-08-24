@@ -18,6 +18,7 @@ using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -75,22 +76,8 @@ namespace IBS.Repositories
                 ConsigneeCd = row.Field<int>("Consignee_cd"),
             }).ToList();
 
-            //var result = context.T08IeControllOfficers
-            //    .Where(co => co.CoRegion == CASE_NO.Substring(0, 1))
-            //    .OrderBy(co => co.CoName)
-            //    .ToList();
-
-            //var dropdownItems = result.Select(item => new SelectListItem
-            //{
-            //    Value = item.CoCd.ToString(),
-            //    Text = item.CoName
-            //});
-            //string selectedCoCdFromDataTable = dt.Rows[0]["co_name"].ToString();
-
             if (ds != null)
             {
-                //model.ControllingManagers = new SelectList(dropdownItems, "Value", "Text");
-                //model.CoName = selectedCoCdFromDataTable;
                 model.CASE_NO = list[0].CASE_NO;
                     model.ComplaintDate = list[0].ComplaintDate;
                     model.PO_DT = list[0].PO_DT;
@@ -122,60 +109,58 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DTResult<ConsigneeComplaints> GetDataList(DTParameters dtParameters)
+        public List<ConsigneeComplaints> GetDataListComplaint(string poNo, string poDt)
         {
             DTResult<ConsigneeComplaints> dTResult = new() { draw = 0 };
             IQueryable<ConsigneeComplaints>? query = null;
-
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "PoNo";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            }
-            else
-            {
-                orderCriteria = "PoNo";
-                orderAscendingDirection = true;
-            }
 
             ConsigneeComplaints model = new ConsigneeComplaints();
             DataTable dt = new DataTable();
             List<ConsigneeComplaints> modelList = new List<ConsigneeComplaints>();
 
-            string PoNo = "", PoDt = "";
+            OracleParameter[] par1 = new OracleParameter[3];
+            par1[0] = new OracleParameter("p_PONo", OracleDbType.Varchar2, poNo, ParameterDirection.Input);
+            par1[1] = new OracleParameter("p_PODate", OracleDbType.Varchar2, poDt, ParameterDirection.Input);
+            par1[2] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            var ds2 = DataAccessDB.GetDataSet("GetConsigneeComplaint", par1, 1);
+            DataTable dt2 = ds2.Tables[0];
+
+            List<ConsigneeComplaints> list2 = dt2.AsEnumerable().Select(row => new ConsigneeComplaints
             {
-                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
-            {
-                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
-            }
+                CASE_NO = row.Field<string>("case_no"),
+                PO_NO = row.Field<string>("po_no"),
+                BK_NO = row.Field<string>("bk_no"),
+                SET_NO = row.Field<string>("set_no"),
+                IC_NO = row.Field<string>("IC_NO"),
+                JiSno = row.Field<string>("ji_sno"),
+                ComplaintId = row.Field<string>("complaint_id"),
+                RejMemoNo = row.Field<string>("rej_memo_no"),
+                PO_DT = row.Field<DateTime?>("PO_DT"),
+                IC_DATE = row.Field<DateTime?>("IC_DT"),
+                RejMemoDt = row.Field<DateTime?>("rej_memo_dt"),
+            }).ToList();
 
-            PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
-            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
+            return list2;
+        }
+        public List<ConsigneeComplaints> GetDataListConsignee(string poNo, string poDt)
+        {
+            DTResult<ConsigneeComplaints> dTResult = new() { draw = 0 };
+            IQueryable<ConsigneeComplaints>? query = null;
 
+            ConsigneeComplaints model = new ConsigneeComplaints();
+            DataTable dt = new DataTable();
+            List<ConsigneeComplaints> modelList = new List<ConsigneeComplaints>();
 
             OracleParameter[] par = new OracleParameter[3];
-            par[0] = new OracleParameter("p_po_no_param", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_po_date_param", OracleDbType.Varchar2, PoDt, ParameterDirection.Input);
+            par[0] = new OracleParameter("p_po_no_param", OracleDbType.Varchar2, poNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_po_date_param", OracleDbType.Varchar2, poDt, ParameterDirection.Input);
             par[2] = new OracleParameter("RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GetFilteredConsigneeComplaints", par, 1);
-            dt = ds.Tables[0];
+            var ds1 = DataAccessDB.GetDataSet("GetFilteredConsigneeComplaints", par, 1);
+            DataTable dt1 = ds1.Tables[0];
 
-            List<ConsigneeComplaints> list = dt.AsEnumerable().Select(row => new ConsigneeComplaints
+            List<ConsigneeComplaints> list1 = dt1.AsEnumerable().Select(row => new ConsigneeComplaints
             {
                 CASE_NO = row.Field<string>("case_no"),
                 PO_NO = row.Field<string>("po_no"),
@@ -189,24 +174,7 @@ namespace IBS.Repositories
                 Railway = row.Field<string>("rly_cd"),
             }).ToList();
 
-
-            //if (!string.IsNullOrEmpty(searchBy))
-            //{
-            //    query = query.Where(w => Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.set).ToLower().Contains(searchBy.ToLower())).AsQueryable();
-            //}
-
-
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
-            dTResult.draw = dtParameters.Draw;
-
-            return dTResult;
+            return list1;
 
         }
 

@@ -107,6 +107,8 @@ public partial class T17CallRegister
 
     public DateTime? Updateddate { get; set; }
 
+    public byte? Isdeleted { get; set; }
+
     public virtual T09Ie? IeCdNavigation { get; set; }
 
     public virtual T05Vendor? MfgCdNavigation { get; set; }

@@ -1,0 +1,343 @@
+ALTER TABLE t02_users 
+    MODIFY USER_NAME  VARCHAR2(100 BYTE);
+    
+    Alter table t02_users
+  add MigType char(1)
+  
+    Alter table t09_ie
+  MODIFY IE_EMP_NO VARCHAR2(12 BYTE)
+  
+   Alter table t02_users
+  MODIFY EMP_NO VARCHAR2(12 BYTE)
+  
+update T02_USERS
+set user_id = '00' || TRIM(user_id) 
+where user_id in 
+(
+SELECT  user_id
+FROM T02_USERS u
+WHERE RTRIM(u.user_id) IN (SELECT TO_CHAR(vend_cd) FROM T05_VENDOR)
+)
+
+update T02_USERS
+set user_id = '000' || TRIM(user_id) 
+where user_id in 
+(
+SELECT  user_id
+FROM T02_USERS u
+WHERE RTRIM(u.user_id) IN (SELECT TO_CHAR(ie_emp_no) FROM t09_ie)
+)
+
+
+UPDATE t09_ie set ie_emp_no = IE_REGION || trim(ie_emp_no)
+where ie_emp_no IN (
+'10928',
+'12169',
+'11464',
+'10937',
+'10549',
+'13121',
+'10298',
+'12867',
+'10723',
+'10936',
+'13000',
+'10423',
+'10553',
+'10618',
+'11061',
+'12261',
+'99999',
+'10555',
+'10422',
+'10430',
+'12647')
+
+
+UPDATE t09_ie set ie_emp_no = to_char(IE_CD) || trim(ie_emp_no) where ie_emp_no in (
+'N10422',
+'E99999',
+'N10430',
+'E12647'
+)
+
+UPDATE t09_ie ie1
+SET ie1.ie_emp_no = TO_CHAR(ie1.IE_CD) || TRIM(ie1.IE_REGION) || TRIM(ie1.ie_emp_no)
+WHERE ie1.ie_emp_no IN (
+    SELECT ie_emp_no
+    FROM t09_ie
+    WHERE ie_emp_no IS NOT NULL
+    GROUP BY ie_emp_no
+    HAVING COUNT(*) > 1
+)
+    
+ insert into t02_users ( user_id,
+    user_name,
+    rites_emp,
+    emp_no,
+    region,
+    password,
+    auth_levl,
+    status,
+    allow_po,
+    allow_up_chksht,
+    allow_dn_chksht,
+    call_marking,
+    call_remarking,
+    user_type,
+    createddate,
+    createdby,
+    updateddate,
+    updatedby,
+    isdeleted,
+    MigType)
+SELECT 
+        TRIM(mobile),
+        user_name,
+        'N' as rites_emp,
+        null as emp_no,
+        null as region,
+        pwd,
+        null as auth_levl,
+        null as status,
+        null as allow_po,
+        null as allow_up_chksht,
+        null as allow_dn_chksht,
+        null as call_marking,
+        null as call_remarking,
+        null as user_type,
+        sysdate as createddate,
+        1 as createdby,
+        sysdate as updateddate,
+        null as updatedby,
+        null as isdeleted,
+        'C' as  MigType
+FROM
+    t32_client_login ;
+    
+    
+    
+    
+    
+ insert into t02_users ( user_id,
+    user_name,
+    rites_emp,
+    emp_no,
+    region,
+    password,
+    auth_levl,
+    status,
+    allow_po,
+    allow_up_chksht,
+    allow_dn_chksht,
+    call_marking,
+    call_remarking,
+    user_type,
+    createddate,
+    createdby,
+    updateddate,
+    updatedby,
+    isdeleted,
+    MigType)
+SELECT 
+        TRIM(vend_cd),
+        vend_name as user_name,
+        'N' as rites_emp,
+        null as emp_no,
+        null as region,
+        vend_pwd,
+        null as auth_levl,
+        null as status,
+        null as allow_po,
+        null as allow_up_chksht,
+        null as allow_dn_chksht,
+        null as call_marking,
+        null as call_remarking,
+        null as user_type,
+        sysdate as createddate,
+        1 as createdby,
+        sysdate as updateddate,
+        null as updatedby,
+        null as isdeleted,
+        'V' as  MigType
+FROM
+    T05_VENDOR ;
+    
+    
+    
+    
+ insert into t02_users ( user_id,
+    user_name,
+    rites_emp,
+    emp_no,
+    region,
+    password,
+    auth_levl,
+    status,
+    allow_po,
+    allow_up_chksht,
+    allow_dn_chksht,
+    call_marking,
+    call_remarking,
+    user_type,
+    createddate,
+    createdby,
+    updateddate,
+    updatedby,
+    isdeleted,
+    MigType)
+SELECT 
+        ie_emp_no,
+        ie_name as user_name,
+        'Y' as rites_emp,
+        ie_emp_no as emp_no,
+        ie_region as region,
+        ie_pwd,
+        null as auth_levl,
+        ie_status as status,
+        null as allow_po,
+        null as allow_up_chksht,
+        null as allow_dn_chksht,
+        null as call_marking,
+        null as call_remarking,
+        null as user_type,
+        sysdate as createddate,
+        1 as createdby,
+        sysdate as updateddate,
+        null as updatedby,
+        null as isdeleted,
+        'I' as  MigType
+FROM
+    T09_IE where ie_emp_no is not null 
+    
+    
+    
+ insert into t02_users ( user_id,
+    user_name,
+    rites_emp,
+    emp_no,
+    region,
+    password,
+    auth_levl,
+    status,
+    allow_po,
+    allow_up_chksht,
+    allow_dn_chksht,
+    call_marking,
+    call_remarking,
+    user_type,
+    createddate,
+    createdby,
+    updateddate,
+    updatedby,
+    isdeleted,
+    MigType)
+SELECT 
+        mobile,
+        lo_name as user_name,
+        null as rites_emp,
+        null as emp_no,
+        null as region,
+        pwd,
+        null as auth_levl,
+        null as status,
+        null as allow_po,
+        null as allow_up_chksht,
+        null as allow_dn_chksht,
+        null as call_marking,
+        null as call_remarking,
+        null as user_type,
+        sysdate as createddate,
+        1 as createdby,
+        sysdate as updateddate,
+        null as updatedby,
+        null as isdeleted,
+        'L' as  MigType
+FROM
+    T105_LO_LOGIN 
+    
+    
+    
+    
+    
+    
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id)
+    
+Select 5,null,1,sysdate, null,null,0,user_id 
+from t02_users where MigType ='L'
+
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id)
+    
+Select 4,null,1,sysdate, null,null,0,user_id 
+from t02_users where MigType ='C'
+
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id)
+    
+Select 2,null,1,sysdate, null,null,0,user_id 
+from t02_users where MigType ='I'
+
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id)
+    
+Select 3,null,1,sysdate, null,null,0,user_id 
+from t02_users where MigType ='V'
+
+
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id)
+    
+Select 1,null,1,sysdate, null,null,0,user_id 
+from t02_users where Auth_levl=1
+
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id)
+    
+Select 6,null,1,sysdate, null,null,0,user_id 
+from t02_users where Auth_levl in (5,6,7,8)
+
+
