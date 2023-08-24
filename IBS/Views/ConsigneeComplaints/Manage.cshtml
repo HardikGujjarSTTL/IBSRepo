@@ -1,10 +1,8 @@
 ﻿@model IBS.Models.ConsigneeComplaints
 @{
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.ComplaintId != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -145,18 +143,18 @@
                         <label for="ComplaintFile"> Upload JI Case (TIF or PDF Format Only)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-1 mb-1">
                         <div class="savenext-btn">
-                        <button type="button" class="save-btn active @clsSave">Upload</button>
+                        <button type="button" class="save-btn active">Upload</button>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="ComplaintFile">Upload REJECTION MEMO(TIF or PDF Format Only)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-1 mb-1">
                         <div class="savenext-btn">
-                            <button type="button" class="save-btn active @clsSave">Upload</button>
+                            <button type="button" class="save-btn active">Upload</button>
                         </div>
                     </div>
                     <div class="col-md-2 mb-2" id="inspreq">
@@ -178,7 +176,19 @@
                 </div>
 
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save">Save</button>
+                    <button type="button" class="save-btn active Permission_Save">Save Your Choice</button>
+                </div>
+            </div>
+
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h2>OUTCOME OF JI</h2>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Region Where Complaint is Received</label>
+                    <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                    <span asp-validation-for="InspRegion" class="text-danger"></span>
                 </div>
             </div>
         </form>
