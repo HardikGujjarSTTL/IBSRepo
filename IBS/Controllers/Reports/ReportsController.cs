@@ -1,11 +1,14 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
 using IBS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.Reports
 {
+    [Authorization]
     public class ReportsController : BaseController
     {
         #region Variables
@@ -78,6 +81,7 @@ namespace IBS.Controllers.Reports
             return Json(dtList);
         }
 
+        [Authorization("Reports", "IEDairy", "view")]
         public IActionResult IEDairy()
         {
             var action = Convert.ToString(Request.Query["actiontype"]) == null ? "" : Convert.ToString(Request.Query["actiontype"]);

@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class HologramAccountalController : BaseController
     {
 
@@ -20,6 +22,8 @@ namespace IBS.Controllers.InspectionBilling
         {
             hologramaccountRepository = _hologramaccountalRepository;
         }
+
+        [Authorization("HologramAccountal", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -75,6 +79,7 @@ namespace IBS.Controllers.InspectionBilling
             return Json(result);
         }
 
+        [Authorization("HologramAccountal", "Index", "view")]
         public IActionResult Manage()
         {
             var obj = new HologramAccountalFilter();
@@ -177,7 +182,7 @@ namespace IBS.Controllers.InspectionBilling
             return View(detail);
         }
 
-
+        //[Authorization("HologramAccountal", "Index", "add")]
         public IActionResult HologramAccountalDetailsSave(HologramAccountalModel Model)
         {
             var message = "";
@@ -224,7 +229,8 @@ namespace IBS.Controllers.InspectionBilling
             }
             return Json(new { _msg = message, _result = result });
         }
-
+        
+        [Authorization("HologramAccountal", "Index", "delete")]
         public IActionResult HologramAccountalDetailDelete(HologramAccountalModel Model)
         {
             var result = false;

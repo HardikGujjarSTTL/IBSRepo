@@ -2,40 +2,38 @@
     ViewData["Title"] = "Railways Directory";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Railways Directory</h2>
-        </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="RailwaysDirectory" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Railways Directory</a>
-        </div>
-
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Railways Directory</h2>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="RlyCd" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Railways Code</th>
-                            <th>Railway/Production Unit</th>
-                            <th>Head Quarter</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="RailwaysDirectory" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Railways Directory</a>
+    </div>
 </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtRailwaysDirectory" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Railways Code</th>
+                        <th>Railway/Production Unit</th>
+                        <th>Head Quarter</th>
+                        <th style="text-align:center">View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -43,7 +41,7 @@
         });
 
         function InitializeDatatable() {
-            $("#RlyCd").DataTable({
+            $("#dtRailwaysDirectory").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -75,24 +73,23 @@
                     { data: "RlyCd" },
                     { data: "Railway" },
                     { data: "HeadQuarter" },
-                    
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.UomCd;
+                            var id = data.Id;
                             var editUrl = '@Url.Action("Manage", "RailwaysDirectory")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="RDDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         }
 
-        function RDDelete(id) {
+        function Delete(id) {
             var url = '@Url.Action("Delete", "RailwaysDirectory")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");

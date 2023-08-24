@@ -117,6 +117,26 @@ namespace IBS.Helper
             [Description("No")]
             No = 1,
         }
+
+        public enum COType
+        {
+            [Description("CM")]
+            C,
+            [Description("DFO")]
+            D,
+        }
+
+        public enum COStatus
+        {
+            [Description("Working")]
+            W,
+            [Description("Retired")]
+            R,
+            [Description("Transferred")]
+            T,
+            [Description("Left/Repatriated")]
+            L,
+        }
     }
 
     public class EnumUtility<T>
@@ -161,6 +181,39 @@ namespace IBS.Helper
             }
 
             return objDropDown;
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetEnumDropDownStringValue(Type EnumerationType)
+        {
+            List<TextValueDropDownDTO> objDropDown = new();
+            Dictionary<string, string> RetVal = new();
+            var AllItems = Enum.GetValues(EnumerationType);
+
+            foreach (var CurrentItem in AllItems)
+            {
+                DescriptionAttribute[] DescAttribute = (DescriptionAttribute[])EnumerationType.GetField(CurrentItem.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+                string Description = DescAttribute.Length > 0 ? DescAttribute[0].Description : CurrentItem.ToString();
+                RetVal.Add(CurrentItem.ToString(), Description);
+            }
+            foreach (string Key in RetVal.Keys)
+            {
+                objDropDown.Add(new TextValueDropDownDTO() { Value = Key, Text = RetVal[Key] });
+            }
+
+            return objDropDown;
+        }
+
+        public static string GetDescriptionByKey(int key)
+        {
+            Enum e = (Enum)Enum.ToObject(typeof(T), key);
+            return e.Description();
+        }
+
+        public static string GetDescriptionByKey(string key)
+        {
+            if(string.IsNullOrEmpty(key)) return string.Empty;
+            Enum e = (Enum)Enum.Parse(typeof(T), key);
+            return e.Description();
         }
     }
 

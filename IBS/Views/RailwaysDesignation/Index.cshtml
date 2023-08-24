@@ -1,40 +1,39 @@
 ﻿@{
-    ViewData["Title"] = "Railway Designation Master";
+    ViewData["Title"] = "Railway Designation Directory";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Railway Designation Master</h2>
-        </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="Rly_Designation_Form" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New RDM</a>
-        </div>
-
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Railway Designation Directory</h2>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="RlyDesigCd" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Designation Code</th>
-                            <th>Designation</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="RailwaysDesignation" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+    </div>
+
 </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtRailwayDesignation" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Designation Code</th>
+                        <th>Designation</th>
+                        <th style="text-align:center">View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -42,7 +41,7 @@
         });
 
         function InitializeDatatable() {
-            $("#RlyDesigCd").DataTable({
+            $("#dtRailwayDesignation").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -73,25 +72,24 @@
                     },
                     { data: "RlyDesigCd" },
                     { data: "RlyDesigDesc" },
-                   
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.RlyDesigCd;
-                            var editUrl = '@Url.Action("Manage", "Rly_Designation_Form")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var editUrl = '@Url.Action("Manage", "RailwaysDesignation")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '<a onclick="RDFDelete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         }
 
         function RDFDelete(id) {
-            var url = '@Url.Action("Delete", "Rly_Designation_Form")?id=' + id;
+            var url = '@Url.Action("Delete", "RailwaysDesignation")?id=' + id;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
