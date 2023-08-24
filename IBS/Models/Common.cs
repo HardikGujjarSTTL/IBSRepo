@@ -1872,7 +1872,7 @@ namespace IBS.Models
                                     new SelectListItem
                                     {
                                         Text = a.UserName,
-                                        Value = Convert.ToString(a.Id)
+                                        Value = Convert.ToString(a.UserId)
                                     }).ToList();
             return city;
         }

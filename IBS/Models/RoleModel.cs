@@ -22,7 +22,7 @@
 
         public decimal? Updatedby { get; set; }
 
-        public int? User_ID { get; set; }
+        public string? User_ID { get; set; }
         public string? UserName { get; set; }
         public int Id { get; set; }
     }

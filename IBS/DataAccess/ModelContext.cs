@@ -7191,7 +7191,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.EmpNo)
-                .HasMaxLength(6)
+                .HasMaxLength(12)
                 .IsUnicode(false)
                 .HasColumnName("EMP_NO");
             entity.Property(e => e.Id)
@@ -7726,7 +7726,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IE_EMAIL");
             entity.Property(e => e.IeEmpNo)
-                .HasMaxLength(6)
+                .HasMaxLength(12)
                 .IsUnicode(false)
                 .HasColumnName("IE_EMP_NO");
             entity.Property(e => e.IeJoinDt)
@@ -14829,7 +14829,9 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("USER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)

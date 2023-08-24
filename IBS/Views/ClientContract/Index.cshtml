@@ -23,7 +23,7 @@
             <h2>Client Contract List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn"><span class="fa fa-plus"></span> Add New Client Contract</a>
+            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client Contract</a>
         </div>
     </div>
     <section class="table-section">
@@ -101,8 +101,8 @@
                             var id = data.Id;
                             var TypeCb = data.TypeCb;
                             var editUrl = '@Url.Action("Manage", "ClientContract")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="ClientContractDelete(' + id + ',\'' + TypeCb + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="ClientContractDelete(' + id + ',\'' + TypeCb + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete Permission_Delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

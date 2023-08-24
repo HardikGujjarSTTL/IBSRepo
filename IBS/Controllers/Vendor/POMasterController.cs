@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.Vendor
 {
+    [Authorization]
     public class POMasterController : BaseController
     {
         #region Variables
@@ -16,10 +18,12 @@ namespace IBS.Controllers.Vendor
         {
             pOMasterRepository = _pOMasterRepository;
         }
+        [Authorization("POMaster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("POMaster", "Index", "view")]
         public IActionResult Manage(string CaseNo)
         {
             PO_MasterModel model = new();
@@ -37,6 +41,7 @@ namespace IBS.Controllers.Vendor
             DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterList(dtParameters, VendCd);
             return Json(dTResult);
         }
+        [Authorization("POMaster", "Index", "delete")]
         public IActionResult Delete(string CaseNo)
         {
             try
@@ -56,6 +61,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("POMaster", "Index", "add")]
         public IActionResult POMasterSave(PO_MasterModel model)
         {
             try

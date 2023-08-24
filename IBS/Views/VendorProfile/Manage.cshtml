@@ -2,6 +2,13 @@
 
 @{
     ViewData["Title"] = "Vendor Profile";
+    string clsSave = "Permission_Save";
+    string clsView = "";
+    if (Model.VendCd > 0)
+    {
+        clsSave = "Permission_Update";
+        clsView = "Permission_View";
+    }
 }
 
 @{
@@ -21,8 +28,14 @@
     <div class="tast-list">
         <h2>Vendor Profile</h2>
     </div>
+    @if (isReadOnly == false)
+    {
+        <div>
+            <a asp-action="Index" asp-controller="Role" class="formBtn viewall-btn">View List</a>
+        </div>
+    }
 </div>
-<section id="tab-1">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorProfile" asp-action="VendorProfileDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVendorProfileDetails">
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
@@ -195,7 +208,7 @@
                 }
                 <div class="savenext-btn">
                     @*<a asp-controller="VendorProfile" asp-action="Index" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
@@ -232,8 +245,9 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if ('@IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower()' != "vendor") {
-                //window.location.href = "/VendorProfile/Index";
-                window.location.href = '@Url.Action("Index", "VendorProfile")';
+                if (res.status) {
+                    window.location.href = '@Url.Action("Index", "VendorProfile")';
+                }
             }
         };
     </script>
