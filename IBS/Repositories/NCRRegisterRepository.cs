@@ -326,7 +326,7 @@ namespace IBS.Repositories
 
                         context.SaveChanges();
                     }
-                    msg = "Remarks Update Successfully";
+                    msg = "Remarks Save Successfully";
                 
             }
 
