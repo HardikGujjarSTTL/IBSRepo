@@ -25,7 +25,7 @@ namespace IBS.Repositories
                 model.Location = role.Location;
                 model.City = role.City;
                 model.StateCd = role.StateCd;
-                model.Country = role.Country;
+                model.Country = Convert.ToString(role.CountryCd);
                 model.UserId = role.UserId;
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
@@ -70,7 +70,7 @@ namespace IBS.Repositories
                         Location = l.Location,
                         StateCd = l.StateCd,
                         City = l.City,
-                        Country = l.Country,
+                        Country = Convert.ToString(l.CountryCd),
                         UserId = l.UserId,
                         Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,
@@ -118,7 +118,7 @@ namespace IBS.Repositories
                 obj.Location = model.Location;
                 obj.City = model.City;
                 obj.StateCd = model.StateCd;
-                obj.Country = model.Country;
+                obj.CountryCd = Convert.ToInt32(model.Country);
                 obj.Updateddate = DateTime.Now;
                 obj.Createdby = model.Createdby;
                 obj.Isdeleted = Convert.ToByte(false);

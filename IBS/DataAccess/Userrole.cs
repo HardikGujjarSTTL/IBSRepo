@@ -9,8 +9,6 @@ public partial class Userrole
 
     public int RoleId { get; set; }
 
-    public string UserId { get; set; } = null!;
-
     public string? Usertype { get; set; }
 
     public int? Createdby { get; set; }
@@ -22,4 +20,6 @@ public partial class Userrole
     public DateTimeOffset? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public string? UserId { get; set; }
 }
