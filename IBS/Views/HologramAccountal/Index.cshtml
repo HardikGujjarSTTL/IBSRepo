@@ -4,69 +4,65 @@
     ViewData["Title"] = "Hologram Accountal List";
 }
 
-    
-        <div class="tast-list">
-            <h2>Hologram Accountal List</h2>
-            <form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramAccountDetails" style="margin-top: 7px;">
-                <div class="accordion-body">
-                    <div class="row my-0 d-flex align-items-end">
-                        <div class="col-md-2 mb-4">
-                            <label for="Reference">Book No</label>
-                            <input type="text" class="input" asp-for="BK_NO" maxlength="200" />
-                            @*<span asp-validation-for="BK_NO" class="text-danger"></span>*@
-                        </div>
 
-                        <div class="col-md-6 mb-4">
-                            <label for="Reference">Set No</label>
-                            <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
-                            @*<span asp-validation-for="SET_NO" class="text-danger"></span>*@
-                        </div>
-                        <div class="col-md-6 mb-4 alignBtn">
-                            <div class="savenext-btn">
-                                @*<button type="button" class="save-btn active" id="btnSubmit">Submit</button>*@
-                                @*<button type="button" class="reset-btn" id="btnDelete">Delete</button>*@
-                                <button type="button" class="reset-btn" id="btnSearch">Search</button>
-                            </div>
-                        </div>
-                    </div>
-                    @*<h5 style="">Enter Book No. & Set No. Against which the Holograms are to be linked.</h5>*@
-                    <div class="alert alert-warning center">
-                    <span id="Label8" >Enter Book No. & Set No. Against which the Holograms are to be linked.</span>
-            </div>
+<div class="tast-list">
+    <h2>Hologram Accountal List</h2>
+    <form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramAccountDetails" style="margin-top: 7px;">
+        <div class="accordion-body">
+            <div class="row my-0 d-flex align-items-end">
+                <div class="col-md-2 mb-4">
+                    <label for="Reference">Book No</label>
+                    <input type="text" class="input" asp-for="BK_NO" maxlength="200" />
+                    @*<span asp-validation-for="BK_NO" class="text-danger"></span>*@
                 </div>
-            </form>
-        </div>
-    
-    @*<h6 style="text-align: center">Search Result is Sorted on Book No. & Set No.</h6>*@
-<div class="alert alert-secondary center mb-3">
-    <span id="Label8" >Search Result is Sorted on Book No. &amp; Set No.</span>
-</div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Case No.</th>
-                            <th>Book No</th>
-                            <th>Set No.</th>
-                            <th>IE</th>
-                            <th>Holograms used on Material</th>
-                            <th>Holograms used on Samples</th>
-                            <th>Holograms used on Test</th>
-                            <th>Holograms used on IC</th>
-                            <th>Hologram used on IC Doc</th>
-                            <th>Holograms used on Other Location</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+
+                <div class="col-md-6 mb-4">
+                    <label for="Reference">Set No</label>
+                    <input type="text" class="input" asp-for="SET_NO" maxlength="200" />
+                    @*<span asp-validation-for="SET_NO" class="text-danger"></span>*@
+                </div>
+                <div class="col-md-6 mb-4 alignBtn">
+                    <div class="savenext-btn">
+                        <button type="button" class="reset-btn" id="btnSearch">Search</button>
+                    </div>
+                </div>
+            </div>           
+            <div class="alert alert-warning center">
+                <span id="Label8">Enter Book No. & Set No. Against which the Holograms are to be linked.</span>
             </div>
         </div>
-    </section>
+    </form>
+</div>
+
+<div class="alert alert-secondary center mb-3">
+    <span id="Label8">Search Result is Sorted on Book No. &amp; Set No.</span>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Case No.</th>
+                        <th>Book No</th>
+                        <th>Set No.</th>
+                        <th>IE</th>
+                        <th>Holograms used on Material</th>
+                        <th>Holograms used on Samples</th>
+                        <th>Holograms used on Test</th>
+                        <th>Holograms used on IC</th>
+                        <th>Hologram used on IC Doc</th>
+                        <th>Holograms used on Other Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 
 @section scripts{

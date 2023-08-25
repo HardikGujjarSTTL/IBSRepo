@@ -62,6 +62,8 @@ namespace IBS.Controllers.Reports
 
                 foreach (var row in dtList.data)
                 {
+                    //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "LAB", fileName);
+                    var tempcasetifpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","COMPLAINTS_CASES" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF");
                     var casetifpath = Path.Combine(env.WebRootPath, "/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF");
                     var casepdfpath = Path.Combine(env.WebRootPath, "/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF");
 

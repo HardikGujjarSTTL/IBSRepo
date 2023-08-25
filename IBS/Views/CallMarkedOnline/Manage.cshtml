@@ -31,14 +31,14 @@
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="" style="padding-right:36px;">Date :</label>
-                <label id="lblDate" style="text-transform: uppercase; color:red;"></label>
-                <input type="text" id="txtCALLLETTERDT" />
+                <label id="lblDate" style="text-transform: uppercase; color:red;"></label>                
                 <input type="hidden" asp-for="PO_DT" />
                 <input type="hidden" asp-for="LETTER_DT" />
             </div>
             <div class="col-md-9 mb-3">
                 <label for="Reference" style="padding-right:71px;">Vendor :</label>
                 <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
+                <input type="text" id="txtCALLLETTERDT" style="width:95px;"/>
                 <input type="hidden" asp-for="VEND_NAME" />
             </div>
         </div>
@@ -140,8 +140,8 @@
         <div class="row my-0">
             <div class="col-md-12 mb-3">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" id="btnSave">Save</button>
-                    <button type="button" class="reset-btn" id="btnCancel">Cancel</button>
+                    <button type="button" class="save-btn active Permission_Save" id="btnSave">Save</button>
+                    @*<button type="button" class="reset-btn" id="btnCancel">Cancel</button>*@
                     <button type="button" class="reset-btn" id="btnCaseHistory">Case History</button>
                     <button type="button" class="reset-btn" id="btnRejectCall">Reject Call</button>
                     <button type="button" class="reset-btn" id="btnSendMail" style="display:none;">Send Email For Incomplete Calls</button>
@@ -169,6 +169,7 @@
 
 <script>
     $(document).ready(function () {
+        $("#viewList").css("display", "block");
         $("#btnSave").click(function () {
             SaveCallMarkedDetail();
         });
@@ -177,9 +178,9 @@
             $("#rejectCall").css("display", "block");
         });
 
-        $("#btnCancel").click(function () {
-            window.location.href = "@Url.Action("Index","CallMarkedOnline")";
-        });
+        //$("#btnCancel").click(function () {
+        //    window.location.href = "@Url.Action("Index","CallMarkedOnline")";
+        //});
 
 
         $("#lblContractNo").html("@Model.PO_NO");
