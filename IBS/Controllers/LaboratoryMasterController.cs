@@ -44,7 +44,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("LaboratoryMaster", "LaboratoryMaster", "add")]
+        [Authorization("LaboratoryMaster", "LaboratoryMaster", "edit")]
         public IActionResult LabDetailsSave(LaboratoryMstModel model)
         {
             try
