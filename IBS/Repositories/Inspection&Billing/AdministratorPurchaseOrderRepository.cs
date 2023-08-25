@@ -18,13 +18,13 @@ namespace IBS.Repositories.Inspection_Billing
         {
             this.context = context;
         }
-        public PO_MasterModel FindByID(string CaseNo)
+        public AdministratorPurchaseOrderModel FindByID(string CaseNo)
         {
-            PO_MasterModel model = new();
-            T80PoMaster POMaster = context.T80PoMasters.Find(CaseNo);
+            AdministratorPurchaseOrderModel model = new();
+            T13PoMaster POMaster = context.T13PoMasters.Where(x=>x.CaseNo == CaseNo).FirstOrDefault();
 
             if (POMaster == null)
-                throw new Exception("Po Master Record Not found");
+                throw new Exception("PO Record Not found");
             else
             {
                 model.CaseNo = POMaster.CaseNo.Trim();
@@ -35,7 +35,6 @@ namespace IBS.Repositories.Inspection_Billing
                 model.PoNo = POMaster.PoNo;
                 model.PoDt = POMaster.PoDt;
                 model.RecvDt = POMaster.RecvDt;
-                model.RlyCdDesc = POMaster.RlyCdDesc;
                 model.VendCd = POMaster.VendCd;
                 model.RlyCd = POMaster.RlyCd;
                 model.RegionCode = POMaster.RegionCode;
@@ -46,11 +45,11 @@ namespace IBS.Repositories.Inspection_Billing
                 return model;
             }
         }
-        public DTResult<AdministratorPurchaseOrderModel> GetPOMasterList(DTParameters dtParameters, string region_code)
+        public DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code)
         {
 
-            DTResult<AdministratorPurchaseOrderModel> dTResult = new() { draw = 0 };
-            IQueryable<AdministratorPurchaseOrderModel>? query = null;
+            DTResult<AdministratorPurchaseOrderListModel> dTResult = new() { draw = 0 };
+            IQueryable<AdministratorPurchaseOrderListModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -94,7 +93,7 @@ namespace IBS.Repositories.Inspection_Billing
             OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("p_cs_no", OracleDbType.Varchar2, CaseNo.ToString() == "" ? DBNull.Value : CaseNo.ToString(), ParameterDirection.Input);
             par[1] = new OracleParameter("p_po_no", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
-            par[2] = new OracleParameter("p_po_date", OracleDbType.Varchar2, PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd/MM/yyyy", null), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_po_date", OracleDbType.Varchar2, PoDt.ToString() == "" ? DBNull.Value : PoDt.ToString(), ParameterDirection.Input);
             par[3] = new OracleParameter("p_vend_name", OracleDbType.Varchar2, vend_name.ToString() == "" ? DBNull.Value : vend_name.ToString(), ParameterDirection.Input);
             par[4] = new OracleParameter("p_region_code", OracleDbType.Varchar2, region_code.ToString() == "" ? DBNull.Value : region_code.ToString(), ParameterDirection.Input);
             par[5] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -103,11 +102,11 @@ namespace IBS.Repositories.Inspection_Billing
             DataTable dt = ds.Tables[0];
 
 
-            List<AdministratorPurchaseOrderModel> list = new();
+            List<AdministratorPurchaseOrderListModel> list = new();
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                list = JsonConvert.DeserializeObject<List<AdministratorPurchaseOrderModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                list = JsonConvert.DeserializeObject<List<AdministratorPurchaseOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
             query = list.AsQueryable();

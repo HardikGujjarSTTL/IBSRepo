@@ -4,6 +4,7 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -28,8 +29,36 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string region_code = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region);
-            DTResult<AdministratorPurchaseOrderModel> dTResult = pIAdministratorPurchaseOrderRepository.GetPOMasterList(dtParameters, region_code);
+            DTResult<AdministratorPurchaseOrderListModel> dTResult = pIAdministratorPurchaseOrderRepository.GetPOMasterList(dtParameters, region_code);
             return Json(dTResult);
+        }
+
+        [Authorization("AdministratorPurchaseOrder", "Index", "view")]
+        public IActionResult Manage(string PO_TYPE,string RLY_CD,string CaseNo)
+        {
+            AdministratorPurchaseOrderModel model = new();
+            if (CaseNo != null)
+            {
+                model = pIAdministratorPurchaseOrderRepository.FindByID(CaseNo);
+            }
+            ViewBag.PO_TYPE = PO_TYPE;
+            ViewBag.RLY_CD = RLY_CD;
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetRailwayCode(string type)
+        {
+            try
+            {
+                List<SelectListItem> objList = Common.GetRailwayCode(type);
+                return Json(new { status = true, list = objList });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetRailwayCode", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
     }
 }

@@ -4,8 +4,8 @@ namespace IBS.Interfaces.Inspection_Billing
 {
     public interface IAdministratorPurchaseOrderRepository
     {
-        public PO_MasterModel FindByID(string CaseNo);
-        DTResult<AdministratorPurchaseOrderModel> GetPOMasterList(DTParameters dtParameters,string region_code);
+        public AdministratorPurchaseOrderModel FindByID(string CaseNo);
+        DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters,string region_code);
         bool Remove(string CaseNo, int UserID);
         string POMasterDetailsInsertUpdate(PO_MasterModel model);
         public PO_MasterModel FindCaseNo(string CaseNo,int VendCd);

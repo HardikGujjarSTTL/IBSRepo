@@ -1649,14 +1649,14 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> GetBankLst = (from a in context.T94Banks
-                                               where a.BankCd > 990 
+                                               where a.BankCd > 990
                                                orderby a.BankName
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.BankName),
-                                     Value = Convert.ToString(a.BankCd)
-                                 }).ToList();
+                                               select
+                                     new SelectListItem
+                                     {
+                                         Text = Convert.ToString(a.BankName),
+                                         Value = Convert.ToString(a.BankCd)
+                                     }).ToList();
             return GetBankLst;
         }
 
@@ -1937,6 +1937,37 @@ namespace IBS.Models
                                         Value = Convert.ToString(a.RoleId)
                                     }).ToList();
             return city;
+        }
+
+        public static List<SelectListItem> GetRailwayCode(string type = "")
+        {
+
+            List<SelectListItem> selectListItems = new List<SelectListItem>();
+            if (type != "")
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_bpo_type", OracleDbType.Varchar2, type.ToString() == "" ? DBNull.Value : type.ToString(), ParameterDirection.Input);
+                par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("SP_GET_RAILWAY_CODES", par, 1);
+                DataTable dt = ds.Tables[0];
+
+                List<RailwayCodeModel> list = new();
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    list = JsonConvert.DeserializeObject<List<RailwayCodeModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
+
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                selectListItems = (from a in list
+                                   select
+                              new SelectListItem
+                              {
+                                  Text = a.RLY_CD,
+                                  Value = a.RLY_CD,
+                              }).ToList();
+            }
+            return selectListItems;
         }
 
         public static List<SelectListItem> GetIENameIsStatusNull(string RegionCode)
