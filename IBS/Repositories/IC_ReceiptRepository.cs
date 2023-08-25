@@ -43,7 +43,7 @@ namespace IBS.Repositories
                 {
                     orderCriteria = "BK_NO";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {

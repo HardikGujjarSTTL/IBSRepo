@@ -1,12 +1,10 @@
 ﻿@model IBS.Models.HologramAccountalModel
 @{
 
-    ViewData["Title"] = "Manage Hologram Accountal";
-    string clsSave = "Permission_Save";
+    ViewData["Title"] = "Manage Hologram Accountal";    
     string clsView = "";
     if (Model.CASE_NO != null)
-    {
-        clsSave = "Permission_Update";
+    {        
         clsView = "Permission_View";
     }
 }
@@ -262,7 +260,7 @@
             <div class="row my-0">
                 <div class="col-md-12 mb-3" style="text-align: center;">
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                         @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
                     </div>
                 </div>

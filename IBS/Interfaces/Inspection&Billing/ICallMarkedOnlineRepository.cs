@@ -5,7 +5,7 @@ namespace IBS.Interfaces.Inspection_Billing
 {
     public interface ICallMarkedOnlineRepository
     {
-        DTResult<CallMarkedOnlineModel> Get_Call_Marked_Online(DTParameters dTParameters);
+        DTResult<CallMarkedOnlineModel> Get_Call_Marked_Online(DTParameters dTParameters, string Region);
         List<SelectListItem> Get_Cluster_IE(string Region);
 
         CallMarkedOnlineModel Get_Call_Marked_Online_Detail(CallMarkedOnlineFilter obj);

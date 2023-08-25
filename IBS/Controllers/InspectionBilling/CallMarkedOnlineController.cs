@@ -97,10 +97,12 @@ namespace IBS.Controllers.InspectionBilling
             DTResult<CallMarkedOnlineModel> dtList = new();
             try
             {
-                dtList = callMarkedOnlineRepository.Get_Call_Marked_Online(dtParameters);
+                var region = Convert.ToString(GetUserInfo.Region);
+                dtList = callMarkedOnlineRepository.Get_Call_Marked_Online(dtParameters,region);
             }
             catch (Exception ex)
             {
+                dtList.draw = 1;
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "Get_Call_Marked_Online", 1, GetIPAddress());
             }
             return Json(dtList);
@@ -180,7 +182,7 @@ namespace IBS.Controllers.InspectionBilling
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("Role", "Index", "add")]
+        [Authorization("CallMarkedOnline", "Index", "edit")]
         public IActionResult Call_Marked_Online_Save(CallMarkedOnlineModel Model)
         {
             var result = false;

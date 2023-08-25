@@ -1,13 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Call Marked Online";
 }
-
-<form data-ajax="true" asp-antiforgery="true" asp-controller="Reports" asp-action="FromToDate" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
-        </div>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="CallMarkedOnline" class="formBtn viewall-btn" id="viewList">View List</a>
+    </div>
+</div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Reports" asp-action="FromToDate" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">    
     <div class="accordion-body" id="body">
         <div class="row my-0" style="text-align:left;">
             <div class="col-md-4 mb-3" style="font-weight: bold;">
@@ -46,7 +48,6 @@
                     <thead>
                         <tr>
                             <th>S.No.</th>
-                            <th>Action</th>
                             <th>Case No.</th>
                             <th>PO NO.</th>
                             <th>PO Date</th>
@@ -59,6 +60,7 @@
                             <th>Call Letter No/Dispatch Ref No.</th>
                             <th>Remarks</th>
                             <th>DateTime</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,6 +93,7 @@
 
 
     $(document).ready(function () {
+        $("#viewList").css("display","none");
         $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
         setDefaultDate();
 
@@ -126,9 +129,13 @@
     function InitializeDatatable() {
         debugger
         var Date = $("#txtDate").val();
-        var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "true" : "false";
-        var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "true" : "false";
-        var Rdb3 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "true" : "false";
+        var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "1" : "0";
+        var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "1" : "0";
+        var Rdb3 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "1" : "0";
+        var chk_val = 1;
+        if ($("#rdbAllCallMarked").is(':checked')) { chk_val = 1 }
+        if ($("#rdbAllCallUnMarked").is(':checked')) { chk_val = 2 }
+        if ($("#rdbOnlyCallUnMarked").is(':checked')) { chk_val = 3 }
         $("#dtList").DataTable({
             stateSave: false,// Design Assets
             autoWidth: true,
@@ -138,25 +145,7 @@
             serverSide: true,
             destroy: true,
             paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            dom: 'Bfrtip',
-            buttons: [
-                'csv', 'excel', //'print'
-                {
-                    extend: 'print',
-                    //text: 'ButtonLabelHere',
-                    title: 'Pending JI Cases'// + FromDate + ' To ' + ToDate,
-                    //exportOptions: {
-                    //    modifier: {
-                    //        selected: null
-                    //    }
-                    //},
-                    //customize: function (win) {
-                    //    $(win.document.body).find('h1').css('text-align', 'center');
-                    //},
-
-                }
-            ],
+            searching: false,// Searching Setups            
             ajax: {// Ajax Filter
                 url: "@Url.Action("Get_Call_Marked_Online", "CallMarkedOnline")",
                 type: "POST",
@@ -173,24 +162,16 @@
                     return JSON.stringify(d);
                 }
             },
-            columns: [
-                {
-                    data: '',
-                    render: function (data, type, row, meta) {
-                        var html = "";
-                        html += '<a onclick="GetDetail(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\',\'submit\');" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                        return html;
-                    }
-                },
+            columns: [                
                 {
                     data: '', orderable: false, width: '5%',
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
-                },
+                },                
                 { data: "CASE_NO" },
                 { data: "PO_NO" },
-                { data: "PO_DATE" },
+                { data: "PO_DT" },
                 { data: "CALL_RECV_DT" },
                 { data: "CALL_SNO" },
                 { data: "CALL_INSTALL_NO" },
@@ -200,13 +181,36 @@
                 { data: "CALL_LETTER_NO" },
                 { data: "REMARKS" },
                 { data: "DATE_TIME" },
+                {
+                    data: '',
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
+                        html += '<a onclick="GetDetail(\'' + row.CASE_NO + '\',\'' + row.CALL_RECV_DT + '\',\'' + row.CALL_SNO + '\',\'' + chk_val + '\',\'' + Date + '\');" id=\"' + row.CASE_NO + '\" class=\"edit\""><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                        html += '</div>';
+                        return html;
+                    }
+                }
             ],
             "order": [[0, "asc"]]
         });
     }
 
     function GetDetail(case_no, call_recv_dt, call_sno, check_select, run_dt) {
-        window.location.href = "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+        //window.location.href = "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+        $("#body").css("display", "none");
+        $("#tblsection").css("display", "none");
+        $("#frmParial").css("display", "block");
+        //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt,
+            //data: obj,
+            success: function (data) {
+                $('#frmParial').html(data)
+            }
+        });
     }
 </script>
 

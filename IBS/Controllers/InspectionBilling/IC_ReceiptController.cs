@@ -110,7 +110,8 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [HttpPost]
-        //[Authorization("IC_Receipt", "Index", "add")]
+        [ValidateAntiForgeryToken]
+        [Authorization("IC_Receipt", "Index", "edit")]
         public IActionResult ICReceiptSave(IC_ReceiptModel model)
         {
             int result = 0;
