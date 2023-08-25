@@ -2,17 +2,12 @@
 
 @{
     ViewData["Title"] = "Create NCR";
-    string clsSaveCase = "Permission_Save";
-    string clsSave = "Permission_Save";
     string clsView = "";
-    if (Model.NC_NO != null)
+    if (Model.NC_NO != null && Model.CaseNo != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
-    if(Model.CaseNo != null){
-        clsSaveCase = "Permission_Update";        
-    }
+   
 }
 
 <div class="list-inner">
@@ -171,11 +166,11 @@
             <div class="savenext-btn">
                 @if (ViewBag.ShowSaveButton)
                 {
-                    <button type="button" class="save-btn active btncls @clsSaveCase" id="btnsave" onclick="Save()">Save</button>
+                            <button type="button" class="save-btn active btncls Permission_Save" id="btnsave" onclick="Save()">Save</button>
                 }
                 @if (ViewBag.ShowRemarksButton)
                 {
-                            <button type="button" class="save-btn active btncls @clsSave" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
+                            <button type="button" class="save-btn active btncls Permission_Save" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
                 }
                 <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
             </div>
@@ -465,6 +460,7 @@
 
    
     completed = function (response) {
+        debugger
         var res = response.responseJSON;
         ShowHideMsgNew(res.status, res.responseText);
         window.location.href = "/NCRRegister/Index";

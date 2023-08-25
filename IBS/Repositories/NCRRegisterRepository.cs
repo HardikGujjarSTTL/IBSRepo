@@ -83,15 +83,16 @@ namespace IBS.Repositories
                 List<NCRRegister> modelList = new List<NCRRegister>();
                 DataSet ds;
 
-                    OracleParameter[] par = new OracleParameter[4];
-                    //par[0] = new OracleParameter("p_case_no", OracleDbType.Varchar2, CASENO, ParameterDirection.Input);
-                    //par[1] = new OracleParameter("p_nc_no", OracleDbType.Varchar2, NCNO, ParameterDirection.Input);
-                    par[0] = new OracleParameter("p_lstIE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
-                    par[1] = new OracleParameter("p_frmDt", OracleDbType.Date, FromDate, ParameterDirection.Input);
-                    par[2] = new OracleParameter("p_toDt", OracleDbType.Date, ToDate, ParameterDirection.Input);
-                    par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                     ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
-               
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("p_lstIE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_frmDt", OracleDbType.Date, FromDate, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_toDt", OracleDbType.Date, ToDate, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                // Assuming DataAccessDB.GetDataSet handles adding parameters to the command internally
+                ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
+
+
 
                 if (ds != null && ds.Tables.Count > 0)
                 {

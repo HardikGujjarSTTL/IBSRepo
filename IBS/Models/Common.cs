@@ -335,6 +335,10 @@ namespace IBS.Models
             single.Text = "No";
             single.Value = "N";
             textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Cancelled";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
 
@@ -1456,6 +1460,26 @@ namespace IBS.Models
             return contacts;
         }
 
+        public static List<SelectListItem> GetCluster(string GetRegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
+                                             join t101 in ModelContext.T101IeClusters on t99.ClusterCode equals t101.ClusterCode
+                                             join t09 in ModelContext.T09Ies on t101.IeCode equals t09.IeCd
+                                             where t99.RegionCode == GetRegionCode && t09.IeStatus == null
+                                             orderby t99.ClusterName, t09.IeName
+
+                                             select new SelectListItem
+                                             {
+                                                 Text = t99.ClusterName + " (" + t09.IeName + ")",
+                                                 Value = Convert.ToString(t99.ClusterCode)
+
+                                             }).ToList();
+
+            return contacts;
+        }
+
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1619,6 +1643,36 @@ namespace IBS.Models
                                      Value = Convert.ToString(a.BpoCd)
                                  }).ToList();
             return GetBPO;
+        }
+
+        public static List<SelectListItem> GetBankLst()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> GetBankLst = (from a in context.T94Banks
+                                               where a.BankCd > 990 
+                                               orderby a.BankName
+                                           select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.BankName),
+                                     Value = Convert.ToString(a.BankCd)
+                                 }).ToList();
+            return GetBankLst;
+        }
+
+        public static List<SelectListItem> GetAccountLst()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> AccountLst = (from a in context.T95AccountCodes
+                                               where a.AccCd > 3000
+                                               orderby a.AccDesc
+                                               select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.AccDesc),
+                                        Value = Convert.ToString(a.AccCd)
+                                    }).ToList();
+            return AccountLst;
         }
 
         public static List<SelectListItem> GetBillPayingOfficer(string RlyCd, string RlyNonrly)

@@ -177,13 +177,11 @@
             ModifyNCR();
         }
 
-        //  completed = function (response) {
-        //    debugger
-        //    var res = response.responseJSON;
-        //    ShowHideMsgNew(res.status, res.responseText);
-        //    //window.location.href = "/NCRRegister";
-        //    window.location.href = '@Url.Action("Index", "NCRRegister")';
-        //};
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/NCRRegister/Index";
+        };
 
 
          function InitializeDatatable() {

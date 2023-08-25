@@ -1,0 +1,146 @@
+﻿@model IBS.Models.InterUnitRecieptModel
+
+@{
+    ViewData["Title"] = "IU Voucher list";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>IU Voucher List</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnitReciept" asp-action="Reciept_Grid" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherListSave">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Voucher No</label>
+                            <input type="text" asp-for="VCHR_NO" id="vchr_no"  readonly="true" maxlength="300" />
+                        </div>
+
+                        <div class="modal-footer">
+                            <div class="btn-group">
+                                
+                                <button type="button" id="saveChanges" class="btn btn-primary" onclick="savedata();">Search</button>
+                            </div>
+                        </div>
+                        
+                    <table id="dtRecieptGrid" class="table-responsive">
+                        <thead>
+                            <tr>
+
+                                @*<th>S NO</th>*@
+
+                                <th>#</th>
+                                <th>IU Advice No/Ref No.</th>
+                                <th>IU Advice Date./Ref Date.</th>
+                                <th>Amount</th>
+                                <th>Region From Which Recieved</th>
+                                <th>BPO</th>
+                                <th>Account</th>
+                                <th>Narration</th>
+                                <th>Action</th>
+
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var VCHR_NO = $("#vchr_no").val();
+            InitializeDatatable(VCHR_NO);
+
+        });
+        function savedata() {
+
+            InitializeDatatable(VCHR_NO);
+        };
+
+
+
+        function InitializeDatatable(VCHR_NO) {
+
+            debugger;
+            $("#dtRecieptGrid").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("RecieptList")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        debugger;
+                        var AdditionalValues = {
+
+                            VCHR_NO: VCHR_NO
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                            ;
+                        }
+                    },
+                    //{ data: "SNO" },
+                    { data: "CHQ_NO" },
+                    { data: "CHQ_DT" },
+                    { data: "AMOUNT" },
+                    { data: "BANK_CD" },
+                    { data: "BPO_CD" },
+                    { data: "ACC_CD" },
+                    { data: "NARRATION" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var VCHR_NO = data.VCHR_NO;
+                            var CHQ_NO = data.CHQ_NO;
+                            var CHQ_DT = data.CHQ_DT;
+                            var BANK_CD = data.BANK_NAME;
+
+
+                            var editUrl = '@Url.Action("Manage", "InterUnitReciept")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}
+

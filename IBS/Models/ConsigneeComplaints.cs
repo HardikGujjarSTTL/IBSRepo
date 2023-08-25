@@ -31,6 +31,7 @@ namespace IBS.Models
         public DateTime? JIDate { get; set; }
         public DateTime? JiFixDt { get; set; }
         public string? InspRegion { get; set; }
+        public string? InspER { get; set; }
         public string? UserId { get; set; }
         public string? ItemDesc { get; set; }
         public decimal? QtyOffered { get; set; }
@@ -43,6 +44,7 @@ namespace IBS.Models
         public string NoJiReason { get; set; }
         public string NoJiOther { get; set; }
         public string JiSno { get; set; }
+        public string AcceptRejornot { get; set; }
         public byte? JiIeCd { get; set; }
         [NotMapped]
         public SelectList ControllingManagers { get; set; }

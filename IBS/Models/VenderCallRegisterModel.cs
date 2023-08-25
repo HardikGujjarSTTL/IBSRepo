@@ -148,7 +148,6 @@ namespace IBS.Models
 
         public virtual ICollection<T50LabRegister> T50LabRegisters { get; set; } = new List<T50LabRegister>();
 
-
         //VENDOR_CALL_PO_DETAILS_VIEW Details related
         public string? PurchaserCd { get; set; }
 
@@ -225,6 +224,14 @@ namespace IBS.Models
         public int e_status { get; set; }
 
         public string IE_name { get; set; }
+
+        public string VendInspStopped { get; set; }
+
+        public string InspectingAgency { get; set; }
+
+        public string VendRemarks { get; set; }
+
+
 
     }
 

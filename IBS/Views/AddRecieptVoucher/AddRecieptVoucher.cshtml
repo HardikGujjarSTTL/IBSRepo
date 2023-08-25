@@ -123,7 +123,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-          
+
             var selectedValue = $("#AccCD").val();
             if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
                 $("#txtCSNO").show();
@@ -142,12 +142,75 @@
             debugger;
 
             $("#frmVoucherDetails").submit();
-            
+
         }
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/AddRecieptVoucher/AddRecieptVoucher";
-        };
+        }
+
+
+
+        // Hide/show BPO details based on lstACD selection
+        $("#AccCD").on("change", function () {
+            debugger;
+            var selectedValue = $("#AccCD").val();
+            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
+                $("#txtCSNO").show();
+                $("#txtBPO").hide();
+                $("#lstBPO").css("display", "none");
+                $("#txtNarrat").show();
+            } else {
+                $("#txtCSNO").hide();
+                $("#lstBPO").hide();
+                $("#txtNarrat").show();
+                $("#txtBPO").show();
+                $("#lstBPO").css("display", "none");
+            }
+        });
+
+        // Handle BPO selection
+        $("#lstBPO").on("change", function () {
+
+        });
+
+
+        function ButtonClick() {
+
+            var AccCD = $("#AccCD").val();
+            var txtBPO = $("#txtBPO").val();
+            var lstBPO = $("#lstBPO").val();
+            var listBPO = $("#listBPO").val();
+            var txtCSNO = $("#CSNO").val();
+            $.ajax({
+                url: '/AddRecieptVoucher/ButtonClick',
+                type: "POST",
+                dataType: "JSON",
+                data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },
+
+                success: function (success) {
+
+                    //alert("buttonclicked");
+                    // console.log(success);
+                    $("#txtNarrat").val(success.Narrt);
+                    $("#lstBPO").css("display", "block");
+
+                    for (i = 0; i < success.BPOList.length; i++) {
+
+                        // var data = '<option value="' + success.BPCodes[i].Text + '">' + success.BPCodes[i].Value + '</option>'
+                        var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
+                        $("#SelectedBPO").append(data);
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+
     </script>
 }

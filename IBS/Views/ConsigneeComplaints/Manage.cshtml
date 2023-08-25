@@ -1,12 +1,10 @@
 ﻿@model IBS.Models.ConsigneeComplaints
 @{
-    string clsSave = "Permission_Save";
     string clsView = "";
-    //if (Model.ComplaintId > 0)
-    //{
-        clsSave = "Permission_Update";
+    if (Model.ComplaintId != null)
+    {
         clsView = "Permission_View";
-    //}
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
@@ -58,17 +56,6 @@
                         <span asp-validation-for="ie_name" class="text-danger"></span>
                     </div>
 
-                   @* <div class="col-md-4 mb-3">
-                        <label for="Reference">Status of Offer</label>
-                        <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
-                            <option value="">--Select--</option>
-                            <option value="S">Offer Sent</option>
-                            <option value="A">Offer Accepted</option>
-                            <option value="B">BID Lost</option>
-                        </select>
-                        <span asp-validation-for="Status" class="text-danger"></span>
-                    </div>*@
-
                     <div class="col-md-4 mb-3">
                         <label for="Reference">	PO No. & PO Date</label>
                         <input type="text" class="input" asp-for="PO_NO" readonly="true">
@@ -99,12 +86,11 @@
                         <span asp-validation-for="FormattedIC_DATE" class="text-danger"></span>
                     </div>
 
-                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Controlling Manager</label>
-                        @Html.DropDownListFor(model => model.CoName, new SelectList(IBS.Models.Common.GetComplaint() , "Text", "Text"),"--Select--", new { @class = ""})
-                    <span class="text-danger"></span>
-                </div>
-
+                     <div class="col-md-4 mb-3">
+                        <label for="Reference">Controlling Manager</label>
+                            @Html.DropDownListFor(model => model.CoName, new SelectList(IBS.Models.Common.GetComplaint() , "Text", "Text"),"--Select--", new { @class = ""})
+                        <span class="text-danger"></span>
+                    </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Rejection Memo No.(25 Chars Maxm)</label>
@@ -117,11 +103,6 @@
                         <input type="text" class="input"asp-for="RejMemoDt" maxlength="300" />
                         <span asp-validation-for="RejMemoDt" class="text-danger"></span>
                     </div>
-
-                    @*<div class="col-md-4 mb-3">
-                    <label for="Reference">Contract Documents (If Any)</label>
-                    <span asp-validation-for="" class="text-danger"></span>
-                    </div>*@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Item Description	</label>
@@ -158,13 +139,88 @@
                         <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
                         <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="ComplaintFile"> Upload JI Case (TIF or PDF Format Only)</label>
+                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
+                    </div>
+                    <div class="col-md-1 mb-1">
+                        <div class="savenext-btn">
+                        <button type="button" class="save-btn active">Upload</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="ComplaintFile">Upload REJECTION MEMO(TIF or PDF Format Only)</label>
+                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                    </div>
+                    <div class="col-md-1 mb-1">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active">Upload</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2" id="inspreq">
+                        <label>Joint Inspection Required</label>
+                        @Html.DropDownListFor(model => model.AcceptRejornot, new SelectList(IBS.Models.Common.Inspectionrequired() , "Value", "Text"),"--Select--", new { id = "Inspectionrequired" })
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="InspRegion">Inspection Region</label>
+                        @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                    </div>
+                    <div class="col-md-2 mb-2" id="JointInspection">
+                        <label for="Jointisp">Joint Inspection Engineer</label>
+                        <select id="Jointisp" asp-for="InspER" class="form-control" required></select>
+                    </div>
+                    <div class="col-md-2 mb-2" id="JIDate">
+                        <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
+                        <input type="text" class="input datepicker" asp-format="{0:dd-MM-yyyy}" ASP-FOR="JIDate" maxlength="300" />
+                    </div>
                 </div>
 
                 <div class="savenext-btn">
-                    <a asp-controller="ConsigneeComplaints" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save">Save</button>
+                    <button type="button" class="save-btn active Permission_Save">Save Your Choice</button>
+                </div>
+            </div>
+
+            <div class="accordion-body">
+                <div class="tast-list">
+                    <h2>OUTCOME OF JI</h2>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Region Where Complaint is Received</label>
+                    <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                    <span asp-validation-for="InspRegion" class="text-danger"></span>
                 </div>
             </div>
         </form>
     </div>
 </section>
+
+@section scripts{
+    <script type="text/javascript">
+            $("#InspRegionDropdown").change(function () {
+            debugger
+            var InspRegionDropdown = $(this).val();
+
+            $.ajax({
+                url: '/ComplaintApproval/GetItems',
+                type: 'GET',
+                data: { InspRegionDropdown: InspRegionDropdown },
+                success: function (data) {
+                    debugger
+                    var Item = $("#Jointisp");
+                    Item.empty();
+                    debugger
+                    var items = JSON.parse(data);
+
+                    for (var i = 0; i < items.length; i++) {
+                        var option = $("<option>")
+                            .text(items[i].IeName)
+                            .val(items[i].IeCd);
+
+                        Item.append(option);
+                    }
+                }
+            });
+        });
+    </script>
+}
