@@ -1,4 +1,5 @@
-﻿using IBS.DataAccess;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace IBS.Models
 {
@@ -6,9 +7,11 @@ namespace IBS.Models
 	{
         public int RDesigCd { get; set; }
 
+        [Display(Name = "Designation")]
+        [Required]
         public string? RDesignation { get; set; }
 
-        public byte? Isdeleted { get; set; }
+        public byte? Isdeleted { get; set; } = 0;
 
         public int? Createdby { get; set; }
 
@@ -17,10 +20,5 @@ namespace IBS.Models
         public DateTime? Createddate { get; set; }
 
         public DateTime? Updateddate { get; set; }
-
-        public virtual ICollection<T08IeControllOfficer> T08IeControllOfficers { get; set; } = new List<T08IeControllOfficer>();
-
-        public virtual ICollection<T09Ie> T09Ies { get; set; } = new List<T09Ie>();
-
     }
 }

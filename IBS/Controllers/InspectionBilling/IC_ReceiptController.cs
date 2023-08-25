@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
@@ -10,6 +11,7 @@ using System.Globalization;
 using System.Web;
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class IC_ReceiptController : BaseController
     {
         #region Variables
@@ -25,6 +27,7 @@ namespace IBS.Controllers.InspectionBilling
             _config = configuration;
         }
 
+        [Authorization("IC_Receipt", "Index", "view")]
         public IActionResult Index()
         {
             ViewBag.IsSave = true;
@@ -43,11 +46,7 @@ namespace IBS.Controllers.InspectionBilling
                 BKNO = Convert.ToString(Request.Query["BK_NO"]);
                 SNO = Convert.ToString(Request.Query["SET_NO"]);
                 Action = "M";
-            }
-
-            //if (!IsPostBack)
-            //{
-            //fill_IEwhomeIssued();
+            }           
 
             var IEStatus = iC_ReceiptRepository.Get_IE_Whome_Issued(region);
             ViewBag.Status = IEStatus;
@@ -55,33 +54,22 @@ namespace IBS.Controllers.InspectionBilling
             var currDate = DateTime.Now.ToString("dd/MM/yyyy").Replace("-", "/"); //current_date();
 
             if (Action == "A")
-            {
-                //txtICDT.Text = ss.Substring(0, 10);
-                //btnDelete.Visible = false;
-
+            {                
                 ViewBag.ICDT = currDate.Replace('-', '/');
                 data.IC_SUBMIT_DT = currDate;
                 ViewBag.IsDelete = false;
             }
             else if (Action == "M")
-            {
-                //show();
-                //btnDelete.Visible = true;
-
-
+            {               
                 data = iC_ReceiptRepository.Get_Selected_IC_Receipt(BKNO, SNO, region);
                 ViewBag.IsDelete = true;
             }
             data.RDT = currDate;
-
-            //}
-
+            
             if (Convert.ToString(GetUserInfo.AuthLevl) == "4")
             {
                 ViewBag.IsSave = false;
-                ViewBag.IsDelete = false;
-                //btnSave.Visible = false;
-                //btnDelete.Visible = false;
+                ViewBag.IsDelete = false;                
             }
 
             return View(data);
@@ -121,6 +109,9 @@ namespace IBS.Controllers.InspectionBilling
             return Json(data);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("IC_Receipt", "Index", "edit")]
         public IActionResult ICReceiptSave(IC_ReceiptModel model)
         {
             int result = 0;
@@ -154,6 +145,7 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [HttpPost]
+        [Authorization("IC_Receipt", "Index", "delete")]
         public IActionResult ICReceiptDelete(string BK_NO, string SET_NO)
         {
             int result = 0;
@@ -173,29 +165,11 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptDelete", 1, GetIPAddress());
             }
             return Json(result);
-        }
-
-        public IActionResult ICFromToDate()
-        {
-            var action = Request.Query["Action"];
-            ViewBag.Action = action;
-            var partialView = "IC_Unbilled_Partial";
-            if(action == "UNBILLEDIC")
-            {
-                partialView = "IC_Unbilled_Partial";
-            }
-            else if(action == "ICISSUEDNSUB")
-            {
-                partialView = "IC_Issued_Partial";
-            }
-            ViewBag.PartialView = partialView;
-            return View();
-        }
+        }        
 
         public IActionResult IC_Issued_Partial(string Type)
         {
-            ViewBag.Type = Type;
-            //return View();
+            ViewBag.Type = Type;            
             return PartialView("IC_Issued_Partial");
         }
 

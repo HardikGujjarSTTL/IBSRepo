@@ -43,7 +43,7 @@ namespace IBS.Repositories
                 {
                     orderCriteria = "BK_NO";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
@@ -103,16 +103,14 @@ namespace IBS.Repositories
 
         public List<SelectListItem> Get_IE_Whome_Issued(string region)
         {
-            var data = context.T09Ies.Where(x => x.IeStatus == null && x.IeRegion == region).Select(x => x).OrderBy(x => x.IeName).ToList();
             List<SelectListItem> IE = (from a in context.T09Ies
                                        orderby a.IeName
-                                       where a.IeRegion == region && a.IeStatus == null && a.IeStatus == null
-                                       select
-                                  new SelectListItem
-                                  {
-                                      Text = Convert.ToString(a.IeName),
-                                      Value = Convert.ToString(a.IeCd)
-                                  }).ToList();
+                                       where a.IeRegion == region && a.IeStatus == null
+                                       select new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.IeName),
+                                           Value = Convert.ToString(a.IeCd)
+                                       }).ToList();
             return IE;
         }
 
@@ -271,7 +269,7 @@ namespace IBS.Repositories
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
             {
                 ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            }            
+            }
             if (!string.IsNullOrEmpty(Region))
             {
                 REGION = Region;
@@ -283,7 +281,7 @@ namespace IBS.Repositories
 
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);            
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, REGION, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
@@ -301,7 +299,7 @@ namespace IBS.Repositories
                 CLIENT_TYPE = row["CLIENT_TYPE"].ToString(),
                 REMARKS = row["REMARKS"].ToString(),
                 REMARKS_DATE = row["REMARKS_DATE"].ToString(),
-                IC_DATE = row["IC_DATE"].ToString(),                
+                IC_DATE = row["IC_DATE"].ToString(),
             }).ToList();
 
             query = list.AsQueryable();
@@ -313,7 +311,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region,string UserName, string Ic_Cd)
+        public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
         {
             DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
             IQueryable<ICIssueNotReceiveModel>? query = null;
@@ -371,21 +369,21 @@ namespace IBS.Repositories
             var ds = DataAccessDB.GetDataSet("SP_GET_IC_ISSUED_BY_IE", par, 1);
             DataTable dt = ds.Tables[0];
             dt.Columns.Add("IsTIF", typeof(bool));
-            dt.Columns.Add("IsPDF", typeof(bool));            
+            dt.Columns.Add("IsPDF", typeof(bool));
 
             List<ICIssueNotReceiveModel> list = dt.AsEnumerable().Select(row => new ICIssueNotReceiveModel
             {
-                IC_ISSUED_DT= Convert.ToString( row["IC_ISSUED_DT"]),
-                BK_NO= Convert.ToString( row["BK_NO"]),
-                SET_NO= Convert.ToString( row["SET_NO"]),
-                IE_NAME= Convert.ToString( row["IE_NAME"]),
-                CO_NAME= Convert.ToString( row["CO_NAME"]),
-                CASE_NO= Convert.ToString( row["CASE_NO"]),
-                PO_SOURCE= Convert.ToString( row["PO_SOURCE"]),
-                PO_YR= Convert.ToString( row["PO_YR"]),
-                PO_NO= Convert.ToString( row["PO_NO"]),
-                IMMS_RLY_CD= Convert.ToString( row["IMMS_RLY_CD"]),
-                RLY_NONRLY= Convert.ToString( row["RLY_NONRLY"])        
+                IC_ISSUED_DT = Convert.ToString(row["IC_ISSUED_DT"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                CO_NAME = Convert.ToString(row["CO_NAME"]),
+                CASE_NO = Convert.ToString(row["CASE_NO"]),
+                PO_SOURCE = Convert.ToString(row["PO_SOURCE"]),
+                PO_YR = Convert.ToString(row["PO_YR"]),
+                PO_NO = Convert.ToString(row["PO_NO"]),
+                IMMS_RLY_CD = Convert.ToString(row["IMMS_RLY_CD"]),
+                RLY_NONRLY = Convert.ToString(row["RLY_NONRLY"])
             }).ToList();
 
             query = list.AsQueryable();
@@ -445,7 +443,7 @@ namespace IBS.Repositories
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
             ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
             REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
-            
+
 
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);

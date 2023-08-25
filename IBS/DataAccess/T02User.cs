@@ -33,8 +33,6 @@ public partial class T02User
 
     public string? UserType { get; set; }
 
-    public decimal? Id { get; set; }
-
     public DateTimeOffset? Createddate { get; set; }
 
     public string? Createdby { get; set; }
@@ -44,4 +42,8 @@ public partial class T02User
     public string? Updatedby { get; set; }
 
     public decimal? Isdeleted { get; set; }
+
+    public int? Id { get; set; }
+
+    public string? Migtype { get; set; }
 }

@@ -407,7 +407,7 @@ table, .tableData { border-collapse: separate; border-spacing: 0; width: 100%; e
 	.userDetail p { font-size: 13px; margin-bottom: 0; }
 	.userDetail p span { display: block; font-size: 15px; color: #b0bec5; margin-top: 5px; }
 	.activeIcon { position: absolute; right: -4px; border: 5px solid #2f3b4c; background: #78a51e; width: 22px; height: 22px; border-radius: 50%; -webkit-border-radius: 50%; bottom: 4px; }
-
+	.disableform {pointer-events: none;}
 	/********** navigation **********/
 	.navigation { width: 100%; height: auto; margin: 0; padding: 0; }
 	.navigation ul { margin: 0; padding: 0 0 10px; list-style: none; position: relative; }
@@ -1484,3 +1484,10 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination li.previous a:befor
 .pagination li.disabled a{color:#999;}
 input[type="datetime-local"]{ height:43px;}
 /*.navbar-toggle.active .fa-bars:before{ content:"\f00d"!important; font-family:FontAwesome; color:#F66A2F;}*/
+
+.navbar-static-side ul li a span.menu-title{ display:inline-block; margin-left:0;}
+.navbar-static-side ul li a i.fa{ position:absolute; left:10px;}
+.navbar-static-side ul li a .arrow{ position:absolute; right:10px;}
+.navbar-static-side ul li a{ padding:15px 35px;}
+
+.actionCenter {text-align: center;}

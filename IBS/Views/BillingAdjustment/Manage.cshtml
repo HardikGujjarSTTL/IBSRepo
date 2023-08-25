@@ -1,14 +1,22 @@
 ﻿@model IBS.Models.BillingAdjustmentModel
 @{
     ViewData["Title"] = "Manage Billing Adjustment";
+    string clsView = "";
+    if (Model.Adjusment_Yr_Mth != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Billing Adjustment</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="BillingAdjustment" class="formBtn viewall-btn">View List</a>
+    </div>
 </div> 
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="BillingAdjustment" asp-action="BillingAdjustmentDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBillingAdjustmentDetails">
             <input type="hidden" asp-for="Adjusment_Yr_Mth" />
@@ -51,8 +59,8 @@
                         </div>
                     </div> 
                     <div class="savenext-btn" style="justify-content:center">
-                        <a asp-controller="BillingAdjustment" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        @*<a asp-controller="BillingAdjustment" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>
@@ -84,8 +92,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/BillingAdjustment/Index";
-            window.location.href = '@Url.Action("Index", "BillingAdjustment")';
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "BillingAdjustment")';
+            }
         }; 
     </script>
 }

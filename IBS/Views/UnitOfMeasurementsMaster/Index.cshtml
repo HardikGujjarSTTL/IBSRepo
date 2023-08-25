@@ -1,38 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Unit of Measurements Master";
+    ViewData["Title"] = "Unit of Measurements";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Unit of Measurements Master</h2>
-        </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="UnitOfMeasurementsMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New UOM</a>
-        </div>
-
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Unit of Measurements</h2>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtUOM" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>UOM Short Description</th>
-                            <th>UOM Long Description</th>
-                            <th>Division Factor</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="UnitOfMeasurementsMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New UOM</a>
+    </div>
 </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtUOM" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>UOM Code</th>
+                        <th>UOM Short Description</th>
+                        <th>UOM Long Description</th>
+                        <th>Division Factor</th>
+                        <th style="text-align:center">View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -82,21 +79,22 @@
                         render: function (data, type, row) {
                             var id = data.UomCd;
                             var editUrl = '@Url.Action("Manage", "UnitOfMeasurementsMaster")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="UOMDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[2, "asc"]]
             });
         }
 
-        function UOMDelete(id) {
+        function Delete(id) {
             var url = '@Url.Action("Delete", "UnitOfMeasurementsMaster")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
+
     </script>
 }

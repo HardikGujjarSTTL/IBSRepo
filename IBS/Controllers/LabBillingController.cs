@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class LabBilling : BaseController
     {
         #region Variables
@@ -14,10 +16,12 @@ namespace IBS.Controllers
         {
             labBillingRepository = _labBillingRepository;
         }
+        [Authorization("LabBilling", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("LabBilling", "Index", "view")]
         public IActionResult Manage(string _labBillPer)
         {
             LabBillingModel model = new();
@@ -35,6 +39,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("LabBilling", "Index", "delete")]
         public IActionResult Delete(string LabBillPer)
         {
             try
@@ -54,6 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("LabBilling", "Index", "edit")]
         public IActionResult LabBillingDetailsSave(LabBillingModel model)
         {
             try

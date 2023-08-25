@@ -1,46 +1,74 @@
-﻿using IBS.DataAccess;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-	public class UnitOfMeasurementsMasterController : BaseController
+    public class UnitOfMeasurementsMasterController : BaseController
     {
-		#region Variables
-		private readonly IUnitOfMeasurements unitOfMeasurements;
-		#endregion
-		public UnitOfMeasurementsMasterController(IUnitOfMeasurements _unitOfMeasurements)
-		{
-			unitOfMeasurements = _unitOfMeasurements;
-		}
-		public IActionResult Index()
+        private readonly IUnitOfMeasurementsRepository unitOfMeasurementsRepository;
+
+        public UnitOfMeasurementsMasterController(IUnitOfMeasurementsRepository _unitOfMeasurementsRepository)
+        {
+            unitOfMeasurementsRepository = _unitOfMeasurementsRepository;
+        }
+
+        public IActionResult Index()
         {
             return View();
         }
 
-		public IActionResult Manage(int id)
-		{
-			UOMModel model = new();
-			if (id > 0)
-			{
-				model = unitOfMeasurements.FindByID(id);
-			}
-			return View(model);
-		}
+        public IActionResult Manage(int id)
+        {
+            UOMModel model = new();
+            if (id > 0)
+            {
+                model = unitOfMeasurementsRepository.FindByID(id);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Manage(UOMModel model)
+        {
+            try
+            {
+                if (model.UomCd == 0)
+                {
+                    model.Createdby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    unitOfMeasurementsRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    unitOfMeasurementsRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "UnitOfMeasurements", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<UOMModel> dTResult = unitOfMeasurements.GetUOMList(dtParameters);
+            DTResult<UOMModel> dTResult = unitOfMeasurementsRepository.GetUOMList(dtParameters);
             return Json(dTResult);
         }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (unitOfMeasurements.Remove(id, UserId))
+                if (unitOfMeasurementsRepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -51,33 +79,6 @@ namespace IBS.Controllers
                 AlertDanger();
             }
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult UnitOfMeasurementsDetailsSave(UOMModel model)
-        {
-            try
-            {
-                string msg = "Unit Of Measurement Inserted Successfully.";
-
-                if (model.UomCd > 0)
-                {
-                    msg = "Unit Of Measurement Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = unitOfMeasurements.UOMDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "UnitOfMeasurementsMaster", "UnitOfMeasurementsDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
     }

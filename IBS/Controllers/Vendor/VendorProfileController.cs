@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers.Vendor
 {
+    [Authorization]
     public class VendorProfileController : BaseController
     {
         #region Variables
@@ -23,16 +25,16 @@ namespace IBS.Controllers.Vendor
             env = _environment;
             _config = configuration;
         }
-
+        [Authorization("VendorProfile", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
-
+        [Authorization("VendorProfile", "Index", "view")]
         public IActionResult Manage(int VEND_CD)
         {
             int VendCd = 0;
-            if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+            if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
             {
                 VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
             }
@@ -47,7 +49,7 @@ namespace IBS.Controllers.Vendor
             }
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.Vendor, Convert.ToString(VendCd));
             FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
-            if ((VendCd == model.VendCd && IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor"))
+            if ((VendCd == model.VendCd && IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor"))
             {
                 FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.View;
             }
@@ -69,7 +71,7 @@ namespace IBS.Controllers.Vendor
             DTResult<VendorlistModel> dTResult = vendorProfileRepository.GetVendorList(dtParameters);
             return Json(dTResult);
         }
-
+        [Authorization("VendorProfile", "Index", "delete")]
         public IActionResult Delete(int VEND_CD)
         {
             try
@@ -89,14 +91,15 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("VendorProfile", "Index", "edit")]
         public IActionResult VendorProfileDetailsSave(VendorModel model, IFormCollection FrmCollection)
         {
             try
             {
                 string msg = "";
                 int VendCd = 0;
-                string userType = IBS.Helper.SessionHelper.UserModelDTO.LoginType;
-                if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+                string userType = IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower();
+                if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
                 {
                     VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 }

@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class CentralRejectionStatusController : BaseController
     {
         #region Variables
@@ -15,10 +17,12 @@ namespace IBS.Controllers
         {
             CentralRejectionStatusRepository = _CentralRejectionStatusRepository;
         }
+        [Authorization("CentralRejectionStatus", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("CentralRejectionStatus", "Index", "view")]
         public IActionResult Manage(int ID)
         {
             CentralRejectionStatusModel model = new();
@@ -35,7 +39,7 @@ namespace IBS.Controllers
             DTResult<CentralRejectionStatusModel> dTResult = CentralRejectionStatusRepository.GetCentralRejectionStatusList(dtParameters);
             return Json(dTResult);
         }
-
+        [Authorization("CentralRejectionStatus", "Index", "delete")]
         public IActionResult Delete(int ID)
         {
             try
@@ -55,6 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("CentralRejectionStatus", "Index", "edit")]
         public IActionResult CentralRejectionStatusSave(CentralRejectionStatusModel model)
         {
             try

@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class UserRoleController : BaseController
     {
         #region Variables
@@ -15,10 +17,12 @@ namespace IBS.Controllers
         {
             roleRepository = _roleRepository;
         }
+        [Authorization("UserRole", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("UserRole", "Index", "view")]
         public IActionResult Manage(int id)
         {
             RoleModel model = new();
@@ -35,6 +39,7 @@ namespace IBS.Controllers
             DTResult<RoleModel> dTResult = roleRepository.GetUserRoleList(dtParameters);
             return Json(dTResult);
         }
+        [Authorization("UserRole", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try
@@ -54,6 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("UserRole", "Index", "edit")]
         public IActionResult UserRoleSave(RoleModel model)
         {
             try

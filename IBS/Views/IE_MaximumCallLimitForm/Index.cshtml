@@ -8,7 +8,8 @@
             <h2>IE Maximum Call Limit Form</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="IE_MaximumCallLimitForm" asp-action="Manage" class="formBtn"> Add New Form</a>
+            @*<a asp-area="" asp-controller="IE_MaximumCallLimitForm" asp-action="Manage" class="formBtn"> Add New Form</a>*@
+            <button type="button" class="formBtn" id="btnAdd">Add New Form</button>
         </div>
 
     </div>
@@ -19,8 +20,8 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>REGION NAME</th>
-                            <th>MAXIMUM CALL LIMIT</th>
+                            <th>Region Name</th>
+                            <th>Maximum Call Llimit</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -52,6 +53,7 @@
                 destroy: true,
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
+                
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -71,16 +73,43 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "RegionCode" },
-                    { data: "MaximumCall" },
+                    //{ data: "RegionCode" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Region = row["RegionCode"];
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            if (Region == "N") {
+                                html = "Northern";
+                            }
+                            if (Region == "S") {
+                                html = "Southern";
+                            }
+                            if (Region == "W") {
+                                html = "Western";
+                            }
+                            if (Region == "E") {
+                                html = "Eastern";
+                            }
+                            if (Region == "C") {
+                                html = "Central";
+                            }
+                            if (Region == "Q") {
+                                html = "CO QA Division";
+                            }
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    { data: "MaximumCall",orderable: false },
                     
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.RegionCode;
-                            var editUrl = '@Url.Action("Manage", "IE_MaximumCallLimitForm")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="MCLDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var Region = data.RegionCode;
+                            var editUrl = '@Url.Action("Manage", "IE_MaximumCallLimitForm")?Region=' + Region;
+                            var html = '<div align=\"center\" class=\"center reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //html += '<a onclick="MCLDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -90,10 +119,19 @@
             });
         }
 
+        $("#btnAdd").click(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            var Region = urlParams.get('Region');
+
+            window.location.href = '@Url.Action("Manage", "IE_MaximumCallLimitForm")' + '?Region=' + Region;
+        });
+
         function MCLDelete(id) {
             var url = '@Url.Action("Delete", "IE_MaximumCallLimitForm")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
+
+
     </script>
 }

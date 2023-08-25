@@ -15,8 +15,8 @@
             <h2>PO Master Details List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="POMaster" asp-action="PoDetailManage" asp-route-CASE_NO="@CaseNo" asp-route-ITEM_SRNO="@ItemSrno" class="formBtn"><span class="fa fa-plus"></span> Add New PO Master Details</a>
-            <a asp-controller="POMaster" asp-action="Index" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>
+            <a asp-area="" asp-controller="POMaster" asp-action="PoDetailManage" asp-route-CASE_NO="@CaseNo" asp-route-ITEM_SRNO="@ItemSrno" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New PO Master Details</a>
+            <a asp-controller="POMaster" asp-action="Index" asp-route-CaseNo="@CaseNo" class="reset-btn">View List</a>
         </div>
     </div>
     <section class="table-section">
@@ -88,8 +88,8 @@
                             var CASE_NO = data.CASE_NO;
                             var ITEM_SRNO = data.ITEM_SRNO;
                             var editUrl = '@Url.Action("PoDetailManage", "POMaster")?CASE_NO=' + CASE_NO + "&ITEM_SRNO=" + ITEM_SRNO;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="POMasterDetailsDelete(this.CASE_NO,this.ITEM_SRNO); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="POMasterDetailsDelete(this.CASE_NO,this.ITEM_SRNO); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

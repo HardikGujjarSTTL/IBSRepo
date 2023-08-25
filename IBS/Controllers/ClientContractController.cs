@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class ClientContractController : BaseController
     {
         #region Variables
@@ -14,11 +16,13 @@ namespace IBS.Controllers
         {
             clientcontractRepository = _clientcontractRepository;
         }
+        [Authorization("ClientContract", "Index", "view")]
         public IActionResult Index(string type)
         {
             ViewBag.Type = type;
             return View();
         }
+        [Authorization("ClientContract", "Index", "view")]
         public IActionResult Manage(int id, string Type)
         {
             string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
@@ -41,6 +45,7 @@ namespace IBS.Controllers
             DTResult<ClientContractModel> dTResult = clientcontractRepository.GetClientContractList(dtParameters);
             return Json(dTResult);
         }
+        [Authorization("ClientContract", "Index", "delete")]
         public IActionResult Delete(int id,string Type)
         {
             try
@@ -60,6 +65,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("ClientContract", "Index", "edit")]
         public IActionResult ClientContractDetailsSave(ClientContractModel model)
         {
             try

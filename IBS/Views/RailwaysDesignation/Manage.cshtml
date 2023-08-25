@@ -1,0 +1,46 @@
+﻿@model IBS.Models.Rly_Designation_FormModel
+
+@{
+    ViewData["Title"] = "Railway Designation Master";
+    bool IsReadOnly = Model != null & !Model.IsNew;
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Railway Designation Master</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form asp-controller="RailwaysDesignation" asp-action="Manage" id="frmRailwayDesignation">
+        <input type="hidden" asp-for="IsNew" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Designation Code <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="RlyDesigCd" maxlength="10" readonly="@IsReadOnly">
+                    <span asp-validation-for="RlyDesigCd" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Designation</label>
+                    <input type="text" class="input" asp-for="RlyDesigDesc" maxlength="40">
+                </div>
+            </div>
+
+            <div class="savenext-btn">
+                <a asp-controller="RailwaysDesignation" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitRailwayDesignation();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function SubmitRailwayDesignation() {
+            if ($("#frmRailwayDesignation").valid()) {
+                $("#frmRailwayDesignation").submit();
+            }
+        }
+    </script>
+}

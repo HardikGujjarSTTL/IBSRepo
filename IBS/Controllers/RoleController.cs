@@ -1,10 +1,14 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using IBS.Helpers;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class RoleController : BaseController
     {
         #region Variables
@@ -14,10 +18,13 @@ namespace IBS.Controllers
         {
             roleRepository = _roleRepository;
         }
+
+        [Authorization("Role", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("Role", "Index", "view")]
         public IActionResult Manage(int id)
         {
             RoleModel model = new();
@@ -34,6 +41,7 @@ namespace IBS.Controllers
             DTResult<RoleModel> dTResult = roleRepository.GetRoleList(dtParameters);
             return Json(dTResult);
         }
+        [Authorization("Role", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try
@@ -53,6 +61,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("Role", "Index", "edit")]
         public IActionResult RoleDetailsSave(RoleModel model)
         {
             try
@@ -63,6 +72,10 @@ namespace IBS.Controllers
                 {
                     msg = "Role Updated Successfully.";
                     model.Updatedby = UserId;
+                    //if (!RoleWisePermissionHelper.ActionIsAccesibleOrNot("Role", "Index", "edit"))
+                    //{
+                    //    return Json(new { status = false, responseText = Common.AccessDeniedMessage });
+                    //}
                 }
                 model.Createdby =UserId;
                 int i = roleRepository.RoleDetailsInsertUpdate(model);

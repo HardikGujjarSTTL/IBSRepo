@@ -1,6 +1,11 @@
 ﻿@model IBS.Models.IC_ReceiptModel
 @{
     ViewData["Title"] = "Receipt of book set in Inspection Office";
+    string clsView = "";
+    if (Model.BK_NO != null && Model.SET_NO != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div>
@@ -48,14 +53,14 @@
                     </div>
                     <div class="row my-0">
                         <div class="col-md-12 mb-4 text-center">
-                            @*<div class="savenext-btn ">*@
-                            <button tabindex="7" type="button" class="reset-btn" id="btnSave" style="background-color:#F66A2F">Save</button>
-                            <button tabindex="9" type="button" class="reset-btn" id="btnSearch" style="background: none;color:#646464">Search</button>
-                            <a asp-controller="IC_Receipt" asp-action="Index" class="reset-btn">Cancel</a>
-                            <button tabindex="10" type="button" class="reset-btn" id="btnReport" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of Unbilled IC's</button>
-                            <button tabindex="11" type="button" class="reset-btn" id="btnIssuedNRec" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of IC's Issued but not Received</button>
-                            <button tabindex="12" type="button" class="reset-btn" id="btnStatusIC" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Status of IC's</button>
-                            @*</div>*@
+                            <div class="savenext-btn ">
+                                <button tabindex="7" type="button" class="save-btn active Permission_Save" id="btnSave" style="background-color:#F66A2F">Save</button>
+                                <button tabindex="9" type="button" class="reset-btn" id="btnSearch" style="background: none;color:#646464">Search</button>
+                                <a asp-controller="IC_Receipt" asp-action="Index" class="reset-btn">Cancel</a>
+                                <button tabindex="10" type="button" class="reset-btn" id="btnReport" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of Unbilled IC's</button>
+                                <button tabindex="11" type="button" class="reset-btn" id="btnIssuedNRec" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of IC's Issued but not Received</button>
+                                <button tabindex="12" type="button" class="reset-btn" id="btnStatusIC" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Status of IC's</button>
+                            </div>
                         </div>
                     </div>
                     <div class="alert alert-warning center">
@@ -127,11 +132,13 @@
             });
 
             $("#btnReport").click(function () {
-                window.location.href = "/IC_Receipt/ICFromToDate?Action=UNBILLEDIC";
+                //window.location.href = "/IC_Receipt/ICFromToDate?Action=UNBILLEDIC";
+                window.location.href = "/Reports/FromToDate?actiontype=UNBILLEDIC";
             })
 
             $("#btnIssuedNRec").click(function () {
-                window.location.href = "/IC_Receipt/ICFromToDate?Action=ICISSUEDNSUB";
+                //window.location.href = "/IC_Receipt/ICFromToDate?Action=ICISSUEDNSUB";
+                window.location.href = "/Reports/FromToDate?actiontype=ICISSUEDNSUB";
             })
 
             $("#btnStatusIC").click(function () {
@@ -144,7 +151,7 @@
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'dd/mm/yy',
-            });           
+            });
         }
 
         function Save() {
@@ -167,8 +174,6 @@
         }
 
         function Delete(bk_no, set_no) {
-            debugger
-            //var formData = new FormData($("#frmICReceipt")[0]);
             var obj = new Object();
             obj.BK_NO = bk_no;
             obj.SET_NO = set_no;
@@ -177,32 +182,20 @@
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
-                //data: { BK_NO : bk_no, SET_NO: set_no },//
-                //data: function (d) {
-                //    var AdditionalValues = {
-                //        "BK_NO": bk_no,
-                //        "SET_NO": set_no
-                //    };
-                //    d.AdditionalValues = AdditionalValues;
-                //    return JSON.stringify(d);
-                //},
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
                     if (response > 0) {
                         ShowHideMsgNew(true, "Record Deleted Successfull")
-                        //alert("Record Deleted Successfull");
                         BindDataTable();
                     } else {
                         ShowHideMsgNew(false, "Record Not Deleted")
-                        //alert("Record Not Deleted");
                     }
                 }
             });
         }
 
         function BindDataTable() {
-            //var formData = new FormData($("#frmICReceipt")[0]);
             var BK_NO = $("#BK_NO").val();
             var SET_NO = $("#SET_NO").val();
             var IE_CD = "";
@@ -249,14 +242,9 @@
 
                             gridData = row;
                             var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
-                            html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="Delete(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\');" href="javascript:void(\'0\');" id=\"' + data.BK_NO + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i></a>';
+                            html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"edit\""><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\');" href="javascript:void(\'0\');" id=\"' + data.BK_NO + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i></a>';
                             html += '</div>';
-
-                            //var html = '<div align=\"center\" class=\"reportIcon\">';
-                            //html += '<a onclick="SelectDetails(\'' + data.BK_NO + '\',\'' + data.SET_NO + '\')" id=\"' + data.BK_NO + '\" class=\"delete\""><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            ////html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
-                            //html += '</div>';
                             return html;
 
 

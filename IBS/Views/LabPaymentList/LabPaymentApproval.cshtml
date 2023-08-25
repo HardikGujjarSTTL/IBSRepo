@@ -1,0 +1,448 @@
+﻿@model IBS.Models.LabPaymentListModel
+
+@{
+    ViewData["Title"] = "LAB SAMPLE PAYMENT RECIEPT APPROVE FORM";
+}
+
+
+<style>
+    tr:nth-child(even) {
+    background-color: #f0f8ff; /* Light Blue */
+}
+
+/* Style for table cells */
+td {
+    height: 50px;
+    padding: 10px;
+    border: 1px solid #b0c4de;
+    vertical-align: top;
+}
+    table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid #b0c4de; /* Add top border */
+  background-color: #f0f8ff;
+  margin-bottom: 20px; /* Add margin at the bottom for spacing */
+}
+
+/* Style for table cells */
+td {
+  height: 50px; /* Adjust the height of table cells */
+  padding: 5px;
+  vertical-align: top;
+}
+
+/* Style for labels */
+label {
+  display: block; /* Make labels block-level to occupy the whole cell width */
+  font-weight: bold;
+}
+
+/* Style for input fields */
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  padding: 5px;
+  box-sizing: border-box; /* Ensure the padding is included in the width */
+}
+
+/* Style for error message */
+.text-danger {
+  color: red;
+  margin-left: 6%;
+}
+
+/* Style for left-aligned button */
+.left-button {
+  float: left;
+  margin-right: 10px;
+}
+
+/* Style for right-aligned button */
+.right-button {
+  float: right;
+  margin-left: 10px;
+}
+
+/* Clear floating elements */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+    .table-responsive {
+    overflow-x: auto;
+    height:190px;
+}
+    .custom-textarea {
+    width: 400px;
+    height:auto; 
+}
+.table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtlabregdtl {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    /* Style table header cells */
+    #dtlabregdtl th {
+        background-color: #f2f2f2;
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    /* Style table body cells */
+    #dtlabregdtl td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+</style>
+<h2>@ViewData["Title"]</h2>
+
+@*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
+    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
+           bgColor="#f0f8ff" border="1">
+        <tr>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">Case No.</label>
+            </td>
+           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label  class="control-label" id="lblcno"></label>
+            </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">
+                Call Sno.
+            </label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblCallSno"></label>
+        </td>
+        </tr>
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">
+                Call Recv Dt.
+            </label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblCallDT"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">Gross Testing Charges Submitted by LAB Official.</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">          
+            <label class="control-label" id="lblgrosstc"></label>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">
+                Net Testing Charges Paid by Vendor.*
+            </label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblnettcv"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">TDS Deducted by Vendor. (If Any)*</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lbltds"></label>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">
+                Gross Testing Charges Submitted by Vendor*
+            </label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblgrosstcv"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">UTR No.*</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblutrno"></label>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">
+                UTR Date*
+            </label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lblutrdt"></label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label">LAB Sample Payment Reciept</label>
+        </td>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+            <label class="control-label" id="lbllabspr"></label>
+        </td>
+    </tr>
+       
+        <tr>
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+           
+            <label>Status</label>
+            
+            @Html.DropDownListFor(model => model.DocStatusFin, new SelectList(IBS.Models.Common.PaymentStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
+            <span class="fa fa-caret-down" style="position: absolute; right: 35px; top: 952px; transform: translateY(-50%); pointer-events: none;"></span>
+        </td>
+        </tr>
+    <tr id="remark" style="display:none;">
+
+        
+        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+            <label>Remarks</label>
+            <textarea  class="form-control custom-textarea" id="txtremark"></textarea>
+        </td>
+
+    </tr>
+    
+    </table>
+<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
+    <br />
+
+@*</form>*@
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+                
+        $(function () {
+            
+            var CaseNo = '@ViewBag.CaseNo';
+            var CallSno = '@ViewBag.CallSno';
+            var CallRDt = '@ViewBag.CallRecvDt';
+            var parts = CallRDt.split('/');
+            var CallRecvDt = parts[1] + '/' + parts[0] + '/' + parts[2];
+            LoadPayment(CaseNo, CallSno, CallRecvDt);
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });            
+            //LoadSampleDtl();
+                         
+        });
+        $("#ddlstatus").change(function () {
+            if ($("#ddlstatus").val() != "R") {
+                $("#remark").css("display", "");
+            }
+            else {
+                $("#remark").css("display", "");
+            }
+          })
+
+        function LoadPayment(CaseNo, CallSno, CallRecvDt) {                      
+            
+            $.ajax({
+                url: '/LabPaymentList/LoadPayment',
+                type: "POST",
+                dataType: "JSON",
+                data: { CaseNo: CaseNo, CallSno: CallSno, CallRecvDt: CallRecvDt },
+
+                success: function (success) {
+
+                    $("#lblcno").text(CaseNo).css("color", "red");
+                    $("#lblCallDT").text(CallRecvDt).css("color", "red");
+                    $("#lblCallSno").text(CallSno).css("color", "red");
+                    $("#lblgrosstc").text(success.GrossTestingChargesLab).css("color", "red");
+                    $("#lblnettcv").text(success.NetTestingChargesVend).css("color", "red");
+                    $("#lbltds").text(success.TDS).css("color", "red");
+                    $("#lblgrosstcv").text(success.GrossVendor).css("color", "red");
+                    $("#lblutrno").text(success.UTRNO).css("color", "red");
+                    $("#lblutrdt").text(success.UTRDT).css("color", "red");
+                    $("#lbllabspr").text(success.PaymentRecUpload).css("color", "red");
+                    //$("#ddlstatus").val(success.DocStatusFin);
+
+                    //$("#txtremark").val(success.Remarks);
+                    
+                    
+                }
+
+            });
+        }
+
+        function SaveDetails() {
+            
+            if ($("#ddlstatus").val() == "") {
+                alert("Status Can not Left Blank!!!");
+                return false;
+            }
+            else if ($("#txtremark").val() == "") {
+                alert("Remarks Can not Left Blank!!!");
+                return false;
+            }
+            
+
+            var parts = $("#lblCallDT").text().split('/');
+            var convertedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
+            
+            var formData = new FormData();
+            
+            formData.append("CaseNo", $("#lblcno").text());
+            formData.append("CallRecvDt", convertedDate);
+            formData.append("CallSno", $("#lblCallSno").text());
+            formData.append("DocStatusFin", $("#ddlstatus").val());
+            formData.append("Remarks", $("#txtremark").val());
+            
+            //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                //contentType: "application/json",
+                url: "/LabPaymentList/SaveData",
+                dataType: "json",
+                data: formData,
+                success: function (res) {
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabPaymentList", "LabPaymentList")";
+                        //$.unblockUI({});
+                        //hideLoader();
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+
+
+                },
+                error: function (res) {
+
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabPaymentList", "LabPaymentList")";
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+
+        }
+        function UpdateDetails() {
+          
+            if ($("#ddlstatus").val() == "U") {
+                if ($("#upload").val() == "") {
+                    alert("please Upload File");
+                    return false;
+                }
+
+            }
+            var parts = $("#lblCallDT").text().split('/');
+            var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+
+            //var files = [];
+            //files.push($('input[type=file]').val());
+            var formData = new FormData();
+            formData.append("UploadLab", $("#upload")[0].files[0]);
+            formData.append("CaseNo", $("#lblcno").text());
+            formData.append("CallRecDt", convertedDate);
+            formData.append("CallSNO", $("#lblCallSno").text());
+            formData.append("Status", $("#ddlstatus").val());
+            formData.append("DateofRecSample", $("#dtrecsam").val());
+            formData.append("TotalTFee", $("#txttesfee").val());
+            formData.append("LikelyDt", $("#dtlike").val());
+            formData.append("Remarks", $("#txtremark").val());
+            formData.append("Data", encode(fileByteArray));
+            //var LabSampleInfoModel = {
+            //    CaseNo: $("#lblcno").text(),
+            //    CallRecDt: convertedDate,
+            //    CallSNO: $("#lblCallSno").text(),
+            //    Status: $("#ddlstatus").val(),
+            //    DateofRecSample: $("#dtrecsam").val(),
+            //    TotalTFee: $("#txttesfee").val(),
+            //    LikelyDt: $("#dtlike").val(),
+            //    Remarks: $("#txtremark").val(),
+            //    //UploadLab: files,
+            //    Data: encode(fileByteArray)
+            //};
+
+            //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: "/LabSampleInfo/UpdateDetails",
+                dataType: "json",
+                data: formData,
+                success: function (res) {
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabSampleInfo", "LabSampleInfo")";
+                        //$.unblockUI({});
+                        //hideLoader();
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+
+
+                },
+                error: function (res) {
+
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+
+                        window.location.href = "@Url.Action("LabSampleInfo", "LabSampleInfo")";
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+
+        }
+    </script>
+}
+

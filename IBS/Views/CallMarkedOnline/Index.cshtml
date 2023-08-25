@@ -1,0 +1,219 @@
+﻿@{
+    ViewData["Title"] = "Call Marked Online";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="CallMarkedOnline" class="formBtn viewall-btn" id="viewList">View List</a>
+    </div>
+</div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="Reports" asp-action="FromToDate" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">    
+    <div class="accordion-body" id="body">
+        <div class="row my-0" style="text-align:left;">
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+               <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbCall", "Show All Online Calls Marked on", new {  @id="rdbAllCallMarked" }) Show All Online Calls Marked on</label>
+            </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+               <label formaction="rdbOnlyCallUnMarked"> @Html.RadioButton("rdbCall", "Show Only Un-Marked Online Calls for", new {  @id="rdbOnlyCallUnMarked" }) Show Only Un-Marked Online Calls for</label>
+            </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <label formaction="rdbAllCallUnMarked">@Html.RadioButton("rdbCall", "Show All Un-Marked Online Calls As on Date", new {  @id="rdbAllCallUnMarked" , @checked = true }) Show All Un-Marked Online Calls As on Date</label>
+            </div>
+        </div>
+        <div class="row my-0" style="text-align:left;">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Date</label>
+                    <input type="text" class="datepicker" id="txtDate" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    @*<a asp-controller="CallMarkedOnline" asp-action="Manage" class="reset-btn" id="btnSubmit">Cancel</a>*@
+                    <button type="button" class="reset-btn" id="btnManage">Call Manage</button>
+                    <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section" id="tblsection">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive nowrap" width="100%">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Case No.</th>
+                            <th>PO NO.</th>
+                            <th>PO Date</th>
+                            <th>Call Date</th>
+                            <th>Call SNo.</th>
+                            <th>Call Install No.</th>
+                            <th>IE</th>
+                            <th>Vendor</th>
+                            <th>Status</th>
+                            <th>Call Letter No/Dispatch Ref No.</th>
+                            <th>Remarks</th>
+                            <th>DateTime</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section class="table-section" id="frmParial" style="display:none;">
+    </section>
+</form>
+
+
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+}
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        $("#viewList").css("display","none");
+        $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+        setDefaultDate();
+
+        $("#btnSubmit").click(function () {
+            InitializeDatatable();
+        });
+
+        $("#btnManage").click(function () {
+            $("#body").css("display", "none");
+            $("#tblsection").css("display", "none");
+            $("#frmParial").css("display", "block");
+            //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023",
+                //data: obj,
+                success: function (data) {
+                    $('#frmParial').html(data)
+                }
+            });
+        });
+    });
+
+    function setDefaultDate() {
+        $('#txtDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        });
+    }
+
+    function InitializeDatatable() {
+        debugger
+        var Date = $("#txtDate").val();
+        var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "1" : "0";
+        var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "1" : "0";
+        var Rdb3 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "1" : "0";
+        var chk_val = 1;
+        if ($("#rdbAllCallMarked").is(':checked')) { chk_val = 1 }
+        if ($("#rdbAllCallUnMarked").is(':checked')) { chk_val = 2 }
+        if ($("#rdbOnlyCallUnMarked").is(':checked')) { chk_val = 3 }
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            //scrollX: true,
+            scrollCollapse: false,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups            
+            ajax: {// Ajax Filter
+                url: "@Url.Action("Get_Call_Marked_Online", "CallMarkedOnline")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "Date": Date,
+                        "Rdb1": Rdb1,
+                        "Rdb2": Rdb2,
+                        "Rdb3": Rdb3
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [                
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },                
+                { data: "CASE_NO" },
+                { data: "PO_NO" },
+                { data: "PO_DT" },
+                { data: "CALL_RECV_DT" },
+                { data: "CALL_SNO" },
+                { data: "CALL_INSTALL_NO" },
+                { data: "IE_NAME" },
+                { data: "VENDOR" },
+                { data: "CALL_STATUS" },
+                { data: "CALL_LETTER_NO" },
+                { data: "REMARKS" },
+                { data: "DATE_TIME" },
+                {
+                    data: '',
+                    render: function (data, type, row, meta) {
+                        var html = "";
+                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
+                        html += '<a onclick="GetDetail(\'' + row.CASE_NO + '\',\'' + row.CALL_RECV_DT + '\',\'' + row.CALL_SNO + '\',\'' + chk_val + '\',\'' + Date + '\');" id=\"' + row.CASE_NO + '\" class=\"edit\""><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                        html += '</div>';
+                        return html;
+                    }
+                }
+            ],
+            "order": [[0, "asc"]],
+            "initComplete": function (settings, json) {  
+                $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+            },
+        });
+    }
+
+    function GetDetail(case_no, call_recv_dt, call_sno, check_select, run_dt) {
+        //window.location.href = "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+        $("#body").css("display", "none");
+        $("#tblsection").css("display", "none");
+        $("#frmParial").css("display", "block");
+        //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt,
+            //data: obj,
+            success: function (data) {
+                $('#frmParial').html(data)
+            }
+        });
+    }
+</script>
+

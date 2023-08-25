@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "PO Detail";
+    string clsView = "";
+    if (Model.ItemSrno == null && Model.ItemSrno == 0)
+    {
+        clsView = "Permission_View";
+    }
 }
 @{
     var CaseNo = Model.CaseNo;
@@ -14,8 +19,11 @@
     <div class="tast-list">
         <h2>PO Detail</h2>
     </div>
+    <div>
+        <a asp-controller="POMaster" asp-action="PODetails" asp-route-CaseNo="@CaseNo" class="reset-btn">View List</a>
+    </div>
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
             <input type="hidden" asp-for="ItemSrno" />
@@ -205,8 +213,8 @@
                     </div>
                 </div>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    <a asp-controller="POMaster" asp-action="PODetails" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    @*<a asp-controller="POMaster" asp-action="PODetails" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>*@
                 </div>
             </div>
         </form>

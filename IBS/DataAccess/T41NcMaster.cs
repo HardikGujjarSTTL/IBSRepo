@@ -23,7 +23,7 @@ public partial class T41NcMaster
 
     public int? ConsigneeCd { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 
@@ -37,9 +37,9 @@ public partial class T41NcMaster
 
     public DateTime? IcDt { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
-    public byte? CoCd { get; set; }
+    public int? CoCd { get; set; }
 
     public string? RegionCode { get; set; }
 

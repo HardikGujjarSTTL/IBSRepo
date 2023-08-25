@@ -1,0 +1,85 @@
+﻿@model IBS.Models.InspectionFeeBillModel
+
+@{
+    ViewData["Title"] = "INSPECTION FEE BILL";
+}
+
+<form role="form" method="post" id="frmInspectionFeeBill">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>INSPECTION FEE BILL</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Bill No</label>
+                <input type="text" class="input" asp-for="BillNo">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Bill Date (dd/mm/yyyy)</label>
+                <input type="text" class="input" asp-for="Display_BillDt">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Case No</label>
+                <input type="text" class="input" asp-for="CaseNo">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Max Fee Allowed</label>
+                <input type="text" class="input" asp-for="MaxFee">
+            </div>
+            <div class="col-md-4 mb-3">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Min Fee Payable</label>
+                <input type="text" class="input" asp-for="MinFee">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Fee Rate</label>
+                <input type="text" class="input" asp-for="FeeRate">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Fee Type</label>
+                @Html.DropDownListFor(model => model.FeeType, Common.GetFeeType(), "",  new { @class = ""})
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Tax Type</label>
+                @Html.DropDownListFor(model => model.TaxType, Common.GetTaxType(), "",  new { @class = ""})
+                @Html.DropDownListFor(model => model.TaxType_GST, Common.GetTaxType_GST(), new { @class = ""})
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="InspectionFeeBill" asp-action="Index" class="reset-btn">Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var newDt1 = new Date('2017-07-01');
+            var BillDt = moment('@Model.Display_BillDt', "DD/MM/YYYY"); // 1st argument - string, 2nd argument - format
+            var newDt2 = BillDt.toDate(); // convert moment.js object to Date object
+
+            if (newDt2 > newDt1) {
+                $("#TaxType_GST").val('@Model.TaxType');
+                $("#TaxType_GST").show();
+                $("#TaxType").hide();
+            }
+            else{
+                $("#TaxType_GST").hide();
+                $("#TaxType").show();
+            }
+        });
+
+    </script>
+
+}

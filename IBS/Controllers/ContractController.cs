@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class ContractController : BaseController
     {
         #region Variables
@@ -21,10 +23,12 @@ namespace IBS.Controllers
             env = _environment;
             contractRepository = _contractRepository;
         }
+        [Authorization("Contract", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("Contract", "Index", "view")]
         public IActionResult Manage(int id)
         {
             ContractModel model = new();
@@ -50,6 +54,7 @@ namespace IBS.Controllers
             DTResult<ContractModel> dTResult = contractRepository.GetContractList(dtParameters);
             return Json(dTResult);
         }
+        [Authorization("Contract", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try
@@ -69,6 +74,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("Contract", "Index", "edit")]
         public IActionResult ContractDetailsSave(ContractModel model, IFormCollection FrmCollection)
         {
             try

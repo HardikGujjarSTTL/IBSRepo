@@ -1,16 +1,23 @@
 ﻿using IBS.DataAccess;
+using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
     public class UOMModel
     {
-		public byte UomCd { get; set; }
+        public byte UomCd { get; set; }
 
-		public string? UomLDesc { get; set; }
+        [Display(Name = "UOM Long Description")]
+        [Required]
+        public string? UomLDesc { get; set; }
 
+        [Display(Name = "UOM Short Description")]
+        [Required]
 		public string? UomSDesc { get; set; }
 
-		public decimal? UomFactor { get; set; }
+        [Display(Name = "Division Factor")]
+        [Required]
+        public decimal? UomFactor { get; set; } = 1;
 
 		public string? UserId { get; set; }
 
@@ -18,7 +25,7 @@ namespace IBS.Models
 
 		public string? ImmsUomCd { get; set; }
 
-		public byte? Isdeleted { get; set; }
+        public byte? Isdeleted { get; set; } = 0;
 
 		public int? Createdby { get; set; }
 
