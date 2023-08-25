@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -19,12 +20,14 @@ namespace IBS.Controllers
         }
 
         #region Lab Sample Information
+        [Authorization("LabSampleInfo", "LabSampleInfo", "view")]
         public IActionResult LabSampleInfo()
         {
 
             return View();
         }
         [HttpPost]
+        [Authorization("LabSampleInfo", "LabSampleInfo", "view")]
         public IActionResult LapSampleIndex(string CaseNo, string CallRdt, string CallSno)
         {
             string Regin = GetRegionCode;
@@ -47,6 +50,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
+        [Authorization("LabSampleInfo", "LabSampleInfo", "add")]
         public JsonResult SaveDataDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
@@ -85,6 +89,7 @@ namespace IBS.Controllers
 
         }
         [HttpPost]
+        [Authorization("LabSampleInfo", "LabSampleInfo", "add")]
         public JsonResult UpdateDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();

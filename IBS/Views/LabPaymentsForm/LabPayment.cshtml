@@ -2,6 +2,13 @@
 
 @{
     ViewData["Title"] = "EXTERNAL LABORATORY PAYMENT FORM";
+    
+    string clsView = "";
+    if (Model.PaymentID != "0")
+    {
+        
+        clsView = "Permission_View";
+    }
 }
 <style>
     #showPayment1 {
@@ -133,9 +140,11 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>@ViewData["Title"] </h2>
+        <h2>EXTERNAL LABORATORY PAYMENT FORM</h2>
     </div>
-
+    <div>
+        <a asp-action="LabPaymentForm" asp-controller="LabPaymentsForm" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
 <div class="accordion-body">
 
@@ -253,9 +262,9 @@
         </tr>
     </table>
     <div class="savenext-btn" style="margin-right:46%;">
-        <button type="button" class="save-btn active"  onclick="Save();" id="btnsave">Save</button>
+        <button type="button" class="save-btn active Permission_Save" onclick="Save();" id="btnsave">Save</button>
         <button type="button" class="save-btn active"  id="btnprint">Print</button>
-        <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>
+       @* <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>*@
     </div>
 </div>
 @*</form>*@
