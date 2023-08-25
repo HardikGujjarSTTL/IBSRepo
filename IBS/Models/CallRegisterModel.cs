@@ -71,5 +71,7 @@ namespace IBS.Models
 
         public string? Consignee { get; set; }
 
+        public string? Status { get; set; }
+
     }
 }

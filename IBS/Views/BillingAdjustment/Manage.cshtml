@@ -1,11 +1,9 @@
 ﻿@model IBS.Models.BillingAdjustmentModel
 @{
     ViewData["Title"] = "Manage Billing Adjustment";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.Adjusment_Yr_Mth != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -62,7 +60,7 @@
                     </div> 
                     <div class="savenext-btn" style="justify-content:center">
                         @*<a asp-controller="BillingAdjustment" asp-action="Index" class="reset-btn">Cancel</a>*@
-                        <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>
