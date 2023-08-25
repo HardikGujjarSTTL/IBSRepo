@@ -46,7 +46,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("ComplaintApproval", "Index", "add")]
+        [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult RejectComplaint(OnlineComplaints model)
         {
             string msg = "";
@@ -69,7 +69,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("ComplaintApproval", "Index", "add")]
+        [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult AcceptComplaint(OnlineComplaints model)
         {
             string msg = complaintApprovalRepository.AcceptComplaint(model);
@@ -77,7 +77,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("ComplaintApproval", "Index", "add")]
+        [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult Submit(OnlineComplaints model)
         {
             string msg = complaintApprovalRepository.SubmitAcceptRecord(model);

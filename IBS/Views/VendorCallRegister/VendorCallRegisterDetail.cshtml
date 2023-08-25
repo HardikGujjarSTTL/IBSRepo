@@ -442,7 +442,7 @@
                 <br />
                 <label for="Name" style="color:red">* Enter the Quantity Offered Now of All the Items Which You want to be Inspected in this call.</label>
                 <br />
-                <input type="checkbox" class="input" name="IsAccept" id="IsAccept">
+                <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan">
                 I hereby accept all the
                 <a href="\RBS\TermsandConditions.aspx"> Terms and Conditions</a>.
                 <br />
@@ -742,7 +742,7 @@
             else if ($("#StaggeredDp").prop("checked") && ($("#LotDp1").val() == "" && $("#LotDp2").val() == "")) {
                 alert("Plz Enter Lot Size & DP");
             }
-            else if (!$("#IsAccept").prop("checked")) {
+            else if (!$("#CHKRejCan").prop("checked")) {
                 alert("Kindly [Select or Check] the declaration before you click on Register Call button.");
             }
             else if ($("#CallRemarkStatus").val() == "") {

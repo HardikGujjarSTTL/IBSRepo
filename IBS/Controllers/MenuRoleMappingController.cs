@@ -50,7 +50,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         //public IActionResult MenuRoleMappingSave(string IDs, string Id, string RoleId)
-        [Authorization("MenuRoleMapping", "Index", "add")]
+        [Authorization("MenuRoleMapping", "Index", "edit")]
         public IActionResult MenuRoleMappingSave(string Id, string RoleId, string dataModel)
         {
             try

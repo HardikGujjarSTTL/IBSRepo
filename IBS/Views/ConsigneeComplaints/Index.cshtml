@@ -191,10 +191,12 @@
                         columns: [
                             {
                                 data: "ComplaintId",
-                                //className: "complaint-id-link",
-                                //render: function (data, type, row) {
-                                //    return '<a href="#" class="edit-link">' + data + '</a>';
-                                //}
+                                className: "complaint-id-link",
+                                render: function (data, type, row, meta) {
+                                    var complaintId = data;
+                                    var rowIndex = meta.row;
+                                    return '<a href="/ConsigneeComplaints/Manage?id=' + complaintId + '&index=' + rowIndex + '" class="edit-link">' + data + '</a>';
+                                }
                             },
                             { data: "JiSno" },
 
