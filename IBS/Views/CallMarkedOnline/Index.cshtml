@@ -139,10 +139,7 @@
         $("#dtList").DataTable({
             stateSave: false,// Design Assets
             autoWidth: true,
-           // scrollX: true,
-           "initComplete": function (settings, json) {  
-                $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
-            },
+            //scrollX: true,
             scrollCollapse: false,
             processing: true, // ServerSide Setups
             serverSide: true,
@@ -195,7 +192,10 @@
                     }
                 }
             ],
-            "order": [[0, "asc"]]
+            "order": [[0, "asc"]],
+            "initComplete": function (settings, json) {  
+                $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+            },
         });
     }
 
