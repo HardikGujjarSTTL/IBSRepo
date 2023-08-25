@@ -30,7 +30,7 @@ namespace IBS.Repositories
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
                 model.Createddate = model.Createddate;
-                model.Isdeleted = role.Isdeleted;
+                //model.Isdeleted = role.isdele;
                 return model;
             }
         }
@@ -62,17 +62,17 @@ namespace IBS.Repositories
                 orderCriteria = "Mobile";
                 orderAscendingDirection = true;
             }
-            query = from l in context.T32ClientLogins
-                    where l.Isdeleted == 0 || l.Isdeleted == null
-                    select new ClientEntryFormModel
+            query = from l in context.T91Railways
+                  //  where l.Isdeleted == 0 || l.Isdeleted == null
+                    select new RailwaysDirectoryModel
                     {
-                        UserName = l.UserName,
-                        Organisation = l.Organisation,
-                        Designation = l.Designation,
-                        Mobile = l.Mobile,
-                        Email = l.Email,
-                        Unit = l.Unit,
-                        Isdeleted = l.Isdeleted,
+                        Railway = l.Railway,
+                        HeadQuarter = l.HeadQuarter,
+                        RlyCd = l.RlyCd,
+                        UserId = l.UserId,
+                        Datetime = l.Datetime,
+                        ImmsRlyCd = l.ImmsRlyCd,
+                       // Isdeleted = l.Isdeleted,
                         Createddate = l.Createddate,
                         Createdby = l.Createdby,
                         Updateddate = l.Updateddate,
@@ -99,7 +99,7 @@ namespace IBS.Repositories
             var roles = context.T32ClientLogins.Find(Convert.ToByte(Mobile));
             if (roles == null) { return false; }
 
-            roles.Isdeleted = Convert.ToByte(true);
+           // roles.Isdeleted = Convert.ToByte(true);
             roles.Updatedby = Convert.ToInt32(UserID);
             roles.Updateddate = DateTime.Now;
             context.SaveChanges();
@@ -123,7 +123,7 @@ namespace IBS.Repositories
                 obj.Email = model.Email;
                 obj.Mobile = model.Mobile;
                 obj.Createdby = model.Createdby;
-                obj.Isdeleted = Convert.ToByte(false);
+               // obj.Isdeleted = Convert.ToByte(false);
                 obj.Createddate = DateTime.Now;
                 context.T32ClientLogins.Add(obj);
                 context.SaveChanges();
