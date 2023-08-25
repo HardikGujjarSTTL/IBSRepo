@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "EXTERNAL LABORATORY PAYMENT SEARCH";
+   
+    string clsView = "";
+   
 }
 <style>
     #showPayment {
@@ -136,6 +139,7 @@
         </div>
         
     </div>
+<section class="@clsView">
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-2 mb-3">
@@ -157,8 +161,8 @@
 
         </div>
         <div class="savenext-btn" style="margin-right:36%;">
-        <button type="button" class="save-btn active" onclick="Add();">Add</button>
-            <button type="button" class="save-btn active" onclick="Save();">Modify</button>
+            <button type="button" class="save-btn active Permission_Save" onclick="Add();">Add</button>
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Modify</button>
         <button type="button" class="save-btn active" onclick="SearchPayment();">Search Payment</button>
         </div>
     </div>
@@ -185,6 +189,7 @@
         </div>
     </section>
 </div>
+</section>
 @*</form>*@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />

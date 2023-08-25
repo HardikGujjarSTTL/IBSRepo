@@ -2,14 +2,25 @@
 
 @{
     ViewData["Title"] = "Generate Voucher";
+   
+    string clsView = "";
+    if (Model.VCHR_NO != "0")
+    {
+        
+        clsView = "Permission_View";
+    }
 }
 
+<
 <div class="list-inner">
     <div class="tast-list">
         <h2>Generate Voucher</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="LabRecieptVoucher" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section class="table-section">
+<section class="@clsView">
     <div class="task-listinput">
         <div class="accordion-body">
             
@@ -139,8 +150,8 @@
                     </div>
 
                     <div class="savenext-btn">
-                        <a asp-controller="LabRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                       @* <a asp-controller="LabRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </form>
@@ -182,7 +193,7 @@
        
             // Hide/show BPO details based on lstACD selection
             $("#AccCD").on("change", function () {
-                debugger;
+               
                 var selectedValue = $("#AccCD").val();
                 if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
                     $("#txtCSNO").show();

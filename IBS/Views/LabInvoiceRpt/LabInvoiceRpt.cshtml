@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "LAB INVOICE";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB INVOICE</h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Sample Registration No.</label>
+                <input type="text" id="txtregno" />
+                <span class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="savenext-btn" style="margin-right:50%;">
+        <button type="button" class="save-btn active" onclick="show();">Search</button>
+        <button type="button" class="save-btn active" onclick="Download();">Download Lab Invoice</button>
+    </div>
+</div>
+<div id="hide" style="display:none">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtinvoiced" class="table-responsive">
+                    <thead>
+                        <tr>
+
+                            <th>Case No.</th>
+                            <th>Sample Registration No.</th>
+                            <th>Transaction No.</th>
+                            <th>Invoice No.</th>
+                            <th>Invoice Date</th>
+                            <th>Invoice Amount</th>
+                            <th>SGST</th>
+                            <th>CGST</th>
+                            <th>IGST</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            var CaseNo = $("#txtcno").val();
+            var RegNo = $("#txtregno").val();
+            var TranNo = $("#txttrno").val();
+            var InNo = $("#txtinno").val();
+            InitializeDatatable(CaseNo, RegNo, TranNo, InNo);
+            $("#hide").css("display", "block");
+        }
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+                $("#txtregno").prop("disabled", false);
+                $("#txttrno").prop("disabled", true);
+            }
+            else if (selectedId == "rb2") {
+                $("#txtregno").prop("disabled", true);
+                $("#txttrno").prop("disabled", false);
+            }
+            else if (selectedId == "rb3") {
+                $("#txtregno").prop("disabled", false);
+                $("#txttrno").prop("disabled", true);
+            }
+        });
+        $(function () {
+            $("#rb1").prop("checked", true);
+        });
+
+        function InitializeDatatable(CaseNo, RegNo, TranNo, InNo) {
+
+            $("#dtinvoiced").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            CaseNo: CaseNo,
+                            RegNo: RegNo,
+                            TranNo: TranNo,
+                            InNo: InNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "CASE_NO" },
+                    { data: "SAMPLE_REG_NO" },
+                    { data: "TRANSACTION_NO" },
+                    { data: "INVOICE_NO" },
+                    { data: "INVOICE_DT" },
+                    { data: "INV_AMOUNT" },
+                    { data: "INV_SGST" },
+                    { data: "INV_CGST" },
+                    { data: "INV_IGST" },
+
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            //var CASE_NO = data.CASE_NO;
+                            //var SAMPLE_REG_NO = data.SAMPLE_REG_NO;
+                            //var INVOICE_NO = data.INVOICE_NO;
+
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = 'Select';
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+        function editRow(escapedRow) {
+            $("#hide").css("display", "none");
+            $("#txtcno").val(escapedRow.CASE_NO);
+            $("#txtregno").val(escapedRow.SAMPLE_REG_NO);
+            $("#txtinno").val(escapedRow.INVOICE_NO);
+
+
+        }
+        function Download() {
+            var CaseNo = $("#txtcno").val();
+            var RegNo = $("#txtregno").val();
+            var InvoiceNo = $("#txtinno").val();
+            var TranNo = $("#txttrno").val();
+            //var QueryString="RptFlag=1&Invoice="+InvoiceNo;
+            var QueryString = "RptFlag=1" +
+                "&Invoice=" + encodeURIComponent(InvoiceNo) +
+                "&CaseNo=" + encodeURIComponent(CaseNo) +
+                "&RegNo=" + encodeURIComponent(RegNo) +
+                "&TranNo=" + encodeURIComponent(TranNo);
+
+            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
+            //$.ajax({
+            //    url: '/LabInvoiceDownload/Download',
+            //    type: "POST",
+            //    dataType: "JSON",
+            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
+
+            //    success: function (success) {
+
+
+
+            //    }
+
+            //});
+
+        }
+                //function UserDelete(UserId) {
+                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                //    $("#btn-delete-yes").attr("href", url);
+                //    $("#modal-delete-conf").modal("show");
+                //}
+
+    </script>
+}

@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -16,7 +17,7 @@ namespace IBS.Controllers
         {
             LaboratoryMstRepository = _LaboratoryMstRepository;
         }
-
+        [Authorization("LaboratoryMaster", "LaboratoryMaster", "view")]
         #region Lab Master
         public IActionResult LaboratoryMaster()
         {
@@ -29,6 +30,7 @@ namespace IBS.Controllers
             DTResult<LaboratoryMstModel> dTResult = LaboratoryMstRepository.GetLaboratoryMstList(dtParameters);
             return Json(dTResult);
         }
+        [Authorization("LaboratoryMaster", "LaboratoryMaster", "view")]
         public IActionResult LaboratoryManage(int LabID)
         {
             LaboratoryMstModel model = new();
@@ -42,6 +44,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("LaboratoryMaster", "LaboratoryMaster", "add")]
         public IActionResult LabDetailsSave(LaboratoryMstModel model)
         {
             try

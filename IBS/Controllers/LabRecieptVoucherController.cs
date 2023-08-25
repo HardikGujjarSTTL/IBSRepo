@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,12 @@ namespace IBS.Controllers
         {
             LabRecieptVoucherRepository = _LabRecieptVoucherRepository;
         }
+        [Authorization("LabRecieptVoucher", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("LabRecieptVoucher", "Index", "view")]
         public IActionResult AddRecieptVoucher(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT)
         {
             var regin = GetRegionCode;
@@ -39,6 +42,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("LabRecieptVoucher", "Index", "add")]
         public IActionResult VoucherDetailsSave(LabRecieptVoucherModel model)
         {
             try
@@ -68,6 +72,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("LabRecieptVoucher", "Index", "add")]
         public ActionResult ButtonClick(string AccCD, string txtBPO, string lstBPO, string txtCSNO)
         {
             LabRecieptVoucherModel bPOmodel = new LabRecieptVoucherModel();
