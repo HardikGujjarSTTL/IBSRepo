@@ -48,9 +48,9 @@ namespace IBS.Controllers
             return View();
         }
 
-        
+        [HttpPost]
         public IActionResult FindByID( string billNo)
-        {
+            {
             CheckPostingFormModel model = new CheckPostingFormModel();
             if (billNo != "" && billNo != null)
             {

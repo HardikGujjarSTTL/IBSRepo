@@ -125,6 +125,8 @@ builder.Services.AddScoped<ICheckPostingFormRepository,CheckPostingFormRepositor
 builder.Services.AddScoped<ISearchPaymentsRepository,SearchPaymentRepository>();
 builder.Services.AddScoped<IEFTEntryRepository,EFTEntryRepository>();
 builder.Services.AddScoped<IInterUnit_TransferRepository,InterUnit_TransferRepository>();
+builder.Services.AddScoped<IInterUnitRecieptRepository, InterUnitRecieptRepository>();
+
 
 
 
