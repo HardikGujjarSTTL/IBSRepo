@@ -20,19 +20,19 @@
                 <label for="Reference" class="billInvoiceClass">Railway</label><br>
             </div>
             <div class="col-md-1 mb-3">
-                <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No">
+                <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">Private</label><br>
             </div>
             <div class="col-md-2 mb-3">
-                <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No">
+                <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">Foreign Railway</label><br>
             </div>
             <div class="col-md-1 mb-3">
-                <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No">
+                <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">PSU</label><br>
             </div>
             <div class="col-md-2 mb-3">
-                <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No">
+                <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">State Government</label><br>
             </div>
             <div class="col-md-3 mb-3">
@@ -252,7 +252,7 @@
                 type = 'S';
             }
             var RLY_CD=$("#dllRCode").val();
-            window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?PO_TYPE=' + type + "&RLY_CD" + RLY_CD;
+            window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?PO_TYPE=' + type + "&RLY_CD=" + RLY_CD;
         }
     </script>
 }

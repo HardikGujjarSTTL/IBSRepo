@@ -1141,3 +1141,72 @@ END;
 
 
 ==============
+CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
+    p_vend_cd IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT V.VEND_CD as Value,
+           (TRIM(V.VEND_NAME) || '/' || TRIM(V.VEND_ADD1) || '/' || NVL2(C.LOCATION, C.LOCATION || ' / ' || C.CITY, C.CITY)) AS Text
+    FROM T05_VENDOR V
+    JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
+    WHERE V.VEND_NAME IS NOT NULL
+    AND (TRIM(V.VEND_CD) = p_vend_cd OR p_vend_cd IS NULL)
+    ORDER BY VEND_NAME;
+END;
+/
+
+=======================
+
+create or replace PROCEDURE GENERATE_CASE_NO (
+    IN_REGION_CD IN VARCHAR2,
+    IN_PO_DT IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) IS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno VARCHAR2(100) := NULL;
+    w_Case_No VARCHAR2(500) := NULL;
+BEGIN
+    ---
+    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    w_Case_No := w_ctr || w_sno;
+
+    OPEN p_result_cursor FOR
+        SELECT w_Case_No AS CaseNo, 0 AS ERR_CD FROM DUAL;
+
+END;
+
+
+===================
+
+
+CREATE OR REPLACE PROCEDURE GET_PO_BPO_DETAILS (
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT P.CASE_NO,
+           P.CONSIGNEE_CD,
+           P.BPO_CD,
+           (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '') || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '') || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '') || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '') || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))) AS CONSIGNEE_NAME,
+           (B.BPO_CD || ' - ' || B.BPO_NAME || '/' || B.BPO_RLY || '/' || NVL2(B.BPO_ADD, B.BPO_ADD || '/', '') || NVL2(E.LOCATION, E.CITY || '/' || E.LOCATION, E.CITY)) AS BPO_NAME
+    FROM T14_PO_BPO P
+    JOIN T06_CONSIGNEE C ON P.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T12_BILL_PAYING_OFFICER B ON P.BPO_CD = B.BPO_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    JOIN T03_CITY E ON B.BPO_CITY_CD = E.CITY_CD
+    WHERE P.CASE_NO = p_case_no;
+END;
+/
+
+=====================

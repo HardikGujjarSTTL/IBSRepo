@@ -51,6 +51,21 @@
         public byte? Isdeleted { get; set; }
 
         public int? Id { get; set; }
+        public int? ddlManufac { get; set; }
+
+        public string? ContractNo { get; set; }
+
+        public DateTime? ContractDt { get; set; }
+
+        public string? ProjectRef { get; set; }
+
+        public long? MinFee { get; set; }
+
+        public long? MaxFee { get; set; }
+
+        public string? WithServTax { get; set; }
+        public string? MPOI { get; set; }
+
     }
 
     public class AdministratorPurchaseOrderListModel

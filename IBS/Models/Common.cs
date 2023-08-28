@@ -1517,7 +1517,9 @@ namespace IBS.Models
                                      VendContactTel2 = m.VendContactTel2,
                                      VendEmail = m.VendEmail,
                                      VendRemarks = m.VendRemarks,
-                                     VendStatus = m.VendStatus
+                                     VendStatus = m.VendStatus,
+                                     VendStatusDtFr=m.VendStatusDtFr,
+                                     VendStatusDtTo = m.VendStatusDtTo
                                  }).FirstOrDefault();
 
             return model;
@@ -1970,6 +1972,12 @@ namespace IBS.Models
             return selectListItems;
         }
 
+        public static string GetRailway(string type = "")
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            string types = context.T91Railways.Where(x => x.RlyCd == type.ToString()).Select(x => x.Railway).FirstOrDefault();
+            return types;
+        }
         public static List<SelectListItem> GetIENameIsStatusNull(string RegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2130,6 +2138,64 @@ namespace IBS.Models
         public static IEnumerable<TextValueDropDownDTO> GetCMType()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.COType)).ToList();
+        }
+
+        public static List<SelectListItem> GetVendCd(string vend_cd)
+        {
+            List<SelectListItem> model = new List<SelectListItem>();
+            if (vend_cd != "0")
+            {
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, vend_cd != "" ? vend_cd : DBNull.Value, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GET_VENDOR_DETAILSForDropDown", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                }
+            }
+            return model;
+        }
+
+        public static List<SelectListItem> getInspectingAgency()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "RITES";
+            single.Value = "R";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Consignee";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PO Cancelled";
+            single.Value = "X";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PO Suspended For Inspection";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> getServTax()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Service Tax to be Charged on Fee";
+            single.Value = "Y";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Fee is Inclusive of Service Tax";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
         }
 
     }
