@@ -28,7 +28,7 @@
 <section class="table-section">
     <div class="task-listinput">
         <div class="accordion-body">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingFormController" asp-action="search" data-ajax-method="post" data-ajax-complete="completed" id="frmchqposting">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingForm" asp-action="search" data-ajax-method="post" data-ajax-complete="completed" id="frmchqposting">
                 <div class="accordion-body">
                     <div class="row my-0">
                        
@@ -442,9 +442,9 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                           
 
-                            var editButtonHtml = '<button class="custom-edit-button><i class="fa fa-pencil" title="Edit"></i></button>';
+
+                            var editButtonHtml = '<button class="custom-edit-button btn-sm btn-primary"><i class="fa fa-pencil" title="Edit"></i></button>';
                             return editButtonHtml;
                         }
                     },
@@ -452,52 +452,58 @@
                 "order": [[0, "asc"]]
             });
 
-            $("#dtchequepost").on("click", ".custom-edit-button", function () {
-                var billNo = $(this).data("bill-no");
-               debugger;    
-                // Make an AJAX call to fetch additional data from the controller
-                $.ajax({
-                    url: '/CheckPostingForm/FindByID', // Replace with your actual controller and action URL
-                    type: 'POST',
-                    dataType: "JSON",
-                    data: { billNo: billNo },
-                    success: function (data) {
-                        debugger;
-                        // Assuming data is an object returned from the controller
-                        $("#billNo").val(billNo);
-                        $("#billDate").val(data.BILL_DATE);
-                        $("#BillAmount").val(data.BILL_AMOUNT_CLEARED);
-                        $("#AmountRecieved").val(data.AMOUNT_RECIEVED);
-                        $("#totalAmount").val(data.BILL_AMOUNT_CLEARED);
-                        $("#totalTDS").val(data.TDS);
-                        $("#RetentionMoney").val(data.Retention_Money);
-                        $("#AmountCreditNote").val(data.Cnote);
-                        $("#AmountAdjusted").val(data.WriteOffAmount);
-                        $("#PostingDate").val(data.POSTING_DATE);
-                        $("#AmountClearedByCheque").val(data.BILL_AMOUNT_CLEARED);
-                        $("#caseNo").val(data.CASE_NO);
-                        $("#BKNO").val(data.BK_NO);
-                        $("#SetNo").val(data.SET_NO);
-                        $("#BPO").val(data.BPO_NAME);
-
-                        // Open the modal
-                        $("#editModal").modal("show");
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-
-            // Handle save changes button click
-          
-
-            $("#cancelChanges").click(function () {
-                // Close the modal without saving
-                $("#editModal").modal("hide");
-            });
+       
         }
+
+
+        $("#dtchequepost").on("click", ".custom-edit-button", function () {
+            debugger;
+
+            var billNo = $(this).closest("tr").find("td:eq(1)").text();
+            // Make an AJAX call to fetch additional data from the controller
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: '/CheckPostingForm/FindByID', // Replace with your actual controller and action URL
+                dataType: "json",
+                data: { billNo: billNo },
+                success: function (data) {
+                    $("#billNo").val(billNo);
+                    $("#billDate").val(data.BILL_DATE);
+                    $("#BillAmount").val(data.BILL_AMOUNT_CLEARED);
+                    $("#AmountRecieved").val(data.AMOUNT_RECIEVED);
+                    $("#totalAmount").val(data.BILL_AMOUNT_CLEARED);
+                    $("#totalTDS").val(data.TDS);
+                    $("#RetentionMoney").val(data.Retention_Money);
+                    $("#AmountCreditNote").val(data.Cnote);
+                    $("#AmountAdjusted").val(data.WriteOffAmount);
+                    $("#PostingDate").val(data.POSTING_DATE);
+                    $("#AmountClearedByCheque").val(data.BILL_AMOUNT_CLEARED);
+                    $("#caseNo").val(data.CASE_NO);
+                    $("#BKNO").val(data.BK_NO);
+                    $("#SetNo").val(data.SET_NO);
+                    $("#BPO").val(data.BPO_NAME);
+
+                    // Open the modal
+                    $("#editModal").modal("show");
+
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+
+        // Handle save changes button click
+
+
+        $("#cancelChanges").click(function () {
+            // Close the modal without saving
+            $("#editModal").modal("hide");
+        });
 
         function savedata(){
            

@@ -129,30 +129,7 @@ namespace IBS.Repositories
         public CheckPostingFormModel FindByID( string billNo)
             {
 
-            //CheckPostingFormModel model = new();
-            //V22Bill bro = context.V22Bills.Find(billNo);
-            //if(bro == null)
-            //{
-            //        throw new Exception("Data Record Not found");
-            //}
-            //else
-            //{
-            //    model.BILL_DATE = Convert.ToDateTime(bro.BillDt);
-            //    model.BILL_AMOUNT = Convert.ToDouble(bro.BillAmount);
-            //    model.AMOUNT_RECIEVED = Convert.ToDecimal(bro.AmountReceived);
-            //    model.AMOUNT_CLEARED = Convert.ToDouble(bro.BillAmtCleared);
-            //    model.TDS = Convert.ToDouble( bro.Tds);
-            //    model.Retention_Money = Convert.ToDouble(bro.RetentionMoney);
-            //    model.Cnote = Convert.ToDouble(bro.CnoteAmount);
-            //    model.WriteOffAmount = Convert.ToDouble(bro.WriteOffAmt);
-            //    model.CASE_NO = bro.CaseNo;
-            //    model.BK_NO = bro.BkNo;
-            //    model.SET_NO = bro.SetNo;
-            //    model.BPO_CD = bro.BpoCd;
-            //    model.BPO_NAME = bro.BpoName;
-
-            //}
-            //return model;
+           
             CheckPostingFormModel query = null;
             var query1 = from bill in context.V22Bills
                          where bill.BillNo == billNo

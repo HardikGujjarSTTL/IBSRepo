@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -21,12 +22,14 @@ namespace IBS.Controllers
         }
 
         #region Lab_Register_Form
+        [Authorization("LabRegisterForm", "Index", "view")]
         public IActionResult Index()
         {
             LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
             
             return View(lABREGISTERModel);
         }
+        [Authorization("LabRegisterForm", "Index", "view")]
         public IActionResult LabRegisterForm(string RegNo)
         {
             ViewBag.RegNo = RegNo;
@@ -74,6 +77,7 @@ namespace IBS.Controllers
             List<LABREGISTERModel> dTResult = LabRegFormRepository.LapIndexData(CaseNo, CallRdt, RegNo);
             return Json(dTResult);
         }
+        [Authorization("LabRegisterForm", "Index", "view")]
         public IActionResult LabRegisterFormNew(string CaseNo,string CallDt,string CallSno)
         {
             LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
@@ -96,6 +100,7 @@ namespace IBS.Controllers
             return Json(lABREGISTERModel);
         }
         [HttpPost]
+        [Authorization("LabRegisterForm", "Index", "add")]
         public bool SaveDataDetails([FromBody]LABREGISTERModel LABREGISTERModel)
         {
             LABREGISTERModel.UName = UserId.ToString();
@@ -112,6 +117,7 @@ namespace IBS.Controllers
            
         }
         [HttpPost]
+        [Authorization("LabRegisterForm", "Index", "add")]
         public bool InsertLabReg([FromBody] LABREGISTERModel LABREGISTERModel)
         {
             LABREGISTERModel.UName = UserId.ToString();

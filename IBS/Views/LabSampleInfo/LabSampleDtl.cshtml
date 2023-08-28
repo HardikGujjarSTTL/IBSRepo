@@ -2,6 +2,13 @@
 
 @{
     ViewData["Title"] = "LAB SAMPLE INFORMATION DETAIL";
+   
+    string clsView = "";
+    if (Model.CaseNo != "0")
+    {
+        
+        clsView = "Permission_View";
+    }
 }
 
 
@@ -123,7 +130,7 @@ input[type="date"] {
     }
 </style>
 <h2>@ViewData["Title"]</h2>
-
+<section class="@clsView">
 @*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
     <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
            bgColor="#f0f8ff" border="1">
@@ -231,10 +238,10 @@ input[type="date"] {
         
       
     </table>
-<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
-<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;display:none;" onclick="UpdateDetails()" id="btnupdate">Update</button>
+    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
+    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:48%;display:none;" onclick="UpdateDetails()" id="btnupdate">Update</button>
     <br />
-
+</section>
 @*</form>*@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
