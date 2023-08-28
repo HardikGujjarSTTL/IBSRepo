@@ -59,7 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("LabBilling", "Index", "add")]
+        [Authorization("LabBilling", "Index", "edit")]
         public IActionResult LabBillingDetailsSave(LabBillingModel model)
         {
             try

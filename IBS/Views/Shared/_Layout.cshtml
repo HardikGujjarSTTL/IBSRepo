@@ -409,18 +409,20 @@
         function HideShowByPermission() {
         @if (SessionHelper.CurrentAccess != null)
         {
-            @if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
-            {
-                @:$(".Permission_Add").css("display", "none");
-            }
-            @if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
-            {
-                @:$(".Permission_Save").css("display", "none");
-            }
+            //@if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
+            //{
+            //    @:$(".Permission_Add").css("display", "none");
+            //}
+            //@if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
+            //{
+            //    @:$(".Permission_Save").css("display", "none");
+            //}
             @if (Convert.ToBoolean(SessionHelper.CurrentAccess.EditAccess) == false)
             {
+                @:$(".Permission_Add").css("display", "none");
                 @:$(".Permission_EditView").removeClass("fa-pencil").addClass("fa-eye");
-                @:$(".Permission_Update").css("display", "none");
+                //@:$(".Permission_Update").css("display", "none");
+                @:$(".Permission_Save").css("display", "none");
                 @:$(".Permission_View").addClass("disableform");
             }
             @if (Convert.ToBoolean(SessionHelper.CurrentAccess.DeleteAccess) == false)

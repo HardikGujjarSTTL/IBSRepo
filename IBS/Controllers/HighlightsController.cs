@@ -58,7 +58,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("Highlights", "Index", "add")]
+        [Authorization("Highlights", "Index", "edit")]
         public IActionResult HighlightsDetailsSave(HighlightsModel model)
         {
             try

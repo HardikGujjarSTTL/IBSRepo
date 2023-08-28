@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -19,11 +20,13 @@ namespace IBS.Controllers
         }
 
         #region Lab Payments Form
+        [Authorization("LabPaymentsForm", "LabPaymentForm", "view")]
         public IActionResult LabPaymentForm()
         {
 
             return View();
         }
+        [Authorization("LabPaymentsForm", "LabPaymentForm", "view")]
         public IActionResult LabPayment()
         {
 
@@ -49,6 +52,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
+        [Authorization("LabPaymentsForm", "LabPaymentForm", "add")]
         public JsonResult SavePayment([FromBody] LabPaymentFormModel paymentFormModel)
         {
             paymentFormModel.Regin = GetRegionCode;

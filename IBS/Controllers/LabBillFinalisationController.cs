@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -17,7 +18,7 @@ namespace IBS.Controllers
         {
             LabBillFinalisationRepository = _LabBillFinalisationRepository;
         }
-
+        [Authorization("LabBillFinalisation", "LabBillFinalisationForm", "view")]
         #region 
         public IActionResult LabBillFinalisationForm()
         {
@@ -33,6 +34,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
+        [Authorization("LabBillFinalisation", "LabBillFinalisationForm", "add")]
         public JsonResult UpdateBill([FromBody] LabBillFinalisationModel LabBillFinalisationModel)
         {
             bool result;

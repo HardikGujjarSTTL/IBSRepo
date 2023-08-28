@@ -59,7 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("CentralRejectionStatus", "Index", "add")]
+        [Authorization("CentralRejectionStatus", "Index", "edit")]
         public IActionResult CentralRejectionStatusSave(CentralRejectionStatusModel model)
         {
             try

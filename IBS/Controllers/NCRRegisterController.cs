@@ -68,7 +68,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("NCRRegister", "Index", "add")]
+        [Authorization("NCRRegister", "Index", "edit")]
         public IActionResult SaveUpdateNCR(NCRRegister model)
         {
             bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
@@ -79,7 +79,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("NCRRegister", "Index", "add")]
+        [Authorization("NCRRegister", "Index", "edit")]
         public IActionResult SaveRemarks(string NCNO,string UserID, [FromForm] List<Remarks> model)
         {
 

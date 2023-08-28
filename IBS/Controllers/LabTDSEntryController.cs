@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -19,6 +20,7 @@ namespace IBS.Controllers
         }
 
         #region Lab TDS Entry
+        [Authorization("LabTDSEntry", "LabTDSEntry", "view")]
         public IActionResult LabTDSEntry()
         {
 
@@ -34,6 +36,7 @@ namespace IBS.Controllers
             return Json(model);
         }
         [HttpPost]
+        [Authorization("LabTDSEntry", "LabTDSEntry", "add")]
         public JsonResult SaveTDSEntry(string RegNo, string TDSAmt, string TDSDate)
         {
 

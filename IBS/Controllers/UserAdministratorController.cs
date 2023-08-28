@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class UserAdministratorController : BaseController
     {
         #region Variables
@@ -18,6 +20,7 @@ namespace IBS.Controllers
         }
 
         #region User Master
+        [Authorization("UserAdministrator", "UserMaster", "view")]
         public IActionResult UserMaster()
         {
             return View();
@@ -31,7 +34,7 @@ namespace IBS.Controllers
         }
 
         #endregion
-
+        [Authorization("UserAdministrator", "UserManage", "view")]
         public IActionResult UserManage(string UserId)
         {
             UserModel model = new();
@@ -44,6 +47,7 @@ namespace IBS.Controllers
             return View(model); 
         }
 
+        [Authorization("UserAdministrator", "UserMaster", "delete")]
         public IActionResult Delete(string UserId)
         {
             try
@@ -63,6 +67,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("UserAdministrator", "UserManage", "add")]
         public IActionResult UserDetailsSave(UserModel model)
         {
             try

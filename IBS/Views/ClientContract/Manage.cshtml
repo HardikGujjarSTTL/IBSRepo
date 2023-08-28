@@ -15,11 +15,9 @@
         Title = "Manage DFO Visit";
     }
     ViewData["Title"] = Title;
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.Id > 0)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -111,7 +109,7 @@
 
                 <div class="savenext-btn">
                     @*<a asp-controller="ClientContract" asp-action="Index" asp-route-Type="@Model.TypeCb" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
