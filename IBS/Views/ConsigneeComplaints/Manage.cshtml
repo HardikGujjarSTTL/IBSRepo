@@ -28,8 +28,8 @@
 
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Date of First reference/ Complaint Date</label>
-                        <input type="text" class="input datepicker" readonly="true" asp-for="FormattedComplaintDate" maxlength="300" />
-                        <span asp-validation-for="FormattedComplaintDate" class="text-danger"></span>
+                        <input type="text" class="input datepicker" readonly="true" asp-for="ComplaintDate" maxlength="300" />
+                        <span asp-validation-for="ComplaintDate" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
@@ -121,8 +121,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Unit of Measurement</label>
-                        <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
-                        <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
+                        <input type="text" class="input" asp-for="unitofM" maxlength="300" />
+                        <span asp-validation-for="unitofM" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Rate</label>
@@ -131,73 +131,188 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">	Value of Qty. Rejected</label>
-                        <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
-                        <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="rejectionValue" maxlength="300" />
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Reasons of Rejection  (250 Chars Maxm)</label>
-                        <input type="text" class="input" @*asp-for="ContractPanalty"*@ maxlength="300" />
-                        <span @*asp-validation-for="ContractPanalty"*@ class="text-danger"></span>
+                        <input type="text" class="input" asp-for="RejectionReason" maxlength="300" />
+                        <span asp-validation-for="RejectionReason" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="ComplaintFile"> Upload JI Case (TIF or PDF Format Only)</label>
-                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
-                    </div>
-                    <div class="col-md-1 mb-1">
-                        <div class="savenext-btn">
-                        <button type="button" class="save-btn active">Upload</button>
+                    @if (ViewBag.Showcomplaint)
+                    {
+                        <div class="col-md-2 mb-2">
+                            <label for="ComplaintFile"> Upload JI Case (TIF or PDF Format Only)</label>
+                            <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
                         </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="ComplaintFile">Upload REJECTION MEMO(TIF or PDF Format Only)</label>
-                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
-                    </div>
-                    <div class="col-md-1 mb-1">
-                        <div class="savenext-btn">
-                            <button type="button" class="save-btn active">Upload</button>
+                        <div class="col-md-2 mb-2">
+                            <label for="ComplaintFile">Upload REJECTION MEMO(TIF or PDF Format Only)</label>
+                            <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
                         </div>
+                        <div class="col-md-2 mb-2" id="inspreq">
+                            <label>Joint Inspection Required</label>
+                            @Html.DropDownListFor(model => model.AcceptRejornot, new SelectList(IBS.Models.Common.Inspectionrequired() , "Value", "Text"),"--Select--", new { id = "JointInspectionrequired" })
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <label for="InspRegion">Inspection Region</label>
+                            @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                        </div>
+                        <div class="col-md-2 mb-2" id="JointInspection">
+                            <label for="Jointisp">Joint Inspection Engineer</label>
+                            <select id="Jointisp" asp-for="InspER" class="form-control" required></select>
+                        </div>
+                        <div class="col-md-2 mb-2" id="JIDate">
+                            <label for="Reference">JI Date</label>
+                            <input type="text" class="input datepicker" asp-for="JIDate" readonly="true" id="PoDt">
+                        </div>
+                    }
+                    <div class="col-md-2 mb-2" id="Remarks">
+                        <label for="Jointisp">Remarks</label>
+                        <select id="Jointisp" asp-for="Remarks" class="form-control"></select>
                     </div>
-                    <div class="col-md-2 mb-2" id="inspreq">
-                        <label>Joint Inspection Required</label>
-                        @Html.DropDownListFor(model => model.AcceptRejornot, new SelectList(IBS.Models.Common.Inspectionrequired() , "Value", "Text"),"--Select--", new { id = "Inspectionrequired" })
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <label for="InspRegion">Inspection Region</label>
-                        @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
-                    </div>
-                    <div class="col-md-2 mb-2" id="JointInspection">
-                        <label for="Jointisp">Joint Inspection Engineer</label>
-                        <select id="Jointisp" asp-for="InspER" class="form-control" required></select>
-                    </div>
-                    <div class="col-md-2 mb-2" id="JIDate">
-                        <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
-                        <input type="text" class="input datepicker" asp-format="{0:dd-MM-yyyy}" ASP-FOR="JIDate" maxlength="300" />
+                    <div class="col-md-2 mb-2" id="NOJIReason">
+                        <label>Joint Inspection Engineer</label>
+                        @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"))
                     </div>
                 </div>
 
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save">Save</button>
-                    <button type="button" class="save-btn active Permission_Save">Save Your Choice</button>
-                </div>
-            </div>
-
-            <div class="accordion-body">
-                <div class="tast-list">
-                    <h2>OUTCOME OF JI</h2>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Region Where Complaint is Received</label>
-                    <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                    <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    @if (ViewBag.Showcomplaint)
+                    {
+                        <button type="button" class="save-btn active Permission_Save">Save Your Choice</button>
+                        <button type="button" class="save-btn active">Upload</button>
+                    }
                 </div>
             </div>
         </form>
     </div>
 </section>
 
+<div class="tast-list" id="outcomehd">
+    <h2>OUTCOME OF JI</h2>
+</div>
+<br/>
+<section class="@clsView" id="outcomeji">
+     <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-1 mb-1">
+                        <label for="Reference">JI Decided on</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Status (Decision Taken by JI Committe)</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label>Defect Coded</label>
+                        @Html.DropDownListFor(model => model.DefectDesc, new SelectList(IBS.Models.Common.GetDefectDesc() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label>Classification</label>
+                        @Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="reference">Date of JI Conclusion</label>
+                        <input type="text" class="input datepicker" asp-for="PO_DT" readonly="true" id="PoDt">
+                     </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="ComplaintFile">Upload JI Report (TIF or PDF Format Only)</label>
+                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                    </div>
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save">Save Outcome of JI</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+     </div>
+</section>
+
+<div class="tast-list" id="finaldishd">
+    <h2>FINAL DISPOSAL</h2>
+</div>
+<br />
+<section class="@clsView" id="finaldisposal">
+     <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Root Cause Analysis</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Root Cause Analysis</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2" id="inspreq">
+                        <label>Classification</label>
+                        @Html.DropDownListFor(model => model.Checksheet, new SelectList(IBS.Models.Common.Checksheet() , "Value", "Text"),"--Select--", new { id = "Checksheet" })
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Any Other</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Status of CAPA</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">D&AR Status (If Any)</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2" id="inspreq">
+                        <label>Classification</label>
+                        @Html.DropDownListFor(model => model.DARPurpose, new SelectList(IBS.Models.Common.DARPurpose() , "Value", "Text"),"--Select--", new { id = "Checksheet" })
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Date of D&AR Issue</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Final Remarks/Action</label>
+                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="col-md-2 mb-2">
+                        <label for="ComplaintFile">Upload Tech Ref (PDF Format Only)</label>
+                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                    </div>
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save">Save Final Disposal</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+
 @section scripts{
     <script type="text/javascript">
-            $("#InspRegionDropdown").change(function () {
+
+        $(document).ready(function () {
+            $("#outcomeji").hide();
+            $("#finaldisposal").hide();
+            $("#outcomehd").hide();
+            $("#finaldishd").hide();
+            $("#NOJIReason").hide();
+            $("#Remarks").hide();
+        });
+
+        $("#InspRegionDropdown").change(function () {
             debugger
             var InspRegionDropdown = $(this).val();
 
@@ -221,6 +336,33 @@
                     }
                 }
             });
+        });
+
+        $("#JointInspectionrequired").change(function () {
+            debugger
+            var selectedValue = $(this).val();
+            if (selectedValue == "Y") {
+                $("#outcomeji").show();
+                $("#finaldisposal").show();
+                $("#outcomehd").show();
+                $("#finaldishd").show();
+                $("#NOJIReason").hide();
+                $("#Remarks").hide();
+            } else if (selectedValue == "N") {
+                $("#outcomeji").hide();
+                $("#finaldisposal").hide();
+                $("#outcomehd").hide();
+                $("#finaldishd").hide();
+                $("#NOJIReason").show();
+                $("#Remarks").hide();
+            } else if (selectedValue == "C"){
+                $("#Remarks").show(); 
+                $("#outcomeji").hide();
+                $("#finaldisposal").hide();
+                $("#outcomehd").hide();
+                $("#finaldishd").hide();
+                $("#NOJIReason").hide();
+            }
         });
     </script>
 }

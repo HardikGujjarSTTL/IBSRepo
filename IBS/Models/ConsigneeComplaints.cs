@@ -31,23 +31,30 @@ namespace IBS.Models
         public DateTime? JIDate { get; set; }
         public DateTime? JiFixDt { get; set; }
         public string? InspRegion { get; set; }
+        public string? unitofM { get; set; }
         public string? InspER { get; set; }
         public string? UserId { get; set; }
         public string? ItemDesc { get; set; }
         public decimal? QtyOffered { get; set; }
         public decimal? QtyRejected { get; set; }
         public decimal? Rate { get; set; }
+        public decimal? rejectionValue { get; set; }
         public string? RejectionReason { get; set; }
         public string? InspectionBy { get; set; }
         public string CoName { get; set; }
         public string JiRequired { get; set; }
-        public string NoJiReason { get; set; }
         public string NoJiOther { get; set; }
         public string JiSno { get; set; }
+        public string NoJIReason { get; set; }
+        public string Remarks { get; set; }
+        public string JiStatusDesc { get; set; }
         public string AcceptRejornot { get; set; }
+        public string DefectDesc { get; set; }
+        public string JiStatusCd { get; set; }
+        public string Checksheet { get; set; }
+        public string DARPurpose { get; set; }
         public byte? JiIeCd { get; set; }
         [NotMapped]
-        public SelectList ControllingManagers { get; set; }
         public decimal? Updatedby { get; set; }
         public decimal? Createdby { get; set; }
     }

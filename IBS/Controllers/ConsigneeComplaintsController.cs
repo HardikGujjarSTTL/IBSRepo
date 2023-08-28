@@ -29,15 +29,21 @@ namespace IBS.Controllers
             return View();
         }
         [Authorization("ConsigneeComplaints", "Index", "view")]
-        public IActionResult Manage(string CASE_NO, string BK_NO,string SET_NO)
+        public IActionResult Manage(string CASE_NO, string BK_NO,string SET_NO,string ComplaintId)
         {
             ConsigneeComplaints model = new();
 
             try
             {
+                if(ComplaintId != "" && ComplaintId != null)
+                {
+                    model = consigneeComplaints.FindByCompID(ComplaintId);
+                    ViewBag.Showcomplaint = true;
+                }
                 if (CASE_NO != null && BK_NO != null && SET_NO != null)
                 {
                     model = consigneeComplaints.FindByID(CASE_NO, BK_NO, SET_NO);
+                    ViewBag.Showcomplaint = false;
                 }
             }
             catch (Exception ex)
@@ -47,14 +53,19 @@ namespace IBS.Controllers
             return View(model);
         }
 
-
         [HttpPost]
-        public ActionResult GetCombinedData(string poNo, string poDt)
+        public IActionResult GetConsData([FromBody] DTParameters dtParameters)
         {
-            List<ConsigneeComplaints> dTResult = consigneeComplaints.GetDataListConsignee(poNo, poDt);
-            List<ConsigneeComplaints> dTResult1 = consigneeComplaints.GetDataListComplaint(poNo, poDt);
-            return Json(new { dTResult = dTResult, dTResult1 = dTResult1 });
+            DTResult<ConsigneeComplaints> dTResult = consigneeComplaints.GetDataListConsignee(dtParameters);
+            return Json(dTResult);
         }
+        [HttpPost]
+        public IActionResult GetCompdata([FromBody] DTParameters dtParameters)
+        {
+            DTResult<ConsigneeComplaints> dTResult = consigneeComplaints.GetDataListComplaint(dtParameters);
+            return Json(dTResult);
+        }
+
 
         //[HttpPost]
         //[ValidateAntiForgeryToken]

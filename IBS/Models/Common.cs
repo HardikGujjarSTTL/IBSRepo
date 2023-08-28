@@ -208,6 +208,36 @@ namespace IBS.Models
             return country;
         }
 
+        public static List<SelectListItem> GetDefectDesc()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+           
+            List<SelectListItem> DefectDesc = (from a in context.T38DefectCodes
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.DefectCd),
+                                           Value = Convert.ToString(a.DefectDesc)
+                                       }).ToList();
+
+            return DefectDesc;
+        }
+
+        public static List<SelectListItem> GetClassification()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> classification = (from a in context.T39JiStatusCodes
+                                                   select
+                                          new SelectListItem
+                                          {
+                                              Text = Convert.ToString(a.JiStatusCd),
+                                              Value = Convert.ToString(a.JiStatusDesc)
+                                          }).ToList();
+
+            return classification;
+        }
+
         public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -338,6 +368,52 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Cancelled";
             single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> Checksheet()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Approved";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Revision";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Prepration";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> DARPurpose()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No Action Required";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Warning Letter";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Minor Penalty";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Major Penalty";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Counselling";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }

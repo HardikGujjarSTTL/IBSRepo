@@ -4,7 +4,7 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 =============================================================================================================================================
 By Neha Gehlot
 =============================================================================================================================================
-create or replace PROCEDURE GetConsigneeComplaintDetails (
+create or replace PROCEDURE GetConsigneeDetails (
     p_case_no IN VARCHAR2,
     p_bk_no IN VARCHAR2,
     p_set_no IN VARCHAR2,

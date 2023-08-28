@@ -16,10 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Drawing.Drawing2D;
 using System.Dynamic;
 using System.Globalization;
 using System.Security.Cryptography;
-using System.Xml;
+
 using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -47,7 +48,7 @@ namespace IBS.Repositories
 
 
 
-            var ds = DataAccessDB.GetDataSet("GetConsigneeComplaintDetails", par, 1);
+            var ds = DataAccessDB.GetDataSet("GetConsigneeDetails", par, 1);
             dt = ds.Tables[0];
 
             string regiondata = "";
@@ -109,24 +110,100 @@ namespace IBS.Repositories
             return model;
         }
 
-        public List<ConsigneeComplaints> GetDataListComplaint(string poNo, string poDt)
+        public ConsigneeComplaints FindByCompID(string ComplaintId)
+        {
+            ConsigneeComplaints model = new ConsigneeComplaints();
+            DataTable dt = new DataTable();
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_complaint_id", OracleDbType.Varchar2, ComplaintId, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GetConsigneeComplaintDetails", par, 1);
+            dt = ds.Tables[0];
+
+            if (dt.Rows.Count > 0)
+            {
+                model.CASE_NO = dt.Rows[0]["CASE_NO"].ToString();
+                model.ComplaintDate = Convert.ToDateTime(dt.Rows[0]["COMPLAINT_DATE"]);
+                model.ComplaintId = ComplaintId;
+                model.PO_NO = dt.Rows[0]["PO"].ToString();
+                model.VEND_NAME = dt.Rows[0]["VENDOR"].ToString();
+                model.BK_NO = dt.Rows[0]["BK_NO"].ToString();
+                model.SET_NO = dt.Rows[0]["SET_NO"].ToString();
+                model.ie_name = dt.Rows[0]["IE_NAME"].ToString();
+                model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
+                model.FormattedIC_DATE = dt.Rows[0]["IC_DT"].ToString();
+                model.RejMemoDt = Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DATE"]);
+                model.RejMemoNo = dt.Rows[0]["REJ_MEMO_NO"].ToString();
+                model.Railway = dt.Rows[0]["rly_cd"].ToString();
+                model.ItemDesc = dt.Rows[0]["ITEM_DESC"].ToString();
+                model.QtyOffered = Convert.ToDecimal(dt.Rows[0]["QTY_OFFERED"]);
+                model.QtyRejected = Convert.ToDecimal(dt.Rows[0]["QTY_REJECTED"]);
+                model.rejectionValue = Convert.ToDecimal(dt.Rows[0]["REJECTION_VALUE"]);
+                model.Rate = Convert.ToDecimal(dt.Rows[0]["RATE"]);
+                model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
+                model.InspRegion = dt.Rows[0]["INSP_REGION_NAME"].ToString();
+                model.CoName = dt.Rows[0]["IE_CO_CD"].ToString();
+                model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
+            }
+            return model;
+        }
+
+        public DTResult<ConsigneeComplaints> GetDataListComplaint(DTParameters dtParameters)
         {
             DTResult<ConsigneeComplaints> dTResult = new() { draw = 0 };
             IQueryable<ConsigneeComplaints>? query = null;
 
-            ConsigneeComplaints model = new ConsigneeComplaints();
-            DataTable dt = new DataTable();
-            List<ConsigneeComplaints> modelList = new List<ConsigneeComplaints>();
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "PO_NO";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "PO_NO";
+                orderAscendingDirection = true;
+            }
+
+            string PoNo = "", PoDt = "";
+
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            {
+                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+            {
+                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
+            }
+
+            DateTime? dtPo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]) ? Convert.ToDateTime(dtParameters.AdditionalValues["PoDt"]) : null;
+
+
+            PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
+            //DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
+
 
             OracleParameter[] par1 = new OracleParameter[3];
-            par1[0] = new OracleParameter("p_PONo", OracleDbType.Varchar2, poNo, ParameterDirection.Input);
-            par1[1] = new OracleParameter("p_PODate", OracleDbType.Varchar2, poDt, ParameterDirection.Input);
+            par1[0] = new OracleParameter("p_PO_No", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
+            par1[1] = new OracleParameter("p_PO_Date", OracleDbType.Varchar2, PoDt, ParameterDirection.Input);
             par1[2] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds2 = DataAccessDB.GetDataSet("GetConsigneeComplaint", par1, 1);
             DataTable dt2 = ds2.Tables[0];
 
-            List<ConsigneeComplaints> list2 = dt2.AsEnumerable().Select(row => new ConsigneeComplaints
+            List<ConsigneeComplaints> list = dt2.AsEnumerable().Select(row => new ConsigneeComplaints
             {
                 CASE_NO = row.Field<string>("case_no"),
                 PO_NO = row.Field<string>("po_no"),
@@ -141,42 +218,105 @@ namespace IBS.Repositories
                 RejMemoDt = row.Field<DateTime?>("rej_memo_dt"),
             }).ToList();
 
-            return list2;
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
-        public List<ConsigneeComplaints> GetDataListConsignee(string poNo, string poDt)
+
+
+        public DTResult<ConsigneeComplaints> GetDataListConsignee(DTParameters dtParameters)
         {
+
             DTResult<ConsigneeComplaints> dTResult = new() { draw = 0 };
             IQueryable<ConsigneeComplaints>? query = null;
 
-            ConsigneeComplaints model = new ConsigneeComplaints();
-            DataTable dt = new DataTable();
-            List<ConsigneeComplaints> modelList = new List<ConsigneeComplaints>();
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "PO_NO";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "PO_NO";
+                orderAscendingDirection = true;
+            }
+
+            string PoNo = "", PoDt = "";
+
+           
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            {
+                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+            {
+                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
+            }
+
+            DateTime? dtPo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]) ? Convert.ToDateTime(dtParameters.AdditionalValues["PoDt"]) : null;
+
+
+            PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
+            //DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
+
 
             OracleParameter[] par = new OracleParameter[3];
-            par[0] = new OracleParameter("p_po_no_param", OracleDbType.Varchar2, poNo, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_po_date_param", OracleDbType.Varchar2, poDt, ParameterDirection.Input);
+            par[0] = new OracleParameter("p_po_no_param", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_po_date_param", OracleDbType.Date, dtPo, ParameterDirection.Input);
             par[2] = new OracleParameter("RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds1 = DataAccessDB.GetDataSet("GetFilteredConsigneeComplaints", par, 1);
-            DataTable dt1 = ds1.Tables[0];
+            var ds = DataAccessDB.GetDataSet("GetFilteredConsigneeComplaints", par, 1);
+            DataTable dt = ds.Tables[0];
 
-            List<ConsigneeComplaints> list1 = dt1.AsEnumerable().Select(row => new ConsigneeComplaints
+            ConsigneeComplaints model = new();
+            List<ConsigneeComplaints> list = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-                CASE_NO = row.Field<string>("case_no"),
-                PO_NO = row.Field<string>("po_no"),
-                PO_DT = row.Field<DateTime?>("PO_DT"),
-                BK_NO = row.Field<string>("bk_no"),
-                SET_NO = row.Field<string>("set_no"),
-                IC_NO = row.Field<string>("IC_NO"),
-                VEND_NAME = row.Field<string>("VEND_NAME"),
-                Consignee = row.Field<string>("Consignee"),
-                IC_DATE = row.Field<DateTime?>("IC_DATE"),
-                Railway = row.Field<string>("rly_cd"),
-            }).ToList();
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<ConsigneeComplaints>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
-            return list1;
+            List<ConsigneeComplaints> lst = new();
 
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+           
+            return dTResult;
         }
+
 
         //public int ComplaintsDetailsInsertUpdate(ConsigneeComplaints model)
         //{

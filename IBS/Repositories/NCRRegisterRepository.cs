@@ -55,7 +55,7 @@ namespace IBS.Repositories
                     orderAscendingDirection = true;
                 }
 
-                string NCNO = "", CASENO = "", ToDate = null, FromDate = null, IENAME = "";
+                string NCNO = "", CASENO = "", ToDate = null, FromDate = null, IENAME = null;
 
                 //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["NCNO"]))
                 //{
