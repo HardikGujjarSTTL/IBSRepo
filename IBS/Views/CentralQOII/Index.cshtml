@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Central QOII List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Central QOII List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="CentralQOII" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Central QOI</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtCentralQOII" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Client</th>
+                            <th>Qoi Date</th>
+                            <th>Region Code</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtCentralQOII").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    //{ data: "Client" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Client = data.Client;
+                            var ClientName = "";
+                            if (Client == "1") {
+                                ClientName = "RSM"
+                            }
+                            else if (Client == "2") {
+                                ClientName = "URM"
+                            }
+                            else if (Client == "3") {
+                                ClientName = "JINDAL RAILWAY"
+                            }
+                            else if (Client == "4") {
+                                ClientName = "JINDAL NON RAILWAY."
+                            }
+                            else if (Client == "5") {
+                                ClientName = "PLATE(BSP)"
+                            }
+                            return ClientName;
+                        }
+                    },
+                    { data: "QoiDate" },
+                    { data: "Region" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Client = data.Client;
+                            var QoiDate = data.QoiDate;
+                            var Weight = data.Weight;
+                            var QoiLength = data.QoiLength;
+                            var editUrl = '@Url.Action("Manage", "CentralQOII")/?Client=' + Client + "&QoiDate=" + QoiDate + "&Weight=" + Weight + "&QoiLength=" + QoiLength;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="CentralQOIIDelete(\'' + Client + '\',\'' + QoiDate + '\',\'' + Weight + '\',\'' + QoiLength + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Client + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function CentralQOIIDelete(Client, QoiDate, Weight, QoiLength) {
+            var url = '@Url.Action("Delete", "CentralQOII")/?Client=' + Client + "&QoiDate" + QoiDate + "&Weight" + Weight + "&QoiLength" + QoiLength;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

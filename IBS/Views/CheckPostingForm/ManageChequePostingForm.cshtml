@@ -1,0 +1,106 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>Edit Cheque Posting</h2>
+    </div>
+</div>
+<section>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingForm" asp-action="FindByID" data-ajax-method="post" data-ajax-complete="completed" id="frmChqPosting">
+            <div id="hide3">
+                <div class="col-md-4 mb-4">
+
+                    <div class="hide1 col-md-4 mb-4">
+                        <input type="radio" class="billInvoiceClass" id="radioBill" name="Bill" value="Bill_No">
+                        <label for="Reference" class="billInvoiceClass">Bill No.</label><br>
+
+                        <input type="radio" class="billInvoiceClass" id="radioInvoice" name="Bill" value="Invoice_No">
+                        <label for="Reference" class="billInvoiceClass">Invoice No.</label><br>
+
+                        <input type="text" class="billInvoiceClass" id="Bill/InvoiceNo" class="input"  maxlength="300" />
+                        <br></br>
+                        <button class="billInvoiceClass save-btn active" id="btnBillDetails" onclick="btnBillDetailsClick();">Bill Details</button>
+                    </div>
+
+                    <label for="Reference" c>Bill Date </label>
+                    <input type="text" id="BillDate" class="input " maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Bill Amount (A) </label>
+                    <input type="text" id="BillAmount" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Amount Already Recieved Thru Cheque /EFT </label>
+                    <input type="text" id="AmtRecieved" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Total Amount Cleared (B) </label>
+                    <input type="text" id="TotalAmount" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Amount To Recover (A-B) </label>
+                    <input type="text" id="AmountRecover" class="input" maxlength="300" readonly />
+
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Total TDS </label>
+                    <input type="text" id="totalTDS" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Retention Money </label>
+                    <input type="text" id="RetentionMoney" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Amount To Thru Credit Note </label>
+                    <input type="text" id="AmountCreditNote" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Write off Amt / Amt Adjusted </label>
+                    <input type="text" id="AmtAdjusted" class="input" maxlength="300" />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Posting Date </label>
+                    <input type="text" id="postingdate" class="input" maxlength="300" />
+
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Amount To be Cleared by this Cheque </label>
+                    <input type="text" id="AmtChq" class="input" maxlength="300" />
+
+                </div>
+
+
+
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Case No </label>
+                    <input type="text" id="caseNo" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">BK NO </label>
+                    <input type="text" id="bkno" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">SET NO </label>
+                    <input type="text" id="setno" class="input" maxlength="300" readonly />
+
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">BPO </label>
+                    <input type="text" id="BPO" class="input" maxlength="300" readonly />
+
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Central Rejection Status List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Central Rejection Status List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="CentralRejectionStatus" asp-action="Manage" class="formBtn"><span class="fa fa-plus Permission_Add"></span> Add New Central Rejection Status</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtCentralRejectionStatus" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Rej. Date</th>
+                            <th>Case No</th>
+                            <th>Consignee</th>
+                            <th>Region</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtCentralRejectionStatus").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "RejDt" },
+                    { data: "CaseNo" },
+                    { data: "Consignee" },
+                    { data: "Region" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "CentralRejectionStatus")?ID=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="CentralRejectionStatusDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function CentralRejectionStatusDelete(ID) {
+            var url = '@Url.Action("Delete", "CentralRejectionStatus")/?ID=' + ID;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

@@ -1,36 +1,34 @@
 ﻿@{
-    ViewData["Title"] = "RitesDesignationMaster";
+    ViewData["Title"] = "Rites Designation Directory";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Rites Designation Master</h2>
-        </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="RitesDesignationMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New RDM</a>
-        </div>
-
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Rites Designation Directory</h2>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtRDM" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Designation Code</th>
-                            <th>Designation</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="RitesDesignationMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+    </div>
 </div>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtRDM" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Designation Code</th>
+                        <th>Designation</th>
+                        <th style="text-align:center">View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -73,27 +71,27 @@
                     },
                     { data: "RDesigCd" },
                     { data: "RDesignation" },
-                    
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.RDesigCd;
                             var editUrl = '@Url.Action("Manage", "RitesDesignationMaster")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="RDMDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         }
 
-        function RDMDelete(id) {
+        function Delete(id) {
             var url = '@Url.Action("Delete", "RitesDesignationMaster")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
+
     </script>
 }

@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class Expenditure : BaseController
     {
         #region Variables
@@ -14,10 +16,12 @@ namespace IBS.Controllers
         {
             expenditureRepository = _expenditureRepository;
         }
+        [Authorization("Expenditure", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("Expenditure", "Index", "view")]
         public IActionResult Manage(string _ExpPer)
         {
             ExpenditureModel model = new();
@@ -35,11 +39,12 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("Expenditure", "Index", "delete")]
         public IActionResult Delete(string _ExpPer)
         {
             try
             {
-                if (expenditureRepository.Remove(_ExpPer, GetRegionCode))
+                if (expenditureRepository.Remove(_ExpPer, GetRegionCode,UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -54,6 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("Expenditure", "Index", "edit")]
         public IActionResult ExpenditureDetailsSave(ExpenditureModel model)
         {
             try
@@ -66,6 +72,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.UserId = Convert.ToString(UserId);
                 model.RegionCode = GetRegionCode;
                 var i = expenditureRepository.ExpenditureDetailsInsertUpdate(model);
                 if (i != null)

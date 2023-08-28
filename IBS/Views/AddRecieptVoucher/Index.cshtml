@@ -49,6 +49,7 @@
         });
 
         function InitializeDatatable() {
+            debugger;
             $("#dtListVoucher").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -76,6 +77,7 @@
                         data: '', orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
+                                ;
                         }
                     },
                     //{ data: "SNO" },
@@ -90,8 +92,12 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.ContractId;
-                            var editUrl = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")/' + id;
+                            var VCHR_NO = data.VCHR_NO;
+                            var BANK_CD = data.BANK_CD;
+                            var CHQ_NO = data.CHQ_NO;
+                            var CHQ_DT = data.CHQ_DT;
+
+                            var editUrl = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';

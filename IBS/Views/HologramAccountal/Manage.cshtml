@@ -1,7 +1,12 @@
 ﻿@model IBS.Models.HologramAccountalModel
 @{
 
-    ViewData["Title"] = "Manage Hologram Accountal";
+    ViewData["Title"] = "Manage Hologram Accountal";    
+    string clsView = "";
+    if (Model.CASE_NO != null)
+    {        
+        clsView = "Permission_View";
+    }
 }
 
 <script>
@@ -45,12 +50,15 @@
                 var setto = (toVal);
 
                 if (setto < setfr) {
-                    flag = false;
-                    alert("[HOLOGRAM No. To] Must be Greater than [HOLOGRAM No. From]");
-                }
-                if (!flag) {
                     $("#" + toID).focus();
+                    flag = false;
+                    //alert("[HOLOGRAM No. To] Must be Greater than [HOLOGRAM No. From]");
+                    ShowHideMsgNew(false, "[HOLOGRAM No. To] Must be Greater than [HOLOGRAM No. From]")
                 }
+                //if (!flag) {
+                //    $("#" + toID).focus();
+                //    //$("#" + fromID).focus();
+                //}
                 return flag;
             }
         }
@@ -67,228 +75,227 @@
     }
 </script>
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="HologramAccountal" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Manage Hologram Accountal</h2>
-        </div>
-
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Hologram Accountal</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="HologramAccountal" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <form data-ajax="true" asp-antiforgery="true" asp-controller="HologramAccountal" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
         <input type="hidden" asp-for="CASE_NO" />
         <input type="hidden" asp-for="CALL_DT" />
         <input type="hidden" asp-for="CALL_SNO" />
         <input type="hidden" asp-for="IE_NAME" />
         <input type="hidden" asp-for="BK_NO" />
         <input type="hidden" asp-for="SET_NO" />
-
         <input type="hidden" asp-for="CONSIGNEE_CD" />
         <input type="hidden" asp-for="IE_CD" />
         <input type="hidden" asp-for="REC_NO" />
-        @*<input type="hidden" id ="RNO" value="@ViewBag.RNO" />*@
-        <div>@ViewData["BNO"]</div>
+        <div class="accordion-body">
+            <table>
+                <tr>
+                    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Case No:</td>
+                    <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
+                        <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
+                    </td>
+                    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Call Date - SNo:</td>
+                    <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
+                        <label id="lblCallRecvDt" style="text-transform: uppercase; color:red;"></label>
+                        <span> - </span>
+                        <label id="lblCallSNo" style="text-transform: uppercase; color:red;"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">IE:</td>
+                    <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
+                        <label id="lblIE_SName" style="text-transform: uppercase; color:red;"></label>
+                        <label id="lblCCD" style="text-transform: uppercase; color:red;"></label>
+                        <label id="lblIECD" style="text-transform: uppercase; color:red;"></label>
+                    </td>
+                    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Book No. - Set No.:</td>
+                    <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
+                        <label id="lblBKNO" style="text-transform: uppercase; color:red;"></label>
+                        <span> - </span>
+                        <label id="lblSetNO" style="text-transform: uppercase; color:red;"></label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <h5 style="text-align: center;text-decoration: underline;">SERIAL NUMBER(S) OF HOLOGRAM USED ON</h5>
+        <div class="accordion-body">
+            <div class="row my-0" style="text-align: center;">
+                <div class="col-md-4 mb-3">
+                    <div class="row my-0">
+                        <label style="color: orangered;font-weight: bold;text-decoration: underline;">Material/Stores</label>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">From</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_MATERIAL_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusin="" onfocusout="Change('HG_NO_MATERIAL_FR');Check('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO');">
+                                <span asp-validation-for="HG_NO_MATERIAL_FR" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">To</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_MATERIAL_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusin="" onfocusout="Change('HG_NO_MATERIAL_TO');Check('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO');txtCopy('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO')">
+                                <span asp-validation-for="HG_NO_MATERIAL_TO" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="row my-0">
+                        <label style="color: orangered;font-weight: bold; text-decoration: underline;">Samples</label>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">From</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_SAMPLE_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusout="Change('HG_NO_SAMPLE_FR');Check('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO');">
+                                <span asp-validation-for="HG_NO_SAMPLE_FR" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">To</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_SAMPLE_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusout="Change('HG_NO_SAMPLE_TO');Check('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO');txtCopy('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO')">
+                                <span asp-validation-for="HG_NO_SAMPLE_TO" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="row my-0">
+                        <label style="color: orangered;font-weight: bold; text-decoration: underline;">Test Request Slip</label>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">From</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_TEST_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_TEST_FR');Check('HG_NO_TEST_FR','HG_NO_TEST_TO');">
+                                <span asp-validation-for="HG_NO_TEST_FR" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">To</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_TEST_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_TEST_TO');Check('HG_NO_TEST_FR','HG_NO_TEST_TO');txtCopy('HG_NO_TEST_FR','HG_NO_TEST_TO')">
+                                <span asp-validation-for="HG_NO_TEST_TO" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0" style="text-align: center;">
+                <div class="col-md-4 mb-3">
+                    <div class="row my-0">
+                        <label style="color: orangered;font-weight: bold; text-decoration: underline;">IC</label>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">From</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_IC_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_IC_FR');Check('HG_NO_IC_FR','HG_NO_IC_TO');">
+                                <span asp-validation-for="HG_NO_IC_FR" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">To</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_IC_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_IC_TO');Check('HG_NO_IC_FR','HG_NO_IC_TO');txtCopy('HG_NO_IC_FR','HG_NO_IC_TO')">
+                                <span asp-validation-for="HG_NO_IC_TO" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="row my-0">
+                        <label style="color: orangered;font-weight: bold; text-decoration: underline;">Inspection Documents</label>
+                        <div class="col-md-12 mb-3">
+                            <div class="reference">
+                                <label for="Reference">Hologram No.</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_IC_DOC" maxlength="90" style="text-transform: uppercase; width: 40%;" onblur="Change('HG_NO_IC_DOC');">
+                                <span asp-validation-for="HG_NO_IC_DOC" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="row my-0">
+                        <label style="color: orangered;font-weight: bold; text-decoration: underline;">Any Other Location</label>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">From</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_OT_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_OT_FR');Check('HG_NO_OT_FR','HG_NO_OT_TO');">
+                                <span asp-validation-for="HG_NO_OT_FR" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="reference">
+                                <label for="Reference">To</label>
+                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <input type="text" class="input" asp-for="HG_NO_OT_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_OT_TO');Check('HG_NO_OT_FR','HG_NO_OT_TO');txtCopy('HG_NO_OT_FR','HG_NO_OT_TO');">
+                                <span asp-validation-for="HG_NO_OT_TO" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0" style="text-align: center;">
+                <div class="col-md-12 mb-3" style="text-align: end;">
+                    <label style="font-weight: bold;">If Any Other Location, Kindly Specify --></label>
+                    <input type="text" class="input" asp-for="HG_OT_DESC" maxlength="90" style="text-transform: uppercase; width: 32%;">
+                    @*<span asp-validation-for="HG_OT_DESC" class="text-danger"></span>*@
 
-    </div>
-    <div class="accordion-body">
-        <table>
-            <tr>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Case No:</td>
-                <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
-                </td>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Call Date - SNo:</td>
-                <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblCallRecvDt" style="text-transform: uppercase; color:red;"></label>
-                    <span> - </span>
-                    <label id="lblCallSNo" style="text-transform: uppercase; color:red;"></label>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">IE:</td>
-                <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblIE_SName" style="text-transform: uppercase; color:red;"></label>
-                    <label id="lblCCD" style="text-transform: uppercase; color:red;"></label>
-                    <label id="lblIECD" style="text-transform: uppercase; color:red;"></label>
-                </td>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Book No. - Set No.:</td>
-                <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblBKNO" style="text-transform: uppercase; color:red;"></label>
-                    <span> - </span>
-                    <label id="lblSetNO" style="text-transform: uppercase; color:red;"></label>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <h5 style="text-align: center;text-decoration: underline;">SERIAL NUMBER(S) OF HOLOGRAM USED ON</h5>
-    <div class="accordion-body">
-        <div class="row my-0" style="text-align: center;">
-            <div class="col-md-4 mb-3">
-                <div class="row my-0">
-                    <label style="color: orangered;font-weight: bold;text-decoration: underline;">Material/Stores</label>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">From</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_MATERIAL_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusout="Change('HG_NO_MATERIAL_FR');Check('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO');">
-                            @*<span asp-validation-for="HG_NO_MATERIAL_FR" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">To</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_MATERIAL_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusout="Change('HG_NO_MATERIAL_TO');Check('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO');txtCopy('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO')">
-                            @*<span asp-validation-for="HG_NO_MATERIAL_TO" class="text-danger"></span>*@
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="row my-0">
-                    <label style="color: orangered;font-weight: bold; text-decoration: underline;">Samples</label>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">From</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_SAMPLE_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_SAMPLE_FR');Check('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO');">
-                            @*<span asp-validation-for="HG_NO_SAMPLE_FR" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">To</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_SAMPLE_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_SAMPLE_TO');Check('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO');txtCopy('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO')">
-                            @*<span asp-validation-for="HG_NO_SAMPLE_TO" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="row my-0">
-                    <label style="color: orangered;font-weight: bold; text-decoration: underline;">Test Request Slip</label>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">From</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_TEST_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_TEST_FR');Check('HG_NO_TEST_FR','HG_NO_TEST_TO');">
-                            @*<span asp-validation-for="HG_NO_TEST_FR" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">To</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_TEST_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_TEST_TO');Check('HG_NO_TEST_FR','HG_NO_TEST_TO');txtCopy('HG_NO_TEST_FR','HG_NO_TEST_TO')">
-                            @*<span asp-validation-for="HG_NO_TEST_TO" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0" style="text-align: center;">
-            <div class="col-md-4 mb-3">
-                <div class="row my-0">
-                    <label style="color: orangered;font-weight: bold; text-decoration: underline;">IC</label>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">From</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_IC_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_IC_FR');Check('HG_NO_IC_FR','HG_NO_IC_TO');">
-                            @*<span asp-validation-for="HG_NO_IC_FR" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">To</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_IC_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_IC_TO');Check('HG_NO_IC_FR','HG_NO_IC_TO');txtCopy('HG_NO_IC_FR','HG_NO_IC_TO')">
-                            @*<span asp-validation-for="HG_NO_IC_TO" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="row my-0">
-                    <label style="color: orangered;font-weight: bold; text-decoration: underline;">Inspection Documents</label>
-                    <div class="col-md-12 mb-3">
-                        <div class="reference">
-                            <label for="Reference">Hologram No.</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_IC_DOC" maxlength="90" style="text-transform: uppercase; width: 40%;" onblur="Change('HG_NO_IC_DOC');">
-                            @*<span asp-validation-for="HG_NO_IC_DOC" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="row my-0">
-                    <label style="color: orangered;font-weight: bold; text-decoration: underline;">Any Other Location</label>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">From</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_OT_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_OT_FR');Check('HG_NO_OT_FR','HG_NO_OT_TO');">
-                            @*<span asp-validation-for="HG_NO_OT_FR" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="reference">
-                            <label for="Reference">To</label>
-                            <span style="color: orangered;font-weight: bold;">N</span>
-                            <input type="text" class="input" asp-for="HG_NO_OT_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_OT_TO');Check('HG_NO_OT_FR','HG_NO_OT_TO');txtCopy('HG_NO_OT_FR','HG_NO_OT_TO');">
-                            @*<span asp-validation-for="HG_NO_OT_TO" class="text-danger"></span>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0" style="text-align: center;">
-            <div class="col-md-12 mb-3" style="text-align: end;">
-                <label style="font-weight: bold;">If Any Other Location, Kindly Specify --></label>
-                <input type="text" class="input" asp-for="HG_OT_DESC" maxlength="90" style="text-transform: uppercase; width: 32%;">
-                @*<span asp-validation-for="HG_OT_DESC" class="text-danger"></span>*@
 
-            </div>
-        </div>
-
-        <div class="row my-0">
-            <div class="col-md-12 mb-3" style="text-align: center;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    <button type="button" class="save-btn active" id="btnDelete" onclick="Delete();">Delete</button>
-                    <a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3" style="text-align: center;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                        @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <h5 style="text-align: center;text-decoration: underline;">HOLOGRAM USED ON</h5>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Material</th>
-                            <th>Samples</th>
-                            <th>Test</th>
-                            <th>IC</th>
-                            <th>IC Doc</th>
-                            <th>Other Location</th>
-                            <th>Case No.</th>
-                            <th>Call Date</th>
-                            <th>Consignee Cd</th>
-                            <th>Call Sno</th>
-                            <th>Record No.</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+        <h5 style="text-align: center;text-decoration: underline;">HOLOGRAM USED ON</h5>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Material</th>
+                                <th>Samples</th>
+                                <th>Test</th>
+                                <th>IC</th>
+                                <th>IC Doc</th>
+                                <th>Other Location</th>
+                                <th>Case No.</th>
+                                <th>Call Date</th>
+                                <th>Consignee Cd</th>
+                                <th>Call Sno</th>
+                                <th>Record No.</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </section>
-</form>
+        </section>
+    </form>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -298,15 +305,7 @@
     </script>
 
     <script type="text/javascript">
-        debugger
-        //'@ViewBag.RNO';
-        //var BNO = '@ViewBag.BNO';
-        //var SNO = '@ViewBag.SNO';
-        //var CCD = '@ViewBag.CCD';
-
         $(document).ready(function () {
-        //var IsDelete = '@ViewBag.RNO';
-            //debugger
             //alert('@Model.HG_NO_MATERIAL_FR');
             //alert('@Model.CASE_NO');
             $("#lblCaseNo").text($("#CASE_NO").val());
@@ -320,7 +319,6 @@
             $("#lblIECD").text($("#IE_CD").val());
 
 
-            //debugger
             if ($("#lblCaseNo").html() != "" && $("#lblCallRecvDt").html() != "" && $("#lblCallSNo").html() != "" && $("#lblCCD").html() != "") {
                 BindDataTable();
             }
@@ -329,7 +327,6 @@
 
 
         function Save() {
-            debugger
             var formData = new FormData($("#frmDetails")[0]);
             RNO = $("#REC_NO").val();
             var url = "@Url.Action("HologramAccountalDetailsSave", "HologramAccountal")?REC_NO=" + RNO;
@@ -341,19 +338,22 @@
                 contentType: false,
                 data: formData,
                 success: function (response) {
-                    debugger
                     var errorMsg = response._msg;
                     var result = response._result;
                     if (errorMsg != "0") {
                         alert(errorMsg);
-                    } else {
+                        ShowHideMsgNew(false, errorMsg)
+                    }
+                    else {
                         if (RNO != 0) {
-                            alert("Record Updateed");
+                            ShowHideMsgNew(true, "Record Save Successfull")
+                            alert("Record Save Successfull");
                             $('#frmDetails').trigger("reset");
                             window.location.href = "/HologramAccountal/Manage?CASE_NO=" + $("#lblCaseNo").html() + "&CALL_RECV_DT=" + $("#lblCallRecvDt").html() + "&CALL_SNO=" + $("#lblCallSNo").html() + "&CONSIGNEE_CD=" + $("#lblCCD").html();
                         }
                         else {
-                            alert("Record Updateed");
+                            ShowHideMsgNew(true, "Record Save Successfull")
+                            alert("Record Save Successfull");
                             $('#frmDetails').trigger("reset");
 
                         }
@@ -373,12 +373,16 @@
                 contentType: false,
                 data: formData,
                 success: function (response) {
-                    //var errorMsg = response._msg;
-                    //var result = response._result;
                     if (response) {
-                        alert("Record Deleted Successfull");
-                        window.location.href = "/HologramAccountal/Manage?CASE_NO=" + $("#lblCaseNo").html() + "&CALL_RECV_DT=" + $("#lblCallRecvDt").html() + "&CALL_SNO=" + $("#lblCallSNo").html() + "&CONSIGNEE_CD=" + $("#lblCCD").html();
+                        //alert("Record Deleted Successfull");
+                        $('#frmDetails').trigger("reset");
+                        ShowHideMsgNew(true, "Record Deleted Successfull")
+                        setTimeout(function () {
+                            BindDataTable();
+                            //window.location.href = "/HologramAccountal/Manage?CASE_NO=" + $("#lblCaseNo").html() + "&CALL_RECV_DT=" + $("#lblCallRecvDt").html() + "&CALL_SNO=" + $("#lblCallSNo").html() + "&CONSIGNEE_CD=" + $("#lblCCD").html();
+                        }, 1000);
                     } else {
+                        ShowHideMsgNew(false, "Record Not Deleted")
                         alert("Record Not Deleted");
                     }
                 }
@@ -387,7 +391,6 @@
 
 
         function BindDataTable() {
-            //debugger
             var CaseNo = $("#lblCaseNo").html();
             var CallRecvDt = $("#lblCallRecvDt").html();
             var ConsigneeCD = $("#lblCCD").html();
@@ -432,18 +435,20 @@
                     { data: "HG_NO_IC" },
                     { data: "HG_NO_IC_DOC" },
                     { data: "HG_NO_OT" },
-                    { data: "CASE_NO" },
-                    { data: "CALL_RECV_DT" },
-                    { data: "CONSIGNEE_CD" },
-                    { data: "CALL_SNO" },
-                    { data: "REC_NO" },
+                    { data: "CASE_NO", visible: false },
+                    { data: "CALL_RECV_DT", visible: false },
+                    { data: "CONSIGNEE_CD", visible: false },
+                    { data: "CALL_SNO", visible: false },
+                    { data: "REC_NO", visible: false },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
 
                             gridData = row;
                             var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
-                            html += '<a onclick="SelectDetails(\'' + data.CASE_NO + '\',\'' + data.CALL_RECV_DT + '\', \'' + data.CALL_SNO + '\', \'' + data.CONSIGNEE_CD + '\', \'' + data.REC_NO + '\')" id=\"' + data.CASE_NO + '\" class=\"delete\"">SELECT</a>';
+                            //html += '<a onclick="SelectDetails(\'' + data.CASE_NO + '\',\'' + data.CALL_RECV_DT + '\', \'' + data.CALL_SNO + '\', \'' + data.CONSIGNEE_CD + '\', \'' + data.REC_NO + '\')" id=\"' + data.CASE_NO + '\" class=\"delete\"">SELECT</a>';
+                            html += '<a onclick="SelectDetails(\'' + data.CASE_NO + '\',\'' + data.CALL_RECV_DT + '\', \'' + data.CALL_SNO + '\', \'' + data.CONSIGNEE_CD + '\', \'' + data.REC_NO + '\', \'edit\')" id=\"' + data.CASE_NO + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="SelectDetails(\'' + data.CASE_NO + '\',\'' + data.CALL_RECV_DT + '\', \'' + data.CALL_SNO + '\', \'' + data.CONSIGNEE_CD + '\', \'' + data.REC_NO + '\', \'delete\')" id=\"' + data.CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -453,8 +458,7 @@
             });
         }
 
-        function SelectDetails(Case_No, Call_Recv_Dt, Call_Sno, Consignee_Cd, Rec_No) {
-            //var url = "@Url.Action("Manage", "HologramAccountal")" + "?CASE_NO=" + Case_No + "&CALL_RECV_DT=" + Call_Recv_Dt + "&CALL_SNO=" + Call_Sno + "&CONSIGNEE_CD=" + Consignee_Cd + "&REC_NO=" + Rec_No;
+        function SelectDetails(Case_No, Call_Recv_Dt, Call_Sno, Consignee_Cd, Rec_No, type) {
             var url = "@Url.Action("GetSelectedHologramAccountal", "HologramAccountal")" + "?CaseNo=" + Case_No + "&CallRecvDt=" + Call_Recv_Dt + "&CallSNo=" + Call_Sno + "&CCD=" + Consignee_Cd + "&RecNo=" + Rec_No;
             $.ajax({
                 url: url,
@@ -463,7 +467,6 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    //debugger
                     if (response != null) {
                         $("#REC_NO").val(response.REC_NO);
                         $("#HG_NO_MATERIAL_FR").val(response.HG_NO_MATERIAL_FR);
@@ -479,9 +482,13 @@
                         $("#HG_NO_OT_FR").val(response.HG_NO_OT_FR);
                         $("#HG_NO_OT_TO").val(response.HG_NO_OT_TO);
 
+                        if (type == "delete") {
+                            Delete();
+                        }
                     } else {
+                        ShowHideMsgNew(false, "No Data Found")
                         alert("No Data Found");
-                    }                    
+                    }
                 }
             });
         }

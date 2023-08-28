@@ -1,0 +1,111 @@
+﻿@{
+    //ViewData["Title"] = "Laboratory List";
+}
+
+<div>
+    
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtlabregdtl" class="table-responsive">
+                    <thead>
+                        <tr>
+                            
+                            <th>SRNo.</th>
+                            <th>Item</th>
+                            <th>No. Of Samples</th>
+                            <th>Test</th>
+                            <th>Lab</th>
+                            <th>Testing Fee</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                            @*<th>Delete</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            debugger;
+            $("#dtlabregdtl").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                           
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "SNO" },
+                    { data: "ITEM_DESC" },
+                    { data: "QTY" },
+                    { data: "TEST" },
+                    { data: "LAB_ID" },
+                    { data: "TESTING_FEE" },
+                    { data: "REMARKS" },
+                    
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        return data.Status ? "Active" : "InActive";
+                    //    }
+                    //},
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Id = data.LabId;
+                            var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")?LabId=' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            //html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        
+
+    </script>
+}

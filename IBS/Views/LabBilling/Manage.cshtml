@@ -1,14 +1,22 @@
 ﻿@model IBS.Models.LabBillingModel
 @{
     ViewData["Title"] = "Manage Lab Billing";
+    string clsView = "";
+    if (Model.Lab_Bill_Per != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Lab Billing</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="LabBilling" class="formBtn viewall-btn">View List</a>
+    </div>
 </div> 
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="LabBilling" asp-action="LabBillingDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabBillingDetails">
             <input type="hidden" asp-for="Lab_Bill_Per" />
@@ -21,12 +29,12 @@
                             </div> 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Month: </label>                                 
-                                @Html.DropDownListFor(model => model.LabBillPerMon, new SelectList(IBS.Models.Common.GetMonth(""), "Value", "Text"),"--Select--")                                 
+                                @Html.DropDownListFor(model => model.LabBillPerMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")                                 
                                 <span asp-validation-for="LabBillPerMon" class="text-danger"></span>
                             </div> 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Year: </label>                                
-                                @Html.DropDownListFor(model => model.LabBillPerYear, new SelectList(IBS.Models.Common.GetYear(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.LabBillPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="LabBillPerYear" class="text-danger"></span>
                             </div> 
                         </div>
@@ -43,8 +51,8 @@
                         </div>
                     </div> 
                     <div class="savenext-btn" style="justify-content:center">
-                        <a asp-controller="LabBilling" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        @*<a asp-controller="LabBilling" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +85,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/LabBilling/Index";
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "LabBilling")';
+            }
         }; 
     </script>
 }

@@ -1,51 +1,42 @@
 ﻿@model IBS.Models.RDMModel
 
 @{
-    ViewData["Title"] = "Rites Designation Master";
+    ViewData["Title"] = "Manage Rites Designation Directory";
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Rites Designation Master</h2>
+        <h2>Manage Rites Designation Directory</h2>
     </div>
 </div>
-
-    <div class="task-listinput">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="RitesDesignationMaster" asp-action="RitesDesignationMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRitesDesignationMaster">
-                <input type="hidden" asp-for="RDesigCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Designation</label>
-                            <textarea class="input" asp-for="RDesignation" maxlength="50"> </textarea>
-                            <span asp-validation-for="RDesignation" class="text-danger"></span>
-                        </div>
-                        @*<div class="col-md-4 mb-3">
-                            <label for="Reference">Designation Code</label>
-                            <textarea class="input" asp-for="RDesigCd" maxlength="30"></textarea>
-                            <span asp-validation-for="RDesigCd" class="text-danger"></span>
-                        </div>*@
-                       
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="RitesDesignationMaster" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form role="form" asp-controller="RitesDesignationMaster" asp-action="Manage" method="post" id="frmRitesDesignationMaster">
+        <input type="hidden" asp-for="RDesigCd" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Designation <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="RDesignation" maxlength="10">
+                    <span asp-validation-for="RDesignation" class="text-danger"></span>
                 </div>
-            </form>
-    </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="RitesDesignationMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitRitesDesignation();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
+
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        function SubmitRitesDesignation() {
             if ($("#frmRitesDesignationMaster").valid()) {
                 $("#frmRitesDesignationMaster").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/RitesDesignationMaster/Index";
-        };
+
     </script>
 }

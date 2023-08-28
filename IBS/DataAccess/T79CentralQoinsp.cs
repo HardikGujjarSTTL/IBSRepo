@@ -22,4 +22,14 @@ public partial class T79CentralQoinsp
     public string? UserId { get; set; }
 
     public DateTime? Datetime { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
 }

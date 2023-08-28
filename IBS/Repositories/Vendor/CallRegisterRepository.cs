@@ -4,6 +4,7 @@ using IBS.Helper;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Dynamic;
@@ -53,17 +54,17 @@ namespace IBS.Repositories.Vendor
                 dt = ds.Tables[0];
                 List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
                 {
-                    CaseNo = row["CASE_NO"].ToString(),
-                    PoNo = row["PO_NO"].ToString(),
-                    PoDt = Convert.ToDateTime(row["PO_DT"]),
-                    CallRecvDt = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                    VendName = row["VENDOR"].ToString(),
-                    CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]),
-                    CallSNo = Convert.ToInt32(row["CALL_SNO"]),
-                    CallStatus = row["CALL_STATUS"].ToString(),
-                    CallLetterNo = row["CALL_LETTER_NO"].ToString(),
-                    Remarks = row["REMARKS"].ToString(),
-                    IE_SName = row["IE_SNAME"].ToString(),
+                    CaseNo = row["CaseNo"].ToString(),
+                    PoNo = row["PoNo"].ToString(),
+                    PoDt = Convert.ToDateTime(row["PoDt"]),
+                    CallRecvDt = Convert.ToDateTime(row["CallRecvDt"]),
+                    VendName = row["VendName"].ToString(),
+                    CallInstallNo = Convert.ToInt32(row["CallInstallNo"]),
+                    CallSNo = Convert.ToInt32(row["CallSNo"]),
+                    CallStatus = row["CallStatus"].ToString(),
+                    CallLetterNo = row["CallLetterNo"].ToString(),
+                    Remarks = row["Remarks"].ToString(),
+                    IE_SName = row["IE_SName"].ToString(),
                 }).ToList();
                 if (list == null)
                     throw new Exception("Record Not found");
@@ -180,7 +181,7 @@ namespace IBS.Repositories.Vendor
                 // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "")
+                if (orderCriteria == "" || orderCriteria == null)
                 {
                     orderCriteria = "CaseNo";
                 }
@@ -241,30 +242,59 @@ namespace IBS.Repositories.Vendor
             var ds = DataAccessDB.GetDataSet("SP_GET_CALLREGISTER", par, 1);
             DataTable dt = ds.Tables[0];
 
-            List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
+            CallRegisterModel model = new();
+            List<CallRegisterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-                CaseNo = row["CASE_NO"].ToString(),
-                PoNo = row["PO_NO"].ToString(),
-                PoDt = Convert.ToDateTime(row["PO_DT"]),
-                CallRecvDt = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                VendName = row["VENDOR"].ToString(),
-                CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]),
-                CallSNo = Convert.ToInt32(row["CALL_SNO"]),
-                CallStatus = row["CALL_STATUS"].ToString(),
-                CallLetterNo = row["CALL_LETTER_NO"].ToString(),
-                Remarks = row["REMARKS"].ToString(),
-                IE_SName = row["IE_SNAME"].ToString(),
-            }).ToList();
+                //string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                //model = JsonConvert.DeserializeObject<List<BillRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
+
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<CallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
             query = list.AsQueryable();
 
             dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
 
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
+            //List<CallRegisterModel> list = new ();   
+            //if (ds != null)
+            //{
+            //    list = dt.AsEnumerable().Select(row => new CallRegisterModel
+            //    {
+            //        CaseNo = row["CASE_NO"].ToString(),
+            //        PoNo = row["PO_NO"].ToString(),
+            //        PoDt = Convert.ToDateTime(row["PO_DT"]),
+            //        CallRecvDt = Convert.ToDateTime(row["CALL_RECV_DT"]),
+            //        VendName = row["VENDOR"].ToString(),
+            //        CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]),
+            //        CallSNo = Convert.ToInt32(row["CALL_SNO"]),
+            //        CallStatus = row["CALL_STATUS"].ToString(),
+            //        CallLetterNo = row["CALL_LETTER_NO"].ToString(),
+            //        Remarks = row["REMARKS"].ToString(),
+            //        IE_SName = row["IE_SNAME"].ToString(),
+            //    }).ToList();
+            //}
+
+
+            //query = list.AsQueryable();
+
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            //dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }
@@ -325,21 +355,29 @@ namespace IBS.Repositories.Vendor
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
             DataTable dt = ds.Tables[0];
 
-            List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
-            {
-                CallStatus = row["STATUS"].ToString(),
-                ItemSrNoPo = Convert.ToInt32(row["ITEM_SRNO_PO"]),
-                ItemDescPo = row["ITEM_DESC_PO"].ToString(),
+            //List<CallRegisterModel> list = dt.AsEnumerable().Select(row => new CallRegisterModel
+            //{
+            //    CallStatus = row["STATUS"].ToString(),
+            //    ItemSrNoPo = Convert.ToInt32(row["ITEM_SRNO_PO"]),
+            //    ItemDescPo = row["ITEM_DESC_PO"].ToString(),
 
-                QtyOrdered = Convert.ToInt32(row["QTY_ORDERED"]),
-                CumQtyPrevOffered = Convert.ToInt32(row["CUM_QTY_PREV_OFFERED"]),
-                CumQtyPrevPassed = Convert.ToInt32(row["CUM_QTY_PREV_PASSED"]),
-                QtyToInsp = Convert.ToInt32(row["QTY_TO_INSP"]),
-                QtyPassed = Convert.ToInt32(row["QTY_PASSED"]),
-                QtyRejected = Convert.ToInt32(row["QTY_REJECTED"]),
-                QtyDue = Convert.ToInt32(row["QTY_DUE"]),
-                Consignee = row["CONSIGNEE"].ToString(),
-            }).ToList();
+            //    QtyOrdered = Convert.ToInt32(row["QTY_ORDERED"]),
+            //    CumQtyPrevOffered = Convert.ToInt32(row["CUM_QTY_PREV_OFFERED"]),
+            //    CumQtyPrevPassed = Convert.ToInt32(row["CUM_QTY_PREV_PASSED"]),
+            //    QtyToInsp = Convert.ToInt32(row["QTY_TO_INSP"]),
+            //    QtyPassed = Convert.ToInt32(row["QTY_PASSED"]),
+            //    QtyRejected = Convert.ToInt32(row["QTY_REJECTED"]),
+            //    QtyDue = Convert.ToInt32(row["QTY_DUE"]),
+            //    Consignee = row["CONSIGNEE"].ToString(),
+            //}).ToList();
+
+            CallRegisterModel model = new();
+            List<CallRegisterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<CallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
             query = list.AsQueryable();
 

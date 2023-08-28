@@ -1,14 +1,22 @@
 ﻿@model IBS.Models.ExpenditureModel
 @{
     ViewData["Title"] = "Manage Expenditure";
+    string clsView = "";
+    if (Model.ExpPer != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Expenditure</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="Expenditure" class="formBtn viewall-btn">View List</a>
+    </div>
 </div> 
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="Expenditure" asp-action="ExpenditureDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmExpenditureDetails">
             <input type="hidden" asp-for="ExpPer" />
@@ -21,12 +29,12 @@
                             </div> 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Month: </label>                                 
-                                @Html.DropDownListFor(model => model.ExpPerMonth, new SelectList(IBS.Models.Common.GetMonth(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.ExpPerMonth, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="ExpPerMonth" class="text-danger"></span>
                             </div> 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Year: </label>                                
-                                @Html.DropDownListFor(model => model.ExpPerYear, new SelectList(IBS.Models.Common.GetYear(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.ExpPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="ExpPerYear" class="text-danger"></span>
                             </div> 
                         </div>
@@ -48,8 +56,8 @@
                         </div>
                     </div> 
                     <div class="savenext-btn" style="justify-content:center">
-                        <a asp-controller="Expenditure" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        @*<a asp-controller="Expenditure" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>
@@ -82,7 +90,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Expenditure/Index";
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "Expenditure")';
+            }
         }; 
     </script>
 }

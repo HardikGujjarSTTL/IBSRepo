@@ -9,7 +9,7 @@ public partial class T42NcDetail
 
     public string? NcCd { get; set; }
 
-    public bool NcCdSno { get; set; }
+    public int NcCdSno { get; set; }
 
     public string? NcDescOthers { get; set; }
 

@@ -154,7 +154,9 @@ BEGIN
         T09.IE_NAME,
         T41.ITEM_DESC_PO,
         T41.ITEM_SRNO_PO,
-        T41.QTY_PASSED
+        T09.user_id,
+        T41.QTY_PASSED,
+        t41.region_code
     FROM
         T41_NC_MASTER T41
         JOIN T05_VENDOR T05 ON T41.VEND_CD = T05.VEND_CD
@@ -198,7 +200,9 @@ BEGIN
         T20.IE_CD,
         T20.IC_NO,
         TO_CHAR(T20.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
-        T09.IE_NAME
+        T09.IE_NAME,
+        T09.user_id,
+        t17.region_code
     FROM
         T13_PO_MASTER T13
         JOIN T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
@@ -219,3 +223,300 @@ EXCEPTION
         ROLLBACK;
         RAISE;
 END GetForAction_A_NCR;
+
+=====================================================================================================================================================================
+
+create or replace PROCEDURE GET_NCR_Email
+(
+    p_NC_NO IN VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT
+        T41.IC_NO,
+        TO_CHAR(T41.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
+        T41.NC_NO,
+        TO_CHAR(NC_DT, 'dd/mm/yyyy') AS NC_DT,
+        T41.CASE_NO,
+        T41.BK_NO,
+        T41.SET_NO,
+        T41.PO_NO,
+        TO_CHAR(T41.PO_DT, 'dd/mm/yyyy') AS PO_DATE,
+        T41.ITEM_SRNO_PO,
+        T41.ITEM_DESC_PO,
+        T41.IE_CD,
+        T41.USER_ID,
+        T42.NC_CD,
+        T42.IE_ACTION1,
+        CO_FINAL_REMARKS1,
+        NVL2(
+            T42.NC_DESC_OTHERS,
+            T69.NC_DESC || '-' || T42.NC_DESC_OTHERS,
+            T69.NC_DESC
+        ) AS NC_DESC,
+        T69.NC_CLASS,
+        T09.IE_NAME,
+        T08.CO_NAME,
+        T09.IE_EMAIL || ';' || T08.CO_EMAIL AS EMAIL
+    FROM
+        T41_NC_MASTER T41,
+        T42_NC_DETAIL T42,
+        T69_NC_CODES T69,
+        T09_IE T09,
+        T08_IE_CONTROLL_OFFICER T08
+    WHERE
+        T41.NC_NO = T42.NC_NO
+        AND T42.NC_CD = T69.NC_CD
+        AND T41.IE_CD = T09.IE_CD
+        AND T41.CO_CD = T08.CO_CD
+        AND T41.NC_NO = p_NC_NO;
+END GET_NCR_Email;
+
+==========================================================================================================================================================
+
+create or replace PROCEDURE GENERATE_NC_NO_New(
+    IN_REGION_CD IN VARCHAR2,
+    IN_NC_DT IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno CHAR(100) := NULL;
+    W_ERR_CD NUMBER := -1;
+    w_NC_NO VARCHAR2(500) := NULL;
+    my_exception EXCEPTION;
+
+BEGIN
+    w_ctr := IN_REGION_CD || SUBSTR(IN_NC_DT, 9, 2);
+
+    -- Get the next sequence number for the given region and NC_DT
+
+
+    SELECT lpad(nvl(max(to_number(nvl(substr(NC_NO,5,8),0))),0)+1,4,'0')
+    INTO w_sno
+    FROM T41_NC_MASTER
+    WHERE SUBSTR(NC_NO, 1, 3) = w_ctr;
+    w_NC_NO := TRIM(w_NC_NO);
+    -- Construct the generated case number
+    w_NC_NO := w_ctr || '-' || w_sno;
+   
+    IF LENGTH(w_NC_NO) <> 8 THEN
+        W_ERR_CD := -2;
+        
+    END IF;
+
+    -- Open the ref cursor and fetch the result set
+    OPEN p_result_cursor FOR
+    SELECT w_NC_NO AS w_NC_NO, W_ERR_CD AS W_ERR_CD FROM DUAL;
+
+
+END;
+
+===================================================================================================================================
+ALTER TABLE T41_NC_MASTER 
+    MODIFY ITEM_SRNO_PO  NUMBER(6,0);
+    
+ALTER TABLE T41_NC_MASTER 
+    MODIFY IE_CD  NUMBER(6,0);
+    
+ALTER TABLE T41_NC_MASTER 
+    MODIFY CO_CD  NUMBER(6,0);
+
+ ALTER TABLE TEMP_ONLINE_COMPLAINTS ADD (
+  CONSTRAINT TEMP_ONLINE_COMPLAINTS_pk PRIMARY KEY (TEMP_COMPLAINT_ID));
+
+  INSERT INTO menu_master (ID, parentid, controllername, actionname, title, menudescription, role_id, iconcssclass, isactive, sortorder, iconpath)
+VALUES (163, 98, 'ComplaintApproval', 'Index', 'Online Complaint Approval', '', '', '', 1, 12, '');
+
+ALTER TABLE temp_online_complaints 
+    MODIFY IE_CD  NUMBER(6,0);
+    
+ALTER TABLE temp_online_complaints 
+    MODIFY CO_CD  NUMBER(6,0);
+
+
+
+========================================================================================================================================
+
+create or replace PROCEDURE GENERATE_TEMP_COMPLAINT_NO(
+    IN_TEMP_COMPLAINT_DT IN char,
+    p_result_cursor OUT SYS_REFCURSOR
+) IS
+	w_ctr char(2) :=null;
+	w_sno char(5) :=null;
+     W_ERR_CD NUMBER := -1;
+    w_compid varchar2(500) :=null;
+	my_exception exception;
+BEGIN
+	W_ERR_CD := -1;
+	---
+	if to_number(substr(IN_TEMP_COMPLAINT_DT,4,2)) > 3 then
+	   w_ctr := lpad(substr(IN_TEMP_COMPLAINT_DT,9,2),2,'0');
+	else
+	   w_ctr := lpad(substr(IN_TEMP_COMPLAINT_DT,9,2)-1,2,'0');
+	end if;
+	Select lpad(nvl(max(to_number(nvl(trim(substr(TEMP_COMPLAINT_ID,4,5)),'0'))),0)+1,5,'0') into w_sno
+	From TEMP_ONLINE_COMPLAINTS where substr(TEMP_COMPLAINT_ID,1,2)=w_ctr;
+	---
+	w_compid:=trim(w_ctr||'-'||w_sno);
+	if length(w_compid) <> 8 then
+	   W_ERR_CD := -2;
+	end if;
+	---
+	OPEN p_result_cursor FOR
+ SELECT w_compid AS w_compid, W_ERR_CD AS W_ERR_CD FROM DUAL;
+END;
+
+=====================================================================================================================================
+
+create or replace PROCEDURE GET_REJECTIONCOMPLAINT_DETAILS
+(
+    p_CaseNo IN VARCHAR2,
+    p_BkNo IN VARCHAR2,
+    p_SetNo IN VARCHAR2,
+    p_TempComplaintId IN VARCHAR2,
+    p_ResultCursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_ResultCursor FOR
+        SELECT
+            P.CASE_NO,
+            P.PO_NO,
+            TO_CHAR(P.PO_DT, 'dd/mm/yyyy') AS PO_DT,
+            V.VENDOR,
+            T20.BK_NO,
+            T09.IE_NAME,
+            T20.SET_NO,
+            T20.IC_NO,
+            TO_CHAR(T20.IC_DT, 'dd/mm/yyyy') AS IC_DATE,
+            V06.CONSIGNEE,
+            T.TEMP_COMPLAINT_ID,
+            TO_CHAR(T.TEMP_COMPLAINT_DT, 'dd/mm/yyyy') AS TEMP_COMPLAINT_DATE,
+            T.ITEM_DESC,
+            T.QTY_OFFERED,
+            T.QTY_REJECTED,
+            T.REJECTION_VALUE,
+            T.REJECTION_REASON,
+            T.TEMP_COMPLAINT_ID
+        FROM
+            V05_VENDOR V,
+            T13_PO_MASTER P,
+            T20_IC T20,
+            TEMP_ONLINE_COMPLAINTS T,
+            V06_CONSIGNEE V06,
+            T09_IE T09
+        WHERE
+            T.CASE_NO = P.CASE_NO
+            AND P.VEND_CD = V.VEND_CD
+            AND T20.CONSIGNEE_CD = V06.CONSIGNEE_CD
+            AND T.BK_NO = T20.BK_NO
+            AND T.SET_NO = T20.SET_NO
+            AND T.CASE_NO = T20.CASE_NO
+            AND T20.IE_CD = T09.IE_CD
+            AND T.CASE_NO = p_CaseNo
+            AND T.BK_NO = p_BkNo
+            AND T.SET_NO = p_SetNo
+            AND T.TEMP_COMPLAINT_ID = p_TempComplaintId;
+
+    -- You can return the result cursor to the calling code
+END GET_REJECTIONCOMPLAINT_DETAILS;
+
+====================================================================================================================================
+
+create or replace PROCEDURE GENERATE_JI_SNO(
+   IN_INSP_REGION IN varchar2,
+   IN_JI_REGION IN varchar2,
+   IN_COMPLAINT_DT IN varchar2,
+   p_result_cursor OUT SYS_REFCURSOR
+) IS
+	w_ctr char(9) :=null;
+	w_sno char(4) :=null;
+        W_ERR_CD NUMBER := -1;
+        w_jisno varchar2(13) :=null;
+	my_exception exception;
+BEGIN
+	W_ERR_CD := -1;
+	---
+	if to_number(substr(IN_COMPLAINT_DT,4,2)) > 3 then
+	   w_ctr := IN_INSP_REGION||IN_JI_REGION||'/'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2)+1,2,'0')||'/';
+	else
+	   w_ctr := IN_INSP_REGION||IN_JI_REGION||'/'||lpad(substr(IN_COMPLAINT_DT,9,2)-1,2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'/';
+	end if;
+	Select lpad(nvl(max(to_number(nvl(trim(substr(JI_SNO,10,4)),'0'))),0)+1,4,'0') into w_sno
+	From T40_CONSIGNEE_COMPLAINTS where substr(JI_SNO,1,9)=w_ctr;
+	---
+	w_jisno := trim(w_ctr||w_sno);
+	if length(w_jisno) <> 13 then
+	    W_ERR_CD := -2;
+	    raise my_exception;
+	end if;
+	---
+	OPEN p_result_cursor FOR
+ SELECT w_jisno AS w_jisno, W_ERR_CD AS W_ERR_CD FROM DUAL;
+END;
+
+===================================================================================================================================================
+
+create or replace PROCEDURE GENERATE_COMPLAINT_NO(
+      IN_REGION_CD IN varchar2,
+      IN_COMPLAINT_DT IN varchar2,
+     p_result_cursor OUT SYS_REFCURSOR
+) IS
+	w_ctr char(8) :=null;
+	w_sno char(4) :=null;
+	w_compid varchar2(12) :=null;   
+	OUT_ERR_CD NUMBER := -1;
+	my_exception exception;
+BEGIN
+	OUT_ERR_CD := -1;
+	---
+	if to_number(substr(IN_COMPLAINT_DT,4,2)) > 3 then
+	   w_ctr := IN_REGION_CD||'/'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2)+1,2,'0')||'/';
+	else
+	   w_ctr :=   IN_REGION_CD||'/'||lpad(substr(IN_COMPLAINT_DT,9,2)-1,2,'0')||'-'||lpad(substr(IN_COMPLAINT_DT,9,2),2,'0')||'/';
+	end if;
+	Select lpad(nvl(max(to_number(nvl(trim(substr(COMPLAINT_ID,9,4)),'0'))),0)+1,4,'0') into w_sno
+	From T40_CONSIGNEE_COMPLAINTS where substr(COMPLAINT_ID,1,8)=w_ctr;
+   	---
+	w_compid:=trim(w_ctr||w_sno);
+	if length(w_compid) <> 12 then
+	    OUT_ERR_CD := -2;
+	    raise my_exception;
+	end if;
+	---
+	OPEN p_result_cursor FOR
+ SELECT w_compid AS w_compid, OUT_ERR_CD AS OUT_ERR_CD FROM DUAL;
+
+END;
+
+======================================================================================================================================
+
+create or replace PROCEDURE GetConsigneeComplaint (
+    p_PONo       VARCHAR2,
+    p_PODate     VARCHAR2,
+    p_ResultSet  OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+    SELECT
+        c.COMPLAINT_ID,
+        c.JI_SNO,
+        c.CASE_NO,
+        c.BK_NO,
+        c.SET_NO,
+        m.PO_NO,
+        m.PO_DT,
+        c.IC_NO,
+        c.IC_DT,
+        c.REJ_MEMO_NO,
+        c.REJ_MEMO_DT
+    FROM T13_PO_MASTER m
+    JOIN V40_CONSIGNEE_COMPLAINTS c ON m.CASE_NO = c.CASE_NO
+    WHERE
+        UPPER(TRIM(m.PO_NO)) LIKE UPPER(TRIM('%' || p_PONo || '%'))
+        AND TO_CHAR(m.PO_DT, 'dd-mm-yyyy') = p_PODate
+    ORDER BY c.CASE_NO, c.COMPLAINT_ID ASC;
+END GetConsigneeComplaint;

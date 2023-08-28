@@ -2,16 +2,21 @@
 
 @{
     ViewData["Title"] = "Vendor Profile";
+    string clsView = "";
+    if (Model.VendCd > 0)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 @{
     int VendCd = 0;
-    if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor")
+    if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
     {
         VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
     }
     bool isReadOnly = false;
-    if (IBS.Helper.SessionHelper.UserModelDTO.LoginType == "vendor" && VendCd == Model.VendCd)
+    if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor" && VendCd == Model.VendCd)
     {
         isReadOnly = true;
     }
@@ -21,8 +26,14 @@
     <div class="tast-list">
         <h2>Vendor Profile</h2>
     </div>
+    @if (isReadOnly == false)
+    {
+        <div>
+            <a asp-action="Index" asp-controller="Role" class="formBtn viewall-btn">View List</a>
+        </div>
+    }
 </div>
-<section id="tab-1">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorProfile" asp-action="VendorProfileDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVendorProfileDetails">
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
@@ -195,7 +206,7 @@
                 }
                 <div class="savenext-btn">
                     @*<a asp-controller="VendorProfile" asp-action="Index" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
@@ -222,7 +233,7 @@
 
         function Save() {
             if ($("#frmVendorProfileDetails").valid()) {
-                if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
+                if ('@IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower()' != "vendor") {
                     SaveSingleDocuments("tab-1");
                 }
                 $("#frmVendorProfileDetails").submit();
@@ -231,8 +242,10 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            if ('@IBS.Helper.SessionHelper.UserModelDTO.LoginType' != "vendor") {
-                window.location.href = "/VendorProfile/Index";
+            if ('@IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower()' != "vendor") {
+                if (res.status) {
+                    window.location.href = '@Url.Action("Index", "VendorProfile")';
+                }
             }
         };
     </script>

@@ -23,6 +23,11 @@ namespace IBS.Models
         public string Region { get; set; }
         public string AuthLevl { get; set; }
         public int IeCd { get; set; }
+        public int RoleId { get; set; }
+        public string Organisation { get; set; }
+        public string OrgnType { get; set; }
+        public string RoleName { get; set; }
+        public string USER_ID { get; set; }
     }
 
     public class ForgotPasswordModel

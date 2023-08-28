@@ -8,9 +8,9 @@ namespace IBS.Controllers
     public class IE_MaximumCallLimitFormController : BaseController
     {
         #region Variables
-        private readonly IE_MaximumCallLimitForm iE_MaximumCallLimitForm;
+        private readonly I_IE_MaximumCallLimitForm iE_MaximumCallLimitForm;
         #endregion
-        public IE_MaximumCallLimitFormController(IE_MaximumCallLimitForm _iE_MaximumCallLimitForm)
+        public IE_MaximumCallLimitFormController(I_IE_MaximumCallLimitForm _iE_MaximumCallLimitForm)
         {
             iE_MaximumCallLimitForm = _iE_MaximumCallLimitForm;
         }
@@ -19,12 +19,13 @@ namespace IBS.Controllers
             return View();
         }
 
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string Region)
         {
             IE_MaximumCallLimitFormModel model = new();
-            if (id > 0)
+            Region = GetRegionCode;
+            if (Region != null)
             {
-                //model = iE_MaximumCallLimitForm.FindByID(id);
+                model = iE_MaximumCallLimitForm.FindByID(Region);
             }
             return View(model);
         }
@@ -32,7 +33,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<IE_MaximumCallLimitFormModel> dTResult = iE_MaximumCallLimitForm.GetIE_MaximumCallLimitFormList(dtParameters);
+            DTResult<IE_MaximumCallLimitFormModel> dTResult = iE_MaximumCallLimitForm.GetIE_MaximumCallLimitFormList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)
@@ -58,23 +59,23 @@ namespace IBS.Controllers
         {
             try
             {
-                string msg = "IE Maximum Call Limit Form Inserted Successfully.";
+                string msg = "Inserted Successfully.";
 
-                //if (model.RegionCode > 0)
+                if (model.RegionCode != null)
                 {
-                    msg = "IE Maximum Call Limit Form Updated Successfully.";
+                    msg = "Updated Successfully.";
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = iE_MaximumCallLimitForm.IE_MaximumCallLimitFormDetailsInsertUpdate(model);
-                if (i > 0)
+                string i = iE_MaximumCallLimitForm.IE_MaximumCallLimitFormDetailsInsertUpdate(model);
+                if (i != null)
                 {
-                    return Json(new { status = true, responseText = msg });
+                    AlertAddSuccess(msg);
                 }
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IE_MaximumCallLimitForm", "IE_MaximumCallLimitFormDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IE_MaximumCallLimitForm", "Save_Update", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

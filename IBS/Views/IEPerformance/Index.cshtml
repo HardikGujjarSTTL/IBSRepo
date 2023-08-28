@@ -1,0 +1,272 @@
+﻿@model IBS.Models.IEFromToDate
+
+@{
+    ViewData["Title"] = "IE Performance";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">IE Performance</label></h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="IEPerformance" class="formBtn viewall-btn">Clear</a>
+    </div>
+</div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    @*<div class="list-inner">
+        <div class="tast-list">            
+            <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">IE Performance</label></h2>
+        </div>
+    </div>*@
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" asp-for="FromDt" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="FromDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" asp-for="ToDt" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="ToDt" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    @*<a asp-controller="IEPerformance" asp-action="Index" class="reset-btn">Back</a>*@
+                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>SNO</th>
+                            <th>IE Name</th>
+                            <th>Dept</th>
+                            <th>Total Calls</th>
+                            <th>Calls Cancelled</th>
+                            <th>No. of IC</th>
+                            <th>Calls Attended Within 7 Days.</th>
+                            <th>Calls Attended Beyond 7 Days.</th>
+                            <th>Rejections</th>
+                            <th>Insp. Fee</th>
+                            <th>Material Value</th>
+                            <th>Average Fee</th>
+                            <th>No. Of IC Issued after 1 days of Last Inspection date.</th>
+                            <th>IC's Submitted beyond 7 Days after Issue of IC.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+
+    @* <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+*@
+
+    <script type="text/javascript">
+        var Rejection = "", NoOfIC = "", CallsWithin = "", CallsBeyond = "";
+        var summaryList = [];
+        $(document).ready(function () {
+            setDefaultDate();
+
+            $("#btnSearch").click(function () {
+                getIEPerformanceSummary();
+                //InitializeDatatable();
+            });
+        });
+        //$(function () {
+        //    InitializeDatatable();
+        //});
+        function setDefaultDate() {
+            $('#FromDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+            });
+            $('#ToDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+            });
+        }
+
+        function getIEPerformanceSummary() {
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var formData = new FormData($("#frmDetails")[0]);
+            $.ajax({
+                url: "@Url.Action("Get_IE_Performance_Summary", "IEPerformance")",
+                type: "POST",
+                dataType: "JSON",
+                //data: function (d) {
+                //    var AdditionalValues = {
+                //        "FromDate": FromDate,
+                //        "ToDate": ToDate
+                //    };
+                //    d.AdditionalValues = AdditionalValues;
+                //    return JSON.stringify(d);
+                //},
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                data: formData,
+                success: function (response) {                    
+                    var res = response;
+                    Rejection = res._rejection;
+                    NoOfIC = res._NoOfIcs;
+                    CallsWithin = res._CallsWithin;
+                    CallsBeyond = res._CallsBeyond;
+                    summaryList = res._summaryList;
+
+                    InitializeDatatable();
+                }
+            });
+        }
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel', //'print'
+                    {
+                        extend: 'print',
+                        //text: 'ButtonLabelHere',
+                        title: 'IE Performance For The Period: ' + FromDate + ' To ' + ToDate,
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        },
+                        customize: function (win) {
+                            $(win.document.body).find('h1').css('text-align', 'center');
+                        },
+                        messageTop: function () {
+                            return Rejection + "</br>" + NoOfIC + "</br>" + CallsWithin + "</br>" + CallsBeyond;
+                        },
+                        messageBottom: function () {
+                            var html = "<table style='width:30%;border: 1px solid black; border-collapse: collapse; margin-top:5px;' id='dtsummary' class='table-responsive'><thead>";
+                            html += "<tr><th style='border: 1px solid black; border-collapse: collapse;text-align: center' colspan=3>Performance Summary</th></tr>"
+                            html += "<tr>";
+                            html += "<th style='border: 1px solid black; border-collapse: collapse;'></th>";
+                            html += "<th style='border: 1px solid black; border-collapse: collapse;'>No. of IC</th>";
+                            html += "<th style='border: 1px solid black; border-collapse: collapse;'>Material Value </th>";
+                            html += "</tr></thead>"
+                            html += "<tbody>";
+                            for (i = 0; i < summaryList.length; i++) {
+                                html += "<tr>";
+                                html += "<td style='border: 1px solid black; border-collapse: collapse;'>" + summaryList[i].RLY_NONRLY + "</td>"
+                                html += "<td style='border: 1px solid black; border-collapse: collapse;'>" + summaryList[i].IC_COUNT + "</td>"
+                                html += "<td style='border: 1px solid black; border-collapse: collapse;'>" + parseFloat(summaryList[i].MATERIAL_VALUE).toFixed(2) + "</td>"
+                                html += "</tr>";
+                            }
+                            html += "</tbody></table>";
+                            return html;
+                        }
+                    }
+                ],
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable", "IEPerformance")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "ToDate": ToDate,
+                            "FromDate": FromDate
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                    //dataSrc: function (data) {
+                    //    debugger
+                    //    var res = data;
+                    //    Rejection = data._rejection;
+                    //    NoOfIC = data._NoOfIcs;
+                    //    CallsWithin = data._CallsWithin;
+                    //    CallsBeyond = data._CallsBeyond;
+                    //    summaryList = data._summaryList;
+                    //    return res._dTResult.data;
+                    //},                   
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "IE_NAME" },
+                    { data: "DEPT" },
+                    { data: "CALLS" },
+                    { data: "CALL_CANCEL" },
+                    { data: "C0" },
+                    { data: "C7" },
+                    { data: "CM7" },
+                    { data: "REJECTIONS" },
+                    { data: "INSP_FEE" },
+                    { data: "MATERIAL_VALUE" },
+                    { data: "AVERAGE_FEE" },
+                    { data: "C3" },
+                    { data: "C10" }
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/PurchesOrder1LOA";
+            window.location.href = '@Url.Action("Index", "PurchesOrder1LOA")';
+        };
+    </script>
+    }
+
+

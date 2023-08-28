@@ -29,9 +29,9 @@ namespace IBS.Repositories
                 // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "")
+                if (orderCriteria == "" || orderCriteria == null)
                 {
-                    orderCriteria = "Datetime";
+                    orderCriteria = "MessageId";
                 }
                 //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
                 orderAscendingDirection = true;
@@ -39,7 +39,7 @@ namespace IBS.Repositories
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "Datetime";
+                orderCriteria = "MessageId";
                 orderAscendingDirection = true;
             }
 

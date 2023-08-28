@@ -1,14 +1,22 @@
 ﻿@model IBS.Models.LastYearOutstandingModel
 @{
     ViewData["Title"] = "Manage LastYearOutstanding";
+    string clsView = "";
+    if (Model.Ly_Per != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Last Year Outstanding</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="LastYearOutstanding" class="formBtn viewall-btn">View List</a>
+    </div>
 </div> 
-<section>
+<section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="LastYearOutstanding" asp-action="LastYearOutstandingDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLastYearOutstandingDetails">
             <input type="hidden" asp-for="Ly_Per" />
@@ -21,12 +29,12 @@
                             </div>    
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Month: </label>
-                                @Html.DropDownListFor(model => model.LyPerMon, new SelectList(IBS.Models.Common.GetMonth(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.LyPerMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="LyPerMon" class="text-danger"></span>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Year: </label>
-                                @Html.DropDownListFor(model => model.LyPerYear, new SelectList(IBS.Models.Common.GetYear(""), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.LyPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="LyPerYear" class="text-danger"></span>
                             </div>
 
@@ -44,8 +52,8 @@
                         </div>
                     </div> 
                     <div class="savenext-btn" style="justify-content:center">
-                        <a asp-controller="LastYearOutstanding" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        @*<a asp-controller="LastYearOutstanding" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +85,9 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/LastYearOutstanding/Index";
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "LastYearOutstanding")';
+            }
         }; 
     </script>
 }

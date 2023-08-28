@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class LabBilling : BaseController
     {
         #region Variables
@@ -14,10 +16,12 @@ namespace IBS.Controllers
         {
             labBillingRepository = _labBillingRepository;
         }
+        [Authorization("LabBilling", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("LabBilling", "Index", "view")]
         public IActionResult Manage(string _labBillPer)
         {
             LabBillingModel model = new();
@@ -35,11 +39,12 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("LabBilling", "Index", "delete")]
         public IActionResult Delete(string LabBillPer)
         {
             try
             {
-                if (labBillingRepository.Remove(LabBillPer, GetRegionCode))
+                if (labBillingRepository.Remove(LabBillPer, GetRegionCode,UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -54,6 +59,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("LabBilling", "Index", "edit")]
         public IActionResult LabBillingDetailsSave(LabBillingModel model)
         {
             try
@@ -66,6 +72,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.User_Id = Convert.ToString(UserId);
                 model.Region_Code = GetRegionCode;
                 var i = labBillingRepository.LabBillingDetailsInsertUpdate(model);
                 if (i != null)

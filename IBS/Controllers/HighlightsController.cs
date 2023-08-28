@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class Highlights : BaseController
     {
         #region Variables
@@ -14,10 +16,12 @@ namespace IBS.Controllers
         {
             highlightsRepository = _highlightsRepository;
         }
+        [Authorization("Highlights", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorization("Highlights", "Index", "view")]
         public IActionResult Manage(string _highDt)
         {
             HighlightsModel model = new();
@@ -34,12 +38,12 @@ namespace IBS.Controllers
             DTResult<HighlightsModel> dTResult = highlightsRepository.GetHighlightsList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
-
-        public IActionResult Delete(string _highDt)
+        [Authorization("Highlights", "Index", "delete")]
+        public IActionResult Delete(string _highDt,string RegionCode)
         {
             try
             {
-                if(highlightsRepository.Remove(_highDt, GetRegionCode))
+                if(highlightsRepository.Remove(_highDt, GetRegionCode, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -54,6 +58,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("Highlights", "Index", "edit")]
         public IActionResult HighlightsDetailsSave(HighlightsModel model)
         {
             try
@@ -66,6 +71,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
+                model.User_Id =Convert.ToString(UserId);
                 model.Region_Code = GetRegionCode;
                 var i = highlightsRepository.HighlightsDetailsInsertUpdate(model);
                 if (i != null)

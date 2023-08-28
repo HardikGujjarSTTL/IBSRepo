@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Web;
+@{
     List<MenuMasterModel> menuList = IBS.Helper.SessionHelper.MenuModelDTO;
 }
 <div class="sidebar-collapse menu-scroll">
@@ -12,8 +13,16 @@
             foreach (var mp in menuList.Where(p => p.ParentId == 0))
             {
                 <li>
-                    
-                    <a href="#"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="@mp.IconPath" alt="tenant" /></i><span class="menu-title"> @mp.Title </span></a>
+                    @{
+                        string urlMain = "javascript:void(0)"; 
+                        string classMain = "fa arrow"; 
+                        if(mp.ActionName != null && mp.ControllerName != null)
+                        {
+                            urlMain = Url.Action(mp.ActionName,mp.ControllerName );
+                            classMain = "fa";
+                        }
+                    }
+                    <a href="@Html.Raw(@HttpUtility.UrlDecode(urlMain))"><span class="@classMain"></span><i class="fa  fa-fw"><img src="@Url.Content("~/"+ mp.IconPath)" alt="tenant" /></i><span class="menu-title"> @mp.Title </span></a>
 
                     @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)
                     {
@@ -21,8 +30,9 @@
                     }
                     @foreach (var cp in menuList.Where(p => p.ParentId == mp.MenuId))
                     {
+
                         string url = Url.Action(cp.ActionName,cp.ControllerName );
-                        @:<li><a href="@url"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a></li>
+                        @:<li><a href="@Html.Raw(@HttpUtility.UrlDecode(url))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a></li>
                     }
 
                     @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)

@@ -2,17 +2,26 @@
 
 @{
     ViewData["Title"] = "Manage Contract";
+    string clsView = "";
+    if (Model.ContractId > 0)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Manage Contract</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="Contract" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section>
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
                 <input type="hidden" asp-for="ContractId" />
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                 <div class="accordion-body">
                     <div class="row my-0">
                         <div class="col-md-4 mb-4">
@@ -115,6 +124,9 @@
                             <input type="text" class="input" asp-for="ContractPanalty" maxlength="500" />
                             <span asp-validation-for="ContractPanalty" class="text-danger"></span>
                         </div>
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Contract_Documents_If_Any" />
+                    </div>
 
                         @*<div class="col-md-4 mb-3">
                         <label for="Reference">Contract Documents (If Any)</label>
@@ -123,8 +135,8 @@
                     </div>
 
                     <div class="savenext-btn">
-                        <a asp-controller="Contract" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        @*<a asp-controller="Contract" asp-action="Index" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
                 </div>
             </form>
@@ -136,13 +148,16 @@
     <script type="text/javascript">
         function Save() {
             if ($("#frmContractDetails").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmContractDetails").submit();
             }
         }
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/Contract/Index";
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "Contract")';
+            }
         };
     </script>
 }

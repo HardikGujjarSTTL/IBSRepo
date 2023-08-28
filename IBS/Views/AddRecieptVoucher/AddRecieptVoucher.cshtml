@@ -13,13 +13,11 @@
     <div class="task-listinput">
         <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">
-              
                 <div class="accordion-body">
                     <div class="row my-0">
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Voucher No</label>
-                            <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="500" />
-                            
+                            <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" data-date-format="dd-mm-yyyy" />
                         </div>
 
                         <div class="col-md-4 mb-4">
@@ -27,38 +25,31 @@
                             <input type="text" class="input datepicker" asp-for="VCHR_DT" maxlength="500" />
                             <span asp-validation-for="VCHR_DT" class="text-danger"></span>
                         </div>
-                        <label for="Reference">Bank/Cash</label>
-                        <select name="lstBank" asp-for="BANK_CD" maxlength="500">
-                            <option value="0">0000-CASH</option>
-                            <option value="85">2100-AXIS BANK, KOLKATA</option>
-                            <option value="2">2100-STATE BANK OF INDIA</option>
-                            <option value="87">2236-AXIS BANK, CHENNAI</option>
-                            <option value="86">2300-AXIS BANK, GURGAON</option>
-                            <option selected="selected" value="53">2319-AXIS BANK,GURGAON(N.R A/c)</option>
-                            <option value="159">2333-AXIS BANK, BHILAI</option>
-                            <option value="88">2483-AXIS BANK, MUMBAI</option>
-                        </select>
-                        <span asp-validation-for="BANK_CD" class="text-danger"></span>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Bank Code/Cash</label>
+                            @Html.DropDownListFor(model => model.BANK_CD, Common.GetBankCode(), new { id = "bankDropdown" })
+                            <span asp-validation-for="BANK_CD" class="text-danger"></span>
+                        </div>
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Cheque No</label>
-                            <input type="text" class="input" asp-for="CHQ_NO" >
+                            <input type="text" id="Chq_No" class="input" asp-for="CHQ_NO">
+                          @*  <input type="text" id="Chq_lbl" value="CASH" class="input" readonly="true">*@
                             <span asp-validation-for="CHQ_NO" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-4 mb-4">
-                            <label for="Reference">Cheque Date<span class="text-danger"> </label>
-                            <input type="text" class="input datepicker" asp-for="CHQ_DT" mode maxlength="500" />
+                            <label for="Reference">Cheque Date<span class="text-danger"></label>
+                            <input type="text" id="Chq_Date" class="input datepicker" asp-for="CHQ_DT" mode maxlength="300" />
+                            
                             <span asp-validation-for="CHQ_DT" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Bank Name</label>
-                            <div class="col-md-4 mb-3">
-                                <label for="Bank Name">City</label>
-                                @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { })
+                        <div id="BankNameDropdown" class="col-md-4 mb-4">
+                            <label for="Reference">Bank Name/Cash</label>
+                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { id = "BankNameDropdown" })
                                 <span asp-validation-for="BANK_NAME" class="text-danger"></span>
-                            </div>
                         </div>
 
                         <div class="col-md-4 mb-4">
@@ -69,37 +60,56 @@
 
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Sample No</label>
-                            <input type="text" class="input" asp-for="SAMPLE_NO" >
-                            <span asp-validation-for="SAMPLE_NO" class="text-danger"></span>
+                            <input type="text" class="input" asp-for="SAMPLE_NO" maxlength="4">
+                            
                         </div>
 
-                        <div class="col-md-4 mb-3">
+                        <div  class="col-md-4 mb-3">
                             <label for="Reference">Account Code</label>
-                           
-                            <select name="ACC_CD" asp-for="ACC_CD" maxlength="500">
-                                <option selected="selected" value="2709">Customer's Advances:2709</option>
-                                <option value="2202">Fee Receivable Foreign Rly:2202</option>
-                                <option value="2203">Fee Receivable Public Sector:2203</option>
-                                <option value="2204">Fee Receivable Pvt. Sector:2204</option>
-                                <option value="2205">Fee Receivable State Govt.:2205</option>
-                                <option value="2222">INSPECTION FEE RECEIVABLE:2222</option>
-                                <option value="2201">Inspct Fee Receivable Ind.Rly:2201</option>
-                                <option value="2210">Lab Testing Fee Receivable (Internal):2210</option>
-                                <option value="2212">Testing Charges (External):2212</option>
-                                <span asp-validation-for="ACC_CD" class="text-danger"></span>
-                            </select>
-                        </div>  
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Case No</label>
-                            <input type="text" class="input" asp-for="CASE_NO">
-                            <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                            @Html.DropDownListFor(model => model.ACC_CD, Common.GetAccountCode(), new { id="AccCD" })
                         </div>
 
+                        <div id="txtCSNO" class="col-md-4 mb-3">
+                            <label  for="Reference">Case No</label>
+                            <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
+                            <br ></br>
+                            <button type="button" class="save-btn active" onclick="ButtonClick();">Select BPO</button>
+                            <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                            
+                        </div>
+                        <div id="txtBPO" class="col-md-4 mb-3">
+                            <label  for="Reference">BPO</label>
+                            <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
+                            <br></br>
+                            <button type="button" class="save-btn active" onclick="ButtonClick()">Select BPO</button>
+                            <span asp-validation-for="BPO_CD" class="text-danger"></span>
+
+                        </div>
+
+                        <div id="lstBPO" class="col-md-4 mb-3" style="display:none">
+                           @* <label  for="Reference">BPO List</label>
+                            @Html.DropDownListFor(model => model.BPO_CD, Common., new { id="listBPO" })*@
+                            <label for="Reference">BPO</label>
+                            <select id="SelectedBPO" class="form-control">
+                               
+                               @* @if(Model.BPOList != null){
+                                    @foreach (var bpo in Model.BPOList)
+                                    {
+                                        <option value="@bpo.value">@bpo.text</option>
+                                    }
+                                }*@
+                            </select>
+                        </div>
+
+                        <div  class="col-md-4 mb-3">
+                            <label for="Reference">Narration</label>
+                            <input type="text" class="input" id="txtNarrat" asp-for="NARRATION" maxlength="9">
+                            
+                        </div>
                     </div>
 
                     <div class="savenext-btn">
-                        <a asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" class="reset-btn">Cancel</a>
+                        <a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>
                         <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
                 </div>
@@ -107,19 +117,100 @@
         </div>
     </div>
 </section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        function Save() {
-            if ($("#frmVoucherDetails").valid()) {
-                $("#frmVoucherDetails").submit();
+        $(document).ready(function () {
+
+            var selectedValue = $("#AccCD").val();
+            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
+                $("#txtCSNO").show();
+                $("#txtBPO").hide();
+                $("#lstBPO").css("display", "none");
+                $("#txtNarrat").show();
+            } else {
+                $("#txtCSNO").hide();
+                $("#lstBPO").css("display", "none");
+                $("#txtNarrat").show();
+                $("#txtBPO").show();
             }
+
+        });
+        function Save() {
+            debugger;
+
+            $("#frmVoucherDetails").submit();
+
         }
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/AddRecieptVoucher/AddRecieptVoucher";
-        };
+        }
+
+
+
+        // Hide/show BPO details based on lstACD selection
+        $("#AccCD").on("change", function () {
+            debugger;
+            var selectedValue = $("#AccCD").val();
+            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
+                $("#txtCSNO").show();
+                $("#txtBPO").hide();
+                $("#lstBPO").css("display", "none");
+                $("#txtNarrat").show();
+            } else {
+                $("#txtCSNO").hide();
+                $("#lstBPO").hide();
+                $("#txtNarrat").show();
+                $("#txtBPO").show();
+                $("#lstBPO").css("display", "none");
+            }
+        });
+
+        // Handle BPO selection
+        $("#lstBPO").on("change", function () {
+
+        });
+
+
+        function ButtonClick() {
+
+            var AccCD = $("#AccCD").val();
+            var txtBPO = $("#txtBPO").val();
+            var lstBPO = $("#lstBPO").val();
+            var listBPO = $("#listBPO").val();
+            var txtCSNO = $("#CSNO").val();
+            $.ajax({
+                url: '/AddRecieptVoucher/ButtonClick',
+                type: "POST",
+                dataType: "JSON",
+                data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },
+
+                success: function (success) {
+
+                    //alert("buttonclicked");
+                    // console.log(success);
+                    $("#txtNarrat").val(success.Narrt);
+                    $("#lstBPO").css("display", "block");
+
+                    for (i = 0; i < success.BPOList.length; i++) {
+
+                        // var data = '<option value="' + success.BPCodes[i].Text + '">' + success.BPCodes[i].Value + '</option>'
+                        var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
+                        $("#SelectedBPO").append(data);
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+
     </script>
 }

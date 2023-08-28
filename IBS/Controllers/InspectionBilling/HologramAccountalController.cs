@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class HologramAccountalController : BaseController
     {
 
@@ -20,6 +22,8 @@ namespace IBS.Controllers.InspectionBilling
         {
             hologramaccountRepository = _hologramaccountalRepository;
         }
+
+        [Authorization("HologramAccountal", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -75,6 +79,7 @@ namespace IBS.Controllers.InspectionBilling
             return Json(result);
         }
 
+        [Authorization("HologramAccountal", "Index", "view")]
         public IActionResult Manage()
         {
             var obj = new HologramAccountalFilter();
@@ -177,7 +182,8 @@ namespace IBS.Controllers.InspectionBilling
             return View(detail);
         }
 
-
+        [HttpPost]
+        [Authorization("HologramAccountal", "Index", "edit")]
         public IActionResult HologramAccountalDetailsSave(HologramAccountalModel Model)
         {
             var message = "";
@@ -197,9 +203,15 @@ namespace IBS.Controllers.InspectionBilling
                     if (RNO == 0)
                     {
                         int rec_no = hologramaccountRepository.GetRecNo(Model.CASE_NO, Model.CALL_DT, Convert.ToInt32(Model.CONSIGNEE_CD), Convert.ToInt32(Model.CALL_SNO));
-
-                        Model.REC_NO = Convert.ToString(rec_no);
-                        result = hologramaccountRepository.HologramInsertUpdate(Model, RNO);
+                        if (rec_no > 0)
+                        {
+                            Model.REC_NO = Convert.ToString(rec_no);
+                            result = hologramaccountRepository.HologramInsertUpdate(Model, RNO);
+                        }
+                        else
+                        {
+                            message = "Rec no. is missing";
+                        }
                     }
                     else if (RNO > 0)
                     {
@@ -213,11 +225,13 @@ namespace IBS.Controllers.InspectionBilling
             }
             catch (Exception ex)
             {
+                message = "Somthing went wrong";
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "HologramAccountal", "HologramAccountalSave", 1, GetIPAddress());
             }
             return Json(new { _msg = message, _result = result });
         }
-
+        
+        [Authorization("HologramAccountal", "Index", "delete")]
         public IActionResult HologramAccountalDetailDelete(HologramAccountalModel Model)
         {
             var result = false;

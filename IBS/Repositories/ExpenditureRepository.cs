@@ -76,7 +76,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T63Exps
-                    where l.RegionCode == RgnCd
+                    where l.RegionCode == RgnCd &&(l.Isdeleted == 0 || l.Isdeleted == null)
                     select new ExpenditureModel
                     {  
                         ExpPer = l.ExpPer,
@@ -85,11 +85,6 @@ namespace IBS.Repositories
                         RegionCode = l.RegionCode,
                         UserId = l.UserId,
                         Datetime = l.Datetime,
-                        //Isdeleted = l.Isdeleted,
-                        //Createdby = l.Createdby,
-                        //Createddate = l.Createddate,
-                        //Updatedby= l.Updatedby,
-                        //Updateddate= l.Updateddate,
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -99,7 +94,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public bool Remove(string ExpPer, string rgnCode)
+        public bool Remove(string ExpPer, string rgnCode, int UserID)
         {
             var _contract = (from m in context.T63Exps
                              where m.ExpPer == ExpPer
@@ -107,9 +102,9 @@ namespace IBS.Repositories
                              select m).FirstOrDefault();
 
             if (_contract == null) { return false; }
-            //_contract. = Convert.ToByte(true);
-            //_contracts.Updatedby = Convert.ToInt32(UserID);
-            //_contracts.Updateddate = DateTime.Now;
+            _contract.Isdeleted = Convert.ToByte(true);
+            _contract.Updatedby = Convert.ToInt32(UserID);
+            _contract.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -133,11 +128,11 @@ namespace IBS.Repositories
                 obj.Datetime = model.Datetime;
                 obj.UserId = model.UserId;
                 obj.RegionCode = model.RegionCode;
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = Convert.ToInt32(model.User_Id);
-                //obj.Createddate = DateTime.Now;
-                //obj.Updatedby = Convert.ToInt32(model.UserId);
-                //obj.Updateddate = DateTime.Now;
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = Convert.ToInt32(model.Createdby);
+                obj.Createddate = DateTime.Now;
+                obj.Updatedby = Convert.ToInt32(model.Updatedby);
+                obj.Updateddate = DateTime.Now;
                 context.T63Exps.Add(obj);
                 context.SaveChanges();
                 Id = (obj.ExpPer);
@@ -146,8 +141,8 @@ namespace IBS.Repositories
             {
                 _contract.TaxAmt = model.TaxAmt;
                 _contract.ExpAmt = model.ExpAmt;
-                //_contract.Updatedby = model.UserId;
-                //_contract.Updateddate = DateTime.Now;
+                _contract.Updatedby = model.Updatedby;
+                _contract.Updateddate = DateTime.Now;
                 Id = _contract.ExpPer;
                 context.SaveChanges();
             }

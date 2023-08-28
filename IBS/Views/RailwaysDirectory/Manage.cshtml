@@ -1,52 +1,51 @@
 ﻿@model IBS.Models.RailwaysDirectoryModel
 
 @{
-    ViewData["Title"] = "Railways Directory";
+    ViewData["Title"] = "Maange Railways Directory";
+    bool IsReadOnly = Model != null & Model.Id > 0;
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Railways Directory</h2>
+        <h2>Maange Railways Directory</h2>
     </div>
 </div>
-
-    <div class="task-listinput">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="RailwaysDirectory" asp-action="RailwaysDirectoryDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmRailwaysDirectory">
-                <input type="hidden" asp-for="RlyCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Railway/Production Unit</label>
-                            <textarea class="input" asp-for="Railway" maxlength="30"> </textarea>
-                            <span asp-validation-for="Railway" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Head Quarter</label>
-                            <textarea class="input" asp-for="HeadQuarter" maxlength="30"> </textarea>
-                            <span asp-validation-for="HeadQuarter" class="text-danger"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="savenext-btn">
-                        <a asp-controller="RailwaysDirectory" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form asp-controller="RailwaysDirectory" asp-action="Manage" id="frmRailwaysDirectory">
+        <input type="hidden" asp-for="Id" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Railway Code <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="RlyCd" maxlength="4" readonly="@IsReadOnly">
+                    <span asp-validation-for="RlyCd" class="text-danger"></span>
                 </div>
-            </form>
-    </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Railway/Production Unit </label>
+                    <input type="text" class="input" asp-for="Railway" maxlength="30">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Head Quarter </label>
+                    <input type="text" class="input" asp-for="HeadQuarter" maxlength="30">
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="RailwaysDirectory" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitRailwaysDirectory();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        function SubmitRailwaysDirectory() {
             if ($("#frmRailwaysDirectory").valid()) {
                 $("#frmRailwaysDirectory").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/RailwaysDirectory/Index";
-        };
+
     </script>
 }

@@ -1,56 +1,48 @@
 ﻿@model IBS.Models.AccountCodesDirectoryModel
 
 @{
-    ViewData["Title"] = "Account Codes Directory";
+    ViewData["Title"] = "Manage Account Codes Directory";
+    bool IsReadOnly = Model != null & !Model.IsNew;
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Account Codes Directory</h2>
+        <h2>Manage Account Codes Directory</h2>
     </div>
 </div>
-
-    <div class="task-listinput">
-        
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="AccountCodesDirectory" asp-action="AccountCodesDirectoryDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmAccountCodesDirectory">
-                <input type="hidden" asp-for="AccCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                       
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Account Code</label>
-                            <textarea class="input" asp-for="AccCd" maxlength="30"> </textarea>
-                            <span asp-validation-for="AccCd" class="text-danger"></span>
-                        </div>
-                   
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Account Description</label>
-                            <input type="text" class="input" asp-for="AccDesc" maxlength="30">
-                            <span asp-validation-for="AccDesc" class="text-danger"></span>
-                        </div>
-
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="AccountCodesDirectory" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form asp-controller="AccountCodesDirectory" asp-action="Manage" id="frmAccountCodesDirectory">
+        <input type="hidden" asp-for="IsNew" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Account Code <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="AccCd" onkeypress="return isNumber(event)" maxlength="4" readonly="@IsReadOnly" />
+                    <span asp-validation-for="AccCd" class="text-danger"></span>
                 </div>
-            </form>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Account Description</label>
+                    <input type="text" class="input" asp-for="AccDesc" maxlength="40" />
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="AccountCodesDirectory" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitAccountCodeData();">Save</button>
+            </div>
+        </div>
+    </form>
 
-    </div>
+</div>
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
-            if ($("#frmBankMaster").valid()) {
-                $("#frmBankMaster").submit();
+
+        function SubmitAccountCodeData() {
+            if ($("#frmAccountCodesDirectory").valid()) {
+                $("#frmAccountCodesDirectory").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/AccountCodesDirectory/Index";
-        };
+
     </script>
 }

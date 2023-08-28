@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class ClientContractController : BaseController
     {
         #region Variables
@@ -14,17 +16,26 @@ namespace IBS.Controllers
         {
             clientcontractRepository = _clientcontractRepository;
         }
-        public IActionResult Index()
+        [Authorization("ClientContract", "Index", "view")]
+        public IActionResult Index(string type)
         {
+            ViewBag.Type = type;
             return View();
         }
-        public IActionResult Manage(int id)
+        [Authorization("ClientContract", "Index", "view")]
+        public IActionResult Manage(int id, string Type)
         {
+            string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
             ClientContractModel model = new();
             if (id > 0)
             {
                 model = clientcontractRepository.FindByID(id);
             }
+            else
+            {
+                model.TypeCb = Type;
+            }
+            model.RegionCd= Region;
             return View(model);
         }
 
@@ -34,7 +45,8 @@ namespace IBS.Controllers
             DTResult<ClientContractModel> dTResult = clientcontractRepository.GetClientContractList(dtParameters);
             return Json(dTResult);
         }
-        public IActionResult Delete(int id)
+        [Authorization("ClientContract", "Index", "delete")]
+        public IActionResult Delete(int id,string Type)
         {
             try
             {
@@ -48,11 +60,12 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientContract", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { type= Type });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("ClientContract", "Index", "edit")]
         public IActionResult ClientContractDetailsSave(ClientContractModel model)
         {
             try
