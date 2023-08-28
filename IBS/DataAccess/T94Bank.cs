@@ -9,7 +9,7 @@ public partial class T94Bank
 
     public string? BankName { get; set; }
 
-    public byte? FmisBankCd { get; set; }
+    public int? FmisBankCd { get; set; }
 
     public string? UserId { get; set; }
 

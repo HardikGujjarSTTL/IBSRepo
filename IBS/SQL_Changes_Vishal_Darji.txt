@@ -5,3 +5,9 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 alter table T91_RAILWAYS drop column ISDELETED;
 
 update menu_master set controllername = 'RailwaysDesignation' where controllername = 'Rly_Designation_Form'
+
+alter table t94_bank MODIFY FMIS_BANK_CD NUMBER(6,0);
+
+UPDATE menu_master set controllername= 'VendorCluster', actionname= 'Index' WHERE ID = 93;
+
+alter table T100_VENDER_CLUSTER MODIFY CLUSTER_CODE NUMBER(6,0);

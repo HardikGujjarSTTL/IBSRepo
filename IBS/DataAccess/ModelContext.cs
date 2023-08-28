@@ -7811,7 +7811,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("DEPARTMENT_NAME");
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
@@ -13919,7 +13919,7 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.BankCd)
                 .HasPrecision(6)
-                .HasDefaultValueSql("\"IBSDEV\".\"T94_BANK_SEQ\".\"NEXTVAL\"")
+                .HasDefaultValueSql("NULL ")
                 .HasColumnName("BANK_CD");
             entity.Property(e => e.BankName)
                 .HasMaxLength(30)
@@ -13935,7 +13935,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.FmisBankCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("FMIS_BANK_CD");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)

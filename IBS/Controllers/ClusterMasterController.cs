@@ -6,13 +6,13 @@ namespace IBS.Controllers
 {
     public class ClusterMasterController : BaseController
     {
-        #region Variables
-        private readonly IClusterMaster clusterMaster;
-        #endregion
-        public ClusterMasterController(IClusterMaster _clusterMaster)
+        private readonly IClusterMasterRepository clusterMasterRepository;
+
+        public ClusterMasterController(IClusterMasterRepository _clusterMasterRepository)
         {
-            clusterMaster = _clusterMaster;
+            clusterMasterRepository = _clusterMasterRepository;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -20,10 +20,13 @@ namespace IBS.Controllers
 
         public IActionResult Manage(int id)
         {
-            ClusterMasterModel model = new();
+            int ClusterCd = clusterMasterRepository.GetMaxClusterCd();
+            ClusterCd += 1;
+
+            ClusterMasterModel model = new() { ClusterCode = ClusterCd, RegionCode = Region };
             if (id > 0)
             {
-                model = clusterMaster.FindByID(id);
+                model = clusterMasterRepository.FindByID(id);
             }
             return View(model);
         }
@@ -31,53 +34,55 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<ClusterMasterModel> dTResult = clusterMaster.GetClusterMasterList(dtParameters);
+            DTResult<ClusterMasterModel> dTResult = clusterMasterRepository.GetClusterMasterList(dtParameters);
             return Json(dTResult);
         }
+
+        [HttpPost]
+        public IActionResult Manage(ClusterMasterModel model)
+        {
+            try
+            {
+                if (model.IsNew)
+                {
+                    model.Createdby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    clusterMasterRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    clusterMasterRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClusterMaster", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (clusterMaster.Remove(id, UserId))
+                if (clusterMasterRepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClusterMaster", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "clusterMasterRepository", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ClusterMasterDetailsSave(ClusterMasterModel model)
-        {
-            try
-            {
-                string msg = "Cluster Master Inserted Successfully.";
-
-                if (model.ClusterCode > 0)
-                {
-                    msg = "Cluster Master Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = clusterMaster.ClusterMasterDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClusterMaster", "ClusterMasterDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
     }
 }
 

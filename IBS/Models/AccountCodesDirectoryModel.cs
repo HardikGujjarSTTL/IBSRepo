@@ -1,8 +1,14 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class AccountCodesDirectoryModel
     {
-        public int AccCd { get; set; }
+        [Display(Name = "Account Code")]
+        [Required]
+        public int? AccCd { get; set; }
+
+        public string? AccountCode { get; set; }
 
         public string? AccDesc { get; set; }
 
@@ -15,5 +21,7 @@
         public DateTime? Createddate { get; set; }
 
         public DateTime? Updateddate { get; set; }
+
+        public bool IsNew { get; set; } = true;
     }
 }
