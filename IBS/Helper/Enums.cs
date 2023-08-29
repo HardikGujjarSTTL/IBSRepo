@@ -142,6 +142,36 @@ namespace IBS.Helper
             [Description("Left/Repatriated")]
             L,
         }
+
+        public enum Department
+        {
+            [Description("Mechanical")]
+            M,
+            [Description("Electrical")]
+            E,
+            [Description("Civil")]
+            C,
+            [Description("Textiles")]
+            T,
+            [Description("M & P")]
+            Z,
+        }
+
+        public enum Region
+        {
+            [Description("Northern Region")]
+            N,
+            [Description("Southern Region")]
+            S,
+            [Description("Eastern Region")]
+            E,
+            [Description("Westrern Region")]
+            W,
+            [Description("Central Region")]
+            C,
+            [Description("QA Corporate")]
+            Q,
+        }
     }
 
     public class EnumUtility<T>

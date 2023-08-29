@@ -86,15 +86,15 @@ builder.Services.AddScoped<IUnitOfMeasurementsRepository, UnitOfMeasurementsRepo
 builder.Services.AddScoped<IRitesDesignationMasterRepository, RitesDesignationMasterRepository>();
 builder.Services.AddScoped<IRailwaysDirectoryRepository, RailwaysDirectoryRepository>();
 builder.Services.AddScoped<IRailwaysDesignationRepository, RailwaysDesignationRepository>();
-builder.Services.AddScoped<IBankMaster, BankMaster>();
-builder.Services.AddScoped<IAccountCodesDirectory, AccountCodesDirectory>();
+builder.Services.AddScoped<IBankRepository, BankRepository>();
+builder.Services.AddScoped<IAccountCodesDirectoryRepository, AccountCodesDirectoryRepository>();
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IMasterItemsListForm, MasterItemsListForm>();
 builder.Services.AddScoped<IConsignee_PMForm, Consignee_PMForm>();
 builder.Services.AddScoped<IInspectionEngineers, InspectionEngineers>();
 builder.Services.AddScoped<I_IE_CO_FormRepository, IE_CO_FormRepository>();
 builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
-builder.Services.AddScoped<IClusterMaster, ClusterMaster>();
+builder.Services.AddScoped<IClusterMasterRepository, ClusterMasterRepository>();
 builder.Services.AddScoped<ILabBillingRepository, LabBillingRepository>();
 builder.Services.AddScoped<IExpenditureRepository, ExpenditureRepository>();
 builder.Services.AddScoped<ITechReferenceRepository, TechReferenceRepository>();
@@ -114,7 +114,7 @@ builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineReposito
 #endregion
 builder.Services.AddScoped<ICityRepository,CityRepository>();
 builder.Services.AddScoped<I_IC_Bookset_Form,IC_Bookset_Form>();
-builder.Services.AddScoped<IVendorCluster,VendorCluster>();
+builder.Services.AddScoped<IVendorClusterRepository,VendorClusterRepository>();
 builder.Services.AddScoped<IHologramSearchForm,HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLForm,MasterItemsPLForm>();
@@ -144,7 +144,7 @@ builder.Services.AddScoped<ILabSamplePaymentRptRepository, LabSamplePaymentRptRR
 builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
-builder.Services.AddScoped<IVendorCluster, VendorCluster>();
+builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();

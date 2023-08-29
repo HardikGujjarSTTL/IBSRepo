@@ -2101,6 +2101,28 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.COType)).ToList();
         }
 
+        public static IEnumerable<TextValueDropDownDTO> GetDepartment()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Department)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetRegion()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Region)).ToList();
+        }
+
+        public static IEnumerable<SelectListItem> GetClustersName(string RegionCode, string DepartmentName)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T99ClusterMasters
+                    where c.Isdeleted != 1 && c.RegionCode == RegionCode && c.DepartmentName != null && c.DepartmentName == DepartmentName
+                    select new SelectListItem
+                    {
+                        Value = c.ClusterCode.ToString(),
+                        Text = c.ClusterName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
     }
     public static class DbContextHelper
     {
