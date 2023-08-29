@@ -21,61 +21,89 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public DTResult<LabInvoiceDownloadModel> GetLapInvoice(DTParameters dtParameters,string Regin)
+        public DTResult<LabInvoiceModel> GetLapInvoice(DTParameters dtParameters, string RegNo)
         {
 
-            DTResult<LabInvoiceDownloadModel> dTResult = new() { draw = 0 };
-            IQueryable<LabInvoiceDownloadModel>? query = null;
+            DTResult<LabInvoiceModel> dTResult = new() { draw = 0 };
+            IQueryable<LabInvoiceModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            //if (dtParameters.Order != null)
+            //{
+            //    // in this example we just default sort on the 1st column
+            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "invoice_no";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "invoice_no";
-                orderAscendingDirection = true;
-            }
+            //    if (orderCriteria == "")
+            //    {
+            //        orderCriteria = "item_srno";
+            //    }
+            //    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            //}
+            //else
+            //{
+            //    // if we have an empty search then just order the results by Id ascending
+            //    orderCriteria = "item_srno";
+            //    orderAscendingDirection = true;
+            //}
 
-            OracleParameter[] par = new OracleParameter[5];
-            par[0] = new OracleParameter("p_case_no", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo"), ParameterDirection.Input);
-            par[1] = new OracleParameter("p_sample_reg_no", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input);
-            par[2] = new OracleParameter("p_transaction_no", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("TranNo"), ParameterDirection.Input);
-            par[3] = new OracleParameter("p_invoice_no", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("InNo"), ParameterDirection.Input);
-            par[4] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            //OracleParameter[] par = new OracleParameter[2];
+            //par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
+            //par[1] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GET_INVOICE_DETAILS", par, 4);
+            //var ds = DataAccessDB.GetDataSet("GET_LabINVOICE_GridLoad", par, 1);
 
-            List<LabInvoiceDownloadModel> modelList = new List<LabInvoiceDownloadModel>();
+            //List<LabInvoiceModel> modelList = new List<LabInvoiceModel>();
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    foreach (DataRow row in ds.Tables[0].Rows)
+            //    {
+            //        LabInvoiceModel model = new LabInvoiceModel
+            //        {
+            //            InvoiceNo = Convert.ToString(row["Invoice_No"]),
+            //            InvoiceDt = Convert.ToString(row["Invoice_DT"]),
+            //            RegNo = Convert.ToString(row["Sample_REG_NO"]),
+            //            GSTINNO = Convert.ToString(row["recipient_gstin_no"]),
+            //            SNO = Convert.ToString(row["Item_SRNO"]),
+            //            Item = Convert.ToString(row["ITEM_DESC"]),
+            //            Quantity = Convert.ToString(row["QTY"]),
+            //            TestingCharges = Convert.ToString(row["Testing_Charges"]),
+            //            CGST = Convert.ToString(row["CGST"]),
+            //            SGST = Convert.ToString(row["SGST"]),
+            //            IGST = Convert.ToString(row["IGST"]),
+
+
+            //        };
+
+            //        modelList.Add(model);
+            //    }
+            //}
+            var par = new List<OracleParameter>();
+            par.Add(new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input));
+            par.Add(new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output));
+
+            var ds = DataAccessDB.GetDataSet("GET_LabINVOICE_GridLoad", par.ToArray(), 1);
+
+            List<LabInvoiceModel> modelList = new List<LabInvoiceModel>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
-                    LabInvoiceDownloadModel model = new LabInvoiceDownloadModel
+                    LabInvoiceModel model = new LabInvoiceModel
                     {
-                        CASE_NO = Convert.ToString(row["case_no"]),
-                        SAMPLE_REG_NO = Convert.ToString(row["sample_reg_no"]),
-                        TRANSACTION_NO = Convert.ToString(row["transaction_no"]),
-                        INVOICE_NO = Convert.ToString(row["invoice_no"]),
-                        INVOICE_DT = Convert.ToString(row["invoice_dt"]),
-                        INV_AMOUNT = Convert.ToString(row["INV_amount"]),
-                        INV_SGST = Convert.ToString(row["INV_sgst"]),
-                        INV_CGST = Convert.ToString(row["INV_cgst"]),
-                        INV_IGST = Convert.ToString(row["INV_igst"]),
-                        
-
+                        InvoiceNo = Convert.ToString(row["Invoice_No"]),
+                        InvoiceDt = Convert.ToString(row["Invoice_DT"]),
+                        RegNo = Convert.ToString(row["Sample_REG_NO"]),
+                        GSTINNO = Convert.ToString(row["recipient_gstin_no"]),
+                        SNO = Convert.ToString(row["Item_SRNO"]),
+                        Item = Convert.ToString(row["ITEM_DESC"]),
+                        Quantity = Convert.ToString(row["QTY"]),
+                        TestingCharges = Convert.ToString(row["Testing_Charges"]),
+                        CGST = Convert.ToString(row["CGST"]),
+                        SGST = Convert.ToString(row["SGST"]),
+                        IGST = Convert.ToString(row["IGST"]),
                     };
 
                     modelList.Add(model);
@@ -102,14 +130,15 @@ namespace IBS.Repositories
 
             dTResult.recordsTotal = query.Count();
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.INVOICE_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.INVOICE_NO).ToLower().Contains(searchBy.ToLower())
-                );
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => Convert.ToString(w.InvoiceNo).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.InvoiceNo).ToLower().Contains(searchBy.ToLower())
+            //    );
 
             dTResult.recordsFiltered = query.Count();
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            // dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.data = query.ToList();
 
             dTResult.draw = dtParameters.Draw;
 
@@ -117,7 +146,7 @@ namespace IBS.Repositories
 
             //using (var dbContext = context.Database.GetDbConnection())
             //{
-                
+
             //}
 
             //return dTResult;
@@ -153,87 +182,163 @@ namespace IBS.Repositories
 
             return dateResult;
         }
-        public string GetSrNo(string InvoiceNo)
+        public LabInvoiceModel Getdtreg(string RegNo)
         {
-            
-            string query = "Select max(ITEM_SRNO) from T86_LAB_INVOICE_DETAILS where INVOICE_NO='" + InvoiceNo + "'";
-            string ds = GetDateString(query);            
-            return ds.ToString();
 
-        }
-        public static DataSet GetDataset(string sqlQuery)
-        {
-            DataSet ds = new DataSet();
-            ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
 
-            try
+            using (var dbContext = context.Database.GetDbConnection())
             {
-                using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                //OracleParameter[] par = new OracleParameter[2];
+                //par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, RegNo, ParameterDirection.Input);
+                //par[1] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Input);
+
+                //var ds = DataAccessDB.GetDataSet("Lab_InvoiceRptDetails", par, 1);
+                string CURR_DATE;
+                string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
+
+                CURR_DATE = GetDateString(sqlQuery);
+
+                LabInvoiceModel labInvoiceModel = Getdtreg1(RegNo);
+                string BPoCD = labInvoiceModel.BPOCD;
+                LabInvoiceModel model = new();
+                if (CURR_DATE != labInvoiceModel.InvoiceDt)
                 {
-                    conn.Open();
+                    LabInvoiceModel mo = BPOList(BPoCD);
+                    var par = new List<OracleParameter>();
+                    par.Add(new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input));
+                    par.Add(new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output));
 
-                    using (var cmd = conn.CreateCommand())
+                    var ds = DataAccessDB.GetDataSet("Lab_InvoiceRptDetails", par.ToArray(), 1);
+
+
+
+                    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = sqlQuery;
-
-                        using (var adapter = new OracleDataAdapter(cmd))
+                        DataRow row = ds.Tables[0].Rows[0];
+                        model = new LabInvoiceModel
                         {
-                            // Fill the dataset with the data retrieved by the query
-                            adapter.Fill(ds);
-                        }
+                            CaseNo = Convert.ToString(row["case_no"]),
+                            CallDt = Convert.ToString(row["call_recv_dt"]),
+                            CallSNO = Convert.ToString(row["call_sno"]),
+                            VendorName = Convert.ToString(row["vendor"]),
+                            ManufacturerNM = Convert.ToString(row["manufacturer"]),
+                            Vendor = Convert.ToString(row["vend_cd"]),
+                            ManufacturerCD = Convert.ToString(row["mfg_cd"]),
+                            BPOCD = mo.BPOCD,
+                            BPONM = mo.BPONM,
+                        };
                     }
                 }
-            }
-            catch (Exception)
-            {
-                // Handle exceptions if needed
-            }
-
-            return ds;
-        }
-        public LabInvoiceDownloadModel Getdtreg(string InvoiceNo)
-        {
-
-            
-                OracleParameter[] par = new OracleParameter[1];
-                
-                var query = "SELECT TO_CHAR(INVOICE_DT, 'yyyymm') AS INVOICE_DT, REGION_CODE FROM T55_LAB_INVOICE WHERE INVOICE_NO ='"+ InvoiceNo + "'";
-
-                DataSet ds = GetDataset(query);
-
-                LabInvoiceDownloadModel model = new LabInvoiceDownloadModel();
-
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                else
                 {
-                    DataRow row = ds.Tables[0].Rows[0];
-                    model.INVOICE_DT = Convert.ToString(row["INVOICE_DT"]);
-                    model.Resign = Convert.ToString(row["REGION_CODE"]);
+                    LabInvoiceModel mo = BPOList(BPoCD);
+                    var par = new List<OracleParameter>();
+                    par.Add(new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input));
+                    par.Add(new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output));
+
+                    var ds = DataAccessDB.GetDataSet("Lab_InvoiceRptDetails", par.ToArray(), 1);
+
+
+
+                    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                    {
+                        DataRow row = ds.Tables[0].Rows[0];
+                        model = new LabInvoiceModel
+                        {
+                            CaseNo = Convert.ToString(row["case_no"]),
+                            CallDt = Convert.ToString(row["call_recv_dt"]),
+                            CallSNO = Convert.ToString(row["call_sno"]),
+                            VendorName = Convert.ToString(row["vendor"]),
+                            ManufacturerNM = Convert.ToString(row["manufacturer"]),
+                            Vendor = Convert.ToString(row["vend_cd"]),
+                            ManufacturerCD = Convert.ToString(row["mfg_cd"]),
+                            BPOCD = mo.BPOCD,
+                            BPONM = mo.BPONM,
+                        };
+                    }
                 }
 
                 return model;
-            
+            }
         }
-        public DataSet Getdata(string CaseNo, string RegNo, string InvoiceNo, string TranNo)
+        public LabInvoiceModel Getdtreg1(string RegNo)
         {
-            DataSet ds = new DataSet();
-            try
-            {
+            //string OracleQuery = "SELECT Invoice_no, TO_CHAR(Invoice_dt, 'dd/mm/yyyy') AS Invoice_dt, bpo_cd FROM t55_lab_invoice WHERE sample_reg_no = :RegNo";
 
-                OracleParameter[] par = new OracleParameter[5];
-                par[0] = new OracleParameter("p_InvoiceNo", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_CaseNo", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_SamNo", OracleDbType.Date, RegNo, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_TN", OracleDbType.Varchar2, TranNo, ParameterDirection.Input);
-                par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Input);
-                
-                 ds = DataAccessDB.GetDataSet("LabInvoiceDownload", par, 4);
-            }
-            catch (Exception ex)
+            //OracleParameter[] par = new OracleParameter[1];
+            //par[0] = new OracleParameter("RegNo", OracleDbType.Varchar2);
+            //par[0].Value = RegNo;
+
+            //var ds = DataAccessDB.GetDataSet(OracleQuery, par, 1);
+            //LabInvoiceModel model = new();
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    DataRow row = ds.Tables[0].Rows[0];
+            //    model = new LabInvoiceModel
+            //    {
+            //        InvoiceNo = Convert.ToString(row["Invoice_no"]),
+            //        InvoiceDt = Convert.ToString(row["Invoice_dt"]),
+            //        BPOCD = Convert.ToString(row["bpo_cd"]),
+
+            //        // Process the retrieved data as needed
+            //    };
+            //}
+            //return model;
+            using (var conn1 = context.Database.GetDbConnection())
             {
-                //return false;
+                string OracleQuery = "SELECT Invoice_no, TO_CHAR(Invoice_dt, 'dd/mm/yyyy') AS Invoice_dt, bpo_cd FROM t55_lab_invoice WHERE sample_reg_no = :RegNo";
+
+                // Create an OracleCommand
+                using (OracleCommand cmd = new OracleCommand(OracleQuery, (OracleConnection)conn1))
+                {
+                    // Bind the parameter to the command
+                    cmd.Parameters.Add(new OracleParameter("RegNo", OracleDbType.Varchar2, RegNo, ParameterDirection.Input));
+
+                    // Execute the query
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        LabInvoiceModel model = new LabInvoiceModel();
+                        if (dt.Rows.Count > 0)
+                        {
+                            DataRow row = dt.Rows[0];
+                            model.InvoiceNo = Convert.ToString(row["Invoice_no"]);
+                            model.InvoiceDt = Convert.ToString(row["Invoice_dt"]);
+                            model.BPOCD = Convert.ToString(row["bpo_cd"]);
+
+                            // Process the retrieved data as needed
+                        }
+                        return model;
+                    }
+                }
             }
-            return ds;
         }
+        public LabInvoiceModel BPOList(string BPoCD)
+        {
+            var par = new List<OracleParameter>();
+            par.Add(new OracleParameter("p_BPO_SEARCH", OracleDbType.NVarchar2, BPoCD, ParameterDirection.Input));
+            par.Add(new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output));
+
+            var ds = DataAccessDB.GetDataSet("GET_BPO_DETAILS", par.ToArray(), 1);
+
+
+            LabInvoiceModel model = new();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow row = ds.Tables[0].Rows[0];
+                model = new LabInvoiceModel
+                {
+                    BPONM = Convert.ToString(row["BPO_NAME"]),
+                    BPOTYPE = Convert.ToString(row["BPO_TYPE"]),
+                    BPOCD = Convert.ToString(row["BPO_CD"]),
+
+                    // Process the retrieved data as needed
+                };
+            }
+            return model;
+        }
+
     }
 }
