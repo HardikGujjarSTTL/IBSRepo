@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 
@@ -96,53 +97,6 @@ namespace IBS.Repositories.Inspection_Billing
                 VENDOR = Convert.ToString(row["VENDOR"]),
                 IE_NAME = Convert.ToString(row["IE_NAME"])
             }).ToList();
-            //DateTime CHQ_DATE = Convert.ToDateTime(DateTime.ParseExact(Date, "dd/MM/yyyy", null).ToString("dd/MM/yyyy"));
-            //query = (from c in context.T17CallRegisters
-            //         join p in context.T13PoMasters on c.CaseNo equals p.CaseNo into cpJoin
-            //         from cp in cpJoin.DefaultIfEmpty()
-            //         join i in context.T09Ies on c.IeCd equals i.IeCd into ciJoin
-            //         from ci in ciJoin.DefaultIfEmpty()
-            //         join v in context.T05Vendors on cp.VendCd equals v.VendCd into cvJoin
-            //         from cv in cvJoin.DefaultIfEmpty()
-            //         join t in context.T03Cities on cv.VendCityCd equals t.CityCd into ctJoin
-            //         from ct in ctJoin.DefaultIfEmpty()
-            //         join s in context.T21CallStatusCodes on c.CallStatus equals s.CallStatusCd into csJoin
-            //         from cs in csJoin.DefaultIfEmpty()
-            //         where cp.RegionCode == "N" && c.OnlineCall == "Y"
-            //               && ((RDB3 && c.CallRecvDt == CHQ_DATE)
-            //                   || (RDB1 && c.CallRecvDt == CHQ_DATE && (ci.IeCd != 0))
-            //                   || (RDB3 || RDB2) && ci.IeCd == null
-            //                   || (RDB2 && c.CallRecvDt <= CHQ_DATE))
-            //         select new CallMarkedOnlineModel
-            //         {
-            //             CASE_NO = cp.CaseNo,
-            //             CALL_RECV_DT = Convert.ToString(c.CallRecvDt),
-            //             CALL_INSTALL_NO = Convert.ToString(c.CallInstallNo),
-            //             CALL_SNO = Convert.ToString(c.CallSno),
-            //             //DATE_TIME = Convert.ToDateTime(c.Datetime).ToString("dd/MM/yyyy-HH:mm:ss"),
-            //             CALL_STATUS = (cs.CallStatusDesc + (c.CallCancelStatus == "N" ? " (Non Chargeable)" : c.CallCancelStatus == "C" ? " (Chargeable)" : "")) ?? cs.CallStatusDesc,
-            //             CALL_LETTER_NO = c.CallLetterNo,
-            //             REMARKS = c.Remarks,
-            //             PO_NO = cp.PoNo,
-            //             //PO_DT = Convert.ToDateTime(cp.PoDt).ToString("dd/MM/yyyy"),
-            //             VENDOR = cv.VendName,// + "(" + (ct.LOCATION ?? (ct.LOCATION + " : " + ct.CITY)) + ")",
-            //             IE_NAME = ci.IeName
-            //         }).AsQueryable();
-
-            //if (RDB1 || RDB3)
-            //{
-            //    query = query.OrderBy(item => item.CASE_NO)
-            //                 .ThenBy(item => item.CALL_RECV_DT)
-            //                 .ThenBy(item => item.CALL_SNO);
-            //}
-            //else
-            //{
-            //    query = query.OrderByDescending(item => item.CALL_RECV_DT)
-            //                 .ThenBy(item => item.CALL_SNO);
-            //}
-
-            //list = query.ToList();
-
 
             query = list.AsQueryable();
 
@@ -158,7 +112,7 @@ namespace IBS.Repositories.Inspection_Billing
             List<SelectListItem> IE = (from t99 in context.T99ClusterMasters
                                        join t101 in context.T101IeClusters on t99.ClusterCode equals t101.ClusterCode
                                        join t09 in context.T09Ies on t101.IeCode equals t09.IeCd
-                                       where t99.RegionCode == "N" && t09.IeStatus == null && t99.DepartmentName == "C"
+                                       where t99.RegionCode == Region && t09.IeStatus == null && t99.DepartmentName == "C"
                                        orderby t99.ClusterName, t09.IeName
                                        select new SelectListItem
                                        {
@@ -319,15 +273,29 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 try
                 {
-                    var cl_exist = (from a in context.T100VenderClusters
-                                    join b in context.T99ClusterMasters on Convert.ToInt32(a.ClusterCode) equals b.ClusterCode
-                                    where a.VendorCode == 46040 && a.DepartmentName == "C" && b.RegionCode == "N"
-                                    select b.ClusterCode).Distinct().Count();
+                    //var cl_exist = (from a in context.T100VenderClusters
+                    //                join b in context.T99ClusterMasters on Convert.ToByte(a.ClusterCode) equals Convert.ToByte(b.ClusterCode)
+                    //                where a.VendorCode == 46040 && a.DepartmentName == "C" && b.RegionCode == "N"
+                    //                select b.ClusterCode).Distinct().Count();
 
-                    var IE = (from ieCluster in context.T101IeClusters
-                              where ieCluster.ClusterCode == Convert.ToByte(677) && ieCluster.DepartmentCode == "C"
-                              select ieCluster.IeCode).FirstOrDefault();
+                    //var IE = (from ieCluster in context.T101IeClusters
+                    //          where ieCluster.ClusterCode == Convert.ToByte(677) && ieCluster.DepartmentCode == "C"
+                    //          select ieCluster.IeCode).FirstOrDefault();
 
+                    OracleParameter[] par = new OracleParameter[6];
+                    par[0] = new OracleParameter("P_VENDOR_CODE", OracleDbType.Varchar2, model.MFG_CD, ParameterDirection.Input);
+                    par[1] = new OracleParameter("P_DEPT_NAME", OracleDbType.Varchar2, model.DEPT_DROPDOWN, ParameterDirection.Input);
+                    par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, model.CASE_NO.Remove(1), ParameterDirection.Input);
+                    par[3] = new OracleParameter("P_CLUSTER_CODE", OracleDbType.Varchar2, model.IE_NAME, ParameterDirection.Input);
+                    par[4] = new OracleParameter("P_RESULT_COUNT", OracleDbType.RefCursor, ParameterDirection.Output);
+                    par[5] = new OracleParameter("P_RESULT_IECODE", OracleDbType.RefCursor, ParameterDirection.Output);
+                    var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_SCALAR_VALUE", par, 2);
+                    DataTable dt = ds.Tables[0];
+
+                    int cl_exist = 0;
+
+                    cl_exist = Convert.ToInt32(ds.Tables[0].Rows[0]["VENDOR_COUNT"]);
+                    var IE = Convert.ToInt32(ds.Tables[1].Rows[0]["IE_CODE"]) == null ? 0 : Convert.ToInt32(ds.Tables[1].Rows[0]["IE_CODE"]);
                     var Co = (from ie in context.T09Ies
                               where ie.IeCd == 0
                               select ie.IeCoCd).FirstOrDefault();
@@ -338,7 +306,7 @@ namespace IBS.Repositories.Inspection_Billing
                     foreach (var item in _data)
                     {
                         item.Remarks = model.REMARKS;
-                        item.IeCd = IE.Value;
+                        item.IeCd = IE;
                         item.ClusterCode = Convert.ToByte(model.IE_NAME);
                         item.CoCd = Convert.ToByte(Co.Value);
                         item.UserId = uModel.UserName;
@@ -368,10 +336,10 @@ namespace IBS.Repositories.Inspection_Billing
                                         where mapping.IeCd == 0 && mapping.PoiCd == Convert.ToInt32("46040")
                                         select mapping).Count();
 
-                    if(ietopoicount == 0)
+                    if (ietopoicount == 0)
                     {
                         T60IePoiMapping insObj = new T60IePoiMapping();
-                        insObj.IeCd = IE.Value;
+                        insObj.IeCd = IE;
                         insObj.PoiCd = Convert.ToInt32(model.MFG_CD);
                         context.T60IePoiMappings.Add(insObj);
                         context.SaveChanges();
@@ -379,13 +347,364 @@ namespace IBS.Repositories.Inspection_Billing
                     flag = true;
                     trans.Commit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     flag = false;
                     trans.Rollback();
                 }
             }
             return flag;
+        }
+
+        public CaseHistoryModel Get_Vendor_Detail_By_CaseNo(string Case_No, string Region)
+        {
+            var data = new CaseHistoryModel();
+            data = (from t13 in context.T13PoMasters
+                    join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
+                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                    join t91 in context.T91Railways on t13.RlyCd equals t91.RlyCd into railways
+                    from t91 in railways.DefaultIfEmpty()
+                    where t13.CaseNo == "N19101278" && t13.RegionCode == "N"
+                    select new CaseHistoryModel
+                    {
+                        CASE_NO = t13.CaseNo,
+                        VEND_CD = Convert.ToString(t05.VendCd),
+                        VENDOR = t05.VendName + "," + t03.City,
+                        VEND_REMARKS = Convert.ToString(t05.VendRemarks),
+                        PO_NO = t13.PoNo,
+                        PO_DT = Convert.ToDateTime(t13.PoDt).ToString("dd/MM/yyyy"),
+                        PO_SOURCE = t13.PoSource,
+                        PO_YR = Convert.ToDateTime(t13.PoDt).Year.ToString(),
+                        IMMS_RLY_CD = t91.ImmsRlyCd,
+                        RLY_CD = t13.RlyCd,
+                        REMARKS = t13.Remarks
+                    }).FirstOrDefault();
+            return data;
+        }
+
+        public DTResult<CaseHistoryItemModel> Get_Case_History_Item(DTParameters dtParameters, string Region)
+        {
+            DTResult<CaseHistoryItemModel> dTResult = new() { draw = 0 };
+            IQueryable<CaseHistoryItemModel> query = null;
+            var Case_NO = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            {
+                Case_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            }
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, Case_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CASE_HISTORY_ITEM", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            List<CaseHistoryItemModel> list = dt.AsEnumerable().Select(row => new CaseHistoryItemModel
+            {
+                CASE_NO = Convert.ToString(row["CASE_NO"]),
+                ITEM_SRNO = Convert.ToString(row["ITEM_SRNO"]),
+                ITEM_DESC = Convert.ToString(row["ITEM_DESC"]),
+                QTY = Convert.ToInt32(row["QTY"]),
+                DELV_DATE = Convert.ToString(row["DELV_DATE"]),
+                PASSED = Convert.ToInt32(row["PASSED"]),
+                BALANCE_QTY = (Convert.ToInt32(row["QTY"]) - Convert.ToInt32(row["PASSED"])),
+                REJECTED = Convert.ToInt32(row["REJECTED"])
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, "ITEM_SRNO", true).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<CaseHistoryPoIREPSModel> Get_Case_History_PO_IREPS(DTParameters dtParameters)//, string PO_DT
+        {
+            string PO_NO = "", PO_DT = "";
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_NO"]))
+            {
+                PO_NO = Convert.ToString(dtParameters.AdditionalValues["PO_NO"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_DT"]))
+            {
+                PO_DT = Convert.ToString(dtParameters.AdditionalValues["PO_DT"]);
+            }
+
+            DTResult<CaseHistoryPoIREPSModel> dTResult = new() { draw = 0 };
+            IQueryable<CaseHistoryPoIREPSModel> query = null;
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("P_PO_NO", OracleDbType.Varchar2, PO_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_PO_DT", OracleDbType.Varchar2, PO_DT, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_PO_IREPS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            List<CaseHistoryPoIREPSModel> list = dt.AsEnumerable().Select(row => new CaseHistoryPoIREPSModel
+            {
+                MAKEY = Convert.ToString(row["MAKEY"]),
+                SLNO = Convert.ToString(row["SLNO"]),
+                MAKEY_DT = Convert.ToString(row["MAKEY_DT"]),
+                MA_FLD_DESCR = Convert.ToString(row["MA_FLD_DESCR"]),
+                OLD_VALUE = Convert.ToString(row["OLD_VALUE"]),
+                NEW_VALUE = Convert.ToString(row["NEW_VALUE"]),
+                RITES_CASE_NO = Convert.ToString(row["RITES_CASE_NO"]),
+                IMMS_RLY_CD = Convert.ToString(row["IMMS_RLY_CD"]),
+                IMMS_POKEY = Convert.ToString(row["IMMS_POKEY"]),
+                MA_NO = Convert.ToString(row["MA_NO"]),
+                MA_DT = Convert.ToString(row["MA_DT"]),
+                MA_STATUS = Convert.ToString(row["MA_STATUS"])
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, "MA_NO", true).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<CaseHistoryPoVendorModel> Get_Case_History_PO_Vendor(DTParameters dtParameters)//, string PO_DT
+        {
+            DTResult<CaseHistoryPoVendorModel> dTResult = new() { draw = 0 };
+            IQueryable<CaseHistoryPoVendorModel> query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            string CASE_NO = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            {
+                CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            }
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "CASE_NO";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CASE_NO";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);            
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_PO_VENDOR", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            List<CaseHistoryPoVendorModel> list = dt.AsEnumerable().Select(row => new CaseHistoryPoVendorModel
+            {
+                CASE_NO = Convert.ToString(row["CASE_NO"]),
+                MA_NO = Convert.ToString(row["MA_NO"]),
+                MA_DT = Convert.ToString(row["MA_DT"]),
+                MA_SNO = Convert.ToString(row["MA_SNO"]),
+                MA_FIELD = Convert.ToString(row["MA_FIELD"]),
+                MA_DESC = Convert.ToString(row["MA_DESC"]),
+                OLD_PO_VALUE = Convert.ToString(row["OLD_PO_VALUE"]),
+                NEW_PO_VALUE = Convert.ToString(row["NEW_PO_VALUE"]),
+                MA_STATUS = Convert.ToString(row["MA_STATUS"])
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<CaseHistoryPreviousCallModel> Get_Case_History_Previous_Call(DTParameters dtParameters)
+        {
+            DTResult<CaseHistoryPreviousCallModel> dTResult = new() { draw = 0 };
+            IQueryable<CaseHistoryPreviousCallModel> query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            string CASE_NO = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            {
+                CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            }
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "CALL_DATE";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CALL_DATE";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_PREVIOUS_CALL", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            List<CaseHistoryPreviousCallModel> list = dt.AsEnumerable().Select(row => new CaseHistoryPreviousCallModel
+            {
+                CALL_DATE = Convert.ToString(row["CALL_DATE"]),
+                LETTER_DATE = Convert.ToString(row["LETTER_DATE"]),
+                CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+                CALL_INSTALL_NO = Convert.ToString(row["CALL_INSTALL_NO"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
+                REASON_REJECT = Convert.ToString(row["REASON_REJECT"]),
+                REASON = Convert.ToString(row["REASON"])                
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<CaseHistoryConsigneeComplaintModel> Get_Case_History_Consignee_Complaints(DTParameters dtParameters)
+        {
+            DTResult<CaseHistoryConsigneeComplaintModel> dTResult = new() { draw = 0 };
+            IQueryable<CaseHistoryConsigneeComplaintModel> query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            string VEND_CD = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VEND_CD"]))
+            {
+                VEND_CD = Convert.ToString(dtParameters.AdditionalValues["VEND_CD"]);
+            }
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "REJ_MEMO_DATE";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "REJ_MEMO_DATE";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_VEND_CD", OracleDbType.Varchar2, VEND_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CASE_HISTORY_CONSIGNEE_COMPLAINTS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            List<CaseHistoryConsigneeComplaintModel> list = dt.AsEnumerable().Select(row => new CaseHistoryConsigneeComplaintModel
+            {
+                ITEM_DESC = Convert.ToString(row["ITEM_DESC"]),
+                REJ_MEMO_DATE = Convert.ToString(row["REJ_MEMO_DATE"]),
+                REJECTION_REASON = Convert.ToString(row["REJECTION_REASON"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
+                JI_STATUS_DESC = Convert.ToString(row["JI_STATUS_DESC"])                
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<CaseHistoryRejectionVendorPlaceModel> Get_Case_History_Rejection_Vendor_Place(DTParameters dtParameters, string region)
+        {
+            DTResult<CaseHistoryRejectionVendorPlaceModel> dTResult = new() { draw = 0 };
+            IQueryable<CaseHistoryRejectionVendorPlaceModel> query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            string CASE_NO= "",VEND_CD = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            {
+                CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VEND_CD"]))
+            {
+                VEND_CD = Convert.ToString(dtParameters.AdditionalValues["VEND_CD"]);
+            }
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "BILL_NO";
+                }
+                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "BILL_NO";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_VEND_CD", OracleDbType.Varchar2, VEND_CD, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, region, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CASE_HISTORY_REJECTIONS_VENDOR_PLACE", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            List<CaseHistoryRejectionVendorPlaceModel> list = dt.AsEnumerable().Select(row => new CaseHistoryRejectionVendorPlaceModel
+            {
+                BILL_NO = Convert.ToString(row["BILL_NO"]),
+                IC_DATE = Convert.ToString(row["IC_DATE"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                REASON_REJECT = Convert.ToString(row["REASON_REJECT"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                VENDOR = Convert.ToString(row["VENDOR"]),
+                ITEM_DESC_PO = Convert.ToString(row["ITEM_DESC_PO"])
+            }).ToList();
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
         }
     }
 }

@@ -1,0 +1,628 @@
+﻿@model IBS.Models.CaseHistoryModel
+@{
+    ViewData["Title"] = "Case History";
+    var ViewPoURL = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.RLY_CD + "/" + Model.PO_NO + ".pdf";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="HologramAccountal" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <input type="hidden" asp-for="CASE_NO" />
+    <input type="hidden" asp-for="VEND_CD" />
+    <input type="hidden" asp-for="VENDOR" />
+    <input type="hidden" asp-for="VEND_REMARKS" />
+    <input type="hidden" asp-for="PO_NO" />
+    <input type="hidden" asp-for="PO_DT" />
+    <input type="hidden" asp-for="PO_SOURCE" />
+    <input type="hidden" asp-for="PO_YR" />
+    <input type="hidden" asp-for="IMMS_RLY_CD" />
+    <input type="hidden" asp-for="RLY_CD" />
+    <input type="hidden" asp-for="REMARKS" />
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>History for Case No. - @ViewBag.Case_NO (@ViewBag.RegionName)</h2>
+            </br>
+            <h5>PO DETAILS</h5>
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" id="btnPrint">Print</button>
+            @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="Reference" style="padding-right:10px;">Case No :</label>
+                <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
+            </div>
+            <div class="col-md-5 mb-3">
+                <label for="Reference" style="padding-right:10px;">Vendor :</label>
+                <span id="lblVendor" style="text-transform: uppercase; color:red;"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference" style="padding-right:10px;">Po No :</label>
+                <label id="lblPoNo" style="text-transform: uppercase; color:red;"></label>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="Reference" style="padding-right:10px;">Dated :</label>
+                <label id="lblDate" style="text-transform: uppercase; color:red;"></label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference" style="padding-right:10px;">Client :</label>
+                <label id="lblClient" style="text-transform: uppercase; color:red;"></label>
+            </div>
+        </div>
+    </div>
+</form>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtItemList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Item SrNo</th>
+                        <th>Item Description</th>
+                        <th>Qty Ordered</th>
+                        <th>Qty Passed</th>
+                        <th>Qty Rejected</th>
+                        <th>BALANCE QTY (Qty Ordered - Qty Passed)</th>
+                        <th>Delv Period</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<div style="text-align:center;">
+    @if (Model.PO_SOURCE == "C")
+    {
+        <a href="@ViewPoURL" target="_blank">VIEW PO</a>
+    }
+    else
+    {
+        var tifpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".tif");
+        var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");
+        if (System.IO.File.Exists(tifpath) == true)
+        {
+            <a href="@tifpath" target="_blank">VIEW PO</a>
+        }
+        else if (System.IO.File.Exists(tifpath) == true)
+        {
+            <a href="@pdfpath" target="_blank">VIEW PO</a>
+        }
+    }
+</div>
+
+<div id="tblPOIreps">
+    <div>
+        <h5>PO AMMENDMENTS IREPS</h5>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>MA No.</th>
+                            <th>MA Date</th>
+                            <th>MA Field</th>
+                            <th>OLD Value</th>
+                            <th>New Value</th>
+                            <th>Status</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="tblPoVendor">
+    <div>
+        <h5>PO AMMENDMENTS VENDOR</h5>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtVendorList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>MA No.</th>
+                            <th>MA Date</th>
+                            <th>MA Field</th>
+                            <th>OLD Value</th>
+                            <th>New Value</th>
+                            <th>Status</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="tblPreviousCall">
+    <div>
+        <h5>PREVIOUS CALL DETAILS</h5>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtPreviousCallList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>Call Letter Date</th>
+                            <th>Call Recieving Date</th>
+                            <th>Call Sno</th>
+                            <th>Call Install No.</th>
+                            <th>IE</th>
+                            <th>Status</th>
+                            <th>Cancel Reason</th>
+                            <th>Rejection Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="SpecialRemark">
+    <h5>SPECIAL REMARKS</h5>
+    <section class="table-section">
+        <div class="row my-0">
+            <div class="col-md-12">
+                <label for="Reference" style="padding-right:10px;">PO :</label>
+                <label id="lblPO" style="text-transform: uppercase; color:red;">@Model.REMARKS</label>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <label for="Reference" style="padding-right:10px;">Vendor/Firm :</label>
+                <label id="lblVendorFirm" style="text-transform: uppercase; color:red;">@Model.VEND_REMARKS</label>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="tblConsigneeComplaints">
+    <div>
+        <h5>CONSIGNEE COMPLAINTS</h5>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtConsigneeComplaintsList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>Item</th>
+                            <th>Rej Memo Date</th>
+                            <th>Rejection Reason</th>
+                            <th>BK No & Set No.</th>
+                            <th>Consignee</th>
+                            <th>JI Outcome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="tblRejectionVendor">
+    <div>
+        <h5>REJECTION AT VENDOR PLACE</h5>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtRejectionVendorPlaceList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>Item</th>
+                            <th>IC Date</th>
+                            <th>Rejection Reason</th>
+                            <th>BK No & Set No.</th>
+                            <th>IE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.10/jspdf.plugin.autotable.min.js"></script>*@
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.13/jspdf.plugin.autotable.min.js"></script>
+}
+<script type="text/javascript">
+    var RegionName = "@ViewBag.RegionName";
+    var CaseNo = "@ViewBag.Case_NO";
+
+    $(document).ready(function () {
+        //window.jsPDF = window.jspdf.jsPDF;
+        var pdf = new jsPDF('landscape');
+
+        $("#lblCaseNo").html($("#CASE_NO").val());
+        $("#lblVendor").html($("#VENDOR").val());
+        $("#lblPoNo").html($("#PO_NO").val());
+        $("#lblDate").html($("#PO_DT").val());
+        $("#lblClient").html($("#RLY_CD").val());
+        $("#btnPrint").click(function () {
+            debugger
+            //demo();
+            PrintAll();
+            //Print();
+        });
+        BindItemDataTable();
+        BindPOIREPSDataTable();
+        BindPOVendorDataTable();
+        BindPreviousCallDataTable();
+        BindConsigneeComplaintDataTable();
+        BindRejectionVendorPlaceDataTable();
+
+        function PrintAll() {            
+            var table1 = $('#dtVendorList').DataTable();
+            var table2 = $('#dtPreviousCallList').DataTable();
+            pdf.setFontSize(14);
+
+            pdf.text('PO DETAILS', 10, 10);
+            pdf.autoTable({
+                html: '#dtItemList',
+                columnStyles: {
+                    0: { cellWidth: 20 },
+                    1: { cellWidth: 120 },
+                    2: { cellWidth: 24 },
+                    3: { cellWidth: 22 },
+                    4: { cellWidth: 24 },
+                    5: { cellWidth: 30 },
+                    6: { cellWidth: 30 },
+                }
+            });
+
+            pdf.addPage();
+            pdf.text('PO AMMENDMENTS VENDOR', 10, 10);
+            pdf.autoTable({ html: '#dtVendorList' });
+
+            pdf.addPage();
+            pdf.text('PREVIOUS CALL DETAILS', 10, 10);
+            pdf.autoTable({ html: '#dtPreviousCallList' });
+
+
+            // Save or print the PDF
+            pdf.save("Case_History_'" + CaseNo + "'.pdf");
+        }
+    });
+    function BindItemDataTable() {
+        var CASE_NO = $("#CASE_NO").val()
+        $("#dtItemList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            ajax: {// Ajax Filter
+                url: "@Url.Action("GetCaseHistoryItem", "CallMarkedOnline")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "CASE_NO": CASE_NO
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+
+            columns: [// Columns Setups
+                { data: "ITEM_SRNO" },
+                { data: "ITEM_DESC" },
+                { data: "QTY" },
+                { data: "PASSED" },
+                { data: "REJECTED" },
+                { data: "BALANCE_QTY" },
+                { data: "DELV_DATE" }
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function BindPOIREPSDataTable() {
+        var PO_NO = $("#PO_NO").val();
+        var PO_DT = $("#PO_DT").val();
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            ajax: {
+                url: "@Url.Action("GetPoIREPSList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "PO_NO": PO_NO,
+                        "PO_DT": PO_DT
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                { data: "SLNO" },
+                { data: "MA_NO" },
+                { data: "MA_DT" },
+                { data: "MA_FLD_DESCR" },
+                { data: "OLD_VALUE" },
+                { data: "NEW_VALUE" },
+                { data: "MA_STATUS" },
+                {
+                    data: "",
+                    render: function (data, type, row) {
+                        //var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/@Model.PO_YR/@Model.RLY_CD/@Model.PO_NO" + "_" + row.MA_NO + ".pdf";
+                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
+                        //html += '<a href="' + urlireps + '">View</a>';
+                        html += '</div>';
+                        return html;
+                    }
+                }
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function BindPOVendorDataTable() {
+        var CASE_NO = $("#CASE_NO").val();
+        $("#dtVendorList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            //dom: 'Bfrtip',
+            //buttons: [
+            //    'print'
+            //],
+            ajax: {
+                url: "@Url.Action("GetPoVendorList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "CASE_NO": CASE_NO
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                { data: "MA_SNO" },
+                { data: "MA_NO" },
+                { data: "MA_DT" },
+                { data: "MA_DESC" },
+                { data: "OLD_PO_VALUE" },
+                { data: "NEW_PO_VALUE" },
+                { data: "MA_STATUS" },
+                {
+                    data: "",
+                    render: function (data, type, row) {
+                        var urlvendor = "/RBS/Vendor/MA/" + row.CASE_NO + "_" + row.MA_NO + "_" + row.MA_DT + ".pdf";
+                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
+                        html += '<a href="' + urlvendor + '">View MA</a>';
+                        html += '</div>';
+                        return html;
+                    }
+                }
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function BindPreviousCallDataTable() {
+        var CASE_NO = $("#CASE_NO").val();
+        $("#dtPreviousCallList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            //dom: 'Bfrtip',
+            //buttons: [
+            //    'print'
+            //],
+            ajax: {
+                url: "@Url.Action("GetPreviousCallList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "CASE_NO": CASE_NO
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "CALL_DATE" },
+                { data: "LETTER_DATE" },
+                { data: "CALL_SNO" },
+                { data: "CALL_INSTALL_NO" },
+                { data: "IE_NAME" },
+                { data: "CALL_STATUS" },
+                { data: "REASON_REJECT" },
+                { data: "REASON" }
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function BindConsigneeComplaintDataTable() {
+        var VEND_CD = $("#VEND_CD").val();
+        $("#dtConsigneeComplaintsList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            //dom: 'Bfrtip',
+            //buttons: [
+            //    'print'
+            //],
+            ajax: {
+                url: "@Url.Action("GetConsigneeComplaintsList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "VEND_CD": VEND_CD
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "ITEM_DESC" },
+                { data: "REJ_MEMO_DATE" },
+                { data: "REJECTION_REASON" },
+                {
+                    data: "",
+                    render: function (data, type, row, meta) {
+                        return row.BK_NO + " & " + row.SET_NO;
+                    }
+                },
+                { data: "CONSIGNEE" },
+                { data: "JI_STATUS_DESC" }
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function BindRejectionVendorPlaceDataTable() {
+        var CASE_NO = $("#CASE_NO").val();
+        var VEND_CD = $("#VEND_CD").val();
+        $("#dtRejectionVendorPlaceList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            //dom: 'Bfrtip',
+            //buttons: [
+            //    'print'
+            //],
+            ajax: {
+                url: "@Url.Action("GetCaseHistoryRejectionVendorPlaceList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "CASE_NO": CASE_NO,
+                        "VEND_CD": VEND_CD
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "ITEM_DESC_PO" },
+                { data: "IC_DATE" },
+                { data: "REASON_REJECT" },
+                {
+                    data: "",
+                    render: function (data, type, row, meta) {
+                        return row.BK_NO + " & " + row.SET_NO;
+                    }
+                },
+                { data: "IE_NAME" },                
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+   
+</script>
+

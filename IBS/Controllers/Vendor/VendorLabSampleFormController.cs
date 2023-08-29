@@ -81,7 +81,7 @@ namespace IBS.Controllers
             return (dt1);
         }
         [HttpPost]
-        [Authorization("VendorLabSampleForm", "LabSampleInfo", "add")]
+        [Authorization("VendorLabSampleForm", "LabSampleInfo", "edit")]
         public JsonResult SaveDataDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();

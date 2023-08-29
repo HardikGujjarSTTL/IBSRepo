@@ -1,14 +1,14 @@
 ﻿@model IBS.Models.LabSamplePaymentRptModel
 
 @{
-    ViewData["Title"] = "Lab Sample Info Details";
+    ViewData["Title"] = "LAB SAMPLE INFO DETAILS";
 }
 
-
+<div>
     <div class="list-inner">
         <div class="tast-list">
             <h2>
-                Lab Sample Info Details
+                LAB SAMPLE INFO DETAILS
             </h2>
         </div>
 
@@ -16,50 +16,43 @@
     <div class="accordion-body">
         <div class="row my-0">
             
-            <div class="col-md-12 mb-3">
+            <div class="col-md-3 mb-3">
                 <label><b>Complaints Recieved in The Period</b></label>
             </div>
             <div class="col-md-3 mb-3">
-            <label for="dtfrom">From Date</label>
-            <input class="input datepicker form-control" id="dtfrom" />
-            
+                <label for="PropertyId">From Date</label>
+                <input class="input datepicker" id="dtfrom" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
                 <span class="text-danger"></span>
             </div>
             <div class="col-md-3 mb-3">
-            <label for="dtto">To date</label>
-                <input class="input datepicker form-control" id="dtto" />
-            
+                <label for="PropertyId">To date</label>
+                <input class="input datepicker" id="dtto"  style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
                 <span class="text-danger"></span>
             </div>
             
         </div>
-        <div class="row my-0 d-flex align-items-end">
+        <div class="row my-0">
 
             
             <div class="col-md-3 mb-3">
                 <label for="PropertyId">Report Status</label>
-                @Html.DropDownListFor(model => model.ReportStatus, new SelectList(IBS.Models.Common.ReportStatus() , "Value", "Text"),new { @id = "ddlstatus" })
-
+                @Html.DropDownListFor(model => model.ReportStatus, new SelectList(IBS.Models.Common.ReportStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
+                <span class="fa fa-caret-down" style="position: absolute; right: 35px; top: 952px; transform: translateY(-50%); pointer-events: none;"></span>
             </div>
-            <div class="col-md-3 mb-3">
-            <label for="rb1">
+            <div class="col-md-3 mb-3" style="margin-top:3%">
+                <label for="PropertyId">Sample Receive Date Wise</label>
                 <input type="radio" name="radioGroup" id="rb1" />
-                    Sample Receive Date Wise
-            </label>
                 <span class="text-danger"></span>
             </div>
-            <div class="col-md-5 mb-3">
-            <label for="rb2">
+            <div class="col-md-5 mb-3" style="margin-top:3%">
+                <label for="PropertyId">Sample Approved By Finance Date Wise</label>
                 <input type="radio" name="radioGroup" id="rb2" />
-                Sample Approved By Finance Date Wise
-                
-            </label>
                 <span class="text-danger"></span>
             </div>
         </div>
         
     </div>
-    <div class="savenext-btn">
+    <div class="savenext-btn" style="margin-right:50%;">
         <button type="button" class="save-btn active" onclick="show();">Submit</button>
     </div>
     <div id="hide" style="display:none;">
@@ -101,7 +94,7 @@
         </div>
     </section>
     </div>
-
+</div>
 
 @section scripts{
 

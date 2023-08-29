@@ -1,0 +1,132 @@
+﻿@model IBS.Models.ConsigneePurchaseModel
+
+@{
+    ViewData["Title"] = "Manage Consignee/Purchase Master";
+    string clsView = "";
+    if (Model.ConsigneeCd > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Consignee/Purchase Master</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ConsigneePurchase" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneePurchase" asp-action="ConsigneePurchaseDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmConsigneePurchaseDetails">
+            <input type="hidden" asp-for="ConsigneeCd" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee Type</label>
+                        @Html.DropDownListFor(Model => Model.ConsigneeType, new SelectList(@ViewBag.ConsigneeType , "Value", "Text"))
+                        @*<span asp-validation-for="ConsigneeType" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Railway/Purchase</label>
+                        <input type="text" class="input" asp-for="FName" maxlength="30" style="margin-bottom:5px;">
+                        @Html.DropDownListFor(Model => Model.ConsigneeRailwayCD, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"))
+                        @*<span asp-validation-for="ConsigneeFirm" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee Designation</label>
+                        <input type="text" class="input" asp-for="CSName" maxlength="30" style="margin-bottom:5px;">
+                        @Html.DropDownListFor(Model => Model.ConsigneeDesig, new SelectList(IBS.Models.Common.GetConsigneeDesignation() , "Value", "Text"))
+                        @*<span asp-validation-for="ConsigneeDesig" class="text-danger"></span>*@
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Department</label>
+                        <input type="text" class="input" asp-for="ConsigneeDept" maxlength="30">
+                        @*<span asp-validation-for="ConsigneeDept" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">City</label>
+                        @*<span style="display:flex;display:none;">
+                        <input type="text" class="input" id="txtCityCode" maxlength="10" style="width:55%;margin-right:5px;    margin-bottom: 5px;">
+                        <button type="button" id="btnCity" class="reset-btn" style="width:38%;margin-right:5px;margin-bottom: 5px;">Select City</button>
+                        </span>*@
+                        @Html.DropDownListFor(Model => Model.ConsigneeCity, new SelectList(IBS.Models.Common.GetConsigneeCity() , "Value", "Text"),"--Select--", new { @class = "select2" })
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">State</label>
+                        <input type="text" asp-for="ConsigneeState" maxlength="30" readonly>
+                        <span asp-validation-for="ConsigneeState" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Address 1</label>
+                        <textarea type="text" class="input" asp-for="ConsigneeAdd1" maxlength="100"></textarea>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Address 2</label>
+                        <textarea type="text" asp-for="ConsigneeAdd2" maxlength="100"></textarea>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">GSTIN No.</label>
+                        <input type="text" asp-for="GstinNo" maxlength="30">
+                        <span asp-validation-for="GstinNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PIN Code</label>
+                        <input type="text" class="input" asp-for="PinCode" maxlength="100">
+                        <span asp-validation-for="PinCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(".select2").select2();
+        $(document).ready(function () {
+            $("#btnCity").click(function () {
+                var CityCode = $("#txtCityCode").val();
+                BindDropDownCity(CityCode);
+            });
+
+            $("#ConsigneeCity").change(function () {
+                var ajaxUrl = "@Url.Action("GetState")";
+                var citycd = $("#ConsigneeCity").val();
+                $.ajax({
+                    url: "@Url.Action("GetState")",
+                    type: 'POST',
+                    data: { City_CD: citycd },
+                    success: function (response) {
+                        $("#ConsigneeState").val(response);
+                    }
+                });
+            })
+        });
+        function Save() {
+            var gststate = $("#GstinNo").val().substring(0, 2);
+            var statecd = $("#ConsigneeState").val().substring(0, 2);
+            if (gststate != statecd) {
+                alert("Kindly enter the GST No according to the State Entered!!!");
+            }
+            if ($("#frmConsigneePurchaseDetails").valid()) {
+                $("#frmConsigneePurchaseDetails").submit();
+            }
+            else {
+                alert("Form not Submited");
+            }
+        }
+
+    </script>
+}

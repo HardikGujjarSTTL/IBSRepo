@@ -41,6 +41,8 @@ namespace IBS.Helper
             MasterItemDoc = 9,
             [Description("/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
+            [Description("/Files/AdministratorPurchaseOrder")]
+            AdministratorPurchaseOrder = 11,
             [Description("/Online_Comp_Document")]
             OnlineComplaints = 11,
             [Description("/Consignee_Comp_Document")]
@@ -58,6 +60,7 @@ namespace IBS.Helper
             TechnicalReferences = 8,
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
+            AdministratorPurchaseOrder =13,
             OnlineComplaints=11,
             ConsigneeComplaints = 12,
         }
@@ -75,6 +78,7 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
+            Upload_a_scanned_copy_of_Purchase_Order = 54,
             Upload_Rejection_Memo=50,
             Upload_JI_Case=51,
             Upload_JI_Report=52,

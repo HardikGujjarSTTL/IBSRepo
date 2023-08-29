@@ -1208,7 +1208,7 @@ font-weight: 600;}
 .navbar-static-side ul li .nav-second-level li { border-bottom: 1px solid; }
 .navbar-static-side ul li .nav-second-level li:last-child { border-bottom:0 none; }
 .navbar-static-side ul li .nav-second-level li a { padding: 15px 15px 15px 40px; color: #efefef; position:relative; }
-.navbar-static-side ul li .nav-second-level li a .fa-angle-right{ position: absolute; left: 20px; top: 18px;}
+.navbar-static-side ul li .nav-second-level li a .fa-angle-double-right{ position: absolute; left: 20px; top: 18px;}
 /*.navbar-static-side ul li .nav-second-level li a span.submenu-title { margin-left: 10px; }*/
 .navbar-static-side ul li.sidebar-heading { padding: 5px 15px; }
 .navbar-static-side ul li.sidebar-heading h4 { font-family: 'Oswald'; font-size: 18px; font-weight: bold; }
@@ -1246,9 +1246,9 @@ font-weight: 600;}
 .nav .open>a, .nav .open>a:hover, .nav .open>a:focus {border-color:#018da8 }
 .navbar-static-side ul li, .navbar-static-side ul li .nav-second-level li { border-bottom-color:rgba(0,0,0,0.3); display:block; width:100%; }
 .navbar-static-side ul li.active a, .navbar-static-side ul li a:hover { background-color: #008B29; position:relative;}
-/*.navbar-static-side ul li.active a:after {
+.navbar-static-side ul li.active a:after {
 	left: 100%;	top: 50%;	border: solid transparent;	content: "";	height: 0;	width: 0;	position: absolute;	pointer-events: none;	border-color: rgba(0, 139, 41, 0);
-	border-left-color: #008B29;	border-width: 10px;	margin-top: -10px;}*/
+	border-left-color: #008B29;	border-width: 10px;	margin-top: -10px;}
 .navbar-static-side ul li .nav-second-level li a:after{ display:none;}
 .navbar-static-side ul li .nav-second-level li.active a, .navbar-static-side ul li .nav-second-level li:hover a, .navbar-static-side ul li .nav-second-level li:focus a, .navbar-static-side ul li .nav-second-level li a.activeLink { color: #f2b604; }
 .navbar-static-side ul li .nav-second-level li a, .navbar-static-side ul li .nav-second-level { background: #194928;}
@@ -1491,10 +1491,3 @@ input[type="datetime-local"]{ height:43px;}
 .navbar-static-side ul li a{ padding:15px 35px;}
 
 .actionCenter {text-align: center;}
-.select2-container .select2-selection--single{ height:43px; border-color:#d1d1d1; border-radius:6px}
-.select2-container--default .select2-selection--single .select2-selection__arrow{ height:41px; line-height:41px;}
-.select2-container--default .select2-selection--single .select2-selection__arrow{ color:#838d94;}
-
-.acess404{ text-align:center;}
-.smlBtn{ padding:10px;}
-.h2Label{font-weight:600;font-family:'Poppins', sans-serif;font-size:24px; margin:0; padding:0;}

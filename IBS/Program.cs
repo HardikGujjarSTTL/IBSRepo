@@ -91,6 +91,7 @@ builder.Services.AddScoped<IAccountCodesDirectory, AccountCodesDirectory>();
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IMasterItemsListForm, MasterItemsListForm>();
 builder.Services.AddScoped<IConsignee_PMForm, Consignee_PMForm>();
+builder.Services.AddScoped<IConsigneePurchaseRepository, ConsigneePurchaseRepository>();
 builder.Services.AddScoped<IInspectionEngineers, InspectionEngineers>();
 builder.Services.AddScoped<I_IE_CO_FormRepository, IE_CO_FormRepository>();
 builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
@@ -152,6 +153,7 @@ builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
 builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
 
 var app = builder.Build();
 

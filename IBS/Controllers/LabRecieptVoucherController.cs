@@ -42,7 +42,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("LabRecieptVoucher", "Index", "add")]
+        [Authorization("LabRecieptVoucher", "Index", "edit")]
         public IActionResult VoucherDetailsSave(LabRecieptVoucherModel model)
         {
             try
@@ -72,7 +72,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("LabRecieptVoucher", "Index", "add")]
+        [Authorization("LabRecieptVoucher", "Index", "edit")]
         public ActionResult ButtonClick(string AccCD, string txtBPO, string lstBPO, string txtCSNO)
         {
             LabRecieptVoucherModel bPOmodel = new LabRecieptVoucherModel();

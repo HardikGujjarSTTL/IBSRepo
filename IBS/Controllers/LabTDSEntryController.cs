@@ -36,7 +36,7 @@ namespace IBS.Controllers
             return Json(model);
         }
         [HttpPost]
-        [Authorization("LabTDSEntry", "LabTDSEntry", "add")]
+        [Authorization("LabTDSEntry", "LabTDSEntry", "edit")]
         public JsonResult SaveTDSEntry(string RegNo, string TDSAmt, string TDSDate)
         {
 

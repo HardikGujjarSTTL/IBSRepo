@@ -6,16 +6,16 @@
 <style>
     #showPayment {
         max-height: 600px;
-         /* Set the maximum height for the scrolling area */ overflow-y: auto;
-         /* Enable vertical scrolling if content exceeds max-height */
+        / Set the maximum height for the scrolling area / overflow-y: auto;
+        / Enable vertical scrolling if content exceeds max-height /
     }
 
     tr:nth-child(even) {
         background-color: #f0f8ff;
-        /* Light Blue */
+        / Light Blue /
     }
 
-    /* Style for table cells */
+    / Style for table cells /
     td {
         height: 50px;
         padding: 10px;
@@ -27,25 +27,25 @@
         width: 100%;
         border-collapse: collapse;
         border-top: 2px solid #b0c4de;
-         /* Add top border */ background-color: #f0f8ff;
+        / Add top border / background-color: #f0f8ff;
         margin-bottom: 20px;
-         /* Add margin at the bottom for spacing */
+        / Add margin at the bottom for spacing /
     }
 
-    /* Style for table cells */
+    / Style for table cells /
     td {
         height: 50px;
-        /* Adjust the height of table cells */  padding: 5px;
+        / Adjust the height of table cells / padding: 5px;
         vertical-align: top;
     }
 
-    /* Style for labels */
+    / Style for labels /
     label {
         display: block;
-         /* Make labels block-level to occupy the whole cell width */ font-weight: bold;
+        / Make labels block-level to occupy the whole cell width / font-weight: bold;
     }
 
-     /* Style for input fields */
+    / Style for input fields /
     input[type="text"],
     input[type="date"] {
         width: 100%;
@@ -54,28 +54,28 @@
         border-radius: 6px;
         padding: 5px;
         box-sizing: border-box;
-         /* Ensure the padding is included in the width */
+        / Ensure the padding is included in the width /
     }
 
-     /* Style for error message */ 
+    / Style for error message /
     .text-danger {
         color: red;
         margin-left: 6%;
     }
 
-    /* Style for left-aligned button */
+    / Style for left-aligned button /
     .left-button {
         float: left;
         margin-right: 10px;
     }
 
-     /* Style for right-aligned button */ 
+    / Style for right-aligned button /
     .right-button {
         float: right;
         margin-left: 10px;
     }
 
-    /* Clear floating elements */
+    / Clear floating elements /
     .clearfix::after {
         content: "";
         display: table;
@@ -98,13 +98,13 @@
         / Enable vertical scrollbar if table exceeds height /
     }
 
-     /* Set table width to 100% and disable horizontal scrollbar */
+    / Set table width to 100% and disable horizontal scrollbar /
     #searchpayment {
         width: 100%;
         table-layout: fixed;
     }
 
-    /* Style table header cells */
+    / Style table header cells /
     #searchpayment th {
         background-color: #f2f2f2;
         border: 1px solid #dddddd;
@@ -112,14 +112,14 @@
         text-align: left;
     }
 
-    /* Style table body cells */
+    / Style table body cells /
     #searchpayment td {
         border: 1px solid #dddddd;
         padding: 8px;
         text-align: left;
     }
 
-    /* Add custom scrollbar style for the table section */
+    / Add custom scrollbar style for the table section /
     .table-section::-webkit-scrollbar {
         width: 8px;
     }
@@ -133,9 +133,9 @@
             background-color: #555;
         }
 </style>
-<section>
+<section class="table-section">
     <div class="task-listinput">
-        
+        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">
                 <div class="accordion-body">
                     <div class="row my-0">
@@ -190,7 +190,7 @@
                     </div>
                 </div>
             </form>
-        
+        </div>
     </div>
 </section>
 

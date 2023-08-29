@@ -45,10 +45,8 @@
                 <div class="row my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Bill Paying Officer/Paying Authority</label>
-                        <div class="row">
-                            <div class="col-lg-8"><input type="text" class="input" asp-for="SBPO"></div>
-                            <div class="col-lg-4"><button type="button" class="button smlBtn" onclick="SearchBPO();">Search</button></div>
-                        </div>                        
+                        <input type="text" class="input" asp-for="SBPO" style="width: 61%;">
+                        <button type="button" class="save-btn active" onclick="SearchBPO();">Search BPO</button>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
@@ -61,11 +59,9 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Consignee</label>
-                        <div class="row">
-                            <div class="col-lg-8"><input type="text" class="input" asp-for="ConsigneeSearch"></div>
-                            <div class="col-lg-4"><button type="button" class="button smlBtn" onclick="SearchConsignee();">Search</button></div>
-                        </div>
+                        <label for="Reference" style="width: 100%;">Consignee</label>
+                        <input type="text" class="input" asp-for="ConsigneeSearch" style="width: 46%;">
+                        <button type="button" class="save-btn active" onclick="SearchConsignee();">Search Consignee</button>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
