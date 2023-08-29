@@ -16,7 +16,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Controllers
 {
-    public class ConsigneeComplaintsController : Controller
+    public class ConsigneeComplaintsController : BaseController
     {
         private readonly IConsigneeComplaintsRepository consigneeComplaints;
         public ConsigneeComplaintsController(IConsigneeComplaintsRepository _ConsigneeComplaintsRepository)
@@ -67,29 +67,107 @@ namespace IBS.Controllers
         }
 
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult ComplaintsDetailsSave(ConsigneeComplaints model)
-        //{
-        //    try
-        //    {
-        //        string msg = "Complaints Inserted Successfully.";
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("ConsigneeComplaints", "Index", "edit")]
+        public IActionResult ComplaintsDetailsSave(ConsigneeComplaints model)
+        {
+            try
+            {
+                string msg = "Complaints Inserted Successfully.";
 
-        //        //if (model.ComplaintId > 0)
-        //        //{
-        //        //    msg = "Complaints Updated Successfully.";
-        //        //}
-        //        int i = consigneeComplaints.ComplaintsDetailsInsertUpdate(model);
-        //        if (i > 0)
-        //        {
-        //            return Json(new { status = true, responseText = msg });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //Common.AddException(ex.ToString(), ex.Message.ToString(), "Role", "RoleDetailsSave", 1, GetIPAddress());
-        //    }
-        //    return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        //}
+                if (model.ComplaintId != null && model.ComplaintId != "")
+                {
+                    msg = "Complaints Updated Successfully.";
+                }
+                string i = consigneeComplaints.ComplaintsDetailsInsertUpdate(model);
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneeComplaints", "ComplaintsDetailsSave", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("ConsigneeComplaints", "Index", "edit")]
+        public IActionResult ComplaintSaveChoice(ConsigneeComplaints model)
+        {
+            try
+            {
+                string msg = "";
+
+                if (model.ComplaintId != null && model.ComplaintId != "")
+                {
+                    msg = "Data Updated Successfully.";
+                }
+                string i = consigneeComplaints.JIChoice(model);
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneeComplaints", "ComplaintSaveChoice", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("ConsigneeComplaints", "Index", "edit")]
+        public IActionResult ComplaintCancelJI(ConsigneeComplaints model)
+        {
+            try
+            {
+                string msg = "";
+
+                if (model.ComplaintId != null && model.ComplaintId != "")
+                {
+                    msg = "JI Cancel Successfully.";
+                }
+                string i = consigneeComplaints.CancelJI(model);
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneeComplaints", "ComplaintCancelJI", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("ConsigneeComplaints", "Index", "edit")]
+        public IActionResult JIOutCome(ConsigneeComplaints model) 
+        {
+            try
+            {
+                string msg = "";
+
+                if (model.ComplaintId != null && model.ComplaintId != "")
+                {
+                    msg = "Data Save Successfully.";
+                }
+                string i = consigneeComplaints.JIOutCome(model);
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneeComplaints", "ComplaintCancelJI", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
     }
 }

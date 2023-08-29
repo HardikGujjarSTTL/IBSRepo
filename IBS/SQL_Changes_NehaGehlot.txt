@@ -334,6 +334,17 @@ ALTER TABLE temp_online_complaints
 ALTER TABLE temp_online_complaints 
     MODIFY CO_CD  NUMBER(6,0);
 
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CO_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY UOM_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY JI_IE_CD  NUMBER(6,0);
 
 
 ========================================================================================================================================

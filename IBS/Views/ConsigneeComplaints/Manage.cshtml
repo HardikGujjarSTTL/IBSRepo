@@ -16,13 +16,22 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneeComplaints" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmConsigneeDetails">
             <input type="hidden" asp-for="ComplaintId" />
             <div class="accordion-body">
                 <div class="row my-0">
+                    <input asp-for="ITEM_SRNO_PO" hidden />
+                    <input asp-for="ie_cd" hidden />
+                    <input asp-for="ie_co_cd" hidden />
+                    <input asp-for="UserId" hidden />
+                    <input asp-for="VendCd" hidden />
+                    <input asp-for="Remarks" hidden />
+                    <input asp-for="ConsigneeCd" hidden />
+                    <input asp-for="COMP_RECV_REGION" hidden />
+                    <input asp-for="uom_cd" hidden />
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Region Where Complaint is Received</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
+                        <input type="text" class="input" ASP-FOR="InspRegion" readonly="true" maxlength="300" />
                         <span asp-validation-for="InspRegion" class="text-danger"></span>
                     </div>
 
@@ -40,19 +49,19 @@
 
                     <div class="col-md-4 mb-4">
                         <label for="Reference">	Book No.<span class="text-danger" style="font-size:smaller"></span></label>
-                        <input type="text" class="input" asp-for="BK_NO" mode maxlength="300" />
+                        <input type="text" class="input" asp-for="BK_NO" readonly="true" mode maxlength="300" />
                         <span asp-validation-for="BK_NO" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Set No.</label>
-                        <input type="text" class="input" asp-for="SET_NO" maxlength="300" />
+                        <input type="text" class="input" asp-for="SET_NO" readonly="true" maxlength="300" />
                         <span asp-validation-for="SET_NO" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Inspection By</label>
-                        <input type="text" class="input" asp-for="ie_name" maxlength="300" />
+                        <input type="text" class="input" asp-for="ie_name" readonly="true"  maxlength="300" />
                         <span asp-validation-for="ie_name" class="text-danger"></span>
                     </div>
 
@@ -64,7 +73,7 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway</label>
-                        <input type="text" class="input" asp-for="Railway" maxlength="300" />
+                        <input type="text" class="input" asp-for="Railway" readonly="true" maxlength="300" />
                         <span asp-validation-for="Railway" class="text-danger"></span>
                     </div>
 
@@ -100,7 +109,7 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Rejection Memo Date</label>
-                        <input type="text" class="input"asp-for="RejMemoDt" maxlength="300" />
+                        <input type="text" class="input datepicker"asp-for="RejMemoDt" maxlength="300" />
                         <span asp-validation-for="RejMemoDt" class="text-danger"></span>
                     </div>
 
@@ -138,24 +147,35 @@
                         <input type="text" class="input" asp-for="RejectionReason" maxlength="300" />
                         <span asp-validation-for="RejectionReason" class="text-danger"></span>
                     </div>
+                   
+                </div>
+
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" id="btnsave">Save</button>
+                </div>
+            </div>
+
+            
+            <div class="accordion-body">
+                <div class="row my-0">
                     @if (ViewBag.Showcomplaint)
                     {
                         <div class="col-md-2 mb-2">
-                            <label for="ComplaintFile"> Upload JI Case (TIF or PDF Format Only)</label>
-                            <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                            <label for="File">Upload JI Case (TIF or PDF Format Only)</label>
+                            <input type="file" id="file" name="file" accept=".pdf" />
                         </div>
                         <div class="col-md-2 mb-2">
                             <label for="ComplaintFile">Upload REJECTION MEMO(TIF or PDF Format Only)</label>
                             <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
                         </div>
-                        <div class="col-md-2 mb-2" id="inspreq">
-                            <label>Joint Inspection Required</label>
+                        <div class="col-md-2 mb-2" id="jointinsp">
+                            <label for="Inspectionrequired">Joint Inspection Required</label>
                             @Html.DropDownListFor(model => model.AcceptRejornot, new SelectList(IBS.Models.Common.Inspectionrequired() , "Value", "Text"),"--Select--", new { id = "JointInspectionrequired" })
                         </div>
 
-                        <div class="col-md-2 mb-3">
+                        <div class="col-md-2 mb-3" id="inspnewregion">
                             <label for="InspRegion">Inspection Region</label>
-                            @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                            @Html.DropDownListFor(model => model.JIInspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
                         </div>
                         <div class="col-md-2 mb-2" id="JointInspection">
                             <label for="Jointisp">Joint Inspection Engineer</label>
@@ -166,47 +186,41 @@
                             <input type="text" class="input datepicker" asp-for="JIDate" readonly="true" id="PoDt">
                         </div>
                     }
-                    <div class="col-md-2 mb-2" id="Remarks">
+
+                    <div class="col-md-2 mb-2" id="Remarkshide">
                         <label for="Jointisp">Remarks</label>
                         <select id="Jointisp" asp-for="Remarks" class="form-control"></select>
                     </div>
+
                     <div class="col-md-2 mb-2" id="NOJIReason">
-                        <label>Joint Inspection Engineer</label>
-                        @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"))
+                        <label>Reason for NO JI</label>
+                        @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"), new { id = "NOJIReasons" })
                     </div>
                 </div>
-
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active Permission_Save">Save</button>
                     @if (ViewBag.Showcomplaint)
                     {
-                        <button type="button" class="save-btn active Permission_Save">Save Your Choice</button>
-                        <button type="button" class="save-btn active">Upload</button>
+                        <button type="button" class="save-btn active Permission_Save" id="btnsavechoice" onclick="btnsaveyourchoice()">Save Your Choice</button>
+                        <button type="button" class="save-btn active Permission_Save" id="btnCancelJI" onclick="btncancelJI()">Cancel Joint Inspection</button>
+                        <button type="button" class="save-btn active" onclick="btnupload()">Upload</button>
                     }
                 </div>
             </div>
-        </form>
-    </div>
-</section>
 
-<div class="tast-list" id="outcomehd">
-    <h2>OUTCOME OF JI</h2>
-</div>
-<br/>
-<section class="@clsView" id="outcomeji">
-     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
-            <div class="accordion-body">
+            <div class="tast-list" id="outcomehd">
+                <h2>OUTCOME OF JI</h2>
+            </div>
+            <div class="accordion-body" id="outcomeji">
                 <div class="row my-0">
                     <div class="col-md-1 mb-1">
                         <label for="Reference">JI Decided on</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input datepicker" ASP-FOR="JIDecided" maxlength="300" />
+                        <span asp-validation-for="JIDecided" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Status (Decision Taken by JI Committe)</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="Status" maxlength="300" />
+                        <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label>Defect Coded</label>
@@ -218,74 +232,61 @@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="reference">Date of JI Conclusion</label>
-                        <input type="text" class="input datepicker" asp-for="PO_DT" readonly="true" id="PoDt">
-                     </div>
+                        <input type="text" class="input datepicker" asp-for="JIDateConclusion">
+                    </div>
                     <div class="col-md-2 mb-2">
                         <label for="ComplaintFile">Upload JI Report (TIF or PDF Format Only)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
                     </div>
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save">Save Outcome of JI</button>
+                        <button type="button" class="save-btn active Permission_Save" id="JIoutcome" onclick="btnJIOutcome()">Save Outcome of JI</button>
                     </div>
                 </div>
             </div>
-        </form>
-     </div>
-</section>
-
-<div class="tast-list" id="finaldishd">
-    <h2>FINAL DISPOSAL</h2>
-</div>
-<br />
-<section class="@clsView" id="finaldisposal">
-     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="Contract" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContractDetails">
-            <div class="accordion-body">
+            <div class="tast-list" id="finaldishd">
+                <h2>FINAL DISPOSAL</h2>
+            </div>
+            <div class="accordion-body" id="finaldisposal">
                 <div class="row my-0">
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Root Cause Analysis</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <label for="Reference">Root Cause Analysis</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="RootCause" maxlength="300" />
+                        <span asp-validation-for="RootCause" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2" id="inspreq">
-                        <label>Classification</label>
+                        <label>	Checksheet</label>
                         @Html.DropDownListFor(model => model.Checksheet, new SelectList(IBS.Models.Common.Checksheet() , "Value", "Text"),"--Select--", new { id = "Checksheet" })
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Any Other</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="AnyOther" maxlength="300" />
+                        <span asp-validation-for="AnyOther" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Status of CAPA</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="StatusCAPA" maxlength="300" />
+                        <span asp-validation-for="StatusCAPA" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">D&AR Status (If Any)</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="DARStatus" maxlength="300" />
+                        <span asp-validation-for="DARStatus" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2" id="inspreq">
-                        <label>Classification</label>
+                        <label>D&AR Proposed</label>
                         @Html.DropDownListFor(model => model.DARPurpose, new SelectList(IBS.Models.Common.DARPurpose() , "Value", "Text"),"--Select--", new { id = "Checksheet" })
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Date of D&AR Issue</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input datepicker" ASP-FOR="DARDate" maxlength="300" />
+                        <span asp-validation-for="DARDate" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Final Remarks/Action</label>
-                        <input type="text" class="input" ASP-FOR="InspRegion" maxlength="300" />
-                        <span asp-validation-for="InspRegion" class="text-danger"></span>
+                        <input type="text" class="input" ASP-FOR="FinalRemarks" maxlength="300" />
+                        <span asp-validation-for="FinalRemarks" class="text-danger"></span>
                     </div>
-                    
+
                     <div class="col-md-2 mb-2">
                         <label for="ComplaintFile">Upload Tech Ref (PDF Format Only)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
@@ -309,7 +310,8 @@
             $("#outcomehd").hide();
             $("#finaldishd").hide();
             $("#NOJIReason").hide();
-            $("#Remarks").hide();
+            $("#Remarkshide").hide();
+            $("#btnCancelJI").hide();
         });
 
         $("#InspRegionDropdown").change(function () {
@@ -347,16 +349,16 @@
                 $("#outcomehd").show();
                 $("#finaldishd").show();
                 $("#NOJIReason").hide();
-                $("#Remarks").hide();
+                $("#Remarkshide").hide();
             } else if (selectedValue == "N") {
                 $("#outcomeji").hide();
                 $("#finaldisposal").hide();
                 $("#outcomehd").hide();
                 $("#finaldishd").hide();
                 $("#NOJIReason").show();
-                $("#Remarks").hide();
+                $("#Remarkshide").hide();
             } else if (selectedValue == "C"){
-                $("#Remarks").show(); 
+                $("#Remarkshide").show();
                 $("#outcomeji").hide();
                 $("#finaldisposal").hide();
                 $("#outcomehd").hide();
@@ -364,5 +366,89 @@
                 $("#NOJIReason").hide();
             }
         });
+
+        $('#btnsave').on('click', function () {
+            var formData = new FormData($("#frmConsigneeDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("ComplaintsDetailsSave", "ConsigneeComplaints")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.redirectToIndex === true) {
+                        alert(response.alertMessage);
+                        $("#btnsave").hide();
+                        $("#btnCancelJI").hide();
+                    }
+                }
+            });
+        });
+
+        function btnsaveyourchoice(){
+            debugger
+            var formData = new FormData($("#frmConsigneeDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("ComplaintSaveChoice", "ConsigneeComplaints")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.redirectToIndex === true) {
+                        alert(response.alertMessage);
+                        $("#btnsave").hide();
+                        $("#btnsavechoice").hide();
+                        $("#btnCancelJI").show();
+                        $("#jointinsp").prop("disabled", true);
+                        $("#inspnewregion").prop("disabled", true);
+                    }
+                }
+            });
+        }
+
+        function btncancelJI(){
+            debugger
+            var formData = new FormData($("#frmConsigneeDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("ComplaintCancelJI", "ConsigneeComplaints")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.redirectToIndex === true) {
+                        alert(response.alertMessage);
+                        $("#btnsave").hide();
+                        $("#btnsavechoice").hide();
+                        $("#btnCancelJI").hide();
+                    }
+                }
+            });
+        }
+
+        function btnJIOutcome(){
+            var formData = new FormData($("#frmConsigneeDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("JIOutCome", "ConsigneeComplaints")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.redirectToIndex === true) {
+                        alert(response.alertMessage);
+                        $("#btnsave").hide();
+                        $("#btnsavechoice").hide();
+                        $("#btnCancelJI").hide();
+                        $("#JIoutcome").hide();
+                    }
+                }
+            });
+        }
     </script>
 }

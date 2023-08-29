@@ -8,6 +8,9 @@ namespace IBS.Interfaces
         public ConsigneeComplaints FindByCompID(string ComplaintId);
         DTResult<ConsigneeComplaints> GetDataListConsignee(DTParameters dtParameters);
         DTResult<ConsigneeComplaints> GetDataListComplaint(DTParameters dtParameters);
-        //int ComplaintsDetailsInsertUpdate(ConsigneeComplaints model);
+        string ComplaintsDetailsInsertUpdate(ConsigneeComplaints model);
+        string JIChoice(ConsigneeComplaints model);
+        string CancelJI(ConsigneeComplaints model);
+        string JIOutCome(ConsigneeComplaints model);
     }
 }

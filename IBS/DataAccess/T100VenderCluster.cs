@@ -9,7 +9,7 @@ public partial class T100VenderCluster
 
     public string DepartmentName { get; set; } = null!;
 
-    public byte? ClusterCode { get; set; }
+    public int? ClusterCode { get; set; }
 
     public string? UserId { get; set; }
 
