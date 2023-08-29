@@ -25,14 +25,22 @@ namespace IBS.Controllers
         
         public IActionResult LabInvoiceRpt()
         {
-
+            
             return View();
+        }
+        public IActionResult ManageLabInvoiceRpt(string RegNo)
+        {
+            ViewBag.RegNo = RegNo;
+            LabInvoiceModel dTResult = LabInvoiceRptRepository.Getdtreg(RegNo);
+            return View(dTResult);
         }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabInvoiceDownloadModel> dTResult = LabInvoiceRptRepository.GetLapInvoice(dtParameters, Regin);
+            DTResult<LabInvoiceModel> dTResult = LabInvoiceRptRepository.GetLapInvoice(dtParameters, Regin);
+           ViewBag.InvoiceNo = dTResult.data.ToList()[0].InvoiceNo.ToString();
+            ViewBag.InvoiceDt = dTResult.data.ToList()[0].InvoiceDt.ToString();
             return Json(dTResult);
         }
         
