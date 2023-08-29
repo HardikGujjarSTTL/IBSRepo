@@ -92,7 +92,7 @@
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="reference">Value</label>
-                        <input type="text" class="input" asp-for="UOMFactor" style="text-transform: uppercase;" readonly="readonly">
+                        <input type="text" class="input" asp-for="UOMFactor"  readonly="readonly">
                     </div>
                 </div>
                 <div class="row my-0">
@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Base Value</label>
-                        <input type="text" class="input" asp-for="BasicValue" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="BasicValue" >
                         <span asp-validation-for="BasicValue" class="text-danger"></span>
                     </div>
                 </div>
@@ -135,14 +135,14 @@
                     <div class="col-md-2 mb-3">
                         <div class="reference">
                             <label for="Name">Value</label>
-                            <input type="text" class="input" asp-for="ExcisePer" style="text-transform: uppercase;" onblur="excise();">
+                            <input type="text" class="input" asp-for="ExcisePer"  onblur="excise();">
                             <span asp-validation-for="ExcisePer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="reference">
                             <label for="Name">Excise</label>
-                            <input type="text" class="input" asp-for="Excise" style="text-transform: uppercase;" onblur="excise();">
+                            <input type="text" class="input" asp-for="Excise"  onblur="excise();">
                             <span asp-validation-for="Excise" class="text-danger"></span>
                         </div>
                     </div>
@@ -151,13 +151,13 @@
                     <div class="col-md-6 mb-3">
                         <div class="reference">
                             <label for="Name">GST/Sale Tax(%)</label>
-                            <input type="text" class="input" asp-for="SalesTaxPer" style="text-transform: uppercase;" onblur="saletax();">
+                            <input type="text" class="input" asp-for="SalesTaxPer"  onblur="saletax();">
                             <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Sale Tax</label>
-                        <input type="text" class="input" asp-for="SalesTax" style="text-transform: uppercase;" onblur="saletax();">
+                        <input type="text" class="input" asp-for="SalesTax"  onblur="saletax();">
                         <span asp-validation-for="SalesTax" class="text-danger"></span>
                     </div>
                 </div>
@@ -172,13 +172,13 @@
                     <div class="col-md-2 mb-3">
                         <div class="reference">
                             <label for="Name">Value</label>
-                            <input type="text" class="input" asp-for="OtChargePer" style="text-transform: uppercase;" onblur="othercharges();">
+                            <input type="text" class="input" asp-for="OtChargePer"  onblur="othercharges();">
                             <span asp-validation-for="OtChargeType" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Other Charges (AMT)</label>
-                        <input type="text" class="input" asp-for="OtherCharges" style="text-transform: uppercase;" onblur="saletax();">
+                        <input type="text" class="input" asp-for="OtherCharges"  onblur="saletax();">
                         <span asp-validation-for="OtherCharges" class="text-danger"></span>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Total Value</label>
-                        <input type="text" class="input" asp-for="Value" style="text-transform: uppercase;" onfocus="total();">
+                        <input type="text" class="input" asp-for="Value"  onfocus="total();">
                         <span asp-validation-for="Value" class="text-danger"></span>
                     </div>
                 </div>
@@ -195,20 +195,20 @@
                     <div class="col-md-6 mb-3">
                         <div class="reference">
                             <label for="Name">Last Date of Supply</label>
-                            <input type="text" class="datetime" asp-for="DelvDt" style="text-transform: uppercase;" readonly="readonly" onblur="cpy();">
+                            <input type="text" class="datetime" asp-for="DelvDt"  readonly="readonly" onblur="cpy();">
                             <span asp-validation-for="DelvDt" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Delivery Deadline Date</label>
-                        <input type="text" class="datetime" asp-for="ExtDelvDt" style="text-transform: uppercase;" readonly="readonly">
+                        <input type="text" class="datetime" asp-for="ExtDelvDt"  readonly="readonly">
                         <span asp-validation-for="ExtDelvDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Item Description</label>
-                        <textarea rows="4" asp-for="ItemDesc" style="text-transform: uppercase;"></textarea>
+                        <textarea rows="4" asp-for="ItemDesc" ></textarea>
                         <span asp-validation-for="ItemDesc" class="text-danger"></span>
                     </div>
                 </div>
