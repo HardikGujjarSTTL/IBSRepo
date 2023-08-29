@@ -1518,7 +1518,7 @@ namespace IBS.Models
                                      VendEmail = m.VendEmail,
                                      VendRemarks = m.VendRemarks,
                                      VendStatus = m.VendStatus,
-                                     VendStatusDtFr=m.VendStatusDtFr,
+                                     VendStatusDtFr = m.VendStatusDtFr,
                                      VendStatusDtTo = m.VendStatusDtTo
                                  }).FirstOrDefault();
 
@@ -1752,20 +1752,22 @@ namespace IBS.Models
 
         public static List<SelectListItem> GetConsigneeUsingConsignee(int ConsigneeSearch)
         {
-            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (ConsigneeSearch != 0)
+            {
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                var obj = (from of in context.V06Consignees
+                           where of.ConsigneeCd == ConsigneeSearch
+                           select of).ToList();
 
-            var obj = (from of in context.V06Consignees
-                       where of.ConsigneeCd == ConsigneeSearch
-                       select of).ToList();
-
-
-            List<SelectListItem> objdata = (from a in obj
-                                            select
-                                       new SelectListItem
-                                       {
-                                           Text = a.ConsigneeCd + "-" + a.Consignee,
-                                           Value = Convert.ToString(a.ConsigneeCd)
-                                       }).ToList();
+                objdata = (from a in obj
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.ConsigneeCd + "-" + a.Consignee,
+                          Value = Convert.ToString(a.ConsigneeCd)
+                      }).ToList();
+            }
             return objdata;
         }
 

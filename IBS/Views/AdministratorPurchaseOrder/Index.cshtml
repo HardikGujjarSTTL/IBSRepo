@@ -87,6 +87,8 @@
                             <th>Inspection By/PO Cancelled</th>
                             <th>View PO</th>
                             <th>View PO</th>
+                            <th>Edit PO Date</th>
+                            <th>View PO Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -97,7 +99,8 @@
         </div>
     </section>
 </div>
-
+<div id="EditPODateModal" class="modal" tabindex="-1" role="dialog">
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -159,6 +162,25 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
+                            var CaseNo = data.CASE_NO;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="OpenEditPODateModal(\'' + CaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CASE_NO;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "AdministratorPurchaseOrder")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
                             var id = data.CASE_NO;
                             var editUrl = '@Url.Action("Manage", "AdministratorPurchaseOrder")?CaseNo=' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
@@ -171,6 +193,7 @@
             });
         }
 
+        
         function FillRailwayCode() {
             var type='';
             if ($("#rdbRailway").is(":checked")) {
@@ -253,6 +276,49 @@
             }
             var RLY_CD=$("#dllRCode").val();
             window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?PO_TYPE=' + type + "&RLY_CD=" + RLY_CD;
+        }
+
+        function OpenEditPODateModal(CaseNo) {
+            $.ajax({
+                url: '@Url.Action("EditPODate", "AdministratorPurchaseOrder")?CaseNo=' + CaseNo,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#EditPODateModal").html("");
+                    $("#EditPODateModal").html(response);
+                    $("#EditPODateModal").modal('show');
+                }
+            });
+        }
+
+        function UpdatePODate() {
+            var CaseNo = $("#CaseNo").val();
+            var PoDtNew = $("#PoDtNew").val();
+            if (PoDtNew == "") {
+                ShowHideMsgNew(false, "Please add new PO Date.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("UpdatePODate", "AdministratorPurchaseOrder")?CaseNo=' + CaseNo + '&PoDtNew=' + PoDtNew,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    if (response.status) {
+                        $("#EditPODateModal").modal('hide');
+                        ShowHideMsgNew(res.status, response.responseText);
+                        InitializePOMasterDatatable();
+                    }
+                    else {
+                        ShowHideMsgNew(res.status, response.responseText);
+                    }
+                }
+            });
         }
     </script>
 }

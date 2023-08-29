@@ -326,7 +326,7 @@ namespace IBS.Repositories.Inspection_Billing
             par[0] = new OracleParameter("p_case_no", OracleDbType.Char, CaseNo, ParameterDirection.Input);
             par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GET_PO_DETAILS", par, 1);
+            var ds = DataAccessDB.GetDataSet("SP_GET_PO_DETAILSForAdministrator", par, 1);
             List<PO_MasterDetailListModel> model = new List<PO_MasterDetailListModel>();
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -353,20 +353,20 @@ namespace IBS.Repositories.Inspection_Billing
         }
         public bool RemovePODetails(string CaseNo, string ITEM_SRNO, int UserID)
         {
-            T82PoDetail POMastersDetails = (from pm in context.T82PoDetails
+            T15PoDetail POMastersDetails = (from pm in context.T15PoDetails
                                             where pm.CaseNo == CaseNo && pm.ItemSrno == Convert.ToByte(ITEM_SRNO)
                                             select pm).FirstOrDefault();
             if (POMastersDetails == null) { return false; }
 
             POMastersDetails.Isdeleted = Convert.ToByte(true);
-            POMastersDetails.Updatedby = Convert.ToInt32(UserID);
+            POMastersDetails.Updatedby = UserID.ToString();
             POMastersDetails.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
         public int GenerateITEM_SRNO(string CaseNo)
         {
-            int maxSrNo = (from pm in context.T82PoDetails
+            int maxSrNo = (from pm in context.T15PoDetails
                            where pm.CaseNo == CaseNo
                            select pm.ItemSrno).Max() + 1;
             return maxSrNo;
@@ -374,7 +374,7 @@ namespace IBS.Repositories.Inspection_Billing
         public PO_MasterDetailsModel FindPODetailsByID(string CASE_NO, string ITEM_SRNO)
         {
             PO_MasterDetailsModel model = new();
-            T82PoDetail POMastersDetails = context.T82PoDetails.Where(x => x.CaseNo == CASE_NO && x.ItemSrno == Convert.ToByte(ITEM_SRNO)).FirstOrDefault();
+            T15PoDetail POMastersDetails = context.T15PoDetails.Where(x => x.CaseNo == CASE_NO && x.ItemSrno == Convert.ToByte(ITEM_SRNO)).FirstOrDefault();
 
             if (POMastersDetails == null)
                 throw new Exception("Po Master Details Record Not found");
@@ -383,11 +383,11 @@ namespace IBS.Repositories.Inspection_Billing
                 model.CaseNo = POMastersDetails.CaseNo;
                 model.ItemSrno = POMastersDetails.ItemSrno;
                 model.PlNo = POMastersDetails.PlNo;
-                model.BpoCd = POMastersDetails.BpoCd;
-                model.Bpo = POMastersDetails.Bpo;
+                //model.BpoCd = POMastersDetails.BpoCd;
+                //model.Bpo = POMastersDetails.Bpo;
                 model.ItemDesc = POMastersDetails.ItemDesc;
                 model.ConsigneeCd = POMastersDetails.ConsigneeCd;
-                model.Consignee = POMastersDetails.Consignee;
+                //model.Consignee = POMastersDetails.Consignee;
                 model.Qty = POMastersDetails.Qty;
                 model.BasicValue = POMastersDetails.BasicValue;
                 model.Rate = POMastersDetails.Rate;
@@ -427,18 +427,18 @@ namespace IBS.Repositories.Inspection_Billing
         public int POMasterSubDetailsInsertUpdate(PO_MasterDetailsModel model)
         {
             int ItemSrno = 0;
-            var t82PoDetail = context.T82PoDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrno == model.ItemSrno).FirstOrDefault();
-            if (t82PoDetail == null)
+            var t15PoDetail = context.T15PoDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrno == model.ItemSrno).FirstOrDefault();
+            if (t15PoDetail == null)
             {
-                T82PoDetail obj = new T82PoDetail();
+                T15PoDetail obj = new T15PoDetail();
                 obj.CaseNo = model.CaseNo;
                 obj.ItemSrno = model.ItemSrno;
                 obj.PlNo = model.PlNo;
-                obj.BpoCd = model.BpoCd;
+                //obj.BpoCd = model.BpoCd;
                 obj.ItemDesc = model.ItemDesc;
                 obj.ConsigneeCd = model.ConsigneeCd;
-                obj.Bpo = model.Bpo;
-                obj.Consignee = model.Consignee;
+                //obj.Bpo = model.Bpo;
+                //obj.Consignee = model.Consignee;
                 obj.Qty = model.Qty;
                 obj.Rate = model.Rate;
                 obj.UomCd = model.UomCd;
@@ -459,43 +459,43 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.ExtDelvDt = model.ExtDelvDt;
                 obj.UserId = model.UserId;
                 obj.Datetime = DateTime.Now;
-                obj.Createdby = model.Createdby;
+                obj.Createdby = model.Createdby.ToString();
                 obj.Createddate = DateTime.Now;
-                context.T82PoDetails.Add(obj);
+                context.T15PoDetails.Add(obj);
                 context.SaveChanges();
                 ItemSrno = Convert.ToInt32(obj.ItemSrno);
             }
             else
             {
-                t82PoDetail.ItemDesc = model.ItemDesc;
-                t82PoDetail.PlNo = model.PlNo;
-                t82PoDetail.BpoCd = model.BpoCd;
-                t82PoDetail.Qty = model.Qty;
-                t82PoDetail.ConsigneeCd = model.ConsigneeCd;
-                t82PoDetail.Bpo = model.Bpo;
-                t82PoDetail.Consignee = model.Consignee;
-                t82PoDetail.UomCd = model.UomCd;
-                t82PoDetail.BasicValue = model.BasicValue;
-                t82PoDetail.Rate = model.Rate;
-                t82PoDetail.ExciseType = model.ExciseType;
-                t82PoDetail.ExcisePer = model.ExcisePer;
-                t82PoDetail.Excise = model.Excise;
-                t82PoDetail.SalesTaxPer = model.SalesTaxPer;
-                t82PoDetail.SalesTax = model.SalesTax;
-                t82PoDetail.DiscountType = model.DiscountType;
-                t82PoDetail.DiscountPer = model.DiscountPer;
-                t82PoDetail.Discount = model.Discount;
-                t82PoDetail.OtChargePer = model.OtChargePer;
-                t82PoDetail.OtChargeType = model.OtChargeType;
-                t82PoDetail.OtherCharges = model.OtherCharges;
-                t82PoDetail.Value = model.Value;
-                t82PoDetail.DelvDt = model.DelvDt;
-                t82PoDetail.ExtDelvDt = model.ExtDelvDt;
-                t82PoDetail.UserId = model.UserId;
-                t82PoDetail.Updatedby = model.Updatedby;
-                t82PoDetail.Updateddate = DateTime.Now;
+                t15PoDetail.ItemDesc = model.ItemDesc;
+                t15PoDetail.PlNo = model.PlNo;
+                //t15PoDetail.BpoCd = model.BpoCd;
+                t15PoDetail.Qty = model.Qty;
+                t15PoDetail.ConsigneeCd = model.ConsigneeCd;
+                //t15PoDetail.Bpo = model.Bpo;
+                //t15PoDetail.Consignee = model.Consignee;
+                t15PoDetail.UomCd = model.UomCd;
+                t15PoDetail.BasicValue = model.BasicValue;
+                t15PoDetail.Rate = model.Rate;
+                t15PoDetail.ExciseType = model.ExciseType;
+                t15PoDetail.ExcisePer = model.ExcisePer;
+                t15PoDetail.Excise = model.Excise;
+                t15PoDetail.SalesTaxPer = model.SalesTaxPer;
+                t15PoDetail.SalesTax = model.SalesTax;
+                t15PoDetail.DiscountType = model.DiscountType;
+                t15PoDetail.DiscountPer = model.DiscountPer;
+                t15PoDetail.Discount = model.Discount;
+                t15PoDetail.OtChargePer = model.OtChargePer;
+                t15PoDetail.OtChargeType = model.OtChargeType;
+                t15PoDetail.OtherCharges = model.OtherCharges;
+                t15PoDetail.Value = model.Value;
+                t15PoDetail.DelvDt = model.DelvDt;
+                t15PoDetail.ExtDelvDt = model.ExtDelvDt;
+                t15PoDetail.UserId = model.UserId;
+                t15PoDetail.Updatedby = model.Updatedby.ToString();
+                t15PoDetail.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                ItemSrno = Convert.ToInt32(t82PoDetail.ItemSrno);
+                ItemSrno = Convert.ToInt32(t15PoDetail.ItemSrno);
             }
             return ItemSrno;
         }
@@ -623,6 +623,58 @@ namespace IBS.Repositories.Inspection_Billing
             context.T14PoBpos.Remove(t14PoBpo);
             context.SaveChanges();
             return true;
+        }
+
+        public ConsigneeModel FindConsigneeByID(string CaseNo, int Consignee_CD)
+        {
+            ConsigneeModel model = new();
+            T14PoBpo t14PoBpo = context.T14PoBpos.Where(x => x.CaseNo == CaseNo && x.ConsigneeCd == Consignee_CD).FirstOrDefault();
+
+            if (t14PoBpo == null)
+                throw new Exception("Consignee Not found");
+            else
+            {
+                model.CaseNo = t14PoBpo.CaseNo;
+                model.ConsigneeCd = t14PoBpo.ConsigneeCd;
+                model.BpoCd = t14PoBpo.BpoCd;
+                return model;
+            }
+        }
+
+        public string SaveConsignee(ConsigneeModel model)
+        {
+            string CaseNo = "";
+            T14PoBpo t14PoBpo = context.T14PoBpos.Where(x => x.CaseNo == model.CaseNo && x.ConsigneeCd == model.ConsigneeCd).FirstOrDefault();
+            if (t14PoBpo == null)
+            {
+                T14PoBpo obj = new T14PoBpo();
+                obj.CaseNo = model.CaseNo;
+                obj.ConsigneeCd = model.ConsigneeCd;
+                obj.BpoCd = model.BpoCd;
+                context.T14PoBpos.Add(obj);
+                context.SaveChanges();
+                CaseNo = obj.CaseNo;
+            }
+            else
+            {
+                t14PoBpo.BpoCd = model.BpoCd;
+                context.SaveChanges();
+                CaseNo = t14PoBpo.CaseNo;
+            }
+            return CaseNo;
+        }
+
+        public string UpdatePODate(AdministratorPurchaseOrderModel model)
+        {
+            string CaseNo = "";
+            var POMaster = context.T13PoMasters.Find(model.CaseNo);
+            if (POMaster != null)
+            {
+                POMaster.PoDt = model.PoDtNew;
+                context.SaveChanges();
+                CaseNo = POMaster.CaseNo;
+            }
+            return CaseNo;
         }
     }
 }

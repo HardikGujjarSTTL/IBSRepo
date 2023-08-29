@@ -41,6 +41,8 @@ namespace IBS.Helper
             MasterItemDoc = 9,
             [Description("/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
+            [Description("/Files/AdministratorPurchaseOrder")]
+            AdministratorPurchaseOrder = 11,
         }
 
         public enum DocumentCategory : int
@@ -54,6 +56,7 @@ namespace IBS.Helper
             TechnicalReferences = 8,
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
+            AdministratorPurchaseOrder =13,
         }
 
 
@@ -69,7 +72,7 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
-            
+            Upload_a_scanned_copy_of_Purchase_Order = 54,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int

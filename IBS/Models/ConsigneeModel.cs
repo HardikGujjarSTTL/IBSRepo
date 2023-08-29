@@ -5,6 +5,8 @@
         public string CaseNo { get; set; } = null!;
         public int ConsigneeCd { get; set; }
         public string? BpoCd { get; set; }
+
+        public string? Firm { get; set; }
     }
     public class ConsigneeListModel
     {

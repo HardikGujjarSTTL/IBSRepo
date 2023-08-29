@@ -16,9 +16,10 @@
         <a asp-action="Index" asp-controller="AdministratorPurchaseOrder" class="formBtn viewall-btn">View List</a>
     </div>
 </div>
-<section class="@clsView">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="AdministratorPurchaseOrder" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" id="hdnType" />
             <input type="hidden" id="hdnRailway" />
@@ -195,32 +196,53 @@
                         <label for="Reference">Place of Inspection</label>
                         <input type="text" class="input" id="txtMPOI" disabled="disabled">
                     </div>
+                    @if (Model.CaseNo != null)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_a_scanned_copy" />
+                        </div>
+                    }
                 </div>
+                
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtConsigneeDetails" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Consignee</th>
-                            <th>BPO</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+    @if (Model.CaseNo != null)
+    {
+        <div class="list-inner">
+            <div class="tast-list">
+                <h2>Consignee List</h2>
+            </div>
+            <div class="list-btn">
+                <a class="formBtn Permission_Add" onclick="OpenConsigneeModal('',0)"><span class="fa fa-plus"></span> Add New Consignee</a>
             </div>
         </div>
-    </section>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtConsigneeDetails" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Consignee</th>
+                                <th>BPO</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
 </section>
+
+<div id="AddEditConsigneeModal" class="modal" tabindex="-1" role="dialog">
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -234,15 +256,15 @@
                 $("#dvNotRailways12").css("display", "none");
             }
             if ('@Model' != null) {
-                if ('@Model.VendCd' != null) {
+                if ('@Model.VendCd' != null && '@Model.VendCd' != '') {
                     $("#txtVend").val('@Model.VendCd');
                     LoadVendor();
                     GetManufVEND();
                 }
-                if ('@Model.PoiCd' != null) {
+                if ('@Model.PoiCd' != null && '@Model.PoiCd' != '') {
                     SelectManufacturer();
                 }
-                if ('@Model.MPOI' != null) {
+                if ('@Model.MPOI' != null && '@Model.MPOI' != '') {
                     $("#txtMPOI").val('@Model.MPOI');
                 }
             }
@@ -263,6 +285,24 @@
                 dateFormat: 'dd-mm-yy',
             });
         });
+
+        function Save() {
+            if ($("#frmPOMaster").valid()) {
+                if ('@Model.CaseNo' != '') {
+                    SaveSingleDocuments("tab-1");
+                }
+                $("#frmPOMaster").submit();
+            }
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
+            }
+
+        };
 
         function InitializeConsigneeDatatable() {
             var CaseNo = $("#CaseNo").val();
@@ -304,8 +344,8 @@
                             var CASE_NO = data.CASE_NO;
                             var CONSIGNEE_CD = data.CONSIGNEE_CD;
                             var BPO_CD = data.BPO_CD;
-                            var editUrl = '@Url.Action("ManageConsignee", "AdministratorPurchaseOrder")?CASE_NO=' + CASE_NO + "&CONSIGNEE_CD" + CONSIGNEE_CD;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            //var editUrl = '@Url.Action("ManageConsignee", "AdministratorPurchaseOrder")?CASE_NO=' + CASE_NO + "&CONSIGNEE_CD" + CONSIGNEE_CD;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="OpenConsigneeModal(\'' + CASE_NO + '\',' + CONSIGNEE_CD + '); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '<a onclick="ConsigneeDelete(\'' + CASE_NO + '\',\'' + CONSIGNEE_CD + '\',\'' + BPO_CD + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
@@ -330,21 +370,6 @@
             }
         }
 
-
-        function Save() {
-            if ($("#frmPOMaster").valid()) {
-                $("#frmPOMaster").submit();
-            }
-        }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            if (res.status) {
-                window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
-            }
-
-        };
-
         function LoadVendor() {
             var txtVend = $("#txtVend").val();
             $("#dvVendCd").css("display", "block");
@@ -365,6 +390,7 @@
             });
         }
 
+        
         function Loadvendor_status() {
             var VendCd = $("#VendCd").val();
             $.ajax({
@@ -435,7 +461,7 @@
         function fill_manufacturer(id) {
             var VendCd = $("#VendCd").val();
             $.ajax({
-                url: '@Url.Action("GetVendor", "AdministratorPurchaseOrder")?id=' + VendCd,
+                url: '@Url.Action("GetVendors", "AdministratorPurchaseOrder")?id=' + VendCd,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -486,5 +512,100 @@
             GetManufVEND(PoiCd);
         }
 
+        function OpenConsigneeModal(CASE_NO, CONSIGNEE_CD) {
+            var RLY_CD = '@ViewBag.RLY_CD';
+            if (RLY_CD == "") {
+                ShowHideMsgNew(false, "Please fill Consignee.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("AddEditConsignee", "AdministratorPurchaseOrder")?CaseNo=' + CASE_NO + '&Consignee_CD=' + CONSIGNEE_CD + '&RLY_CD=' + RLY_CD,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#AddEditConsigneeModal").html("");
+                    $("#AddEditConsigneeModal").html(response);
+                    $("#AddEditConsigneeModal").modal('show');
+
+                }
+            });
+        }
+
+        function LoadConsignee() {
+            var ConsigneeCd = $("#txtSCon").val();
+            if (ConsigneeCd == "") {
+                ShowHideMsgNew(false, "Please fill BPO.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("getConsignee", "AdministratorPurchaseOrder")?ConsigneeCd=' + ConsigneeCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ConsigneeCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function LoadBPO() {
+            var SBPO = $("#txtSBPO").val();
+            $.ajax({
+                url: '@Url.Action("getBPO", "AdministratorPurchaseOrder")?SBPO=' + SBPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BpoCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function AddEditConsignee() {
+            var CaseNo = $("#CaseNo").val();
+            var ConsigneeCd = $("#ConsigneeCd").val();
+            var BpoCd = $("#BpoCd").val();
+            if (ConsigneeCd == "") {
+                ShowHideMsgNew(false, "Please select consignee.");
+                return;
+            }
+            if (BpoCd == "") {
+                ShowHideMsgNew(false, "Please select BPO.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SaveConsignee", "AdministratorPurchaseOrder")?CaseNo=' + CaseNo + '&ConsigneeCd=' + ConsigneeCd + '&BpoCd=' + BpoCd,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    if (response.status) {
+                        $("#AddEditConsigneeModal").modal('hide');
+                        ShowHideMsgNew(response.status, response.responseText);
+                        InitializeConsigneeDatatable();
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, response.responseText);
+                    }
+                }
+            });
+        }
     </script>
 }

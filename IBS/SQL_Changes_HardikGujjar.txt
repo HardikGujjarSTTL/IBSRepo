@@ -1210,3 +1210,26 @@ END;
 /
 
 =====================
+create or replace PROCEDURE SP_GET_PO_DETAILSForAdministrator(
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT p.CASE_NO, p.ITEM_SRNO, p.ITEM_DESC,
+           (C.CONSIGNEE_CD || '-' || nvl2(trim(C.CONSIGNEE_DESIG), trim(C.CONSIGNEE_DESIG) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_DEPT), trim(C.CONSIGNEE_DEPT) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_FIRM), trim(C.CONSIGNEE_FIRM) || '/', '') ||
+           NVL2(trim(C.CONSIGNEE_ADD1), trim(C.CONSIGNEE_ADD1) || '/', '') ||
+           NVL2(trim(D.LOCATION), trim(D.LOCATION) || ' : ' || trim(D.CITY), trim(D.CITY))) AS CONSIGNEE_NAME,
+           p.QTY, p.RATE, p.VALUE as DATAVALUE
+    FROM T15_PO_DETAIL p
+    JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE (p.IsDeleted is null or p.IsDeleted =0)  and p.CASE_NO = p_case_no
+    ORDER BY p.ITEM_SRNO;
+END;
+
+
+===================

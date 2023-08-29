@@ -65,6 +65,7 @@
 
         public string? WithServTax { get; set; }
         public string? MPOI { get; set; }
+        public DateTime? PoDtNew { get; set; }
 
     }
 

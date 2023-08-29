@@ -21,5 +21,8 @@ namespace IBS.Interfaces.Inspection_Billing
         string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO, string USER_ID);
         DTResult<ConsigneeListModel> GetConsigneeDetaisList(DTParameters dtParameters);
         bool ConsigneeDelete(string CASE_NO, string CONSIGNEE_CD,string BPO_CD);
+        public ConsigneeModel FindConsigneeByID(string CaseNo, int Consignee_CD);
+        string SaveConsignee(ConsigneeModel model);
+        string UpdatePODate(AdministratorPurchaseOrderModel model);
     }
 }
