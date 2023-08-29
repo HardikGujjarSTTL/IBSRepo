@@ -14,7 +14,7 @@
     <div class="task-listinput">
         @*<form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneeComplaints" asp-action="GetCombinedData" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaintDetails">*@
             <div class="accordion-body">
-                <div class="row my-0">
+                <div class="row my-0 d-flex align-items-end">
                     <div class="col-md-4 mb-3">
                         <label for="reference">Po/offer letter no.</label>
                         <input type="text" class="input" asp-for="PO_NO" maxlength="50" id="PoNo">
@@ -23,17 +23,15 @@
                     <div class="col-md-4 mb-3">
                         <label for="reference">Po Date</label>
                         <input type="text" class="input datepicker" asp-for="PO_DT" readonly="true" id="PoDt">
-                        <span asp-validation-for="PO_DT" class="text-danger"></span>
-
-                    </div>
-                    <div class="savenext-btn">
-                        @*<button type="button" class="save-btn active" onclick="Search();">search</button>*@
-
-                        <button type="button" class="save-btn active" id="btnSearch">search</button>
+                        </div>
+                    <div class="col-md-4 mb-3 alignBtn">
+                        <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="Search();">search</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        
+            </form>
         <section class="table-section">
             <div class="task-listinput">
                 <div class="dash-table">

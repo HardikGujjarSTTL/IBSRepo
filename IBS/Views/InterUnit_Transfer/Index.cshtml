@@ -1,8 +1,7 @@
 ﻿@model IBS.Models.InterUnit_TransferModel
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnit_Transfer" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmUnitTransfer">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnit_Transfer" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmUnitTransfer">
                 <div class="accordion-body">
                     <div class="row my-0">
 
@@ -137,7 +136,6 @@
                     </div>  
                 </div>
             </form>
-        </div>
     </div>
 </section>
 @section scripts{
