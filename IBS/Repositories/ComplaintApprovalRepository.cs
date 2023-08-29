@@ -173,7 +173,7 @@ namespace IBS.Repositories
                        existingComplaint.UserId = model.UserId;
                        existingComplaint.Datetime = DateTime.Now;
                    }
-
+                    msg = "Data Saved.";
                    context.SaveChanges();
                }
 
@@ -189,8 +189,8 @@ namespace IBS.Repositories
                     existingComplaint.NoJiReason = model.NoJIReason;
                     existingComplaint.UserId = model.UserId;
                     existingComplaint.Datetime = DateTime.Now;
-
                     context.SaveChanges();
+                    msg = "Data Saved.";
                 }
             }
 
@@ -263,6 +263,7 @@ namespace IBS.Repositories
                     tempOnlineComplaint.ComplaintId = ComplaintID;
                     context.SaveChanges();
                 }
+                msg = "Data Saved";
             }
             else
             {

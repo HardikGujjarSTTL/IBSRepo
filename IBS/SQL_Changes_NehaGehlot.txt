@@ -4,7 +4,7 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 =============================================================================================================================================
 By Neha Gehlot
 =============================================================================================================================================
-create or replace PROCEDURE GetConsigneeComplaintDetails (
+create or replace PROCEDURE GetConsigneeDetails (
     p_case_no IN VARCHAR2,
     p_bk_no IN VARCHAR2,
     p_set_no IN VARCHAR2,
@@ -85,11 +85,11 @@ END;
 ===============================================================================================================================================
 
 create or replace PROCEDURE GetFilterNCR(
-    p_case_no IN VARCHAR2,
-    p_nc_no IN VARCHAR2,
-    p_lstIE IN VARCHAR2,
-    p_frmDt IN DATE DEFAULT NULL,
-    p_toDt IN DATE DEFAULT NULL,
+    ---p_case_no IN VARCHAR2,
+    --p_nc_no IN VARCHAR2,
+    p_lstIE_no IN VARCHAR2,
+    p_frmDt_dt IN DATE DEFAULT NULL,
+    p_toDt_dt IN DATE DEFAULT NULL,
     p_result_cursor OUT SYS_REFCURSOR
 )
 IS
@@ -112,10 +112,10 @@ BEGIN
         JOIN T03_CITY T03 ON T06.CONSIGNEE_CITY = T03.CITY_CD
         JOIN T41_NC_MASTER T41 ON T20.BK_NO = T41.BK_NO AND T20.SET_NO = T41.SET_NO AND T20.CONSIGNEE_CD = T41.CONSIGNEE_CD
     WHERE
-        (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
-        AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
-        AND (p_lstIE IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE))
-        AND (p_frmDt IS NULL OR p_toDt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt AND p_toDt))
+       -- (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
+        --AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
+         (p_lstIE_no IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE_no))
+        AND (p_frmDt_dt IS NULL OR p_toDt_dt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt_dt AND p_toDt_dt))
     ORDER BY CALL_RECV_DATE, CASE_NO, BK_NO, SET_NO;
 
     COMMIT;
@@ -124,7 +124,6 @@ EXCEPTION
         ROLLBACK;
         RAISE;
 END GetFilterNCR;
-
 ===============================================================================================================================================
 
 create or replace PROCEDURE GetForAction_M_NCR (
@@ -335,6 +334,17 @@ ALTER TABLE temp_online_complaints
 ALTER TABLE temp_online_complaints 
     MODIFY CO_CD  NUMBER(6,0);
 
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CO_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY UOM_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY JI_IE_CD  NUMBER(6,0);
 
 
 ========================================================================================================================================

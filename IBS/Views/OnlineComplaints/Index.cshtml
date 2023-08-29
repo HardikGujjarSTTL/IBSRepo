@@ -6,11 +6,12 @@
     </div>
 </div>
 
-<section>
+<section id="tab-1">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="OnlineComplaints" asp-action="ComplaintsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
             <div class="accordion-body">
                 <div class="row my-0">
+                    <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                     <input type="text" asp-for="ItemSrnoPo" id="ItemSrnoPo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="UomCd" id="UomCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="Rate" id="Rate" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
@@ -93,6 +94,9 @@
                         <label for="Reference">Rejection Memo Date</label>
                         <input type="text" class="input datepicker" ASP-FOR="RejMemodate" id="memodate" maxlength="300" required />
                         <span asp-validation-for="RejMemodate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
                     </div>
                     @*<div class="col-md-4 mb-4">
                         <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
@@ -183,6 +187,7 @@
 
         function Save(){
             if ($("#frmComplaints").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmComplaints").submit();
             }
         }

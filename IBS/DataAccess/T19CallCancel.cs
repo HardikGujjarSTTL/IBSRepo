@@ -43,5 +43,17 @@ public partial class T19CallCancel
 
     public string? DocsSubmitted { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
+    public byte? CancelCd12 { get; set; }
+
     public virtual T17CallRegister Ca { get; set; } = null!;
 }

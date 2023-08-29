@@ -1067,3 +1067,169 @@ BEGIN
         ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
 END;
 ====================
+create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
+    p_cs_no VARCHAR2,
+    p_po_no VARCHAR2,
+    p_po_date VARCHAR2,
+    p_vend_name VARCHAR2,
+    p_region_code VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+BEGIN
+    str1 := 'SELECT m.CASE_NO, m.PO_NO, TO_CHAR(m.PO_DT, ''dd/mm/yyyy'') AS PO_DT, ' ||
+            '(DECODE(m.RLY_NONRLY, ''R'', ''Railway'', ''P'', ''Private'', ''S'', ''State Government'', ''F'', ''Foreign Railways'', ''U'', ''PSU'') || ''('' || m.RLY_CD || '')'') AS RLY_CD, ' ||
+            '(v.VEND_NAME || ''('' || NVL2(t.LOCATION, t.LOCATION || '' : '' || t.CITY, t.CITY) || '')'') AS VEND_NAME, ' ||
+            '(NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || ''/'', '''') || NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || ''/'', '''') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME, ' ||
+            'DECODE(m.INSPECTING_AGENCY, ''C'', ''Consignee'', ''X'', ''PO Cancelled'', ''RITES'') AS INSPECTING_AGENCY, ' ||
+            'DECODE(PO_SOURCE, ''V'', ''VENDOR'', ''M'', ''MANUAL'', ''C'', ''IREPS'', ''OTHER'') AS SOURCE, ' ||
+            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, ''CASE_NO/'' || m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
+            '''CASE_NO/'' || m.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
+            'FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t ' ||
+            'WHERE m.VEND_CD = v.VEND_CD ' ||
+            'AND v.VEND_CITY_CD = t.CITY_CD ' ||
+            'AND m.PURCHASER_CD = c.CONSIGNEE_CD(+) ' ||
+            'AND m.REGION_CODE = ''' || p_region_code || '''';
+
+    IF p_cs_no IS NOT NULL THEN
+        str1 := str1 || 'AND TRIM(CASE_NO) = ''' || p_cs_no || ''' ';
+    END IF;
+
+    IF p_po_no IS NOT NULL THEN
+        str1 := str1 || 'AND UPPER(TRIM(PO_NO)) LIKE UPPER(''%' || p_po_no || '%'') ';
+    END IF;
+
+    IF p_po_date IS NOT NULL THEN
+        str1 := str1 || 'AND TO_CHAR(PO_DT, ''dd/mm/yyyy'') = ''' || p_po_date || ''' ';
+    END IF;
+
+    IF p_vend_name IS NOT NULL THEN
+        str1 := str1 || 'AND UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(''' || p_vend_name || '%'') ';
+    END IF;
+
+    str1 := str1 || 'ORDER BY CASE_NO ASC';
+
+    OPEN p_result_cursor FOR str1;
+END;
+
+
+===============================
+
+create or replace PROCEDURE SP_GET_RAILWAY_CODES (
+    p_bpo_type VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+BEGIN
+    IF p_bpo_type = 'R' THEN
+        str1 := 'SELECT RLY_CD FROM T91_RAILWAYS WHERE RLY_CD <> ''CORE'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'P' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''P'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'F' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''F'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'U' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''U'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'S' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''S'' ORDER BY RLY_CD';
+    ELSE
+        -- Handle invalid input here, or provide a default query
+        str1 := 'SELECT RLY_CD FROM T91_RAILWAYS WHERE RLY_CD <> ''CORE'' ORDER BY RLY_CD';
+    END IF;
+
+    OPEN p_result_cursor FOR str1;
+END;
+
+
+==============
+CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
+    p_vend_cd IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT V.VEND_CD as Value,
+           (TRIM(V.VEND_NAME) || '/' || TRIM(V.VEND_ADD1) || '/' || NVL2(C.LOCATION, C.LOCATION || ' / ' || C.CITY, C.CITY)) AS Text
+    FROM T05_VENDOR V
+    JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
+    WHERE V.VEND_NAME IS NOT NULL
+    AND (TRIM(V.VEND_CD) = p_vend_cd OR p_vend_cd IS NULL)
+    ORDER BY VEND_NAME;
+END;
+/
+
+=======================
+
+create or replace PROCEDURE GENERATE_CASE_NO (
+    IN_REGION_CD IN VARCHAR2,
+    IN_PO_DT IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) IS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno VARCHAR2(100) := NULL;
+    w_Case_No VARCHAR2(500) := NULL;
+BEGIN
+    ---
+    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    w_Case_No := w_ctr || w_sno;
+
+    OPEN p_result_cursor FOR
+        SELECT w_Case_No AS CaseNo, 0 AS ERR_CD FROM DUAL;
+
+END;
+
+
+===================
+
+
+CREATE OR REPLACE PROCEDURE GET_PO_BPO_DETAILS (
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT P.CASE_NO,
+           P.CONSIGNEE_CD,
+           P.BPO_CD,
+           (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '') || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '') || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '') || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '') || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))) AS CONSIGNEE_NAME,
+           (B.BPO_CD || ' - ' || B.BPO_NAME || '/' || B.BPO_RLY || '/' || NVL2(B.BPO_ADD, B.BPO_ADD || '/', '') || NVL2(E.LOCATION, E.CITY || '/' || E.LOCATION, E.CITY)) AS BPO_NAME
+    FROM T14_PO_BPO P
+    JOIN T06_CONSIGNEE C ON P.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T12_BILL_PAYING_OFFICER B ON P.BPO_CD = B.BPO_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    JOIN T03_CITY E ON B.BPO_CITY_CD = E.CITY_CD
+    WHERE P.CASE_NO = p_case_no;
+END;
+/
+
+=====================
+create or replace PROCEDURE SP_GET_PO_DETAILSForAdministrator(
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT p.CASE_NO, p.ITEM_SRNO, p.ITEM_DESC,
+           (C.CONSIGNEE_CD || '-' || nvl2(trim(C.CONSIGNEE_DESIG), trim(C.CONSIGNEE_DESIG) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_DEPT), trim(C.CONSIGNEE_DEPT) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_FIRM), trim(C.CONSIGNEE_FIRM) || '/', '') ||
+           NVL2(trim(C.CONSIGNEE_ADD1), trim(C.CONSIGNEE_ADD1) || '/', '') ||
+           NVL2(trim(D.LOCATION), trim(D.LOCATION) || ' : ' || trim(D.CITY), trim(D.CITY))) AS CONSIGNEE_NAME,
+           p.QTY, p.RATE, p.VALUE as DATAVALUE
+    FROM T15_PO_DETAIL p
+    JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE (p.IsDeleted is null or p.IsDeleted =0)  and p.CASE_NO = p_case_no
+    ORDER BY p.ITEM_SRNO;
+END;
+
+
+===================
