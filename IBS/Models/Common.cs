@@ -2071,6 +2071,46 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.COType)).ToList();
         }
 
+        public static IEnumerable<SelectListItem> GetRailway()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = (from a in ModelContext.T91Railways
+                                             orderby a.Railway
+                                             select new SelectListItem
+                                             {
+                                                 Text = Convert.ToString(a.Railway),
+                                                 Value = Convert.ToString(a.RlyCd)
+                                             }).ToList();
+            return dropList;
+        }
+
+        public static IEnumerable<SelectListItem> GetConsigneeDesignation()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = (from a in ModelContext.T90RlyDesignations
+                                             orderby a.RlyDesigCd
+                                             select new SelectListItem
+                                             {
+                                                 Text = Convert.ToString(a.RlyDesigCd),
+                                                 Value = Convert.ToString(a.RlyDesigCd)
+                                             }).ToList();
+            return dropList;
+        }
+
+        public static IEnumerable<SelectListItem> GetConsigneeCity()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = ModelContext.T03Cities                           
+                            .OrderBy(city => city.City)
+                            .Select(city => new SelectListItem
+                            {
+                                Value = Convert.ToString(city.CityCd),
+                                Text = city.Location != null ? city.Location + " : " + city.City : city.City
+                            }).ToList();            
+            return dropList;
+        }
+
     }
     public static class DbContextHelper
     {

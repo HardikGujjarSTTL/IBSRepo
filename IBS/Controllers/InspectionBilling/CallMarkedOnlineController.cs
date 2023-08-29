@@ -198,5 +198,130 @@ namespace IBS.Controllers.InspectionBilling
             return Json(result);
         }
 
+        public IActionResult CaseHistory(string CASE_NO)
+        {
+            var model = new CaseHistoryModel();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                model = callMarkedOnlineRepository.Get_Vendor_Detail_By_CaseNo(CASE_NO, Region);
+                var RegionName = "";
+                if (Convert.ToString(Region) == "N") { RegionName = "Northern Region"; }
+                else if (Convert.ToString(Region) == "S") { RegionName = "Southern Region"; }
+                else if (Convert.ToString(Region) == "E") { RegionName = "Eastern Region"; }
+                else if (Convert.ToString(Region) == "W") { RegionName = "Western Region"; }
+                else if (Convert.ToString(Region) == "C") { RegionName = "Central Region"; }
+
+                ViewBag.Case_NO = CASE_NO;
+                ViewBag.RegionName = RegionName;
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "CaseHistory", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+        //[HttpPost]
+        public IActionResult GetCaseHistoryItem([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryItemModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Item(dTParameters, Region);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetCaseHistoryItem", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetPoIREPSList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryPoIREPSModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_PO_IREPS(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetCaseHistoryItem", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetPoVendorList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryPoVendorModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_PO_Vendor(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetCaseHistoryItem", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetPreviousCallList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryPreviousCallModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Previous_Call(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetPreviousCallList", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetConsigneeComplaintsList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryConsigneeComplaintModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Consignee_Complaints(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetPreviousCallList", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetCaseHistoryRejectionVendorPlaceList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryRejectionVendorPlaceModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Rejection_Vendor_Place(dTParameters, Region);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetPreviousCallList", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
     }
 }

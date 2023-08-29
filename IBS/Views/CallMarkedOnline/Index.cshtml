@@ -33,9 +33,7 @@
 
         <div class="row my-0">
             <div class="col-md-6 mb-3">
-                <div class="savenext-btn">
-                    @*<a asp-controller="CallMarkedOnline" asp-action="Manage" class="reset-btn" id="btnSubmit">Cancel</a>*@
-                    <button type="button" class="reset-btn" id="btnManage">Call Manage</button>
+                <div class="savenext-btn">                    
                     <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
                 </div>
             </div>
@@ -49,7 +47,7 @@
                         <tr>
                             <th>S.No.</th>
                             <th>Case No.</th>
-                            <th>PO NO.</th>
+                            <th style="white-space: nowrap;">PO NO.</th>
                             <th>PO Date</th>
                             <th>Call Date</th>
                             <th>Call SNo.</th>
@@ -99,23 +97,7 @@
 
         $("#btnSubmit").click(function () {
             InitializeDatatable();
-        });
-
-        $("#btnManage").click(function () {
-            $("#body").css("display", "none");
-            $("#tblsection").css("display", "none");
-            $("#frmParial").css("display", "block");
-            //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
-
-            $.ajax({
-                type: 'GET',
-                url: "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023",
-                //data: obj,
-                success: function (data) {
-                    $('#frmParial').html(data)
-                }
-            });
-        });
+        });        
     });
 
     function setDefaultDate() {
