@@ -12,9 +12,9 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public Consignee_PMFormModel FindByID(int ConsigneeCd)
+        public ConsigneePurchaseModel FindByID(int ConsigneeCd)
         {
-            Consignee_PMFormModel model = new();
+            ConsigneePurchaseModel model = new();
             T06Consignee role = context.T06Consignees.Find(Convert.ToByte(ConsigneeCd));
 
             if (role == null)
@@ -37,11 +37,11 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<Consignee_PMFormModel> GetConsignee_PMFormList(DTParameters dtParameters)
+        public DTResult<ConsigneePurchaseModel> GetConsignee_PMFormList(DTParameters dtParameters)
         {
 
-            DTResult<Consignee_PMFormModel> dTResult = new() { draw = 0 };
-            IQueryable<Consignee_PMFormModel>? query = null;
+            DTResult<ConsigneePurchaseModel> dTResult = new() { draw = 0 };
+            IQueryable<ConsigneePurchaseModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -66,7 +66,7 @@ namespace IBS.Repositories
             }
             query = from l in context.T06Consignees
                     where l.Isdeleted == 0 || l.Isdeleted == null
-                    select new Consignee_PMFormModel
+                    select new ConsigneePurchaseModel
                     {
                         ConsigneeCd = l.ConsigneeCd,
                         ConsigneeDept = l.ConsigneeDept,
@@ -109,7 +109,7 @@ namespace IBS.Repositories
             return true;
         }
 
-        public int Consignee_PMFormDetailsInsertUpdate(Consignee_PMFormModel model)
+        public int Consignee_PMFormDetailsInsertUpdate(ConsigneePurchaseModel model)
         {
             int RoleId = 0;
             var CPM = context.T06Consignees.Where(x => x.ConsigneeCd == model.ConsigneeCd).FirstOrDefault();
