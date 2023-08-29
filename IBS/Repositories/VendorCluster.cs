@@ -24,7 +24,7 @@ namespace IBS.Repositories
             {
                 model.VendorCode = role.VendorCode;
                 model.DepartmentName = role.DepartmentName;
-                model.ClusterCode = role.ClusterCode;
+                model.ClusterCode = Convert.ToByte(role.ClusterCode);
                 model.UserId = role.UserId;
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
@@ -68,7 +68,7 @@ namespace IBS.Repositories
                     {
                         VendorCode = l.VendorCode,
                         DepartmentName = l.DepartmentName,
-                        ClusterCode = l.ClusterCode,
+                        ClusterCode = Convert.ToByte(l.ClusterCode),
                         UserId = l.UserId,
                         //Isdeleted = l.Isdeleted,
                         //Createddate = l.Createddate,
