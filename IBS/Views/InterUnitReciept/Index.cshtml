@@ -1,0 +1,313 @@
+﻿@model IBS.Models.InterUnitRecieptModel
+
+@{
+    ViewData["Title"] = "Generate Voucher";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Generate Voucher</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnitReciept" asp-action="InterUnitRecieptSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInterUnitReciept">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Voucher No</label>
+                            <input type="text" asp-for="VCHR_NO" id="Vchr_no" placeholder="Voucher No. will appear here." readonly="true" maxlength="300"  />
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Voucher Date</label>
+                            <input type="text" id="vchr_dt" class="input " asp-for="VCHR_DT" maxlength="500" readonly />
+                        </div>
+
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">IU Advice No/Ref No.</label>
+                            <input type="text" class="input" asp-for="iu_Advice_no" maxlength="500" />
+                           
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">IU Advice Date/Ref Date</label>
+                            <input type="text" class="input datepicker" asp-for="iu_Advice_DT" maxlength="500" />
+
+                        </div>
+
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Region From Which Recieved</label>
+                            @Html.DropDownListFor(model => model.BANK_CD, Common.GetBankLst(), new { id = "bankDropdown" })
+                         
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Amount</label>
+                            <input type="text" class="input" asp-for="AMOUNT" maxlength="500" />
+                            <span asp-validation-for="AMOUNT" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Account Code</label>
+                            @Html.DropDownListFor(model => model.ACC_CD, Common.GetAccountLst(), new { id="AccCD" })
+                        </div>
+
+                        <div id="txtCSNO" class="col-md-4 mb-3">
+                            <label for="Reference">Case No</label>
+                            <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
+                            <br></br>
+                            <button type="button" class="save-btn active" onclick="ButtonClick();">Select BPO</button>
+                            <span asp-validation-for="CASE_NO" class="text-danger"></span>
+
+                        </div>
+                        <div id="txtBPO" class="col-md-4 mb-3">
+                            <label for="Reference">BPO</label>
+                            <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
+                            <br></br>
+                            <button type="button" class="save-btn active" onclick="ButtonClick()">Select BPO</button>
+                            <input type="text" class="input" id="txtBPOtype"  maxlength="10" readonly hidden>
+
+                        </div>
+
+                        <div id="lstBPO" class="col-md-4 mb-3" style="display:none">
+                            @* <label  for="Reference">BPO List</label>
+                            @Html.DropDownListFor(model => model.BPO_CD, Common., new { id="listBPO" })*@
+                            <label for="Reference">BPO</label>
+                            <select id="SelectedBPO" class="form-control">
+
+                                @* @if(Model.BPOList != null){
+                                @foreach (var bpo in Model.BPOList)
+                                {
+                                <option value="@bpo.value">@bpo.text</option>
+                                }
+                                }*@
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Narration</label>
+                            <input type="text" class="input" id="txtNarrat" asp-for="NARRATION" maxlength="9">
+
+                        </div>
+                    </div>
+
+                    <div class="savenext-btn">
+                        <a asp-controller="InterUnitReciept" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                     @*   <button type="button" class="active" onclick="InitializeDatatable();">test</button>
+                        <button type="button" class="active" onclick="search();">Search Voucher</button>*@
+
+
+
+                       
+
+                    </div>
+
+                    <table id="dtInterUnitReciept" class="table-responsive">
+                        <thead>
+                            <tr>
+
+                                @*<th>S NO</th>*@
+
+                                <th>#</th>
+                                <th>IU Advice No/Ref No.</th>
+                                <th>IU Advice Date./Ref Date.</th>
+                                <th>Amount</th>
+                                <th>Region From Which Recieved</th>
+                                <th>BPO</th>
+                                <th>Account</th>
+                                <th>Narration</th>
+                                <th>Action</th>
+
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            $("#dtInterUnitReciept").css("display", "none");
+
+            var currentDate = new Date();
+
+           
+            var month = currentDate.getMonth() + 1;
+            var day = currentDate.getDate();
+            var year = currentDate.getFullYear();
+
+           
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+
+           
+            var formattedDate = month + "/" + day + "/" + year;
+
+
+            $("#vchr_dt").val(formattedDate);
+
+            var selectedValue = $("#AccCD").val();
+            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
+                $("#txtCSNO").show();
+                $("#txtBPO").hide();
+                $("#lstBPO").css("display", "none");
+                $("#txtNarrat").show();
+            } else {
+                $("#txtCSNO").hide();
+                $("#lstBPO").css("display", "none");
+                $("#txtNarrat").show();
+                $("#txtBPO").show();
+            }
+
+        });
+        function Save() {
+            debugger;
+
+            $("#frmInterUnitReciept").submit();
+           var VCHR_NO = $("#Vchr_no").val();
+            var VCHR_DT = $("#vchr_dt").val();
+                    
+        }
+        completed = function (response) {
+            debugger;
+            var res = response.responseJSON;
+          
+            $("#Vchr_no").val(res.vchrNo);
+            ShowHideMsgNew(res.status, res.responseText);
+            $("#dtInterUnitReciept").css("display", "block");
+            InitializeDatatable(res.vchrNo);
+        };
+
+
+
+        function InitializeDatatable(vchrNo) {
+            var VCHR_NO = vchrNo;
+            debugger;
+            $("#dtInterUnitReciept").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("RecieptList")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        debugger;
+                        var AdditionalValues = {
+                           
+                            VCHR_NO: VCHR_NO
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                            ;
+                        }
+                    },
+                    //{ data: "SNO" },
+                    { data: "CHQ_NO" },
+                    { data: "CHQ_DT" },
+                    { data: "AMOUNT" },
+                    { data: "BANK_CD" },
+                    { data: "BPO_CD" },
+                    { data: "ACC_CD" },
+                    { data: "NARRATION" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            debugger;
+                            var VCHR_NO = data.VCHR_NO;
+                            var CHQ_NO = data.CHQ_NO;
+                            var CHQ_DT = data.CHQ_DT;
+                            var BANK_CD = data.BANK_NAME;
+                           var VCHR_DT = data.VCHR_DT;
+
+
+                            var editUrl = '@Url.Action("Manage", "InterUnitReciept")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT + '&VCHR_DT=' + VCHR_DT;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+
+        function ButtonClick() {
+
+            debugger;
+            //var selectedValue = $("#AccCD").val();
+
+
+            var BPOCD = $("#bpoCD").val();
+         
+            $.ajax({
+                url: '/InterUnitReciept/ButtonClick',
+                type: "POST",
+                dataType: "JSON",
+                data: { BPOCD: BPOCD },
+
+                success: function (success) {
+                    debugger;
+                    //alert("buttonclicked");
+                    // console.log(success);
+                   
+                    $("#lstBPO").css("display", "block");
+
+                    for (i = 0; i < success.BPOList.length; i++) {
+
+                        // var data = '<option value="' + success.BPCodes[i].Text + '">' + success.BPCodes[i].Value + '</option>'
+                        var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
+                        $("#SelectedBPO").append(data);
+
+                    }
+
+                    
+
+                }
+
+            });
+
+        }
+
+        //function search(){
+
+        //    window.location.href = '@Url.Action("RecieptList", "InterUnitReciept")';
+        //}
+    </script>
+}

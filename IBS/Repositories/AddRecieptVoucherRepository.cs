@@ -209,10 +209,10 @@ namespace IBS.Repositories
             }
             else
             {
-                DateTime parsedDate;
-                DateTime vdt;
-                DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
-                DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
+                    DateTime parsedDate;
+                    DateTime vdt;
+                    DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
+                    DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
                 VCHR_NO = model.VCHR_NO;
 
                 T24Rv data = new T24Rv();
@@ -227,7 +227,7 @@ namespace IBS.Repositories
                 T25RvDetail obj = new T25RvDetail();
                 GetValue2.VchrNo = Convert.ToString(VCHR_NO);
                 GetValue2.BankCd = Convert.ToByte(model.BANK_NAME);
-                obj.ChqDt = parsedDate;
+                obj.ChqDt = parsedDate; 
                 GetValue2.Amount = Convert.ToDecimal(model.AMOUNT);
                 GetValue2.SampleNo = model.SAMPLE_NO;
                 GetValue2.AccCd = Convert.ToInt32(model.ACC_CD);

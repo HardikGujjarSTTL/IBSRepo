@@ -182,7 +182,8 @@ namespace IBS.Controllers.InspectionBilling
             return View(detail);
         }
 
-        //[Authorization("HologramAccountal", "Index", "add")]
+        [HttpPost]
+        [Authorization("HologramAccountal", "Index", "edit")]
         public IActionResult HologramAccountalDetailsSave(HologramAccountalModel Model)
         {
             var message = "";

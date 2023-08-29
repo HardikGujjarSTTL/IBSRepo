@@ -338,6 +338,10 @@ namespace IBS.Models
             single.Text = "No";
             single.Value = "N";
             textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Cancelled";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
 
@@ -1750,6 +1754,36 @@ namespace IBS.Models
                                      Value = Convert.ToString(a.BpoCd)
                                  }).ToList();
             return GetBPO;
+        }
+
+        public static List<SelectListItem> GetBankLst()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> GetBankLst = (from a in context.T94Banks
+                                               where a.BankCd > 990 
+                                               orderby a.BankName
+                                           select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.BankName),
+                                     Value = Convert.ToString(a.BankCd)
+                                 }).ToList();
+            return GetBankLst;
+        }
+
+        public static List<SelectListItem> GetAccountLst()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> AccountLst = (from a in context.T95AccountCodes
+                                               where a.AccCd > 3000
+                                               orderby a.AccDesc
+                                               select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.AccDesc),
+                                        Value = Convert.ToString(a.AccCd)
+                                    }).ToList();
+            return AccountLst;
         }
 
         public static List<SelectListItem> GetBillPayingOfficer(string RlyCd, string RlyNonrly)

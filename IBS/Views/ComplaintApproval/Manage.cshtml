@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "Create NCR";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.CaseNo != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -155,10 +153,10 @@
                 <br/>
                 <br/>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active @clsSave" id="acceptbtn" onclick="Accept();">Accept</button>
-                    <button type="button" class="save-btn active @clsSave" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
+                    <button type="button" class="save-btn active Permission_Save" id="acceptbtn" onclick="Accept();">Accept</button>
+                    <button type="button" class="save-btn active Permission_Save" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
                     <button type="button" class="save-btn active" id="rejectbtn" onclick="Reject();">Reject</button>
-                    <button type="button" class="save-btn active @clsSave" id="btnsubmit" onclick="Submit();">Submit</button>
+                    <button type="button" class="save-btn active Permission_Save" id="btnsubmit" onclick="Submit();">Submit</button>
                 </div>
                 
             </div>

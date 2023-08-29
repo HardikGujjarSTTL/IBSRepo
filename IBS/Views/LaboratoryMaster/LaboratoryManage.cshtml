@@ -1,74 +1,89 @@
 ﻿@model IBS.Models.LaboratoryMstModel
 
+@*@{
+    ViewData["Title"] = "Manage Laboratory";
+}*@
 @{
     ViewData["Title"] = "Manage Laboratory";
+    string clsView = "";
+    if (Model.LabId > 0)
+    {        
+        clsView = "Permission_View";
+    }
 }
-
-<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">
-    
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>@ViewData["Title"] </h2>
-        </div>
-        <input type="hidden" asp-for="LabId" />
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Laboratory</h2>
     </div>
-    <div class="accordion-body">
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Lab Name</label>
-                <input type="text" class="input" asp-for="LabName" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="LabName" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Email</label>
-                <input type="text" class="input" asp-for="LabEmail" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="LabEmail" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="PropertyId">City</label>
-                @Html.DropDownListFor(model => model.LabCity, Common.GetCity(), new { })
-                <span asp-validation-for="LabCity" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="PropertyId">Lab Approval</label>
-                @Html.DropDownListFor(model => model.LabApproval, Common.GetLabApproval(), new { })
-                <span asp-validation-for="LabApproval" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Approval Period(DD/MM/YYYY)</label>
-                <label for="Reference">From</label>
-                <input type="text" class="input datepicker" asp-for="LabApprovalFr" readonly="true">
-                <span asp-validation-for="LabApprovalFr" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label for="Reference">To</label>
-                <input type="text" class="input datepicker" asp-for="LabApprovalTo" readonly="true">
-                <span asp-validation-for="LabApprovalTo" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Contact Person1</label>
-                <input type="text" class="input" asp-for="LabContactPer" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="LabContactPer" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Tel No.</label>
-                <input type="text" class="input" asp-for="LabContactTel" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="LabContactTel" class="text-danger"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="Reference">Lab Address</label>
-                @*<input type="text" class="input" asp-for="LAB_ADDRESS" maxlength="30" style="text-transform: uppercase;">*@
-                <textarea class="input" asp-for="LabAddress" maxlength="30"> </textarea>
-                <span asp-validation-for="LabAddress" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="savenext-btn">
-            <a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
-        </div>
+    <div>
+        <a asp-action="LaboratoryMaster" asp-controller="LaboratoryMaster" class="formBtn viewall-btn">View List</a>
     </div>
-</form>
+</div>
+
+
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Lab Name</label>
+                        <input type="text" class="input" asp-for="LabName" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="LabName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Email</label>
+                        <input type="text" class="input" asp-for="LabEmail" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="LabEmail" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="PropertyId">City</label>
+                        @Html.DropDownListFor(model => model.LabCity, Common.GetCity(), new { })
+                        <span asp-validation-for="LabCity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="PropertyId">Lab Approval</label>
+                        @Html.DropDownListFor(model => model.LabApproval, Common.GetLabApproval(), new { })
+                        <span asp-validation-for="LabApproval" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Approval Period(DD/MM/YYYY)</label>
+                        <label for="Reference">From</label>
+                        <input type="text" class="input datepicker" asp-for="LabApprovalFr" readonly="true">
+                        <span asp-validation-for="LabApprovalFr" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">To</label>
+                        <input type="text" class="input datepicker" asp-for="LabApprovalTo" readonly="true">
+                        <span asp-validation-for="LabApprovalTo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Contact Person1</label>
+                        <input type="text" class="input" asp-for="LabContactPer" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="LabContactPer" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Tel No.</label>
+                        <input type="text" class="input" asp-for="LabContactTel" maxlength="30" style="text-transform: uppercase;">
+                        <span asp-validation-for="LabContactTel" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Lab Address</label>
+                        @*<input type="text" class="input" asp-for="LAB_ADDRESS" maxlength="30" style="text-transform: uppercase;">*@
+                        <textarea class="input" asp-for="LabAddress" maxlength="30"> </textarea>
+                        <span asp-validation-for="LabAddress" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    @*<a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
