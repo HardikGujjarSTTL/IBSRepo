@@ -42,7 +42,7 @@ namespace IBS.Helper
             [Description("/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
             [Description("/Files/AdministratorPurchaseOrder")]
-            AdministratorPurchaseOrder = 11,
+            AdministratorPurchaseOrder = 13,
             [Description("/Online_Comp_Document")]
             OnlineComplaints = 11,
             [Description("/Consignee_Comp_Document")]
