@@ -42,7 +42,7 @@ namespace IBS.Helper
             [Description("/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
             [Description("/Files/AdministratorPurchaseOrder")]
-            AdministratorPurchaseOrder = 11,
+            AdministratorPurchaseOrder = 13,
             [Description("/Online_Comp_Document")]
             OnlineComplaints = 11,
             [Description("/Consignee_Comp_Document")]
@@ -156,35 +156,87 @@ namespace IBS.Helper
             [Description("Left/Repatriated")]
             L,
         }
-
-        public enum Department
+        public enum PoOrLetter
         {
-            [Description("Mechanical")]
-            M,
-            [Description("Electrical")]
-            E,
-            [Description("Civil")]
-            C,
-            [Description("Textiles")]
-            T,
-            [Description("M & P")]
-            Z,
+            [Description("Purchase Order")]
+            P,
+            [Description("Letter of Offer")]
+            L,
+        }
+        public enum StockNonstock
+        {
+            [Description("Stock")]
+            S,
+            [Description("Non-Stock")]
+            N,
+        }
+        public enum ServTax
+        {
+            [Description("Service Tax to be Charged on Fee")]
+            Y,
+            [Description("Fee is Inclusive of Service Tax")]
+            N,
+        }
+        public enum ClientType
+        {
+            [Description("Railways")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            PSU,
+            [Description("State Govt")]
+            S,
+            [Description("Foreign Railways")]
+            F,
         }
 
-        public enum Region
+        public enum RegionCode
         {
-            [Description("Northern Region")]
+            [Description("NORTHERN REGION")]
             N,
-            [Description("Southern Region")]
-            S,
-            [Description("Eastern Region")]
+            [Description("EASTERN REGION")]
             E,
-            [Description("Westrern Region")]
+            [Description("WESTERN REGION")]
             W,
-            [Description("Central Region")]
+            [Description("SOUTHERN REGION")]
+            S,
+            [Description("CENTRAL REGION")]
             C,
-            [Description("QA Corporate")]
+            [Description("CO QA DIVISION")]
             Q,
+        }
+        public enum DiscountType
+        {
+            [Description("Percentage")]
+            P,
+            [Description("Lumpsum")]
+            L,
+            [Description("Per No.")]
+            N,
+        }
+        public enum ExciseType
+        {
+            [Description("Percentage")]
+            P,
+            [Description("Lumpsum")]
+            L,
+        }
+        public enum VendorStatus
+        {
+            [Description("Active")]
+            A,
+            [Description("Banned/BlackListed")]
+            B,
+            [Description("Re-Instated")]
+            R,
+        }
+        public enum OnlineCallStatus
+        {
+            [Description("No")]
+            N,
+            [Description("Yes")]
+            Y,
         }
     }
 
