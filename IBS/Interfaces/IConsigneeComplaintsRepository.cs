@@ -12,5 +12,6 @@ namespace IBS.Interfaces
         string JIChoice(ConsigneeComplaints model);
         string CancelJI(ConsigneeComplaints model);
         string JIOutCome(ConsigneeComplaints model);
+        string FinalDisposal(ConsigneeComplaints model);
     }
 }

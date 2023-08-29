@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
@@ -137,13 +138,13 @@ namespace IBS.Repositories
                 model.ComplaintDate = Convert.ToDateTime(dt.Rows[0]["COMPLAINT_DATE"]);
                 model.ComplaintId = ComplaintId;
                 model.PO_NO = dt.Rows[0]["PO"].ToString();
-                model.VEND_NAME = dt.Rows[0]["VENDOR"].ToString();
+                //model.VEND_NAME = dt.Rows[0]["VENDOR"].ToString();
                 model.BK_NO = dt.Rows[0]["BK_NO"].ToString();
                 model.SET_NO = dt.Rows[0]["SET_NO"].ToString();
-                model.ie_name = dt.Rows[0]["IE_NAME"].ToString();
-                model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
+                //model.ie_name = dt.Rows[0]["IE_NAME"].ToString();
+               // model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
                 model.FormattedIC_DATE = dt.Rows[0]["IC_DT"].ToString();
-                model.RejMemoDt = Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DATE"]);
+                model.RejMemoDt = Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DT"]);
                 model.RejMemoNo = dt.Rows[0]["REJ_MEMO_NO"].ToString();
                 model.Railway = dt.Rows[0]["rly_cd"].ToString();
                 model.ItemDesc = dt.Rows[0]["ITEM_DESC"].ToString();
@@ -152,7 +153,7 @@ namespace IBS.Repositories
                 model.rejectionValue = Convert.ToDecimal(dt.Rows[0]["REJECTION_VALUE"]);
                 model.Rate = Convert.ToDecimal(dt.Rows[0]["RATE"]);
                 model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
-                model.InspRegion = dt.Rows[0]["INSP_REGION_NAME"].ToString();
+                model.InspRegion = dt.Rows[0]["INSP_REGION"].ToString();
                 model.CoName = dt.Rows[0]["IE_CO_CD"].ToString();
                 model.ITEM_SRNO_PO = dt.Rows[0]["ITEM_SRNO_PO"].ToString();
                 model.VendCd = Convert.ToInt32(dt.Rows[0]["vend_cd"]);
@@ -160,9 +161,10 @@ namespace IBS.Repositories
                 model.ie_cd = Convert.ToInt32(dt.Rows[0]["ie_cd"]);
                 model.ie_co_cd = Convert.ToInt32(dt.Rows[0]["ie_co_cd"]);
                 model.UserId = dt.Rows[0]["user_id"].ToString();
-                model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
+                //model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
                 model.uom_cd = dt.Rows[0]["uom_cd"].ToString();
                 model.Remarks = dt.Rows[0]["REMARKS"].ToString();
+                model.JiStatusCd = dt.Rows[0]["JI_STATUS_CD"].ToString();
                 model.COMP_RECV_REGION = dt.Rows[0]["COMP_RECV_REGION"].ToString();
             }
             return model;
@@ -344,9 +346,9 @@ namespace IBS.Repositories
             if (Complaint == null)
             {
                 DataSet ds;
-
+                string inspRegionFirstChar = model.InspRegion.Substring(0, 1);
                 OracleParameter[] par = new OracleParameter[3];
-                par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.InspRegion, ParameterDirection.Input);
+                par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, inspRegionFirstChar, ParameterDirection.Input);
                 par[1] = new OracleParameter("IN_COMPLAINT_DT", OracleDbType.Varchar2, DateTime.Now, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
                 ds = DataAccessDB.GetDataSet("GENERATE_COMPLAINT_NO", par, 1);
@@ -439,6 +441,53 @@ namespace IBS.Repositories
                         complaint.Datetime = DateTime.Now;
                         context.SaveChanges();
                     }
+                }
+            }
+            return model.ComplaintId;
+        }
+
+        public string FinalDisposal(ConsigneeComplaints model)
+        {
+            if(model.DARPurpose == "I" || model.DARPurpose == "J")
+            {
+                var existingRecord = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
+
+                if (existingRecord != null)
+                {
+                    existingRecord.RootCauseAnalysis = model.RootCause;
+                    existingRecord.TechRef = model.TechnicalReference;
+                    existingRecord.ChksheetStatus = model.Checksheet;
+                    existingRecord.AnyOther = model.AnyOther;
+                    existingRecord.CapaStatus = model.StatusCAPA;
+                    existingRecord.DandarStatus = model.DARStatus;
+                    existingRecord.ActionProposed = model.DARPurpose;
+                    existingRecord.ActionProposedDt = model.DARDate;
+                    existingRecord.PenaltyType = model.Penaltytype;
+                    existingRecord.PenaltyDt = model.PenaltyDate;
+                    existingRecord.Action = model.FinalRemarks;
+                    existingRecord.UserId = model.UserId;
+                    existingRecord.Datetime = DateTime.Now;
+                    context.SaveChanges();
+                }
+            }
+            else
+            {
+                var existingRecord = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
+
+                if (existingRecord != null)
+                {
+                    existingRecord.RootCauseAnalysis = model.RootCause;
+                    existingRecord.TechRef = model.TechnicalReference;
+                    existingRecord.ChksheetStatus = model.Checksheet;
+                    existingRecord.AnyOther = model.AnyOther;
+                    existingRecord.CapaStatus = model.StatusCAPA;
+                    existingRecord.DandarStatus = model.DARStatus;
+                    existingRecord.ActionProposed = model.DARPurpose;
+                    existingRecord.ActionProposedDt = model.DARDate;
+                    existingRecord.Action = model.FinalRemarks;
+                    existingRecord.UserId = model.UserId;
+                    existingRecord.Datetime = DateTime.Now;
+                    context.SaveChanges();
                 }
             }
             return model.ComplaintId;
@@ -552,19 +601,23 @@ namespace IBS.Repositories
 
                     if (complaint != null)
                     {
-                        complaint.JiRequired = model.JiRequired;
+                        complaint.JiRequired = model.AcceptRejornot;
                         complaint.NoJiReason = model.NoJIReason;
                         complaint.JiRegion = model.JIInspRegion;
                         complaint.Remarks = model.Remarks;
                         complaint.JiSno = model.JiSno;
                         complaint.JiIeCd = model.JiIeCd;
                         complaint.JiDt = model.JIDate;
-                        complaint.JiFixDt = model.JiFixDt;
+                        complaint.JiFixDt = DateTime.Now;
                         complaint.UserId = model.UserId;
                         complaint.Datetime = DateTime.Now;
                         context.SaveChanges();
                     }
                 }
+            }
+            else
+            {
+                return Complaintid;
             }
 
             return model.ComplaintId;

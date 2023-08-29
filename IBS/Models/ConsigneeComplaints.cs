@@ -62,12 +62,15 @@ namespace IBS.Models
         public string Status { get; set; }
         public string Checksheet { get; set; }
         public string RootCause { get; set; }
+        public string TechnicalReference { get; set; }
         public string AnyOther { get; set; }
         public string StatusCAPA { get; set; }
         public string DARStatus { get; set; }
         public string DARPurpose { get; set; }
         public string FinalRemarks { get; set; }
+        public string Penaltytype { get; set; }
         public DateTime? DARDate { get; set; }
+        public DateTime? PenaltyDate { get; set; }
         public byte? JiIeCd { get; set; }
         [NotMapped]
         public decimal? Updatedby { get; set; }

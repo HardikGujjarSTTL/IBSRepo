@@ -14,10 +14,11 @@
         <a asp-action="Index" asp-controller="ConsigneeComplaints" class="formBtn viewall-btn">View List</a>
     </div>
 </div>
-<section class="@clsView">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneeComplaints" asp-action="ComplaintsDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmConsigneeDetails">
             <input type="hidden" asp-for="ComplaintId" />
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <div class="accordion-body">
                 <div class="row my-0">
                     <input asp-for="ITEM_SRNO_PO" hidden />
@@ -27,6 +28,7 @@
                     <input asp-for="VendCd" hidden />
                     <input asp-for="Remarks" hidden />
                     <input asp-for="ConsigneeCd" hidden />
+                    <input asp-for="JiStatusCd" hidden />
                     <input asp-for="COMP_RECV_REGION" hidden />
                     <input asp-for="uom_cd" hidden />
                     <div class="col-md-4 mb-4">
@@ -79,14 +81,14 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Consignee</label>
-                        <input type="text" class="input" asp-for="Consignee" readonly="true">
-                        <span asp-validation-for="Consignee" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="ConsigneeCd" readonly="true">
+                        <span asp-validation-for="ConsigneeCd" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Vendor</label>
-                        <input type="text" class="input" asp-for="VEND_NAME" readonly="true">
-                        <span asp-validation-for="VEND_NAME" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="VendCd" readonly="true">
+                        <span asp-validation-for="VendCd" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -130,8 +132,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Unit of Measurement</label>
-                        <input type="text" class="input" asp-for="unitofM" maxlength="300" />
-                        <span asp-validation-for="unitofM" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="uom_cd" maxlength="300" />
+                        <span asp-validation-for="uom_cd" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Rate</label>
@@ -161,12 +163,12 @@
                     @if (ViewBag.Showcomplaint)
                     {
                         <div class="col-md-2 mb-2">
-                            <label for="File">Upload JI Case (TIF or PDF Format Only)</label>
-                            <input type="file" id="file" name="file" accept=".pdf" />
+                            @*<input type="file" id="file" name="file" accept=".pdf" />*@
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_JI_Case" />
                         </div>
                         <div class="col-md-2 mb-2">
-                            <label for="ComplaintFile">Upload REJECTION MEMO(TIF or PDF Format Only)</label>
-                            <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                            @*<input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">*@
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
                         </div>
                         <div class="col-md-2 mb-2" id="jointinsp">
                             <label for="Inspectionrequired">Joint Inspection Required</label>
@@ -188,8 +190,8 @@
                     }
 
                     <div class="col-md-2 mb-2" id="Remarkshide">
-                        <label for="Jointisp">Remarks</label>
-                        <select id="Jointisp" asp-for="Remarks" class="form-control"></select>
+                        <label for="remarks">Remarks</label>
+                        <input type="text" id="remarks" asp-for="Remarks" class="form-control"></input>
                     </div>
 
                     <div class="col-md-2 mb-2" id="NOJIReason">
@@ -202,7 +204,7 @@
                     {
                         <button type="button" class="save-btn active Permission_Save" id="btnsavechoice" onclick="btnsaveyourchoice()">Save Your Choice</button>
                         <button type="button" class="save-btn active Permission_Save" id="btnCancelJI" onclick="btncancelJI()">Cancel Joint Inspection</button>
-                        <button type="button" class="save-btn active" onclick="btnupload()">Upload</button>
+                        <button type="button" class="save-btn active" id="btnupload">Upload</button>
                     }
                 </div>
             </div>
@@ -224,19 +226,30 @@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label>Defect Coded</label>
-                        @Html.DropDownListFor(model => model.DefectDesc, new SelectList(IBS.Models.Common.GetDefectDesc() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                        @Html.DropDownListFor(model => model.DefectDesc, new SelectList(IBS.Models.Common.GetDefectDesc() , "Text", "Value"),"--Select--", new { id = "Inspectionrequired" })
                     </div>
                     <div class="col-md-2 mb-2">
                         <label>Classification</label>
-                        @Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                        @if (Model != null && Model.JiStatusDesc != null)
+                        {
+                            @Html.DropDownListFor(
+                            model => model.JiStatusCd,
+                            new SelectList(Model.JiStatusCd, "JiStatusCd", "JiStatusDesc"),
+                            "--Select--",
+                            new { id = "Inspectionrequired" }
+                        )
+                        }else{
+                            @Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                        }
+                        @*@Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })*@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="reference">Date of JI Conclusion</label>
                         <input type="text" class="input datepicker" asp-for="JIDateConclusion">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="ComplaintFile">Upload JI Report (TIF or PDF Format Only)</label>
-                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_JI_Report" />
+                        @*<input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">*@
                     </div>
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active Permission_Save" id="JIoutcome" onclick="btnJIOutcome()">Save Outcome of JI</button>
@@ -252,6 +265,11 @@
                         <label for="Reference">Root Cause Analysis</label>
                         <input type="text" class="input" ASP-FOR="RootCause" maxlength="300" />
                         <span asp-validation-for="RootCause" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Technical Reference</label>
+                        <input type="text" class="input" ASP-FOR="TechnicalReference" maxlength="300" />
+                        <span asp-validation-for="TechnicalReference" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2" id="inspreq">
                         <label>	Checksheet</label>
@@ -274,12 +292,21 @@
                     </div>
                     <div class="col-md-2 mb-2" id="inspreq">
                         <label>D&AR Proposed</label>
-                        @Html.DropDownListFor(model => model.DARPurpose, new SelectList(IBS.Models.Common.DARPurpose() , "Value", "Text"),"--Select--", new { id = "Checksheet" })
+                        @Html.DropDownListFor(model => model.DARPurpose, new SelectList(IBS.Models.Common.DARPurpose() , "Value", "Text"),"--Select--", new { id = "DARProposed" })
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Date of D&AR Issue</label>
                         <input type="text" class="input datepicker" ASP-FOR="DARDate" maxlength="300" />
                         <span asp-validation-for="DARDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2" id="typenalty">
+                        <label for="Reference">Type of Penalty</label>
+                        <select id="lstPenaltyType" asp-for="Penaltytype" class="form-control"></select>
+                    </div>
+                    <div class="col-md-2 mb-2" id="dtpenalty">
+                        <label for="Reference">Date of Imposing Penalty</label>
+                        <input type="text" class="input datepicker" ASP-FOR="PenaltyDate" maxlength="300" />
+                        <span asp-validation-for="PenaltyDate" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Final Remarks/Action</label>
@@ -288,11 +315,11 @@
                     </div>
 
                     <div class="col-md-2 mb-2">
-                        <label for="ComplaintFile">Upload Tech Ref (PDF Format Only)</label>
-                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Tech_Ref" />
+                        @*<input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf">*@
                     </div>
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save">Save Final Disposal</button>
+                        <button type="button" class="save-btn active Permission_Save" id="btnfinaldisposal">Save Final Disposal</button>
                     </div>
                 </div>
             </div>
@@ -312,6 +339,8 @@
             $("#NOJIReason").hide();
             $("#Remarkshide").hide();
             $("#btnCancelJI").hide();
+            $("#typenalty").hide();
+            $("#dtpenalty").hide();
         });
 
         $("#InspRegionDropdown").change(function () {
@@ -338,6 +367,48 @@
                     }
                 }
             });
+        });
+
+        $("#DARProposed").change(function () {
+            debugger
+            var selectedValue = $(this).val();
+            var Item = $("#lstPenaltyType");
+            Item.empty();
+            if (selectedValue == "I") {
+                var options = [
+                    { text: "Censure", value: "IC" },
+                    { text: "Withholding of Increment of pay", value: "II" },
+                    { text: "Withholding of promotion", value: "IP" },
+                    { text: "Recovery from pay", value: "IR" }
+                ];
+
+                $.each(options, function (index, option) {
+                    Item.append($("<option>", {
+                        value: option.value,
+                        text: option.text
+                    }));
+                });
+                $("#typenalty").show();
+                $("#dtpenalty").show();
+            } else if (selectedValue == "J") {
+                var options = [
+                    { text: "Reduction to a lower grade or post", value: "JL" },
+                    { text: "Removal from service", value: "JR" },
+                    { text: "Dismissal", value: "JD" }
+                ];
+
+                $.each(options, function (index, option) {
+                    Item.append($("<option>", {
+                        value: option.value,
+                        text: option.text
+                    }));
+                });
+                $("#typenalty").show();
+                $("#dtpenalty").show();
+            }else{
+                $("#typenalty").hide();
+                $("#dtpenalty").hide();
+            }
         });
 
         $("#JointInspectionrequired").change(function () {
@@ -402,8 +473,10 @@
                         $("#btnsave").hide();
                         $("#btnsavechoice").hide();
                         $("#btnCancelJI").show();
-                        $("#jointinsp").prop("disabled", true);
-                        $("#inspnewregion").prop("disabled", true);
+                        $("#JointInspectionrequired").prop("disabled", true);
+                        $("#InspRegionDropdown").prop("disabled", true);
+                    }else{
+                        alert(response.alertMessage);
                     }
                 }
             });
@@ -431,6 +504,7 @@
         }
 
         function btnJIOutcome(){
+            SaveSingleDocuments("tab-1");
             var formData = new FormData($("#frmConsigneeDetails")[0]);
             $.ajax({
                 url: '@Url.Action("JIOutCome", "ConsigneeComplaints")',
@@ -446,9 +520,63 @@
                         $("#btnsavechoice").hide();
                         $("#btnCancelJI").hide();
                         $("#JIoutcome").hide();
+                    }else{
+                        alert(response.alertMessage);
                     }
                 }
             });
         }
+
+        $("#btnfinaldisposal").on('click', function (){
+            SaveSingleDocuments("tab-1");
+            var formData = new FormData($("#frmConsigneeDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("FinalDisposal", "ConsigneeComplaints")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.redirectToIndex === true) {
+                        alert(response.alertMessage);
+                        $("#btnsave").hide();
+                        $("#btnsavechoice").hide();
+                        $("#btnCancelJI").hide();
+                        $("#JIoutcome").hide();
+                        $("#btnfinaldisposal").hide();
+                    } else {
+                        alert(response.alertMessage);
+                    }
+                }
+            });
+        });
+
+        $("#btnupload").on('click', function () {
+            SaveSingleDocuments("tab-1");
+            var formData = new FormData($("#frmConsigneeDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("UploadPDF", "ConsigneeComplaints")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.redirectToIndex === true) {
+                        alert(response.alertMessage);
+                        $("#btnsave").hide();
+                        $("#btnsavechoice").hide();
+                        $("#btnCancelJI").hide();
+                        $("#JIoutcome").hide();
+                        $("#btnfinaldisposal").hide();
+                        $("#btnupload").hide();
+                    } else {
+                        alert(response.alertMessage);
+                    }
+                }
+            });
+        });
+             
     </script>
 }
