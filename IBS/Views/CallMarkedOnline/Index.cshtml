@@ -13,13 +13,13 @@
     <div class="accordion-body" id="body">
         <div class="row my-0" style="text-align:left;">
             <div class="col-md-4 mb-3" style="font-weight: bold;">
-                @Html.RadioButton("rdbCall", "Show All Online Calls Marked on", new { @class = "text-darkblue font-bold font-size-8pt", @id="rdbAllCallMarked" }) Show All Online Calls Marked on
+               <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbCall", "Show All Online Calls Marked on", new {  @id="rdbAllCallMarked" }) Show All Online Calls Marked on</label>
             </div>
             <div class="col-md-4 mb-3" style="font-weight: bold;">
-                @Html.RadioButton("rdbCall", "Show Only Un-Marked Online Calls for", new { @class = "text-darkblue font-bold font-size-8pt", @id="rdbOnlyCallUnMarked" }) Show Only Un-Marked Online Calls for
+               <label formaction="rdbOnlyCallUnMarked"> @Html.RadioButton("rdbCall", "Show Only Un-Marked Online Calls for", new {  @id="rdbOnlyCallUnMarked" }) Show Only Un-Marked Online Calls for</label>
             </div>
             <div class="col-md-4 mb-3" style="font-weight: bold;">
-                @Html.RadioButton("rdbCall", "Show All Un-Marked Online Calls As on Date", new { @class = "text-darkblue font-bold font-size-8pt", @id="rdbAllCallUnMarked" , @checked = true }) Show All Un-Marked Online Calls As on Date
+                <label formaction="rdbAllCallUnMarked">@Html.RadioButton("rdbCall", "Show All Un-Marked Online Calls As on Date", new {  @id="rdbAllCallUnMarked" , @checked = true }) Show All Un-Marked Online Calls As on Date</label>
             </div>
         </div>
         <div class="row my-0" style="text-align:left;">
@@ -121,8 +121,8 @@
         $("#dtList").DataTable({
             stateSave: false,// Design Assets
             autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
+            //scrollX: true,
+            scrollCollapse: false,
             processing: true, // ServerSide Setups
             serverSide: true,
             destroy: true,
@@ -174,7 +174,10 @@
                     }
                 }
             ],
-            "order": [[0, "asc"]]
+            "order": [[0, "asc"]],
+            "initComplete": function (settings, json) {  
+                $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+            },
         });
     }
 

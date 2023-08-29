@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -19,6 +20,7 @@ namespace IBS.Controllers
         }
 
         #region Lab Sample Information
+        [Authorization("VendorLabSampleForm", "LabSampleInfo", "view")]
         public IActionResult LabSampleInfo()
         {
 
@@ -31,6 +33,7 @@ namespace IBS.Controllers
             List<LabSampleInfoModel> dTResult = VendorLabSampleInfoRepository.LapSampleIndex(CaseNo, CallRdt, CallSno, VenCod);
             return Json(dTResult);
         }
+        [Authorization("VendorLabSampleForm", "LabSampleInfo", "view")]
         public IActionResult LabPaymentRecieptForm(string CaseNo, string CallRdt, string CallSno, string Flag)
         {
             ViewBag.CaseNo = CaseNo; 
@@ -40,6 +43,7 @@ namespace IBS.Controllers
             return View();
         }
         [HttpPost]
+        [Authorization("VendorLabSampleForm", "LabSampleInfo", "view")]
         public IActionResult SampleDtlData(string CaseNo, string CallRdt, string CallSno)
         {
             string Regin = GetRegionCode;
@@ -77,6 +81,7 @@ namespace IBS.Controllers
             return (dt1);
         }
         [HttpPost]
+        [Authorization("VendorLabSampleForm", "LabSampleInfo", "edit")]
         public JsonResult SaveDataDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
@@ -121,6 +126,7 @@ namespace IBS.Controllers
 
         }
         [HttpPost]
+        [Authorization("VendorLabSampleForm", "LabSampleInfo", "edit")]
         public JsonResult UpdateDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();

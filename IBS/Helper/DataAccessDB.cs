@@ -70,7 +70,7 @@ namespace IBS.Helper
                 cmd.ExecuteNonQuery();
                 context.Database.CloseConnection();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 context.Database.CloseConnection();
             }

@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Reflection.Emit;
 using static IBS.Helper.Enums;
 
@@ -21,47 +23,116 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public List<LabPaymentFormModel> GetLabPayments(LabPaymentFormModel paymentFormModel)
+        public DTResult<LabPaymentFormModel> GetLabPayments(DTParameters dtParameters,string Regin)
         {
 
-            //DTResult<LABREGISTERModel> dTResult = new() { draw = 0 };
-            //IQueryable<LABREGISTERModel>? query = null;
+            //using (var dbContext = context.Database.GetDbConnection())
+            //{
+            //    OracleParameter[] par = new OracleParameter[5];
+            //    par[0] = new OracleParameter("p_Region", OracleDbType.NVarchar2, paymentFormModel.Regin, ParameterDirection.Input);
+            //    par[1] = new OracleParameter("p_PaymentID", OracleDbType.NVarchar2, paymentFormModel.PaymentID, ParameterDirection.Input);
+            //    par[2] = new OracleParameter("p_PaymentDT", OracleDbType.Date, paymentFormModel.PaymentDt, ParameterDirection.Input);
+            //    par[3] = new OracleParameter("p_LabID", OracleDbType.NVarchar2, paymentFormModel.Lab, ParameterDirection.Input);
+            //    par[4] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
+            //    var ds = DataAccessDB.GetDataSet("GetLabPayments", par, 4);
 
+            //    List<LabPaymentFormModel> modelList = new List<LabPaymentFormModel>();
+            //    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //    {
+            //        foreach (DataRow row in ds.Tables[0].Rows)
+            //        {
+            //            LabPaymentFormModel model = new LabPaymentFormModel
+            //            {
+            //                PaymentID = row["PAYMENT_ID"] as string,
+            //                PaymentDt = Convert.ToString(row["PAYMENT_DATE"]),
+            //                Lab = Convert.ToString(row["LAB"]),
+            //                Amount = Convert.ToString(row["AMOUNT"]),
+            //            };
 
+            //            modelList.Add(model);
+            //        }
+            //    }
 
-            using (var dbContext = context.Database.GetDbConnection())
+            //    return modelList;
+            //}
+
+            DTResult<LabPaymentFormModel> dTResult = new() { draw = 0 };
+            IQueryable<LabPaymentFormModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
             {
-                OracleParameter[] par = new OracleParameter[5];
-                par[0] = new OracleParameter("p_Region", OracleDbType.NVarchar2, paymentFormModel.Regin, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_PaymentID", OracleDbType.NVarchar2, paymentFormModel.PaymentID, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_PaymentDT", OracleDbType.Date, paymentFormModel.PaymentDt, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_LabID", OracleDbType.NVarchar2, paymentFormModel.Lab, ParameterDirection.Input);
-                par[4] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                var ds = DataAccessDB.GetDataSet("GetLabPayments", par, 4);
-
-                List<LabPaymentFormModel> modelList = new List<LabPaymentFormModel>();
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                if (orderCriteria == "")
                 {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        LabPaymentFormModel model = new LabPaymentFormModel
-                        {
-                            PaymentID = row["PAYMENT_ID"] as string,
-                            PaymentDt = Convert.ToString(row["PAYMENT_DATE"]),
-                            Lab = Convert.ToString(row["LAB"]),
-                            Amount = Convert.ToString(row["AMOUNT"]),
-                        };
-
-                        modelList.Add(model);
-                    }
+                    orderCriteria = "PAYMENT_ID";
                 }
-
-                return modelList;
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "PAYMENT_ID";
+                orderAscendingDirection = true;
+            }
+            LabPaymentFormModel labPaymentFormModel = new LabPaymentFormModel();
+            if(dtParameters.AdditionalValues?.GetValueOrDefault("PaymentDt") == "")
+            {
+                labPaymentFormModel.PaymentDt = null;
+            }
+            else
+            {
+                labPaymentFormModel.PaymentDt = dtParameters.AdditionalValues?.GetValueOrDefault("PaymentID");
+               
             }
 
-            //return dTResult;
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("p_Region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_PaymentID", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("PaymentID"), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_PaymentDT", OracleDbType.Date, labPaymentFormModel.PaymentDt, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_LabID", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("Lab"), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GetLabPayments", par, 4);
+
+            List<LabPaymentFormModel> modelList = new List<LabPaymentFormModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    LabPaymentFormModel model = new LabPaymentFormModel
+                    {
+                        PaymentID = row["PAYMENT_ID"] as string,
+                        PaymentDt = Convert.ToString(row["PAYMENT_DATE"]),
+                        Lab = Convert.ToString(row["LAB"]),
+                        Amount = Convert.ToString(row["AMOUNT"]),
+                    };
+
+                    modelList.Add(model);
+                }
+            }
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.PaymentID).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.PaymentID).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
         public List<LabPaymentFormModel> GetPayments(LabPaymentFormModel paymentFormModel)
         {
@@ -90,6 +161,47 @@ namespace IBS.Repositories
                             SNO = Convert.ToString(row["SNO"]),
                             TOT_CHARGES = Convert.ToString(row["TOT_CHARGES"]),
                             TDS_AMT = Convert.ToString(row["TDS_AMT"]),
+                            TESTING_FEE = Convert.ToString(row["TESTING_FEE"]),
+                            AMT_CLEARED = Convert.ToString(row["AMT_CLEARED"]),
+                            IAMOUNT = Convert.ToString(row["AMOUNT"]),
+                        };
+
+                        modelList.Add(model);
+                    }
+                }
+
+                return modelList;
+            }
+
+            //return dTResult;
+        }
+        public List<LabPaymentFormModel> GetPaymentsEdit(string PaymentID)
+        {
+
+
+
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_payment_id", OracleDbType.NVarchar2, PaymentID, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("LabPaymentEdit", par, 1);
+
+                List<LabPaymentFormModel> modelList = new List<LabPaymentFormModel>();
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        LabPaymentFormModel model = new LabPaymentFormModel
+                        {
+                            CHQ_NO = row["CHQ_NO"] as string,
+                            CHQ_DT = Convert.ToString(row["CHQ_DT"]),
+                            SAMPLE_REG_NO = Convert.ToString(row["SAMPLE_REG_NO"]),
+                            CASE_NO = Convert.ToString(row["CASE_NO"]),
+                            SNO = Convert.ToString(row["SNO"]),
+                            TOT_CHARGES = Convert.ToString(row["TOT_CHARGES"]),
+                            //TDS_AMT = Convert.ToString(row["TDS_AMT"]),
                             TESTING_FEE = Convert.ToString(row["TESTING_FEE"]),
                             AMT_CLEARED = Convert.ToString(row["AMT_CLEARED"]),
                             IAMOUNT = Convert.ToString(row["AMOUNT"]),
@@ -180,6 +292,33 @@ namespace IBS.Repositories
             }
             return true;
         }
+        public bool UpdatePayment(LabPaymentFormModel LabPaymentFormModel)
+        {
+            
+            string ss;
+            string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
+
+            ss = GetDateString(sqlQuery);
+            try
+            {
+
+                OracleParameter[] par = new OracleParameter[6];
+                par[0] = new OracleParameter("p_chq_no", OracleDbType.Varchar2, LabPaymentFormModel.CHQ_NO, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_chq_dt", OracleDbType.Date, LabPaymentFormModel.CHQ_DT, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_remarks", OracleDbType.Varchar2, LabPaymentFormModel.Remarks, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_user_id", OracleDbType.Varchar2, LabPaymentFormModel.UserId, ParameterDirection.Input);
+                par[4] = new OracleParameter("p_datetime", OracleDbType.Date, ss, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_payment_id", OracleDbType.Varchar2, LabPaymentFormModel.PaymentID, ParameterDirection.Input);
+
+                var ds = DataAccessDB.ExecuteNonQuery("UPDATE_PAYMENT_DETAILS", par, 1);
+                
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
         public bool Update(LabPaymentFormModel LabPaymentFormModel, string PaymentNo)
         {
             string[] srno = LabPaymentFormModel.SNO.Split(',');
@@ -255,6 +394,45 @@ namespace IBS.Repositories
                 }
                 model.SAMPLE_REG_NO = sampleDetail.SAMPLE_REG_NO;
                 model.IAMOUNT = sampleDetail.IAMOUNT;
+                return model;
+            }
+
+            //return dTResult;
+        }
+        public LabPaymentFormModel Edit(string PaymentID)
+        {
+
+
+
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_payment_id", OracleDbType.NVarchar2, PaymentID, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("GET_PAYMENT_DETAILS_Edit", par, 1);
+
+                LabPaymentFormModel model = new();
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataRow row = ds.Tables[0].Rows[0];
+                    model = new LabPaymentFormModel
+                    {
+                        PaymentID = row["PAYMENT_ID"] as string,
+                        PaymentDt = Convert.ToString(row["PAYMENT_DATE"]),
+                        CHQ_NO = Convert.ToString(row["CHQ_NO"]),
+                        CHQ_DT = Convert.ToString(row["CHQ_DATE"]),
+                        BankCD = Convert.ToString(row["BANK_CD"]),
+                        Remarks = Convert.ToString(row["REMARKS"]),
+                        //Bank = Convert.ToString(row["BANK_NAME"]),
+                        Amount = Convert.ToString(row["AMOUNT"]),
+                        LabCd = Convert.ToString(row["LAB_ID"]),
+                        //Lab = Convert.ToString(row["LAB_NAME"]),
+
+                    };
+
+
+                }
                 return model;
             }
 

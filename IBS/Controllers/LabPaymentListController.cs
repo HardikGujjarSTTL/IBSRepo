@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -19,7 +20,7 @@ namespace IBS.Controllers
             LabPaymentListRepository = _LabPaymentListRepository;
         }
 
-       
+        [Authorization("LabPaymentList", "LabPaymentList", "view")]
         public IActionResult LabPaymentList()
         {
 
@@ -32,6 +33,7 @@ namespace IBS.Controllers
             DTResult<LabPaymentListModel> dTResult = LabPaymentListRepository.GetLapPaymentList(dtParameters, Regin);
             return Json(dTResult);
         }
+        [Authorization("LabPaymentList", "LabPaymentList", "view")]
         public IActionResult LabPaymentApproval(string CaseNo,string CallSno,string CallRecvDt)
         {
             ViewBag.CaseNo = CaseNo;
@@ -47,6 +49,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
+        [Authorization("LabPaymentList", "LabPaymentList", "edit")]
         public JsonResult SaveData()
         {
             LabPaymentListModel LabPaymentListModel = new LabPaymentListModel();

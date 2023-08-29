@@ -1,6 +1,13 @@
 ﻿@model IBS.Models.LABREGISTERModel
 
 @{
+   
+    string clsView = "";
+    if (Model.LabID != "0")
+    {
+        
+        clsView = "Permission_View";
+    }
     //ViewData["Title"] = "LAB REGISTER";
 }
 
@@ -133,7 +140,8 @@
 
 <h2>@ViewData["Title"]</h2>
 
-
+<section class="@clsView">
+    <div class="task-listinput">
     <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
            bgColor="#f0f8ff" border="1">
         <!-- First row -->
@@ -151,7 +159,7 @@
             <td style="width: 7.74%; height: 32px;" align="center" bgcolor="#ffcccc" colspan="2">
                 <label class="font-bold font-size-8pt text-darkblue" style="font-family: Verdana; width: 100%;">Lab Registration No.</label>
                 <input type="text" id="txtlabregno"/>
-                <button type="submit" class="btn btn-primary" style="width:auto;margin-left:34%;margin-top:1%;" onclick="Modify()">Modify</button>
+                    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:34%;margin-top:1%;" onclick="Modify()">Modify</button>
             </td>
             <td style="width: 241px; height: 32px;" bgcolor="#ffffff"></td>
             <td style="width: 16.7%; height: 32px;" align="center" bgcolor="#f0f8ff">
@@ -161,7 +169,7 @@
             <td style="width: 20%; height: 32px;" align="center" bgcolor="#f0f8ff">
                 <label  style="font-family: Verdana; width: 100%;">Call Receive Date</label>
                 <input id="txtcallRDt" class="input datepicker" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-            <button type="submit" class="btn btn-primary" style="width:auto;margin-left:15%;margin-top:1%;" onclick="AddNew()">Add New</button>
+                    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:15%;margin-top:1%;" onclick="AddNew()">Add New</button>
             </td>
             <td style="width: 10%; height: 32px;" align="center" bgcolor="#f0f8ff">
                 <label class="font-bold font-size-8pt text-darkblue" style="font-family: Verdana; width: 100%;">Call SNO.</label>
@@ -200,7 +208,8 @@
         </div>
     </section>
 </div>
-
+ </div>
+</section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
