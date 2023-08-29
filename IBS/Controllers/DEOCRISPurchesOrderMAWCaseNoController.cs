@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Policy;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class DEOCRISPurchesOrderMAWCaseNoController : BaseController
     {
         #region Variables
@@ -14,7 +16,7 @@ namespace IBS.Controllers
         {
             purchesorderRepository = _purchesorderRepository;
         }
-
+        [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -27,6 +29,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
         public IActionResult Manage(string Rly, int Makey, byte Slno)
         {
             DEOCRISPurchesOrderMAModel model = new();
@@ -41,6 +44,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "edit")]
         public IActionResult DetailsSave(DEOCRISPurchesOrderMAModel model)
         {
             try

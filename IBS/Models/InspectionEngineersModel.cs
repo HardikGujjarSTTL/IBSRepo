@@ -18,7 +18,9 @@ namespace IBS.Models
 
         public string? IeDepartment { get; set; }
 
-        public int? IeCityCd { get; set; }
+        public string IeCityCd { get; set; }
+
+        public int IeCityId { get; set; }
 
         public string? IePhoneNo { get; set; }
 

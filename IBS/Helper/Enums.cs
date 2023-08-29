@@ -142,6 +142,38 @@ namespace IBS.Helper
             [Description("Left/Repatriated")]
             L,
         }
+
+        public enum IEPosting
+        {
+            [Description("Local")]
+            LC,
+            [Description("Outstation")]
+            OU,
+            [Description("Liaison Officer")]
+            LO,
+        }
+
+        public enum IEStatus
+        {
+            [Description("Working")]
+            W,
+            [Description("Retired")]
+            R,
+            [Description("Transferred")]
+            T,
+            [Description("Left/Repatriated")]
+            L,
+        }
+
+        public enum IEJobType
+        {
+            [Description("Regular")]
+            R,
+            [Description("Deputation")]
+            D,
+            [Description("Contract")]
+            C,
+        }
     }
 
     public class EnumUtility<T>

@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Globalization;
 using IBS.Controllers;
 using Humanizer.Localisation;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace IBS.Models
 {
@@ -355,6 +358,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
 
         public static List<SelectListItem> ItemBlocked()
         {
@@ -974,6 +978,37 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> IEDepartmentlist()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Mechanical";
+            single.Value = "M";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Electrical";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Civil";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Metallurgy";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Textiles";
+            single.Value = "T";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Power Engineering";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> CommonYesNo()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1023,6 +1058,36 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static bool CallCancelCheck(VenderCallCancellationModel model, int chk)
+        {
+            if (model.chk1 == chk)
+                return true;
+            else if (model.chk2 == chk)
+                return true;
+            else if (model.chk3 == chk)
+                return true;
+            else if (model.chk4 == chk)
+                return true;
+            else if (model.chk5 == chk)
+                return true;
+            else if (model.chk6 == chk)
+                return true;
+            else if (model.chk7 == chk)
+                return true;
+            else if (model.chk8 == chk)
+                return true;
+            else if (model.chk9 == chk)
+                return true;
+            else if (model.chk10 == chk)
+                return true;
+            else if (model.chk11 == chk)
+                return true;
+            else if (model.chk12 == chk)
+                return true;
+
+            return false;
+        }
+
         public static IEnumerable<DropDownDTO> GetYesNoCommon()
         {
             return EnumUtility<List<DropDownDTO>>.GetEnumDropDownIntValue(typeof(Enums.YesNoCommon)).ToList();
@@ -1039,6 +1104,20 @@ namespace IBS.Models
                                         Value = Convert.ToString(a.RoleId)
                                     }).ToList();
             return Role;
+
+        }
+
+        public static List<SelectListItem> IEDesignation()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> Desig = (from a in ModelContext.T07RitesDesigs
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = Convert.ToString(a.RDesignation),
+                                         Value = Convert.ToString(a.RDesigCd)
+                                     }).ToList();
+            return Desig;
 
         }
 
@@ -1143,6 +1222,23 @@ namespace IBS.Models
 
         }
 
+        public static List<SelectListItem> GetControllingOfficer(string Region)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> CoName = (from a in ModelContext.T08IeControllOfficers
+                                           join c in ModelContext.T07RitesDesigs on a.CoDesig equals c.RDesigCd
+                                           where a.CoRegion == Region
+                                           orderby a.CoName
+                                           select
+                                      new SelectListItem
+                                      {
+                                          Text = c.RDesignation != null ? a.CoName + "/" + c.RDesignation : a.CoName,
+                                          Value = Convert.ToString(a.CoCd)
+                                      }).ToList();
+            return CoName;
+
+        }
+
         public static List<SelectListItem> PaymentStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1200,6 +1296,21 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Others";
             single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> CallCancelStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Call Chargeable";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Call Non-Chargeable";
+            single.Value = "N";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -1687,6 +1798,35 @@ namespace IBS.Models
             return objdata;
         }
 
+
+        public static List<SelectListItem> GetIeCity(int IeCityId)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<T03City> obj = null;
+            if (IeCityId > 0)
+            {
+                obj = (from t03 in context.T03Cities
+                       where t03.CityCd == IeCityId
+                       select t03).ToList();
+            }
+            else
+            {
+                obj = (from t03 in context.T03Cities
+                       //where t03.CityCd == IeCityId
+                       select t03).ToList();
+            }
+
+
+            List<SelectListItem> objdata = (from a in obj
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.Location != null ? a.Location + " : " + a.City : a.City,
+                                           Value = Convert.ToString(a.CityCd),
+                                       }).ToList();
+            return objdata;
+        }
+
         public static List<SelectListItem> GetConsignee(string RlyCd, string RlyNonrly)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -2066,6 +2206,23 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.COType)).ToList();
         }
+
+        public static IEnumerable<TextValueDropDownDTO> GetIEPosting()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEPosting)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetIEStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEStatus)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetIEJobType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEJobType)).ToList();
+        }
+
+
 
     }
     public static class DbContextHelper

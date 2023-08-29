@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Manage General Message";
+    string clsView = "";
+    if (Model.MESSAGE_ID != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="GeneralMessages" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmMessageDetails">
@@ -22,7 +27,7 @@
         </div>
         <div class="savenext-btn">
             <a asp-controller="GeneralMessages" asp-action="MessageMaster" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
         </div>
     </div>
 </form>

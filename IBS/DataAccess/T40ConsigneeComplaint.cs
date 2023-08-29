@@ -21,9 +21,9 @@ public partial class T40ConsigneeComplaint
 
     public string? InspRegion { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
-    public byte? IeCoCd { get; set; }
+    public int? IeCoCd { get; set; }
 
     public string? CompRecvRegion { get; set; }
 
@@ -39,7 +39,7 @@ public partial class T40ConsigneeComplaint
 
     public decimal? QtyRejected { get; set; }
 
-    public byte? UomCd { get; set; }
+    public int? UomCd { get; set; }
 
     public decimal? Rate { get; set; }
 

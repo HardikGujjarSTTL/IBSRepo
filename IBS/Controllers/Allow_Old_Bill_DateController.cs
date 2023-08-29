@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using System.Drawing;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class Allow_Old_Bill_DateController : BaseController
     {
         #region Variables
@@ -15,7 +17,7 @@ namespace IBS.Controllers
         {
             allowoldbilldateRepository = _allowoldbilldateRepository;
         }
-
+        [Authorization("Allow_Old_Bill_Date", "Allow_Old_Bill_DateMaster", "view")]
         public IActionResult Allow_Old_Bill_DateMaster()
         {
             return View();
@@ -30,6 +32,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("Allow_Old_Bill_Date", "Allow_Old_Bill_DateMaster", "edit")]
         public IActionResult DetailsSave(Allow_Old_Bill_DateModel model)
         {
             try
@@ -55,6 +58,7 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        [Authorization("Allow_Old_Bill_Date", "Allow_Old_Bill_DateMaster", "view")]
         public IActionResult Allow_Old_Bill_DateManage(string region)
         {
             Allow_Old_Bill_DateModel model = new();

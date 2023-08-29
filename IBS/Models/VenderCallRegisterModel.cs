@@ -159,9 +159,9 @@ namespace IBS.Models
 
         //T05_VENDOR
         public string? VendAdd1 { get; set; }
-        
+
         public string? VendContactPer1 { get; set; }
-        
+
         public string? VendContactTel1 { get; set; }
 
         public string? VendStatus { get; set; }
@@ -209,7 +209,7 @@ namespace IBS.Models
 
         public string FOS { get; set; }
 
-        public string IsNewVender { get; set;}
+        public string IsNewVender { get; set; }
 
         public string? Createdby { get; set; }
 
@@ -217,10 +217,10 @@ namespace IBS.Models
 
         public decimal wMat_value { get; set; }
 
-        public int desire_dt { get; set; }  
+        public int desire_dt { get; set; }
 
-        public string CaseNoNoFound { get; set; } 
-        
+        public string CaseNoNoFound { get; set; }
+
         public int e_status { get; set; }
 
         public string IE_name { get; set; }
@@ -329,6 +329,98 @@ namespace IBS.Models
 
         public string? VendPOEmail { get; set; }
 
+
+    }
+
+    public class VenderCallCancellationModel
+    {
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short? CallSno { get; set; }
+
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public string? IeSname { get; set; }
+
+        public string? Vendor { get; set; }
+
+        public string CallCancelStatus { get; set; }
+
+        public int chk1 { get; set; }
+
+        public int chk2 { get; set; }
+
+        public int chk3 { get; set; }
+
+        public int chk4 { get; set; }
+
+        public int chk5 { get; set; }
+
+        public int chk6 { get; set; }
+
+        public int chk7 { get; set; }
+
+        public int chk8 { get; set; }
+
+        public int chk9 { get; set; }
+
+        public int chk10 { get; set; }
+
+        public int chk11 { get; set; }
+
+        public int chk12 { get; set; }
+
+        public bool chk_1 { get; set; }
+
+        public bool chk_2 { get; set; }
+
+        public bool chk_3 { get; set; }
+
+        public bool chk_4 { get; set; }
+                    
+        public bool chk_5 { get; set; }
+                    
+        public bool chk_6 { get; set; }
+                    
+        public bool chk_7 { get; set; }
+                    
+        public bool chk_8 { get; set; }
+                    
+        public bool chk_9 { get; set; }
+                    
+        public bool chk_10 { get; set; }
+                    
+        public bool chk_11 { get; set; }
+
+        public bool chk_12 { get; set; }
+
+        public string DocRec { get; set; }
+
+        public string Cdesc { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CancelDt { get; set; }
+
+        public string Createdby { get; set; }
+
+        public string CreatedDate { get; set; }
+
+        public string Updatedby { get; set; }
+
+        public string UpdatedDate { get; set; }
+
+        public string ActionType { get; set; }
+
+        public bool[] chkItems { get; set; }
 
     }
 }

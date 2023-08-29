@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "MANAGE INSTRUCTIONS FOR IE";
+    string clsView = "";
+    if (Model.MessageId != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="IE_Instructions_Admin" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
@@ -61,7 +66,7 @@
         
                 <div class="savenext-btn">
                     <a asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsMaster" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
     </div>
 </form>

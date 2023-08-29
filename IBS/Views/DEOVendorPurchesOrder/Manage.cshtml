@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "PO Master";
+    string clsView = "";
+    if (Model.CaseNo != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
@@ -185,8 +190,8 @@
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="DEOVendorPurchesOrder" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    <button type="button" class="save-btn active" onclick="AcceptPO();">Accept PO</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
                 </div>
             </div>
         </form>

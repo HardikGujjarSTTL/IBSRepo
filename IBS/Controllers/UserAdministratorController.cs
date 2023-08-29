@@ -34,7 +34,7 @@ namespace IBS.Controllers
         }
 
         #endregion
-        [Authorization("UserAdministrator", "UserManage", "view")]
+        [Authorization("UserAdministrator", "UserMaster", "view")]
         public IActionResult UserManage(string UserId)
         {
             UserModel model = new();
@@ -67,7 +67,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("UserAdministrator", "UserManage", "add")]
+        [Authorization("UserAdministrator", "UserManage", "edit")]
         public IActionResult UserDetailsSave(UserModel model)
         {
             try

@@ -7811,7 +7811,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("DEPARTMENT_NAME");
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
@@ -9322,6 +9322,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CancelCd11)
                 .HasPrecision(2)
                 .HasColumnName("CANCEL_CD_11");
+            entity.Property(e => e.CancelCd12)
+                .HasPrecision(2)
+                .HasColumnName("CANCEL_CD_12");
             entity.Property(e => e.CancelCd2)
                 .HasPrecision(2)
                 .HasColumnName("CANCEL_CD_2");
@@ -9353,6 +9356,13 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("CANCEL_DESC");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -9361,6 +9371,16 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("DOCS_SUBMITTED");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -10740,10 +10760,10 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("DEFECT_CD");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeCoCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("IE_CO_CD");
             entity.Property(e => e.IeJiRemarks)
                 .HasMaxLength(500)
@@ -10863,7 +10883,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("TECH_REF");
             entity.Property(e => e.UomCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("UOM_CD");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
@@ -13919,7 +13939,7 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.BankCd)
                 .HasPrecision(6)
-                .HasDefaultValueSql("\"IBSDEV\".\"T94_BANK_SEQ\".\"NEXTVAL\"")
+                .HasDefaultValueSql("NULL ")
                 .HasColumnName("BANK_CD");
             entity.Property(e => e.BankName)
                 .HasMaxLength(30)
@@ -13935,7 +13955,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.FmisBankCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("FMIS_BANK_CD");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
@@ -15856,10 +15876,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeCoCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("IE_CO_CD");
             entity.Property(e => e.IeCoName)
                 .HasMaxLength(30)
@@ -16006,7 +16026,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("TECH_REF");
             entity.Property(e => e.UomCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("UOM_CD");
             entity.Property(e => e.UomSDesc)
                 .HasMaxLength(10)

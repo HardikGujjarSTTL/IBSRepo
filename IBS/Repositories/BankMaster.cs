@@ -25,7 +25,7 @@ namespace IBS.Repositories
             {
                 model.BankCd = role.BankCd;
                 model.BankName = role.BankName;
-                model.FmisBankCd = role.FmisBankCd;
+                model.FmisBankCd = (byte)role.FmisBankCd;
                 model.UserId = role.UserId;
                 model.Updatedby = role.Updatedby;
                 model.Createdby = role.Createdby;
@@ -68,7 +68,7 @@ namespace IBS.Repositories
                     {
                         BankCd = l.BankCd,
                         BankName = l.BankName,
-                        FmisBankCd = l.FmisBankCd,
+                        FmisBankCd = (byte)l.FmisBankCd,
                         UserId = l.UserId,
                         //Isdeleted = l.Isdeleted,
                         //Createddate = l.Createddate,

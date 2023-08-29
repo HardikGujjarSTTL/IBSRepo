@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class MasterTableStatusController : BaseController
     {
         #region Variables
@@ -14,7 +16,7 @@ namespace IBS.Controllers
         {
             mastertablestatusRepository = _mastertablestatusRepository;
         }
-
+        [Authorization("MasterTableStatus", "MasterTableStatusList", "view")]
         public IActionResult MasterTableStatusList()
         {
             return View();

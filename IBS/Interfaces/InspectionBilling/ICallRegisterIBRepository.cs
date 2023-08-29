@@ -6,7 +6,7 @@ namespace IBS.Interfaces.InspectionBilling
     {
         DTResult<VenderCallRegisterModel> GetDataList(DTParameters dtParameters, string GetRegionCode);
 
-        public VenderCallRegisterModel FindByID(string CaseNo, string CallRecvDt, string CallSno, string GetRegionCode);
+        public VenderCallRegisterModel FindByID(string CaseNo, DateTime? CallRecvDt, string CallSno, string GetRegionCode);
 
         DTResult<VenderCallRegisterModel> FindByModifyDetail(string CaseNo, string CallRecvDt, int CallSno, string GetRegionCode);
 
@@ -14,9 +14,9 @@ namespace IBS.Interfaces.InspectionBilling
 
         public string GetRegionValue(string CaseNo, string CallRecvDt, string CallSno);
 
-        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno,string ActionType, string UserName);
+        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string ActionType, string GetRegionCode);
 
-        DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd,string CaseNo);
+        DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd, string CaseNo);
 
         string RegiserCallSave(VenderCallRegisterModel model);
 
@@ -28,9 +28,19 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallRegisterModel FindAddDetails(string CaseNo);
 
-        public string GetMatch(string CaseNo,string GetRegionCode);
+        public string GetMatch(string CaseNo, string GetRegionCode);
 
-        public int show2(string CaseNo,string CallRecvDt,int CallSno);
+        public int show2(string CaseNo, string CallRecvDt, int CallSno);
+
+        public string GetCaseNoFind(string CaseNo, string CallRecvDt, int CallSno);
+
+        public VenderCallCancellationModel CancelCallFindByID(string CaseNo, string CallRecvDt, int CallSno, string ActionType);
+
+        public VenderCallCancellationModel CancelCallFindByIDM(string CaseNo, string CallRecvDt, int CallSno, string ActionType);
+
+        string CallDetailsSave(VenderCallCancellationModel model,  string UserName);
+
+        string CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno);
 
     }
 }

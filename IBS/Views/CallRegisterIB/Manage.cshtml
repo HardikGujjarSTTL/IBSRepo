@@ -261,21 +261,21 @@
                     <div class="reference">
                         <label for="Name">Contact Person's Name</label>
                         <input type="text" class="input" asp-for="VendContactPer1">
-                        <span asp-validation-for="VendContactPer1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactPer1" class="text-danger" id="spnVendContactPer1"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Name">Manufacturer Email</label>
                         <input type="text" class="input" asp-for="VendEmail">
-                        <span asp-validation-for="VendEmail" class="text-danger"></span>
+                        <span asp-validation-for="VendEmail" class="text-danger" id="spnVendEmail"></span>
                     </div>
                 </div>
                 <div class="col-md-2 mb-3">
                     <div class="reference">
                         <label for="Name">Phone No.</label>
                         <input type="text" class="input" asp-for="VendContactTel1">
-                        <span asp-validation-for="VendContactTel1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactTel1" class="text-danger" id="spnVendContactTel1"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -364,6 +364,7 @@
             else if(actiontype == "A")
             {
                 $("#btnCDetails").hide();
+                $("#btnDelete").hide();
                 $("#CallStatus").val("Marked");
             }
 
@@ -472,6 +473,22 @@
         }
 
         $("#btnUpdateMDetails").click(function () {
+            if($("#VendContactPer1").val() == "" || $("#VendContactPer1").val() == null)
+            {
+                $("#spnVendContactPer1").html("Contact Person's Name");
+                //ShowHideMsgNew(false, "Please add Contact Person's Name");
+                return;
+            }
+            if($("#VendEmail").val() == "" || $("#VendEmail").val() == null)
+            {
+                $("#spnVendEmail").html("Manufacturer Email");
+                return;
+            }
+            if($("#VendContactTel1").val() == "" || $("#VendContactTel1").val() == null)
+            {
+                $("#spnVendContactTel1").html("Phone No.");
+                return;
+            }
             var formData = {
                 MfgCd: $("#MfgCd").val(),
                 VendCd: $("#VendCd").val(),
@@ -534,7 +551,7 @@
             event.preventDefault();
 
             var formData = $("#frmDetails").serialize();
-            $.post("@Url.Action("DetailsDelete", "VendorCallRegister")", formData, function (response) {
+            $.post("@Url.Action("DetailsDelete", "CallRegisterIB")", formData, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
                 }

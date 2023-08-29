@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "Manage User";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.UserId != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -145,7 +143,7 @@
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="UserAdministrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>
