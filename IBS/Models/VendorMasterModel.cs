@@ -1,18 +1,23 @@
-﻿using IBS.DataAccess;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
-    public class VendorModel
+    public class VendorMasterModel
     {
         public int VendCd { get; set; }
 
+        [Display(Name = "Vendor Name")]
+        [Required]
         public string? VendName { get; set; }
 
+        [Display(Name = "Vendor Address")]
+        [Required]
         public string? VendAdd1 { get; set; }
 
         public string? VendAdd2 { get; set; }
 
+        [Display(Name = "City")]
+        [Required]
         public int? VendCityCd { get; set; }
 
         public string? VendContactPer1 { get; set; }
@@ -25,22 +30,30 @@ namespace IBS.Models
 
         public string? VendApproval { get; set; }
 
+        [Display(Name = "Approval Period From")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendApprovalFr { get; set; }
 
+        [Display(Name = "Approval Period To")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendApprovalTo { get; set; }
 
         public string? VendStatus { get; set; }
 
+        [Display(Name = "Status Date From")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendStatusDtFr { get; set; }
 
+        [Display(Name = "Status Date To")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendStatusDtTo { get; set; }
 
         public string? VendStatusDtFrST { get; set; }
@@ -55,6 +68,8 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [Display(Name = "Email")]
+        [EmailAddress]
         public string? VendEmail { get; set; }
 
         public string? VendInspStopped { get; set; }
@@ -63,30 +78,14 @@ namespace IBS.Models
 
         public string? OnlineCallStatus { get; set; }
 
+        public byte? Isdeleted { get; set; }
 
-        public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();
+        public int? Createdby { get; set; }
 
-        public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();
+        public int? Updatedby { get; set; }
 
-        public virtual ICollection<T40ConsigneeComplaint> T40ConsigneeComplaints { get; set; } = new List<T40ConsigneeComplaint>();
+        public DateTime? Createddate { get; set; }
 
-        public virtual ICollection<T41NcMaster> T41NcMasters { get; set; } = new List<T41NcMaster>();
-
-        public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();
-
-        public virtual ICollection<T80PoMaster> T80PoMasters { get; set; } = new List<T80PoMaster>();
-
-        public virtual T03City? VendCityCdNavigation { get; set; }
+        public DateTime? Updateddate { get; set; }
     }
-    public class VendorlistModel
-    {
-        public int VEND_CD { get; set; }
-
-        public string? VEND_NAME { get; set; }
-        public string? VEND_CITY_CD { get; set; }
-        public string? VEND_ADD { get; set; }
-        public string? VEND_CONT_NO { get; set; }
-        public string? VEND_EMAIL { get; set; }
-    }
-
 }
