@@ -436,20 +436,6 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.VendorStatus)).ToList();
         }
 
-        public static List<SelectListItem> ItemBlocked()
-        {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single.Text = "No";
-            single.Value = "";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Yes";
-            single.Value = "Y";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
-        }
-
         public static List<TextValueDropDownDTO> OnlineCallStatus()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.OnlineCallStatus)).ToList();
