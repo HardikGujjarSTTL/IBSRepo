@@ -109,7 +109,6 @@
     }
 
     function InitializeDatatable() {
-        debugger
         var Date = $("#txtDate").val();
         var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "1" : "0";
         var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "1" : "0";
@@ -186,16 +185,16 @@
         $("#body").css("display", "none");
         $("#tblsection").css("display", "none");
         $("#frmParial").css("display", "block");
-        //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
-
-        $.ajax({
-            type: 'GET',
-            url: "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt,
-            //data: obj,
-            success: function (data) {
-                $('#frmParial').html(data)
-            }
-        });
+        //window.location.href = "@Url.Action("Manage","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+        window.location.href = "@Url.Action("Manage","CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+        //$.ajax({
+        //    type: 'GET',
+        //    url: "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt,
+        //    //data: obj,
+        //    success: function (data) {
+        //        $('#frmParial').html(data)
+        //    }
+        //});
     }
 </script>
 

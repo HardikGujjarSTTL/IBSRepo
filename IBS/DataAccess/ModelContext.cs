@@ -8250,10 +8250,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T10IcBookset>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T10_IC_BOOKSET");
+            entity.HasKey(e => e.Id).HasName("T10_IC_BOOKSET_PK");
 
+            entity.ToTable("T10_IC_BOOKSET");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T10_IC_BOOKSET_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.BkNo)
                 .HasMaxLength(4)
                 .IsUnicode(false)
@@ -8316,7 +8320,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
 
-            entity.HasOne(d => d.IssueToIecdNavigation).WithMany()
+            entity.HasOne(d => d.IssueToIecdNavigation).WithMany(p => p.T10IcBooksets)
                 .HasForeignKey(d => d.IssueToIecd)
                 .HasConstraintName("FK_IECD");
         });
@@ -15927,7 +15931,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("JI_FIX_DT");
             entity.Property(e => e.JiIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("JI_IE_CD");
             entity.Property(e => e.JiIeRemarks)
                 .HasMaxLength(500)
@@ -18110,6 +18114,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T04_UOM_SEQ");
         modelBuilder.HasSequence("T05_VENDOR_SEQ");
         modelBuilder.HasSequence("T07_RITES_DESIG_SEQ");
+        modelBuilder.HasSequence("T10_IC_BOOKSET_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
         modelBuilder.HasSequence("T45_CLAIM_MASTER_SEQ");

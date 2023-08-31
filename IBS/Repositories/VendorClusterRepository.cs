@@ -203,15 +203,13 @@ namespace IBS.Repositories
             return model.VendorCode;
         }
 
-        public bool Remove(int VendorCode, int UserID)
+        public bool Remove(int VendorCode, string DepartmentCode)
         {
-            var roles = context.T100VenderClusters.Find(Convert.ToByte(VendorCode));
-            if (roles == null) { return false; }
-
-            roles.Isdeleted = Convert.ToByte(true);
-            roles.Updatedby = Convert.ToInt32(UserID);
-            roles.Updateddate = DateTime.Now;
-            context.SaveChanges();
+            if (context.T100VenderClusters.Any(x => x.VendorCode == VendorCode && x.DepartmentName == DepartmentCode))
+            {
+                context.T100VenderClusters.RemoveRange(context.T100VenderClusters.Where(x => x.VendorCode == VendorCode && x.DepartmentName == DepartmentCode).ToList());
+                context.SaveChanges();
+            }
             return true;
         }
 

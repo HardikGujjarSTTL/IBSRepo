@@ -125,12 +125,13 @@ namespace IBS.Repositories.Inspection_Billing
         public CallMarkedOnlineModel Get_Call_Marked_Online_Detail(CallMarkedOnlineFilter obj)
         {
             var model = new CallMarkedOnlineModel();
-            OracleParameter[] par = new OracleParameter[4];
+            OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, obj.CASE_NO, ParameterDirection.Input);
             par[1] = new OracleParameter("P_DATE", OracleDbType.Varchar2, obj.Date, ParameterDirection.Input);
             par[2] = new OracleParameter("P_CALL_SNO", OracleDbType.Varchar2, obj.CALL_SNO, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_DETAIL", par, 1);
+            par[4] = new OracleParameter("P_PREV_CALL_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_DETAIL", par, 2);
             DataTable dt = ds.Tables[0];
 
             model = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
@@ -162,6 +163,12 @@ namespace IBS.Repositories.Inspection_Billing
                 DEPARTMENT_CODE = Convert.ToString(row["DEPARTMENT_CODE"]),
                 FINAL_OR_STAGE = Convert.ToString(row["FINAL_OR_STAGE"])
             }).FirstOrDefault();
+
+            if (ds.Tables[1].Rows.Count > 0)
+            {
+                model.PREV_CALL_1 = (Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) != null && Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) != "") ? Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) : null;
+                model.PREV_CALL_2 = (Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) != null && Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) != "") ? Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) : null;
+            }
 
             return model;
         }
