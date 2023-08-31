@@ -187,7 +187,6 @@
         });
 
         $("#Inspectionrequired").change(function () {
-            debugger
             var selectedValue = $(this).val();
             if(selectedValue == "Y"){
                 $("#JIDate").show();
@@ -211,7 +210,6 @@
         }
 
         function Submit(){
-            debugger
 
             $("#acceptbtn").hide;
 
@@ -290,7 +288,6 @@
         }
 
         $("#InspRegionDropdown").change(function () {
-            debugger
             var InspRegionDropdown = $(this).val();
 
             $.ajax({
@@ -298,10 +295,8 @@
                 type: 'GET',
                 data: { InspRegionDropdown: InspRegionDropdown },
                 success: function (data) {
-                    debugger
                     var Item = $("#Jointisp");
                     Item.empty();
-                    debugger
                     var items = JSON.parse(data);
 
                     for (var i = 0; i < items.length; i++) {

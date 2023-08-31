@@ -1,5 +1,4 @@
-﻿
-
+﻿@model IBS.Models.ICIsuued
 <div class="accordion-body" id="BYIE">
     <div class="row my-0">
         <div class="list-inner">
@@ -9,13 +8,13 @@
         </div>
         <div class="col-md-3 mb-3">
             <label for="Reference">From Date</label>
-            <input type="text" class="input datepicker" @*asp-for="FromDate"*@ readonly="true" id="FromDate" required>
-            <span @*asp-validation-for="FromDate"*@ class="text-danger"></span>
+            <input type="text" class="input datepicker" asp-for="FromDT" readonly="true" id="FromDate" required>
+            <span asp-validation-for="FromDT" class="text-danger"></span>
         </div>
         <div class="col-md-3 mb-3">
             <label for="Reference">To Date</label>
-            <input type="text" class="input datepicker" @*asp-for="ToDate"*@ readonly="true" id="ToDate" required>
-            <span @*asp-validation-for="ToDate"*@ class="text-danger"></span>
+            <input type="text" class="input datepicker" asp-for="ToDT" readonly="true" id="ToDate" required>
+            <span asp-validation-for="ToDT" class="text-danger"></span>
         </div>
         <div class="col-md-3 mb-3">
             <div class="savenext-btn">

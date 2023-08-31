@@ -344,7 +344,6 @@
         });
 
         $("#InspRegionDropdown").change(function () {
-            debugger
             var InspRegionDropdown = $(this).val();
 
             $.ajax({
@@ -352,10 +351,8 @@
                 type: 'GET',
                 data: { InspRegionDropdown: InspRegionDropdown },
                 success: function (data) {
-                    debugger
                     var Item = $("#Jointisp");
                     Item.empty();
-                    debugger
                     var items = JSON.parse(data);
 
                     for (var i = 0; i < items.length; i++) {
@@ -370,7 +367,6 @@
         });
 
         $("#DARProposed").change(function () {
-            debugger
             var selectedValue = $(this).val();
             var Item = $("#lstPenaltyType");
             Item.empty();
@@ -412,7 +408,6 @@
         });
 
         $("#JointInspectionrequired").change(function () {
-            debugger
             var selectedValue = $(this).val();
             if (selectedValue == "Y") {
                 $("#outcomeji").show();
@@ -458,7 +453,6 @@
         });
 
         function btnsaveyourchoice(){
-            debugger
             var formData = new FormData($("#frmConsigneeDetails")[0]);
             $.ajax({
                 url: '@Url.Action("ComplaintSaveChoice", "ConsigneeComplaints")',
@@ -483,7 +477,6 @@
         }
 
         function btncancelJI(){
-            debugger
             var formData = new FormData($("#frmConsigneeDetails")[0]);
             $.ajax({
                 url: '@Url.Action("ComplaintCancelJI", "ConsigneeComplaints")',
