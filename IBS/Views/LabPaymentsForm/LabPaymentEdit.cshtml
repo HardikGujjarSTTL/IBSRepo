@@ -1,0 +1,450 @@
+﻿@model IBS.Models.LabPaymentFormModel
+
+@{
+    ViewData["Title"] = "EXTERNAL LABORATORY PAYMENT FORM";
+    
+    string clsView = "";
+    //if (Model.PaymentID != "0")
+    //{
+        
+    //    clsView = "Permission_View";
+    //}
+}
+<style>
+    #showPayment1 {
+        max-height: 300px; /* Set the maximum height for the scrolling area */
+        overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    }
+
+    tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de; /* Add top border */
+        background-color: #f0f8ff;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px; /* Adjust the height of table cells */
+        padding: 5px;
+        vertical-align: top;
+    }
+
+    /* Style for labels */
+    label {
+        display: block; /* Make labels block-level to occupy the whole cell width */
+        font-weight: bold;
+    }
+
+    /* Style for input fields */
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box; /* Ensure the padding is included in the width */
+    }
+
+    /* Style for error message */
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    /* Style for left-aligned button */
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    /* Style for right-aligned button */
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    /* Clear floating elements */
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtPayment {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        /* Style table header cells */
+        #dtPayment th {
+            background-color: #f2f2f2;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table body cells */
+        #dtPayment td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style>
+@*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>EXTERNAL LABORATORY PAYMENT FORM</h2>
+    </div>
+    <div>
+        <a asp-action="LabPaymentForm" asp-controller="LabPaymentsForm" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<div class="accordion-body">
+
+    <div class="col-md-8 mb-3">
+        <label for="PropertyId">Lab</label>
+        @Html.DropDownListFor(model => model.LabCd, Common.GetLab(), new { @id="ddlppylab",@disabled="disabled"})
+        <span asp-validation-for="LabCd" class="text-danger"></span>
+    </div>
+
+</div>
+@*<div class="savenext-btn" style="margin-right:50%;">
+    <button type="button" class="save-btn active" onclick="GetPayment();">Submit</button>
+</div>*@
+    </div>
+<div id="showPayment1">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtPayment" class="table">
+                    <thead>
+                        <tr>
+                            
+                            <th>Sample Reg No</th>
+                            <th>Case No</th>
+                            <th>Total Lab Charges</th>
+                            <th>TDS AMT</th>
+                            <th>Fees+S.T.</th>
+                            <th>Amount Cleared</th>
+                            <th>Instrument No</th>
+                            <th>Instrument Dt</th>
+                            <th>Instrument Amt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="accordion-body"  id="pytdtl">
+
+    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
+           bgColor="#f0f8ff" border="1">
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Payment No.</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="lblpyno"></label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Payment Date</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label" id="dtpydt"></label>
+                
+                <span class="text-danger" id="spnregdt" style="margin-left:6%;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">
+                    Instrument No
+
+                </label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input type="text" class="form-control" id="txtAno" />
+                <span asp-validation-for="CHQ_NO" class="text-danger"></span>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Instrument Date</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input class="input datepicker" id="dtAdt" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
+                <span asp-validation-for="CHQ_DT" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">
+                    Bank
+
+                </label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                @Html.DropDownListFor(model => model.Bank, Common.GetBankPayment(), new { @id="ddlbank" , @disabled="disabled"})
+                <span asp-validation-for="Bank" class="text-danger"></span>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Amount</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <input type="text" id="txtamt" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" readonly="realonly" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <label class="control-label">Remarks</label>
+            </td>
+            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+                <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremk"></textarea>
+            </td>
+        </tr>
+    </table>
+    <div class="savenext-btn" style="margin-right:46%;">
+        <button type="button" class="save-btn active Permission_Save" onclick="Save();" id="btnsave">Save</button>
+        <button type="button" class="save-btn active"  id="btnprint">Print</button>
+       @* <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>*@
+    </div>
+</div>
+@*</form>*@
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            var PaymentID = '@ViewBag.PaymentID';
+            Edit(PaymentID);
+            GetPayment();
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+            var today = new Date();
+            //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+            $("#dtpydt").text(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear())).css("color", "red");
+        });
+        $("#btnp").click(function () {
+            $('html, body').animate({
+                scrollTop: $("#pytdtl").offset().top
+            }, 1000);
+        });
+        function cancel() {
+            window.location.href = "/LabPaymentsForm/LabPaymentForm";
+        }
+        function GetPayment() {
+
+
+            var PaymentID = '@ViewBag.PaymentID';
+            $.ajax({
+                url: '/LabPaymentsForm/LoadTableEdit', // Replace with your actual endpoint URL
+                type: 'POST',
+                dataType: 'json',
+                data: { PaymentID: PaymentID },
+                success: function (data) {
+                    
+                    if (data.length == 0) {
+
+                    }
+                    else {
+
+                        $("#showPayment1").css("display", "block");
+                        $("#btnp").css("display", "block");
+
+                        // Once data is successfully received, populate the table
+                        var tableBody = $('#tableBody');
+                        tableBody.empty(); // Clear existing rows (if any)
+                        for (i = 0; i < data.length; i++) {
+
+                            var row = $('<tr>');
+                            //row.append($('<td>').text(data[i].SNO)); // SRNo.
+                            //var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+                            //var snoLink = $('<input>').attr({ 'type': 'checkbox', 'data-sno': data[i].SNO, 'data-regno': data[i].SAMPLE_REG_NO });
+
+                            //var snoCell = $('<td>').append(snoLink);
+                            //row.append(snoCell);
+                            row.append($('<td>').text(data[i].SAMPLE_REG_NO));
+                            row.append($('<td>').text(data[i].CASE_NO));
+                            row.append($('<td>').text(data[i].TOT_CHARGES));
+                            row.append($('<td>').text(data[i].TDS_AMT));
+                            row.append($('<td>').text(data[i].TESTING_FEE));
+                            row.append($('<td>').text(data[i].AMT_CLEARED));
+                            row.append($('<td>').text(data[i].CHQ_NO));
+                            row.append($('<td>').text(data[i].CHQ_DT));
+                            row.append($('<td>').text(data[i].IAMOUNT));
+
+                            
+                            tableBody.append(row);
+                            //var sno = data[i].SNO;
+                        }
+
+                        //editButton.click(function(event) {
+                        //snoLink.click(function (event) {
+                        //    //var regNo = regNo1;
+                        //    //var sno = sno1;
+                        //    //LabDtlModify(regNo, sno);
+                        //});
+                    }
+                },
+                error: function () {
+
+                }
+
+            });
+        }
+
+        function Click() {
+            
+            var text = $("#ddlppylab option:selected").text();
+            $("#pytdtl").css("display", "block");
+            $("#txtremk").val(text);
+        }
+        function Save() {
+            
+
+          
+            var LabPaymentFormModel = {
+                PaymentID: $("#lblpyno").text(),
+                CHQ_NO: $("#txtAno").val(),
+                CHQ_DT: $("#dtAdt").val(),                
+                Remarks: $("#txtremk").val()               
+            };
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                url: "/LabPaymentsForm/UpdatePayment",
+                dataType: "json",
+                data: JSON.stringify(LabPaymentFormModel),
+                    success: function (result) {
+                   
+                        sessionStorage.setItem("pytid",result.message);
+                        if (result.success == true) {
+
+                        alert('Data Saved Successfully!');
+                            $("#lblpyno").text(result.message).css("color", "red");
+                            $("#btnsave").css("display","none");
+                            $("#btnprint").css("display", "block");
+                        //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                },
+                error: function (result) {
+
+
+                        if (result.success == true) {
+
+                        alert('Data Saved Successfully!');
+                            $("#lblpyno").text(result.message).css("color", "red");
+                            $("#btnsave").css("display", "none");
+                            $("#btnprint").css("display", "block");
+                        //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+            
+            //else
+            //{
+            //    alert("Select atleast One Sample Registration No. to process the Lab Payment.");
+            //}
+        }
+
+        $("#btnprint").click(function (){
+           
+           var PaymentID  = sessionStorage.getItem("pytid");
+            window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+        })
+        function Edit(PaymentID) {
+
+            var PaymentID = PaymentID;
+            $.ajax({
+                url: '/LabPaymentsForm/Edit',
+                type: "POST",
+                dataType: "JSON",
+                data: { PaymentID: PaymentID },
+
+                success: function (success) {
+
+                    var parts = success.PaymentDt.split('/');
+                    var PaymentDt = parts[1] + '/' + parts[0] + '/' + parts[2];
+
+                    var parts1 = success.CHQ_DT.split('/');
+                    var CHQ_DT = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+                    //$("#dtregdt").val(success.SampleRegDate);
+                    $("#lblpyno").text(success.PaymentID);
+                    $("#dtpydt").text(PaymentDt);
+                    $("#txtAno").val(success.CHQ_NO);
+                    $("#dtAdt").val(CHQ_DT);
+                    $("#ddlbank").val(success.BankCD);
+                    $("#txtamt").val(success.Amount);
+                    $("#ddlppylab").val(success.LabCd);
+                    $("#txtremk").val(success.Remarks);
+                    
+
+                }
+
+            });
+        }
+    </script>
+}

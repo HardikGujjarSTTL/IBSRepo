@@ -32,14 +32,32 @@ namespace IBS.Controllers
 
             return View();
         }
-        [HttpPost]
-        public IActionResult LoadTable(LabPaymentFormModel paymentFormModel, string PaymentID, string PaymentDT, string Lab)
+        [Authorization("LabPaymentsForm", "LabPaymentForm", "view")]
+        public IActionResult LabPaymentEdit(string PaymentID)
         {
-            paymentFormModel.PaymentID = PaymentID;
-            paymentFormModel.PaymentDt = PaymentDT;
-            paymentFormModel.Lab = Lab;
-            paymentFormModel.Regin = GetRegionCode;
-            List<LabPaymentFormModel> dTResult = LabPaymentRepository.GetLabPayments(paymentFormModel);
+            ViewBag.PaymentID = PaymentID;
+            
+            return View();
+        }
+        [HttpPost]
+        public IActionResult LoadTableEdit(string PaymentID)
+        {
+            string Regin = GetRegionCode;
+            List<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPaymentsEdit(PaymentID);
+            return Json(dTResult);
+        }
+        [HttpPost]
+        public IActionResult Edit(string PaymentID)
+        {
+            string Regin = GetRegionCode;
+            LabPaymentFormModel dTResult = LabPaymentRepository.Edit(PaymentID);
+            return Json(dTResult);
+        }
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {            
+            string Regin = GetRegionCode;
+            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetLabPayments(dtParameters, Regin);
             return Json(dTResult);
         }
         [HttpPost]
@@ -52,13 +70,34 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        [Authorization("LabPaymentsForm", "LabPaymentForm", "add")]
+        [Authorization("LabPaymentsForm", "LabPaymentForm", "edit")]
         public JsonResult SavePayment([FromBody] LabPaymentFormModel paymentFormModel)
         {
             paymentFormModel.Regin = GetRegionCode;
             paymentFormModel.UserId = Convert.ToString(UserId);
             bool result;
             result = LabPaymentRepository.SavePayment(paymentFormModel);
+            if (result == true)
+            {
+
+                //ViewBag.PaymentID = paymentFormModel.PaymentID;
+                return Json(new { success = true, message = paymentFormModel.PaymentID });
+            }
+            else
+            {
+                return Json(new { success = false, message = paymentFormModel.PaymentID });
+            }
+
+        }
+
+        [HttpPost]
+        [Authorization("LabPaymentsForm", "LabPaymentForm", "edit")]
+        public JsonResult UpdatePayment([FromBody] LabPaymentFormModel paymentFormModel)
+        {
+            paymentFormModel.Regin = GetRegionCode;
+            paymentFormModel.UserId = Convert.ToString(UserId);
+            bool result;
+            result = LabPaymentRepository.UpdatePayment(paymentFormModel);
             if (result == true)
             {
 

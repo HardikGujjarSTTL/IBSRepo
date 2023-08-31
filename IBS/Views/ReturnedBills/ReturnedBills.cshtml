@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Returned Bills yet to be Resent (Not Posted in IBS)";
+}
+
+
+
+    <div id="hide">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Returned Bills yet to be Resent (Not Posted in IBS)</h2>
+        </div>
+        
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtinvoiced" class="table-responsive">
+                    <thead>
+                        <tr>
+                            
+                            <th>S.No.</th>
+                            <th>Client</th>
+                            <th>Bill No.</th>
+                            <th>Bill Dt.</th>
+                            <th>Bill Amount</th>
+                            <th>BK No.</th>
+                            <th>SET No.</th>
+                            <th>Return Reason</th>
+                            <th>Retun Date</th>
+                            <th>
+                                AU CODE
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    </div>
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+           
+            $("#dtinvoiced").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "BpoRly" },
+                    { data: "BillNo" },
+                    { data: "BillDate" },
+                    { data: "BillAmount" },
+                    { data: "BkNo" },
+                    { data: "SetNo" },
+                    { data: "ReturnReason" },
+                    { data: "ReturnDate" },
+                    { data: "AU" },
+                    
+                    
+        //            {
+        //                data: null, orderable: false,
+        //                render: function (data, type, row) {
+                           
+        //                    //var CASE_NO = data.CASE_NO;
+        //                    //var SAMPLE_REG_NO = data.SAMPLE_REG_NO;
+        //                    //var INVOICE_NO = data.INVOICE_NO;
+                           
+        //                    var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;'); 
+        //                    var linkText = 'Select';
+        //                var editLink = '<a href="javascript:void(0);" ' +
+        //               'onclick="editRow(' + escapedRow + ')" ' +
+        //               'style="color: blue; text-decoration: underline;">' +
+        //               linkText +
+        //               '</a>';
+                       
+        //return editLink;
+        //                }
+        //            },
+                    
+                ],
+                
+                "order": [[0, "asc"]]
+            });
+        
+        }
+        //function editRow(escapedRow) {
+        //    $("#hide").css("display","none");
+        //    $("#txtcno").val(escapedRow.CASE_NO);
+        //    $("#txtregno").val(escapedRow.SAMPLE_REG_NO);
+        //    $("#txtinno").val(escapedRow.INVOICE_NO);
+           
+           
+        //}
+      
+        //function UserDelete(UserId) {
+        //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+        //    $("#btn-delete-yes").attr("href", url);
+        //    $("#modal-delete-conf").modal("show");
+        //}
+
+    </script>
+}

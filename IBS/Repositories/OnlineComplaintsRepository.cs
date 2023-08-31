@@ -48,7 +48,7 @@ namespace IBS.Repositories
             return json;
         }
 
-        public string SaveComplaints(OnlineComplaints onlineComplaints, IFormFile complaintFile)
+        public string SaveComplaints(OnlineComplaints onlineComplaints)
         {
             string msg = "";
             TempOnlineComplaint complaint = null;
@@ -105,7 +105,6 @@ namespace IBS.Repositories
                     IeCd = onlineComplaints.IE_CD,
                     CoCd = onlineComplaints.CoCd,
                 };
-                msg = "Complaint is registered";
                 //SendEmail(onlineComplaints);
 
             //}
@@ -118,7 +117,7 @@ namespace IBS.Repositories
             context.TempOnlineComplaints.Add(complaint);
             context.SaveChanges();
 
-            return msg;
+            return Compid;
         }
 
         public void SendEmail(OnlineComplaints onlineComplaints)

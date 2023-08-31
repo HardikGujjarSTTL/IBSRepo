@@ -100,7 +100,7 @@ namespace IBS.Controllers
             return Json(lABREGISTERModel);
         }
         [HttpPost]
-        [Authorization("LabRegisterForm", "Index", "add")]
+        [Authorization("LabRegisterForm", "Index", "edit")]
         public bool SaveDataDetails([FromBody]LABREGISTERModel LABREGISTERModel)
         {
             LABREGISTERModel.UName = UserId.ToString();
@@ -117,7 +117,7 @@ namespace IBS.Controllers
            
         }
         [HttpPost]
-        [Authorization("LabRegisterForm", "Index", "add")]
+        [Authorization("LabRegisterForm", "Index", "edit")]
         public bool InsertLabReg([FromBody] LABREGISTERModel LABREGISTERModel)
         {
             LABREGISTERModel.UName = UserId.ToString();

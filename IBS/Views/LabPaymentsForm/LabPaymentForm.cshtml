@@ -6,7 +6,7 @@
     string clsView = "";
    
 }
-<style>
+@*<style>
     #showPayment {
         max-height: 400px; /* Set the maximum height for the scrolling area */
         overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
@@ -130,7 +130,7 @@
         .table-section::-webkit-scrollbar-thumb:hover {
             background-color: #555;
         }
-</style>
+</style>*@
 @*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
     
     <div class="list-inner">
@@ -161,28 +161,30 @@
 
         </div>
         <div class="savenext-btn" style="margin-right:36%;">
-            <button type="button" class="save-btn active Permission_Save" onclick="Add();">Add</button>
-            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Modify</button>
-        <button type="button" class="save-btn active" onclick="SearchPayment();">Search Payment</button>
+            @*button type="button" class="save-btn active Permission_Save" onclick="Add();">Add</button>
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Modify</button>*@
+        <button type="button" class="save-btn active" onclick="SearchPayment();" style="margin-left:68%;">Search Payment</button>
         </div>
     </div>
-<div id="showPayment" style="display:none;">
+    <div class="list-btn">
+        <a asp-area="" asp-controller="LabPaymentsForm" asp-action="LabPayment" class="formBtn Permission_Add" style="margin-left:90%;"><span class="fa fa-plus"></span> Add</a>
+    </div>
+<div id="showPayment">
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtPayment" class="table">
+                    <table id="dtPayment" class="table-responsive">
                     <thead>
-                        <tr>
-                            <th style="width:6%;"></th>
-                            <th style="width:8%;">Payment ID</th>
-                            <th style="width:11%;">Payment Date</th>
-                            <th style="width:33%;">Lab</th>
-                            <th style="width:5%;">Amount</th>
-                            
+                        <tr>                           
+                            <th>Payment ID</th>
+                            <th>Payment Date</th>
+                            <th>Lab</th>
+                            <th>Amount</th>
+                                <th></th>
 
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -199,72 +201,146 @@
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
             });
+            InitializeDatatable();
         });
         function SearchPayment(){
-            $("#showPayment").css("display","block");
-           var PaymentID= $("#txtpyid").val();
-            var PaymentDT = $("#txtpydt").val();
-            var Lab = $("#ddlpylab").val();
-            $.ajax({
-                url: '/LabPaymentsForm/LoadTable', // Replace with your actual endpoint URL
-                type: 'POST',
-                dataType: 'json',
-                data: { PaymentID: PaymentID, PaymentDT: PaymentDT, Lab: Lab },
-                success: function (data) {
+            InitializeDatatable();
+        }
+        //function SearchPayment(){
+        //    $("#showPayment").css("display","block");
+        //   var PaymentID= $("#txtpyid").val();
+        //    var PaymentDT = $("#txtpydt").val();
+        //    var Lab = $("#ddlpylab").val();
+        //    $.ajax({
+        //        url: '/LabPaymentsForm/LoadTable', // Replace with your actual endpoint URL
+        //        type: 'POST',
+        //        dataType: 'json',
+        //        data: { PaymentID: PaymentID, PaymentDT: PaymentDT, Lab: Lab },
+        //        success: function (data) {
 
-                    // Once data is successfully received, populate the table
-                    var tableBody = $('#tableBody');
-                    tableBody.empty(); // Clear existing rows (if any)
-                    for (i = 0; i < data.length; i++) {
+        //            // Once data is successfully received, populate the table
+        //            var tableBody = $('#tableBody');
+        //            tableBody.empty(); // Clear existing rows (if any)
+        //            for (i = 0; i < data.length; i++) {
 
-                        var row = $('<tr>');
-                        //row.append($('<td>').text(data[i].SNO)); // SRNo.
-                        var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
-                        snoLink.hover(
-                            function () {
-                                $(this).css('text-decoration', 'underline'); // Add underline on hover
-                            },
-                            function () {
-                                $(this).css('text-decoration', 'none');      // Remove underline on hover out
-                            }
-                        );
-                        var snoCell = $('<td>').append(snoLink);
-                        row.append(snoCell);
-                        row.append($('<td>').text(data[i].PaymentID));
-                        row.append($('<td>').text(data[i].PaymentDt));
-                        row.append($('<td>').text(data[i].Lab));
-                        row.append($('<td>').text(data[i].Amount));
+        //                var row = $('<tr>');
+        //                //row.append($('<td>').text(data[i].SNO)); // SRNo.
+        //                var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+        //                snoLink.hover(
+        //                    function () {
+        //                        $(this).css('text-decoration', 'underline'); // Add underline on hover
+        //                    },
+        //                    function () {
+        //                        $(this).css('text-decoration', 'none');      // Remove underline on hover out
+        //                    }
+        //                );
+        //                var snoCell = $('<td>').append(snoLink);
+        //                row.append(snoCell);
+        //                row.append($('<td>').text(data[i].PaymentID));
+        //                row.append($('<td>').text(data[i].PaymentDt));
+        //                row.append($('<td>').text(data[i].Lab));
+        //                row.append($('<td>').text(data[i].Amount));
                        
 
-                        // Add the action column (if needed)
-                        //var actionColumn = $('<td>');
-                        //var editButton = $('<a>').text('Select').attr('id',"editButton");
-                        //actionColumn.append(editButton);
-                        //row.append(actionColumn);
-                        tableBody.append(row);
+        //                // Add the action column (if needed)
+        //                //var actionColumn = $('<td>');
+        //                //var editButton = $('<a>').text('Select').attr('id',"editButton");
+        //                //actionColumn.append(editButton);
+        //                //row.append(actionColumn);
+        //                tableBody.append(row);
 
+        //            }
+        //            //editButton.click(function(event) {
+        //            snoLink.click(function (event) {
+        //                //var regNo = regNo1;
+        //                //var sno = sno1;
+        //                //LabDtlModify(regNo, sno);
+        //            });
+
+        //        },
+        //        error: function () {
+
+        //        }
+        //    });
+        //}
+        function InitializeDatatable() {
+
+            $("#dtPayment").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            PaymentID: $("#txtpyid").val(),
+                            PaymentDt: $("#txtpydt").val(),
+                            Lab: $("#ddlpylab").val()
+                            
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
                     }
-                    //editButton.click(function(event) {
-                    snoLink.click(function (event) {
-                        //var regNo = regNo1;
-                        //var sno = sno1;
-                        //LabDtlModify(regNo, sno);
-                    });
-
                 },
-                error: function () {
 
-                }
+                columns: [// Columns Setups
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "PaymentID" },
+                    { data: "PaymentDt" },
+                    { data: "Lab" },
+                    { data: "Amount" },                    
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {                          
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = 'Edit';
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;" ' +
+                                'class="fa fa-pencil Permission_EditView">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+
+                ],
+
+                "order": [[0, "asc"]]
             });
+
         }
+        function editRow(escapedRow) {
+            window.location.href = '@Url.Action("LabPaymentEdit", "LabPaymentsForm")?PaymentID=' + escapedRow.PaymentID;
+        }
+        //function Add() {
+        //    window.location.href = '@Url.Action("LabPayment", "LabPaymentsForm")';
+        //}
         
-        function Add() {
-            window.location.href = '@Url.Action("LabPayment", "LabPaymentsForm")';
-        }
-        //completed = function (response) {
-        //    var res = response.responseJSON;
-        //    ShowHideMsgNew(res.status, res.responseText);
-        //    window.location.href = "/LaboratoryMaster/LaboratoryMaster";
-        //};
     </script>
 }

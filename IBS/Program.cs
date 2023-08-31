@@ -16,6 +16,7 @@ using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
@@ -91,6 +92,7 @@ builder.Services.AddScoped<IAccountCodesDirectoryRepository, AccountCodesDirecto
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IMasterItemsListForm, MasterItemsListForm>();
 builder.Services.AddScoped<IConsignee_PMForm, Consignee_PMForm>();
+builder.Services.AddScoped<IConsigneePurchaseRepository, ConsigneePurchaseRepository>();
 builder.Services.AddScoped<IInspectionEngineers, InspectionEngineers>();
 builder.Services.AddScoped<I_IE_CO_FormRepository, IE_CO_FormRepository>();
 builder.Services.AddScoped<IBill_Paying_Officer_Form, Bill_Paying_Officer_Form>();
@@ -113,11 +115,11 @@ builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineRepository>();
 #endregion
 builder.Services.AddScoped<ICityRepository,CityRepository>();
-builder.Services.AddScoped<I_IC_Bookset_Form,IC_Bookset_Form>();
-builder.Services.AddScoped<IVendorClusterRepository,VendorClusterRepository>();
+builder.Services.AddScoped<I_ICBooksetFormRepository,ICBooksetFormRepository>();
+builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
 builder.Services.AddScoped<IHologramSearchForm,HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
-builder.Services.AddScoped<IMasterItemsPLForm,MasterItemsPLForm>();
+builder.Services.AddScoped<IMasterItemsPLFormRepository,MasterItemsPLFormRepository>();
 builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
 builder.Services.AddScoped<ICheckPostingFormRepository,CheckPostingFormRepository>();
 builder.Services.AddScoped<ISearchPaymentsRepository,SearchPaymentRepository>();
@@ -143,15 +145,16 @@ builder.Services.AddScoped<ILabInvoiceDownloadRepository, LabInvoiceDownloadRRep
 builder.Services.AddScoped<ILabSamplePaymentRptRepository, LabSamplePaymentRptRRepository>();
 builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
-builder.Services.AddScoped<I_IC_Bookset_Form, IC_Bookset_Form>();
-builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
+builder.Services.AddScoped<I_ICBooksetFormRepository, ICBooksetFormRepository>();
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
-builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
+builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormRepository>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
 builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
 
 var app = builder.Build();
 
@@ -165,7 +168,7 @@ if (!app.Environment.IsDevelopment())
 
 var supportedCultures = new[]
 {
- new CultureInfo("en-GB"),
+ new CultureInfo("en-GB")
 };
 
 app.UseRequestLocalization(new RequestLocalizationOptions

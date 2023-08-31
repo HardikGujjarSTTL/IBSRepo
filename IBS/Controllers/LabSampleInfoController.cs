@@ -50,7 +50,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        [Authorization("LabSampleInfo", "LabSampleInfo", "add")]
+        [Authorization("LabSampleInfo", "LabSampleInfo", "edit")]
         public JsonResult SaveDataDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
@@ -89,7 +89,7 @@ namespace IBS.Controllers
 
         }
         [HttpPost]
-        [Authorization("LabSampleInfo", "LabSampleInfo", "add")]
+        [Authorization("LabSampleInfo", "LabSampleInfo", "edit")]
         public JsonResult UpdateDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();

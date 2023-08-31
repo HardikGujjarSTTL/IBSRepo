@@ -37,11 +37,11 @@ public partial class V40ConsigneeComplaint
 
     public string? InspRegionName { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public string? IeName { get; set; }
 
-    public byte? IeCoCd { get; set; }
+    public int? IeCoCd { get; set; }
 
     public string? IeCoName { get; set; }
 
@@ -61,7 +61,7 @@ public partial class V40ConsigneeComplaint
 
     public string? Vendor { get; set; }
 
-    public byte? ItemSrnoPo { get; set; }
+    public int? ItemSrnoPo { get; set; }
 
     public string? ItemDesc { get; set; }
 
@@ -69,7 +69,7 @@ public partial class V40ConsigneeComplaint
 
     public decimal? QtyRejected { get; set; }
 
-    public byte? UomCd { get; set; }
+    public int? UomCd { get; set; }
 
     public string? UomSDesc { get; set; }
 
@@ -85,7 +85,7 @@ public partial class V40ConsigneeComplaint
 
     public string? JiRegion { get; set; }
 
-    public byte? JiIeCd { get; set; }
+    public int? JiIeCd { get; set; }
 
     public string? Remarks { get; set; }
 
