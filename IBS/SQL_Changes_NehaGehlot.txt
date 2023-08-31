@@ -554,3 +554,34 @@ BEGIN
         WHERE
             COMPLAINT_ID = p_complaint_id;
 END GetConsigneeComplaintDetails;
+
+==============================================================================================================================================
+
+create or replace PROCEDURE CMWiseICDetail(
+   p_region VARCHAR2,
+   p_start_date VARCHAR2,
+   p_end_date VARCHAR2,
+   p_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+ OPEN p_result FOR
+      SELECT TO_CHAR(T17.CALL_STATUS_DT, 'dd/mm/yyyy') AS IC_ISSUED_DT,
+                     T17.CASE_NO,
+                      T17.BK_NO,
+                      T17.SET_NO,
+                      T09.IE_NAME,
+                      T08.CO_NAME
+                 FROM T17_CALL_REGISTER T17
+                      LEFT JOIN T30_IC_RECEIVED T30 ON (T17.BK_NO = T30.BK_NO AND T17.SET_NO = T30.SET_NO AND T17.REGION_CODE = T30.REGION),
+                      T09_IE T09,
+                      T08_IE_CONTROLL_OFFICER T08
+                WHERE (T30.BK_NO IS NULL AND T30.SET_NO IS NULL AND T30.REGION IS NULL)
+                  AND T17.IE_CD = T09.IE_CD
+                  AND T09.IE_CO_CD = T08.CO_CD
+                  AND T17.CALL_STATUS IN ('A', 'R')
+                 AND SUBSTR(T17.CASE_NO, 1, 1) = SUBSTR(p_region, 1, 1)
+                  AND (T17.CALL_STATUS_DT BETWEEN TO_DATE(p_start_date, 'dd/mm/yyyy') AND TO_DATE(p_end_date, 'dd/mm/yyyy'));
+                 
+END;
+

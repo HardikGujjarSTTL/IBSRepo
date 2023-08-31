@@ -1,4 +1,10 @@
 ﻿@model IBS.Models.ICIsuued
+
+@{
+    string partialView = ViewBag.PartialView;
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="pfrmFromToDate" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmICDetails">
 <div class="accordion-body" id="BYIE">
     <div class="row my-0">
         <div class="list-inner">
@@ -8,18 +14,41 @@
         </div>
         <div class="col-md-3 mb-3">
             <label for="Reference">From Date</label>
-            <input type="text" class="input datepicker" asp-for="FromDT" readonly="true" id="FromDate" required>
+            <input type="text" class="input datepicker" asp-for="FromDT"  id="FromDate" required>
             <span asp-validation-for="FromDT" class="text-danger"></span>
         </div>
         <div class="col-md-3 mb-3">
             <label for="Reference">To Date</label>
-            <input type="text" class="input datepicker" asp-for="ToDT" readonly="true" id="ToDate" required>
+                <input type="text" class="input datepicker" asp-for="ToDT"  id="ToDate" required>
             <span asp-validation-for="ToDT" class="text-danger"></span>
         </div>
         <div class="col-md-3 mb-3">
             <div class="savenext-btn">
-                <button type="button" class="save-btn active btncls" id="btnsubmit" onclick="Submit();">Submit</button>
+                <button type="button" class="save-btn active btncls" id="btnsubmit">Submit</button>
             </div>
         </div>
     </div>
 </div>
+    <section class="table-section" id="tblsection">
+        @Html.Partial(@partialView)
+    </section>
+</form>
+
+
+@section scripts{
+     <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+     <script type="text/javascript">
+
+        var action = "@ViewBag.Action";
+        $(document).ready(function () {
+            debugger
+            
+            $("#btnsubmit").click(function () {
+                InitializeDatatable();
+            });
+        });
+
+     </script>
+}
