@@ -200,8 +200,6 @@
         function InitializeDatatable() {
             var PoNo = $("#PoNo").val();
             var PoDt = $("#PoDt").val();
-            debugger
-
             $("#dtConsignee").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -351,7 +349,6 @@
             });
         }
         completed = function (response) {
-            debugger
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = '@Url.Action("Index", "ConsigneeComplaints")';
