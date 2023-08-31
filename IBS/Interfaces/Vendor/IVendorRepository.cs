@@ -1,12 +1,12 @@
 ﻿using IBS.Models;
 
-namespace IBS.Interfaces
+namespace IBS.Interfaces.Vendor
 {
-    public interface IVendorClusterRepository
+    public interface IVendorRepository 
     {
-        public VendorClusterModel FindByID(int VendorCode, string DepartmentCode);
+        public VendorModel FindByID(int Id);
 
-        DTResult<VendorClusterModel>GetVendorClusterList(DTParameters dtParameters);
+        public DTResult<VendorlistModel> GetVendorList(DTParameters dtParameters);
 
         public VendorDetailsModel GetVendorDetails(string VendorCodeName);
 

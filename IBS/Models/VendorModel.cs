@@ -1,4 +1,7 @@
-﻿using IBS.DataAccess;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
@@ -25,22 +28,32 @@ namespace IBS.Models
 
         public string? VendApproval { get; set; }
 
+        [Display(Name = "Approval Period From")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
+        //[RequiredIf(nameof(VendApproval), "E,R", ErrorMessage = "Approval Period From Required")]
+        [RequiredIf("VendApproval", "E", "enter your age")]
         public DateTime? VendApprovalFr { get; set; }
 
+        [Display(Name = "Approval Period To")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendApprovalTo { get; set; }
 
         public string? VendStatus { get; set; }
 
+        [Display(Name = "Status Date From")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendStatusDtFr { get; set; }
 
+        [Display(Name = "Status Date To")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
+        [RegularExpression(Common.RegularExpressionForDT, ErrorMessage = "Invalid date format.")]
         public DateTime? VendStatusDtTo { get; set; }
 
         public string? VendStatusDtFrST { get; set; }
@@ -55,6 +68,8 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [Display(Name = "Email")]
+        [EmailAddress]
         public string? VendEmail { get; set; }
 
         public string? VendInspStopped { get; set; }
@@ -63,22 +78,53 @@ namespace IBS.Models
 
         public string? OnlineCallStatus { get; set; }
 
-
-        public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();
-
-        public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();
-
-        public virtual ICollection<T40ConsigneeComplaint> T40ConsigneeComplaints { get; set; } = new List<T40ConsigneeComplaint>();
-
-        public virtual ICollection<T41NcMaster> T41NcMasters { get; set; } = new List<T41NcMaster>();
-
-        public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();
-
-        public virtual ICollection<T80PoMaster> T80PoMasters { get; set; } = new List<T80PoMaster>();
-
-        public virtual T03City? VendCityCdNavigation { get; set; }
-
     }
+
+
+    public class RequiredIfAttribute : ValidationAttribute
+    {
+        private String PropertyName { get; set; }
+        private String ErrorMessage { get; set; }
+        private Object DesiredValue { get; set; }
+
+        public RequiredIfAttribute(String propertyName, Object desiredvalue, String errormessage)
+        {
+            this.PropertyName = propertyName;
+            this.DesiredValue = desiredvalue;
+            this.ErrorMessage = errormessage;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext context)
+        {
+            Object instance = context.ObjectInstance;
+            Type type = instance.GetType();
+            Object proprtyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
+            if (proprtyvalue.ToString() == DesiredValue.ToString() && value == null)
+            //if (proprtyvalue.ToString() == DesiredValue.ToString() && value.ToString() == "N/A")
+            {
+                return new ValidationResult(ErrorMessage);
+            }
+            return ValidationResult.Success;
+        }
+
+        public void AddValidation(ClientModelValidationContext context)
+        {
+            MergeAttribute(context.Attributes, "data-val", "true");
+            var errorMessage = FormatErrorMessage(context.ModelMetadata.GetDisplayName());
+            MergeAttribute(context.Attributes, "data-val-requirediftrue", errorMessage);
+        }
+
+        private bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
+        {
+            if (attributes.ContainsKey(key))
+            {
+                return false;
+            }
+            attributes.Add(key, value);
+            return true;
+        }
+    }
+
     public class VendorlistModel
     {
         public int VEND_CD { get; set; }

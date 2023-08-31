@@ -1,35 +1,43 @@
 ﻿@model IBS.Models.MasterItemsPLFormModel
 
 @{
-    ViewData["Title"] = "Master Items PL Form";
+    ViewData["Title"] = "Manage Master Items PL Form";
+    bool IsReadOnly = Model != null & !Model.IsNew;
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Master Items PL Form</h2>
+        <h2>Manage Master Items PL Form</h2>
     </div>
 </div>
 <section class="table-section">
     <div class="task-listinput">
         <div class="accordion-body">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="MasterItemsPLForm" asp-action="MasterItemsPLFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmMasterItemsPLForm">
-                <input type="hidden" asp-for="ItemCd" />
+            <form asp-controller="MasterItemsPLForm" asp-action="Manage" id="frmMasterItemsPLForm">
+                <input type="hidden" asp-for="IsNew" />
                 <div class="accordion-body">
                     <div class="row my-0">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="Reference">Select Item</label>
-                            <textarea class="input" asp-for="ItemCd" maxlength="30"> </textarea>
+                            @Html.DropDownListFor(model => model.ItemCd, Common.GetItems(), "--Select--",  IsReadOnly ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "" })
                             <span asp-validation-for="ItemCd" class="text-danger"></span>
                         </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-3">
+                            <label for="Reference">Item CD - Item Description</label>
+                            <input type="text" class="input" asp-for="ItemDesc" />
+                        </div>
+                    </div>
+                    <div class="row my-0">
                         <div class="col-md-4 mb-3">
                             <label for="Reference">PL NO</label>
-                            <textarea class="input" asp-for="PlNo" maxlength="30"> </textarea>
+                            <input type="text" class="input" asp-for="PlNo" maxlength="10" />
                             <span asp-validation-for="PlNo" class="text-danger"></span>
                         </div>
                     </div>
-                   
                     <div class="savenext-btn">
                         <a asp-controller="MasterItemsPLForm" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active" onclick="SubmitPLData();">Save</button>
                     </div>
                 </div>
             </form>
@@ -37,19 +45,31 @@
     </div>
 </section>
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        $(document).ready(function () {
+            if ('@IsReadOnly') {
+                $('#ItemCd').change();
+            }
+        });
+
+        $("#ItemCd").change(function () {
+            if (this.value == "") {
+                $("#ItemDesc").val("");
+            }
+            else {
+                var itemDesc = this.value + "-" + this.options[this.selectedIndex].text;
+                $("#ItemDesc").val(itemDesc);
+            }
+        });
+
+        function SubmitPLData() {
             if ($("#frmMasterItemsPLForm").valid()) {
                 $("#frmMasterItemsPLForm").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/MasterItemsPLForm/Index";
-            window.location.href = '@Url.Action("Index", "MasterItemsPLForm")';
-        };
+
     </script>
 }

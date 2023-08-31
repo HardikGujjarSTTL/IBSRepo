@@ -1,21 +1,13 @@
 ﻿using IBS.Helper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Diagnostics.Metrics;
 using System.Linq.Expressions;
 using System.Text;
-using System.Reflection.Metadata;
 using IBS.DataAccess;
-using Newtonsoft.Json.Linq;
-using static System.Net.Mime.MediaTypeNames;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Globalization;
-using IBS.Controllers;
-using Humanizer.Localisation;
 
 namespace IBS.Models
 {
@@ -26,8 +18,9 @@ namespace IBS.Models
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
         public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
         public const string CommonDateFormate1 = "dd/MM/yyyy";
-
         public static string AccessDeniedMessage = "You don't have permission to do this action.";
+        public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
+
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
             List<string> strArray = new List<string> { address1, address2, address3, address4, address5, PostCode };
@@ -1649,14 +1642,14 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> GetBankLst = (from a in context.T94Banks
-                                               where a.BankCd > 990 
+                                               where a.BankCd > 990
                                                orderby a.BankName
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.BankName),
-                                     Value = Convert.ToString(a.BankCd)
-                                 }).ToList();
+                                               select
+                                     new SelectListItem
+                                     {
+                                         Text = Convert.ToString(a.BankName),
+                                         Value = Convert.ToString(a.BankCd)
+                                     }).ToList();
             return GetBankLst;
         }
 
@@ -2123,6 +2116,34 @@ namespace IBS.Models
                     }).OrderBy(c => c.Text).ToList();
         }
 
+        public static IEnumerable<SelectListItem> GetItems()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T61ItemMasters
+                    where c.Isdeleted != 1
+                    select new SelectListItem
+                    {
+                        Value = c.ItemCd.ToString(),
+                        Text = c.ItemDesc
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetIEIEToWhomIssued(string RegionCode)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == RegionCode
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetBookSubmitted()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BookSubmitted)).ToList();
+        }
     }
     public static class DbContextHelper
     {

@@ -1,15 +1,19 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
+using IBS.Interfaces.Vendor;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-namespace IBS.Repositories
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
+
+namespace IBS.Repositories.Vendor
 {
-    public class VendorClusterRepository : IVendorClusterRepository
+    public class VendorRepository : IVendorRepository
     {
         private readonly ModelContext context;
 
-        public VendorClusterRepository(ModelContext context)
+        public VendorRepository(ModelContext context)
         {
             this.context = context;
         }
@@ -40,7 +44,7 @@ namespace IBS.Repositories
                                                City = c.City ?? ""
                                            }).FirstOrDefault();
 
-                if(data != null)
+                if (data != null)
                 {
                     model.VendFullName = data.VendName + "/" + data.VendAdd1 + "/" + data.Location + " / " + data.City;
                     model.VendAdd1 = data.VendAdd1;
@@ -52,11 +56,39 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<VendorClusterModel> GetVendorClusterList(DTParameters dtParameters)
+        public VendorModel FindByID(int Id)
+        {
+            VendorModel model = (from m in context.T05Vendors
+                                 where m.VendCd == Id
+                                 select new VendorModel
+                                 {
+                                     VendCd = m.VendCd,
+                                     VendName = m.VendName,
+                                     VendAdd1 = m.VendAdd1,
+                                     VendAdd2 = m.VendAdd2,
+                                     VendCityCd = m.VendCityCd,
+                                     VendApproval = m.VendApproval,
+                                     VendApprovalFr = m.VendApprovalFr,
+                                     VendApprovalTo = m.VendApprovalTo,
+                                     VendContactPer1 = m.VendContactPer1,
+                                     VendContactTel1 = m.VendContactTel1,
+                                     VendContactPer2 = m.VendContactPer2,
+                                     VendContactTel2 = m.VendContactTel2,
+                                     VendEmail = m.VendEmail,
+                                     VendRemarks = m.VendRemarks,
+                                     VendStatus = m.VendStatus,
+                                     VendInspStopped = m.VendInspStopped,
+                                     OnlineCallStatus = m.OnlineCallStatus,
+                                 }).FirstOrDefault();
+
+            return model;
+        }
+
+        public DTResult<VendorlistModel> GetVendorList(DTParameters dtParameters)
         {
 
-            DTResult<VendorClusterModel> dTResult = new() { draw = 0 };
-            IQueryable<VendorClusterModel>? query = null;
+            DTResult<VendorlistModel> dTResult = new() { draw = 0 };
+            IQueryable<VendorlistModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -65,41 +97,35 @@ namespace IBS.Repositories
             if (dtParameters.Order != null && dtParameters.Order.Length > 0)
             {
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "VendorName";
+                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "VEND_NAME";
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
-                orderCriteria = "VendorName";
+                orderCriteria = "VEND_NAME";
                 orderAscendingDirection = true;
             }
 
-            string Region = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]) ? Convert.ToString(dtParameters.AdditionalValues["Region"]) : "";
+            OracleParameter[] par = new OracleParameter[1];
+            par[0] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var lstQuery = (from vc in context.T100VenderClusters
-                            join cm in context.T99ClusterMasters on vc.ClusterCode equals cm.ClusterCode
-                            join v in context.T05Vendors on vc.VendorCode equals v.VendCd
-                            where cm.RegionCode == Region
-                            select new VendorClusterModel
-                            {
-                                VendorCode = vc.VendorCode,
-                                VendorName = v.VendName,
-                                ClusterName = cm.ClusterName,
-                                GeographicalPartition = cm.GeographicalPartition,
-                                DepartmentCode = vc.DepartmentName ?? "",
-                                DepartmentName = EnumUtility<Enums.Department>.GetDescriptionByKey(vc.DepartmentName),
-                            }).ToList();
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 1);
 
-            query = lstQuery.AsQueryable();
+            List<VendorlistModel> model = new List<VendorlistModel>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<VendorlistModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+
+            query = model.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => (w.VendorName != null && w.VendorName.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.ClusterName != null && w.ClusterName.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.GeographicalPartition != null && w.GeographicalPartition.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.DepartmentName != null && w.DepartmentName.ToLower().Contains(searchBy.ToLower()))
-                                           );
+                query = query.Where(w => (w.VEND_CD.ToString().Contains(searchBy.ToLower()))
+                    || (w.VEND_NAME != null && w.VEND_NAME.ToLower().Contains(searchBy.ToLower()))
+            );
 
             dTResult.recordsFiltered = query.Count();
 

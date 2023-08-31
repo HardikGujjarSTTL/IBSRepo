@@ -172,6 +172,18 @@ namespace IBS.Helper
             [Description("QA Corporate")]
             Q,
         }
+
+        public enum BookSubmitted
+        {
+            [Description("Submitted & Completed")]
+            Y,
+            [Description("Submitted but not Completed")]
+            S,
+            [Description("Not Submitted but Completed")]
+            C,
+            [Description("NO")]
+            N,
+        }
     }
 
     public class EnumUtility<T>
