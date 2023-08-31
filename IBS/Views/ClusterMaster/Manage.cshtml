@@ -1,55 +1,75 @@
 ﻿@model IBS.Models.ClusterMasterModel
 
 @{
-    ViewData["Title"] = "Cluster Master";
+    ViewData["Title"] = "Manage Cluster Master";
+    bool IsReadOnlyRegion = Model != null & Model.RegionCode != "";
+
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Cluster Master</h2>
+        <h2>Manage Cluster Master</h2>
     </div>
 </div>
-
-    <div class="task-listinput">
-        
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="ClusterMaster" asp-action="ClusterMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClusterMaster">
-                <input type="hidden" asp-for="ClusterCode" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Cluster Name</label>
-                            <textarea class="input" asp-for="ClusterName" maxlength="30"> </textarea>
-                            <span asp-validation-for="ClusterName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Geographical Area</label>
-                            <textarea class="input" asp-for="GeographicalPartition" maxlength="30"> </textarea>
-                            <span asp-validation-for="GeographicalPartition" class="text-danger"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="savenext-btn">
-                        <a asp-controller="ClusterMaster" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form asp-controller="ClusterMaster" asp-action="Manage" id="frmClusterMaster">
+        <input type="hidden" asp-for="IsNew" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Cluster Code <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="ClusterCode" readonly />
+                    <span asp-validation-for="ClusterCode" class="text-danger"></span>
                 </div>
-            </form>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Cluster Name <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="ClusterName" maxlength="50" />
+                    <span asp-validation-for="ClusterName" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Geographical Area <i class="text-danger">*</i></label>
+                    <textarea class="input" asp-for="GeographicalPartition" maxlength="200"> </textarea>
+                    <span asp-validation-for="GeographicalPartition" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Department Name <i class="text-danger">*</i></label>
+                    @Html.DropDownListFor(model => model.DepartmentName, new SelectList(Common.GetDepartment() , "Value", "Text"), "--Select--",  new { @class = "" })
+                    <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Region Name <i class="text-danger">*</i></label>
+                    @Html.DropDownListFor(model => model.RegionCode, new SelectList(Common.GetRegion() , "Value", "Text"), IsReadOnlyRegion ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "" })
+                    <span asp-validation-for="RegionCode" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">HQ Area <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="HqArea" maxlength="50" />
+                    <span asp-validation-for="HqArea" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="ClusterMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitClusterData();">Save</button>
+            </div>
+        </div>
+    </form>
 
-    </div>
+</div>
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        function SubmitClusterData() {
             if ($("#frmClusterMaster").valid()) {
+                $('select').prop('disabled', false);
                 $("#frmClusterMaster").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/ClusterMaster/Index";
-            window.location.href = '@Url.Action("Index", "ClusterMaster")';
-        };
+
+       
+
     </script>
 }

@@ -87,8 +87,8 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Vendor</label>
-                        <input type="text" class="input" asp-for="VendCd" readonly="true">
-                        <span asp-validation-for="VendCd" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="VEND_NAME" readonly="true">
+                        <span asp-validation-for="VEND_NAME" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -132,8 +132,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Unit of Measurement</label>
-                        <input type="text" class="input" asp-for="uom_cd" maxlength="300" />
-                        <span asp-validation-for="uom_cd" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="unitofM" maxlength="300" />
+                        <span asp-validation-for="unitofM" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Rate</label>
@@ -344,7 +344,6 @@
         });
 
         $("#InspRegionDropdown").change(function () {
-            debugger
             var InspRegionDropdown = $(this).val();
 
             $.ajax({
@@ -352,10 +351,8 @@
                 type: 'GET',
                 data: { InspRegionDropdown: InspRegionDropdown },
                 success: function (data) {
-                    debugger
                     var Item = $("#Jointisp");
                     Item.empty();
-                    debugger
                     var items = JSON.parse(data);
 
                     for (var i = 0; i < items.length; i++) {
@@ -370,7 +367,6 @@
         });
 
         $("#DARProposed").change(function () {
-            debugger
             var selectedValue = $(this).val();
             var Item = $("#lstPenaltyType");
             Item.empty();
@@ -412,7 +408,6 @@
         });
 
         $("#JointInspectionrequired").change(function () {
-            debugger
             var selectedValue = $(this).val();
             if (selectedValue == "Y") {
                 $("#outcomeji").show();
@@ -458,7 +453,6 @@
         });
 
         function btnsaveyourchoice(){
-            debugger
             var formData = new FormData($("#frmConsigneeDetails")[0]);
             $.ajax({
                 url: '@Url.Action("ComplaintSaveChoice", "ConsigneeComplaints")',
@@ -483,7 +477,6 @@
         }
 
         function btncancelJI(){
-            debugger
             var formData = new FormData($("#frmConsigneeDetails")[0]);
             $.ajax({
                 url: '@Url.Action("ComplaintCancelJI", "ConsigneeComplaints")',

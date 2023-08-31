@@ -1,20 +1,18 @@
-﻿using IBS.DataAccess;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
     public class AccountCodesDirectoryController : BaseController
     {
-        #region Variables
-        private readonly IAccountCodesDirectory accountCodes;
-        #endregion
-        public AccountCodesDirectoryController(IAccountCodesDirectory _accountCodes)
+        private readonly IAccountCodesDirectoryRepository accountCodesRepository;
+
+        public AccountCodesDirectoryController(IAccountCodesDirectoryRepository _accountCodesRepository)
         {
-            accountCodes = _accountCodes;
+            accountCodesRepository = _accountCodesRepository;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -25,23 +23,55 @@ namespace IBS.Controllers
             AccountCodesDirectoryModel model = new();
             if (id > 0)
             {
-                model = accountCodes.FindByID(id);
+                model = accountCodesRepository.FindByID(id);
             }
             return View(model);
         }
 
-
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<AccountCodesDirectoryModel> dTResult = accountCodes.GetAccountCodesDirectoryList(dtParameters);
+            DTResult<AccountCodesDirectoryModel> dTResult = accountCodesRepository.GetAccountCodesDirectoryList(dtParameters);
             return Json(dTResult);
         }
+
+        [HttpPost]
+        public IActionResult Manage(AccountCodesDirectoryModel model)
+        {
+            try
+            {
+                if (!accountCodesRepository.IsDuplicate(model))
+                {
+                    if (model.IsNew)
+                    {
+                        model.Createdby = UserId;
+                        accountCodesRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Added Successfully.");
+                    }
+                    else
+                    {
+                        model.Updatedby = UserId;
+                        accountCodesRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                else
+                    AlertAlreadyExist();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AccountCodesDirectory", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (accountCodes.Remove(id))
+                if (accountCodesRepository.Remove(id))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -53,34 +83,6 @@ namespace IBS.Controllers
             }
             return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AccountCodesDirectoryDetailsSave(AccountCodesDirectoryModel model)
-        {
-            try
-            {
-                string msg = "Account Codes Directory Inserted Successfully.";
-
-                if (model.AccCd > 0)
-                {
-                    msg = "Account Codes Directory Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = accountCodes.AccountCodesDirectoryDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AccountCodesDirectory", "AccountCodesDirectoryDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
     }
 }
 

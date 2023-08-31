@@ -530,3 +530,27 @@ BEGIN
         AND TO_CHAR(m.PO_DT, 'dd-mm-yyyy') = p_PODate
     ORDER BY c.CASE_NO, c.COMPLAINT_ID ASC;
 END GetConsigneeComplaint;
+
+====================================================================================================================================
+create or replace PROCEDURE GetConsigneeComplaintDetails (
+    p_complaint_id IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_result FOR
+         SELECT
+      to_char(c.COMPLAINT_DT, 'dd/mm/yyyy') AS COMPLAINT_DATE,c.REJ_MEMO_NO,c.REJ_MEMO_DT,c.CASE_NO,c.BK_NO,c.SET_NO,trim(m.PO_NO) || ' dated - ' || to_char(m.PO_DT, 'dd/mm/yyyy') AS PO,
+      m.RLY_CD,to_char(d.IC_DT, 'dd/mm/yyyy') AS IC_DT,m.region_code,c.IE_CO_CD,c.COMP_RECV_REGION,f.VEND_NAME,f.vend_cd,c.ITEM_SRNO_PO,c.ITEM_DESC,c.QTY_OFFERED,c.QTY_REJECTED,c.UOM_CD,m.USER_ID,
+      c.RATE,c.REJECTION_VALUE,c.ROOT_CAUSE_ANALYSIS,c.TECH_REF,c.CHKSHEET_STATUS,c.ANY_OTHER,c.CAPA_STATUS,c.DANDAR_STATUS,c.REJECTION_REASON,c.STATUS,c.JI_REQUIRED,
+      c.JI_REGION,c.NO_JI_REASON,c.JI_IE_CD,c.IE_CD,c.CONSIGNEE_CD,c.REMARKS,c.JI_SNO, to_char(c.JI_FIX_DT, 'dd/mm/yyyy') AS JI_FIX_DT,to_char(c.JI_DT, 'dd/mm/yyyy') AS JI_DT,e.consignee,um.UOM_CD,um.UOM_S_DESC,
+      c.DEFECT_CD,c.JI_STATUS_CD,to_char(c.CONCLUSION_DT, 'dd/mm/yyyy') AS CONCLUSION_DT,c.ACTION_PROPOSED,to_char(c.ACTION_PROPOSED_DT, 'dd/mm/yyyy') AS ACTION_PROPOSED_DT,
+      c.PENALTY_TYPE,to_char(c.PENALTY_DT, 'dd/mm/yyyy') AS PENALTY_DT,c.ACTION
+    FROM T13_PO_MASTER m
+    JOIN T20_IC d ON m.CASE_NO = d.CASE_NO
+    JOIN T40_CONSIGNEE_COMPLAINTS c ON d.CASE_NO = c.CASE_NO
+    JOIN V06_CONSIGNEE e ON c.CONSIGNEE_CD = e.CONSIGNEE_CD  
+    JOIN T05_VENDOR f ON c.VEND_CD = f.VEND_CD  
+    JOIN T04_UOM um ON c.uom_cd = um.uom_cd
+        WHERE
+            COMPLAINT_ID = p_complaint_id;
+END GetConsigneeComplaintDetails;

@@ -3,8 +3,11 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8618, CS8625</NoWarn>
+		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625</NoWarn>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Repositories\AccountCodesDirectoryRepository.cs~RF1034cdb0.TMP" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<None Include="Views\Home\Index.cshtml" />
@@ -78,6 +81,17 @@
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="Views\Vendor\Index.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\Vendor\Manage.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

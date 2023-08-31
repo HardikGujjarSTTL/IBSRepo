@@ -82,7 +82,7 @@ namespace IBS.Controllers
         {
             get
             {
-                return (GetUserInfo.USER_ID);
+                return (GetUserInfo.UserName);
             }
         }
 

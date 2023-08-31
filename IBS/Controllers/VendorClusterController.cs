@@ -6,39 +6,67 @@ namespace IBS.Controllers
 {
     public class VendorClusterController : BaseController
     {
-        #region Variables
-        private readonly IVendorCluster vendorCluster;
-        #endregion
-        public VendorClusterController(IVendorCluster _vendorCluster)
+        private readonly IVendorClusterRepository vendorClusterRepository;
+
+        public VendorClusterController(IVendorClusterRepository _vendorClusterRepository)
         {
-            vendorCluster = _vendorCluster;
+            vendorClusterRepository = _vendorClusterRepository;
         }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Manage(int id)
+        public IActionResult Manage()
+        {
+            return View(new VendorClusterModel());
+        }
+
+        public IActionResult ManageVendorCluster(int VendorCode, string DepartmentCode)
         {
             VendorClusterModel model = new();
-            if (id > 0)
+            if (VendorCode > 0 && !string.IsNullOrEmpty(DepartmentCode))
             {
-                model = vendorCluster.FindByID(id);
+                model = vendorClusterRepository.FindByID(VendorCode, DepartmentCode);
             }
-            return View(model);
+            return View("Manage", model);
         }
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<VendorClusterModel> dTResult = vendorCluster.GetVendorClusterList(dtParameters);
+            dtParameters.AdditionalValues.Add("Region", Region);
+            DTResult<VendorClusterModel> dTResult = vendorClusterRepository.GetVendorClusterList(dtParameters);
             return Json(dTResult);
         }
-        public IActionResult Delete(int id)
+
+        public IActionResult GetVendorDetails(string VendorCodeName)
         {
             try
             {
-                if (vendorCluster.Remove(id, UserId))
+                var VendorDetails = vendorClusterRepository.GetVendorDetails(VendorCodeName);
+                return Json(new { status = true, VendorDetails });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCluster", "GetVendorDetails", 1, GetIPAddress());
+            }
+
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult GetClustersName(string RegionCode, string DepartmentName)
+        {
+            return Json(Common.GetClustersName(RegionCode, DepartmentName).ToList());
+        }
+
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                string[] data = id.Split('-');
+                if (vendorClusterRepository.Remove(Convert.ToInt32(data[0]), data[1]))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -52,30 +80,44 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult VendorClusterDetailsSave(VendorClusterModel model)
+        public IActionResult Manage(VendorClusterModel model, IFormCollection formCollection)
         {
             try
             {
-                string msg = "Vendor Cluster Inserted Successfully.";
+                if (model.IsNew)
+                {
+                    if (formCollection.Keys.Contains("_VendorCode"))
+                    {
+                        model.VendorCode = Convert.ToInt32(formCollection["_VendorCode"]);
+                    }
 
-                if (model.VendorCode > 0)
-                {
-                    msg = "Vendor luster Updated Successfully.";
-                    model.Updatedby = UserId;
+                    if (!vendorClusterRepository.IsDuplicate(model))
+                    {
+                        model.Createdby = UserId;
+                        model.UserId = USER_ID.Substring(0, 8);
+                        vendorClusterRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Added Successfully.");
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        AlertAlreadyExist("Cluster for this vender and department is already entered!!!");
+                    }
                 }
-                model.Createdby = UserId;
-                int i = vendorCluster.VendorClusterDetailsInsertUpdate(model);
-                if (i > 0)
+                else
                 {
-                    return Json(new { status = true, responseText = msg });
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    vendorClusterRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                    return RedirectToAction("Index");
                 }
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCluster", "VendorClusterDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCluster", "Manage", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
         }
 
     }
