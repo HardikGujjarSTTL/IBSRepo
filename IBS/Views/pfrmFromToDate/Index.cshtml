@@ -1,11 +1,13 @@
 ﻿@model IBS.Models.ICIsuued
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>CM Wise IC Issued By IE But Not Rrecived in Office</h2>
+    </div>
+</div>
+
 <div class="accordion-body" id="BYIE">
-    <div class="row my-0">
-        <div class="list-inner">
-            <div class="tast-list">
-                <h3>CMWISE IC ISSUED BY IE BUT NOT RECEIVED IN OFFICE</h3>
-            </div>
-        </div>
+    <div class="row my-0 d-flex align-items-end">
         <div class="col-md-3 mb-3">
             <label for="Reference">From Date</label>
             <input type="text" class="input datepicker" asp-for="FromDT" readonly="true" id="FromDate" required>
