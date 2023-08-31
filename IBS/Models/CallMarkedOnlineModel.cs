@@ -39,6 +39,9 @@
         public string CALL_MATERIAL_VALUE { get; set; }
 
         public string REJECT_REASON { get; set; }
+
+        public string PREV_CALL_1 { get; set; }
+        public string PREV_CALL_2 { get; set; }
     }
 
     public class CallMarkedOnlineFilter
