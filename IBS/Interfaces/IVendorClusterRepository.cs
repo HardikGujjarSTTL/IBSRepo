@@ -2,7 +2,7 @@
 
 namespace IBS.Interfaces
 {
-    public interface IVendorClusterRepository 
+    public interface IVendorClusterRepository
     {
         public VendorClusterModel FindByID(int VendorCode, string DepartmentCode);
 
@@ -14,7 +14,7 @@ namespace IBS.Interfaces
 
         public int SaveDetails(VendorClusterModel model);
 
-        bool Remove(int VendorCode, int UserID);
+        public bool Remove(int VendorCode, string DepartmentCode);
     }
 }
 

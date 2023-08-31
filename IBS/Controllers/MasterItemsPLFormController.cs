@@ -1,29 +1,30 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
     public class MasterItemsPLFormController : BaseController
     {
-        #region Variables
-        private readonly IMasterItemsPLForm masterItemsPLForm;
-        #endregion
-        public MasterItemsPLFormController(IMasterItemsPLForm _masterItemsPLForm)
+        private readonly IMasterItemsPLFormRepository masterItemsPLFormRepository;
+
+        public MasterItemsPLFormController(IMasterItemsPLFormRepository _masterItemsPLFormRepository)
         {
-            masterItemsPLForm = _masterItemsPLForm;
+            masterItemsPLFormRepository = _masterItemsPLFormRepository;
         }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string id)
         {
             MasterItemsPLFormModel model = new();
-            if (id > 0)
+            if (!string.IsNullOrEmpty(id))
             {
-                model = masterItemsPLForm.FindByID(id);
+                model = masterItemsPLFormRepository.FindByID(id);
             }
             return View(model);
         }
@@ -31,14 +32,49 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<MasterItemsPLFormModel> dTResult = masterItemsPLForm.GetMasterItemsPLFormList(dtParameters);
+            DTResult<MasterItemsPLFormModel> dTResult = masterItemsPLFormRepository.GetMasterItemsPLFormList(dtParameters);
             return Json(dTResult);
         }
-        public IActionResult Delete(int id)
+
+        [HttpPost]
+        public IActionResult Manage(MasterItemsPLFormModel model)
         {
             try
             {
-                if (masterItemsPLForm.Remove(id, UserId))
+                if (!masterItemsPLFormRepository.IsDuplicate(model))
+                {
+                    if (model.IsNew)
+                    {
+                        model.Createdby = UserId;
+                        model.UserId = USER_ID.Substring(0, 8);
+                        masterItemsPLFormRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Added Successfully.");
+                    }
+                    else
+                    {
+                        model.Updatedby = UserId;
+                        model.UserId = USER_ID.Substring(0, 8);
+                        masterItemsPLFormRepository.SaveDetails(model);
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                else
+                    AlertAlreadyExist();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "RailwaysDirectory", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                if (masterItemsPLFormRepository.Remove(id))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -49,33 +85,6 @@ namespace IBS.Controllers
                 AlertDanger();
             }
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult MasterItemsPLFormDetailsSave(MasterItemsPLFormModel model)
-        {
-            try
-            {
-                string msg = "Master Items PL Form Inserted Successfully.";
-
-              //  if (model.ItemCd > 0)
-                {
-                    msg = "Master Items PL Form Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = masterItemsPLForm.MasterItemsPLFormDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "MasterItemsPLForm", "MasterItemsPLFormDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
     }

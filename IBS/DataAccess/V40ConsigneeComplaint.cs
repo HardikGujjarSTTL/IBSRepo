@@ -85,7 +85,7 @@ public partial class V40ConsigneeComplaint
 
     public string? JiRegion { get; set; }
 
-    public byte? JiIeCd { get; set; }
+    public int? JiIeCd { get; set; }
 
     public string? Remarks { get; set; }
 

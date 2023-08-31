@@ -1,16 +1,13 @@
-﻿using IBS.Helper;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
     public class VendorClusterController : BaseController
     {
-        #region Variables
         private readonly IVendorClusterRepository vendorClusterRepository;
-        #endregion
+
         public VendorClusterController(IVendorClusterRepository _vendorClusterRepository)
         {
             vendorClusterRepository = _vendorClusterRepository;
@@ -64,18 +61,19 @@ namespace IBS.Controllers
             return Json(Common.GetClustersName(RegionCode, DepartmentName).ToList());
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             try
             {
-                if (vendorClusterRepository.Remove(id, UserId))
+                string[] data = id.Split('-');
+                if (vendorClusterRepository.Remove(Convert.ToInt32(data[0]), data[1]))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "vendorClusterRepository", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCluster", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("Index");

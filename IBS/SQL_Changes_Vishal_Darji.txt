@@ -11,3 +11,13 @@ alter table t94_bank MODIFY FMIS_BANK_CD NUMBER(6,0);
 UPDATE menu_master set controllername= 'VendorCluster', actionname= 'Index' WHERE ID = 93;
 
 alter table T100_VENDER_CLUSTER MODIFY CLUSTER_CODE NUMBER(6,0);
+
+update menu_master set controllername= 'MasterItemsPLForm', actionname= 'Index' WHERE title like '%Master Items PL Form%';
+
+ALTER TABLE T10_IC_BOOKSET ADD ID NUMBER(6,0);
+CREATE SEQUENCE T10_IC_BOOKSET_seq START WITH 1 INCREMENT BY 1 CACHE 20;
+UPDATE T10_IC_BOOKSET SET ID = T10_IC_BOOKSET_seq.nextval;
+ALTER TABLE T10_IC_BOOKSET MODIFY ID NUMBER(6,0) DEFAULT T10_IC_BOOKSET_seq.nextval;
+ALTER TABLE T10_IC_BOOKSET ADD CONSTRAINT T10_IC_BOOKSET_pk  PRIMARY KEY (ID);
+
+update menu_master set controllername= 'Vendor', actionname= 'Index' WHERE ID = 86;
