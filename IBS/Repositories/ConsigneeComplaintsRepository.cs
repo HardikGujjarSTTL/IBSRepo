@@ -138,11 +138,11 @@ namespace IBS.Repositories
                 model.ComplaintDate = Convert.ToDateTime(dt.Rows[0]["COMPLAINT_DATE"]);
                 model.ComplaintId = ComplaintId;
                 model.PO_NO = dt.Rows[0]["PO"].ToString();
-                //model.VEND_NAME = dt.Rows[0]["VENDOR"].ToString();
+                model.VEND_NAME = dt.Rows[0]["VEND_NAME"].ToString();
                 model.BK_NO = dt.Rows[0]["BK_NO"].ToString();
                 model.SET_NO = dt.Rows[0]["SET_NO"].ToString();
                 //model.ie_name = dt.Rows[0]["IE_NAME"].ToString();
-               // model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
+                model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
                 model.FormattedIC_DATE = dt.Rows[0]["IC_DT"].ToString();
                 model.RejMemoDt = Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DT"]);
                 model.RejMemoNo = dt.Rows[0]["REJ_MEMO_NO"].ToString();
@@ -153,7 +153,7 @@ namespace IBS.Repositories
                 model.rejectionValue = Convert.ToDecimal(dt.Rows[0]["REJECTION_VALUE"]);
                 model.Rate = Convert.ToDecimal(dt.Rows[0]["RATE"]);
                 model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
-                model.InspRegion = dt.Rows[0]["INSP_REGION"].ToString();
+                model.InspRegion = dt.Rows[0]["region_code"].ToString();
                 model.CoName = dt.Rows[0]["IE_CO_CD"].ToString();
                 model.ITEM_SRNO_PO = dt.Rows[0]["ITEM_SRNO_PO"].ToString();
                 model.VendCd = Convert.ToInt32(dt.Rows[0]["vend_cd"]);
@@ -161,7 +161,7 @@ namespace IBS.Repositories
                 model.ie_cd = Convert.ToInt32(dt.Rows[0]["ie_cd"]);
                 model.ie_co_cd = Convert.ToInt32(dt.Rows[0]["ie_co_cd"]);
                 model.UserId = dt.Rows[0]["user_id"].ToString();
-                //model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
+                model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
                 model.uom_cd = dt.Rows[0]["uom_cd"].ToString();
                 model.Remarks = dt.Rows[0]["REMARKS"].ToString();
                 model.JiStatusCd = dt.Rows[0]["JI_STATUS_CD"].ToString();
