@@ -156,6 +156,21 @@ namespace IBS.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetClusterByIE(string IeDepartment)
+        {
+            try
+            {
+                List<SelectListItem> ClusterLst = Common.GetClusterByIE(GetRegionCode,IeDepartment);
+                return Json(new { status = true, list = ClusterLst });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "GetIeCity", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
         public IActionResult GetMatch(int IeCd)
         {
             try

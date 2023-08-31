@@ -26,7 +26,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<Allow_Old_Bill_DateModel> dTResult = allowoldbilldateRepository.GetMessageList(dtParameters);
+            DTResult<Allow_Old_Bill_DateModel> dTResult = allowoldbilldateRepository.GetMessageList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
 
@@ -62,7 +62,7 @@ namespace IBS.Controllers
         public IActionResult Allow_Old_Bill_DateManage(string region)
         {
             Allow_Old_Bill_DateModel model = new();
-
+            region = Convert.ToString(GetRegionCode);
             if (region != null)
             {
                 model = allowoldbilldateRepository.FindByID(region);

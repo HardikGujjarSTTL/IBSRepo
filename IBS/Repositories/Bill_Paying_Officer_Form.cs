@@ -2,6 +2,7 @@
 using IBS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using IBS.Models;
+using System.Data;
 
 namespace IBS.Repositories
 {
@@ -17,21 +18,50 @@ namespace IBS.Repositories
         public Bill_Paying_Officer_FormModel FindByID(string BpoCd)
         {
             Bill_Paying_Officer_FormModel model = new();
-            T12BillPayingOfficer BPO = context.T12BillPayingOfficers.Where(x=>x.BpoCd == BpoCd).FirstOrDefault();
+            T12BillPayingOfficer BPO = context.T12BillPayingOfficers.Where(x => x.BpoCd == BpoCd).FirstOrDefault();
+
+            var BPOState = (from s in context.T92States
+                            where s.StateCd == (from c in context.T03Cities
+                                                where c.CityCd == BPO.BpoCityCd
+                                                select c.StateCd).FirstOrDefault()
+                            select Convert.ToString(s.StateCd).PadLeft(2, '0') + "-" + s.StateName
+                         ).FirstOrDefault();
+
 
             if (BPO == null)
                 return model;
             else
             {
                 model.BpoCd = BPO.BpoCd;
+                model.BpoRegion = BPO.BpoRegion;
+                model.BpoType = BPO.BpoType;
                 model.BpoName = BPO.BpoName;
+                model.BpoRly = BPO.BpoRly;
+                model.BpoAdd = BPO.BpoAdd;
                 model.BpoCityCd = Convert.ToInt32(BPO.BpoCityCd);
+                model.BpoCity = Convert.ToString(BPO.BpoCityCd);
+                model.BillPassOfficer = BPO.BillPassOfficer;
+                model.BpoFeeType = BPO.BpoFeeType;
+                model.BpoFee = BPO.BpoFee;
+                model.BpoTaxType = (BPO.BpoTaxType == "" || BPO.BpoTaxType == null) ? "X" : BPO.BpoTaxType;
+                model.BpoFlg = BPO.BpoFlg;
+                model.BpoAdvFlg = BPO.BpoAdvFlg;
+                model.BpoLocCd = BPO.BpoLocCd;
+                model.BpoOrgn = BPO.BpoOrgn;
+                model.BpoAdd1 = BPO.BpoAdd1;
+                model.BpoAdd2 = BPO.BpoAdd2;
+                model.lblBpoState = Convert.ToString(BPOState);
+                model.BpoState = BPO.BpoState;
+                model.BpoPhone = BPO.BpoPhone;
+                model.BpoFax = BPO.BpoFax;
+                model.BpoEmail = BPO.BpoEmail;
+                model.PayWindowId = BPO.PayWindowId;
                 model.GstinNo = BPO.GstinNo;
+                model.Au = BPO.Au;
+                model.PinCode = BPO.PinCode;
+                model.SapCustCdBpo = BPO.SapCustCdBpo;
+
                 model.UserId = BPO.UserId;
-                model.Updatedby = BPO.Updatedby;
-                model.Createdby = BPO.Createdby;
-                model.Createddate = model.Createddate;
-                model.Isdeleted = BPO.Isdeleted;
                 return model;
             }
         }
@@ -159,7 +189,7 @@ namespace IBS.Repositories
 
             return dTResult;
         }
-        
+
         public bool Remove(int BpoCd, int UserID)
         {
             var roles = context.T12BillPayingOfficers.Find(Convert.ToByte(BpoCd));
@@ -172,39 +202,132 @@ namespace IBS.Repositories
             return true;
         }
 
-        public int BPODetailsInsertUpdate(Bill_Paying_Officer_FormModel model)
+        public string GetMaxBPOCd()
         {
-            int RoleId = 0;
-            var BPO = context.T12BillPayingOfficers.Where(x => x.BpoCd == model.BpoCd).FirstOrDefault();
-            #region Role save
-            //if (BPO == null || BPO.BpoCd == 0)
-            if (BPO == null)
+            string BPOCd = "";
 
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            using (var command = context.Database.GetDbConnection().CreateCommand())
             {
-                T12BillPayingOfficer obj = new T12BillPayingOfficer();
+                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    //command.CommandText = "SELECT NVL(MAX(BANK_CD), 0) FROM T94_BANK WHERE BANK_CD < 990";
+                    command.CommandText = "SELECT LPAD(to_number(NVL(MAX(NVL(BPO_CD,0)),0)+1),5,'0') FROM T12_BILL_PAYING_OFFICER";
+                    BPOCd = Convert.ToString(command.ExecuteScalar());
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+            return BPOCd;
+        }
 
-                obj.BpoName = model.BpoName;
-                obj.BpoCityCd = model.BpoCityCd;
-                obj.GstinNo = model.GstinNo;
-                obj.Createdby = model.Createdby;
-                obj.Isdeleted = Convert.ToByte(false);
-                obj.Createddate = DateTime.Now;
-                context.T12BillPayingOfficers.Add(obj);
+        public string BPOSave(Bill_Paying_Officer_FormModel model)
+        {
+            string BPOCd ="";
+            if (model.BpoCd == null)
+            {
+                BPOCd = GetMaxBPOCd();
+
+                T12BillPayingOfficer bpo = new()
+                {
+                    BpoCd = BPOCd,
+                    BpoRegion = model.BpoRegion,
+                    BpoType = model.BpoType,
+                    BpoName = model.BpoName,
+
+                    BpoRly = model.BpoType == "R" ? model.BpoRlylst : model.BpoRly,
+                    BpoAdd = model.BpoAdd,
+                    BpoCityCd = Convert.ToInt32(model.BpoCity),
+                    BillPassOfficer = model.BillPassOfficer,
+                    BpoFeeType = model.BpoFeeType,
+                    BpoFee = model.BpoFee,
+
+                    BpoTaxType = model.BpoTaxType == "X" ? "" : model.BpoTaxType,
+                    BpoFlg = model.BpoFlg,
+                    BpoAdvFlg = model.BpoAdvFlg,
+                    BpoLocCd = model.BpoLocCd,
+                    BpoOrgn = model.BpoOrgn,
+                    BpoAdd1 = model.BpoAdd1,
+                    BpoAdd2 = model.BpoAdd2,
+                    BpoState = model.BpoState,
+                    BpoPhone = model.BpoPhone,
+                    BpoFax = model.BpoFax,
+                    BpoEmail = model.BpoEmail,
+                    PayWindowId = model.BpoType == "R" ? model.PayWindowId : null,
+                    UserId = model.UserId,
+                    Datetime = DateTime.Now.Date,
+                    GstinNo = model.GstinNo,
+                    Au = model.BpoType == "R" ? model.Au : null,
+                    LegalName = model.BpoType == "R" ? "MINISTRY OF RAILWAYS" : null,
+                    PinCode = model.PinCode,
+
+                    Createdby = model.Createdby,
+                    Createddate = DateTime.Now,
+                };
+
+                context.T12BillPayingOfficers.Add(bpo);
                 context.SaveChanges();
-                RoleId = Convert.ToInt32(obj.BpoCd);
             }
             else
             {
-                BPO.BpoName = model.BpoName;
-                BPO.BpoCityCd = model.BpoCityCd;
-                BPO.GstinNo = model.GstinNo;
-                BPO.Updatedby = model.Updatedby;
-                BPO.Updateddate = DateTime.Now;
-                context.SaveChanges();
-                RoleId = Convert.ToInt32(BPO.BpoCd);
+                T12BillPayingOfficer bpo = context.T12BillPayingOfficers.Find(model.BpoCd);
+
+                if (bpo != null)
+                {
+                    bpo.BpoRegion = model.BpoRegion;
+                    bpo.BpoType = model.BpoType;
+                    bpo.BpoName = model.BpoName;
+                    bpo.BpoRly = model.BpoType == "R" ? model.BpoRlylst : model.BpoRly;
+                    bpo.BpoAdd = model.BpoAdd;
+                    bpo.BpoCityCd = Convert.ToInt32(model.BpoCity);
+                    bpo.BillPassOfficer = model.BillPassOfficer;
+                    bpo.BpoFeeType = model.BpoFeeType;
+                    bpo.BpoFee = model.BpoFee;
+                    bpo.BpoTaxType = model.BpoTaxType == "X" ? "" : model.BpoTaxType;
+                    bpo.BpoFlg = model.BpoFlg;
+                    bpo.BpoAdvFlg = model.BpoAdvFlg;
+                    bpo.BpoLocCd = model.BpoLocCd;
+                    bpo.BpoOrgn = model.BpoOrgn;
+                    bpo.BpoAdd1 = model.BpoAdd1;
+                    bpo.BpoAdd2 = model.BpoAdd2;
+                    bpo.BpoState = model.BpoState;
+                    bpo.BpoPhone = model.BpoPhone;
+                    bpo.BpoFax = model.BpoFax;
+                    bpo.BpoEmail = model.BpoEmail;
+                    bpo.PayWindowId = model.BpoType == "R" ? model.PayWindowId : null;
+                    bpo.UserId = model.UserId;
+                    bpo.Datetime = DateTime.Now.Date;
+                    bpo.GstinNo = model.GstinNo.ToUpper();
+                    bpo.Au = model.BpoType == "R" ? model.Au : null;
+                    bpo.PinCode = model.PinCode;
+
+                    bpo.Updatedby = model.Updatedby;
+                    bpo.Updateddate = DateTime.Now;
+
+                    context.SaveChanges();
+                    BPOCd = model.BpoCd;
+                }
             }
-            #endregion
-            return RoleId;
+            return BPOCd;
+
+        }
+
+        public string GetState(int BpoCityCd)
+        {
+            string StateName ="";
+
+            var BPOState = (from s in context.T92States
+                            where s.StateCd == (from c in context.T03Cities
+                                                where c.CityCd == BpoCityCd
+                                                select c.StateCd).FirstOrDefault()
+                            select Convert.ToString(s.StateCd).PadLeft(2, '0') + "-" + s.StateName
+                        ).FirstOrDefault();
+
+            return BPOState;
         }
     }
 

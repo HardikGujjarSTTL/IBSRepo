@@ -181,6 +181,9 @@ namespace IBS.Repositories
         {
             string status = "";
             int code = new int();
+
+            var ClusterDetails = context.T101IeClusters.Where(x=>x.ClusterCode == Convert.ToByte(model.Cluster) && x.DepartmentCode == model.IeDepartment).FirstOrDefault();
+
             if (model.IeCd == null || model.IeCd == 0)
             {
                 int count = context.T09Ies.Where(t09 => t09.IeRegion == model.IeRegion && (t09.IeSname == model.IeSname || t09.IeEmpNo == model.IeEmpNo)).Count();
@@ -225,7 +228,6 @@ namespace IBS.Repositories
                     context.T09Ies.Add(obj);
                     context.SaveChanges();
                     status = Convert.ToString(obj.IeCd);
-
                 }
                 else
                 {
@@ -275,7 +277,24 @@ namespace IBS.Repositories
                 }
             }
 
-
+            if (ClusterDetails == null)
+            {
+                T101IeCluster Cster = new T101IeCluster();
+                Cster.IeCode = model.IeCd;
+                Cster.ClusterCode = Convert.ToByte(model.Cluster);
+                Cster.DepartmentCode = model.IeDepartment;
+                Cster.UserId = model.UserId;
+                Cster.Datetime = DateTime.Now.Date;
+                context.T101IeClusters.Add(Cster);
+                context.SaveChanges();
+            }
+            else
+            {
+                ClusterDetails.IeCode = model.IeCd;
+                ClusterDetails.UserId = model.UserId;
+                ClusterDetails.Datetime = DateTime.Now.Date;
+                context.SaveChanges();
+            }
 
             return status;
         }

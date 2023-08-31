@@ -86,10 +86,18 @@
                     @Html.DropDownListFor(model => model.IeDepartment, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"),"--Select--")
                     <span asp-validation-for="IeDepartment" class="text-danger"></span>
                 </div>
+
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Designation</label>
                     @Html.DropDownListFor(model => model.IeDesig, new SelectList(IBS.Models.Common.IEDesignation() , "Value", "Text"),"--Select--")
                     <span asp-validation-for="IeDesig" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Cluster Name</label>
+                    @Html.DropDownListFor(model => model.Cluster, new SelectList(IBS.Models.Common.GetClusterByIE(Model.IeRegion,Model.IeDepartment) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="Cluster" class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
@@ -269,6 +277,26 @@
                     $("#IeCityCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
                         $("#IeCityCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function GetCluster() {
+            var IeDepartment = $("#IeDepartment").val();
+            $.ajax({
+                url: '@Url.Action("GetClusterByIE", "InspectionEngineers")?IeDepartment=' + IeDepartment,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#Cluster").html("");
+                    $("#Cluster").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#Cluster").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
                 }
             });

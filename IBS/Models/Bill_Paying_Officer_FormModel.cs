@@ -1,4 +1,6 @@
 ﻿using IBS.DataAccess;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace IBS.Models
 {
@@ -10,10 +12,13 @@ namespace IBS.Models
 
         public string? BpoType { get; set; }
 
+        [Display(Name = "Bpo Name")]
+        [Required]
         public string? BpoName { get; set; }
 
-
         public string? BpoRly { get; set; }
+
+        public string? BpoRlylst { get; set; }
 
         public string? BpoAdd { get; set; }
 
@@ -41,14 +46,20 @@ namespace IBS.Models
 
         public string? BpoAdd2 { get; set; }
 
+        [Display(Name = "State")]
+        [Required]
         public string? BpoState { get; set; }
+
+        public string? lblBpoState { get; set; }
 
         public string? BpoPin { get; set; }
 
+        [Phone]
         public string? BpoPhone { get; set; }
 
         public string? BpoFax { get; set; }
 
+        [EmailAddress]
         public string? BpoEmail { get; set; }
 
         public string? PayWindowId { get; set; }
@@ -59,6 +70,8 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [Display(Name = "GSTIN Number")]
+        [Required]
         public string? GstinNo { get; set; }
 
         public string? Au { get; set; }
@@ -69,7 +82,10 @@ namespace IBS.Models
 
         public string? LegalName { get; set; }
 
+        [Display(Name = "PINCODE")]
+        [Required]
         public string? PinCode { get; set; }
+
         public byte? Isdeleted { get; set; }
 
         public int? Createdby { get; set; }
@@ -85,6 +101,8 @@ namespace IBS.Models
         public virtual ICollection<T14PoBpo> T14PoBpos { get; set; } = new List<T14PoBpo>();
 
         public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
+
+        public string ActionType { get; set; }
     }
 }
 

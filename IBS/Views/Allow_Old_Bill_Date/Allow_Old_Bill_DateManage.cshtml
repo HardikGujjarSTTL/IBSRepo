@@ -21,8 +21,8 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="PropertyId">Region</label>
-                @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
-                <span asp-validation-for="Region" class="text-danger"></span>
+                @Html.DropDownListFor(model => model.Region, Common.GetRegion(Model.Region), new { })
+                @*<span asp-validation-for="Region" class="text-danger"></span>*@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="custom-readio">

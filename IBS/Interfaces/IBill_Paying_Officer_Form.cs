@@ -10,6 +10,8 @@ namespace IBS.Interfaces
 
         bool Remove(int BpoCd, int UserID);
 
-        int BPODetailsInsertUpdate(Bill_Paying_Officer_FormModel model);
+        string BPOSave(Bill_Paying_Officer_FormModel model);
+
+        string GetState (int BpoCityCd);
     }
 }
