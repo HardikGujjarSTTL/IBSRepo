@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -65,7 +64,6 @@ namespace IBS.Helper
             ConsigneeComplaints = 12,
         }
 
-
         public enum DocumentCategory_CANRegisrtation : int
         {
             Address_Proof_Document = 5,
@@ -91,6 +89,7 @@ namespace IBS.Helper
             Browse_the_Document_to_Upload = 7,
             CallRegistrationDoc = 13,
         }
+
         public enum DocumentCategory_VendorMADoc : int
         {
             VendorMADoc = 8,
@@ -115,7 +114,6 @@ namespace IBS.Helper
 
             return defDesc;
         }
-
 
         public enum RegionType
         {
@@ -156,6 +154,7 @@ namespace IBS.Helper
             [Description("Left/Repatriated")]
             L,
         }
+
         public enum PoOrLetter
         {
             [Description("Purchase Order")]
@@ -163,6 +162,7 @@ namespace IBS.Helper
             [Description("Letter of Offer")]
             L,
         }
+
         public enum StockNonstock
         {
             [Description("Stock")]
@@ -170,6 +170,7 @@ namespace IBS.Helper
             [Description("Non-Stock")]
             N,
         }
+
         public enum ServTax
         {
             [Description("Service Tax to be Charged on Fee")]
@@ -177,6 +178,7 @@ namespace IBS.Helper
             [Description("Fee is Inclusive of Service Tax")]
             N,
         }
+
         public enum ClientType
         {
             [Description("Railways")]
@@ -206,6 +208,7 @@ namespace IBS.Helper
             [Description("CO QA DIVISION")]
             Q,
         }
+
         public enum DiscountType
         {
             [Description("Percentage")]
@@ -215,6 +218,7 @@ namespace IBS.Helper
             [Description("Per No.")]
             N,
         }
+
         public enum ExciseType
         {
             [Description("Percentage")]
@@ -222,6 +226,7 @@ namespace IBS.Helper
             [Description("Lumpsum")]
             L,
         }
+
         public enum VendorStatus
         {
             [Description("Active")]
@@ -231,6 +236,7 @@ namespace IBS.Helper
             [Description("Re-Instated")]
             R,
         }
+
         public enum OnlineCallStatus
         {
             [Description("No")]
@@ -238,6 +244,49 @@ namespace IBS.Helper
             [Description("Yes")]
             Y,
         }
+
+        public enum Department
+        {
+            [Description("Mechanical")]
+            M,
+            [Description("Electrical")]
+            E,
+            [Description("Civil")]
+            C,
+            [Description("Textiles")]
+            T,
+            [Description("M & P")]
+            Z,
+        }
+
+        public enum Region
+        {
+            [Description("Northern Region")]
+            N,
+            [Description("Southern Region")]
+            S,
+            [Description("Eastern Region")]
+            E,
+            [Description("Westrern Region")]
+            W,
+            [Description("Central Region")]
+            C,
+            [Description("QA Corporate")]
+            Q,
+        }
+
+        public enum BookSubmitted
+        {
+            [Description("Submitted & Completed")]
+            Y,
+            [Description("Submitted but not Completed")]
+            S,
+            [Description("Not Submitted but Completed")]
+            C,
+            [Description("NO")]
+            N,
+        }
+
     }
 
     public class EnumUtility<T>

@@ -1,9 +1,17 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class MasterItemsPLFormModel
     {
+        [Display(Name = "Item")]
+        [Required]
         public string? ItemCd { get; set; }
 
+        public string? ItemDesc { get; set; }
+
+        [Display(Name = "PL No")]
+        [Required]
         public string PlNo { get; set; } = null!;
 
         public string? UserId { get; set; }
@@ -19,5 +27,7 @@
         public DateTime? Createddate { get; set; }
 
         public DateTime? Updateddate { get; set; }
+
+        public bool IsNew { get; set; } = true;
     }
 }

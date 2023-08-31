@@ -179,13 +179,13 @@
                     ShowHideMsgNew(true, "Consignee Purchase Detail Delete Successful");
                     InitializeDatatable();
                 } else if (response == 500) {
-                    ShowHideMsgNew(false, "Somthing went wrong");
+                    ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
                 } else if (response == -1) {
-                    ShowHideMsgNew(false, "Record not deleted");
+                    ShowHideMsgNew(false, "Record Not Deleted");
                 } else {
-                    ShowHideMsgNew(false, "Record not deleted");
+                    ShowHideMsgNew(false, "Record Not Deleted");
                 }
-                $("#ConsigneeState").val(response);
+                //$("#ConsigneeState").val(response);
             }
         });
     }

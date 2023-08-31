@@ -138,7 +138,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             catch (Exception ex)
             {
-                msg = "Somthing went wrong";
+                msg = "Oops Somthing Went Wrong !!";
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptSave", 1, GetIPAddress());
             }
             return Json(msg);

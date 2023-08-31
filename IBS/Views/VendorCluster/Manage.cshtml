@@ -1,55 +1,166 @@
 ﻿@model IBS.Models.VendorClusterModel
 
 @{
-    ViewData["Title"] = "Vendor Cluster";
+    ViewData["Title"] = "Manage Vendor Cluster";
+    string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
+    bool IsReadOnly = Model != null & !Model.IsNew;
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Vendor Cluster</h2>
+        <h2>Manage Vendor Cluster</h2>
     </div>
 </div>
 <section class="table-section">
     <div class="task-listinput">
         <div class="accordion-body">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCluster" asp-action="VendorClusterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVendorCluster">
+            <form role="form" asp-controller="VendorCluster" asp-action="Manage" id="frmVendorCluster">
                 <input type="hidden" asp-for="VendorCode" />
+                <input type="hidden" asp-for="IsNew" />
+                <input type="hidden" id="_VendorCode" name="_VendorCode" />
                 <div class="accordion-body">
                     <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Name of Vendor/Manufacture Code</label>
-                            <textarea class="input" asp-for="DepartmentName" maxlength="30"> </textarea>
-                            <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Name of Vendor/Manufacture Code <i class="text-danger">*</i></label>
+                            <input type="text" class="input" id="txtVendorCodeName" readonly="@IsReadOnly"/>
+                            <span id="spnErrorVendorCodeName" class="text-danger"></span>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Department Name</label>
-                            <textarea class="input" asp-for="ClusterCode" maxlength="30"> </textarea>
-                            <span asp-validation-for="ClusterCode" class="text-danger"></span>
+                        <div class="col-md-3 mb-3">
+                            <div class="savenext-btn" style="margin-top: 30px">
+                                <button type="button" class="save-btn active" id="btnSearch">Select Place of Inspection</button>
+                            </div>
                         </div>
                     </div>
-                   
+                    <div class="row my-0">
+                        <div class="col-md-6 mb-3">
+                            <select id="ddlVendor" style="display: none"></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" class="input" id="txtVendAdd1" style="display: none" />
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Department Name <i class="text-danger">*</i></label>
+                            @Html.DropDownListFor(model => model.DepartmentName, new SelectList(Common.GetDepartment() , "Value", "Text"), "--Select--", IsReadOnly ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "", @onchange = "BindClusterData();" } )
+                            <span class="text-danger" asp-validation-for="DepartmentName"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Cluster Name <i class="text-danger">*</i></label>
+                            @Html.DropDownListFor(model => model.ClusterCode, Common.GetClustersName(Region, Model.DepartmentName), "--Select--",  new { @class = "" })
+                            <span class="text-danger" asp-validation-for="ClusterCode"></span>
+                        </div>
+                    </div>
                     <div class="savenext-btn">
                         <a asp-controller="VendorCluster" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active" onclick="SubmitVendorClusterData();">Save</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </section>
+
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
+
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        $(document).ready(function () {
+            var VendorCode = '@Model.VendorCode';
+            var VendFullName = '@Model.VendFullName';
+            var VendAdd1 = '@Model.VendAdd1';
+
+            if ('@Model' != null && '@Model.VendorCode' > 0) {
+
+                $('#txtVendorCodeName').val(VendorCode);
+                $('#ddlVendor').append($('<option>', { value: VendorCode, text: VendFullName }));
+                $('#txtVendAdd1').val(VendAdd1);
+
+                $('#ddlVendor').css('display', '');
+                $('#txtVendAdd1').css('display', '');
+
+                $("#btnSearch").hide();
+
+            }
+        });
+
+        $("#btnSearch").click(function () {
+
+            $("#spnErrorVendorCodeName").html("");
+
+            var VendorCodeName = $("#txtVendorCodeName").val();
+
+            if (VendorCodeName == "") {
+                $("#spnErrorVendorCodeName").html("Name of Vendor/Manufacture Code is required.");
+                $("#txtVendorCodeName").focus();
+                return false;
+            }
+
+            $.get("@Url.Action("GetVendorDetails")", { VendorCodeName: VendorCodeName }, function (response) {
+                if (response.status) {
+                    if (response.VendorDetails != null && response.VendorDetails != undefined) {
+                        if (response.VendorDetails.VendStatus == "B") {
+                            alert("This Manufacturer is Blacklisted From: " + response.VendorDetails.Display_VendStatusDtFr + " TO: " + response.VendorDetails.Display_VendStatusDtTo);
+                            $("#ddlVendor").empty();
+                            $('#txtVendAdd1').val("");
+                            $('#ddlVendor').css('display', 'none');
+                            $('#txtVendAdd1').css('display', 'none');
+                            return;
+                        }
+                        var details = response.VendorDetails.VendName + "/" + response.VendorDetails.VendAdd1 + "/" + response.VendorDetails.Location + " / " + response.VendorDetails.City;
+
+                        $("#ddlVendor").empty();
+                        $('#ddlVendor').append($('<option>', { value: response.VendorDetails.VendCd, text: details }));
+
+                        $('#txtVendAdd1').val(response.VendorDetails.VendAdd1);
+
+                        $('#ddlVendor').css('display', '');
+                        $('#txtVendAdd1').css('display', '');
+                    }
+                    else {
+                        alert("No Manufacturer Found!!!");
+                        $("#ddlVendor").empty();
+                        $('#txtVendAdd1').val("");
+                        $('#ddlVendor').css('display', 'none');
+                        $('#txtVendAdd1').css('display', 'none');
+                    }
+                }
+            });
+
+        });
+
+        function BindClusterData() {
+            $("#DistrictId").empty();
+            $("#DistrictId").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetClustersName", "VendorCluster")", { RegionCode: '@Region',  DepartmentName: $("#DepartmentName").val() }, function (response) {
+                if (response != null) {
+                    $("#ClusterCode").empty();
+                    $("#ClusterCode").append($('<option value="">--Select--</option>'));
+                    $.each(response, function (ind, val) {
+                        $("#ClusterCode").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
+        }
+
+        function SubmitVendorClusterData() {
+
+            var VendorCode = $("#ddlVendor").val();
+
+            if (VendorCode == null || VendorCode == "") {
+                $("#spnErrorVendorCodeName").html("Name of Vendor/Manufacture Code is required.");
+                $("#txtVendorCodeName").focus();
+                return;
+            }
+
             if ($("#frmVendorCluster").valid()) {
+                $("#_VendorCode").val(VendorCode);
+                $('select').prop('disabled', false);
                 $("#frmVendorCluster").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/VendorCluster/Index";
-            window.location.href = '@Url.Action("Index", "VendorCluster")';
-        };
+
     </script>
 }

@@ -71,7 +71,6 @@ namespace IBS.Repositories
                         CoDesigName = d.RDesignation,
                         CoPhoneNo = co.CoPhoneNo,
                         CoEmail = co.CoEmail,
-                        //CoTypeName = co.CoType == "C" ? "CM" : (co.CoType == "D" ? "DFO" : ""),
                         CoTypeName = EnumUtility<Enums.COType>.GetDescriptionByKey(co.CoType),
                     };
 
