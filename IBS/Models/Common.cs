@@ -1125,6 +1125,34 @@ namespace IBS.Models
 
         }
 
+        public static List<SelectListItem> BPORailway()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> RlyCd = (from a in ModelContext.T91Railways
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = Convert.ToString(a.Railway),
+                                         Value = Convert.ToString(a.RlyCd)
+                                     }).ToList();
+            return RlyCd;
+
+        }
+
+        public static List<SelectListItem> GetAUCris()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> RlyCd = (from a in ModelContext.AuCris
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = a.Au + "-" + a.Audesc + "/" + a.Address, 
+                                         Value = Convert.ToString(a.Au)
+                                     }).ToList();
+            return RlyCd;
+
+        }
+
         public static List<SelectListItem> GetComplaint()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2208,6 +2236,17 @@ namespace IBS.Models
                     }).OrderBy(c => c.Text).ToList();
         }
 
+        public static IEnumerable<SelectListItem> GetPayingWindow()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T73PayingWindows
+                    select new SelectListItem
+                    {
+                        Value = c.PayWindowId,
+                        Text = c.PayWindowDesc
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
         public static IEnumerable<SelectListItem> GetCountries()
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -2255,7 +2294,30 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEJobType)).ToList();
         }
-
+        public static IEnumerable<TextValueDropDownDTO> GetBPOFeeType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOFeeType)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetBPOTaxType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOTaxType)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetBPOFlag()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOFlag)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetBPOAdvFlag()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOAdvFlag)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetActiveInActive()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ActiveInActive)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetUserType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserType)).ToList();
+        }
 
 
     }

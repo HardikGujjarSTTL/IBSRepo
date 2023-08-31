@@ -75,6 +75,8 @@ public partial class T09Ie
 
     public virtual ICollection<NoIeWorkPlan> NoIeWorkPlans { get; set; } = new List<NoIeWorkPlan>();
 
+    public virtual ICollection<T10IcBookset> T10IcBooksets { get; set; } = new List<T10IcBookset>();
+
     public virtual ICollection<T16IcCancel> T16IcCancels { get; set; } = new List<T16IcCancel>();
 
     public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();

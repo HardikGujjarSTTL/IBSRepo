@@ -13,29 +13,30 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public Bill_Paying_Officer_FormModel FindByID(int BpoCd)
+
+        public Bill_Paying_Officer_FormModel FindByID(string BpoCd)
         {
             Bill_Paying_Officer_FormModel model = new();
-            T12BillPayingOfficer role = context.T12BillPayingOfficers.Find(Convert.ToByte(BpoCd));
+            T12BillPayingOfficer BPO = context.T12BillPayingOfficers.Where(x=>x.BpoCd == BpoCd).FirstOrDefault();
 
-            if (role == null)
-                throw new Exception("Role Record Not found");
+            if (BPO == null)
+                return model;
             else
             {
-                model.BpoCd = role.BpoCd;
-                model.BpoName = role.BpoName;
-                model.BpoCityCd = role.BpoCityCd;
-                model.GstinNo = role.GstinNo;
-                model.UserId = role.UserId;
-                model.Updatedby = role.Updatedby;
-                model.Createdby = role.Createdby;
+                model.BpoCd = BPO.BpoCd;
+                model.BpoName = BPO.BpoName;
+                model.BpoCityCd = Convert.ToInt32(BPO.BpoCityCd);
+                model.GstinNo = BPO.GstinNo;
+                model.UserId = BPO.UserId;
+                model.Updatedby = BPO.Updatedby;
+                model.Createdby = BPO.Createdby;
                 model.Createddate = model.Createddate;
-                model.Isdeleted = role.Isdeleted;
+                model.Isdeleted = BPO.Isdeleted;
                 return model;
             }
         }
 
-        public DTResult<Bill_Paying_Officer_FormModel>GetBPOList(DTParameters dtParameters)
+        public DTResult<Bill_Paying_Officer_FormModel> GetBPOList(DTParameters dtParameters)
         {
 
             DTResult<Bill_Paying_Officer_FormModel> dTResult = new() { draw = 0 };
@@ -52,37 +53,102 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "BpoCd";
+                    orderCriteria = "BpoName";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "BpoCd";
+                orderCriteria = "BpoName";
                 orderAscendingDirection = true;
             }
-            query = from l in context.T12BillPayingOfficers
-                    where l.Isdeleted == 0 || l.Isdeleted == null
+
+            string BpoCd = "", BpoName = "", BpoRly = "", BpoCity = "", SapCustCdBpo = "", GstinNo = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BpoCd"]))
+            {
+                BpoCd = Convert.ToString(dtParameters.AdditionalValues["BpoCd"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BpoName"]))
+            {
+                BpoName = Convert.ToString(dtParameters.AdditionalValues["BpoName"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BpoRly"]))
+            {
+                BpoRly = Convert.ToString(dtParameters.AdditionalValues["BpoRly"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BpoCity"]))
+            {
+                BpoCity = Convert.ToString(dtParameters.AdditionalValues["BpoCity"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["SapCustCdBpo"]))
+            {
+                SapCustCdBpo = Convert.ToString(dtParameters.AdditionalValues["SapCustCdBpo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["GstinNo"]))
+            {
+                GstinNo = Convert.ToString(dtParameters.AdditionalValues["GstinNo"]);
+            }
+
+            BpoCd = BpoCd.ToString() == "" ? string.Empty : BpoCd.ToString();
+            BpoName = BpoName.ToString() == "" ? string.Empty : BpoName.ToString();
+            BpoRly = BpoRly.ToString() == "" ? string.Empty : BpoRly.ToString();
+            BpoCity = BpoCity.ToString() == "" ? string.Empty : BpoCity.ToString();
+            SapCustCdBpo = SapCustCdBpo.ToString() == "" ? string.Empty : SapCustCdBpo.ToString();
+            GstinNo = GstinNo.ToString() == "" ? string.Empty : GstinNo.ToString();
+
+            //query = from t12 in context.T12BillPayingOfficers
+            //        join t03 in context.T03Cities on t12.BpoCityCd equals t03.CityCd into cityGroup
+            //        from city in cityGroup.DefaultIfEmpty()
+            //        join a in context.AuCris on t12.Au equals a.Au into auGroup
+            //        from au in auGroup.DefaultIfEmpty()
+            //        where (string.IsNullOrEmpty(BpoCd) || t12.BpoCd == BpoCd) &&
+            //              (string.IsNullOrEmpty(BpoName) || t12.BpoName.ToUpper().StartsWith(BpoName.ToUpper())) &&
+            //              (string.IsNullOrEmpty(BpoRly) || t12.BpoRly.ToUpper() == BpoRly.Trim().ToUpper()) &&
+            //              (string.IsNullOrEmpty(BpoCity) || (city != null && city.City.ToUpper().StartsWith(BpoCity.Trim().ToUpper()))) &&
+            //              (string.IsNullOrEmpty(SapCustCdBpo) || t12.SapCustCdBpo == SapCustCdBpo.Trim()) &&
+            //              (string.IsNullOrEmpty(GstinNo) || t12.GstinNo.ToUpper() == GstinNo.Trim().ToUpper())
+            //        orderby t12.BpoName, t12.BpoRly,
+            //                (t12.BpoAdd + "," + (city != null ? city.Location + " : " + city.City : city.City))
+            //        select new Bill_Paying_Officer_FormModel
+            //        {
+            //            BpoCd = t12.BpoCd,
+            //            BpoName =t12.BpoName,
+            //            BpoRly = t12.BpoRly,
+            //            BpoAdd = t12.BpoAdd + "," + (city != null ? city.Location + " : " + city.City : city.City),
+            //            Au = au != null ? au.Au + "-" + au.Audesc : null,
+            //            BpoCityCd = t12.BpoCityCd,
+            //            GstinNo = t12.GstinNo,
+            //        };
+
+            query = from l in context.ViewGetBpodetails
+                    where (string.IsNullOrEmpty(BpoCd) || l.BpoCd == BpoCd)
+                    && (string.IsNullOrEmpty(BpoName) || l.BpoName == BpoName)
+                    && (string.IsNullOrEmpty(BpoRly) || l.BpoRly == BpoRly)
+                    && (string.IsNullOrEmpty(BpoCity) || l.City.Equals(BpoCity))
+                    && (string.IsNullOrEmpty(SapCustCdBpo) || l.SapCustCdBpo == SapCustCdBpo)
+                    && (string.IsNullOrEmpty(GstinNo) || l.GstinNo == GstinNo)
+
                     select new Bill_Paying_Officer_FormModel
                     {
                         BpoCd = l.BpoCd,
                         BpoName = l.BpoName,
-                        BpoCityCd = l.BpoCityCd,
-                        GstinNo = l.GstinNo,
-                        UserId = l.UserId,
-                        Isdeleted = l.Isdeleted,
-                        Createddate = l.Createddate,
-                        Createdby = l.Createdby,
-                        Updateddate = l.Updateddate,
-                        Updatedby = l.Updatedby
+                        BpoRly = l.BpoRly,
+                        BpoAdd = l.BpoAdd,
+                        Au = l.Audesc,
+                        BpoCity = l.City,
+                        GstinNo = l.GstinNo
                     };
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.BpoName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.BpoPhone).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.BpoCd).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.BpoName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.BpoRly).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.BpoAdd).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Au).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.GstinNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -93,6 +159,7 @@ namespace IBS.Repositories
 
             return dTResult;
         }
+        
         public bool Remove(int BpoCd, int UserID)
         {
             var roles = context.T12BillPayingOfficers.Find(Convert.ToByte(BpoCd));
@@ -111,9 +178,9 @@ namespace IBS.Repositories
             var BPO = context.T12BillPayingOfficers.Where(x => x.BpoCd == model.BpoCd).FirstOrDefault();
             #region Role save
             //if (BPO == null || BPO.BpoCd == 0)
-                if (BPO == null )
+            if (BPO == null)
 
-                {
+            {
                 T12BillPayingOfficer obj = new T12BillPayingOfficer();
 
                 obj.BpoName = model.BpoName;

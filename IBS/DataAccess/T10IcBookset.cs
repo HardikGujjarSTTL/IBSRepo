@@ -39,5 +39,7 @@ public partial class T10IcBookset
 
     public DateTime? Updateddate { get; set; }
 
+    public int Id { get; set; }
+
     public virtual T09Ie? IssueToIecdNavigation { get; set; }
 }

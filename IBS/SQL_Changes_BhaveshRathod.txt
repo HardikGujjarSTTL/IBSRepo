@@ -309,5 +309,8 @@ ALTER TABLE T19_CALL_CANCEL ADD CANCEL_CD_12 NUMBER(2,0)
 
 18) Master Page Inspection Engineer
 VIEW : VIEW_ISNPECTION_ENG
+
+19) BPO 
+View : VIEW_GET_BPODETAILS
 =============================================================================================================================================
 

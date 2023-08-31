@@ -1,61 +1,47 @@
 ﻿@model IBS.Models.BankMasterModel
 
 @{
-    ViewData["Title"] = "Bank Master";
+    ViewData["Title"] = "Manage Banks Directory";
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Bank Master</h2>
+        <h2>Manage Banks Directory</h2>
     </div>
 </div>
 
-    <div class="task-listinput">
-        
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="BankMaster" asp-action="BankMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBankMaster">
-                <input type="hidden" asp-for="BankCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        @*<div class="col-md-4 mb-3">
-                            <label for="Reference">BankCd</label>
-                            <textarea class="input" asp-for="BankCd" maxlength="30"> </textarea>
-                            <span asp-validation-for="BankCd" class="text-danger"></span>
-                        </div>*@
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Bank Name</label>
-                            <textarea class="input" asp-for="BankName" maxlength="30"> </textarea>
-                            <span asp-validation-for="BankName" class="text-danger"></span>
-                        </div>
-                    
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Fmis Bank Code</label>
-                            <input type="text" class="input" asp-for="FmisBankCd" maxlength="30">
-                            <span asp-validation-for="FmisBankCd" class="text-danger"></span>
-                        </div>
-
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="BankMaster" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form asp-controller="BankMaster" asp-action="Manage" id="frmBankMaster">
+        <input type="hidden" asp-for="BankCd" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Bank Name <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="BankName" maxlength="30" />
+                    <span asp-validation-for="BankName" class="text-danger"></span>
                 </div>
-            </form>
-
-    </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">FMIS Bank Code</label>
+                    <input type="text" class="input" asp-for="FmisBankCd" onkeypress="return isNumber(event)" maxlength="4">
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="BankMaster" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitBankData();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
-        function Save() {
+
+        function SubmitBankData() {
             if ($("#frmBankMaster").valid()) {
                 $("#frmBankMaster").submit();
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/BankMaster/Index";
-            window.location.href = '@Url.Action("Index", "BankMaster")';
-        };
+
     </script>
 }

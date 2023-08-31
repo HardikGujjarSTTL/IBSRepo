@@ -2,6 +2,9 @@
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using IBS.Helper;
+using Newtonsoft.Json;
+using IBS.Helpers;
 
 namespace IBS.Controllers
 {
@@ -9,10 +12,16 @@ namespace IBS.Controllers
     {
         #region Variables
         private readonly IInspectionEngineers inspectionEngineers;
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _config;
         #endregion
-        public InspectionEngineersController(IInspectionEngineers _inspectionEngineers)
+        public InspectionEngineersController(IInspectionEngineers _inspectionEngineers, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             inspectionEngineers = _inspectionEngineers;
+            iDocument = _iDocumentRepository;
+            env = _environment;
+            _config = configuration;
         }
         public IActionResult Index(int IeCd)
         {
@@ -29,6 +38,25 @@ namespace IBS.Controllers
         public IActionResult Manage(int IeCd, string ActionType)
         {
             InspectionEngineersModel model = new();
+
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEFullSignature, Convert.ToString(IeCd));
+            FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
+            FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.IEFullSignature).ToList();
+            FileUploaderCOI.OthersSection = false;
+            FileUploaderCOI.MaxUploaderinOthers = 5;
+            FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IEFullSignature = FileUploaderCOI;
+
+            List<IBS_DocumentDTO> lstDocumentSignature = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEInitials, Convert.ToString(IeCd));
+            FileUploaderDTO FileUploaderCOISignature = new FileUploaderDTO();
+            FileUploaderCOISignature.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCOISignature.IBS_DocumentList = lstDocumentSignature.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.IEInitials).ToList();
+            FileUploaderCOISignature.OthersSection = false;
+            FileUploaderCOISignature.MaxUploaderinOthers = 5;
+            FileUploaderCOISignature.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IEInitials = FileUploaderCOISignature;
+
             model.IeRegion = GetRegionCode;
             if (IeCd > 0)
             {
@@ -62,7 +90,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DetailsSave(InspectionEngineersModel model)
+        public IActionResult DetailsSave(InspectionEngineersModel model, IFormCollection FrmCollection)
         {
             try
             {
@@ -79,6 +107,19 @@ namespace IBS.Controllers
                 string i = inspectionEngineers.DetailsInsertUpdate(model);
                 if (i != "Exists")
                 {
+                    #region File Upload Profile Picture
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEFullSignature };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEFullSignature), env, iDocument, "IEFullSignature", string.Empty, DocumentIds);
+
+                        int[] DocumentIds2 = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEInitials };
+                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEInitials), env, iDocument, "IEInitials", string.Empty, DocumentIds2);
+                    }
+                    #endregion
+
                     return Json(new { status = true, responseText = msg });
                 }
                 else if (i == "0")
@@ -125,6 +166,34 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "GetMatch", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteIe(int IeCd)
+        {
+            try
+            {
+                string i = "";
+                string msg = "Delete Successfully.";
+                if (IeCd > 0)
+                {
+                    i = inspectionEngineers.DeleteIe(IeCd);
+                }
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, Id = i });
+                }
+                else
+                {
+                    msg = "This Call cannot be deleted. because IC is present for this call!!!";
+                    return Json(new { status = false, responseText = msg, Id = i });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VenderCallRegisterModel", "DetailsDelete", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

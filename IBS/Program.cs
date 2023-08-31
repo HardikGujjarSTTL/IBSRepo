@@ -86,7 +86,7 @@ builder.Services.AddScoped<IUnitOfMeasurementsRepository, UnitOfMeasurementsRepo
 builder.Services.AddScoped<IRitesDesignationMasterRepository, RitesDesignationMasterRepository>();
 builder.Services.AddScoped<IRailwaysDirectoryRepository, RailwaysDirectoryRepository>();
 builder.Services.AddScoped<IRailwaysDesignationRepository, RailwaysDesignationRepository>();
-builder.Services.AddScoped<IBankMaster, BankMaster>();
+//builder.Services.AddScoped<IBankMaster, BankMaster>();
 builder.Services.AddScoped<IAccountCodesDirectory, AccountCodesDirectory>();
 builder.Services.AddScoped<IClientContractRepository, ClientContractRepository>();
 builder.Services.AddScoped<IMasterItemsListForm, MasterItemsListForm>();
@@ -151,7 +151,7 @@ builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
 
 var app = builder.Build();

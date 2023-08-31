@@ -13,17 +13,18 @@ namespace IBS.Controllers
         {
            bill_Paying_Officer_Form  = _bill_Paying_Officer_Form;
         }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string BpoCd)
         {
             Bill_Paying_Officer_FormModel model = new();
-            if (id > 0)
+            if (BpoCd != null)
             {
-                model = bill_Paying_Officer_Form.FindByID(id);
+                model = bill_Paying_Officer_Form.FindByID(BpoCd);
             }
             return View(model);
         }
@@ -34,6 +35,7 @@ namespace IBS.Controllers
             DTResult<Bill_Paying_Officer_FormModel> dTResult = bill_Paying_Officer_Form.GetBPOList(dtParameters);
             return Json(dTResult);
         }
+
         public IActionResult Delete(int id)
         {
             try

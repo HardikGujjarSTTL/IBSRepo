@@ -19,9 +19,10 @@
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-12 mb-3">
                 <label for="Reference">MESSAGE Details</label>
-                <input type="text" class="input" asp-for="MESSAGE" maxlength="100" style="text-transform: uppercase;">
+                @*<input type="text" class="input" asp-for="MESSAGE" maxlength="100" style="text-transform: uppercase;">*@
+                <textarea rows="4" asp-for="MESSAGE"></textarea>
                 <span asp-validation-for="MESSAGE" class="text-danger"></span>
             </div>
         </div>

@@ -31,7 +31,7 @@ public partial class T40ConsigneeComplaint
 
     public int? VendCd { get; set; }
 
-    public byte? ItemSrnoPo { get; set; }
+    public int? ItemSrnoPo { get; set; }
 
     public string? ItemDesc { get; set; }
 
@@ -75,7 +75,7 @@ public partial class T40ConsigneeComplaint
 
     public DateTime? Datetime { get; set; }
 
-    public byte? JiIeCd { get; set; }
+    public int? JiIeCd { get; set; }
 
     public string? ActionProposed { get; set; }
 

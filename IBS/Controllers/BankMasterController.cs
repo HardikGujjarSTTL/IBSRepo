@@ -1,4 +1,4 @@
-﻿using IBS.DataAccess;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -8,13 +8,13 @@ namespace IBS.Controllers
 {
     public class BankMasterController : BaseController
     {
-        #region Variables
-        private readonly IBankMaster bankMaster;
-        #endregion
-        public BankMasterController(IBankMaster _bankMaster)
+        private readonly IBankRepository bankRepository;
+
+        public BankMasterController(IBankRepository _bankRepository)
         {
-            bankMaster = _bankMaster;
+            bankRepository = _bankRepository;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -25,7 +25,7 @@ namespace IBS.Controllers
             BankMasterModel model = new();
             if (id > 0)
             {
-                model = bankMaster.FindByID(id);
+                model = bankRepository.FindByID(id);
             }
             return View(model);
         }
@@ -33,14 +33,44 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<BankMasterModel> dTResult = bankMaster.GetBankMasterList(dtParameters);
+            DTResult<BankMasterModel> dTResult = bankRepository.GetBankMasterList(dtParameters);
             return Json(dTResult);
         }
+
+        [HttpPost]
+        public IActionResult Manage(BankMasterModel model)
+        {
+            try
+            {
+                if (model.BankCd == 0)
+                {
+                    model.Createdby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    bankRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    bankRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BankMaster", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (bankMaster.Remove(id, UserId))
+                if (bankRepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -53,32 +83,6 @@ namespace IBS.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult BankMasterDetailsSave(BankMasterModel model)
-        {
-            try
-            {
-                string msg = "Bank Master Inserted Successfully.";
-
-                if (model.BankCd > 0)
-                {
-                    msg = "BankMaster Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = bankMaster.BankMasterDetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "BankMaster", "BankMasterDetailsSave", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
 
     }
 }

@@ -25,24 +25,11 @@
                 <input type="text" class="input" asp-for="MessageId" maxlength="50" style="text-transform: uppercase;" readonly="readonly">
                 <span asp-validation-for="MessageId" class="text-danger"></span>
             </div>
-            @* <div class="col-md-4 mb-3">
-            <label for="PropertyId">Region Code</label>
-            @Html.DropDownListFor(model => model.RegionCode, Common.GetRegionType(), new { })
-            <span asp-validation-for="RegionCode" class="text-danger"></span>
-            </div>*@
-
             <div class="col-md-4 mb-3">
                 <label for="Reference">Letter No.</label>
                 <input type="text" class="input" asp-for="LetterNo" maxlength="50" style="text-transform: uppercase;">
                 <span asp-validation-for="LetterNo" class="text-danger"></span>
             </div>
-
-            @* <div class="col-md-4 mb-3">
-            <label for="Reference">Letter Dt.</label>
-            <input type="text" class="datepicker" asp-for="LetterDt" maxlength="30" style="text-transform: uppercase;" placeholder="dd-MM-yyyy" readonly="readonly">
-            <span asp-validation-for="LetterDt" class="text-danger"></span>
-            </div>*@
-       
             <div class="col-md-4 mb-3">
                 <div class="otherdetails">
                     <label for="LetterDate">Letter Dt.</label>
@@ -55,19 +42,20 @@
                     </div>
                 </div>
             </div>
-       
-            <div class="col-md-4 mb-3">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
                 <label for="Reference">Message</label>
                 @*<input type="text" class="input" asp-for="Message" maxlength="800" style="text-transform: uppercase;">*@
                 <textarea rows="4" asp-for="Message" style="text-transform: uppercase;"></textarea>
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
         </div>
-        
-                <div class="savenext-btn">
-                    <a asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsMaster" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                </div>
+
+        <div class="savenext-btn">
+            <a asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsMaster" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+        </div>
     </div>
 </form>
 @section scripts{

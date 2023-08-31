@@ -1,4 +1,7 @@
 ﻿using IBS.DataAccess;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace IBS.Models
 {
@@ -6,8 +9,12 @@ namespace IBS.Models
     {
         public int IeCd { get; set; }
 
+        [Display(Name = "Ie Name")]
+        [Required]
         public string? IeName { get; set; }
 
+        [Display(Name = "Ie Short Name")]
+        [Required]
         public string? IeSname { get; set; }
 
         public string? IeEmpNo { get; set; }
@@ -20,10 +27,12 @@ namespace IBS.Models
 
         public string IeCityCd { get; set; }
 
+        [Range(0, 1000, ErrorMessage = "City Id must number.")]
         public int IeCityId { get; set; }
 
+        [Phone]
         public string? IePhoneNo { get; set; }
-
+        
         public byte? IeCoCd { get; set; }
 
         public DateTime? IeJoinDt { get; set; }
@@ -42,6 +51,7 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [EmailAddress(ErrorMessage = "Email must be proper.")]
         public string? IeEmail { get; set; }
 
         public DateTime? IeDob { get; set; }

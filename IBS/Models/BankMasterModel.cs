@@ -1,12 +1,16 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class BankMasterModel
     {
         public int BankCd { get; set; }
 
+        [Display(Name = "Bank Name")]
+        [Required]
         public string? BankName { get; set; }
 
-        public byte? FmisBankCd { get; set; }
+        public int? FmisBankCd { get; set; }
 
         public string? UserId { get; set; }
 

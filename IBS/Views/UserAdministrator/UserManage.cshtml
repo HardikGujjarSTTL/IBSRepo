@@ -55,11 +55,12 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Status</label>
-                        <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
+                        @*<select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
                             <option value="">--Select--</option>
                             <option value="A">Active</option>
                             <option value="I">InActive</option>
-                        </select>
+                        </select>*@
+                        @Html.DropDownListFor(model => model.Status, new SelectList(IBS.Models.Common.GetActiveInActive() , "Value", "Text"),"--Select--", new { @class = ""})
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
 
@@ -131,13 +132,14 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">User Type</label>
-                        <select id="ddlUserType" class="form-control col-md-8" name="UserType" asp-for="UserType">
+                        @*<select id="ddlUserType" class="form-control col-md-8" name="UserType" asp-for="UserType">
                             <option value="">--Select--</option>
                             <option value="U">User</option>
                             <option value="C">CM</option>
                             <option value="G">GM</option>
                             <option value="S">SBU HEAD</option>
-                        </select>
+                        </select>*@
+                        @Html.DropDownListFor(model => model.UserType, new SelectList(IBS.Models.Common.GetUserType() , "Value", "Text"),"--Select--", new { @class = ""})
                         <span asp-validation-for="UserType" class="text-danger"></span>
                     </div>
                 </div>

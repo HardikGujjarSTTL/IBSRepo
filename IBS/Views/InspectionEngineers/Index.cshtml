@@ -154,13 +154,13 @@
             });
         }
 
+        
+
         $("#btnAdd").click(function () {
             var IeCd = $("#IeCd").val();
             if (IeCd != null || IeCd != "") {
                 window.location.href = '@Url.Action("Manage", "InspectionEngineers")';
             }
-
-
         });
         $("#btnModify").click(function () {
             var IeCd = $("#IeCd").val();
@@ -180,6 +180,9 @@
                     var MCode = status.MCode;
                     if (MCode == "2") {
                         window.location.href = '@Url.Action("Manage", "InspectionEngineers")' + '?IeCd=' + IeCd + "&ActionType=M";
+                    }
+                    else {
+                        ShowHideMsgNew(false, "You Are Not Authorised to Update / Delete IE data of other Regions!!!");
                     }
                 }
             });
@@ -202,6 +205,10 @@
                     var MCode = status.MCode;
                     if (MCode == "2") {
                         window.location.href = '@Url.Action("Manage", "InspectionEngineers")' + '?IeCd=' + IeCd + "&ActionType=D";
+                    }
+                    else
+                    {
+                        ShowHideMsgNew(false, "You Are Not Authorised to Update / Delete IE data of other Regions!!!");
                     }
                 }
             });

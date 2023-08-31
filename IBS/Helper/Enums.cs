@@ -41,6 +41,11 @@ namespace IBS.Helper
             MasterItemDoc = 9,
             [Description("/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
+
+            [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
+            IEFullSignature = 10,
+            [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
+            IEInitials = 10,
         }
 
         public enum DocumentCategory : int
@@ -54,6 +59,8 @@ namespace IBS.Helper
             TechnicalReferences = 8,
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
+            IEFullSignature = 14,
+            IEInitials = 15,
         }
 
 
@@ -76,6 +83,8 @@ namespace IBS.Helper
         {
             Browse_the_Document_to_Upload = 7,
             CallRegistrationDoc = 13,
+            IEFullSignature = 14,
+            IEInitials = 15
         }
         public enum DocumentCategory_VendorMADoc : int
         {
@@ -173,6 +182,65 @@ namespace IBS.Helper
             D,
             [Description("Contract")]
             C,
+        }
+
+        public enum BPOFeeType
+        {
+            [Description("Man days Basis")]
+            D,
+            [Description("Hourly Basis")]
+            H,
+            [Description("Lump sum")]
+            L,
+            [Description("Percentage Basis")]
+            P,
+        }
+        public enum BPOTaxType
+        {
+            [Description("Fee Inclusive Service Tax")]
+            I,
+            [Description("Tax/VAT Charged separately")]
+            X,
+        }
+        public enum BPOFlag
+        {
+            [Description("FA & CAO")]
+            F,
+            [Description("AO�s")]
+            A,
+            [Description("DFM�s")]
+            D,
+            [Description("DEE/DCEE etc.")]
+            M,
+            [Description("Workshop")]
+            S,
+        }
+        public enum BPOAdvFlag
+        {
+            [Description("Advance bill to be raised")]
+            A,
+            [Description("Otherwise")]
+            N,
+        }
+
+        public enum ActiveInActive
+        {
+            [Description("Active")]
+            A,
+            [Description("InActive")]
+            I,
+        }
+
+        public enum UserType
+        {
+            [Description("User")]
+            U,
+            [Description("CM")]
+            C,
+            [Description("GM")]
+            G,
+            [Description("SBU HEAD")]
+            S,
         }
     }
 

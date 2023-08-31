@@ -2,11 +2,14 @@
 
 namespace IBS.Interfaces
 {
-    public interface IBankMaster
+    public interface IBankRepository
     {
-        public BankMasterModel FindByID(int BankCd);
+        public BankMasterModel FindByID(int Id);
+
         DTResult<BankMasterModel> GetBankMasterList(DTParameters dtParameters);
-        bool Remove(int BankCd, int UserID);
-        int BankMasterDetailsInsertUpdate(BankMasterModel model);
+
+        public int SaveDetails(BankMasterModel model);
+
+        public bool Remove(int Id, int UserID);
     }
 }

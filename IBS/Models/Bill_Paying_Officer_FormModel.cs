@@ -17,7 +17,9 @@ namespace IBS.Models
 
         public string? BpoAdd { get; set; }
 
-        public int? BpoCityCd { get; set; }
+        public int BpoCityCd { get; set; }
+
+        public string BpoCity { get; set; }
 
         public string? BillPassOfficer { get; set; }
 
@@ -60,6 +62,8 @@ namespace IBS.Models
         public string? GstinNo { get; set; }
 
         public string? Au { get; set; }
+
+        public string? AuDesc { get; set; }
 
         public string? SapCustCdBpo { get; set; }
 

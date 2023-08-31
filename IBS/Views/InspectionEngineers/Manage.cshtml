@@ -9,20 +9,21 @@
     </div>
 </div>
 
-<div class="task-listinput">
-
-    <form data-ajax="true" asp-antiforgery="true" asp-controller="InspectionEngineers" asp-action="InspectionEngineersDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInspectionEngineers">
+<div class="task-listinput" id="tab-1">
+    @*    <form data-ajax="true" asp-antiforgery="true" asp-controller="InspectionEngineers" asp-action="InspectionEngineersDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInspectionEngineers">*@
+    <form role="form" asp-controller="InspectionEngineers" asp-action="Manage" id="frmInspectionEngineers">
+        <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
         <input type="hidden" asp-for="IeCd" />
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">IE Name</label>
-                    <input type="text" class="input" asp-for="IeName" maxlength="30">
+                    <input type="text" class="input" asp-for="IeName" maxlength="30" style="text-transform: uppercase;">
                     <span asp-validation-for="IeName" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">IE Short Name</label>
-                    <input type="text" class="input" asp-for="IeSname" maxlength="30">
+                    <input type="text" class="input" asp-for="IeSname" maxlength="4" style="text-transform: uppercase;">
                     <span asp-validation-for="IeSname" class="text-danger"></span>
                 </div>
             </div>
@@ -30,7 +31,7 @@
                 <div class="col-md-3 mb-3">
                     <label for="Reference">IE City ID</label>
                     <input type="text" class="input" asp-for="IeCityId" maxlength="30">
-                    <span asp-validation-for="IeCityCd" class="text-danger"></span>
+                    <span asp-validation-for="IeCityId" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">IE City</label>
@@ -51,7 +52,7 @@
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">IE Phone No.</label>
-                    <input type="text" class="input" asp-for="IePhoneNo" maxlength="30">
+                    <input type="text" class="input" asp-for="IePhoneNo" maxlength="10">
                     <span asp-validation-for="IePhoneNo" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -161,6 +162,18 @@
                     <span asp-validation-for="AltIe" class="text-danger"></span>
                 </div>
             </div>
+
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IEFullSignature" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IEInitials" />
+                </div>
+            </div>
+
+
             <div class="savenext-btn">
                 <a asp-controller="InspectionEngineers" asp-action="Index" class="reset-btn">Cancel</a>
                 <button type="button" class="save-btn active" id="btnSave">Save</button>
@@ -179,8 +192,7 @@
         $(function () {
             const urlParams = new URLSearchParams(window.location.search);
             const _actionType = urlParams.get('ActionType');
-            if(_actionType == "M")
-            {
+            if (_actionType == "M") {
                 $("#btnSave").text("Update");
                 $("#btnDelete").hide();
             }
@@ -188,13 +200,16 @@
                 $("#btnSave").hide();
                 $("#btnDelete").show();
             }
-            else
-            {
+            else {
                 $("#btnDelete").hide();
             }
 
         });
-        
+
+        $("#IeCityCd").change(function () {
+            $("#IeCityId").val($('option:selected', $(this)).val())
+        });
+
         $("#btnCitySearch").click(function () {
             GetIeCity();
         });
@@ -204,17 +219,36 @@
                 ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
                 return;
             }
-            if ($("#IeCityCd").val() == null)
-            {
+            if ($("#IeCityCd").val() == null) {
                 ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
                 return;
             }
+            if (!SaveSingleDocuments("tab-1")) { return; }
             event.preventDefault();
-            var formData = $("#frmInspectionEngineers").serialize();
-          
-            $.post("@Url.Action("DetailsSave", "InspectionEngineers")", formData, function (response) {
-                ShowHideMsgNew(response.status, response.responseText);
+            if ($("#frmInspectionEngineers").valid()) {
+                var formData = $("#frmInspectionEngineers").serialize();
+                $.post("@Url.Action("DetailsSave", "InspectionEngineers")", formData, function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.status) {
+                    }
+                });
+            }
+            return false;
+        });
+
+        $("#btnDelete").click(function () {
+            var IeCd = $("#IeCd").val();
+            $.ajax({
+                url: '@Url.Action("DeleteIe", "InspectionEngineers")?IeCd=' + IeCd,
+                type: 'post',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
                 if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    window.location.href = '@Url.Action("Index", "InspectionEngineers")';
                 }
             });
             return false;

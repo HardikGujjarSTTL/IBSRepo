@@ -507,6 +507,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
+    public virtual DbSet<ViewGetBpodetail> ViewGetBpodetails { get; set; }
+
     public virtual DbSet<ViewGetCallRegCancellation> ViewGetCallRegCancellations { get; set; }
 
     public virtual DbSet<ViewGetCallinspectionPrintReport> ViewGetCallinspectionPrintReports { get; set; }
@@ -8250,10 +8252,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T10IcBookset>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T10_IC_BOOKSET");
+            entity.HasKey(e => e.Id).HasName("T10_IC_BOOKSET_PK");
 
+            entity.ToTable("T10_IC_BOOKSET");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T10_IC_BOOKSET_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.BkNo)
                 .HasMaxLength(4)
                 .IsUnicode(false)
@@ -8316,7 +8322,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
 
-            entity.HasOne(d => d.IssueToIecdNavigation).WithMany()
+            entity.HasOne(d => d.IssueToIecdNavigation).WithMany(p => p.T10IcBooksets)
                 .HasForeignKey(d => d.IssueToIecd)
                 .HasConstraintName("FK_IECD");
         });
@@ -10782,7 +10788,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.JiApprovalDt)
                 .HasColumnType("DATE")
@@ -10799,7 +10805,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("JI_FIX_DT");
             entity.Property(e => e.JiIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("JI_IE_CD");
             entity.Property(e => e.JiIeRemarks)
                 .HasMaxLength(500)
@@ -15910,7 +15916,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.JiApprovalDt)
                 .HasColumnType("DATE")
@@ -15927,7 +15933,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("JI_FIX_DT");
             entity.Property(e => e.JiIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("JI_IE_CD");
             entity.Property(e => e.JiIeRemarks)
                 .HasMaxLength(500)
@@ -16881,6 +16887,46 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SwachhBharatCess)
                 .HasColumnType("NUMBER")
                 .HasColumnName("SWACHH_BHARAT_CESS");
+        });
+
+        modelBuilder.Entity<ViewGetBpodetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_BPODETAILS");
+
+            entity.Property(e => e.Audesc)
+                .HasMaxLength(105)
+                .IsUnicode(false)
+                .HasColumnName("AUDESC");
+            entity.Property(e => e.BpoAdd)
+                .HasMaxLength(204)
+                .IsUnicode(false)
+                .HasColumnName("BPO_ADD");
+            entity.Property(e => e.BpoCd)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("BPO_CD");
+            entity.Property(e => e.BpoName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BPO_NAME");
+            entity.Property(e => e.BpoRly)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BPO_RLY");
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CITY");
+            entity.Property(e => e.GstinNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("GSTIN_NO");
+            entity.Property(e => e.SapCustCdBpo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("SAP_CUST_CD_BPO");
         });
 
         modelBuilder.Entity<ViewGetCallRegCancellation>(entity =>
@@ -18110,6 +18156,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T04_UOM_SEQ");
         modelBuilder.HasSequence("T05_VENDOR_SEQ");
         modelBuilder.HasSequence("T07_RITES_DESIG_SEQ");
+        modelBuilder.HasSequence("T10_IC_BOOKSET_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
         modelBuilder.HasSequence("T45_CLAIM_MASTER_SEQ");

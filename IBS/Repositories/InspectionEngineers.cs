@@ -40,56 +40,38 @@ namespace IBS.Repositories
         public InspectionEngineersModel FindManageByID(int IeCd, string ActionType, string GetRegionCode)
         {
             InspectionEngineersModel model = new();
-            if(ActionType == "M")
-            {
-                model = (from t09 in context.T09Ies
-                         where t09.IeCd == Convert.ToInt32(IeCd)
-                         select new InspectionEngineersModel
-                         {
-                             IeCd = t09.IeCd,
-                             IeName = t09.IeName,
-                             IeSname = t09.IeSname,
-                             IeEmpNo = t09.IeEmpNo,
-                             IeDesig = t09.IeDesig,
-                             IeSealNo = t09.IeSealNo,
-                             IeDepartment = t09.IeDepartment,
-                             IeCityCd = Convert.ToString(t09.IeCityCd),
-                             IeCityId = Convert.ToInt32(t09.IeCityCd),
-                             IePhoneNo = t09.IePhoneNo,
-                             IeCoCd = Convert.ToByte(t09.IeCoCd),
-                             IeJoinDt = t09.IeJoinDt,
-                             IeStatus = t09.IeStatus,
-                             IeStatusDt = t09.IeStatusDt,
-                             IeType = t09.IeType,
-                             IeRegion = t09.IeRegion,
-                             IePwd = t09.IePwd,
-                             IeEmail = t09.IeEmail,
-                             IeDob = t09.IeDob,
-                             AltIe = t09.AltIe,
-                             IeCallMarking = t09.IeCallMarking,
-                             AltIeTwo = t09.AltIeTwo,
-                             AltIeThree = t09.AltIeThree,
-                             CallMarkingStoppingDt = t09.CallMarkingStoppingDt,
 
-                         }).FirstOrDefault();
-            }
-            //else
-            //{
-            //    model = (from v in context.T09Ies
-            //         join c in context.T03Cities on v.IeCityCd equals c.CityCd into cityJoin
-            //         from c in cityJoin.DefaultIfEmpty()
-            //         where v.IeCd == Convert.ToInt32(IeCd)
-            //         select new InspectionEngineersModel
-            //         {
-            //             IeCd = v.IeCd,
-            //             IeName = v.IeName,
-            //             IeSname = v.IeSname,
-            //             IeEmpNo = v.IeEmpNo,
-            //             IeSealNo = v.IeSealNo,
-            //             IeCoCd = Convert.ToByte(v.IeCoCd),
-            //             IeRegion = v.IeRegion
-            //         }).FirstOrDefault();
-            //}
+            model = (from t09 in context.T09Ies
+                     where t09.IeCd == Convert.ToInt32(IeCd)
+                     select new InspectionEngineersModel
+                     {
+                         IeCd = t09.IeCd,
+                         IeName = t09.IeName,
+                         IeSname = t09.IeSname,
+                         IeEmpNo = t09.IeEmpNo,
+                         IeDesig = t09.IeDesig,
+                         IeSealNo = t09.IeSealNo,
+                         IeDepartment = t09.IeDepartment,
+                         IeCityCd = Convert.ToString(t09.IeCityCd),
+                         IeCityId = Convert.ToInt32(t09.IeCityCd),
+                         IePhoneNo = t09.IePhoneNo,
+                         IeCoCd = Convert.ToByte(t09.IeCoCd),
+                         IeJoinDt = t09.IeJoinDt,
+                         IeStatus = t09.IeStatus,
+                         IeStatusDt = t09.IeStatusDt,
+                         IeType = t09.IeType,
+                         IeRegion = t09.IeRegion,
+                         IePwd = t09.IePwd,
+                         IeEmail = t09.IeEmail,
+                         IeDob = t09.IeDob,
+                         AltIe = t09.AltIe,
+                         IeCallMarking = t09.IeCallMarking,
+                         AltIeTwo = t09.AltIeTwo,
+                         AltIeThree = t09.AltIeThree,
+                         CallMarkingStoppingDt = t09.CallMarkingStoppingDt,
+
+                     }).FirstOrDefault();
+
             model.IeRegion = GetRegionCode;
             return model;
         }
@@ -197,9 +179,9 @@ namespace IBS.Repositories
 
         public string DetailsInsertUpdate(InspectionEngineersModel model)
         {
-            string status="";
+            string status = "";
             int code = new int();
-            if(model.IeCd == null || model.IeCd == 0)
+            if (model.IeCd == null || model.IeCd == 0)
             {
                 int count = context.T09Ies.Where(t09 => t09.IeRegion == model.IeRegion && (t09.IeSname == model.IeSname || t09.IeEmpNo == model.IeEmpNo)).Count();
                 if (count == 0)
@@ -300,16 +282,27 @@ namespace IBS.Repositories
 
         public string GetMatch(int IeCd, string GetRegionCode)
         {
-            var MCode ="";
-            var item = context.T09Ies.Where(x=>x.IeCd == IeCd).FirstOrDefault();
+            var MCode = "";
+            var item = context.T09Ies.Where(x => x.IeCd == IeCd).FirstOrDefault();
             if (item != null)
             {
-                if(item.IeRegion == GetRegionCode)
+                if (item.IeRegion == GetRegionCode)
                 {
                     MCode = "2";
                 }
             }
             return MCode;
+        }
+
+        public string DeleteIe(int IeCd)
+        {
+            string msg = "";
+            var itemDelete = context.T09Ies.FirstOrDefault(x => x.IeCd == IeCd);
+
+            context.T09Ies.Remove(itemDelete);
+            context.SaveChanges();
+            msg = Convert.ToString(itemDelete.IeCd);
+            return msg;
         }
     }
 
