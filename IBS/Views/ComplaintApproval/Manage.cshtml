@@ -139,7 +139,7 @@
                     </div>
                     <div class="col-md-2 mb-2" id="JIDate">
                         <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
-                        <input type="text" class="input datepicker" asp-format="{0:dd-MM-yyyy}" ASP-FOR="JIDate" maxlength="300" />
+                        <input type="text" class="input datepicker" ASP-FOR="JIDate" maxlength="300" />
                     </div>
                     <div class="col-md-2 mb-2" id="JointInspection">
                         <label for="Jointisp">Joint Inspection Engineer</label>
@@ -148,6 +148,10 @@
                     <div class="col-md-2 mb-2" id="NOJIReason">
                         <label>Joint Inspection Engineer</label>
                         @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"))
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
+
                     </div>
                 </div>
                 <br/>
