@@ -1,0 +1,34 @@
+﻿@model IBS.Models.Clientmaster
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Client Master</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtclient" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User Name</th>
+                            <th>ORGANISATION</th>
+                            <th>DESIGNATION</th>
+                            <th>MOBILE</th>
+                            <th>EMAIL</th>
+                            <th>UNIT</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

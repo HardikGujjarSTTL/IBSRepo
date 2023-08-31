@@ -1,0 +1,63 @@
+﻿@model IBS.Models.Clientmaster
+
+@{
+    string clsView = "";
+    if (Model.Id > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Client</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ClientMaster" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientMaster" asp-action="UserRoleSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserRole">
+            <input type="hidden" asp-for="Id" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Client Name</label>
+                        <input type="text" class="input" ASP-FOR="USER_NAME" maxlength="300" required />
+                        <span asp-validation-for="USER_NAME" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Organisation</label>
+                        <input type="text" class="input" ASP-FOR="ORGANISATION" maxlength="300" required />
+                        <span asp-validation-for="ORGANISATION" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Client Designation</label>
+                        <input type="text" class="input" ASP-FOR="DESIGNATION" maxlength="300" required />
+                        <span asp-validation-for="DESIGNATION" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Mobile</label>
+                        <input type="text" class="input" ASP-FOR="MOBILE" maxlength="300" required />
+                        <span asp-validation-for="MOBILE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Email</label>
+                        <input type="text" class="input" ASP-FOR="EMAIL" maxlength="300" required />
+                        <span asp-validation-for="EMAIL" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Unit</label>
+                        <input type="text" class="input" ASP-FOR="UNIT" maxlength="300" required />
+                        <span asp-validation-for="UNIT" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
