@@ -364,6 +364,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> Checksheet()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -381,6 +382,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> DARPurpose()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1935,6 +1937,7 @@ namespace IBS.Models
             string types = context.T91Railways.Where(x => x.RlyCd == type.ToString()).Select(x => x.Railway).FirstOrDefault();
             return types;
         }
+
         public static List<SelectListItem> GetIENameIsStatusNull(string RegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2139,6 +2142,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<TextValueDropDownDTO> getServTax()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ServTax)).ToList();
@@ -2211,6 +2215,28 @@ namespace IBS.Models
         public static IEnumerable<TextValueDropDownDTO> GetBookSubmitted()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BookSubmitted)).ToList();
+        }
+
+        public static IEnumerable<SelectListItem> GetClustersName(string RegionCode, string DepartmentName)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T99ClusterMasters
+                    where c.Isdeleted != 1 && c.RegionCode == RegionCode && c.DepartmentName != null && c.DepartmentName == DepartmentName
+                    select new SelectListItem
+                    {
+                        Value = c.ClusterCode.ToString(),
+                        Text = c.ClusterName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetDepartment()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Department)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetRegion()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Region)).ToList();
         }
     }
     public static class DbContextHelper
