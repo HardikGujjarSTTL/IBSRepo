@@ -1,4 +1,4 @@
-﻿@model IBS.Models.VendorModel
+﻿@model IBS.Models.VendorMasterModel
 
 @{
     ViewData["Title"] = "Manage Vendor/Manufacturer Master";
@@ -28,7 +28,6 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="VendAdd2">Address (Count).</label>
-                        <textarea class="input" asp-for="VendAdd2"></textarea>
                     </div>
                 </div>
                 <div class="row my-0">
@@ -40,16 +39,16 @@
                     <div class="col-md-4 mb-3">
                         <label for="VendApproval">Vendor Approval</label>
                         @Html.DropDownListFor(model => model.VendApproval, new SelectList(IBS.Models.Common.VendorApproval() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="VendApproval" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="VendApprovalFr">Approval Period From</label>
-                        <input type="text" class="datepicker" asp-for="VendApprovalFr" placeholder="DD/MM/YYYY">
+                        <input type="text" class="datepicker" asp-for="VendApprovalFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
                         <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
+
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="VendApprovalTo">Approval Period To</label>
-                        <input type="text" class="datepicker" asp-for="VendApprovalTo" placeholder="DD/MM/YYYY">
+                        <input type="text" class="datepicker" asp-for="VendApprovalTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
                         <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
                     </div>
                 </div>
@@ -57,12 +56,11 @@
                     <div class="col-md-4 mb-3">
                         <label for="VendContactPer1">Contact Person 1</label>
                         <input type="text" class="input" asp-for="VendContactPer1">
-                        <span asp-validation-for="VendContactPer1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactPer1" class="text-danger" data-rule-requiredifVendContactPer1="true"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="VendContactPer2">Contact Person 2</label>
                         <input type="text" class="input" asp-for="VendContactPer2">
-                        <span asp-validation-for="VendContactPer2" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="VendContactTel1">Tel No.</label>
@@ -74,7 +72,6 @@
                     <div class="col-md-4 mb-3">
                         <label for="VendContactTel2">Tel No.</label>
                         <input type="text" class="input" asp-for="VendContactTel2">
-                        <span asp-validation-for="VendContactTel2" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="VendEmail">Email</label>
@@ -84,18 +81,17 @@
                     <div class="col-md-4 mb-3">
                         <label for="VendStatus">Status</label>
                         @Html.DropDownListFor(model => model.VendStatus, new SelectList(IBS.Models.Common.VendorStatus() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="VendStatus" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-2 mb-3">
                         <label for="VendStatusDtFr">Date From</label>
-                        <input type="text" class="datepicker" asp-for="VendStatusDtFr" placeholder="DD/MM/YYYY">
+                        <input type="text" class="datepicker" asp-for="VendStatusDtFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendStatus="true">
                         <span asp-validation-for="VendStatusDtFr" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="VendStatusDtTo">Date To</label>
-                        <input type="text" class="datepicker" asp-for="VendStatusDtTo" placeholder="DD/MM/YYYY">
+                        <input type="text" class="datepicker" asp-for="VendStatusDtTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendStatus="true">
                         <span asp-validation-for="VendStatusDtTo" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -116,7 +112,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-4">
                         <label for="OnlineCallStatus">Vendor Online Call Registration Status (Y/N)</label>
-                        @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
                         <span asp-validation-for="OnlineCallStatus" class="text-danger"></span>
                     </div>
                     <div class="col-md-8 mb-3" style="margin-top: 40px">
@@ -125,7 +121,7 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
-                      @*   <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Vendor_Manufacturer" /> *@
+                        @*   <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Vendor_Manufacturer" /> *@
                     </div>
                 </div>
                 <div class="savenext-btn">
@@ -143,23 +139,33 @@
     <script type="text/javascript">
 
         $(function () {
-           
-        });
-
-        (function ($) {
-
-            var $jQval = $.validator;
-
-            $jQval.addMethod("requirediftrue",
-                function (value, element, parameters) {
-                    return value !== "" && value != null;
+            jQuery.validator.addMethod("requiredifVendApproval", function (value, element) {
+                if (($("#VendApproval").val() == "R" || $("#VendApproval").val() == "E") && value == "") {
+                    return false;
                 }
-            );
+                else {
+                    return true;
+                }
+            }, "The Approval Period From/To field is required.");
 
-            var adapters = $jQval.unobtrusive.adapters;
-            adapters.addBool('requirediftrue');
+            jQuery.validator.addMethod("requiredifVendStatus", function (value, element) {
+                if (($("#VendStatus").val() == "R" || $("#VendStatus").val() == "E") && value == "") {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }, "The Date From/To field is required.");
 
-        })(jQuery);
+            jQuery.validator.addMethod("requiredifVendContactPer1", function (value, element) {
+                if ($("#OnlineCallStatus").val() == "Y" && value == "") {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }, "The Contact Person 1 field is required.");
+        });
 
         function SubmitVendorData() {
             if ($("#frmVendor").valid()) {

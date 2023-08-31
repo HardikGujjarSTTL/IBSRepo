@@ -25,7 +25,7 @@ namespace IBS.Controllers.Vendor
 
         public IActionResult Manage(int Id)
         {
-            VendorModel model = new();
+            VendorMasterModel model = new();
             if (Id > 0)
             {
                 model = vendorRepository.FindByID(Id);
@@ -70,38 +70,25 @@ namespace IBS.Controllers.Vendor
         }
 
         [HttpPost]
-        public IActionResult Manage(VendorModel model, IFormCollection formCollection)
+        public IActionResult Manage(VendorMasterModel model, IFormCollection formCollection)
         {
             try
             {
-                //if (model.IsNew)
-                //{
-                //    if (formCollection.Keys.Contains("_VendorCode"))
-                //    {
-                //        model.VendorCode = Convert.ToInt32(formCollection["_VendorCode"]);
-                //    }
-
-                //    if (!vendorClusterRepository.IsDuplicate(model))
-                //    {
-                //        model.Createdby = UserId;
-                //        model.UserId = USER_ID.Substring(0, 8);
-                //        vendorClusterRepository.SaveDetails(model);
-                //        AlertAddSuccess("Record Added Successfully.");
-                //        return RedirectToAction("Index");
-                //    }
-                //    else
-                //    {
-                //        AlertAlreadyExist("Cluster for this vender and department is already entered!!!");
-                //    }
-                //}
-                //else
-                //{
-                //    model.Updatedby = UserId;
-                //    model.UserId = USER_ID.Substring(0, 8);
-                //    vendorClusterRepository.SaveDetails(model);
-                //    AlertAddSuccess("Record Updated Successfully.");
-                //    return RedirectToAction("Index");
-                //}
+                if (model.VendCd == 0)
+                {
+                    model.Createdby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    vendorRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    vendorRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {

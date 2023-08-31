@@ -18,68 +18,30 @@ namespace IBS.Repositories.Vendor
             this.context = context;
         }
 
-        public VendorClusterModel FindByID(int VendorCode, string DepartmentCode)
+        public VendorMasterModel FindByID(int Id)
         {
-            VendorClusterModel model = new();
-
-            T100VenderCluster venderCluster = context.T100VenderClusters.Where(x => x.VendorCode == VendorCode && x.DepartmentName == DepartmentCode).FirstOrDefault();
-
-            if (venderCluster == null)
-                return model;
-            else
-            {
-                model.VendorCode = venderCluster.VendorCode;
-                model.DepartmentName = venderCluster.DepartmentName;
-                model.ClusterCode = venderCluster.ClusterCode;
-
-                VendorDetailsModel data = (from v in context.T05Vendors
-                                           join c in context.T03Cities on v.VendCityCd equals c.CityCd
-                                           where v.VendCd == VendorCode
-                                           select new VendorDetailsModel
-                                           {
-                                               VendCd = v.VendCd,
-                                               VendName = v.VendName ?? "",
-                                               VendAdd1 = v.VendAdd1 ?? "",
-                                               Location = c.Location ?? "",
-                                               City = c.City ?? ""
-                                           }).FirstOrDefault();
-
-                if (data != null)
-                {
-                    model.VendFullName = data.VendName + "/" + data.VendAdd1 + "/" + data.Location + " / " + data.City;
-                    model.VendAdd1 = data.VendAdd1;
-                }
-
-                model.IsNew = false;
-
-                return model;
-            }
-        }
-
-        public VendorModel FindByID(int Id)
-        {
-            VendorModel model = (from m in context.T05Vendors
-                                 where m.VendCd == Id
-                                 select new VendorModel
-                                 {
-                                     VendCd = m.VendCd,
-                                     VendName = m.VendName,
-                                     VendAdd1 = m.VendAdd1,
-                                     VendAdd2 = m.VendAdd2,
-                                     VendCityCd = m.VendCityCd,
-                                     VendApproval = m.VendApproval,
-                                     VendApprovalFr = m.VendApprovalFr,
-                                     VendApprovalTo = m.VendApprovalTo,
-                                     VendContactPer1 = m.VendContactPer1,
-                                     VendContactTel1 = m.VendContactTel1,
-                                     VendContactPer2 = m.VendContactPer2,
-                                     VendContactTel2 = m.VendContactTel2,
-                                     VendEmail = m.VendEmail,
-                                     VendRemarks = m.VendRemarks,
-                                     VendStatus = m.VendStatus,
-                                     VendInspStopped = m.VendInspStopped,
-                                     OnlineCallStatus = m.OnlineCallStatus,
-                                 }).FirstOrDefault();
+            VendorMasterModel model = (from m in context.T05Vendors
+                                       where m.VendCd == Id
+                                       select new VendorMasterModel
+                                       {
+                                           VendCd = m.VendCd,
+                                           VendName = m.VendName,
+                                           VendAdd1 = m.VendAdd1,
+                                           VendAdd2 = m.VendAdd2,
+                                           VendCityCd = m.VendCityCd,
+                                           VendApproval = m.VendApproval,
+                                           VendApprovalFr = m.VendApprovalFr,
+                                           VendApprovalTo = m.VendApprovalTo,
+                                           VendContactPer1 = m.VendContactPer1,
+                                           VendContactTel1 = m.VendContactTel1,
+                                           VendContactPer2 = m.VendContactPer2,
+                                           VendContactTel2 = m.VendContactTel2,
+                                           VendEmail = m.VendEmail,
+                                           VendRemarks = m.VendRemarks,
+                                           VendStatus = m.VendStatus,
+                                           VendInspStopped = m.VendInspStopped,
+                                           OnlineCallStatus = m.OnlineCallStatus,
+                                       }).FirstOrDefault();
 
             return model;
         }
@@ -138,95 +100,83 @@ namespace IBS.Repositories.Vendor
             return dTResult;
         }
 
-        public VendorDetailsModel GetVendorDetails(string VendorCodeName)
+        public int SaveDetails(VendorMasterModel model)
         {
-            VendorDetailsModel data = new();
+            if (model.VendCd == 0)
+            {
+                int VendCd = GetMaxVend_CD();
+                VendCd += 1;
 
-            if (int.TryParse(VendorCodeName, out int n))
-            {
-                data = (from v in context.T05Vendors
-                        join c in context.T03Cities on v.VendCityCd equals c.CityCd
-                        where v.VendCd == Convert.ToInt32(VendorCodeName)
-                        select new VendorDetailsModel
-                        {
-                            VendCd = v.VendCd,
-                            VendName = v.VendName ?? "",
-                            VendAdd1 = v.VendAdd1 ?? "",
-                            VendStatus = v.VendStatus ?? "",
-                            VendStatusDtFr = v.VendStatusDtFr,
-                            VendStatusDtTo = v.VendStatusDtTo,
-                            Location = c.Location ?? "",
-                            City = c.City ?? ""
-                        }).FirstOrDefault();
-            }
-            else
-            {
-                data = (from v in context.T05Vendors
-                        join c in context.T03Cities on v.VendCityCd equals c.CityCd
-                        where v.VendName != null && v.VendName.ToString().ToUpper().StartsWith(VendorCodeName.ToString().ToUpper())
-                        select new VendorDetailsModel
-                        {
-                            VendCd = v.VendCd,
-                            VendName = v.VendName ?? "",
-                            VendAdd1 = v.VendAdd1 ?? "",
-                            VendStatus = v.VendStatus ?? "",
-                            VendStatusDtFr = v.VendStatusDtFr,
-                            VendStatusDtTo = v.VendStatusDtTo,
-                            Location = c.Location ?? "",
-                            City = c.City ?? ""
-                        }).FirstOrDefault();
-            }
-
-            return data;
-        }
-
-        public bool IsDuplicate(VendorClusterModel model)
-        {
-            if (model.IsNew)
-            {
-                return context.T100VenderClusters.Any(x => x.VendorCode == model.VendorCode && x.DepartmentName == model.DepartmentName);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public int SaveDetails(VendorClusterModel model)
-        {
-            if (model.IsNew)
-            {
-                T100VenderCluster venderCluster = new()
+                T05Vendor vendor = new()
                 {
-                    VendorCode = model.VendorCode,
-                    DepartmentName = model.DepartmentName,
-                    ClusterCode = model.ClusterCode,
+                    VendCd = model.VendCd,
+                    VendName = model.VendName,
+                    VendAdd1 = model.VendAdd1,
+                    VendAdd2 = model.VendAdd2,
+                    VendCityCd = model.VendCityCd,
+                    VendContactPer1 = model.VendContactPer1,
+                    VendContactTel1 = model.VendContactTel1,
+                    VendContactPer2 = model.VendContactPer2,
+                    VendContactTel2 = model.VendContactTel2,
+                    VendApproval = model.VendApproval,
+                    VendApprovalFr = model.VendApprovalFr,
+                    VendApprovalTo = model.VendApprovalTo,
+                    VendStatus = model.VendStatus,
+                    VendStatusDtFr = model.VendStatusDtFr,
+                    VendStatusDtTo = model.VendStatusDtTo,
+                    VendRemarks = model.VendRemarks,
+                    VendCdAlpha = model.VendCdAlpha,
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
+                    VendEmail = model.VendEmail,
+                    VendInspStopped = model.VendInspStopped,
+                    VendPwd = model.VendPwd,
                     Createdby = model.Createdby,
                     Createddate = DateTime.Now,
+                    Isdeleted = model.Isdeleted,
                 };
 
-                context.T100VenderClusters.Add(venderCluster);
+                context.T05Vendors.Add(vendor);
                 context.SaveChanges();
             }
             else
             {
-                T100VenderCluster venderCluster = context.T100VenderClusters.Where(x => x.VendorCode == model.VendorCode && x.DepartmentName == model.DepartmentName).FirstOrDefault();
+                T05Vendor uom = context.T05Vendors.Find(model.VendCd);
 
-                if (venderCluster != null)
+                if (uom != null)
                 {
-                    venderCluster.ClusterCode = model.ClusterCode;
-                    venderCluster.UserId = model.UserId;
-                    venderCluster.Datetime = DateTime.Now.Date;
-                    venderCluster.Updatedby = model.Updatedby;
-                    venderCluster.Updateddate = DateTime.Now;
+                    uom.UserId = model.UserId;
+                    uom.Datetime = DateTime.Now.Date;
+                    uom.Updatedby = model.Updatedby;
+                    uom.Updateddate = DateTime.Now;
 
                     context.SaveChanges();
                 }
             }
 
-            return model.VendorCode;
+            return model.VendCd;
+        }
+
+        public int GetMaxVend_CD()
+        {
+            int UOM_CD = 0;
+
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            using (var command = context.Database.GetDbConnection().CreateCommand())
+            {
+                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    command.CommandText = "SELECT NVL(MAX(VEND_CD),0) from T05_VENDOR";
+                    UOM_CD = Convert.ToInt32(command.ExecuteScalar());
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+            return UOM_CD;
         }
 
         public bool Remove(int VendorCode, string DepartmentCode)
