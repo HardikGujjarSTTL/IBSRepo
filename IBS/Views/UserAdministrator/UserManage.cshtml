@@ -47,13 +47,13 @@
                         <span asp-validation-for="Region" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4 mb-3">
+                    @*<div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Role </label>
                             @Html.DropDownListFor(model => model.AuthLevl, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
                             <span class="text-danger" id="spnErrorAuthLevl"></span>
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Status</label>
@@ -141,6 +141,11 @@
                             <option value="S">SBU HEAD</option>
                         </select>
                         <span asp-validation-for="UserType" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Role Name</label>
+                        @Html.DropDownListFor(model => model.RoleId, new SelectList(IBS.Models.Common.GetRoles() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="savenext-btn">
