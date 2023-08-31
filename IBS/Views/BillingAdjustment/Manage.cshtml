@@ -30,7 +30,7 @@
 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Month: </label>
-                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="AdjusmentPerMon" class="text-danger"></span>
                             </div>
                             <div class="col-md-4 mb-4">

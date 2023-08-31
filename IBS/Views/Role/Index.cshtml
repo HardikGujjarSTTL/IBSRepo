@@ -90,10 +90,11 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                                var id = data.RoleId;
-                            var editUrl = '@Url.Action("Manage", "Role")/' + id;
+                            var id = data.RoleId;
+                            var EncryptedRoleId = data.EncryptedRoleId;
+                            var editUrl = '@Url.Action("Manage", "Role")/' + EncryptedRoleId;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="RoleDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="RoleDelete(\''+EncryptedRoleId+'\'); return false;" href="javascript:void(\'0\');" id=\"' + EncryptedRoleId + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

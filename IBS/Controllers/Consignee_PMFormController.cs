@@ -21,7 +21,7 @@ namespace IBS.Controllers
 
         public IActionResult Manage(int id)
         {
-            Consignee_PMFormModel model = new();
+            ConsigneePurchaseModel model = new();
             if (id > 0)
             {
                 model = consignee_PMForm.FindByID(id);
@@ -32,7 +32,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<Consignee_PMFormModel> dTResult = consignee_PMForm.GetConsignee_PMFormList(dtParameters);
+            DTResult<ConsigneePurchaseModel> dTResult = consignee_PMForm.GetConsignee_PMFormList(dtParameters);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)
@@ -54,7 +54,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Consignee_PMFormDetailsSave(Consignee_PMFormModel model)
+        public IActionResult Consignee_PMFormDetailsSave(ConsigneePurchaseModel model)
         {
             try
             {

@@ -4,7 +4,7 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 =============================================================================================================================================
 By Neha Gehlot
 =============================================================================================================================================
-create or replace PROCEDURE GetConsigneeComplaintDetails (
+create or replace PROCEDURE GetConsigneeDetails (
     p_case_no IN VARCHAR2,
     p_bk_no IN VARCHAR2,
     p_set_no IN VARCHAR2,
@@ -85,11 +85,11 @@ END;
 ===============================================================================================================================================
 
 create or replace PROCEDURE GetFilterNCR(
-    p_case_no IN VARCHAR2,
-    p_nc_no IN VARCHAR2,
-    p_lstIE IN VARCHAR2,
-    p_frmDt IN DATE DEFAULT NULL,
-    p_toDt IN DATE DEFAULT NULL,
+    ---p_case_no IN VARCHAR2,
+    --p_nc_no IN VARCHAR2,
+    p_lstIE_no IN VARCHAR2,
+    p_frmDt_dt IN DATE DEFAULT NULL,
+    p_toDt_dt IN DATE DEFAULT NULL,
     p_result_cursor OUT SYS_REFCURSOR
 )
 IS
@@ -112,10 +112,10 @@ BEGIN
         JOIN T03_CITY T03 ON T06.CONSIGNEE_CITY = T03.CITY_CD
         JOIN T41_NC_MASTER T41 ON T20.BK_NO = T41.BK_NO AND T20.SET_NO = T41.SET_NO AND T20.CONSIGNEE_CD = T41.CONSIGNEE_CD
     WHERE
-        (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
-        AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
-        AND (p_lstIE IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE))
-        AND (p_frmDt IS NULL OR p_toDt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt AND p_toDt))
+       -- (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
+        --AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
+         (p_lstIE_no IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE_no))
+        AND (p_frmDt_dt IS NULL OR p_toDt_dt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt_dt AND p_toDt_dt))
     ORDER BY CALL_RECV_DATE, CASE_NO, BK_NO, SET_NO;
 
     COMMIT;
@@ -124,7 +124,6 @@ EXCEPTION
         ROLLBACK;
         RAISE;
 END GetFilterNCR;
-
 ===============================================================================================================================================
 
 create or replace PROCEDURE GetForAction_M_NCR (
@@ -335,6 +334,17 @@ ALTER TABLE temp_online_complaints
 ALTER TABLE temp_online_complaints 
     MODIFY CO_CD  NUMBER(6,0);
 
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CO_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY UOM_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY JI_IE_CD  NUMBER(6,0);
 
 
 ========================================================================================================================================
@@ -520,3 +530,58 @@ BEGIN
         AND TO_CHAR(m.PO_DT, 'dd-mm-yyyy') = p_PODate
     ORDER BY c.CASE_NO, c.COMPLAINT_ID ASC;
 END GetConsigneeComplaint;
+
+====================================================================================================================================
+create or replace PROCEDURE GetConsigneeComplaintDetails (
+    p_complaint_id IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_result FOR
+         SELECT
+      to_char(c.COMPLAINT_DT, 'dd/mm/yyyy') AS COMPLAINT_DATE,c.REJ_MEMO_NO,c.REJ_MEMO_DT,c.CASE_NO,c.BK_NO,c.SET_NO,trim(m.PO_NO) || ' dated - ' || to_char(m.PO_DT, 'dd/mm/yyyy') AS PO,
+      m.RLY_CD,to_char(d.IC_DT, 'dd/mm/yyyy') AS IC_DT,m.region_code,c.IE_CO_CD,c.COMP_RECV_REGION,f.VEND_NAME,f.vend_cd,c.ITEM_SRNO_PO,c.ITEM_DESC,c.QTY_OFFERED,c.QTY_REJECTED,c.UOM_CD,m.USER_ID,
+      c.RATE,c.REJECTION_VALUE,c.ROOT_CAUSE_ANALYSIS,c.TECH_REF,c.CHKSHEET_STATUS,c.ANY_OTHER,c.CAPA_STATUS,c.DANDAR_STATUS,c.REJECTION_REASON,c.STATUS,c.JI_REQUIRED,
+      c.JI_REGION,c.NO_JI_REASON,c.JI_IE_CD,c.IE_CD,c.CONSIGNEE_CD,c.REMARKS,c.JI_SNO, to_char(c.JI_FIX_DT, 'dd/mm/yyyy') AS JI_FIX_DT,to_char(c.JI_DT, 'dd/mm/yyyy') AS JI_DT,e.consignee,um.UOM_CD,um.UOM_S_DESC,
+      c.DEFECT_CD,c.JI_STATUS_CD,to_char(c.CONCLUSION_DT, 'dd/mm/yyyy') AS CONCLUSION_DT,c.ACTION_PROPOSED,to_char(c.ACTION_PROPOSED_DT, 'dd/mm/yyyy') AS ACTION_PROPOSED_DT,
+      c.PENALTY_TYPE,to_char(c.PENALTY_DT, 'dd/mm/yyyy') AS PENALTY_DT,c.ACTION
+    FROM T13_PO_MASTER m
+    JOIN T20_IC d ON m.CASE_NO = d.CASE_NO
+    JOIN T40_CONSIGNEE_COMPLAINTS c ON d.CASE_NO = c.CASE_NO
+    JOIN V06_CONSIGNEE e ON c.CONSIGNEE_CD = e.CONSIGNEE_CD  
+    JOIN T05_VENDOR f ON c.VEND_CD = f.VEND_CD  
+    JOIN T04_UOM um ON c.uom_cd = um.uom_cd
+        WHERE
+            COMPLAINT_ID = p_complaint_id;
+END GetConsigneeComplaintDetails;
+
+==============================================================================================================================================
+
+create or replace PROCEDURE CMWiseICDetail(
+   p_region VARCHAR2,
+   p_start_date VARCHAR2,
+   p_end_date VARCHAR2,
+   p_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+ OPEN p_result FOR
+      SELECT TO_CHAR(T17.CALL_STATUS_DT, 'dd/mm/yyyy') AS IC_ISSUED_DT,
+                     T17.CASE_NO,
+                      T17.BK_NO,
+                      T17.SET_NO,
+                      T09.IE_NAME,
+                      T08.CO_NAME
+                 FROM T17_CALL_REGISTER T17
+                      LEFT JOIN T30_IC_RECEIVED T30 ON (T17.BK_NO = T30.BK_NO AND T17.SET_NO = T30.SET_NO AND T17.REGION_CODE = T30.REGION),
+                      T09_IE T09,
+                      T08_IE_CONTROLL_OFFICER T08
+                WHERE (T30.BK_NO IS NULL AND T30.SET_NO IS NULL AND T30.REGION IS NULL)
+                  AND T17.IE_CD = T09.IE_CD
+                  AND T09.IE_CO_CD = T08.CO_CD
+                  AND T17.CALL_STATUS IN ('A', 'R')
+                 AND SUBSTR(T17.CASE_NO, 1, 1) = SUBSTR(p_region, 1, 1)
+                  AND (T17.CALL_STATUS_DT BETWEEN TO_DATE(p_start_date, 'dd/mm/yyyy') AND TO_DATE(p_end_date, 'dd/mm/yyyy'));
+                 
+END;
+

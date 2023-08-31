@@ -6,7 +6,7 @@ namespace IBS.Models
     {
         public int BankCd { get; set; }
 
-        [Display(Name = "Bank Name")]
+        [Display (Name = "Bank Name")]
         [Required]
         public string? BankName { get; set; }
 
