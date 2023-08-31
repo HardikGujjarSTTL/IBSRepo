@@ -118,23 +118,15 @@
             var gststate = $("#GstinNo").val().substring(0, 2);
             var statecd = $("#ConsigneeState").val().substring(0, 2);
             if (gststate != statecd) {
-                ShowHideMsgNew(false, "Kindly enter the GST No according to the State Entered!!!");
-                //alert("Kindly enter the GST No according to the State Entered!!!");
+                alert("Kindly enter the GST No according to the State Entered!!!");
             }
             if ($("#frmConsigneePurchaseDetails").valid()) {
                 $("#frmConsigneePurchaseDetails").submit();
             }
-        }
-
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            if (res.status) {
-                setTimeout(function () {
-                    window.location.href = '@Url.Action("Index", "ConsigneePurchase")';
-                }, 1000)
+            else {
+                alert("Form not Submited");
             }
-        };
+        }
 
     </script>
 }
