@@ -2435,6 +2435,51 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Region)).ToList();
         }
+
+        public static IEnumerable<TextValueDropDownDTO> GetActiveInActive()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ActiveInActive)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetUserType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserType)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetIEPosting()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEPosting)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetIEStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEStatus)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetIEJobType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IEJobType)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetBPOFeeType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOFeeType)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetBPOTaxType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOTaxType)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetBPOFlag()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOFlag)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetBPOAdvFlag()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOAdvFlag)).ToList();
+        }
     }
     public static class DbContextHelper
     {
