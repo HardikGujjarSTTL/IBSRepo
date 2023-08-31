@@ -29,7 +29,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        [Authorization("ClientMaster", "Index", "view")]
+        //[Authorization("ClientMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             Clientmaster model = new();

@@ -1,14 +1,29 @@
 ﻿@model IBS.Models.Clientmaster
 
 <div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Client Master</h2>
-        </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client</a>
-        </div>
-    </div>
+    
+        <form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramAccountDetails" style="margin-top: 7px;">
+            <div class="accordion-body">
+                <div class="row my-0 d-flex align-items-end">
+                    <div class="col-md-2 mb-4">
+                        <label for="Reference">Book No</label>
+                        <input type="text" class="input" asp-for="USER_NAME" maxlength="200" />
+                        @*<span asp-validation-for="BK_NO" class="text-danger"></span>*@
+                    </div>
+
+                    <div class="col-md-6 mb-4 alignBtn">
+                        <div class="savenext-btn">
+                            <button type="button" class="reset-btn" id="btnSearch">Search</button>
+                            <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-warning center">
+                    <span id="Label8">Enter Book No. & Set No. Against which the Holograms are to be linked.</span>
+                </div>
+            </div>
+        </form>
+        
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
