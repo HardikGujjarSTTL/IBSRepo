@@ -99,7 +99,6 @@
         }
 
          function Submit() {
-             debugger
             var ncrNoInput = $("#FromDate");
             var ncrNoInput1 = $("#ToDate");
             
@@ -130,7 +129,6 @@
         }
 
         function btnnewncr(){
-            debugger
             var ncrNoInput = $("#BKNo");
             var ncrNo1Input = $("#CASENO");
             var ncrNo2Input = $("#SetNo");
@@ -159,7 +157,6 @@
         }
 
         function ModifyNCR(){
-            debugger
             var ncrNoInput = $("#NCNO");
             var ncrNoValue = ncrNoInput.val().trim();
             var validationSpan = $("[data-valmsg-for='NC_NO']");
@@ -185,8 +182,6 @@
 
 
          function InitializeDatatable() {
-            debugger
-            
             var selectedValue = $("#IENAME").val();
             var NCNO = $("#NCNO").val();
             var CASENO = $("#CASENO").val();
@@ -213,7 +208,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
-                        debugger
                         var AdditionalValues = {
                             "NCNO": NCNO,
                             "CASENO": CASENO,
@@ -237,7 +231,6 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            debugger
                             var NC_NO = data.NC_NO;
                             var CaseNo = data.CaseNo;
                             var BKNo = data.BKNo;

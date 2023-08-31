@@ -31,14 +31,14 @@
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="" style="padding-right:36px;">Date :</label>
-                <label id="lblDate" style="text-transform: uppercase; color:red;"></label>                
+                <label id="lblDate" style="text-transform: uppercase; color:red;"></label>
                 <input type="hidden" asp-for="PO_DT" />
                 <input type="hidden" asp-for="LETTER_DT" />
             </div>
             <div class="col-md-9 mb-3">
                 <label for="Reference" style="padding-right:71px;">Vendor :</label>
                 <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
-                <input type="text" id="txtCALLLETTERDT" style="width:95px;"/>
+                <input type="text" id="txtCALLLETTERDT" style="width:95px;" />
                 <input type="hidden" asp-for="VEND_NAME" />
             </div>
         </div>
@@ -178,6 +178,10 @@
             $("#rejectCall").css("display", "block");
         });
 
+        $("#btnCaseHistory").click(function () {
+            window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();;
+        });
+
         //$("#btnCancel").click(function () {
         //    window.location.href = "@Url.Action("Index","CallMarkedOnline")";
         //});
@@ -226,6 +230,12 @@
             processData: false, // Prevent jQuery from converting the data to a string
             contentType: false,
             success: function (response) {
+                debugger
+                if (response) {
+                    ShowHideMsgNew(response, "Successful");
+                } else {
+                    ShowHideMsgNew(response, "Somthing went wrong");
+                }
                 console.log("success");
             }
         });

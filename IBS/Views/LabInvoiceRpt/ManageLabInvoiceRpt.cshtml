@@ -1,0 +1,237 @@
+﻿@model IBS.Models.LabInvoiceModel
+@{
+    ViewData["Title"] = "LAB INVOICE";
+    string clsView = "";
+    //if (Model.CaseNo != "0")
+    //{
+    //    clsView = "Permission_View";
+    //}
+}
+
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB INVOICE</h2>
+        </div>
+    <div>
+        <a asp-action="LabInvoiceRpt" asp-controller="LabInvoiceRpt" class="formBtn viewall-btn">View List</a>
+    </div>
+    </div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="LabInvoiceRpt" asp-action="LabInvoiceRpt" data-ajax-method="post" data-ajax-complete="completed" id="frmLabInvoice">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Case No.</label>
+                        <input type="text" class="input" asp-for="CaseNo" readonly="true">
+                        <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Call date.</label>
+                        <input type="text" class="input" asp-for="CallDt" readonly="true">
+                        <span asp-validation-for="CallDt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Call SNo.</label>
+                        <input type="text" class="input" asp-for="CallSNO" readonly="true">
+                        <span asp-validation-for="CallSNO" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <label for="Reference">Vendor</label>
+                        <input type="text" class="input" asp-for="VendorName" readonly="true">
+                        <span asp-validation-for="VendorName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-7 mb-3">
+                        <label for="Reference">Manufacturer</label>
+                        <input type="text" class="input" asp-for="ManufacturerNM" readonly="true">
+                        <span asp-validation-for="ManufacturerNM" class="text-danger"></span>
+                    </div>
+                    </div>
+                    <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">BPO</label>
+                        <input type="text" class="input" asp-for="BPOCD" readonly="true">
+                        <span asp-validation-for="BPOCD" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        @*<label for="Reference">Tel No.</label>*@
+                        <input type="text" class="input" asp-for="BPONM" readonly="true" style="margin-top:4%">
+                        <span asp-validation-for="BPONM" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="InvoiceNo" id="hndInNo" />
+                    <input type="hidden" asp-for="InvoiceDt" id="hndInDt" />
+                </div>
+                <h4>LAB INVOICE DETAILS</h4>
+                <section class="table-section">
+                    <div class="task-listinput">
+                        <div class="dash-table">
+                            <table id="dtinvoiced" class="table-responsive">
+                                <thead>
+                                    <tr>
+
+                                        <th>SNo.</th>
+                                        <th>Invoice No.</th>
+                                        <th>Invoice date</th>
+                                        <th>ITEM</th>
+                                        <th>Quantity</th>
+                                        <th>Testing Charges</th>
+                                        <th>CGST</th>
+                                        <th>SGST</th>
+                                        <th>IGST</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <div class="savenext-btn">
+                    @*<a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>*@
+                    <button type="button" class="save-btn active Permission_Save" onclick="Download();" style="margin-left:40%;">Generate Invoice</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+
+@section scripts{
+
+        <partial name="_DataTablesScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
+
+        <script type="text/javascript">
+            
+            $(function () {
+                
+            var RegNo = '@ViewBag.RegNo';
+            InitializeDatatable(RegNo);
+            });
+
+        function InitializeDatatable(RegNo) {
+
+                $("#dtinvoiced").DataTable({
+                    stateSave: false,// Design Assets
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true, // ServerSide Setups
+                    serverSide: true,
+                    destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                    ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                            RegNo: RegNo
+                        };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        }
+                    },
+
+                    columns: [// Columns Setups
+                        {
+                            data: '', orderable: false, width: '5%',
+                            render: function (data, type, row, meta) {
+                            sessionStorage.setItem("InvoiceNo", row.InvoiceNo);
+                            sessionStorage.setItem("InvoiceDt", row.InvoiceDt);
+                            var InvoiceDt = '@ViewBag.InvoiceDt';
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        //{
+                        //    render: function (data, type, row) {
+                        //        var Id = data.LabId;
+                        //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                        //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                        //        html += '</div>';
+                        //        return html;
+                        //    }
+                        //},
+                    { data: "InvoiceNo" },
+                    { data: "InvoiceDt" },
+                    { data: "Item" },
+                    { data: "Quantity" },
+                    { data: "TestingCharges" },
+                    { data: "CGST" },
+                    { data: "SGST" },
+                    { data: "IGST" },
+                        
+                        //{
+                        //    data: null, orderable: false,
+                        //    render: function (data, type, row) {
+
+                        //        //var CASE_NO = data.CASE_NO;
+                        //        //var SAMPLE_REG_NO = data.SAMPLE_REG_NO;
+                        //        //var INVOICE_NO = data.INVOICE_NO;
+
+                        //        var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                        //        var linkText = 'Select';
+                        //        var editLink = '<a href="javascript:void(0);" ' +
+                        //            'onclick="editRow(' + escapedRow + ')" ' +
+                        //            'style="color: blue; text-decoration: underline;">' +
+                        //            linkText +
+                        //            '</a>';
+
+                        //        return editLink;
+                        //    }
+                        //},
+
+                    ],
+
+                    "order": [[0, "asc"]]
+                });
+
+            }
+            
+            function Download() {
+               
+            var InvoiceNo = sessionStorage.getItem("InvoiceNo");;
+            var InvoiceDt = sessionStorage.getItem("InvoiceDt");;
+            var QueryString = "RptFlag=2" +
+                    "&Invoice=" + encodeURIComponent(InvoiceNo)+
+                "&InvoiceDt=" + encodeURIComponent(InvoiceDt);
+                    //"&RegNo=" + encodeURIComponent(RegNo) +
+                    //"&TranNo=" + encodeURIComponent(TranNo);
+
+                //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+                var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+                if (oWin === null || typeof (oWin) === 'undefined') {
+                    alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+                }
+                window.opener = 'x';
+                window.close();
+                //$.ajax({
+                //    url: '/LabInvoiceDownload/Download',
+                //    type: "POST",
+                //    dataType: "JSON",
+                //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
+
+                //    success: function (success) {
+
+
+
+                //    }
+
+                //});
+
+            }
+                    //function UserDelete(UserId) {
+                    //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                    //    $("#btn-delete-yes").attr("href", url);
+                    //    $("#modal-delete-conf").modal("show");
+                    //}
+
+        </script>
+}

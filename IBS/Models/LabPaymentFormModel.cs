@@ -26,6 +26,7 @@ namespace IBS.Models
         public string AMT_CLEARED { get; set; }
         public string IAMOUNT { get; set; }
         public string Bank { get; set; }
+        public string BankCD { get; set; }
         public string Remarks { get; set; }
         public string UserId { get; set; }
 

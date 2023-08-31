@@ -34,7 +34,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        [Authorization("LabBillFinalisation", "LabBillFinalisationForm", "add")]
+        [Authorization("LabBillFinalisation", "LabBillFinalisationForm", "edit")]
         public JsonResult UpdateBill([FromBody] LabBillFinalisationModel LabBillFinalisationModel)
         {
             bool result;
