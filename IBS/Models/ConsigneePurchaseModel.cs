@@ -22,24 +22,24 @@ namespace IBS.Models
 
         public string? ConsigneeAdd2 { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The city is required.")]
         public int? ConsigneeCity { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The state is required.")]
         public string? ConsigneeState { get; set; }
 
         public string? UserId { get; set; }
 
         public DateTime? Datetime { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The GSTIN No is required.")]
         public string? GstinNo { get; set; }
 
         public string? SapCustCdCon { get; set; }
 
         public string? LegalName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The PIN Code is required.")]
         public string? PinCode { get; set; }
         public byte? Isdeleted { get; set; }
 
