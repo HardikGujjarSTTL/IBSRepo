@@ -77,15 +77,20 @@ namespace IBS.Models
         public virtual ICollection<T80PoMaster> T80PoMasters { get; set; } = new List<T80PoMaster>();
 
         public virtual T03City? VendCityCdNavigation { get; set; }
+
     }
     public class VendorlistModel
     {
         public int VEND_CD { get; set; }
 
         public string? VEND_NAME { get; set; }
+
         public string? VEND_CITY_CD { get; set; }
+
         public string? VEND_ADD { get; set; }
+
         public string? VEND_CONT_NO { get; set; }
+
         public string? VEND_EMAIL { get; set; }
     }
 
