@@ -208,6 +208,36 @@ namespace IBS.Models
             return country;
         }
 
+        public static List<SelectListItem> GetDefectDesc()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+           
+            List<SelectListItem> DefectDesc = (from a in context.T38DefectCodes
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.DefectCd),
+                                           Value = Convert.ToString(a.DefectDesc)
+                                       }).ToList();
+
+            return DefectDesc;
+        }
+
+        public static List<SelectListItem> GetClassification()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> classification = (from a in context.T39JiStatusCodes
+                                                   select
+                                          new SelectListItem
+                                          {
+                                              Text = Convert.ToString(a.JiStatusCd),
+                                              Value = Convert.ToString(a.JiStatusDesc)
+                                          }).ToList();
+
+            return classification;
+        }
+
         public static List<SelectListItem> GetLabApproval()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -341,23 +371,56 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-
-        public static List<SelectListItem> VendorStatus()
+        public static List<SelectListItem> Checksheet()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
-            single.Text = "Active";
+            single.Text = "Approved";
             single.Value = "A";
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
-            single.Text = "Banned/BlackListed";
-            single.Value = "B";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Re-Instated";
+            single.Text = "Revision";
             single.Value = "R";
             textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Prepration";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> DARPurpose()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No Action Required";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Warning Letter";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Minor Penalty";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Major Penalty";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Counselling";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<TextValueDropDownDTO> VendorStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.VendorStatus)).ToList();
         }
 
         public static List<SelectListItem> ItemBlocked()
@@ -374,45 +437,14 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> OnlineCallStatus()
+        public static List<TextValueDropDownDTO> OnlineCallStatus()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single.Text = "No";
-            single.Value = "N";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Yes";
-            single.Value = "Y";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.OnlineCallStatus)).ToList();
         }
 
-        public static List<SelectListItem> ClientType()
+        public static List<TextValueDropDownDTO> ClientType()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "Railways";
-            single.Value = "R";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Private";
-            single.Value = "P";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "PSU";
-            single.Value = "PSU";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "State Govt.";
-            single.Value = "S";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Foreign Railways";
-            single.Value = "F";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ClientType)).ToList();
         }
 
         public static List<SelectListItem> GetAccountCode()
@@ -847,65 +879,19 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> RegionCode()
+        public static List<TextValueDropDownDTO> RegionCode()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "NORTHERN REGION";
-            single.Value = "N";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "EASTERN REGION";
-            single.Value = "E";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "WESTERN REGION";
-            single.Value = "W";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "SOUTHERN REGION.";
-            single.Value = "S";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "CENTRAL REGION";
-            single.Value = "C";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "CO QA DIVISION";
-            single.Value = "Q";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.RegionCode)).ToList();
         }
 
-        public static List<SelectListItem> StockNonstock()
+        public static List<TextValueDropDownDTO> StockNonstock()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "Stock";
-            single.Value = "S";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Non-Stock";
-            single.Value = "N";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.StockNonstock)).ToList();
         }
 
-        public static List<SelectListItem> PoOrLetter()
+        public static List<TextValueDropDownDTO> PoOrLetter()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "Purchase Order";
-            single.Value = "P";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Letter of Offer";
-            single.Value = "L";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.PoOrLetter)).ToList();
         }
 
         public static List<SelectListItem> CallRStatus()
@@ -993,38 +979,14 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> DiscountType()
+        public static List<TextValueDropDownDTO> DiscountType()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "Percentage";
-            single.Value = "P";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Lumpsum";
-            single.Value = "L";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Per No.";
-            single.Value = "N";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.DiscountType)).ToList();
         }
 
-        public static List<SelectListItem> ExciseType()
+        public static List<TextValueDropDownDTO> ExciseType()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "Percentage";
-            single.Value = "P";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Lumpsum";
-            single.Value = "L";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ExciseType)).ToList();
         }
 
         public static IEnumerable<DropDownDTO> GetYesNoCommon()
@@ -2184,20 +2146,9 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-        public static List<SelectListItem> getServTax()
+        public static List<TextValueDropDownDTO> getServTax()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single = new SelectListItem();
-            single.Text = "Service Tax to be Charged on Fee";
-            single.Value = "Y";
-            single.Selected = true;
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Fee is Inclusive of Service Tax";
-            single.Value = "N";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ServTax)).ToList();
         }
 
         public static IEnumerable<SelectListItem> GetRailway()

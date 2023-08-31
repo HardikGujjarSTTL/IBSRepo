@@ -1,4 +1,5 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -12,8 +13,13 @@ namespace IBS.Controllers
         #region Variables
         private readonly IComplaintApprovalRepository complaintApprovalRepository ;
         #endregion
-        public ComplaintApprovalController(IComplaintApprovalRepository _complaintApprovalRepository)
+
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
+        public ComplaintApprovalController(IDocument _iDocumentRepository, IWebHostEnvironment _environment, IComplaintApprovalRepository _complaintApprovalRepository)
         {
+            iDocument = _iDocumentRepository;
+            env = _environment;
             complaintApprovalRepository = _complaintApprovalRepository;
         }
         [Authorization("ComplaintApproval", "Index", "view")]
@@ -37,6 +43,14 @@ namespace IBS.Controllers
             try
             {
                 model = complaintApprovalRepository.FindByID(TEMP_COMPLAINT_ID, SetNo, BKNo, CaseNo);
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(TEMP_COMPLAINT_ID));
+                FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
+                FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
+                FileUploaderUpload_Memo.OthersSection = false;
+                FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_Rejection_Memo = FileUploaderUpload_Memo;
             }
             catch (Exception ex)
             {

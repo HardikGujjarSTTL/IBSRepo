@@ -42,7 +42,11 @@ namespace IBS.Helper
             [Description("/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
             [Description("/Files/AdministratorPurchaseOrder")]
-            AdministratorPurchaseOrder = 11,
+            AdministratorPurchaseOrder = 13,
+            [Description("/Online_Comp_Document")]
+            OnlineComplaints = 11,
+            [Description("/Consignee_Comp_Document")]
+            ConsigneeComplaints = 12,
         }
 
         public enum DocumentCategory : int
@@ -57,6 +61,8 @@ namespace IBS.Helper
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
             AdministratorPurchaseOrder =13,
+            OnlineComplaints=11,
+            ConsigneeComplaints = 12,
         }
 
 
@@ -73,6 +79,11 @@ namespace IBS.Helper
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
             Upload_a_scanned_copy_of_Purchase_Order = 54,
+            Upload_Rejection_Memo=50,
+            Upload_JI_Case=51,
+            Upload_JI_Report=52,
+            Upload_Tech_Ref1 = 53,
+
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
@@ -144,6 +155,88 @@ namespace IBS.Helper
             T,
             [Description("Left/Repatriated")]
             L,
+        }
+        public enum PoOrLetter
+        {
+            [Description("Purchase Order")]
+            P,
+            [Description("Letter of Offer")]
+            L,
+        }
+        public enum StockNonstock
+        {
+            [Description("Stock")]
+            S,
+            [Description("Non-Stock")]
+            N,
+        }
+        public enum ServTax
+        {
+            [Description("Service Tax to be Charged on Fee")]
+            Y,
+            [Description("Fee is Inclusive of Service Tax")]
+            N,
+        }
+        public enum ClientType
+        {
+            [Description("Railways")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            PSU,
+            [Description("State Govt")]
+            S,
+            [Description("Foreign Railways")]
+            F,
+        }
+
+        public enum RegionCode
+        {
+            [Description("NORTHERN REGION")]
+            N,
+            [Description("EASTERN REGION")]
+            E,
+            [Description("WESTERN REGION")]
+            W,
+            [Description("SOUTHERN REGION")]
+            S,
+            [Description("CENTRAL REGION")]
+            C,
+            [Description("CO QA DIVISION")]
+            Q,
+        }
+        public enum DiscountType
+        {
+            [Description("Percentage")]
+            P,
+            [Description("Lumpsum")]
+            L,
+            [Description("Per No.")]
+            N,
+        }
+        public enum ExciseType
+        {
+            [Description("Percentage")]
+            P,
+            [Description("Lumpsum")]
+            L,
+        }
+        public enum VendorStatus
+        {
+            [Description("Active")]
+            A,
+            [Description("Banned/BlackListed")]
+            B,
+            [Description("Re-Instated")]
+            R,
+        }
+        public enum OnlineCallStatus
+        {
+            [Description("No")]
+            N,
+            [Description("Yes")]
+            Y,
         }
     }
 
