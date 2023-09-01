@@ -26,7 +26,7 @@ namespace IBS.Repositories.Inspection_Billing
             ICCancellationModel model = new();
             T16IcCancel t16IcCancel = context.T16IcCancels.Where(x => x.Region == REGION && x.BkNo == BK_NO && x.SetNo == SET_NO).FirstOrDefault();
             if (t16IcCancel == null)
-                throw new Exception("Cancellation Record Not found");
+                return model;
             else
             {
                 model.BkNo = t16IcCancel.BkNo;
@@ -92,7 +92,7 @@ namespace IBS.Repositories.Inspection_Billing
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                list = JsonConvert.DeserializeObject<List<ICCancellationListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                list = JsonConvert.DeserializeObject<List<ICCancellationListModel>>(serializeddt, new JsonSerializerSettings { });
             }
             query = list.AsQueryable();
 

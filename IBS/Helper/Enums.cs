@@ -286,7 +286,15 @@ namespace IBS.Helper
             [Description("NO")]
             N,
         }
-
+        public enum IcStatus
+        {
+            [Description("Cancelled")]
+            C,
+            [Description("Missing")]
+            M,
+            [Description("Lost / Theft")]
+            L,
+        }
     }
 
     public class EnumUtility<T>

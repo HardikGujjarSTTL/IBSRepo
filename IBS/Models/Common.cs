@@ -2250,6 +2250,10 @@ namespace IBS.Models
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
         }
+        public static List<TextValueDropDownDTO> GetIcStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IcStatus)).ToList();
+        }
     }
     public static class DbContextHelper
     {

@@ -1,11 +1,16 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class ICCancellationModel
     {
+        [Required]
         public string BkNo { get; set; } = null!;
 
+        [Required]
         public string SetNo { get; set; } = null!;
 
+        [Required]
         public int? IssueToIecd { get; set; }
 
         public string? IcStatus { get; set; }
@@ -24,8 +29,10 @@
         public string SET_NO { get; set; }
         public string IE_NAME { get; set; }
         public string IC_STATUS { get; set; }
+        public string STATUS { get; set; }
         public string STATUS_DT { get; set; }
         public string REGION { get; set; }
+        public string REGIONV { get;}
         public string REMARKS { get; set; }
     }
 

@@ -34,6 +34,8 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult Manage(string REGION,string BK_NO,string SET_NO)
         {
             ICCancellationModel model = new();
+            string Region = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region);
+            ViewBag.Region = Region;
             if (REGION != null && BK_NO != "" && SET_NO != "")
             {
                 model = iCCancellationRepository.FindByID(REGION, BK_NO, SET_NO);
@@ -42,6 +44,7 @@ namespace IBS.Controllers.InspectionBilling
             else
             {
                 model.IsEdit = 0;
+                model.Region = Region;
             }
             return View(model);
         }
@@ -69,16 +72,17 @@ namespace IBS.Controllers.InspectionBilling
         {
             try
             {
-                string msg = "IC Cancellation Inserted Successfully.";
                 if (model.IsEdit > 0)
                 {
-                    msg = "IC Cancellation Updated Successfully.";
+                    iCCancellationRepository.ICCancellationSave(model);
+                    AlertAddSuccess("IC Cancellation Updated Successfully.");
                 }
-                string id = iCCancellationRepository.ICCancellationSave(model);
-                if (id != null)
+                else
                 {
-                    return Json(new { status = true, responseText = msg });
+                    iCCancellationRepository.ICCancellationSave(model);
+                    AlertAddSuccess("IC Cancellation Inserted Successfully.");
                 }
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
