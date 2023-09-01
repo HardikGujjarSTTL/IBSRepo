@@ -225,7 +225,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             catch (Exception ex)
             {
-                message = "Somthing went wrong";
+                message = "Oops Somthing Went Wrong !!";
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "HologramAccountal", "HologramAccountalSave", 1, GetIPAddress());
             }
             return Json(new { _msg = message, _result = result });

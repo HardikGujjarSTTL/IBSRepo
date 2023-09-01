@@ -3,7 +3,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">Online Call Marking Form</label></h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="CallMarkedOnline" class="formBtn viewall-btn" id="viewList">View List</a>
@@ -22,16 +22,13 @@
                 <label formaction="rdbAllCallUnMarked">@Html.RadioButton("rdbCall", "Show All Un-Marked Online Calls As on Date", new {  @id="rdbAllCallUnMarked" , @checked = true }) Show All Un-Marked Online Calls As on Date</label>
             </div>
         </div>
-        <div class="row my-0" style="text-align:left;">
+        <div class="row my-0 d-flex align-items-end">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Date</label>
                     <input type="text" class="datepicker" id="txtDate" maxlength="100" style="text-transform: uppercase;">
                 </div>
             </div>
-        </div>
-
-        <div class="row my-0">
             <div class="col-md-6 mb-3">
                 <div class="savenext-btn">                    
                     <button type="button" class="save-btn active" id="btnSubmit">Submit</button>
@@ -109,7 +106,6 @@
     }
 
     function InitializeDatatable() {
-        debugger
         var Date = $("#txtDate").val();
         var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "1" : "0";
         var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "1" : "0";
@@ -186,16 +182,16 @@
         $("#body").css("display", "none");
         $("#tblsection").css("display", "none");
         $("#frmParial").css("display", "block");
-        //window.location.href = "@Url.Action("Index","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
-
-        $.ajax({
-            type: 'GET',
-            url: "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt,
-            //data: obj,
-            success: function (data) {
-                $('#frmParial').html(data)
-            }
-        });
+        //window.location.href = "@Url.Action("Manage","CallMarkedOnline")" + "?CASE_NO=N19101278&CALL_RECV_DT=29/08/2022&CALL_SNO=4&CHECK_SELECTED=2&RUN_DT=23/08/2023"
+        window.location.href = "@Url.Action("Manage","CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+        //$.ajax({
+        //    type: 'GET',
+        //    url: "@Url.Action("Index", "CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt,
+        //    //data: obj,
+        //    success: function (data) {
+        //        $('#frmParial').html(data)
+        //    }
+        //});
     }
 </script>
 

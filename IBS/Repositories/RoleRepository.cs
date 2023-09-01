@@ -77,7 +77,8 @@ namespace IBS.Repositories
                         Createddate = l.Createddate,
                         Createdby = l.Createdby,
                         Updateddate = l.Updateddate,
-                        Updatedby = l.Updatedby
+                        Updatedby = l.Updatedby,
+                        EncryptedRoleId=Common.EncryptQueryString(l.RoleId.ToString())
                     };
 
             dTResult.recordsTotal = query.Count();

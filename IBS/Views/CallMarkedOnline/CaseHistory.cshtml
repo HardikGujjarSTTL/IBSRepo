@@ -24,6 +24,7 @@
             <h5>PO DETAILS</h5>
         </div>
         <div class="savenext-btn">
+            <button type="button" class="save-btn" id="btnBack">Back</button>
             <button type="button" class="save-btn active" id="btnPrint">Print</button>
             @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
         </div>
@@ -274,9 +275,13 @@
 <script type="text/javascript">
     var RegionName = "@ViewBag.RegionName";
     var CaseNo = "@ViewBag.Case_NO";
-
+    
     $(document).ready(function () {
         //window.jsPDF = window.jspdf.jsPDF;
+
+        //$("#btnBack").click(function(){
+        //    window.location.href = "@Url.Action("Manage","CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
+        //});
         var pdf = new jsPDF('landscape');
 
         $("#lblCaseNo").html($("#CASE_NO").val());
@@ -316,8 +321,9 @@
                 }
             });
 
+            //let finalY = pdf.lastAutoTable.finalY;
             pdf.addPage();
-            pdf.text('PO AMMENDMENTS VENDOR', 10, 10);
+            pdf.text('PO AMMENDMENTS VENDOR', 10, 10)///finalY);
             pdf.autoTable({ html: '#dtVendorList' });
 
             pdf.addPage();
