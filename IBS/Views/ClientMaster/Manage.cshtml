@@ -19,7 +19,7 @@
 
 <section class="@clsView">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientMaster" asp-action="UserRoleSave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserRole">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientMaster" asp-action="ClientDetailsave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserRole">
             <input type="hidden" asp-for="Id" />
             <div class="accordion-body">
                 <div class="row my-0">
@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Mobile</label>
-                        <input type="text" class="input" ASP-FOR="MOBILE" maxlength="300" required />
+                        <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10" required />
                         <span asp-validation-for="MOBILE" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -61,3 +61,22 @@
         </form>
     </div>
 </section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmUserRole").valid()) {
+                $("#frmUserRole").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "ClientMaster")';
+            }
+        };
+    </script>
+}

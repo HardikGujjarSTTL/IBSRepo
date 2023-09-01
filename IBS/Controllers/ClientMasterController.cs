@@ -29,7 +29,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        //[Authorization("ClientMaster", "Index", "view")]
+        [Authorization("ClientMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             Clientmaster model = new();
@@ -39,5 +39,34 @@ namespace IBS.Controllers
             }
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("ClientMaster", "Index", "edit")]
+        public IActionResult ClientDetailsave(Clientmaster model)
+        {
+            try
+            {
+                string msg = "Client Inserted Successfully.";
+
+                if (model.Id > 0)
+                {
+                    msg = "Client Updated Successfully.";
+                    model.Updatedby = UserId;
+                }
+                model.Createdby = UserId;
+                int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
+                if (i > 0)
+                {
+                    return Json(new { status = true, responseText = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "ClientDetailsave", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
     }
 }

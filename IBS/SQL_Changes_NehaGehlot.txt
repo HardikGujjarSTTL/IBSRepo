@@ -346,6 +346,8 @@ ALTER TABLE temp_online_complaints
     ALTER TABLE T40_Consignee_Complaints 
     MODIFY JI_IE_CD  NUMBER(6,0);
 
+      ALTER TABLE t32_client_login
+ADD ID NUMBER;
 
 ========================================================================================================================================
 
