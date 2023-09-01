@@ -30,7 +30,7 @@
                 <table id="dtclient" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>User Name</th>
+                            <th>Client Name</th>
                             <th>ORGANISATION</th>
                             <th>DESIGNATION</th>
                             <th>MOBILE</th>
@@ -94,8 +94,8 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.RDesigCd;
-                            var editUrl = '@Url.Action("Manage", "RitesDesignationMaster")/' + id;
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "ClientMaster")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
@@ -105,6 +105,12 @@
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function Delete(id) {
+            var url = '@Url.Action("Delete", "ClientMaster")?ID=' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
         }
     </script>
 }

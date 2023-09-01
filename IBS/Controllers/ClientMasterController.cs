@@ -35,7 +35,7 @@ namespace IBS.Controllers
             Clientmaster model = new();
             if (id > 0)
             {
-                //model = roleRepository.FindUserRoleByID(id);
+                model = clientMasterRepository.FindClientByID(id);
             }
             return View(model);
         }
@@ -66,6 +66,24 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "ClientDetailsave", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [Authorization("ClientMaster", "Index", "delete")]
+        public IActionResult Delete(int ID)
+        {
+            try
+            {
+                if (clientMasterRepository.Remove(ID, UserId))
+                    AlertDeletedSuccess();
+                else
+                    AlertDanger();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "Delete", 1, GetIPAddress());
+                AlertDanger();
+            }
+            return RedirectToAction("Index");
         }
 
     }

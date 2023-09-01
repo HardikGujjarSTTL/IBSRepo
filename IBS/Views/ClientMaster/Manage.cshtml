@@ -40,18 +40,38 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Mobile</label>
-                        <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10" required />
+                        <input type="number" class="input" ASP-FOR="MOBILE" maxlength="10" required />
                         <span asp-validation-for="MOBILE" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Email</label>
-                        <input type="text" class="input" ASP-FOR="EMAIL" maxlength="300" required />
+                        <input type="email" class="input" ASP-FOR="EMAIL" maxlength="300" required />
                         <span asp-validation-for="EMAIL" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Unit</label>
                         <input type="text" class="input" ASP-FOR="UNIT" maxlength="300" required />
                         <span asp-validation-for="UNIT" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Orgn Type</label>
+                        @Html.DropDownListFor(model => model.Orgn_Type, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                        <span asp-validation-for="Orgn_Type" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="Name">Password<i class="text-danger">*</i></label>
+                            <input id="password" class="form-control" asp-for="Pwd" maxlength="50" />
+                            <span asp-validation-for="Pwd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="Name">Confirm Password<i class="text-danger">*</i></label>
+                            <input asp-for="ConfirmPassword" class="form-control" id="confirmPassword" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            <div class="text-danger" id="confirmPasswordError"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="savenext-btn">
@@ -67,8 +87,18 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         function Save() {
-            if ($("#frmUserRole").valid()) {
-                $("#frmUserRole").submit();
+            debugger
+
+            var password = $("#password").val();
+            var confirmPassword = $("#confirmPassword").val();
+
+            if (password !== confirmPassword) {
+                $("#confirmPasswordError").text("The password and confirmation password do not match.");
+            } else {
+                $("#confirmPasswordError").text("");
+                if ($("#frmUserRole").valid()) {
+                    $("#frmUserRole").submit();
+                }
             }
         }
         completed = function (response) {
@@ -78,5 +108,6 @@
                 window.location.href = '@Url.Action("Index", "ClientMaster")';
             }
         };
+
     </script>
 }
