@@ -52,28 +52,10 @@ function isNumberWithDot(evt) {
         evt.preventDefault();
 }
 
-function getContactEntryModal(ContactId, ContactTypeID, ContactRefrenceID) {
-    $.post("/Contact/Manage", { ContactId, ContactTypeID, ContactRefrenceID }, function (response) {
-        $("#contactEntryModal").find(".modal-body").html(response);
-        $("#contactEntryModal").modal('show');
-    });
-}
-
-function showMapModal() {
-    $("#mapModal").modal('show');
-}
-
-function getCallEntryModal(CdId, CdRtId, CdRefType) {
-    $.post("/CallDetail/Manage", { CdId, CdRtId, CdRefType }, function (response) {
-        $("#callDetailEntryModal").find(".modal-body").html(response);
-        $("#callDetailEntryModal").modal('show');
-    });
-}
-
-function getNoteEntryModal(NdId, NdRtId, NdRefType) {
-    $.post("/Notes/Manage", { NdId, NdRtId, NdRefType }, function (response) {
-        $("#noteEntryModal").find(".modal-body").html(response);
-        $("#noteEntryModal").modal('show');
-    });
+function IsValidDate(myInput) {
+    var pattern = /(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))/;
+    if (!pattern.test(myInput)) {
+        return false;
+    }
 }
 

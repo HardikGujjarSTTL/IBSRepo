@@ -81,7 +81,6 @@ namespace IBS.Models
     public class VendorlistModel
     {
         public int VEND_CD { get; set; }
-
         public string? VEND_NAME { get; set; }
         public string? VEND_CITY_CD { get; set; }
         public string? VEND_ADD { get; set; }

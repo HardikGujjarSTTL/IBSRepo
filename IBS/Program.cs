@@ -156,6 +156,7 @@ builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatus
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
 builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
+builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
 
 var app = builder.Build();

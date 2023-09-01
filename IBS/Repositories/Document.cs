@@ -47,14 +47,14 @@ namespace IBS.Repositories
                             }).ToList();
 
             return MainList;
-            
+
         }
 
         public int GetRecordsMaxID(int DocumentCategoryID)
         {
             string? id = (from x in context.IbsAppdocuments
-                            where x.Documentcategory == Convert.ToInt32(DocumentCategoryID)
-                            select x.Applicationid).Max();
+                          where x.Documentcategory == Convert.ToInt32(DocumentCategoryID)
+                          select x.Applicationid).Max();
 
             return Convert.ToInt32(id);
         }
@@ -66,8 +66,9 @@ namespace IBS.Repositories
             {
                 foreach (var item in objAPPDocumentDTO)
                 {
-                    List<IbsAppdocument> objGNR_APPDocument = (from c in context.IbsAppdocuments where c.Applicationid == Convert.ToString(item.Applicationid)
-                                                               && c.Documentcategory==item.DocumentCategoryID
+                    List<IbsAppdocument> objGNR_APPDocument = (from c in context.IbsAppdocuments
+                                                               where c.Applicationid == Convert.ToString(item.Applicationid)
+                                                               && c.Documentcategory == item.DocumentCategoryID
                                                                select c).ToList();
                     foreach (var Docitem in objGNR_APPDocument)
                     {
