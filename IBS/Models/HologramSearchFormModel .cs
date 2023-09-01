@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -10,7 +11,10 @@ namespace IBS.Models
 
         public string? HgNoTo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime? HgIssueDt { get; set; }
+        public string Display_HgIssueDt { get { return this.HgIssueDt != null ? Common.ConvertDateFormat(this.HgIssueDt.Value) : ""; } }
 
         public int? HgIecd { get; set; }
 
@@ -29,5 +33,12 @@ namespace IBS.Models
         public DateTime? Updateddate { get; set; }
 
         public virtual T09Ie? HgIecdNavigation { get; set; }
-    }
+
+        public virtual string HgIeName { get; set; } = "";
+
+        public string lblHgNoFr { get; set; }
+        public string lblHgNoTo { get; set; }
+
+        public string IEStatus { get; set; }
+    }    
 }

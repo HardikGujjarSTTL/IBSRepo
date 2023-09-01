@@ -1,57 +1,67 @@
 ﻿@model IBS.Models.HologramSearchFormModel
-
 @{
     ViewData["Title"] = "Issue of Hologram to IE";
+    string clsView = "";
+    if (Model.HgNoFr != "")
+    {
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
         <h2>Issue of Hologram to IE</h2>
     </div>
+    <div>
+        <a asp-action="Index" asp-controller="HologramSearchForm" class="formBtn viewall-btn">View List</a>
+    </div>
 </div>
-<section class="table-section">
+<section class="@clsView">
     <div class="task-listinput">
-        <div class="accordion-body">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="HologramSearchForm" asp-action="HologramSearchFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramSearchForm">
-                <input type="hidden" asp-for="HgRegion" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Holograms No. From</label>
-                            <textarea class="input" asp-for="HgNoFr" maxlength="30"> </textarea>
-                            <span asp-validation-for="HgNoFr" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Holograms No. TO</label>
-                            <textarea class="input" asp-for="HgNoTo" maxlength="30"> </textarea>
-                            <span asp-validation-for="HgNoTo" class="text-danger"></span>
-                        </div>
+        <form data-ajax="true" asp-controller="HologramSearchForm" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmHologramSearchForm">
+            <input type="hidden" asp-for="HgRegion" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Holograms No. From</label>
+                        <input type="text" class="input" asp-for="HgNoFr" maxlength="30">
+                        <span asp-validation-for="HgNoFr" class="text-danger"></span>
+                        <input type="hidden" asp-for="lblHgNoFr" />
                     </div>
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Issued to IE</label>
-                            <input type="text" class="input" asp-for="HgIssueDt" maxlength="30">
-                            <span asp-validation-for="HgIssueDt" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">IE to whom issued</label>
-                            <input type="text" class="input" asp-for="HgIecd" maxlength="30">
-                            <span asp-validation-for="HgIecd" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="HologramSearchForm" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Holograms No. TO</label>
+                        <input type="text" class="input" asp-for="HgNoTo" maxlength="30">
+                        <span asp-validation-for="HgNoTo" class="text-danger"></span>
+                        <input type="hidden" asp-for="lblHgNoTo" />
                     </div>
                 </div>
-            </form>
-        </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Date of Issued to IE</label>
+                        <input type="text" class="datepicker" class="input" asp-for="HgIssueDt" maxlength="30">
+                        <span asp-validation-for="HgIssueDt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">IE to whom issued</label>
+                        @Html.DropDownListFor(Model => Model.HgIecd, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="HgIecd" class="text-danger"></span>
+                    </div>
+                </div>
+                @if(Model.IEStatus == "" || Model.IEStatus == null)
+                {                    
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="SubmitHologramToIE();" id="btnSave">Save</button>
+                    </div>
+                }
+            </div>
+        </form>
     </div>
 </section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        function Save() {
+        var Role = "@ViewBag.Role";
+        function SubmitHologramToIE() {
             if ($("#frmHologramSearchForm").valid()) {
                 $("#frmHologramSearchForm").submit();
             }
@@ -60,7 +70,18 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             //window.location.href = "/HologramSearchForm/Index";
-            window.location.href = '@Url.Action("Index", "HologramSearchForm")';
+            if (res.status){
+                setTimeout(function () {
+                    window.location.href = '@Url.Action("Index", "HologramSearchForm")';
+                }, 1000)
+            }
         };
+        if(@Model == null){
+            ShowHideMsgNew(false, "Hologram Record Not found");
+        }
+
+        if (Role != "Admin"){
+            $("#btnSave").css("display","none");
+        }
     </script>
 }

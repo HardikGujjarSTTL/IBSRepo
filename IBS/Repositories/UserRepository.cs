@@ -106,7 +106,8 @@ namespace IBS.Repositories
                                     //RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select ur.RoleId).FirstOrDefault()),
                                     //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
                                     RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.UserId ?? "").ToString() select ur.RoleId).FirstOrDefault()),
-                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
+                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where ur.UserId == u.UserId select r.Rolename).FirstOrDefault()),
+                                    //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
                                 }).FirstOrDefault();
             return userSessionModel;
 

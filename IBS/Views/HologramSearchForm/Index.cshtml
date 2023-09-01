@@ -1,16 +1,47 @@
-﻿@{
+﻿@model IBS.Models.ICFromToModel
+@{
     ViewData["Title"] = "Issue of Hologram to IE";
 }
 
-<div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="" asp-action="" data-ajax-method="post" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
             <h2>Issue of Hologram to IE</h2>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="HologramSearchForm" asp-action="Manage" class="formBtn"> Add New Form</a>
+        <div class="list-btn" id="addNewForm">
+            <a asp-area="" asp-controller="HologramSearchForm" asp-action="Manage" class="formBtn Permission_Add"> <span class="fa fa-plus"></span> Add New</a>
         </div>
-
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Hologram No. From</label>
+                    <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                    <input type="text" id="txtFromNo" maxlength="100" style="text-transform: uppercase;width:94%;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Hologram No. To</label>
+                    <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                    <input type="text" id="txtToNo" maxlength="100" style="text-transform: uppercase;width:94%;">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" id="secDrop">
+                <div class="reference">
+                    <label for="Name" id="lblIECM">IE</label>
+                    @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region) , "Value", "Text"),"--Select--", new{@id="DpIE"})
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -32,18 +63,29 @@
             </div>
         </div>
     </section>
-</div>
+</form>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-
-        $(function () {
-            InitializeDatatable();
+        var Role = "@ViewBag.Role";
+        $(document).ready(function () {
+            $("#btnSearch").click(function () {
+                InitializeDatatable();
+                if (Role != "Admin") {
+                    var table = $("#dtSOF").DataTable();
+                    table.column(5).visible(false);
+                }
+            });
+            if (Role == "Admin"){
+                $("#addNewForm").css("display","none");
+            }
         });
-
         function InitializeDatatable() {
+            var FromNo = $("#txtFromNo").val();
+            var ToNo = $("#txtToNo").val();
+            var IE = $("#DpIE").val();
             $("#dtSOF").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -61,6 +103,9 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            "HFromNo": FromNo,
+                            "HToNo": ToNo,
+                            "IE": IE
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -75,15 +120,25 @@
                     },
                     { data: "HgNoFr" },
                     { data: "HgNoTo" },
-                    { data: "HgIssueDt" },
-                    { data: "HgIecd" },
+                    {
+                        data: "Display_HgIssueDt"//"HgIssueDt",
+                        //render: function (data, type, row) {
+                        //    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                        //        return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        //    }
+                        //    return data;
+                        //}
+                    },
+                    { data: "HgIeName" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.HgNoFr;
-                            var editUrl = '@Url.Action("Manage", "HologramSearchForm")/' + id;
+                            debugger
+                            var HgNoFr = data.HgNoFr;
+                            var HgNoTo = data.HgNoTo;
+                            var editUrl = '@Url.Action("Manage", "HologramSearchForm")?Hg_No_Fr=' + HgNoFr + '&Hg_No_To=' + HgNoTo;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="SOFDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="SOFDelete(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\')" href="javascript:void(\'0\');" id=\"' + HgNoFr + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';                            
                             html += '</div>';
                             return html;
                         }
@@ -93,9 +148,13 @@
             });
         }
 
-        function SOFDelete(id) {
-            var url = '@Url.Action("Delete", "HologramSearchForm")';
-            $("#btn-delete-yes").attr("href", url + "/" + id);
+        function SOFDelete(Hg_No_Fr, Hg_No_To) {
+            debugger
+            //var obj = new Object();
+            //obj.HgNoFr = HgNoFr;
+            //obj.HgNoTo = HgNoTo;
+            var url = '@Url.Action("Delete", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To;
+            $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
     </script>
