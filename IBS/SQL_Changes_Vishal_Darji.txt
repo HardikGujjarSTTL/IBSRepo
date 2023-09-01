@@ -21,3 +21,7 @@ ALTER TABLE T10_IC_BOOKSET MODIFY ID NUMBER(6,0) DEFAULT T10_IC_BOOKSET_seq.next
 ALTER TABLE T10_IC_BOOKSET ADD CONSTRAINT T10_IC_BOOKSET_pk  PRIMARY KEY (ID);
 
 update menu_master set controllername= 'Vendor', actionname= 'Index' WHERE ID = 86;
+
+UPDATE menu_master SET controllername= 'InspectionFeeBill', actionname= 'Index' WHERE ID = 103;
+
+UPDATE menu_master SET controllername= 'BillFinalisationForm', actionname= 'Index' WHERE ID = 155;

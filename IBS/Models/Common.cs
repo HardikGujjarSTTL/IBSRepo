@@ -2238,6 +2238,12 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Region)).ToList();
         }
+
+        public static IEnumerable<TextValueDropDownDTO> GetSector()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Sector)).ToList();
+        }
+
     }
     public static class DbContextHelper
     {
