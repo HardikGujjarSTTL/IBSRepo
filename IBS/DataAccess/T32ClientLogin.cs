@@ -33,5 +33,5 @@ public partial class T32ClientLogin
 
     public byte? Isdeleted { get; set; }
 
-    public int? Id { get; set; }
+    public int Id { get; set; }
 }
