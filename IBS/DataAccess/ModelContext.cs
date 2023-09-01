@@ -10285,7 +10285,7 @@ public partial class ModelContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("T32_CLIENT_LOGIN_PK");
 
-            entity.HasIndex(e => e.Mobile, "PK_CLIENT_ID").IsUnique();
+            entity.ToTable("T32_CLIENT_LOGIN");
 
             entity.HasIndex(e => e.Mobile, "PK_CLIENT_ID").IsUnique();
 
@@ -10307,9 +10307,6 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("EMAIL");
-            entity.Property(e => e.Id)
-                .HasPrecision(6)
-                .HasColumnName("ID");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
