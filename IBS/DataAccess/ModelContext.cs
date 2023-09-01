@@ -507,7 +507,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
+    public virtual DbSet<ViewGetBpodetail> ViewGetBpodetails { get; set; }
+
     public virtual DbSet<ViewGetCallRegCancellation> ViewGetCallRegCancellations { get; set; }
+
+    public virtual DbSet<ViewGetCallStatusDetail> ViewGetCallStatusDetails { get; set; }
 
     public virtual DbSet<ViewGetCallinspectionPrintReport> ViewGetCallinspectionPrintReports { get; set; }
 
@@ -10279,14 +10283,12 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T32ClientLogin>(entity =>
         {
-            entity.HasKey(e => e.Mobile).HasName("PK_CLIENT_ID");
+            entity
+                .HasNoKey()
+                .ToTable("T32_CLIENT_LOGIN");
 
-            entity.ToTable("T32_CLIENT_LOGIN");
+            entity.HasIndex(e => e.Mobile, "PK_CLIENT_ID").IsUnique();
 
-            entity.Property(e => e.Mobile)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("MOBILE");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
@@ -10301,9 +10303,16 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("EMAIL");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
             entity.Property(e => e.Organisation)
                 .HasMaxLength(25)
                 .IsUnicode(false)
@@ -16887,6 +16896,46 @@ public partial class ModelContext : DbContext
                 .HasColumnName("SWACHH_BHARAT_CESS");
         });
 
+        modelBuilder.Entity<ViewGetBpodetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_BPODETAILS");
+
+            entity.Property(e => e.Audesc)
+                .HasMaxLength(105)
+                .IsUnicode(false)
+                .HasColumnName("AUDESC");
+            entity.Property(e => e.BpoAdd)
+                .HasMaxLength(204)
+                .IsUnicode(false)
+                .HasColumnName("BPO_ADD");
+            entity.Property(e => e.BpoCd)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("BPO_CD");
+            entity.Property(e => e.BpoName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BPO_NAME");
+            entity.Property(e => e.BpoRly)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BPO_RLY");
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CITY");
+            entity.Property(e => e.GstinNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("GSTIN_NO");
+            entity.Property(e => e.SapCustCdBpo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("SAP_CUST_CD_BPO");
+        });
+
         modelBuilder.Entity<ViewGetCallRegCancellation>(entity =>
         {
             entity
@@ -16939,6 +16988,82 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(205)
                 .IsUnicode(false)
                 .HasColumnName("VENDOR");
+        });
+
+        modelBuilder.Entity<ViewGetCallStatusDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_CALL_STATUS_DETAILS");
+
+            entity.Property(e => e.CallMarkDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_MARK_DT");
+            entity.Property(e => e.CallRecvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_RECV_DT");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(5)
+                .HasColumnName("CALL_SNO");
+            entity.Property(e => e.CallStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALL_STATUS");
+            entity.Property(e => e.CallStatus1)
+                .HasMaxLength(22)
+                .IsUnicode(false)
+                .HasColumnName("CALL_STATUS1");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Consignee)
+                .HasMaxLength(116)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE");
+            entity.Property(e => e.Count)
+                .HasColumnType("NUMBER")
+                .HasColumnName("COUNT");
+            entity.Property(e => e.IeName)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_NAME");
+            entity.Property(e => e.IePhoneNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_PHONE_NO");
+            entity.Property(e => e.ItemDescPo)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("ITEM_DESC_PO");
+            entity.Property(e => e.ItemSrnoPo)
+                .HasPrecision(4)
+                .HasColumnName("ITEM_SRNO_PO");
+            entity.Property(e => e.MfgPers)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("MFG_PERS");
+            entity.Property(e => e.MfgPhone)
+                .HasMaxLength(45)
+                .IsUnicode(false)
+                .HasColumnName("MFG_PHONE");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.UpdateAllowed)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("UPDATE_ALLOWED");
+            entity.Property(e => e.VendName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("VEND_NAME");
         });
 
         modelBuilder.Entity<ViewGetCallinspectionPrintReport>(entity =>

@@ -1,4 +1,7 @@
 ﻿using IBS.DataAccess;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace IBS.Models
 {
@@ -6,8 +9,12 @@ namespace IBS.Models
     {
         public int IeCd { get; set; }
 
+        [Display(Name = "Ie Name")]
+        [Required]
         public string? IeName { get; set; }
 
+        [Display(Name = "Ie Short Name")]
+        [Required]
         public string? IeSname { get; set; }
 
         public string? IeEmpNo { get; set; }
@@ -18,8 +25,12 @@ namespace IBS.Models
 
         public string? IeDepartment { get; set; }
 
-        public int? IeCityCd { get; set; }
+        public string IeCityCd { get; set; }
 
+        [Range(0, 1000, ErrorMessage = "City Id must number.")]
+        public int IeCityId { get; set; }
+
+        [Phone]
         public string? IePhoneNo { get; set; }
 
         public byte? IeCoCd { get; set; }
@@ -40,6 +51,7 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [EmailAddress(ErrorMessage = "Email must be proper.")]
         public string? IeEmail { get; set; }
 
         public DateTime? IeDob { get; set; }
@@ -65,26 +77,6 @@ namespace IBS.Models
 
         public DateTime? Updateddate { get; set; }
 
-        public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
-
-        public virtual T07RitesDesig? IeDesigNavigation { get; set; }
-
-        public virtual T01Region? IeRegionNavigation { get; set; }
-
-        public virtual ICollection<NoIeWorkPlan> NoIeWorkPlans { get; set; } = new List<NoIeWorkPlan>();
-
-        public virtual ICollection<T16IcCancel> T16IcCancels { get; set; } = new List<T16IcCancel>();
-
-        public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();
-
-        public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
-
-        public virtual ICollection<T45ClaimMaster> T45ClaimMasters { get; set; } = new List<T45ClaimMaster>();
-
-        public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();
-
-        public virtual ICollection<T48NiIeWorkPlan> T48NiIeWorkPlans { get; set; } = new List<T48NiIeWorkPlan>();
-
-        public virtual T70UnregisteredCall? T70UnregisteredCall { get; set; }
+        public string Cluster { get; set; }
     }
 }

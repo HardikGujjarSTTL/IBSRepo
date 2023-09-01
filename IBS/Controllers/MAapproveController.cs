@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class MAapproveController : BaseController
     {
         #region Variables
@@ -16,6 +18,7 @@ namespace IBS.Controllers
             maapproveRepository = _maapproveRepository;
         }
 
+        [Authorization("MAapprove", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -28,6 +31,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("MAapprove", "Index", "view")]
         public IActionResult Manage(string CaseNo, string MaNo, string MaDtc, byte MaSno)
         {
             MAapproveModel model = new();
@@ -42,6 +46,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("MAapprove", "Index", "edit")]
         public IActionResult DetailsSave(MAapproveModel model)
         {
             try

@@ -22,9 +22,6 @@ namespace IBS.Controllers
             LabInvoiceDownloadRepository = _LabInvoiceDownloadRepository;
             _webHostEnvironment = webHostEnvironment;
         }
-        
-
-        
 
         public IActionResult LabInvoiceDownload()
         {

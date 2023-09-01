@@ -8,7 +8,7 @@
             <h2>General Message List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="GeneralMessages" asp-action="MessageManage" class="formBtn"><span class="fa fa-plus"></span> Add New Message</a>
+            <a asp-area="" asp-controller="GeneralMessages" asp-action="MessageManage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Message</a>
         </div>
     </div>
     <section class="table-section">
@@ -79,8 +79,8 @@
                         render: function (data, type, row) {
                             var Id = data.MESSAGE_ID;
                             var editUrl = '@Url.Action("MessageManage", "GeneralMessages")?MessageID=' + Id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="MessageDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="MessageDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

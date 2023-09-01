@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IBS.Models.InspectionEngineersModel
+@{
     ViewData["Title"] = "Inspection Engineers";
 }
 
@@ -7,10 +8,51 @@
         <div class="tast-list">
             <h2>Inspection Engineers</h2>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="InspectionEngineers" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Form</a>
+        @* <div class="list-btn">
+        <a asp-area="" asp-controller="InspectionEngineers" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Form</a>
+        </div>*@
+    </div>
+    <div class="accordion-body">
+        <input type="hidden" asp-for="IeRegion" />
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">IE Code</label>
+                    <input type="text" asp-for="IeCd" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">IE Short Name</label>
+                    <input type="text" asp-for="IeSname" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">IE Full Name</label>
+                    <input type="text" asp-for="IeName" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Controlling Officer</label>
+                    @Html.DropDownListFor(model => model.IeCoCd, new SelectList(IBS.Models.Common.GetControllingOfficer(Model.IeRegion) , "Value", "Text"),"--Select--")
+                </div>
+            </div>
         </div>
-
+        <div class="row my-0">
+            <div class="alert alert-warning center">
+                To Edit/Delete a IE --> Enter IE Code & Click on "Modify"/"Delete" button <br />
+                To Search a IE --> Enter IE Code or IE Full/Short Name or Controlling Officer Name and click on "Search IE" button
+            </div>
+        </div>
+        <div class="savenext-btn center">
+            <button type="button" class="save-btn active" id="btnAdd">Add</button>
+            <button type="button" class="save-btn" id="btnModify">Modify</button>
+            <button type="button" class="save-btn" id="btnDelete">Delete</button>
+            <button type="button" class="save-btn" id="btnSearch">Search IE</button>
+            @*<a asp-controller="IE_MaximumCallLimitForm" asp-action="Index" class="reset-btn">Cancel</a>*@
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -23,7 +65,6 @@
                             <th>IE Full Name</th>
                             <th>IE Short Name</th>
                             <th>Employee No</th>
-                            <th>Designation</th>
                             <th>IE Seal No.</th>
                             <th>IE City</th>
                             <th>IE Region</th>
@@ -48,6 +89,16 @@
         });
 
         function InitializeDatatable() {
+            var IeCd = $("#IeCd").val();
+            var IeSname = $("#IeSname").val();
+            var IeName = $("#IeName").val();
+            var IeCoCd = $("#IeCoCd").val();
+            if (IeCd == 0 || IeCd == null) {
+                debugger
+                $("#IeCd").val("");
+                IeCd = $("#IeCd").val();
+            }
+
             $("#dtIE").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -65,6 +116,10 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            "IeCd": IeCd,
+                            "IeSname": IeSname,
+                            "IeName": IeName,
+                            "IeCoCd": IeCoCd
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -81,17 +136,15 @@
                     { data: "IeName" },
                     { data: "IeSname" },
                     { data: "IeEmpNo" },
-                    { data: "IeDesig" },
                     { data: "IeSealNo" },
                     { data: "IeCityCd" },
-                    { data: "IeDepartment" },
+                    { data: "IeRegion" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.IeCd;
-                            var editUrl = '@Url.Action("Manage", "InspectionEngineers")/' + id;
+                            var IeCd = data.IeCd;
+                            var editUrl = '@Url.Action("Index", "InspectionEngineers")?IeCd=' + IeCd;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="IEDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -101,10 +154,68 @@
             });
         }
 
-        function IEDelete(id) {
-            var url = '@Url.Action("Delete", "InspectionEngineers")';
-            $("#btn-delete-yes").attr("href", url + "/" + id);
-            $("#modal-delete-conf").modal("show");
-        }
+        
+
+        $("#btnAdd").click(function () {
+            var IeCd = $("#IeCd").val();
+            if (IeCd != null || IeCd != "") {
+                window.location.href = '@Url.Action("Manage", "InspectionEngineers")';
+            }
+        });
+        $("#btnModify").click(function () {
+            var IeCd = $("#IeCd").val();
+            if (IeCd == null || IeCd == "") {
+                ShowHideMsgNew(false, "Please add IE Code");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetMatch", "InspectionEngineers")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "IeCd": IeCd },
+                success: function (status) {
+                    debugger
+
+                    var MCode = status.MCode;
+                    if (MCode == "2") {
+                        window.location.href = '@Url.Action("Manage", "InspectionEngineers")' + '?IeCd=' + IeCd + "&ActionType=M";
+                    }
+                    else {
+                        ShowHideMsgNew(false, "You Are Not Authorised to Update / Delete IE data of other Regions!!!");
+                    }
+                }
+            });
+        });
+        $("#btnDelete").click(function () {
+            var IeCd = $("#IeCd").val();
+            if (IeCd == null || IeCd == "") {
+                ShowHideMsgNew(false, "Please add IE Code");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetMatch", "InspectionEngineers")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "IeCd": IeCd },
+                success: function (status) {
+                    debugger
+
+                    var MCode = status.MCode;
+                    if (MCode == "2") {
+                        window.location.href = '@Url.Action("Manage", "InspectionEngineers")' + '?IeCd=' + IeCd + "&ActionType=D";
+                    }
+                    else
+                    {
+                        ShowHideMsgNew(false, "You Are Not Authorised to Update / Delete IE data of other Regions!!!");
+                    }
+                }
+            });
+        });
+        $("#btnSearch").click(function () {
+            InitializeDatatable();
+        });
+
     </script>
-}
+    }

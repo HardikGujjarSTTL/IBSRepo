@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System.Drawing;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class DEOVendorPurchesOrderController : BaseController
     {
         #region Variables
@@ -22,6 +24,7 @@ namespace IBS.Controllers
             pSendMailRepository = _pSendMailRepository;
         }
 
+        [Authorization("DEOVendorPurchesOrder", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -34,6 +37,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("DEOVendorPurchesOrder", "Index", "view")]
         public IActionResult Manage(string CaseNo)
         {
             PO_MasterModel model = new();
@@ -45,6 +49,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("DEOVendorPurchesOrder", "Index", "edit")]
         public IActionResult POMasterSave(PO_MasterModel model)
         {
             try
@@ -210,6 +215,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("DEOVendorPurchesOrder", "Index", "view")]
         public IActionResult PODetails(string CaseNo)
         {
             PO_MasterModel model = new();
@@ -227,6 +233,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("DEOVendorPurchesOrder", "Index", "edit")]
         public IActionResult DeletePODetails(string CASE_NO, string ITEM_SRNO)
         {
             try
@@ -244,6 +251,7 @@ namespace IBS.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorization("DEOVendorPurchesOrder", "Index", "view")]
         public IActionResult PoDetailManage(string CASE_NO, string ITEM_SRNO)
         {
             PO_MasterDetailsModel model = new();
@@ -269,6 +277,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("DEOVendorPurchesOrder", "Index", "edit")]
         public IActionResult POMasterDetailsSave(PO_MasterDetailsModel model)
         {
             try
