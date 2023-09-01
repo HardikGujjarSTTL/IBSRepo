@@ -6,31 +6,31 @@
     </div>
 </div>
 <div class="accordion-body">
-    <form role="form" asp-controller="VendorFeedback" asp-action="SaveVendorFeedback" id="frmICCancellationDetails">
+    <form role="form" asp-controller="VendorFeedback" asp-action="SaveVendorFeedback" id="frmVendorFeedback">
         <input type="hidden" asp-for="VendEmail" />
-    <div class="row my-0">
-        <div class="col-md-4 mb-3">
-            <label for="Reference">Vendor Code Alloted by RITES</label>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Vendor Code Alloted by RITES</label>
                 <input type="text" class="input" asp-for="VendCd">
                 <span asp-validation-for="VendCd" class="text-danger"></span>
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active" style="margin-top: 26px;" onclick="GetVenderDetails();">Submit</button>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" style="margin-top: 26px;" onclick="GetVenderDetails();">Submit</button>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="Reference">Vendor Name & Address</label>
+                <label id="lblVendorDetails"></label>
             </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <label for="Reference">Vendor Name & Address</label>
-            <label id="lblVendorDetails"></label>
-        </div>
-    </div>
 
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="alert alert-info"><span class="astric">*</span> Kindly Enter Your Name Of Organisation , Your Name, Mobile No. and Email-ID then Select the Region for which you are submitting the Rating/Feedback, then enter Rating/Feedback and Click on Save Button.</div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <div class="alert alert-info"><span class="astric">*</span> Kindly Enter Your Name Of Organisation , Your Name, Mobile No. and Email-ID then Select the Region for which you are submitting the Rating/Feedback, then enter Rating/Feedback and Click on Save Button.</div>
+            </div>
         </div>
-    </div>
-        
+
         <h3 class="headingh3">Region for which Feedbak to be submitted</h3>
         <div class="row my-0">
             <div class="col-md-6 mb-3">
@@ -53,6 +53,23 @@
                             <td>1.</td>
                             <td>Promptness of RITES Regional Office in attending to P.O. & Call Registration.</td>
                             <td>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="startRating">
+                                        <div class="ratingGroup">
+                                            <input disabled checked class="ratingInput ratingInputNone" name="rating-1" id="ratingNone" value="0" type="radio">
+                                            <label class="ratingLabel" for="BelowAverage-1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                            <input class="ratingInput" name="rating-1" id="BelowAverage-1" value="Below Average" type="radio">
+                                            <label class="ratingLabel" for="Good-1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                            <input class="ratingInput" name="rating-1" id="Good-1" value="Good" type="radio">
+                                            <label class="ratingLabel" for="VeryGood-1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                            <input class="ratingInput" name="rating-1" id="VeryGood-1" value="Very Good" type="radio">
+                                            <label class="ratingLabel" for="Excellent-1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                            <input class="ratingInput" name="rating-1" id="Excellent-1" value="Excellent" type="radio">
+                                        </div>
+                                    </div>
+                                    <div class="ratingText"></div>
+                                </div>
                                 <div class="company-checkbox rattingCheckboxGrp">
                                     <div class="remember">
                                         <div class="remecheckbox">
@@ -253,7 +270,7 @@
                             <td>10.</td>
                             <td>Suggestions for improvement in service.<span class="note astric">(250 Chars Maxm)</span></td>
                             <td>
-                                <textarea class="input" asp-for="Field10"> </textarea>
+                                <textarea class="input" asp-for="Field10" maxlength="250"></textarea>
                                 <span asp-validation-for="Field10" class="text-danger"></span>
                             </td>
                         </tr>
@@ -271,9 +288,17 @@
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('input:radio[name]').change(function () {
+                var radioValue = this.value
+                $(this).parent().parent().next().text('(' + radioValue + ')');
+            });
+        });
+
         function Save() {
-            if ($("#frmICCancellationDetails").valid()) {
-                $("#frmICCancellationDetails").submit();
+            if ($("#frmVendorFeedback").valid()) {
+                $("#frmVendorFeedback").submit();
             }
         }
         function GetVenderDetails() {

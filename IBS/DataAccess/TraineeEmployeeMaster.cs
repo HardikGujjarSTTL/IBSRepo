@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class TraineeEmployeeMaster
 {
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public string? Name { get; set; }
 

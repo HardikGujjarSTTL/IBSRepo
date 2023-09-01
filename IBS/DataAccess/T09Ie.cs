@@ -83,6 +83,8 @@ public partial class T09Ie
 
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
 
+    public virtual ICollection<T31HologramIssued> T31HologramIssueds { get; set; } = new List<T31HologramIssued>();
+
     public virtual ICollection<T45ClaimMaster> T45ClaimMasters { get; set; } = new List<T45ClaimMaster>();
 
     public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();

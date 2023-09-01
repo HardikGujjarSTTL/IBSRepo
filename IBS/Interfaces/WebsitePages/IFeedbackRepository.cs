@@ -9,5 +9,9 @@ namespace IBS.Interfaces.WebsitePages
         int VendorFeedbackSave(VendorFeedbackModel model);
         #endregion
 
+        #region Client feedback
+        bool CheckClientAlreadyExist(ClientFeedbackModel model);
+        int ClientFeedbackSave(ClientFeedbackModel model);
+        #endregion
     }
 }
