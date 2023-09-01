@@ -346,6 +346,18 @@ ALTER TABLE temp_online_complaints
     ALTER TABLE T40_Consignee_Complaints 
     MODIFY JI_IE_CD  NUMBER(6,0);
 
+    ALTER TABLE t32_client_login
+    ADD ID NUMBER(6,0);
+
+    MERGE INTO T32_CLIENT_LOGIN t
+    USING (
+      SELECT ROW_NUMBER() OVER (ORDER BY user_name) AS RowNo, mobile
+      FROM T32_CLIENT_LOGIN
+    ) subquery
+    ON (t.mobile = subquery.mobile)
+    WHEN MATCHED THEN
+      UPDATE SET t.id = subquery.RowNo;
+
 
 ========================================================================================================================================
 
@@ -584,4 +596,22 @@ BEGIN
                   AND (T17.CALL_STATUS_DT BETWEEN TO_DATE(p_start_date, 'dd/mm/yyyy') AND TO_DATE(p_end_date, 'dd/mm/yyyy'));
                  
 END;
+
+=============================================================================================================================================
+
+create or replace PROCEDURE GetClientInfo(
+    p_clientname IN VARCHAR2,
+     p_ResultSet  OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+        select 
+        ID as ClientId,USER_NAME,ORGANISATION,DESIGNATION,MOBILE,EMAIL,UNIT,ORGN_TYPE
+        from t32_client_login
+        WHERE  isdeleted = 0 OR isdeleted IS NULL
+          AND UPPER(TRIM(USER_NAME)) LIKE UPPER(TRIM(p_clientname)) || '%';
+END GetClientInfo;
+
+
 
