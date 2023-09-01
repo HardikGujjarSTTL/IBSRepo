@@ -1,17 +1,16 @@
 ﻿@model IBS.Models.ICIsuued
-
 @{
     string partialView = ViewBag.PartialView;
 }
 
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>CMWISE IC ISSUED BY IE BUT NOT RECEIVED IN OFFICE</h2>
+    </div>
+</div>
 <form data-ajax="true" asp-antiforgery="true" asp-controller="pfrmFromToDate" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmICDetails">
 <div class="accordion-body" id="BYIE">
-    <div class="row my-0">
-        <div class="list-inner">
-            <div class="tast-list">
-                <h3>CMWISE IC ISSUED BY IE BUT NOT RECEIVED IN OFFICE</h3>
-            </div>
-        </div>
+    <div class="row my-0 d-flex align-items-end">
         <div class="col-md-3 mb-3">
             <label for="Reference">From Date</label>
             <input type="text" class="input datepicker" asp-for="FromDT"  id="FromDate" required>
@@ -43,7 +42,6 @@
 
         var action = "@ViewBag.Action";
         $(document).ready(function () {
-            debugger
             
             $("#btnsubmit").click(function () {
                 InitializeDatatable();

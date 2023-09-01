@@ -57,7 +57,7 @@ input[type="radio"] { -webkit-appearance: radio }
 input[type="submit"], input[type="button"], input[type="reset"], button, .button { line-height: 20px; padding: 4px 10px; display: inline-block; text-decoration: none; border: 0 none; margin: 0; outline: 0 none; }
 textarea { overflow: auto; vertical-align: top; resize: vertical; height: 100px; max-width: 100%; min-width: 100%; max-height: 500px; min-height: 90px; }
 fieldset { border: 0 none; margin: 0; padding: 0 }
-label { display: inline-block; padding-bottom: 10px; font-weight: normal; }
+label { display: inline-block; padding-bottom: 10px; font-weight: 500; }
 @font-face { font-family: 'Poppins'; src: url('./fonts/Poppins-SemiBold.woff2') format('woff2'), url('./fonts/Poppins-SemiBold.woff') format('woff'), url('./fonts/Poppins-SemiBold.ttf') format('truetype'), url('./fonts/Poppins-SemiBold.svg#Poppins-SemiBold') format('svg'); font-weight: 600; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Poppins'; src: url('./fonts/Poppins-Regular.woff2') format('woff2'), url('./fonts/Poppins-Regular.woff') format('woff'), url('./fonts/Poppins-Regular.ttf') format('truetype'), url('./fonts/Poppins-Regular.svg#Poppins-Regular') format('svg'); font-weight: normal; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Poppins'; src: url('./fonts/Poppins-Bold.woff2') format('woff2'), url('./fonts/Poppins-Bold.woff') format('woff'), url('./fonts/Poppins-Bold.ttf') format('truetype'), url('./fonts/Poppins-Bold.svg#Poppins-Bold') format('svg'); font-weight: bold; font-style: normal; font-display: swap; }
@@ -1494,3 +1494,4 @@ input[type="datetime-local"]{ height:43px;}
 .select2-container .select2-selection--single,
 .select2-container--default .select2-selection--single .select2-selection__arrow{height:42px;}
 .select2-container--default .select2-selection--single .select2-selection__rendered{ line-height:40px;}
+.rattingCheckboxGrp{ height:auto;}

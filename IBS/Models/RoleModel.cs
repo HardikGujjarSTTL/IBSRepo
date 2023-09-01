@@ -3,6 +3,7 @@
     public class RoleModel
     {
         public decimal RoleId { get; set; }
+        public string EncryptedRoleId { get; set; }
 
         public string? Rolename { get; set; }
 
