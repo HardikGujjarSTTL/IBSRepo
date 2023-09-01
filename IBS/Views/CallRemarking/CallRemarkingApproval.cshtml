@@ -1,0 +1,46 @@
+﻿@model IBS.Models.CallRemarkingModel
+
+@{
+    ViewData["Title"] = "Call Remark Submitted by Controlling Manager's Awaiting for Approval";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Call Remark Submitted by Controlling Manager's Awaiting for Approval</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtCallRemarkingList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Case No.</th>
+                        <th>Call Date</th>
+                        <th>Call SNo.</th>
+                        <th>Call Status</th>
+                        <th>Call Status</th>
+                        <th>From IE</th>
+                        <th>To IE</th>
+                        <th>From IE Pending Calls</th>
+                        <th>To IE Pending Calls</th>
+                        <th>Initiated By</th>
+                        <th>Initiated DateTime</th>
+                        <th style="text-align:center">View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+    </script>
+}

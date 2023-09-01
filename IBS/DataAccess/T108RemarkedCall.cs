@@ -15,9 +15,9 @@ public partial class T108RemarkedCall
 
     public string? RemarkReason { get; set; }
 
-    public byte? FrIeCd { get; set; }
+    public int? FrIeCd { get; set; }
 
-    public byte? ToIeCd { get; set; }
+    public int? ToIeCd { get; set; }
 
     public string? RemInitBy { get; set; }
 
@@ -31,7 +31,9 @@ public partial class T108RemarkedCall
 
     public string? RemRejRemark { get; set; }
 
-    public byte? FrIePendingCalls { get; set; }
+    public int? FrIePendingCalls { get; set; }
 
-    public byte? ToIePendingCalls { get; set; }
+    public int? ToIePendingCalls { get; set; }
+
+    public int Id { get; set; }
 }

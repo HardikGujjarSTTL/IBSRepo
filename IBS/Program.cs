@@ -159,6 +159,8 @@ builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>()
 builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
 
+builder.Services.AddScoped<ICallRemarkingRepository, CallRemarkingRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

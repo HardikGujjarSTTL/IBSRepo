@@ -123,15 +123,6 @@
             $("#spnErrorMsgIssueDt").html("");
 
             if ($("#frmICBooksetForm").valid()) {
-
-                // var IssueDt = new Date(moment($('#IssueDt').datepicker('getDate')).format("YYYY-MM-DD"));
-                // var CurrentDate = new Date();
-
-                // if (IssueDt > CurrentDate) {
-                //     $("#spnErrorMsgIssueDt").html("The Date Of Issue To IE Cannot be greater then todays date.");
-                //     return;
-                // }
-
                 $("#frmICBooksetForm").submit();
             }
         }

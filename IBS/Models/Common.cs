@@ -209,14 +209,14 @@ namespace IBS.Models
         public static List<SelectListItem> GetDefectDesc()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-           
+
             List<SelectListItem> DefectDesc = (from a in context.T38DefectCodes
-                                            select
-                                       new SelectListItem
-                                       {
-                                           Text = Convert.ToString(a.DefectCd),
-                                           Value = Convert.ToString(a.DefectDesc)
-                                       }).ToList();
+                                               select
+                                          new SelectListItem
+                                          {
+                                              Text = Convert.ToString(a.DefectCd),
+                                              Value = Convert.ToString(a.DefectDesc)
+                                          }).ToList();
 
             return DefectDesc;
         }
@@ -1103,7 +1103,7 @@ namespace IBS.Models
                                           select
                                      new SelectListItem
                                      {
-                                         Text = a.Au + "-" + a.Audesc + "/" + a.Address, 
+                                         Text = a.Au + "-" + a.Audesc + "/" + a.Address,
                                          Value = Convert.ToString(a.Au)
                                      }).ToList();
             return RlyCd;
@@ -1576,7 +1576,7 @@ namespace IBS.Models
             return contacts;
         }
 
-        public static List<SelectListItem> GetClusterByIE(string GetRegionCode,string Dept)
+        public static List<SelectListItem> GetClusterByIE(string GetRegionCode, string Dept)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
 
@@ -1851,7 +1851,7 @@ namespace IBS.Models
             else
             {
                 obj = (from t03 in context.T03Cities
-                       //where t03.CityCd == IeCityId
+                           //where t03.CityCd == IeCityId
                        select t03).ToList();
             }
 
@@ -2375,13 +2375,13 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropList = new List<SelectListItem>();
-            dropList = ModelContext.T03Cities                           
+            dropList = ModelContext.T03Cities
                             .OrderBy(city => city.City)
                             .Select(city => new SelectListItem
                             {
                                 Value = Convert.ToString(city.CityCd),
                                 Text = city.Location != null ? city.Location + " : " + city.City : city.City
-                            }).ToList();            
+                            }).ToList();
             return dropList;
         }
 
@@ -2492,6 +2492,7 @@ namespace IBS.Models
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
         }
+
         public static List<TextValueDropDownDTO> GetIcStatus()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IcStatus)).ToList();
@@ -2500,6 +2501,42 @@ namespace IBS.Models
         public static IEnumerable<TextValueDropDownDTO> GetSector()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Sector)).ToList();
+        }
+
+        public static List<SelectListItem> GetControllingOfficers(string Region)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from a in context.T08IeControllOfficers
+                    where a.CoStatus == null && a.CoRegion == Region
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.CoName),
+                        Value = Convert.ToString(a.CoCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<SelectListItem> GetIEByCo(string Region, int COCd)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region && c.IeCoCd == COCd
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetRemarkingToIE(string Region)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
         }
 
     }
