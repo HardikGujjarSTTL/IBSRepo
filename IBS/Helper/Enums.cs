@@ -51,6 +51,8 @@ namespace IBS.Helper
             IEFullSignature = 13,
             [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
             IEInitials = 14,
+            [Description("/ReadWriteData/ContractEntry")]
+            ContractEntry = 15,
         }
 
         public enum DocumentCategory : int
@@ -69,6 +71,7 @@ namespace IBS.Helper
             ConsigneeComplaints = 12,
             IEFullSignature = 14,
             IEInitials = 15,
+            ContractEntryDoc=16,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -88,6 +91,7 @@ namespace IBS.Helper
             Upload_JI_Case=51,
             Upload_JI_Report=52,
             Upload_Tech_Ref1 = 53,
+            Upload_Contract_Doc=16,
 
         }
 

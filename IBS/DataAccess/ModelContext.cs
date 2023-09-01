@@ -209,6 +209,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T09Ie> T09Ies { get; set; }
 
+    public virtual DbSet<T100Contract> T100Contracts { get; set; }
+
     public virtual DbSet<T100VenderCluster> T100VenderClusters { get; set; }
 
     public virtual DbSet<T101IeCluster> T101IeClusters { get; set; }
@@ -7799,6 +7801,75 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.IeRegionNavigation).WithMany(p => p.T09Ies)
                 .HasForeignKey(d => d.IeRegion)
                 .HasConstraintName("FK_IE_REGION");
+        });
+
+        modelBuilder.Entity<T100Contract>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008833");
+
+            entity.ToTable("T100_CONTRACT");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Callcancelation)
+                .HasColumnType("NUMBER")
+                .HasColumnName("CALLCANCELATION");
+            entity.Property(e => e.Clientname)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CLIENTNAME");
+            entity.Property(e => e.Clienttype)
+                .HasMaxLength(50)
+                .HasColumnName("CLIENTTYPE");
+            entity.Property(e => e.Createdby)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Inspfee)
+                .HasColumnType("NUMBER")
+                .HasColumnName("INSPFEE");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.LetterDate)
+                .HasColumnType("DATE")
+                .HasColumnName("LETTER_DATE");
+            entity.Property(e => e.LetterNo)
+                .HasPrecision(6)
+                .HasColumnName("LETTER_NO");
+            entity.Property(e => e.Lotofinsp)
+                .HasColumnType("NUMBER")
+                .HasColumnName("LOTOFINSP");
+            entity.Property(e => e.Mandaybasis)
+                .HasColumnType("NUMBER")
+                .HasColumnName("MANDAYBASIS");
+            entity.Property(e => e.Materialdescription)
+                .HasMaxLength(250)
+                .HasColumnName("MATERIALDESCRIPTION");
+            entity.Property(e => e.Materialvalue)
+                .HasColumnType("NUMBER")
+                .HasColumnName("MATERIALVALUE");
+            entity.Property(e => e.Maxpoval)
+                .HasColumnType("NUMBER")
+                .HasColumnName("MAXPOVAL");
+            entity.Property(e => e.Minpoval)
+                .HasColumnType("NUMBER")
+                .HasColumnName("MINPOVAL");
+            entity.Property(e => e.Tpfrom)
+                .HasColumnType("DATE")
+                .HasColumnName("TPFROM");
+            entity.Property(e => e.Tpto)
+                .HasColumnType("DATE")
+                .HasColumnName("TPTO");
+            entity.Property(e => e.Updatedate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDATE");
+            entity.Property(e => e.Updatedby)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("UPDATEDBY");
         });
 
         modelBuilder.Entity<T100VenderCluster>(entity =>

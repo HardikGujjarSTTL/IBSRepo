@@ -1,0 +1,137 @@
+﻿@model IBS.Models.ContractEntry
+
+@{
+    string clsView = "";
+    //if (Model.ID > 0)
+    //{
+    //    clsView = "Permission_View";
+    //}
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Contract Entry</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ContractEntry" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+<section id="tab-1" @*class="@clsView"*@>
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ContractEntry" asp-action="ContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContract">
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Letter No.</label>
+                        <input type="text" class="input" ASP-FOR="LETTER_NO" maxlength="300" required />
+                        <span asp-validation-for="LETTER_NO" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Letter Date</label>
+                        <input type="text" class="input datepicker" ASP-FOR="LETTER_DATE" maxlength="300" required />
+                        <span asp-validation-for="LETTER_DATE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Client Name</label>
+                        @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                        <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Client Type</label>
+                        @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                        <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Time Period From.</label>
+                        <input type="text" class="input datepicker" asp-for="TPFROM" readonly="true" id="FromDate" required>
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">To</label>
+                        <input type="text" class="input datepicker" asp-for="TPTO" readonly="true" id="ToDate" required>
+                        <span asp-validation-for="TPTO" class="text-danger"></span>
+                    </div>
+                    <p style="font-size:larger;"><u><b>Inspection Fee</b></u></p>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Inspection Fee</label>
+                        <input type="text" class="input" ASP-FOR="INSPFEE" maxlength="300" required />
+                        <span asp-validation-for="INSPFEE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Manday Basis</label>
+                        <input type="text" class="input" ASP-FOR="MANDAYBASIS" maxlength="300" required />
+                        <span asp-validation-for="MANDAYBASIS" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Total Lot Of Insp</label>
+                        <input type="text" class="input" ASP-FOR="LOTOFINSP" maxlength="300" required />
+                        <span asp-validation-for="LOTOFINSP" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Material Value</label>
+                        <input type="text" class="input" ASP-FOR="MATERIALVALUE" maxlength="300" required />
+                        <span asp-validation-for="MATERIALVALUE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Min PO Value</label>
+                        <input type="text" class="input" ASP-FOR="MINPOVAL" maxlength="300" required />
+                        <span asp-validation-for="MINPOVAL" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Max PO Value</label>
+                        <input type="text" class="input" ASP-FOR="MAXPOVAL" maxlength="300" required />
+                        <span asp-validation-for="MAXPOVAL" class="text-danger"></span>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <p style="font-size:larger;"><u><b>Call Cancelation/Call Rejection</b></u></p>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Call Cancelation</label>
+                        <input type="text" class="input" ASP-FOR="CALLCANCELATION" maxlength="300" required />
+                        <span asp-validation-for="CALLCANCELATION" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Material Description</label>
+                        <input type="text" class="input" ASP-FOR="Materialdescription" maxlength="300" required />
+                        <span asp-validation-for="Materialdescription" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Contract_Doc" />
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="BtnSave()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+                        
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+       function BtnSave(){
+            SaveSingleDocuments("tab-1");
+            if ($("#frmContract").valid()) {
+                $("#frmContract").submit();
+            }
+       }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "ContractEntry")';
+            }
+        };
+    </script>
+}

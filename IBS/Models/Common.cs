@@ -1181,6 +1181,17 @@ namespace IBS.Models
             return Role;
 
         }
+        
+        public static List<SelectListItem> GetClientName()
+        {
+            ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> distinctUserNames = modelContext.T32ClientLogins
+                    .Select(t => new SelectListItem { Value = t.UserName, Text = t.UserName })
+                    .Distinct()
+                    .ToList();
+            return distinctUserNames;
+
+        }
 
         public static List<SelectListItem> GetNCCode()
         {
