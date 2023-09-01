@@ -1,23 +1,24 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class IE_Instructions_AdminController : BaseController
     {
 
         #region Variables
         private readonly IIE_Instructions_AdminRepository ie_instructions_adminRepository;
-
-        //public int setMessageID { get; set; }
         #endregion
         public IE_Instructions_AdminController(IIE_Instructions_AdminRepository _ie_instructions_adminRepository)
         {
             ie_instructions_adminRepository = _ie_instructions_adminRepository;
         }
 
+        [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "view")]
         public IActionResult IE_InstructionsMaster()
         {
             return View();
@@ -30,6 +31,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "delete")]
         public IActionResult Delete(int MessageID)
         {
             try
@@ -49,6 +51,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "edit")]
         public IActionResult DetailsSave(IE_Instructions_AdminModel model)
         {
             try
@@ -76,6 +79,7 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "view")]
         public IActionResult IE_InstructionsManage(int MessageID, string RegionCode)
         {
             IE_Instructions_AdminModel model = new();

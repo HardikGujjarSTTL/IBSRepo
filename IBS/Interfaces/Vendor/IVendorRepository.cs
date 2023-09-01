@@ -10,7 +10,7 @@ namespace IBS.Interfaces.Vendor
 
         public int SaveDetails(VendorMasterModel model);
 
-        public bool Remove(int VendorCode, string DepartmentCode);
+        public bool Remove(int id);
     }
 }
 

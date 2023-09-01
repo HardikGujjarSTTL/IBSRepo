@@ -129,7 +129,7 @@
                         render: function (data, type, row) {
                             var id = data.CaseNo;
                             var poDetsilsUrl = '@Url.Action("PODetails", "DEOVendorPurchesOrder")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -139,7 +139,7 @@
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
                             var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             //html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;

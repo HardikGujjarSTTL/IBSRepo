@@ -92,5 +92,7 @@ namespace IBS.Controllers.Vendor
             }
             return Json(new { success = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Vendor
 {
@@ -20,28 +21,34 @@ namespace IBS.Repositories.Vendor
 
         public VendorMasterModel FindByID(int Id)
         {
-            VendorMasterModel model = (from m in context.T05Vendors
-                                       where m.VendCd == Id
-                                       select new VendorMasterModel
-                                       {
-                                           VendCd = m.VendCd,
-                                           VendName = m.VendName,
-                                           VendAdd1 = m.VendAdd1,
-                                           VendAdd2 = m.VendAdd2,
-                                           VendCityCd = m.VendCityCd,
-                                           VendApproval = m.VendApproval,
-                                           VendApprovalFr = m.VendApprovalFr,
-                                           VendApprovalTo = m.VendApprovalTo,
-                                           VendContactPer1 = m.VendContactPer1,
-                                           VendContactTel1 = m.VendContactTel1,
-                                           VendContactPer2 = m.VendContactPer2,
-                                           VendContactTel2 = m.VendContactTel2,
-                                           VendEmail = m.VendEmail,
-                                           VendRemarks = m.VendRemarks,
-                                           VendStatus = m.VendStatus,
-                                           VendInspStopped = m.VendInspStopped,
-                                           OnlineCallStatus = m.OnlineCallStatus,
-                                       }).FirstOrDefault();
+            VendorMasterModel model = new();
+
+            T05Vendor vendor = context.T05Vendors.Find(Id);
+
+            if (vendor == null)
+                return model;
+            else
+            {
+                model.VendCd = vendor.VendCd;
+                model.VendName = vendor.VendName;
+                model.VendAdd1 = vendor.VendAdd1;
+                model.VendAdd2 = vendor.VendAdd2;
+                model.VendCityCd = vendor.VendCityCd;
+                model.VendContactPer1 = vendor.VendContactPer1;
+                model.VendContactTel1 = vendor.VendContactTel1;
+                model.VendContactPer2 = vendor.VendContactPer2;
+                model.VendContactTel2 = vendor.VendContactTel2;
+                model.VendApproval = vendor.VendApproval;
+                model.VendApprovalFr = vendor.VendApprovalFr;
+                model.VendApprovalTo = vendor.VendApprovalTo;
+                model.VendStatus = vendor.VendStatus;
+                model.VendStatusDtFr = vendor.VendStatusDtFr;
+                model.VendStatusDtTo = vendor.VendStatusDtTo;
+                model.VendRemarks = vendor.VendRemarks;
+                model.VendEmail = vendor.VendEmail;
+                model.VendInspStopped = vendor.VendInspStopped;
+                model.OnlineCallStatus = vendor.OnlineCallStatus;
+            }
 
             return model;
         }
@@ -52,7 +59,7 @@ namespace IBS.Repositories.Vendor
             DTResult<VendorlistModel> dTResult = new() { draw = 0 };
             IQueryable<VendorlistModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
+            //var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
@@ -67,6 +74,11 @@ namespace IBS.Repositories.Vendor
                 orderCriteria = "VEND_NAME";
                 orderAscendingDirection = true;
             }
+
+            string VendorCode = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorCode"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorCode"]) : "";
+            string VendorName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorName"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorName"]) : "";
+            string VendorAddress = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorAddress"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorAddress"]) : "";
+            string VendorCity = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorCity"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorCity"]) : "";
 
             OracleParameter[] par = new OracleParameter[1];
             par[0] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -84,10 +96,10 @@ namespace IBS.Repositories.Vendor
 
             dTResult.recordsTotal = query.Count();
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => (w.VEND_CD.ToString().Contains(searchBy.ToLower()))
-                    || (w.VEND_NAME != null && w.VEND_NAME.ToLower().Contains(searchBy.ToLower()))
-            );
+            if (!string.IsNullOrEmpty(VendorCode)) query = query.Where(w => w.VEND_CD.ToString() == VendorCode);
+            if (!string.IsNullOrEmpty(VendorName)) query = query.Where(w => w.VEND_NAME != null && w.VEND_NAME.ToString().ToLower().Contains(VendorName.ToString().ToLower()));
+            if (!string.IsNullOrEmpty(VendorAddress)) query = query.Where(w => w.VEND_ADD != null && w.VEND_ADD.ToString().ToLower().Contains(VendorAddress.ToString().ToLower()));
+            if (!string.IsNullOrEmpty(VendorCity)) query = query.Where(w => w.VEND_CITY_CD != null && w.VEND_CITY_CD.ToString().ToLower().Contains(VendorCity.ToString().ToLower()));
 
             dTResult.recordsFiltered = query.Count();
 
@@ -105,7 +117,7 @@ namespace IBS.Repositories.Vendor
             if (model.VendCd == 0)
             {
                 int VendCd = GetMaxVend_CD();
-                VendCd += 1;
+                model.VendCd = VendCd + 1;
 
                 T05Vendor vendor = new()
                 {
@@ -125,12 +137,12 @@ namespace IBS.Repositories.Vendor
                     VendStatusDtFr = model.VendStatusDtFr,
                     VendStatusDtTo = model.VendStatusDtTo,
                     VendRemarks = model.VendRemarks,
-                    VendCdAlpha = model.VendCdAlpha,
-                    UserId = model.UserId,
-                    Datetime = DateTime.Now.Date,
                     VendEmail = model.VendEmail,
                     VendInspStopped = model.VendInspStopped,
-                    VendPwd = model.VendPwd,
+                    OnlineCallStatus = model.OnlineCallStatus,
+                    VendPwd = model.VendCd.ToString(),
+                    UserId = model.UserId,
+                    Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,
                     Createddate = DateTime.Now,
                     Isdeleted = model.Isdeleted,
@@ -141,14 +153,32 @@ namespace IBS.Repositories.Vendor
             }
             else
             {
-                T05Vendor uom = context.T05Vendors.Find(model.VendCd);
+                T05Vendor vendor = context.T05Vendors.Find(model.VendCd);
 
-                if (uom != null)
+                if (vendor != null)
                 {
-                    uom.UserId = model.UserId;
-                    uom.Datetime = DateTime.Now.Date;
-                    uom.Updatedby = model.Updatedby;
-                    uom.Updateddate = DateTime.Now;
+                    vendor.VendName = model.VendName;
+                    vendor.VendAdd1 = model.VendAdd1;
+                    vendor.VendAdd2 = model.VendAdd2;
+                    vendor.VendCityCd = model.VendCityCd;
+                    vendor.VendContactPer1 = model.VendContactPer1;
+                    vendor.VendContactTel1 = model.VendContactTel1;
+                    vendor.VendContactPer2 = model.VendContactPer2;
+                    vendor.VendContactTel2 = model.VendContactTel2;
+                    vendor.VendApproval = model.VendApproval;
+                    vendor.VendApprovalFr = model.VendApprovalFr;
+                    vendor.VendApprovalTo = model.VendApprovalTo;
+                    vendor.VendStatus = model.VendStatus;
+                    vendor.VendStatusDtFr = model.VendStatusDtFr;
+                    vendor.VendStatusDtTo = model.VendStatusDtTo;
+                    vendor.VendEmail = model.VendEmail;
+                    vendor.VendInspStopped = model.VendInspStopped;
+                    vendor.OnlineCallStatus = model.OnlineCallStatus;
+                    vendor.VendRemarks = model.VendRemarks;
+                    vendor.UserId = model.UserId;
+                    vendor.Datetime = DateTime.Now.Date;
+                    vendor.Updatedby = model.Updatedby;
+                    vendor.Updateddate = DateTime.Now;
 
                     context.SaveChanges();
                 }
@@ -179,11 +209,11 @@ namespace IBS.Repositories.Vendor
             return UOM_CD;
         }
 
-        public bool Remove(int VendorCode, string DepartmentCode)
+        public bool Remove(int id)
         {
-            if (context.T100VenderClusters.Any(x => x.VendorCode == VendorCode && x.DepartmentName == DepartmentCode))
+            if (context.T05Vendors.Any(x => x.VendCd == id))
             {
-                context.T100VenderClusters.RemoveRange(context.T100VenderClusters.Where(x => x.VendorCode == VendorCode && x.DepartmentName == DepartmentCode).ToList());
+                context.T05Vendors.RemoveRange(context.T05Vendors.Where(x => x.VendCd == id).ToList());
                 context.SaveChanges();
             }
             return true;

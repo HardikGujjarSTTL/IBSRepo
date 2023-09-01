@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -8,6 +9,7 @@ using System.Data;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class DownloadDocumentsController : BaseController
     {
         #region Variables
@@ -26,6 +28,7 @@ namespace IBS.Controllers
             _config = configuration;
         }
 
+        [Authorization("DownloadDocuments", "Index", "view")]
         public IActionResult Index()
         {
             var model = new DownloadDocumentsModel();

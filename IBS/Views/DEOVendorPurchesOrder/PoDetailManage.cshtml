@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "PO Detail";
+    string clsView = "";
+    if (Model.CaseNo != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 @{
     var CaseNo = Model.CaseNo;
@@ -205,7 +210,7 @@
                     </div>
                 </div>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     <a asp-controller="DEOVendorPurchesOrder" asp-action="PODetails" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>
                 </div>
             </div>

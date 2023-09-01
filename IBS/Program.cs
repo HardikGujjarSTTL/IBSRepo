@@ -155,8 +155,10 @@ builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormReposi
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
+builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
+builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
 
 var app = builder.Build();
 

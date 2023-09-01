@@ -20,32 +20,37 @@ namespace IBS.Helper
 
         public enum FolderPath
         {
-            [Description("/Files/TempUploadedFiles")]
+            [Description("/ReadWriteData/Files/TempUploadedFiles")]
             TempFilePath = 1,
-            [Description("/Files/UserRegistration")]
+            [Description("/ReadWriteData/Files/UserRegistration")]
             UserRegistration = 2,
-            [Description("/Files/AdminUserUploadDoc")]
+            [Description("/ReadWriteData/Files/AdminUserUploadDoc")]
             AdminUserUploadDoc = 3,
-            [Description("/Files/Vendor")]
+            [Description("/ReadWriteData/Files/Vendor")]
             Vendor = 4,
-            [Description("/Files/VendorDocument")]
+            [Description("/ReadWriteData/Files/VendorDocument")]
             VendorDocument = 5,
-            [Description("/MA")]
+            [Description("/ReadWriteData/MA")]
             VendorMADocument = 6,
-            [Description("/Files/ContractDocument")]
+            [Description("/ReadWriteData/Files/ContractDocument")]
             ContractDocument = 7,
-            [Description("/Files/TechnicalReferences")]
+            [Description("/ReadWriteData/Files/TechnicalReferences")]
             TechnicalReferencesDoc = 8,
-            [Description("/MASTER_ITEMS_CHECKSHEETS")]
+            [Description("/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")]
             MasterItemDoc = 9,
-            [Description("/CALLS_DOCUMENTS")]
+            [Description("/ReadWriteData/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
-            [Description("/Files/AdministratorPurchaseOrder")]
+            [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
             AdministratorPurchaseOrder = 13,
-            [Description("/Online_Comp_Document")]
+            [Description("/ReadWriteData/Online_Comp_Document")]
             OnlineComplaints = 11,
-            [Description("/Consignee_Comp_Document")]
+            [Description("/ReadWriteData/Consignee_Comp_Document")]
             ConsigneeComplaints = 12,
+
+            [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
+            IEFullSignature = 13,
+            [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
+            IEInitials = 14,
         }
 
         public enum DocumentCategory : int
@@ -62,6 +67,8 @@ namespace IBS.Helper
             AdministratorPurchaseOrder =13,
             OnlineComplaints=11,
             ConsigneeComplaints = 12,
+            IEFullSignature = 14,
+            IEInitials = 15,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -88,6 +95,8 @@ namespace IBS.Helper
         {
             Browse_the_Document_to_Upload = 7,
             CallRegistrationDoc = 13,
+            IEFullSignature = 14,
+            IEInitials = 15
         }
 
         public enum DocumentCategory_VendorMADoc : int
@@ -153,6 +162,97 @@ namespace IBS.Helper
             T,
             [Description("Left/Repatriated")]
             L,
+        }
+
+        public enum IEPosting
+        {
+            [Description("Local")]
+            LC,
+            [Description("Outstation")]
+            OU,
+            [Description("Liaison Officer")]
+            LO,
+        }
+
+        public enum IEStatus
+        {
+            [Description("Working")]
+            W,
+            [Description("Retired")]
+            R,
+            [Description("Transferred")]
+            T,
+            [Description("Left/Repatriated")]
+            L,
+        }
+
+        public enum IEJobType
+        {
+            [Description("Regular")]
+            R,
+            [Description("Deputation")]
+            D,
+            [Description("Contract")]
+            C,
+        }
+
+        public enum BPOFeeType
+        {
+            [Description("Man days Basis")]
+            D,
+            [Description("Hourly Basis")]
+            H,
+            [Description("Lump sum")]
+            L,
+            [Description("Percentage Basis")]
+            P,
+        }
+        public enum BPOTaxType
+        {
+            [Description("Fee Inclusive Service Tax")]
+            I,
+            [Description("Tax/VAT Charged separately")]
+            X,
+        }
+        public enum BPOFlag
+        {
+            [Description("FA & CAO")]
+            F,
+            [Description("AO�s")]
+            A,
+            [Description("DFM�s")]
+            D,
+            [Description("DEE/DCEE etc.")]
+            M,
+            [Description("Workshop")]
+            S,
+        }
+        public enum BPOAdvFlag
+        {
+            [Description("Advance bill to be raised")]
+            A,
+            [Description("Otherwise")]
+            N,
+        }
+
+        public enum ActiveInActive
+        {
+            [Description("Active")]
+            A,
+            [Description("InActive")]
+            I,
+        }
+
+        public enum UserType
+        {
+            [Description("User")]
+            U,
+            [Description("CM")]
+            C,
+            [Description("GM")]
+            G,
+            [Description("SBU HEAD")]
+            S,
         }
 
         public enum PoOrLetter
@@ -287,6 +387,31 @@ namespace IBS.Helper
             N,
         }
 
+        public enum Sector
+        {
+            [Description("All")]
+            A,
+            [Description("Railways")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            U,
+            [Description("State Govt.")]
+            S,
+            [Description("Foreign Railways")]
+            F,
+        }
+
+        public enum IcStatus
+        {
+            [Description("Cancelled")]
+            C,
+            [Description("Missing")]
+            M,
+            [Description("Lost / Theft")]
+            L,
+        }
     }
 
     public class EnumUtility<T>
