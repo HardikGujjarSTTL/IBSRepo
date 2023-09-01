@@ -258,7 +258,7 @@ namespace IBS.Repositories
         }
         #endregion
 
-        #region UserRole
+        #region MenuRoleMapping
         public MenuroleMappingModel FindMenuRoleMappingByID(int ID)
         {
             MenuroleMappingModel model = new();
