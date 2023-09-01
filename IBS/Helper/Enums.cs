@@ -20,31 +20,31 @@ namespace IBS.Helper
 
         public enum FolderPath
         {
-            [Description("/Files/TempUploadedFiles")]
+            [Description("/ReadWriteData/Files/TempUploadedFiles")]
             TempFilePath = 1,
-            [Description("/Files/UserRegistration")]
+            [Description("/ReadWriteData/Files/UserRegistration")]
             UserRegistration = 2,
-            [Description("/Files/AdminUserUploadDoc")]
+            [Description("/ReadWriteData/Files/AdminUserUploadDoc")]
             AdminUserUploadDoc = 3,
-            [Description("/Files/Vendor")]
+            [Description("/ReadWriteData/Files/Vendor")]
             Vendor = 4,
-            [Description("/Files/VendorDocument")]
+            [Description("/ReadWriteData/Files/VendorDocument")]
             VendorDocument = 5,
-            [Description("/MA")]
+            [Description("/ReadWriteData/MA")]
             VendorMADocument = 6,
-            [Description("/Files/ContractDocument")]
+            [Description("/ReadWriteData/Files/ContractDocument")]
             ContractDocument = 7,
-            [Description("/Files/TechnicalReferences")]
+            [Description("/ReadWriteData/Files/TechnicalReferences")]
             TechnicalReferencesDoc = 8,
-            [Description("/MASTER_ITEMS_CHECKSHEETS")]
+            [Description("/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")]
             MasterItemDoc = 9,
-            [Description("/CALLS_DOCUMENTS")]
+            [Description("/ReadWriteData/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
-            [Description("/Files/AdministratorPurchaseOrder")]
+            [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
             AdministratorPurchaseOrder = 13,
-            [Description("/Online_Comp_Document")]
+            [Description("/ReadWriteData/Online_Comp_Document")]
             OnlineComplaints = 11,
-            [Description("/Consignee_Comp_Document")]
+            [Description("/ReadWriteData/Consignee_Comp_Document")]
             ConsigneeComplaints = 12,
         }
 
@@ -285,6 +285,22 @@ namespace IBS.Helper
             C,
             [Description("NO")]
             N,
+        }
+
+        public enum Sector
+        {
+            [Description("All")]
+            A,
+            [Description("Railways")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            U,
+            [Description("State Govt.")]
+            S,
+            [Description("Foreign Railways")]
+            F,
         }
 
     }

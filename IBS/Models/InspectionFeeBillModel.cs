@@ -110,5 +110,69 @@ namespace IBS.Models
         public string? LoRemarks { get; set; }
 
         public string? SapStatus { get; set; }
+
+        public decimal? AmountCleared { get; set; }
+
+        public decimal? AmountRecievedThruChequeDD { get; set; }
+
+        public decimal? TotalAmountReceived { get; set; }
+
+        public decimal? AmountRecover { get; set; }
+    }
+
+    public class BillItemsListModel
+    {
+        public string? BillNo { get; set; }
+
+        public byte ItemSrno { get; set; }
+
+        public string? ItemDesc { get; set; }
+
+        public decimal? Qty { get; set; }
+
+        public decimal? Rate { get; set; }
+
+        public byte? UomCd { get; set; }
+
+        public string? UomSDesc { get; set; }
+
+        public decimal? BasicValue { get; set; }
+
+        public decimal? SalesTaxPer { get; set; }
+
+        public decimal? SalesTax { get; set; }
+
+        public string? ExciseType { get; set; }
+
+        public decimal? ExcisePer { get; set; }
+
+        public decimal? Excise { get; set; }
+
+        public string? DiscountType { get; set; }
+
+        public decimal? DiscountPer { get; set; }
+
+        public decimal? Discount { get; set; }
+
+        public decimal? OtherCharges { get; set; }
+
+        public decimal? Value { get; set; }
+
+        public string? OtChargeType { get; set; }
+
+        public decimal? OtChargePer { get; set; }
+    }
+
+    public class ChequeDetailsListModel
+    {
+        public string? BankName { get; set; }
+
+        public string ChqNo { get; set; } = null!;
+
+        public DateTime ChqDt { get; set; }
+
+        public decimal? Amount { get; set; }
+
+        public decimal? AmountCleared { get; set; }
     }
 }
