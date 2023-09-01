@@ -5,6 +5,7 @@ using IBS.Models;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
@@ -1810,22 +1811,22 @@ namespace IBS.Repositories.InspectionBilling
         {
             int val = 0;
             string ext_delv_dt = "";
-            var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo)
+            var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo).ToList() // Retrieve data from the database into memory
                         .Select(l => new
                         {
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
             var query = (from t17 in context.T17CallRegisters
-                         where t17.CaseNo == CaseNo && t17.CallRecvDt == _CallRecvDt && t17.CallSno == CallSno
+                         where t17.CaseNo == CaseNo && t17.CallRecvDt == Convert.ToDateTime(CallRecvDt) && t17.CallSno == CallSno
                          select new
                          {
                              INSP_DATE = Convert.ToDateTime(t17.DtInspDesire)
                          }).FirstOrDefault();
 
-
-            if (ext_delv_dt == "01-JAN-01")
+            ext_delv_dt = result.ExtDelvDt;
+            if (ext_delv_dt == "01/01/2001")
             {
                 val = 2;
             }
@@ -2104,7 +2105,7 @@ namespace IBS.Repositories.InspectionBilling
             return (chk);
         }
 
-        public string CallDetailsSave(VenderCallCancellationModel model, string UserName)
+        public string CallCancellationSave(VenderCallCancellationModel model, string UserName)
         {
             string ID = "";
             //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
@@ -2491,11 +2492,11 @@ namespace IBS.Repositories.InspectionBilling
                     t17.Updatedby = model.Updatedby;
                     t17.Updateddate = DateTime.Now;
                     context.SaveChanges();
-                    
-                    if(model.CallStatus == "M" || model.CallStatus == "A")
+
+                    if (model.CallStatus == "M" || model.CallStatus == "A")
                     {
                         IcIntermediate ic = context.IcIntermediates.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
-                        if(ic!= null)
+                        if (ic != null)
                         {
                             ic.ConsgnCallStatus = model.CallStatus;
                             ic.UserId = model.UserId;
@@ -2512,30 +2513,237 @@ namespace IBS.Repositories.InspectionBilling
 
         }
 
-        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, string ActionType)
+        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo)
         {
-            using (var dbContext = context.Database.GetDbConnection())
+            VendrorCallDetailsModel model = new();
+            string dt = Convert.ToDateTime(CallRecvDt).ToString("dd-MM-yyyy");
+            DateTime parsedDate = DateTime.ParseExact(dt, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+            var GetValue = (from v in context.T09Ies
+                            join d in context.T17CallRegisters on v.IeCd equals d.IeCd
+                            where d.CaseNo == CaseNo && d.CallRecvDt == parsedDate && d.CallSno == CallSno
+                            select new
+                            {
+                                v,
+                                d
+                            }
+                  ).FirstOrDefault();
+
+            var PODetails = context.T13PoMasters.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
+            var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == parsedDate && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrNoPo).FirstOrDefault();
+            if (GetValue == null)
+                throw new Exception("Record Not found");
+            else
             {
-                DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+                model.IESName = GetValue.v.IeSname;
+                model.CallRecvDt = GetValue.d.CallRecvDt;
+                model.CallSno = GetValue.d.CallSno;
 
-                OracleParameter[] par = new OracleParameter[4];
-                par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_DT", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno, ParameterDirection.Input);
-
-                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-
-                var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
-
-                VendrorCallDetailsModel model = new();
-                if (ds != null && ds.Tables.Count > 0)
+                if (PODetails != null)
                 {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    model = JsonConvert.DeserializeObject<List<VendrorCallDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
+                    model.PoNo = PODetails.PoNo;
+                    model.PoDt = PODetails.PoDt;
                 }
-                return model;
             }
+            if (CallDetails != null)
+            {
+                model.ItemSrNoPo = CallDetails.ItemSrnoPo;
+                model.ItemDescPo = CallDetails.ItemDescPo;
+                model.QtyOrdered = CallDetails.QtyOrdered;
+                model.CumQtyPrevOffered = CallDetails.CumQtyPrevOffered;
+                model.CumQtyPrevPassed = CallDetails.CumQtyPrevPassed;
+                model.QtyToInsp = CallDetails.QtyToInsp;
+            }
+            return model;
         }
 
+        public DTResult<VendrorCallDetailsModel> GetCallDetailsList(DTParameters dtParameters)
+        {
+
+            DTResult<VendrorCallDetailsModel> dTResult = new() { draw = 0 };
+            IQueryable<VendrorCallDetailsModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = false;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "Status";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "Status";
+                orderAscendingDirection = true;
+            }
+
+            string CaseNo = "", CallRecvDt = "", CallSNo = "";
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+            {
+                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecvDt"]))
+            {
+                CallRecvDt = Convert.ToString(dtParameters.AdditionalValues["CallRecvDt"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSNo"]))
+            {
+                CallSNo = Convert.ToString(dtParameters.AdditionalValues["CallSNo"]);
+            }
+
+            CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            CallSNo = CallSNo.ToString() == "" ? string.Empty : CallSNo.ToString();
+
+
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSNo, ParameterDirection.Input);
+
+            par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            //VendrorCallDetailsModel model = new();
+            //List<VendrorCallDetailsModel> list = new List<VendrorCallDetailsModel>();
+
+            //if (ds != null && ds.Tables.Count > 0)
+            //{
+            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+
+            //    JArray jsonArray = JArray.Parse(serializeddt);
+            //    list = jsonArray.Select(item =>
+            //    {
+            //        var lst = item.ToObject<VendrorCallDetailsModel>();
+
+            //        if (lst.QTYPASSED is int doubleValue)
+            //        {
+            //            lst.QTYPASSED = (int)doubleValue;
+            //        }
+
+            //        return lst;
+            //    }).ToList();
+            //}
+
+            VendrorCallDetailsModel model = new();
+            List<VendrorCallDetailsModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<VendrorCallDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public int CallDetailsSave(VendrorCallDetailsModel model, string UserName)
+        {
+            int Id = 0;
+            int status = 0;
+            decimal reader = 0;
+            decimal qty = 0;
+
+            var CallDetails = (from c in context.T17CallRegisters
+                               join d in context.T18CallDetails on c.CaseNo equals d.CaseNo
+                               where c.CaseNo.Equals(d.CaseNo) && c.CallRecvDt.Equals(d.CallRecvDt) && c.CallSno.Equals(d.CallSno)
+                               && c.CaseNo == model.CaseNo && d.ItemSrnoPo == model.ItemSrNoPo && !new[] { "R", "C" }.Contains(c.CallStatus)
+                               select new
+                               {
+                                   d.QtyToInsp
+                               }
+                  ).FirstOrDefault();
+            reader = Convert.ToDecimal(CallDetails.QtyToInsp);
+            if (reader > 0)
+            {
+                qty = (reader + Convert.ToDecimal(model.QtyToInsp)) - Convert.ToDecimal(model.QtyToInsp);
+                if (reader > Convert.ToDecimal(model.QtyOrdered))
+                {
+                    status = 2;
+                }
+                else
+                {
+                    if (qty > Convert.ToDecimal(model.QtyOrdered))
+                    {
+                        status = 1;
+                    }
+                }
+            }
+            if (status != 2)
+            {
+                if (status == 1)
+                {
+                    return 1;
+                }
+                else
+                {
+                    var CallDetailsUpdate = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno && x.ItemSrnoPo == model.ItemSrNoPo).FirstOrDefault();
+
+                    #region CallDetailsUpdate
+                    if (CallDetailsUpdate != null)
+                    {
+                        CallDetailsUpdate.ItemDescPo = model.ItemDescPo;
+                        CallDetailsUpdate.QtyOrdered = model.QtyOrdered;
+                        CallDetailsUpdate.CumQtyPrevOffered = model.CumQtyPrevOffered;
+                        CallDetailsUpdate.CumQtyPrevPassed = model.CumQtyPrevPassed;
+                        CallDetailsUpdate.QtyToInsp = model.QtyToInsp;
+                        CallDetailsUpdate.UserId = UserName;
+                        CallDetailsUpdate.Datetime = DateTime.Now;
+                        CallDetailsUpdate.Updatedby = model.Updatedby;
+                        CallDetailsUpdate.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                        Id = Convert.ToInt32(3);
+                    }
+                    #endregion
+
+                    var PODetailsUpdate = context.T15PoDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrno == model.ItemSrNoPo).FirstOrDefault();
+
+                    #region PODetailsUpdate 
+                    if (PODetailsUpdate != null)
+                    {
+                        PODetailsUpdate.ItemDesc = model.ItemDescPo;
+                        context.SaveChanges();
+                        Id = Convert.ToInt32(3);
+                    }
+                    #endregion
+                }
+            }
+            else if (status == 2)
+            {
+                return 2;
+            }
+
+            return Id;
+        }
+
+        public bool CallDetailsRemove(VendrorCallDetailsModel model)
+        {
+            var itemDelete = context.T18CallDetails.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
+
+            context.T18CallDetails.Remove(itemDelete);
+            context.SaveChanges();
+            return true;
+        }
     }
 }

@@ -316,5 +316,9 @@ VIEW : VIEW_ISNPECTION_ENG
 
 19) BPO 
 View : VIEW_GET_BPODETAILS
+
+20) Inspection Certificate
+View : VIEW_GET_INSPECTION_CERT_DETAILS
+
 =============================================================================================================================================
 

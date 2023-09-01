@@ -326,7 +326,7 @@
             }
             if (CaseNo != null || CallRecvDt != null || CallSno != null) {
                 $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
-                    //success: function (response) {
+                    debugger
                     if (response.status) {
                         if (response.w_itemBlocked == "Y") {
                             var msg = response.responseText;

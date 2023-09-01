@@ -1,0 +1,220 @@
+﻿@model IBS.Models.InspectionCertModel
+
+@{
+    ViewData["Title"] = "Inspection Certificate";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Inspection Certificate</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="InspectionCert" asp-action="Index" id="frmDetails">
+        <div class="accordion-body" style="overflow-x: auto;">
+            <table>
+                <tr>
+                    <td style="background-color:#ccccff" colSpan="2">
+                        <span>UPDATE INSPECTION CERTIFICATE</span>
+                    </td>
+                    <td colSpan="1">
+                    </td>
+                    <td style="background-color:#ccccff" colSpan="3">
+                        <span>NEW INSPECTION CERTIFICATE</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Book No.</span>
+                    </td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Set No.</span>
+                    </td>
+                    <td rowspan="2"></td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Case No.</span>
+                    </td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Call Recieve Date</span>
+                    </td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Call SNO.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" asp-for="Bkno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Setno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Caseno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Callrecvdt" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Callsno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+
+            </table>
+            <div class="row my-0">
+                <div class="col-md-9 mb-3">
+                    <button type="button" class="reset-btn active" id="btnSearch">Modify</button>
+                    <button type="button" class="reset-btn" id="btnSearch">Delete</button>
+                    <button type="button" class="reset-btn" id="btnSearch">Change Consignee</button>
+                    <button type="button" class="reset-btn" id="btnSearch">Change BPO in Returned Bills</button>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <button type="button" class="reset-btn" id="btnSearch">New Certificate</button>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-4 text-center">
+                    <button type="button" class="reset-btn" id="btnSearch" onclick="Search();">Search</button>
+                </div>
+            </div>
+            <div class="alert alert-warning center">
+                Search Result is Sorted on [Call Date]
+            </div>
+        </div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Bill Status</th>
+                                <th>Case No.</th>
+                                <th>Call Date</th>
+                                <th>Call SNo.</th>
+                                <th>Call Status</th>
+                                <th>IE</th>
+                                <th>IC NO</th>
+                                <th>Book No</th>
+                                <th>Set No.</th>
+                                <th>Consignee</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        table,
+        table td {
+            border: 1px solid #cccccc;
+        }
+
+        td {
+            height: 80px;
+            width: 160px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+    <script type="text/javascript">
+
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+
+        }
+
+        function Search() {
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable", "InspectionCert")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Caseno": Caseno,
+                            "Callrecvdt": Callrecvdt,
+                            "Callsno": Callsno
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Caseno" },
+                    { data: "Callsno" },
+                    {
+                        data: "Callrecvdt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+
+                    { data: "Caseno" },
+                    { data: "Caseno" },
+                    { data: "Caseno" },
+                    { data: "Caseno" },
+                    { data: "Caseno" },
+                    { data: "Caseno" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            //var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
+                            var CallRecvDt = moment(data.CallRecvDt).format("YYYY-MM-DD");
+                            //var CallRecvDt = data.CallRecvDt;
+                            var CallSno = data.CallSno;
+
+                            var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+
+    </script>
+}
