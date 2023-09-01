@@ -1,8 +1,13 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NuGet.Protocol.Plugins;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Dynamic;
 using System.Globalization;
 using System.Net;
@@ -2408,7 +2413,7 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             var CallReg = context.T17CallRegisters.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
-            if(CallReg != null)
+            if (CallReg != null)
             {
                 CallReg.CallStatus = "C";
                 CallReg.CallCancelStatus = model.CallCancelStatus;
@@ -2434,7 +2439,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 msg = CallCancalltion.CaseNo;
             }
-            if(CallReg != null)
+            if (CallReg != null)
             {
                 CallReg.CallStatus = "M";
                 context.SaveChanges();
@@ -2442,5 +2447,95 @@ namespace IBS.Repositories.InspectionBilling
 
             return msg;
         }
+
+        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno)
+        {
+            VenderCallStatusModel model = new();
+            //DateTime? _CallRecvDt = CallRecvDt == null ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+
+            var Status = context.ViewGetCallStatusDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
+
+            if (Status == null)
+                return model;
+            else
+            {
+                model.VendName = Status.VendName;
+                model.Consignee = Status.Consignee;
+                model.ItemDescPo = Status.ItemDescPo;
+                model.CallRecvDt = Status.CallRecvDt;
+                model.IeName = Status.IeName;
+                model.IePhoneNo = Status.IePhoneNo;
+                model.PoNo = Status.PoNo;
+                model.PoDt = Status.PoDt;
+                model.CaseNo = Status.CaseNo;
+                model.MfgPers = Status.MfgPers;
+                model.MfgPhone = Status.MfgPhone;
+                model.CallSno = Status.CallSno;
+                model.CallStatus1 = Status.CallStatus1;
+                model.CallStatus = Status.CallStatus;
+                model.UpdateAllowed = Status.UpdateAllowed;
+            }
+            return model;
+        }
+
+        public string Save(VenderCallStatusModel model)
+        {
+            string str = "";
+            if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
+            {
+                T17CallRegister t17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+                if (t17 != null)
+                {
+                    t17.CallStatus = model.CallStatus;
+                    t17.UpdateAllowed = model.UpdateAllowed == "Y" ? "" : model.UpdateAllowed;
+                    t17.Updatedby = model.Updatedby;
+                    t17.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                    
+                    if(model.CallStatus == "M" || model.CallStatus == "A")
+                    {
+                        IcIntermediate ic = context.IcIntermediates.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+                        if(ic!= null)
+                        {
+                            ic.ConsgnCallStatus = model.CallStatus;
+                            ic.UserId = model.UserId;
+                            ic.Datetime = DateTime.Now.Date;
+
+                            context.SaveChanges();
+                        }
+                    }
+                    str = model.CaseNo;
+                }
+            }
+
+            return str;
+
+        }
+
+        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, string ActionType)
+        {
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_DT", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno, ParameterDirection.Input);
+
+                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
+
+                VendrorCallDetailsModel model = new();
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<VendrorCallDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
+                }
+                return model;
+            }
+        }
+
     }
 }

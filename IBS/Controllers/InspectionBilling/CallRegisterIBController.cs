@@ -65,6 +65,7 @@ namespace IBS.Controllers.InspectionBilling
         {
             VenderCallRegisterModel model = new();
             string myYear1 = "", myMonth1 = "", myDay1 = "";
+
             myYear1 = CallRecvDt.ToString().Substring(6, 4);
             myMonth1 = CallRecvDt.ToString().Substring(3, 2);
             myDay1 = CallRecvDt.ToString().Substring(0, 2);
@@ -408,7 +409,7 @@ namespace IBS.Controllers.InspectionBilling
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CallDetailsSave(VenderCallCancellationModel model)
+        public IActionResult CallCancellationSave(VenderCallCancellationModel model)
         {
             try
             {
@@ -416,7 +417,7 @@ namespace IBS.Controllers.InspectionBilling
                 string msg = "Insert Successfully.";
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
                 {
-                    i = callregisterRepository.CallDetailsSave(model,UserName);
+                    i = callregisterRepository.CallDetailsSave(model, UserName);
                 }
                 if (i != "")
                 {
@@ -444,7 +445,7 @@ namespace IBS.Controllers.InspectionBilling
                     var check = callregisterRepository.CallCancelDelete(CaseNo, CallRecvDt, CallSno);
                     if (check != "")
                     {
-                        return Json(new { status = true, responseText = "Delete Successfully!!!"});
+                        return Json(new { status = true, responseText = "Delete Successfully!!!" });
                     }
                 }
 
@@ -455,6 +456,49 @@ namespace IBS.Controllers.InspectionBilling
             }
 
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno)
+        {
+            VenderCallStatusModel model = new();
+            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+            {
+                model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult CallStatus(VenderCallStatusModel model)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(model.CaseNo) && model.CallRecvDt != null && model.CallSno > 0)
+                {
+                    model.Updatedby = UserName.Substring(0, 8);
+                    model.UserId = Convert.ToString(UserId);
+                    callregisterRepository.Save(model);
+                    AlertAddSuccess("Call Status and Call Update Status has Been Modified!!!");
+                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallStatusSave", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+        public IActionResult CallDetails(string CaseNo, string _CallRecvDt, int CallSno, string ActionType)
+        {
+            VendrorCallDetailsModel model = new();
+            if (CaseNo != null && _CallRecvDt != null && CallSno > 0 && ActionType != null)
+            {
+                model = callregisterRepository.CallDetailsFindByID(CaseNo, _CallRecvDt, CallSno, ActionType);
+            }
+
+
+            return View(model);
         }
 
     }

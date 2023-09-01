@@ -385,19 +385,19 @@ namespace IBS.Models
         public bool chk_3 { get; set; }
 
         public bool chk_4 { get; set; }
-                    
+
         public bool chk_5 { get; set; }
-                    
+
         public bool chk_6 { get; set; }
-                    
+
         public bool chk_7 { get; set; }
-                    
+
         public bool chk_8 { get; set; }
-                    
+
         public bool chk_9 { get; set; }
-                    
+
         public bool chk_10 { get; set; }
-                    
+
         public bool chk_11 { get; set; }
 
         public bool chk_12 { get; set; }
@@ -422,5 +422,127 @@ namespace IBS.Models
 
         public bool[] chkItems { get; set; }
 
+    }
+
+    public class VenderCallStatusModel
+    {
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short? CallSno { get; set; }
+
+        public string? VendName { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? ItemDescPo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallMarkDt { get; set; }
+
+        public string? IeName { get; set; }
+        [Phone]
+        public string? IePhoneNo { get; set; }
+
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public string? CallStatus1 { get; set; }
+
+        public string? CallStatus { get; set; }
+
+        public string? UpdateAllowed { get; set; }
+
+        public string? MfgPers { get; set; }
+
+        public string? MfgPhone { get; set; }
+
+        public decimal? Count { get; set; }
+
+        public byte ItemSrnoPo { get; set; }
+
+        public string Createdby { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+
+        public string Updatedby { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
+        public string ActionType { get; set; }
+
+        public string UserId { get; set; }
+
+    }
+
+    public class VendrorCallDetailsModel
+    {
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short? CallSno { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallMarkDt { get; set; }
+
+        public string? IeName { get; set; }
+        [Phone]
+        public string? IePhoneNo { get; set; }
+
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public int ItemSrNoPo { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Item Desc")]
+        public string? ItemDescPo { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Qty Ordered")]
+        public decimal? QtyOrdered { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Cum Qty Prev Offered")]
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Cum Qty Prev Passed")]
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Qty To Insp")]
+        public decimal? QtyToInsp { get; set; }
+
+        public int? QtyPassed { get; set; }
+
+        public int? QtyRejected { get; set; }
+
+        public int? QtyDue { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? Status { get; set; }
+
+        public int? CallInstallNo { get; set; }
+
+        public string VendCd { get; set; }
+
+        public string CallLetterNo { get; set; }
+
+        public string? CallStatus { get; set; }
+
+        public string? Remarks { get; set; }
+
+        public string? IESName { get; set; }
     }
 }

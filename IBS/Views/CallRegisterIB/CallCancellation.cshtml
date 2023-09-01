@@ -209,7 +209,7 @@
         <div class="savenext-btn center">
             <button type="button" class="save-btn active" id="btnSave">Save</button>
             <button type="button" class="save-btn " id="btnDelete">Delete</button>
-            <a asp-controller="VendorCallRegisterDetail" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
+            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
         </div>
     </div>
 </form>
@@ -252,7 +252,7 @@
             if ($("#frmDetails").valid()) {
                 var formData = new FormData($("#frmDetails")[0]);
                 $.ajax({
-                    url: '@Url.Action("CallDetailsSave", "CallRegisterIB")',
+                    url: '@Url.Action("CallCancellationSave", "CallRegisterIB")',
                     type: "POST",
                     dataType: "JSON",
                     data: formData,

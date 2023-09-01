@@ -214,7 +214,7 @@
                             var CallRecvDt = moment(data.CallRecvDt).format("YYYY-MM-DD");
                             //var CallRecvDt = data.CallRecvDt;
                             var CallSno = data.CallSno;
-                            
+
                             var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
@@ -232,12 +232,18 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
-            var CaseNo = $("#CaseNo").val();
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
             }
-
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
             var w_itemBlocked = "";
             var w_remarksVend = "";
             $.ajax({
@@ -306,7 +312,6 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
-
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
@@ -319,24 +324,25 @@
                 ShowHideMsgNew(false, "Please select Call Sno.");
                 return;
             }
-
-            $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
-                //success: function (response) {
-                if (response.status) {
-                    if (response.w_itemBlocked == "Y") {
-                        var msg = response.responseText;
-                        var d = confirm(msg);
-                        if (d === false) {
-                            window.location.href = '@Url.Action("Index", "CallRegisterIB")';
-                        } else {
+            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+                $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                    //success: function (response) {
+                    if (response.status) {
+                        if (response.w_itemBlocked == "Y") {
+                            var msg = response.responseText;
+                            var d = confirm(msg);
+                            if (d === false) {
+                                window.location.href = '@Url.Action("Index", "CallRegisterIB")';
+                            } else {
+                                window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                            }
+                        }
+                        else {
                             window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
                         }
                     }
-                    else {
-                        window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
-                    }
-                }
-            });
+                });
+            }
         });
 
         $("#btnDelete").click(function () {
@@ -344,7 +350,6 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
-
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
@@ -357,15 +362,16 @@
                 ShowHideMsgNew(false, "Please select Call Sno.");
                 return;
             }
+            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+                $.get("@Url.Action("DeleteDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                    if (response.status) {
+                        if (response.ActionType == "D") {
+                            window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.CaseNo + "&CallRecvDt=" + response.CallRecvDt + "&CallSno=" + response.CallSno + "&ActionType=" + response.ActionType;
+                        }
 
-            $.get("@Url.Action("DeleteDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
-                if (response.status) {
-                    if (response.ActionType == "D") {
-                        window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.CaseNo + "&CallRecvDt=" + response.CallRecvDt + "&CallSno=" + response.CallSno + "&ActionType=" + response.ActionType;
                     }
-
-                }
-            });
+                });
+            }
         });
 
         $("#btnCCancellation").click(function () {
@@ -373,7 +379,6 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
-
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
@@ -387,12 +392,37 @@
                 return;
             }
 
-            $.get("@Url.Action("GetCCancellationDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
-                if (response.status) {
-                    window.location.href = '@Url.Action("CallCancellation", "CallRegisterIB")' + '?CaseNo=' + response.CaseNo + "&_CallRecvDt=" + response.CallRecvDt + "&CallSno=" + response.CallSno + "&ActionType=" + response.ActionType;
+            if ((CaseNo != null || CaseNo != "") && (CallRecvDt != null || CallRecvDt != "") && (CallSno != null || CallSno != null)) {
+                $.get("@Url.Action("GetCCancellationDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                    if (response.status) {
+                        window.location.href = '@Url.Action("CallCancellation", "CallRegisterIB")' + '?CaseNo=' + response.CaseNo + "&_CallRecvDt=" + response.CallRecvDt + "&CallSno=" + response.CallSno + "&ActionType=" + response.ActionType;
 
-                }
-            });
+                    }
+                });
+            }
+        });
+
+        $("#btnEditStatus").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var CallSno = $("#CallSno").val();
+
+            if (CaseNo == null || CaseNo == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
+            }
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
+            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+                window.location.href = '@Url.Action("CallStatus", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+            }
+
         });
 
         completed = function (response) {

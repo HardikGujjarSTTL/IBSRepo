@@ -1,4 +1,5 @@
 ﻿using IBS.Models;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace IBS.Interfaces.InspectionBilling
 {
@@ -41,6 +42,12 @@ namespace IBS.Interfaces.InspectionBilling
         string CallDetailsSave(VenderCallCancellationModel model,  string UserName);
 
         string CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno);
+
+        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno);
+
+        string Save(VenderCallStatusModel model);
+
+        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, string ActionType);
 
     }
 }
