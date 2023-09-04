@@ -521,6 +521,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewGetIcphotoenclosed> ViewGetIcphotoencloseds { get; set; }
 
+    public virtual DbSet<ViewGetInspectionCertDetail> ViewGetInspectionCertDetails { get; set; }
+
     public virtual DbSet<ViewGetPendingJiComplaint> ViewGetPendingJiComplaints { get; set; }
 
     public virtual DbSet<ViewGetPoDetailsReport> ViewGetPoDetailsReports { get; set; }
@@ -1161,12 +1163,16 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<ClientFeedback>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("CLIENT_FEEDBACK");
+            entity.HasKey(e => e.Id).HasName("CLIENT_FEEDBACK_PK");
+
+            entity.ToTable("CLIENT_FEEDBACK");
 
             entity.HasIndex(e => new { e.Mobile, e.RegionCode }, "UK_CLIENT_FEEDBACK").IsUnique();
 
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"CLIENT_FEEDBACK_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.Client)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -1176,44 +1182,44 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("EMAIL");
             entity.Property(e => e.Field1)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_1");
             entity.Property(e => e.Field10)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_10");
             entity.Property(e => e.Field11)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_11");
             entity.Property(e => e.Field12)
                 .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("FIELD_12");
             entity.Property(e => e.Field2)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_2");
             entity.Property(e => e.Field3)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_3");
             entity.Property(e => e.Field4)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_4");
             entity.Property(e => e.Field5)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_5");
             entity.Property(e => e.Field6)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_6");
             entity.Property(e => e.Field7)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_7");
             entity.Property(e => e.Field8)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_8");
             entity.Property(e => e.Field9)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("FIELD_9");
             entity.Property(e => e.Mobile)
-                .HasPrecision(10)
+                .HasColumnType("NUMBER(30)")
                 .HasColumnName("MOBILE");
             entity.Property(e => e.OffName)
                 .HasMaxLength(50)
@@ -7838,7 +7844,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("LETTER_DATE");
             entity.Property(e => e.LetterNo)
-                .HasPrecision(6)
+                .HasMaxLength(50)
                 .HasColumnName("LETTER_NO");
             entity.Property(e => e.Lotofinsp)
                 .HasColumnType("NUMBER")
@@ -8195,10 +8201,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T108RemarkedCall>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T108_REMARKED_CALLS");
+            entity.HasKey(e => e.Id).HasName("T108_REMARKED_CALLS_PK");
 
+            entity.ToTable("T108_REMARKED_CALLS");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T108_REMARKED_CALLS_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.CallRecvDt)
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
@@ -8216,10 +8226,10 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.FrIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("FR_IE_CD");
             entity.Property(e => e.FrIePendingCalls)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("FR_IE_PENDING_CALLS");
             entity.Property(e => e.RemAppBy)
                 .HasMaxLength(8)
@@ -8251,10 +8261,10 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("REMARKING_STATUS");
             entity.Property(e => e.ToIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("TO_IE_CD");
             entity.Property(e => e.ToIePendingCalls)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("TO_IE_PENDING_CALLS");
         });
 
@@ -14730,10 +14740,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<TraineeEmployeeMaster>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("TRAINEE_EMPLOYEE_MASTER");
+            entity.HasKey(e => e.IeCd).HasName("SYS_C009210");
 
+            entity.ToTable("TRAINEE_EMPLOYEE_MASTER");
+
+            entity.Property(e => e.IeCd)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("IE_CD");
             entity.Property(e => e.Category)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -14763,7 +14777,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("EMP_NO");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
@@ -14859,7 +14873,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("TRAINING_DETAILS");
 
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.CourseId)
                 .HasMaxLength(5)
@@ -17406,6 +17420,63 @@ public partial class ModelContext : DbContext
                 .HasColumnName("SET_NO");
         });
 
+        modelBuilder.Entity<ViewGetInspectionCertDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_GET_INSPECTION_CERT_DETAILS");
+
+            entity.Property(e => e.Bkno)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("BKNO");
+            entity.Property(e => e.Callrecvdt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALLRECVDT");
+            entity.Property(e => e.Callsno)
+                .HasPrecision(5)
+                .HasColumnName("CALLSNO");
+            entity.Property(e => e.Callstatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALLSTATUS");
+            entity.Property(e => e.Callstatusdesc)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CALLSTATUSDESC");
+            entity.Property(e => e.Caseno)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASENO");
+            entity.Property(e => e.Consignee)
+                .HasMaxLength(378)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE");
+            entity.Property(e => e.Icno)
+                .HasMaxLength(29)
+                .IsUnicode(false)
+                .HasColumnName("ICNO");
+            entity.Property(e => e.Iesname)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("IESNAME");
+            entity.Property(e => e.Regioncode)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("REGIONCODE");
+            entity.Property(e => e.Setno)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("SETNO");
+            entity.Property(e => e.Status)
+                .HasMaxLength(18)
+                .IsUnicode(false)
+                .HasColumnName("STATUS");
+        });
+
         modelBuilder.Entity<ViewGetPendingJiComplaint>(entity =>
         {
             entity
@@ -18308,6 +18379,7 @@ public partial class ModelContext : DbContext
                 .HasColumnName("VCHR_NO");
         });
         modelBuilder.HasSequence("AUDIT_SEQ");
+        modelBuilder.HasSequence("CLIENT_FEEDBACK_SEQ");
         modelBuilder.HasSequence("EMAILCONFIGURATIONSEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
@@ -18321,6 +18393,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T07_RITES_DESIG_SEQ");
         modelBuilder.HasSequence("T10_IC_BOOKSET_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
+        modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
         modelBuilder.HasSequence("T31_HOLOGRAM_ISSUED_SEQ");
         modelBuilder.HasSequence("T32_CLIENT_LOGIN_SEQ");

@@ -1,5 +1,6 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -18,7 +19,7 @@ namespace IBS.Controllers
             return View();
         }
 
-        public IActionResult GetBillDetails(string BillNo)
+        public IActionResult BillDetails(string BillNo)
         {
             InspectionFeeBillModel model = inspectionFeeBillRepository.FindByBillNo(BillNo);
 
@@ -27,8 +28,21 @@ namespace IBS.Controllers
                 AlertDanger("Record not found for the given Bill No.!!!");
                 return View("Index");
             }
-            return View("BillDetails", model);
+            return View(model);
         }
 
+        [HttpPost]
+        public IActionResult LoadTableBillItems([FromBody] DTParameters dtParameters)
+        {
+            DTResult<BillItemsListModel> dTResult = inspectionFeeBillRepository.GetBillItemsList(dtParameters);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableChequeDetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<ChequeDetailsListModel> dTResult = inspectionFeeBillRepository.GetChequeDetailsList(dtParameters);
+            return Json(dTResult);
+        }
     }
 }

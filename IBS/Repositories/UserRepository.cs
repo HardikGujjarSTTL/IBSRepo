@@ -55,8 +55,8 @@ namespace IBS.Repositories
                 model.CallMarking = user.CallMarking;
                 model.CallRemarking = user.CallRemarking;
                 model.UserType = user.UserType;
-
                 model.Isdeleted = user.Isdeleted;
+                model.RoleId = (from u in context.Userroles where u.UserId == user.UserId select u.RoleId).FirstOrDefault();
                 return model;
             }
         }
@@ -106,8 +106,27 @@ namespace IBS.Repositories
                                     //RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select ur.RoleId).FirstOrDefault()),
                                     //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
                                     RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.UserId ?? "").ToString() select ur.RoleId).FirstOrDefault()),
-                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where ur.UserId == u.UserId select r.Rolename).FirstOrDefault()),
-                                    //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
+                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
+                                    OrgnTypeL = Convert.ToString((from t106 in context.T106LoOrgns
+                                                                  join u1 in context.T02Users on t106.Mobile equals u1.UserId into userGroup
+                                                                  from user in userGroup.DefaultIfEmpty()
+                                                                  where t106.Mobile == model.UserName.Trim()
+                                                                  select t106.OrgnType).FirstOrDefault()),
+                                    OrganisationL = Convert.ToString((from t106 in context.T106LoOrgns
+                                                                      join u1 in context.T02Users on t106.Mobile equals u1.UserId into userGroup
+                                                                      from user in userGroup.DefaultIfEmpty()
+                                                                      where t106.Mobile == model.UserName.Trim()
+                                                                      select t106.OrgnChased).FirstOrDefault()),
+                                    OrgnType = Convert.ToString((from t32 in context.T32ClientLogins
+                                                                  join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
+                                                                  from user in userGroup.DefaultIfEmpty()
+                                                                  where t32.Mobile == model.UserName.Trim()
+                                                                  select t32.OrgnType).FirstOrDefault()),
+                                    Organisation = Convert.ToString((from t32 in context.T32ClientLogins
+                                                                 join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
+                                                                 from user in userGroup.DefaultIfEmpty()
+                                                                 where t32.Mobile == model.UserName.Trim()
+                                                                 select t32.Organisation).FirstOrDefault())
                                 }).FirstOrDefault();
             return userSessionModel;
 
@@ -222,8 +241,9 @@ namespace IBS.Repositories
                         Createddate = l.Createddate,
                         Createdby = l.Createdby,
                         Updateddate = l.Updateddate,
-                        Updatedby = l.Updatedby
-                    };
+                        Updatedby = l.Updatedby,
+                        RoleName = (from u in context.Userroles join r in context.Roles on u.RoleId equals r.RoleId where u.UserId == l.UserId select r.Rolename).FirstOrDefault(),
+        };
 
             dTResult.recordsTotal = query.Count();
 
@@ -251,6 +271,14 @@ namespace IBS.Repositories
             User.Updatedby = UserID;
             User.Updateddate = DateTime.Now;
             context.SaveChanges();
+
+            var roles = (from ur in context.Userroles where ur.UserId == UserID select ur).FirstOrDefault();
+            if (roles != null) {
+                roles.Isdeleted = Convert.ToByte(true);
+                roles.Updatedby = User.Id;
+                roles.Updateddate = DateTime.Now;
+                context.SaveChanges();
+            }
             return true;
         }
 
@@ -279,6 +307,28 @@ namespace IBS.Repositories
                 context.T02Users.Add(obj);
                 context.SaveChanges();
                 Id = Convert.ToInt32(obj.Id);
+
+                var role = (from ur in context.Userroles where ur.UserId == obj.UserId select ur).FirstOrDefault();
+                if (role == null)
+                {
+                    int maxID = context.Userroles.Max(x => x.Id) + 1;
+                    Userrole objUR = new Userrole();
+                    objUR.Id = maxID;
+                    objUR.UserId = Convert.ToString(obj.UserId);
+                    objUR.RoleId = Convert.ToInt32(model.RoleId);
+                    objUR.Isdeleted = Convert.ToByte(false);
+                    objUR.Createdby = Convert.ToInt32(model.Createdby);
+                    objUR.Createddate = DateTime.Now;
+                    context.Userroles.Add(objUR);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    role.RoleId = Convert.ToInt32(model.RoleId);
+                    role.Updatedby = Convert.ToInt32(model.Updatedby);
+                    role.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                }
             }
             else
             {
@@ -293,11 +343,33 @@ namespace IBS.Repositories
                 User.AllowDnChksht = model.AllowDnChksht;
                 User.CallMarking = model.CallMarking;
                 User.CallRemarking = model.CallRemarking;
-
                 User.Isdeleted = Convert.ToByte(false);
                 User.Updatedby = model.UserId;
                 User.Updateddate = DateTime.Now;
                 context.SaveChanges();
+
+                var role = (from ur in context.Userroles where ur.UserId == User.UserId select ur).FirstOrDefault();
+                if (role == null)
+                {
+                    int maxID = context.Userroles.Max(x => x.Id) + 1;
+                    Userrole objUR = new Userrole();
+                    objUR.Id = maxID;
+                    objUR.UserId = Convert.ToString(User.UserId);
+                    objUR.RoleId = Convert.ToInt32(model.RoleId);
+                    objUR.Isdeleted = Convert.ToByte(false);
+                    objUR.Createdby = Convert.ToInt32(model.Createdby);
+                    objUR.Createddate = DateTime.Now;
+                    context.Userroles.Add(objUR);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    role.RoleId = Convert.ToInt32(model.RoleId);
+                    role.Updatedby = Convert.ToInt32(model.Updatedby);
+                    role.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                }
+
                 Id = Convert.ToInt32(User.Id);
             }
             #endregion

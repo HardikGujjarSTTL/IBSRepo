@@ -8,12 +8,14 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
+using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
+using IBS.Repositories.WebsitePages;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -81,6 +83,9 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 
 
+builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
+builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
+builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
 builder.Services.AddScoped<IUnitOfMeasurementsRepository, UnitOfMeasurementsRepository>();
@@ -153,8 +158,14 @@ builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormReposi
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
+builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
+builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
+builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
+builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
 
 var app = builder.Build();
 

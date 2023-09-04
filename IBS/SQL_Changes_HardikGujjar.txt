@@ -1233,3 +1233,45 @@ END;
 
 
 ===================
+
+ALTER TABLE Vendor_Feedback 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE Vendor_Feedback_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE Vendor_Feedback
+   SET ID = Vendor_Feedback_seq.nextval;
+   
+ALTER TABLE Vendor_Feedback
+    MODIFY ID NUMBER(6,0) DEFAULT Vendor_Feedback_seq.nextval;
+    
+ALTER TABLE Vendor_Feedback
+ADD CONSTRAINT Vendor_Feedback_pk  PRIMARY KEY (ID);
+
+======================
+
+ALTER TABLE CLIENT_FEEDBACK 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE CLIENT_FEEDBACK_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE CLIENT_FEEDBACK
+   SET ID = CLIENT_FEEDBACK_seq.nextval;
+   
+ALTER TABLE CLIENT_FEEDBACK
+    MODIFY ID NUMBER(6,0) DEFAULT CLIENT_FEEDBACK_seq.nextval;
+    
+ALTER TABLE CLIENT_FEEDBACK
+ADD CONSTRAINT CLIENT_FEEDBACK_pk  PRIMARY KEY (ID);
+
+======================

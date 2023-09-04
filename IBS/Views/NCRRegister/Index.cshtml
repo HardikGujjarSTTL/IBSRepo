@@ -79,25 +79,6 @@
 
      <script type="text/javascript">
 
-         function Search() {
-            var ncrNoInput = $("#CASENO");
-            var ncrNoValue = ncrNoInput.val().trim();
-            var validationSpan = $("[data-valmsg-for='CaseNo']");
-
-            if (ncrNoValue === "") {
-                validationSpan.html("CASE No. is required.");
-                validationSpan.show();
-                return;
-            } else {
-                if ($("#frmNCRDetails").valid()) {
-                    $("#frmNCRDetails").submit();
-                }
-                InitializeDatatable();
-            }
-            validationSpan.hide();
-            ModifyNCR();
-        }
-
          function Submit() {
             var ncrNoInput = $("#FromDate");
             var ncrNoInput1 = $("#ToDate");
@@ -125,53 +106,6 @@
             }
             validationSpan.hide();
             ieCdValidationSpan.hide();
-            //ModifyNCR();
-        }
-
-        function btnnewncr(){
-            var ncrNoInput = $("#BKNo");
-            var ncrNo1Input = $("#CASENO");
-            var ncrNo2Input = $("#SetNo");
-            var ncrNoValue = ncrNoInput.val().trim();
-            var ncrNo1Input = ncrNoInput.val().trim();
-            var ncrNo2Input = ncrNoInput.val().trim();
-            var validationSpan = $("[data-valmsg-for='BKNo']");
-            var validationSpan1 = $("[data-valmsg-for='CaseNo']");
-            var validationSpan2 = $("[data-valmsg-for='SetNo']");
-
-            if (ncrNoValue === "" && ncrNo1Input === "" && ncrNo2Input==="") {
-                validationSpan.html("BK No. is required.");
-                validationSpan1.html("Case No. is required.");
-                validationSpan2.html("Set No. is required.");
-                validationSpan.show();
-                return;
-            } else {
-                var CASENO = $("#CASE_NO").val();
-                var BKNo = $("#BKNo").val();
-                var SetNo = $("#SetNo").val();
-                var url = '@Url.Action("Manage", "NCRRegister")' + '?Actions=A&CASENO=' + CASENO + '&BKNo=' + BKNo + '&SetNo=' + SetNo;
-                window.location.href = url;
-            }
-            validationSpan.hide();
-            ModifyNCR();
-        }
-
-        function ModifyNCR(){
-            var ncrNoInput = $("#NCNO");
-            var ncrNoValue = ncrNoInput.val().trim();
-            var validationSpan = $("[data-valmsg-for='NC_NO']");
-
-            if (ncrNoValue === "") {
-                validationSpan.html("NCR No. is required.");
-                validationSpan.show();
-                return;
-            }else{
-                var NC_NO = $("#NCNO").val();
-                var url = '@Url.Action("Manage", "NCRRegister")' + '?Actions=M&NC_NO=' + NC_NO;
-                window.location.href = url;
-            }
-            validationSpan.hide();
-            ModifyNCR();
         }
 
         completed = function (response) {

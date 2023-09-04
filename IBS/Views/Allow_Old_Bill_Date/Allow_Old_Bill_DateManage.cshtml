@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Manage ALLOW OLD BILL DATE FORM";
+    string clsView = "";
+    if (Model.Region != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="Allow_Old_Bill_Date" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmAllowOldBillDateDetails">
@@ -16,8 +21,8 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="PropertyId">Region</label>
-                @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
-                <span asp-validation-for="Region" class="text-danger"></span>
+                @Html.DropDownListFor(model => model.Region, Common.GetRegion(Model.Region), new { })
+                @*<span asp-validation-for="Region" class="text-danger"></span>*@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="custom-readio">
@@ -44,7 +49,7 @@
         </div>
         <div class="savenext-btn">
             <a asp-controller="Allow_Old_Bill_Date" asp-action="Allow_Old_Bill_DateMaster" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
         </div>
     </div>
 </form>

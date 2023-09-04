@@ -32,8 +32,8 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string OrgType = "R";
-            string Org = "SWR";
+            string OrgType = OrgnType;
+            string Org = Organisation;
             DTResult<ReturnedBillsModel> dTResult = ReturnedBillsRepository.GetReturnedBills(dtParameters, OrgType, Org);
             return Json(dTResult);
         }

@@ -31,7 +31,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<Allow_Old_Bill_DateModel> GetMessageList(DTParameters dtParameters)
+        public DTResult<Allow_Old_Bill_DateModel> GetMessageList(DTParameters dtParameters, string GetRegionCode)
         {
 
             DTResult<Allow_Old_Bill_DateModel> dTResult = new() { draw = 0 };
@@ -58,6 +58,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T97ControlFiles
+                    where l.Region == GetRegionCode
                     select new Allow_Old_Bill_DateModel
                     {
                         Region = l.Region,
