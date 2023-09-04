@@ -166,6 +166,7 @@ builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
 builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
 builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
+builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 
 var app = builder.Build();
 
