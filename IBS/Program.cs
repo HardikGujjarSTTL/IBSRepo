@@ -8,12 +8,14 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Vendor;
+using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
+using IBS.Repositories.WebsitePages;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -160,6 +162,7 @@ builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>()
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
 builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
 var app = builder.Build();
 

@@ -2531,7 +2531,27 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Sector)).ToList();
         }
+        public static string[] GetVenderDetails(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
 
+            var objData = (from t05 in ModelContext.T05Vendors
+                        join t03 in ModelContext.T03Cities on t05.VendCityCd equals t03.CityCd
+                        where t05.VendCd == VendCd
+                        select new
+                        {
+                            VENDOR = t05.VendName + "," +
+                                     (t05.VendAdd2 != null ? (t05.VendAdd1 + "/" + t05.VendAdd2) : t05.VendAdd1) + "/" + t03.City,
+                            t05.VendEmail
+                        }).FirstOrDefault();
+            string[] strings = new string[2];
+            if(objData != null)
+            {
+                strings[0] = objData.VENDOR;
+                strings[1] = objData.VendEmail;
+            }
+            return strings;
+        }
     }
     public static class DbContextHelper
     {

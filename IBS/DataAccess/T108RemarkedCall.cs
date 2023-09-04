@@ -34,4 +34,6 @@ public partial class T108RemarkedCall
     public byte? FrIePendingCalls { get; set; }
 
     public byte? ToIePendingCalls { get; set; }
+
+    public int Id { get; set; }
 }
