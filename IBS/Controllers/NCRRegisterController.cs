@@ -44,12 +44,9 @@ namespace IBS.Controllers
                 }
                 else if (Actions == "M")
                 {
-                    int isButtonDisabled = nCRRegisterRepository.ShouldRemarkDisable(NC_NO);
-                    ViewBag.ShowRemarksButton = isButtonDisabled >= 1 ? false : true;
-
                     ViewBag.ShowNCRButton = false;
                     ViewBag.ShowNCRNO = true;
-                   
+                    ViewBag.ShowRemarksButton = true;
                     ViewBag.ShowSaveButton = false;
                 }
 

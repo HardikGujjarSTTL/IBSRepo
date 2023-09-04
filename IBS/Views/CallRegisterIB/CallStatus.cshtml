@@ -1,0 +1,154 @@
+﻿@model IBS.Models.VenderCallStatusModel
+
+@{
+    ViewData["Title"] = "Call Status Update form";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Call Status Update form</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatus" id="frmCallStatus">
+        <input type="hidden" asp-for="ActionType" />
+        <div class="accordion-body" style="overflow-x: auto;">
+            <table>
+                <col style="width: 20%;" />
+                <col style="width: 80%;" />
+                <tr>
+                    <td>
+                        <label for="Reference">Vendor : </label>
+                    </td>
+
+                    <td>
+                        <input type="text" class="input" asp-for="VendName" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Purchaser : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="Consignee" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Item : </label>
+                    </td>
+                    <td>
+                        <textarea rows="4" asp-for="ItemDescPo" style="color:red;text-transform: uppercase;" readonly="readonly"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Call Date : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Engineer Name : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="IeName" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Engineer Contact No. : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="IePhoneNo" maxlength="10" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">PO No. : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="PoNo" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">PO Date : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="PoDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Case No. : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="CaseNo" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Contact Person : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="MfgPers" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Contact Person Tel No. : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="MfgPhone" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Call Serial No. : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="CallSno" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Call Status : </label>
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"), "--Select--")
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Allow Updation of Call(Y/N) : </label>
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.UpdateAllowed, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"), "--Select--")
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+        </div>
+    </form>
+
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmCallStatus").valid()) {
+                $("#frmCallStatus").submit();
+            }
+
+        }
+
+    </script>
+}

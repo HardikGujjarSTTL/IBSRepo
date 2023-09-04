@@ -57,7 +57,7 @@ input[type="radio"] { -webkit-appearance: radio }
 input[type="submit"], input[type="button"], input[type="reset"], button, .button { line-height: 20px; padding: 4px 10px; display: inline-block; text-decoration: none; border: 0 none; margin: 0; outline: 0 none; }
 textarea { overflow: auto; vertical-align: top; resize: vertical; height: 100px; max-width: 100%; min-width: 100%; max-height: 500px; min-height: 90px; }
 fieldset { border: 0 none; margin: 0; padding: 0 }
-label { display: inline-block; padding-bottom: 10px; font-weight: normal; }
+label { display: inline-block; padding-bottom: 10px; font-weight: 500; }
 @font-face { font-family: 'Poppins'; src: url('./fonts/Poppins-SemiBold.woff2') format('woff2'), url('./fonts/Poppins-SemiBold.woff') format('woff'), url('./fonts/Poppins-SemiBold.ttf') format('truetype'), url('./fonts/Poppins-SemiBold.svg#Poppins-SemiBold') format('svg'); font-weight: 600; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Poppins'; src: url('./fonts/Poppins-Regular.woff2') format('woff2'), url('./fonts/Poppins-Regular.woff') format('woff'), url('./fonts/Poppins-Regular.ttf') format('truetype'), url('./fonts/Poppins-Regular.svg#Poppins-Regular') format('svg'); font-weight: normal; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Poppins'; src: url('./fonts/Poppins-Bold.woff2') format('woff2'), url('./fonts/Poppins-Bold.woff') format('woff'), url('./fonts/Poppins-Bold.ttf') format('truetype'), url('./fonts/Poppins-Bold.svg#Poppins-Bold') format('svg'); font-weight: bold; font-style: normal; font-display: swap; }
@@ -1165,7 +1165,7 @@ font-weight: 600;}
 	.company-checkbox [type="radio"]:checked + label:before, .company-checkbox [type="radio"]:not(:checked) + label:before { content: ''; position: absolute; left: 0; top: 0; width: 18px; height: 18px; border: 1px solid #2B368B; border-radius: 100%; background: #fff; }
 	.company-checkbox [type="radio"]:checked + label:after, .company-checkbox [type="radio"]:not(:checked) + label:after { content: ''; width: 10px; height: 10px; background: #2B368B; position: absolute; top: 4px; left: 4px; border-radius: 100%; -webkit-transition: all 0.2s ease; transition: all 0.2s ease; }
 	.company-checkbox [type="radio"]:checked + label:after { opacity: 1; -webkit-transform: scale(1); transform: scale(1); border: 1px solid #2B368B; }
-	.company-checkbox [type="radio"]:not(:checked) + label:after { background: #dddddd; border: 1px solid #cacaca; }
+	.company-checkbox [type="radio"]:not(:checked) + label:after { background: #fff; border: 1px solid #fff; }
 	.company-checkbox [type="radio"]:not(:checked) + label:before { border-color: #c9c9c9; }
 	.company-checkbox [type="radio"]:checked + label { color: #2B368B; }
 	.readiobox .company-checkbox { justify-content: flex-start; }
@@ -1491,3 +1491,17 @@ input[type="datetime-local"]{ height:43px;}
 .navbar-static-side ul li a{ padding:15px 35px;}
 
 .actionCenter {text-align: center;}
+.select2-container .select2-selection--single,
+.select2-container--default .select2-selection--single .select2-selection__arrow{height:42px;}
+.select2-container--default .select2-selection--single .select2-selection__rendered{ line-height:40px;}
+.dt-align-center {text-align: center;}
+.startRating .ratingGroup {display: inline-flex;}
+.startRating .ratingIcon {pointer-events: none;}
+.startRating .ratingInput {position: absolute !important; left: -9999px !important;}
+.startRating .ratingInputNone {display: none;}
+.startRating .ratingLabel {cursor: pointer; padding: 0 0.1em; font-size: 2rem;}
+.startRating .ratingIconStar {color: orange;}
+.startRating .ratingInput:checked ~ .ratingLabel .ratingIconStar {color: #ddd;}
+.startRating .ratingGroup:hover .ratingLabel .ratingIconStar {color: orange;}
+.startRating .ratingInput:hover ~ .ratingLabel .ratingIconStar {color: #ddd;}
+.ratingText{padding:0 20px;}

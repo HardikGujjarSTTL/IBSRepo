@@ -45,6 +45,9 @@ namespace IBS.Models
         public DateTimeOffset? Updateddate { get; set; }
 
         public string? Updatedby { get; set; }
+
+        public decimal RoleId { get; set; }
+        public string RoleName { get; set; }
     }
 
     public class UserAuthorizationModel

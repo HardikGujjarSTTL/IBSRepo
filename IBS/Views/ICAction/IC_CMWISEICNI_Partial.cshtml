@@ -1,0 +1,81 @@
+﻿@*<section class="table-section">*@
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtIC" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>IE S.No.</th>
+                        <th>IC Issue Date</th>
+                        <th>CM</th>
+                        <th>IE</th>
+                        <th>BK NO.</th>
+                        <th>Set NO.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+@*</section>*@
+
+
+    <script type="text/javascript">
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+
+            var ajaxUrl = '@Url.Action("LoadTable", "pfrmFromToDate")';
+
+            $("#dtIC").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: "IC_ISSUED_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CO_NAME" },
+                    { data: "IE_NAME" },
+                    { data: "BK_NO" },
+                    { data: "SET_NO" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+
+    </script>

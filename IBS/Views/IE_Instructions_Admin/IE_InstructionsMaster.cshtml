@@ -8,7 +8,7 @@
             <h2>INSTRUCTIONS FOR IE List</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsManage" class="formBtn"><span class="fa fa-plus"></span> Add New Instruction</a>
+            <a asp-area="" asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsManage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Instruction</a>
         </div>
     </div>
     <section class="table-section">
@@ -96,8 +96,8 @@
                             var MessageId = data.MessageId;
                             var RegionCode = data.RegionCode;
                             var editUrl = '@Url.Action("IE_InstructionsManage", "IE_Instructions_Admin")?MessageId=' + MessageId + '&RegionCode=' + RegionCode;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="MessageDelete(\'' + MessageId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + MessageId + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="MessageDelete(\'' + MessageId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + MessageId + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

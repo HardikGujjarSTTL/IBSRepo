@@ -9,69 +9,299 @@
     </div>
 </div>
 
-    <div class="task-listinput">
-        
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="InspectionEngineers" asp-action="InspectionEngineersDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInspectionEngineers">
-                <input type="hidden" asp-for="IeCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">IE Full Name</label>
-                            <textarea class="input" asp-for="IeName" maxlength="30"> </textarea>
-                            <span asp-validation-for="IeName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">IE Short Name</label>
-                            <textarea class="input" asp-for="IeSname" maxlength="30"> </textarea>
-                            <span asp-validation-for="IeSname" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Employee No</label>
-                            <input type="text" class="input" asp-for="IeEmpNo" maxlength="30">
-                            <span asp-validation-for="IeEmpNo" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Designation</label>
-                            <input type="text" class="input" asp-for="IeDesig" maxlength="30">
-                            <span asp-validation-for="IeDesig" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">IE Seal No</label>
-                            <input type="text" class="input" asp-for="IeSealNo" maxlength="30">
-                            <span asp-validation-for="IeSealNo" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">IE Region</label>
-                            <input type="text" class="input" asp-for="IeDepartment" maxlength="30">
-                            <span asp-validation-for="IeDepartment" class="text-danger"></span>
-                        </div>
-
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="InspectionEngineers" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+<div class="task-listinput" id="tab-1">
+    @*    <form data-ajax="true" asp-antiforgery="true" asp-controller="InspectionEngineers" asp-action="InspectionEngineersDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInspectionEngineers">*@
+    <form role="form" asp-controller="InspectionEngineers" asp-action="Manage" id="frmInspectionEngineers">
+        <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+        <input type="hidden" asp-for="IeCd" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">IE Name</label>
+                    <input type="text" class="input" asp-for="IeName" maxlength="30" style="text-transform: uppercase;">
+                    <span asp-validation-for="IeName" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">IE Short Name</label>
+                    <input type="text" class="input" asp-for="IeSname" maxlength="4" style="text-transform: uppercase;">
+                    <span asp-validation-for="IeSname" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE City ID</label>
+                    <input type="text" class="input" asp-for="IeCityId" maxlength="30">
+                    <span asp-validation-for="IeCityId" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE City</label>
+                    @Html.DropDownListFor(model => model.IeCityCd, new SelectList(IBS.Models.Common.GetIeCity(Model.IeCityId) , "Value", "Text"),"--Select--")
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference"><br /></label>
+                    <div class="savenext-btn center">
+                        <button type="button" class="save-btn active" id="btnCitySearch">Select City</button>
                     </div>
                 </div>
-            </form>
-        
-    </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Region</label>
+                    @Html.DropDownListFor(model => model.IeRegion, new SelectList(IBS.Models.Common.GetRegionType() , "Value", "Text"))
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Phone No.</label>
+                    <input type="text" class="input" asp-for="IePhoneNo" maxlength="10">
+                    <span asp-validation-for="IePhoneNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Controlling Officer.</label>
+                    @Html.DropDownListFor(model => model.IeCoCd, new SelectList(IBS.Models.Common.GetControllingOfficer(Model.IeRegion) , "Value", "Text"),"--Select--")
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Email.</label>
+                    <input type="text" class="input" asp-for="IeEmail" maxlength="30">
+                    <span asp-validation-for="IeEmail" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">DOB</label>
+                    <input type="text" class="datepicker" asp-for="IeDob" placeholder="DD/MM/YYYY" maxlength="30">
+                    <span asp-validation-for="IeDob" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Employee No.</label>
+                    <input type="text" class="input" asp-for="IeEmpNo" maxlength="30">
+                    <span asp-validation-for="IeEmpNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Seal No.</label>
+                    <input type="text" class="input" asp-for="IeSealNo" maxlength="30">
+                    <span asp-validation-for="IeSealNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Department</label>
+                    @Html.DropDownListFor(model => model.IeDepartment, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeDepartment" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Designation</label>
+                    @Html.DropDownListFor(model => model.IeDesig, new SelectList(IBS.Models.Common.IEDesignation() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeDesig" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Cluster Name</label>
+                    @Html.DropDownListFor(model => model.Cluster, new SelectList(IBS.Models.Common.GetClusterByIE(Model.IeRegion,Model.IeDepartment) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="Cluster" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Joining Date (DD/MM/YYYY)</label>
+                    <input type="text" class="datepicker" asp-for="IeJoinDt" placeholder="DD/MM/YYYY" maxlength="30">
+                    <span asp-validation-for="IeJoinDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Posting</label>
+                    @Html.DropDownListFor(model => model.IeType, new SelectList(IBS.Models.Common.GetIEPosting() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeType" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE Status</label>
+                    @Html.DropDownListFor(model => model.IeStatus, new SelectList(IBS.Models.Common.GetIEStatus() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeStatus" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Status Date (DD/MM/YYYY)</label>
+                    <input type="text" class="datepicker" asp-for="IeStatusDt" placeholder="DD/MM/YYYY" maxlength="30">
+                    <span asp-validation-for="IeStatusDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE CALL MARKING</label>
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" asp-for="IeCallMarking" value="Y" id="IeCallMarking_Y" />
+                                <label for="IeCallMarking_Y">Yes</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" asp-for="IeCallMarking" value="N" id="IeCallMarking_N" />
+                                <label for="IeCallMarking_N">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Call Marking Stopping Date</label>
+                    <input type="text" class="datepicker" asp-for="CallMarkingStoppingDt" placeholder="DD/MM/YYYY" maxlength="30">
+                    <span asp-validation-for="CallMarkingStoppingDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE TYPE</label>
+                    @Html.DropDownListFor(model => model.IeType, new SelectList(IBS.Models.Common.GetIEJobType() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeType" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Alternate IE ONE</label>
+                    @Html.DropDownListFor(model => model.AltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="AltIe" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Alternate IE TWO</label>
+                    @Html.DropDownListFor(model => model.AltIeTwo, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="AltIeTwo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Alternate IE THREE</label>
+                    @Html.DropDownListFor(model => model.AltIeThree, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="AltIeThree" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Contract Alternate IE</label>
+                    @Html.DropDownListFor(model => model.AltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="AltIe" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IEFullSignature" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IEInitials" />
+                </div>
+            </div>
+
+
+            <div class="savenext-btn">
+                <a asp-controller="InspectionEngineers" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" id="btnSave">Save</button>
+                <button type="button" class="save-btn active" id="btnDelete">Delete</button>
+            </div>
+        </div>
+    </form>
+
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        function Save() {
-            if ($("#frmInspectionEngineers").valid()) {
-                $("#frmInspectionEngineers").submit();
+
+        $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const _actionType = urlParams.get('ActionType');
+            if (_actionType == "M") {
+                $("#btnSave").text("Update");
+                $("#btnDelete").hide();
             }
+            if (_actionType == "D") {
+                $("#btnSave").hide();
+                $("#btnDelete").show();
+            }
+            else {
+                $("#btnDelete").hide();
+            }
+
+        });
+
+        $("#IeCityCd").change(function () {
+            $("#IeCityId").val($('option:selected', $(this)).val())
+        });
+
+        $("#btnCitySearch").click(function () {
+            GetIeCity();
+        });
+
+        $("#btnSave").click(function () {
+            if ($("#IeCityCd").is(":hidden")) {
+                ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
+                return;
+            }
+            if ($("#IeCityCd").val() == null) {
+                ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
+                return;
+            }
+            if (!SaveSingleDocuments("tab-1")) { return; }
+            event.preventDefault();
+            if ($("#frmInspectionEngineers").valid()) {
+                var formData = $("#frmInspectionEngineers").serialize();
+                $.post("@Url.Action("DetailsSave", "InspectionEngineers")", formData, function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.status) {
+                    }
+                });
+            }
+            return false;
+        });
+
+        $("#btnDelete").click(function () {
+            var IeCd = $("#IeCd").val();
+            $.ajax({
+                url: '@Url.Action("DeleteIe", "InspectionEngineers")?IeCd=' + IeCd,
+                type: 'post',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    window.location.href = '@Url.Action("Index", "InspectionEngineers")';
+                }
+            });
+            return false;
+        });
+
+        function GetIeCity() {
+            var IeCityId = $("#IeCityId").val();
+            $.ajax({
+                url: '@Url.Action("GetIeCity", "InspectionEngineers")?IeCityId=' + IeCityId,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#IeCityCd").html("");
+                    $("#IeCityCd").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#IeCityCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/InspectionEngineers/Index";
-            window.location.href = '@Url.Action("Index", "InspectionEngineers")';
-        };
+
+        function GetCluster() {
+            var IeDepartment = $("#IeDepartment").val();
+            $.ajax({
+                url: '@Url.Action("GetClusterByIE", "InspectionEngineers")?IeDepartment=' + IeDepartment,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#Cluster").html("");
+                    $("#Cluster").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#Cluster").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+
     </script>
 }
