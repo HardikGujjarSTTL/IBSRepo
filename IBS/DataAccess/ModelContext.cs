@@ -14740,10 +14740,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<TraineeEmployeeMaster>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("TRAINEE_EMPLOYEE_MASTER");
+            entity.HasKey(e => e.IeCd).HasName("SYS_C009210");
 
+            entity.ToTable("TRAINEE_EMPLOYEE_MASTER");
+
+            entity.Property(e => e.IeCd)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("IE_CD");
             entity.Property(e => e.Category)
                 .HasMaxLength(1)
                 .IsUnicode(false)

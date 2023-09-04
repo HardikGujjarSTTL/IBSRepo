@@ -1,0 +1,228 @@
+﻿@{
+    ViewData["Title"] = "INSPECTION FEE BILL";
+    string clsView = "";
+}
+
+
+<style>
+    #popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .close-button {
+        position: absolute;
+        
+        right: 37%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size:xx-large;
+        margin-top:-2%;
+    }
+</style>
+<div id="hide">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>
+                INSPECTION FEE BILL LIST
+
+            </h2>
+        </div>
+
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtinvoiced" class="table-responsive">
+                    <thead>
+                        <tr>
+
+                            <th>S.No.</th>
+                            <th>Bill No.</th>
+                            <th>Bill Amount</th>
+                            <th>AU</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="popup" style="display: none;">
+
+    <div class="popup-content">
+        <span class="close-button" id="close" onclick="ClosePopup();">&times;</span>
+        <input type="hidden" id="hdnbillno" />
+        <label>LO Remarks</label>
+        <textarea id="textAreaInput" placeholder="Enter text"></textarea>
+
+        <button id="save" style="margin-left:35%" class="Permission_Save" onclick="UpdateDetails();">Save Remarks</button>
+    </div>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable1();
+        });
+
+        function InitializeDatatable1() {
+
+            $("#dtinvoiced").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "BILL_NO" },
+                    { data: "BILL_AMOUNT" },
+                    { data: "AU" },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = '';
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;" ' +
+                                'class="fa fa-pencil Permission_EditView">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+        function editRow(escapedRow) {
+            
+            $("#hdnbillno").val(escapedRow.BILL_NO);
+            $("#textAreaInput").val(escapedRow.LO_REMARKS);
+            $("#popup").fadeIn();
+        }
+        $("#popup").click(function (event) {
+            if (!$(event.target).closest(".popup-content").length) {
+                $("#popup").fadeOut();
+            }
+        });
+        function ClosePopup() {
+            $("#popup").fadeOut();
+        }
+
+        function UpdateDetails() {
+            
+            if ($("#textAreaInput").val() == "") {
+                    alert("please Enter Remark");
+                    return false;
+                }
+            var formData = new FormData();
+            formData.append("BILL_NO", $("#hdnbillno").val());
+            formData.append("LO_REMARKS", $("#textAreaInput").val());
+
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: "/BillRemarks/SaveData",
+                dataType: "json",
+                data: formData,
+                success: function (res) {
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+                        window.location.reload();
+                       
+                    }
+                    else {
+
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+
+                },
+                error: function (res) {
+
+
+                    if (res == true) {
+
+                        alert('Data Saved Successfully!');
+                        window.location.reload();
+                       
+                    }
+                    else {
+                        alert('Error Occurred. Contact Your admin!');
+                        //alert(error);
+                    }
+
+                }
+            });
+        }
+
+    </script>
+}

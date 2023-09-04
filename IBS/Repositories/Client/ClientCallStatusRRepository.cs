@@ -21,7 +21,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public DTResult<ClientCallRptModel> GetCallStatusR(DTParameters dtParameters)
+        public DTResult<ClientCallRptModel> GetCallStatusR(DTParameters dtParameters, string OrgType, string Org)
         {
 
             DTResult<ClientCallRptModel> dTResult = new() { draw = 0 };
@@ -50,8 +50,8 @@ namespace IBS.Repositories
             }
 
             OracleParameter[] par = new OracleParameter[5];
-            par[0] = new OracleParameter("p_CLT", OracleDbType.NVarchar2, "R", ParameterDirection.Input);
-            par[1] = new OracleParameter("p_RLYCD", OracleDbType.NVarchar2, "SR", ParameterDirection.Input);
+            par[0] = new OracleParameter("p_CLT", OracleDbType.NVarchar2, OrgType, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_RLYCD", OracleDbType.NVarchar2, Org, ParameterDirection.Input);
             par[2] = new OracleParameter("p_wFrmDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("FromDate"), ParameterDirection.Input);
             par[3] = new OracleParameter("p_wToDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("ToDate"), ParameterDirection.Input);
             par[4] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -104,7 +104,7 @@ namespace IBS.Repositories
 
 
         }
-        public DTResult<ClientCallRptModel> GetCallStatusC(DTParameters dtParameters)
+        public DTResult<ClientCallRptModel> GetCallStatusC(DTParameters dtParameters, string OrgType, string Org)
         {
 
             DTResult<ClientCallRptModel> dTResult = new() { draw = 0 };
@@ -147,8 +147,8 @@ namespace IBS.Repositories
             //else
             //{
             OracleParameter[] par = new OracleParameter[6];
-            par[0] = new OracleParameter("p_CLT", OracleDbType.NVarchar2, "R", ParameterDirection.Input);
-            par[1] = new OracleParameter("p_RLYCD", OracleDbType.NVarchar2, "SR", ParameterDirection.Input);
+            par[0] = new OracleParameter("p_CLT", OracleDbType.NVarchar2, OrgType, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_RLYCD", OracleDbType.NVarchar2, Org, ParameterDirection.Input);
             par[2] = new OracleParameter("p_wFrmDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("FromDate"), ParameterDirection.Input);
             par[3] = new OracleParameter("p_wToDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("ToDate"), ParameterDirection.Input);
             par[4] = new OracleParameter("p_status", OracleDbType.Varchar2, dtParameters.AdditionalValues?.GetValueOrDefault("ReportStatus"), ParameterDirection.Input);
