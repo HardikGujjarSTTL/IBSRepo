@@ -349,6 +349,9 @@ ALTER TABLE temp_online_complaints
     ALTER TABLE t32_client_login
     ADD ID NUMBER(6,0);
 
+    Alter table T100_CONTRACT
+Add LETTER_NO NVARCHAR2(50 CHAR)
+
     MERGE INTO T32_CLIENT_LOGIN t
     USING (
       SELECT ROW_NUMBER() OVER (ORDER BY user_name) AS RowNo, mobile
@@ -678,5 +681,6 @@ BEGIN
         MATERIALDESCRIPTION
     FROM T100_CONTRACT
     WHERE (p_clientname IS NULL OR CLIENTNAME = p_clientname)
-    AND (p_clienttype IS NULL OR CLIENTTYPE = p_clienttype);
+    AND (p_clienttype IS NULL OR CLIENTTYPE = p_clienttype)
+    AND isdeleted = 0 OR isdeleted IS NULL;
 END GetContractInfo;

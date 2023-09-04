@@ -7,5 +7,6 @@ namespace IBS.Interfaces
         int ContractDetailsInsertUpdate(ContractEntry model);
         DTResult<ContractEntry> GetContractList(DTParameters dtParameters);
         public ContractEntry FindByID(int ID);
+        bool Remove(int ID, int UserID);
     }
 }

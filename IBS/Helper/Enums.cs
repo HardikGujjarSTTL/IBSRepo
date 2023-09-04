@@ -42,16 +42,16 @@ namespace IBS.Helper
             CallRegistrationDoc = 10,
             [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
             AdministratorPurchaseOrder = 13,
-            [Description("/ReadWriteData/Online_Comp_Document")]
+            [Description("/ReadWriteData/Files/Online_Comp_Document")]
             OnlineComplaints = 11,
-            [Description("/ReadWriteData/Consignee_Comp_Document")]
+            [Description("/ReadWriteData/Files/Consignee_Comp_Document")]
             ConsigneeComplaints = 12,
 
             [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
             IEFullSignature = 13,
             [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
             IEInitials = 14,
-            [Description("/ReadWriteData/ContractEntry")]
+            [Description("/ReadWriteData/Files/ContractEntry")]
             ContractEntry = 15,
         }
 

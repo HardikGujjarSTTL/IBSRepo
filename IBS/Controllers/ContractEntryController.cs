@@ -20,7 +20,7 @@ namespace IBS.Controllers
             env = _environment;
             contractEntryRepository = _contractEntryRepository;
         }
-        //[Authorization("ContractEntry", "Index", "view")]
+        [Authorization("ContractEntry", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -33,12 +33,12 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        // [Authorization("ContractEntry", "Index", "view")]
+        [Authorization("ContractEntry", "Index", "view")]
         public IActionResult Manage(int id)
         {
             ContractEntry model = new();
 
-            List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ContractEntryDoc, Convert.ToString(model.ID));
+            List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ContractEntryDoc, Convert.ToString(id));
             FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
             FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Contract_Doc).ToList();
@@ -56,7 +56,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorization("ContractEntry", "Index", "edit")]
+        [Authorization("ContractEntry", "Index", "edit")]
         public IActionResult ContractDetailsSave(ContractEntry model, IFormCollection FrmCollection)
         {
             try
@@ -72,6 +72,12 @@ namespace IBS.Controllers
                 int i = contractEntryRepository.ContractDetailsInsertUpdate(model);
                 if (i > 0)
                 {
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Contract_Doc };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(Convert.ToString(model.ID), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ContractEntry), env, iDocument, "CONTRACT_ENTRY", string.Empty, DocumentIds);
+                    }
                     return Json(new { status = true, responseText = msg });
                 }
             }
@@ -81,5 +87,22 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                if (contractEntryRepository.Remove(id, UserId))
+                    AlertDeletedSuccess();
+                else
+                    AlertDanger();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ContractEntry", "Delete", 1, GetIPAddress());
+                AlertDanger();
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 }

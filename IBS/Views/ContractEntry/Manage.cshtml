@@ -2,10 +2,10 @@
 
 @{
     string clsView = "";
-    //if (Model.ID > 0)
-    //{
-    //    clsView = "Permission_View";
-    //}
+    if (Model.ID > 0)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<section id="tab-1" @*class="@clsView"*@>
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ContractEntry" asp-action="ContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContract">
             <input type="hidden" asp-for="ID" />
@@ -115,13 +115,12 @@
                         
 @section scripts{
 
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
 
        function BtnSave(){
-            SaveSingleDocuments("tab-1");
             if ($("#frmContract").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmContract").submit();
             }
        }

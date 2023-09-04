@@ -7844,7 +7844,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("LETTER_DATE");
             entity.Property(e => e.LetterNo)
-                .HasPrecision(6)
+                .HasMaxLength(50)
                 .HasColumnName("LETTER_NO");
             entity.Property(e => e.Lotofinsp)
                 .HasColumnType("NUMBER")
@@ -8226,10 +8226,10 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.FrIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("FR_IE_CD");
             entity.Property(e => e.FrIePendingCalls)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("FR_IE_PENDING_CALLS");
             entity.Property(e => e.RemAppBy)
                 .HasMaxLength(8)
@@ -8261,10 +8261,10 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("REMARKING_STATUS");
             entity.Property(e => e.ToIeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("TO_IE_CD");
             entity.Property(e => e.ToIePendingCalls)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("TO_IE_PENDING_CALLS");
         });
 

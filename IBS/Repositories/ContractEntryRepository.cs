@@ -23,11 +23,19 @@ namespace IBS.Repositories
         public int ContractDetailsInsertUpdate(ContractEntry model)
         {
             int ContractId = 0;
+            int maxID = 0;
             var Contract = (from r in context.T100Contracts where r.Id == Convert.ToInt32(model.ID) select r).FirstOrDefault();
             #region Contract save
             if (Contract == null)
             {
-                int maxID = context.T100Contracts.Max(x => x.Id) + 1;
+                if (context.T100Contracts.Any())
+                {
+                    maxID = context.T100Contracts.Max(x => x.Id) + 1;
+                }
+                else
+                {
+                    maxID = 1; 
+                }
                 T100Contract obj = new T100Contract();
                 obj.Id = maxID;
                 obj.LetterNo = model.LETTER_NO;
@@ -123,11 +131,11 @@ namespace IBS.Repositories
             dt = ds.Tables[0];
             List<ContractEntry> list = null;
 
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
+            if (ds != null && ds.Tables.Count > 0)
+            { 
                 list = dt.AsEnumerable().Select(row => new ContractEntry
                 {
-                        LETTER_NO = row["LETTER_NO"] != DBNull.Value ? Convert.ToInt32(row["LETTER_NO"]) : 0,
+                        LETTER_NO = row["LETTER_NO"] != DBNull.Value ? Convert.ToString(row["LETTER_NO"]) : "",
                         ID = row["ID"] != DBNull.Value ? Convert.ToInt32(row["ID"]) : 0,
                         LETTER_DATE = row["LETTER_DATE"] != DBNull.Value ? Convert.ToDateTime(row["LETTER_DATE"]) : DateTime.MinValue,
                         TPFROM = row["TPFROM"] != DBNull.Value ? Convert.ToDateTime(row["TPFROM"]) : DateTime.MinValue,
@@ -146,14 +154,14 @@ namespace IBS.Repositories
 
                 query = list.AsQueryable();
                 dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-                dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
                 if (!string.IsNullOrEmpty(searchBy))
                     query = query.Where(w => Convert.ToString(w.CLIENTNAME).ToLower().Contains(searchBy.ToLower())
                     || Convert.ToString(w.LETTER_NO).ToLower().Contains(searchBy.ToLower())
                     );
+                dTResult.recordsFiltered = query.Count();
+
                 dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
                 dTResult.draw = dtParameters.Draw;
-                return dTResult;
             }
             return dTResult;
         }
@@ -185,5 +193,15 @@ namespace IBS.Repositories
             }
         }
 
+        public bool Remove(int ID, int UserID)
+        {
+            var Contract = context.T100Contracts.Find(ID);
+            if (Contract == null) { return false; }
+            Contract.Isdeleted = Convert.ToByte(true);
+            Contract.Updatedby = UserID;
+            Contract.Updatedate = DateTime.Now;
+            context.SaveChanges();
+            return true;
+        }
     }
 }

@@ -7,7 +7,7 @@ public partial class T100Contract
 {
     public int Id { get; set; }
 
-    public int? LetterNo { get; set; }
+    public string? LetterNo { get; set; }
 
     public DateTime? LetterDate { get; set; }
 

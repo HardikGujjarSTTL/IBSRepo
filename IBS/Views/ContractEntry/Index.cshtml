@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<form data-ajax="true" asp-antiforgery="false" asp-controller="ContractEntry" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmContrcatEntry">
+<form data-ajax="true" asp-antiforgery="true" asp-controller="ContractEntry" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmContrcatEntry">
     <div class="accordion-body">
         <div class="row my-0 d-flex align-items-end">
             <div class="col-md-3 mb-3">
@@ -60,7 +60,29 @@
     <script type="text/javascript">
 
         $("#btnSearch").click(function () {
-            InitializeDatatable();
+
+            var CnameDropDown = $("#ClientName");
+            var cnameValue = CnameDropDown.val();
+            var cnameValidationSpan = $("[data-valmsg-for='CLIENTNAME']");
+
+            var ctypeDropDown = $("#Clienttype");
+            var ctypeValue = ctypeDropDown.val();
+            var ctypeValidationSpan = $("[data-valmsg-for='CLIENTTYPE']");
+
+            if (cnameValue === "" && ctypeValue === "") {
+                cnameValidationSpan.html("Client Name is required.");
+                ctypeValidationSpan.html("Client Type is required.");
+                cnameValidationSpan.show();
+                ctypeValidationSpan.show();
+                return;
+            } else {
+                if ($("#frmContrcatEntry").valid()) {
+                    $("#frmContrcatEntry").submit();
+                }
+                InitializeDatatable();
+            }
+            ctypeValidationSpan.hide();
+            cnameValidationSpan.hide();
         });
 
         function InitializeDatatable() {
@@ -117,9 +139,29 @@
         }
 
         function Delete(id) {
-            var url = '@Url.Action("Delete", "ClientMaster")?ID=' + id;
+            var url = '@Url.Action("Delete", "ContractEntry")?ID=' + id;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
+
+        $("#ClientName").on("change", function () {
+            $("[data-valmsg-for='CLIENTNAME']").hide();
+        });
+
+        $("#ClientName").on("blur", function () {
+            if ($(this).val() === "") {
+                $("[data-valmsg-for='CLIENTNAME']").show();
+            }
+        });
+
+        $("#Clienttype").on("change", function () {
+            $("[data-valmsg-for='CLIENTTYPE']").hide();
+        });
+
+        $("#Clienttype").on("blur", function () {
+            if ($(this).val() === "") {
+                $("[data-valmsg-for='CLIENTTYPE']").show();
+            }
+        });
     </script>
 }

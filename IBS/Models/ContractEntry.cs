@@ -3,7 +3,7 @@
     public class ContractEntry
     {
         public int ID { get; set; }
-        public int? LETTER_NO { get; set; }
+        public string? LETTER_NO { get; set; }
         public DateTime? LETTER_DATE { get; set; }
         public DateTime? TPFROM { get; set; }
         public DateTime? TPTO { get; set; }
