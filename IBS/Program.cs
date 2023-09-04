@@ -83,6 +83,7 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 
 
+builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
 builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
 builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
 builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
