@@ -1,5 +1,11 @@
 ﻿@model IBS.Models.VendorFeedbackModel
 
+@{
+    Layout = "~/Views/Shared/_FrontendLayout.cshtml";
+}
+
+<div class="container">
+    <div class="innerContent">
 <div class="list-inner">
     <div class="tast-list">
         <h2>RITES QA Division (Gurugram) Client Feedback Form</h2>
@@ -8,8 +14,8 @@
 <div class="accordion-body">
     <form role="form" asp-controller="VendorFeedback" asp-action="SaveVendorFeedback" id="frmVendorFeedback">
         <input type="hidden" asp-for="VendEmail" />
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+                <div class="row my-0 d-flex align-items-end">
+            <div class="col-md-3 mb-3">
                 <label for="Reference">Vendor Code Alloted by RITES</label>
                 <input type="text" class="input" asp-for="VendCd">
                 <span asp-validation-for="VendCd" class="text-danger"></span>
@@ -19,9 +25,10 @@
                     <button type="button" class="save-btn active" style="margin-top: 26px;" onclick="GetVenderDetails();">Submit</button>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="Reference">Vendor Name & Address</label>
-                <label id="lblVendorDetails"></label>
+            <div class="col-md-7 mb-3">
+                <div><label for="Reference">Vendor Name & Address</label>
+                            <label id="lblVendorDetails"></label>
+                        </div>
             </div>
         </div>
 
@@ -154,6 +161,8 @@
             <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
         </div>
     </form>
+</div>
+    </div>
 </div>
 
 @section scripts{
