@@ -29,5 +29,7 @@ public partial class T31HologramIssued
 
     public DateTime? Updateddate { get; set; }
 
+    public int Id { get; set; }
+
     public virtual T09Ie? HgIecdNavigation { get; set; }
 }

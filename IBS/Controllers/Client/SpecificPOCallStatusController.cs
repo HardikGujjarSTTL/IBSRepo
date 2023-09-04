@@ -26,8 +26,9 @@ namespace IBS.Controllers.Client
         {
             
             DTResult<ClientCallRptModel> dTResult = new DTResult<ClientCallRptModel>();
-            
-            dTResult = SpecificPOCallStatusRepository.GetPOCallStatusIndex(dtParameters);
+            string OrgType = OrgnTypeClient;
+            string Org = OrganisationClient;
+            dTResult = SpecificPOCallStatusRepository.GetPOCallStatusIndex(dtParameters, OrgType, Org);
             
             return Json(dTResult);
         }

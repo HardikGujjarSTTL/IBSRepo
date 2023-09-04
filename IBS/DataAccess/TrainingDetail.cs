@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class TrainingDetail
 {
-    public byte IeCd { get; set; }
+    public int IeCd { get; set; }
 
     public string CourseId { get; set; } = null!;
 }

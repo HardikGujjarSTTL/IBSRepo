@@ -75,11 +75,15 @@ public partial class T09Ie
 
     public virtual ICollection<NoIeWorkPlan> NoIeWorkPlans { get; set; } = new List<NoIeWorkPlan>();
 
+    public virtual ICollection<T10IcBookset> T10IcBooksets { get; set; } = new List<T10IcBookset>();
+
     public virtual ICollection<T16IcCancel> T16IcCancels { get; set; } = new List<T16IcCancel>();
 
     public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();
 
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
+
+    public virtual ICollection<T31HologramIssued> T31HologramIssueds { get; set; } = new List<T31HologramIssued>();
 
     public virtual ICollection<T45ClaimMaster> T45ClaimMasters { get; set; } = new List<T45ClaimMaster>();
 

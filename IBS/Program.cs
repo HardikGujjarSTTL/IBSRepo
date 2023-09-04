@@ -151,8 +151,11 @@ builder.Services.AddScoped<IMasterItemsPLForm, MasterItemsPLForm>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+//builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
+builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
+builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
+builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
 
 var app = builder.Build();
 

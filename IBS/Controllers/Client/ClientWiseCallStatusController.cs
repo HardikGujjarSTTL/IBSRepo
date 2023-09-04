@@ -27,14 +27,16 @@ namespace IBS.Controllers.Client
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             var Action = dtParameters.AdditionalValues?.GetValueOrDefault("Action");
+            string OrgType = OrgnTypeClient;
+            string Org = OrganisationClient;
             DTResult<ClientCallRptModel> dTResult = new DTResult<ClientCallRptModel>();
             if (Action == "R")
             {
-                 dTResult = ClientCallStatusRepository.GetCallStatusR(dtParameters);
+                 dTResult = ClientCallStatusRepository.GetCallStatusR(dtParameters, OrgType, Org);
             }
             else
             {
-                 dTResult = ClientCallStatusRepository.GetCallStatusC(dtParameters);
+                 dTResult = ClientCallStatusRepository.GetCallStatusC(dtParameters, OrgType, Org);
             }
 
             return Json(dTResult);
