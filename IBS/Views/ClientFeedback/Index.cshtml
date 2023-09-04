@@ -49,422 +49,104 @@
                             <th class="width50p">Description</th>
                             <th>Rating</th>
                         </tr>
-                        <tr>
-                            <td>1.</td>
-                            <td>Response of RITES office in attending to priorities given by the Railways.</td>
-                            <td>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field1" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage0"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field1" asp-for="Field1" id="BelowAverage0" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good0"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field1" asp-for="Field1" id="Good0" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood0"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field1" asp-for="Field1" id="VeryGood0" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent0"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field1" asp-for="Field1" id="Excellent0" value="Excellent" type="radio" value="4">
+                        @for (int j = 1; j <= 11; j++)
+                        {
+                            <tr>
+                                @{
+                                    var i = j;
+                                    var name = "Field" + j;
+                                    var BelowAverage = "BelowAverage" + j;
+                                    var Good = "Good" + j;
+                                    var VeryGood = "VeryGood" + j;
+                                    var Excellent = "Excellent" + j;
+                                }
+                                <td>@i.</td>
+                                @if (i == 1)
+                                {
+                                    <td>
+                                        Response of RITES office in attending to priorities given by the Railways.
+                                    </td>
+                                }
+                                else if (i == 2)
+                                {
+                                    <td>
+                                        Completion of inspections in time by RITES Inspecting Engineer.
+                                    </td>
+                                }
+                                else if (i == 3)
+                                {
+                                    <td>
+                                        Quality of Inspections and Rejection Advices on RITES website for JI Registration.
+                                    </td>
+                                }
+                                else if (i == 4)
+                                {
+                                    <td>
+                                        Ease of Registering of Rejection Advices on RITES website for JI Registration.
+                                    </td>
+                                }
+                                else if (i == 5)
+                                {
+                                    <td>
+                                        Response of RITES in attending to Joint Inspection requests for Rejection Cases.
+                                    </td>
+                                }
+                                else if (i == 6)
+                                {
+                                    <td>
+                                         Nature of Technical references sent by RITES and suggestions on improvement of material quality.
+                                    </td>
+                                }
+                                else if (i == 7)
+                                {
+                                    <td>
+                                        Liaison by RITES officials with your office and their responsiveness.
+                                    </td>
+                                }
+                                else if (i == 8)
+                                {
+                                    <td>
+                                        Quality of RITES website and dissemination of information for the clients.
+                                    </td>
+                                }
+                                else if (i == 9)
+                                {
+                                    <td>
+                                        Accessibility of IC issued by RITES on IREPS portal.
+                                    </td>
+                                }
+                                else if (i == 10)
+                                {
+                                    <td>
+                                        Responsiveness of the Inspection Engineer to queries raised by your office.
+                                    </td>
+                                }
+                                else if (i == 11)
+                                {
+                                    <td>
+                                        Overall experience with RITES QA divison.
+                                    </td>
+                                }
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="startRating">
+                                            <div class="ratingGroup">
+                                                <input disabled checked class="ratingInput ratingInputNone" name="@name" id="ratingNone" value="0" type="radio">
+                                                <label class="ratingLabel" for="@BelowAverage"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@BelowAverage" type="radio" value="1">
+                                                <label class="ratingLabel" for="@Good"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@Good" type="radio" value="2">
+                                                <label class="ratingLabel" for="@VeryGood"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@VeryGood" type="radio" value="3">
+                                                <label class="ratingLabel" for="@Excellent"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@Excellent" type="radio" value="4">
+                                            </div>
                                         </div>
+                                        <div class="ratingText"></div>
                                     </div>
-                                    <div class="ratingText"></div>
-                                </div>
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field1" id="BelowAverage0" value="1" />
-                                            <label for="BelowAverage0">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field1" id="Good0" value="2" />
-                                            <label for="Good0">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field1" id="VeryGood0" value="3" />
-                                            <label for="VeryGood0">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field1" id="Excellent0" value="4" />
-                                            <label for="Excellent0">Excellent</label>
-                                            <span asp-validation-for="Field1" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2.</td>
-                            <td>Completion of inspections in time by RITES Inspecting Engineer.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field2" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field2" asp-for="Field2" id="BelowAverage1" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field2" asp-for="Field2" id="Good1" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field2" asp-for="Field2" id="VeryGood1" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent1"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field2" asp-for="Field2" id="Excellent1" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-@*
-                                <div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field2" id="BelowAverage1" value="1" />
-                                            <label for="BelowAverage1">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field2" id="Good1" value="2" />
-                                            <label for="Good1">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field2" id="VeryGood2" value="3" />
-                                            <label for="VeryGood2">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field2" id="Excellent3" value="4" />
-                                            <label for="Excellent3">Excellent</label>
-                                            <span asp-validation-for="Field2" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3.</td>
-                            <td>Quality of Inspections and Rejection Advices on RITES website for JI Registration.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field3" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage4"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field3" asp-for="Field3" id="BelowAverage4" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good4"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field3" asp-for="Field3" id="Good4" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood4"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field3" asp-for="Field3" id="VeryGood4" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent5"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field3" asp-for="Field3" id="Excellent5" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field3" id="BelowAverage4" value="1" />
-                                            <label for="BelowAverage4">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field3" id="Good4" value="2" />
-                                            <label for="Good4">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field3" id="VeryGood4" value="3" />
-                                            <label for="VeryGood4">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field3" id="Excellent5" value="4" />
-                                            <label for="Excellent5">Excellent</label>
-                                            <span asp-validation-for="Field3" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4.</td>
-                            <td>Ease of Registering of Rejection Advices on RITES website for JI Registration.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field4" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage6"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field4" asp-for="Field4" id="BelowAverage6" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good6"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field4" asp-for="Field4" id="Good6" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood6"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field4" asp-for="Field4" id="VeryGood6" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent6"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field4" asp-for="Field4" id="Excellent6" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field4" id="BelowAverage6" value="1" />
-                                            <label for="BelowAverage6">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field4" id="Good6" value="2" />
-                                            <label for="Good6">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field4" id="VeryGood6" value="3" />
-                                            <label for="VeryGood6">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field4" id="Excellent6" value="4" />
-                                            <label for="Excellent6">Excellent</label>
-                                            <span asp-validation-for="Field4" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5.</td>
-                            <td>Response of RITES in attending to Joint Inspection requests for Rejection Cases.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field5" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage7"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field5" asp-for="Field5" id="BelowAverage7" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good7"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field5" asp-for="Field5" id="Good7" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood7"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field5" asp-for="Field5" id="VeryGood7" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent7"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field5" asp-for="Field5" id="Excellent7" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field5" id="BelowAverage7" value="1" />
-                                            <label for="BelowAverage7">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field5" id="Good7" value="2" />
-                                            <label for="Good7">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field5" id="VeryGood7" value="3" />
-                                            <label for="VeryGood7">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field5" id="Excellent7" value="4" />
-                                            <label for="Excellent7">Excellent</label>
-                                            <span asp-validation-for="Field5" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>6.</td>
-                            <td>Nature of Technical references sent by RITES and suggestions on improvement of material quality.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field6" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage8"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field6" asp-for="Field6" id="BelowAverage8" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good8"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field6" asp-for="Field6" id="Good8" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood8"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field6" asp-for="Field6" id="VeryGood8" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent8"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field6" asp-for="Field6" id="Excellent8" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-
-                               @* <div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field6" id="BelowAverage8" value="1" />
-                                            <label for="BelowAverage8">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field6" id="Good8" value="2" />
-                                            <label for="Good8">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field6" id="VeryGood8" value="3" />
-                                            <label for="VeryGood8">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field6" id="Excellent8" value="4" />
-                                            <label for="Excellent8">Excellent</label>
-                                            <span asp-validation-for="Field6" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>7.</td>
-                            <td>Liaison by RITES officials with your office and their responsiveness.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field7" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage9"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field7" asp-for="Field7" id="BelowAverage9" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good9"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field7" asp-for="Field7" id="Good9" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood9"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field7" asp-for="Field7" id="VeryGood9" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent9"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field7" asp-for="Field7" id="Excellent9" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field7" id="BelowAverage9" value="1" />
-                                            <label for="BelowAverage9">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field7" id="Good9" value="2" />
-                                            <label for="Good9">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field7" id="VeryGood9" value="3" />
-                                            <label for="VeryGood9">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field7" id="Excellent9" value="4" />
-                                            <label for="Excellent9">Excellent</label>
-                                            <span asp-validation-for="Field7" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>8.</td>
-                            <td>Quality of RITES website and dissemination of information for the clients.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field8" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage10"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field8" asp-for="Field8" id="BelowAverage10" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good10"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field8" asp-for="Field8" id="Good10" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood10"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field8" asp-for="Field8" id="VeryGood10" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent10"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field8" asp-for="Field8" id="Excellent10" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field8" id="BelowAverage10" value="1" />
-                                            <label for="BelowAverage10">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field8" id="Good10" value="2" />
-                                            <label for="Good10">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field8" id="VeryGood10" value="3" />
-                                            <label for="VeryGood10">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field8" id="Excellent10" value="4" />
-                                            <label for="Excellent10">Excellent</label>
-                                            <span asp-validation-for="Field8" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>9.</td>
-                            <td>Accessibility of IC issued by RITES on IREPS portal.</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="startRating">
-                                        <div class="ratingGroup">
-                                            <input disabled checked class="ratingInput ratingInputNone" name="Field9" id="ratingNone" value="0" type="radio">
-                                            <label class="ratingLabel" for="BelowAverage11"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field9" asp-for="Field9" id="BelowAverage11" value="Below Average" type="radio" value="1">
-                                            <label class="ratingLabel" for="Good11"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field9" asp-for="Field9" id="Good11" value="Good" type="radio" value="2">
-                                            <label class="ratingLabel" for="VeryGood11"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field9" asp-for="Field9" id="VeryGood11" value="Very Good" type="radio" value="3">
-                                            <label class="ratingLabel" for="Excellent11"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
-                                            <input class="ratingInput" name="Field9" asp-for="Field9" id="Excellent11" value="Excellent" type="radio" value="4">
-                                        </div>
-                                    </div>
-                                    <div class="ratingText"></div>
-                                </div>
-
-                                @*<div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field9" id="BelowAverage11" value="1" />
-                                            <label for="BelowAverage11">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field9" id="Good11" value="2" />
-                                            <label for="Good11">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field9" id="VeryGood11" value="3" />
-                                            <label for="VeryGood11">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field9" id="Excellent11" value="4" />
-                                            <label for="Excellent11">Excellent</label>
-                                            <span asp-validation-for="Field9" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>*@
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>10.</td>
-                            <td>Responsiveness of the Inspection Engineer to queries raised by your office.</td>
-                            <td>
-                                <div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field10" id="BelowAverage12" value="1" />
-                                            <label for="BelowAverage12">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field10" id="Good12" value="2" />
-                                            <label for="Good12">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field10" id="VeryGood12" value="3" />
-                                            <label for="VeryGood12">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field10" id="Excellent12" value="4" />
-                                            <label for="Excellent12">Excellent</label>
-                                            <span asp-validation-for="Field10" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>11.</td>
-                            <td>Overall experience with RITES QA divison.</td>
-                            <td>
-                                <div class="company-checkbox rattingCheckboxGrp">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="Field11" id="BelowAverage13" value="1" />
-                                            <label for="BelowAverage13">Below Average</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field11" id="Good13" value="2" />
-                                            <label for="Good13">Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field11" id="VeryGood13" value="3" />
-                                            <label for="VeryGood13">Very Good</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" asp-for="Field11" id="Excellent13" value="4" />
-                                            <label for="Excellent13">Excellent</label>
-                                            <span asp-validation-for="Field11" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        }
                         <tr>
                             <td>12.</td>
                             <td>Any other Comments/Suggestiong regarding functioning RITES QA system.<span class="note astric">(250 Chars Maxm)</span></td>
@@ -484,35 +166,57 @@
 </div>
 
 @section scripts{
-    <partial name="_ValidationScriptsPartial" />
-    <script type="text/javascript">
+        <partial name="_ValidationScriptsPartial" />
+        <script type="text/javascript">
 
-        $(document).ready(function () {
-            $('input:radio[name]').change(function () {
-                var radioValue = this.value
-                var val="";
-                if (radioValue == 1)
-                {
-                    val = "Below Average";
-                }
-                else if (radioValue == 2) {
-                    val = "Good";
-                }
-                else if (radioValue == 3) {
-                    val = "Very Good";
-                }
-                else if (radioValue == 4) {
-                    val = "Excellent";
-                }
+            $(document).ready(function () {
+                $('input:radio[name]').change(function () {
+                    var radioValue = this.value
+                    var val="";
+                    if (radioValue == 1)
+                    {
+                        val = "Below Average";
+                    }
+                    else if (radioValue == 2) {
+                        val = "Good";
+                    }
+                    else if (radioValue == 3) {
+                        val = "Very Good";
+                    }
+                    else if (radioValue == 4) {
+                        val = "Excellent";
+                    }
 
-                $(this).parent().parent().next().text('(' + val + ')');
+                    $(this).parent().parent().next().text('(' + val + ')');
+                });
             });
-        });
 
-        function Save() {
-            if ($("#frmClientFeedback").valid()) {
-                $("#frmClientFeedback").submit();
+            function CheckValidation()
+            {
+                var returnVal=true;
+                for (var i = 1; i <= 11; i++)
+                {
+                    var BelowAverage= $("#BelowAverage"+i).is(":checked");
+                    var Good = $("#Good" + i).is(":checked");
+                    var VeryGood = $("#VeryGood" + i).is(":checked");
+                    var Excellent = $("#Excellent" + i).is(":checked");
+                    if (!BelowAverage && !Good && !VeryGood && !Excellent)
+                    {
+                        returnVal = false;
+                    }
+                }
+                return returnVal;
             }
-        }
-    </script>
+
+            function Save() {
+                    if (!CheckValidation())
+                    {
+                        ShowHideMsgNew(false, "Please select rating.");
+                        return;
+                    }
+                if ($("#frmClientFeedback").valid()) {
+                    $("#frmClientFeedback").submit();
+                }
+            }
+        </script>
 }
