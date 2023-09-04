@@ -7,8 +7,10 @@ namespace IBS.Models
     {
         public string? HgRegion { get; set; }
 
+        [Required(ErrorMessage = "Hologram No. From is require")]        
         public string? HgNoFr { get; set; }
 
+        [Required(ErrorMessage = "Hologram No. To is require")]
         public string? HgNoTo { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
@@ -16,6 +18,7 @@ namespace IBS.Models
         public DateTime? HgIssueDt { get; set; }
         public string Display_HgIssueDt { get { return this.HgIssueDt != null ? Common.ConvertDateFormat(this.HgIssueDt.Value) : ""; } }
 
+        [Required(ErrorMessage ="IE Name is require")]
         public int? HgIecd { get; set; }
 
         public string? UserId { get; set; }

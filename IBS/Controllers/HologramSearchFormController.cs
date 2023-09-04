@@ -34,7 +34,9 @@ namespace IBS.Controllers
             ViewBag.Region = GetUserInfo.Region;
             if (!string.IsNullOrEmpty(Hg_No_Fr) && !string.IsNullOrEmpty(Hg_No_To))
             {
-                model = hologramSearchForm.FindByID(Hg_No_Fr.Substring(1, 7), Hg_No_To.Substring(1, 7), Region);
+                Hg_No_Fr = Hg_No_Fr.Substring(1, 7);
+                Hg_No_To = Hg_No_To.Substring(1, 7);
+                model = hologramSearchForm.FindByID(Hg_No_Fr, Hg_No_To, GetUserInfo.Region);
             }            
             return View(model);
         }
@@ -78,6 +80,7 @@ namespace IBS.Controllers
             try
             {
                 ViewBag.Role = GetUserInfo.RoleName;
+                ViewBag.Region = GetUserInfo.Region;
                 model.HgRegion = Region;
                 string msg = "";
                 var chkDate = hologramSearchForm.CheckDate(Convert.ToString(model.HgIssueDt));
@@ -148,5 +151,24 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        [HttpPost]
+        public IActionResult MatchHologram(string Hg_No_Fr, string Hg_No_To)
+        {
+            string errorMsg = "";
+            Hg_No_Fr = Hg_No_Fr.Substring(1, 7);
+            Hg_No_To = Hg_No_To.Substring(1, 7);
+            var res = hologramSearchForm.MatchHologram(Hg_No_Fr, Hg_No_To, GetUserInfo.Region);            
+            if (res == 0)
+            {
+                errorMsg = "No Record Found of Entered Hologram No From. and Hologram No.To!!!";
+                //return Json(new { status = false, responseText =  });
+            }
+            else if(res == 1)
+            {
+                errorMsg = "You Are Not Authorised to Update/Delete Hologram data Issued to Other Regions!!!";
+                //return Json(new { status = false, responseText = "You Are Not Authorised to Update/Delete Hologram data Issued to Other Regions!!!" });
+            }
+            return Json(errorMsg);
+        }
     }
 }

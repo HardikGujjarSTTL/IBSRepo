@@ -22,22 +22,28 @@
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Holograms No. From</label>
-                        <input type="text" class="input" asp-for="HgNoFr" maxlength="30">
-                        <span asp-validation-for="HgNoFr" class="text-danger"></span>
-                        <input type="hidden" asp-for="lblHgNoFr" />
+                        <div class="reference">
+                            <label for="Reference">Holograms No. From</label>
+                            <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                            <input type="text" class="input" asp-for="HgNoFr" maxlength="7" style="text-transform: uppercase;width:96%;">
+                            <span asp-validation-for="HgNoFr" class="text-danger"></span>
+                            <input type="hidden" asp-for="lblHgNoFr" />
+                        </div>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Holograms No. TO</label>
-                        <input type="text" class="input" asp-for="HgNoTo" maxlength="30">
-                        <span asp-validation-for="HgNoTo" class="text-danger"></span>
-                        <input type="hidden" asp-for="lblHgNoTo" />
+                        <div class="reference">
+                            <label for="Reference">Holograms No. TO</label>
+                            <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                            <input type="text" class="input" asp-for="HgNoTo" maxlength="7" style="text-transform: uppercase;width:96%;">
+                            <span asp-validation-for="HgNoTo" class="text-danger"></span>
+                            <input type="hidden" asp-for="lblHgNoTo" />
+                        </div>
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Issued to IE</label>
-                        <input type="text" class="datepicker" class="input" asp-for="HgIssueDt" maxlength="30">
+                        <input type="text" class="datepicker" class="input" asp-for="HgIssueDt" maxlength="10">
                         <span asp-validation-for="HgIssueDt" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -46,8 +52,8 @@
                         <span asp-validation-for="HgIecd" class="text-danger"></span>
                     </div>
                 </div>
-                @if(Model.IEStatus == "" || Model.IEStatus == null)
-                {                    
+                @if (Model.IEStatus == "" || Model.IEStatus == null)
+                {
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="SubmitHologramToIE();" id="btnSave">Save</button>
                     </div>
@@ -70,18 +76,18 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             //window.location.href = "/HologramSearchForm/Index";
-            if (res.status){
+            if (res.status) {
                 setTimeout(function () {
                     window.location.href = '@Url.Action("Index", "HologramSearchForm")';
                 }, 1000)
             }
         };
-        if(@Model == null){
+        if (@Model == null) {
             ShowHideMsgNew(false, "Hologram Record Not found");
         }
 
-        if (Role != "Admin"){
-            $("#btnSave").css("display","none");
+        if (Role != "Admin") {
+            $("#btnSave").css("display", "none");
         }
     </script>
 }

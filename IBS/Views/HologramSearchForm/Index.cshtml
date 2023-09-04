@@ -18,14 +18,14 @@
                 <div class="reference">
                     <label for="Reference">Hologram No. From</label>
                     <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
-                    <input type="text" id="txtFromNo" maxlength="100" style="text-transform: uppercase;width:94%;">
+                    <input type="text" id="txtFromNo" maxlength="7" style="text-transform: uppercase;width:94%;">
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Hologram No. To</label>
                     <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
-                    <input type="text" id="txtToNo" maxlength="100" style="text-transform: uppercase;width:94%;">
+                    <input type="text" id="txtToNo" maxlength="7" style="text-transform: uppercase;width:94%;">
                 </div>
             </div>
             <div class="col-md-4 mb-3" id="secDrop">
@@ -78,8 +78,8 @@
                     table.column(5).visible(false);
                 }
             });
-            if (Role == "Admin"){
-                $("#addNewForm").css("display","none");
+            if (Role != "Admin") {
+                $("#addNewForm").css("display", "none");
             }
         });
         function InitializeDatatable() {
@@ -118,27 +118,38 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "HgNoFr" },
-                    { data: "HgNoTo" },
                     {
-                        data: "Display_HgIssueDt"//"HgIssueDt",
-                        //render: function (data, type, row) {
-                        //    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                        //        return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                        //    }
-                        //    return data;
-                        //}
+                        data: "HgNoFr",
+                        render: function (data, type, row) {
+                            return row.HgRegion.substring(0, 1) + row.HgNoFr
+                        }
+                    },
+                    {
+                        data: "HgNoTo",
+                        render: function (data, type, row) {
+                            return row.HgRegion.substring(0, 1) + row.HgNoTo
+                        }
+                    },
+                    {
+                        data: "HgIssueDt",//"Display_HgIssueDt"
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
                     },
                     { data: "HgIeName" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            debugger
-                            var HgNoFr = data.HgNoFr;
-                            var HgNoTo = data.HgNoTo;
+                            var HgNoFr = data.HgRegion.substring(0, 1) + data.HgNoFr;
+                            var HgNoTo = data.HgRegion.substring(0, 1) + data.HgNoTo;
                             var editUrl = '@Url.Action("Manage", "HologramSearchForm")?Hg_No_Fr=' + HgNoFr + '&Hg_No_To=' + HgNoTo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="SOFDelete(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\')" href="javascript:void(\'0\');" id=\"' + HgNoFr + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';                            
+                            var html = '<div align=\"center\" class=\"reportIcon\">';
+                            //html += '<a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Edit(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="SOFDelete(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" id=\"' + HgNoFr + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -148,14 +159,46 @@
             });
         }
 
-        function SOFDelete(Hg_No_Fr, Hg_No_To) {
-            debugger
-            //var obj = new Object();
-            //obj.HgNoFr = HgNoFr;
-            //obj.HgNoTo = HgNoTo;
-            var url = '@Url.Action("Delete", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To;
-            $("#btn-delete-yes").attr("href", url);
-            $("#modal-delete-conf").modal("show");
+        function Edit(Hg_No_Fr, Hg_No_To, Region) {
+            Hg_No_Fr = Region + Hg_No_Fr;
+            Hg_No_To = Region + Hg_No_To;
+            $.ajax({
+                url: '@Url.Action("MatchHologram", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To,
+                type: "POST",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != "") {
+                        ShowHideMsgNew(false, response);
+                    } else {
+                        window.location.href = '@Url.Action("Manage", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To;
+                    }
+                }
+            });
+
+        }
+
+        function SOFDelete(Hg_No_Fr, Hg_No_To, Region) {
+            Hg_No_Fr = Region + Hg_No_Fr;
+            Hg_No_To = Region + Hg_No_To;
+            $.ajax({
+                url: '@Url.Action("MatchHologram", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To,
+                type: "POST",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != "") {
+                        ShowHideMsgNew(false, response);
+                    } else {
+                        var url = '@Url.Action("Delete", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To;
+                        $("#btn-delete-yes").attr("href", url);
+                        $("#modal-delete-conf").modal("show");
+                    }
+                }
+            });
+
         }
     </script>
 }
