@@ -123,7 +123,7 @@ builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineReposito
 builder.Services.AddScoped<ICityRepository,CityRepository>();
 builder.Services.AddScoped<I_ICBooksetFormRepository,ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
-builder.Services.AddScoped<IHologramSearchForm,HologramSearchForm>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLFormRepository,MasterItemsPLFormRepository>();
 builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
@@ -153,7 +153,7 @@ builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRReposit
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<I_ICBooksetFormRepository, ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
-builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+//builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormRepository>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
@@ -164,6 +164,10 @@ builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>()
 builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
+builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
+builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
+builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 
 var app = builder.Build();
 

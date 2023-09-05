@@ -622,7 +622,8 @@ CREATE TABLE Menu_Master (
     IconCssClass NVARCHAR2(50),
     IsActive NUMBER(1),
     SortOrder NUMBER(6),
-    IconPath VARCHAR2(50)
+    IconPath VARCHAR2(50),
+    IsDisplay NUMBER(1)
 );
 
 ALTER TABLE Menu_Master
@@ -1041,6 +1042,7 @@ BEGIN
             (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
         FROM MENU_MASTER m
         WHERE m.PARENTID IS NULL
+        AND m.IsDisplay = 1
         CONNECT BY PRIOR m.ID = m.PARENTID
 
         UNION ALL
@@ -1062,6 +1064,7 @@ BEGIN
             (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
         FROM MENU_MASTER p
         JOIN MENU_MASTER c ON p.ID = c.PARENTID
+        AND p.IsDisplay = 1
         CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
 
         ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
@@ -1275,3 +1278,41 @@ ALTER TABLE CLIENT_FEEDBACK
 ADD CONSTRAINT CLIENT_FEEDBACK_pk  PRIMARY KEY (ID);
 
 ======================
+create or replace PROCEDURE SP_Get_ICCancelData (
+    p_BKNo IN VARCHAR2,
+    p_SetNo IN VARCHAR2,
+    p_ISSUE_TO_IECD IN NUMBER,
+    p_Region IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+BEGIN
+    OPEN p_Result FOR
+    SELECT IC.BK_NO,
+           IC.SET_NO,
+           IE.IE_NAME,
+           CASE IC.IC_STATUS
+               WHEN 'C' THEN 'Cancelled'
+               WHEN 'M' THEN 'Missing'
+               WHEN 'L' THEN 'Lost'
+           END AS IC_STATUS,
+           IC.IC_STATUS as STATUS,
+           TO_CHAR(IC.STATUS_DT, 'dd/mm/yyyy') AS STATUS_DT,
+           CASE IC.REGION
+               WHEN 'N' THEN 'Northern'
+               WHEN 'W' THEN 'Western'
+               WHEN 'E' THEN 'Eastern'
+               WHEN 'S' THEN 'South'
+               WHEN 'C' THEN 'Central'
+           END AS REGION,
+           IC.REGION AS REGIONV,
+           IC.REMARKS
+    FROM T16_IC_CANCEL IC
+    INNER JOIN T09_IE IE ON IC.ISSUE_TO_IECD = IE.IE_CD
+    WHERE (IC.BK_NO = UPPER(TRIM(p_BKNo)) OR p_BKNo IS NULL)
+      AND (IC.SET_NO = UPPER(TRIM(p_SetNo)) OR p_SetNo IS NULL)
+      AND (IC.ISSUE_TO_IECD = p_ISSUE_TO_IECD OR p_ISSUE_TO_IECD = 0)
+      AND IC.REGION = p_Region
+    ORDER BY IC.BK_NO, IC.SET_NO;
+END;
+
+===============
