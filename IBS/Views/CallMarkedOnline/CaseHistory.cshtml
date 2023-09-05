@@ -24,7 +24,7 @@
             <h5>PO DETAILS</h5>
         </div>
         <div class="savenext-btn">
-            <button type="button" class="save-btn" id="btnBack">Back</button>
+            @*<button type="button" class="save-btn" id="btnBack">Back</button>*@
             <button type="button" class="save-btn active" id="btnPrint">Print</button>
             @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
         </div>
@@ -595,7 +595,7 @@
             //    'print'
             //],
             ajax: {
-                url: "@Url.Action("GetCaseHistoryRejectionVendorPlaceList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                url: "@Url.Action("GetCaseHistoryRejectionVendorPlaceList", "CallMarkedOnline")",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
