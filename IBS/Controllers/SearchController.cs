@@ -18,13 +18,16 @@ namespace IBS.Controllers
         [Authorization("Search", "Index", "view")]
         public IActionResult Index()
         {
+            var region = GetUserInfo.Region;
+            ViewBag.Region = region;
             return View();
         }
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<Search> dTResult = searchRepository.GetSearchList(dtParameters);
+            var region = GetUserInfo.Region;
+            DTResult<Search> dTResult = searchRepository.GetSearchList(dtParameters, region);
             return Json(dTResult);
         }
 
@@ -39,6 +42,13 @@ namespace IBS.Controllers
         public JsonResult GetConsigneeData(string Prefix)
         {
             List<Consignee> dTResult = searchRepository.GetConsigneeList(Prefix);
+            return Json(dTResult);
+        }
+        
+        [HttpPost]
+        public JsonResult GetVendorData(string Prefix)
+        {
+            List<VendorCls> dTResult = searchRepository.GetVendorList(Prefix);
             return Json(dTResult);
         }
     }

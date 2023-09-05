@@ -39,7 +39,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <label for="PropertyId">IE</label>
-                @Html.DropDownListFor(model => model.IEName, new SelectList(IBS.Models.Common.GetIENameWithoutCode(), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                @Html.DropDownList("IEName", new SelectList(IBS.Models.Common.GetIEName(@ViewBag.Region) , "Value", "Text"),"--Select--", new { id = "IENAME" })
             </div>
             <div class="col-md-2 mb-4">
                 <label for="Reference">Bill No.</label>
@@ -63,7 +63,7 @@
             </div>
             <div class="col-md-2 mb-4">
                 <label for="Reference">Vendor</label>
-                <input type="text" id="vendor" class="input" asp-for="Vendor" maxlength="200" />
+                <input type="text" id="vendor" class="input" maxlength="3" />
             </div>
             <div class="col-md-3 mb-3">
                 <div class="savenext-btn">
@@ -106,10 +106,123 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />
+   @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
     <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
 
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#btnsearch").click(function () {
+                InitializeDatatable();
+            });
+
+            function InitializeDatatable() {
+                debugger
+                var caseno = $("#caseno").val();
+                var pono = $("#pono").val();
+                var podt = $("#podt").val();
+                var bkno = $("#bkno").val();
+                var setno = $("#setno").val();
+                var calldt = $("#calldt").val();
+                var billno = $("#billno").val();
+                var billdt = $("#billdt").val();
+                var billamount = $("#billamount").val();
+                var bpo = $("#bpo").val();
+                var consignee = $("#consignee").val();
+                var vendor = $("#vendor").val();
+                var IENAME = $("#IENAME").val();
+                var callsno = $("#callsno").val();
+
+                var indexOfHyphen = vendor.indexOf("-");
+                var vendcd = vendor.substr(0, indexOfHyphen).trim();
+
+                var indexOfHyphen = consignee.indexOf("-");
+                var consigneecd = consignee.substr(0, indexOfHyphen).trim();
+
+                var indexOfHyphen = bpo.indexOf("-");
+                var bpocd = bpo.substr(0, indexOfHyphen).trim();
+
+                var ajaxUrl = "@Url.Action("LoadTable")";
+
+                $("#dtsearch").DataTable({
+                    stateSave: false,
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true,
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,
+                    searching: true,
+                    ajax: {
+                        url: ajaxUrl,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                                "caseno": caseno,
+                                "pono": pono,
+                                "podt": podt,
+                                "bkno": bkno,
+                                "setno": setno,
+                                "calldt": calldt,
+                                "callsno": callsno,
+                                "billno": billno,
+                                "billdt": billdt,
+                                "billamount": billamount,
+                                "bpocd": bpocd,
+                                "consigneecd": consigneecd,
+                                "vendcd": vendcd,
+                                "IENAME": IENAME,
+                            };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        },
+                    },
+                    columns: [
+                        { data: "CaseNo" },
+                        { data: "PONO" },
+                        {
+                            data: "PODT",
+                            render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            data: "Calldt",
+                            render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        { data: "CallSno" },
+                        { data: "BKNO" },
+                        { data: "SetNo" },
+                        { data: "IEName" },
+                        { data: "Consignee" },
+                        { data: "BillNo" },
+                        {
+                            data: "BillDt",
+                            render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        { data: "InspFee" },
+                        { data: "BillAmount" },
+                    ],
+                    "order": [[0, "asc"]]
+                });
+            }
+        });
 
         $(document).ready(function () {
             $("#bpo").autocomplete({
@@ -141,92 +254,29 @@
                             response($.map(data, function (item) {
                                 return { label: item.CONSIGNEE, value: item.CONSIGNEE };
                             }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
 
+            $("#vendor").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
                         }
                     })
                 },
                 minLength: 3
             });
         });
-
-        $("#btnsearch").click(function () {
-            InitializeDatatable();
-        });
-
-        function InitializeDatatable() {
-            var caseno = $("#caseno").val();
-            var pono = $("#pono").val();
-            var podt = $("#podt").val();
-            var bkno = $("#bkno").val();
-            var setno = $("#setno").val();
-            var calldt = $("#calldt").val();
-            var billno = $("#billno").val();
-            var billdt = $("#billdt").val();
-            var billamount = $("#billamount").val();
-            var bpo = $("#bpo").val();
-            var consignee = $("#consignee").val();
-            var vendor = $("#vendor").val();
-            var IENAME = $("#IENAME").val();
-            var callsno = $("#callsno").val();
-
-            var ajaxUrl = "@Url.Action("LoadTable")";
-
-            $("#dtsearch").DataTable({
-                stateSave: false,
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                paging: true,
-                searching: true,
-                ajax: {
-                    url: ajaxUrl,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "caseno": caseno,
-                            "pono": pono,
-                            "podt": podt,
-                            "bkno": bkno,
-                            "setno": setno,
-                            "calldt": calldt,
-                            "billno": billno,
-                            "billdt": billdt,
-                            "billamount": billamount,
-                            "bpo": bpo,
-                            "consignee": consignee,
-                            "vendor": vendor,
-                            "IENAME": IENAME,
-                            "callsno": callsno,
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    },
-                },
-                columns: [
-                    { data: "CaseNo" },
-                    { data: "PONO" },
-                    { data: "PODT" },
-                    { data: "BKNO" },
-                    { data: "SetNo" },
-                    { data: "CallSno" },
-                    { data: "Calldt" },
-                    { data: "IEName" },
-                    { data: "BillNo" },
-                    { data: "Consignee" },
-                    { data: "Vendor" },
-                    { data: "BPO" },
-                    { data: "BillDt" },
-                    { data: "InspFee" },
-                    { data: "BillAmount" },
-                ],
-                "order": [[0, "asc"]]
-            });
-        }
 
     </script>
 }

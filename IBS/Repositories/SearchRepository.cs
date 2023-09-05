@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
@@ -38,7 +39,7 @@ namespace IBS.Repositories
         {
             var query = context.V06Consignees
                 .Where(consignee =>
-                    consignee.Consignee.Trim().ToUpper().StartsWith(Consignee))
+                    consignee.Consignee.Trim().ToUpper().StartsWith(Consignee.ToUpper()))
                 .OrderBy(consignee => consignee.Consignee)
                 .Select(consignee => new Consignee
                 {
@@ -50,7 +51,28 @@ namespace IBS.Repositories
             return query;
         }
 
-        public DTResult<Search> GetSearchList(DTParameters dtParameters)
+        public List<VendorCls> GetVendorList(string Vendor)
+        {
+            var query = from v in context.T05Vendors
+                        join c in context.T03Cities on v.VendCityCd equals c.CityCd
+                        where v.VendName != null &&
+                              v.VendName.Trim().ToUpper().StartsWith(Vendor.ToUpper())
+                        orderby v.VendName
+                        select new VendorCls
+                        {
+                            VEND_CD = v.VendCd,
+                            VEND_NAME = v.VendCd + "-" +
+                                        v.VendName.Trim() + "/" +
+                                        v.VendAdd1.Trim() + "/" +
+                                        (c.Location != null ?
+                                        c.Location.Trim() + " / " + c.City.Trim() :
+                                        c.City.Trim())
+                        };
+            return query.ToList();
+        }
+
+
+        public DTResult<Search> GetSearchList(DTParameters dtParameters, string region)
         {
             DTResult<Search> dTResult = new() { draw = 0 };
             IQueryable<Search>? query = null;
@@ -75,7 +97,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string caseno = "", pono = "", podt = "", bkno = "", setno = "", calldt = "", billno = "", billdt = "", billamount = "", bpo = "", consignee = "", vendor = "", IENAME = "", callsno = "";
+            string caseno = null, pono = null, podt = null, bkno = null, setno = null, calldt =null, billno = null, billdt = null, billamount = null, bpo = null, consignee = null, vendor = null, IENAME = null, callsno = null;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["caseno"]))
             {
                 caseno = Convert.ToString(dtParameters.AdditionalValues["caseno"]);
@@ -112,17 +134,17 @@ namespace IBS.Repositories
             {
                 billamount = Convert.ToString(dtParameters.AdditionalValues["billamount"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["bpo"]))
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["bpocd"]))
             {
-                bpo = Convert.ToString(dtParameters.AdditionalValues["bpo"]);
+                bpo = Convert.ToString(dtParameters.AdditionalValues["bpocd"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["consignee"]))
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["consigneecd"]))
             {
-                consignee = Convert.ToString(dtParameters.AdditionalValues["consignee"]);
+                consignee = Convert.ToString(dtParameters.AdditionalValues["consigneecd"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["vendor"]))
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["vendcd"]))
             {
-                vendor = Convert.ToString(dtParameters.AdditionalValues["vendor"]);
+                vendor = Convert.ToString(dtParameters.AdditionalValues["vendcd"]);
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IENAME"]))
             {
@@ -132,48 +154,49 @@ namespace IBS.Repositories
             {
                 callsno = Convert.ToString(dtParameters.AdditionalValues["callsno"]);
             }
-
+            DateTime? calldt1 = !string.IsNullOrEmpty(dtParameters.AdditionalValues["calldt"]) ? Convert.ToDateTime(dtParameters.AdditionalValues["calldt"]) : null;
+            DateTime? billdt1 = !string.IsNullOrEmpty(dtParameters.AdditionalValues["billdt"]) ? Convert.ToDateTime(dtParameters.AdditionalValues["billdt"]) : null;
             DataTable dt = new DataTable();
             DataSet ds;
 
-            OracleParameter[] par = new OracleParameter[15];
+            OracleParameter[] par = new OracleParameter[16];
             par[0] = new OracleParameter("p_case_no", OracleDbType.Varchar2, caseno, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_po_no", OracleDbType.Varchar2, pono, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_po_dt", OracleDbType.Varchar2, podt, ParameterDirection.Input);
-            par[3] = new OracleParameter("p_consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_bpo_cd", OracleDbType.Varchar2, bpo, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, vendor, ParameterDirection.Input);
-            par[6] = new OracleParameter("p_dt_of_rec", OracleDbType.Varchar2, calldt, ParameterDirection.Input);
-            par[7] = new OracleParameter("p_call_sno", OracleDbType.Varchar2, callsno, ParameterDirection.Input);
-            par[8] = new OracleParameter("p_ie_cd", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
-            par[9] = new OracleParameter("p_bk_no", OracleDbType.Varchar2, bkno, ParameterDirection.Input);
-            par[10] = new OracleParameter("p_set_no", OracleDbType.Varchar2, setno, ParameterDirection.Input);
-            par[11] = new OracleParameter("p_bill_no", OracleDbType.Varchar2, billno, ParameterDirection.Input);
-            par[12] = new OracleParameter("p_bill_dt", OracleDbType.Varchar2, billdt, ParameterDirection.Input);
-            par[13] = new OracleParameter("p_bill_amt", OracleDbType.Varchar2, billamount, ParameterDirection.Input);
-            par[14] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("p_region", OracleDbType.Varchar2, region, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_po_no", OracleDbType.Varchar2, pono, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_po_dt", OracleDbType.Varchar2, podt, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_bpo_cd", OracleDbType.Varchar2, bpo, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, vendor, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_call_dt", OracleDbType.Date, calldt1, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_call_sno", OracleDbType.Varchar2, callsno, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_ie_cd", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
+            par[10] = new OracleParameter("p_bk_no", OracleDbType.Varchar2, bkno, ParameterDirection.Input);
+            par[11] = new OracleParameter("p_set_no", OracleDbType.Varchar2, setno, ParameterDirection.Input);
+            par[12] = new OracleParameter("p_bill_no", OracleDbType.Varchar2, billno, ParameterDirection.Input);
+            par[13] = new OracleParameter("p_bill_dt", OracleDbType.Date, billdt1, ParameterDirection.Input);
+            par[14] = new OracleParameter("p_bill_amt", OracleDbType.Int32, billamount, ParameterDirection.Input);
+            par[15] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("GetSearchAllData", par, 1);
-
+            
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];
-
                 List<Search> list = dt.AsEnumerable().Select(row => new Search
                 {
-                    CaseNo = row.Field<string?>("CASE_NO"),
-                    PONO = row.Field<string?>("PO_NO"),
-                    PODT = row.Field<DateTime?>("PO_DT"),
-                    Consignee = row.Field<string>("CONSIGNEE"),
-                    BPO = row.Field<string?>("BPO_CD"),
-                    Calldt = row.Field<DateTime?>("CALL_RECV_DT"),
-                    CallSno = row.Field<string?>("CALL_SNO"),
-                    BKNO = row.Field<string?>("BK_NO"),
-                    SetNo = row.Field<string?>("SET_NO"),
-                    BillNo = row.Field<string?>("BILL_NO"),
-                    BillDt = row.Field<DateTime?>("BILL_DT"),
-                    IEName = row.Field<string?>("IE_SNAME"),
-                    BillAmount = row.Field<decimal?>("BILL_AMOUNT"),
-                    InspFee = row.Field<decimal?>("INSP_FEE"),
+                    CaseNo = row["CASE_NO"].ToString(),
+                    PONO = row["PO_NO"].ToString(),
+                    PODT = DateTime.TryParse(row["PO_DT"].ToString(), out var poDt) ? (DateTime?)poDt : null,
+                    Consignee = row["CONSIGNEE"].ToString(),
+                    BPO = row["BPO_CD"] != DBNull.Value ? Convert.ToInt32(row["BPO_CD"]) : (int?)null,
+                    Calldt = DateTime.TryParse(row["CALL_RECV_DT"].ToString(), out var calldt) ? (DateTime?)calldt : null,
+                    CallSno = row["CALL_SNO"] != DBNull.Value ? Convert.ToInt32(row["CALL_SNO"]) : (int?)null,
+                    BKNO = row["BK_NO"].ToString(),
+                    SetNo = row["SET_NO"].ToString(),
+                    BillNo = row["BILL_NO"].ToString(),
+                    BillDt = DateTime.TryParse(row["BILL_DT"].ToString(), out var billDt) ? (DateTime?)billDt : null,
+                    IEName = row["IE_SNAME"].ToString(),
+                    BillAmount = row["BILL_AMOUNT"] != DBNull.Value ? Convert.ToDecimal(row["BILL_AMOUNT"]) : (decimal?)null,
+                    InspFee = row["INSP_FEE"] != DBNull.Value ? Convert.ToDecimal(row["INSP_FEE"]) : (decimal?)null
                 }).ToList();
 
                 query = list.AsQueryable();
@@ -206,6 +229,12 @@ namespace IBS.Repositories
     {
         public int CONSIGNEE_CD { get; set; }
         public string CONSIGNEE { get; set; }
+    }
+    
+    public class VendorCls
+    {
+        public int VEND_CD { get; set; }
+        public string VEND_NAME { get; set; }
     }
 
 }

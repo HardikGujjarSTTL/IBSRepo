@@ -37,20 +37,27 @@ namespace IBS.Controllers
         public IActionResult Manage(int id)
         {
             ContractEntry model = new();
-
-            List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ContractEntryDoc, Convert.ToString(id));
-            FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
-            FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-            FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Contract_Doc).ToList();
-            FileUploaderUpload_Memo.OthersSection = false;
-            FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
-            FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
-            ViewBag.Upload_Contract_Doc = FileUploaderUpload_Memo;
-
-            if (id > 0)
+            try
             {
-                model = contractEntryRepository.FindByID(id);
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ContractEntryDoc, Convert.ToString(id));
+                FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
+                FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Contract_Doc).ToList();
+                FileUploaderUpload_Memo.OthersSection = false;
+                FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_Contract_Doc = FileUploaderUpload_Memo;
+
+                if (id > 0)
+                {
+                    model = contractEntryRepository.FindByID(id);
+                }
             }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ContractEntry", "Manage", 1, GetIPAddress());
+            }
+
             return View(model);
         }
 
