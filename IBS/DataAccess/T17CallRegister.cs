@@ -49,7 +49,7 @@ public partial class T17CallRegister
 
     public string? SetNo { get; set; }
 
-    public byte? CoCd { get; set; }
+    public int? CoCd { get; set; }
 
     public short? CallCancelCharges { get; set; }
 

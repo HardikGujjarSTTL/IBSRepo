@@ -1,0 +1,206 @@
+﻿@{
+    ViewData["Title"] = "Central Region Billing Information List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Central Region Billing Information List</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="reference">Bill No</label>
+                <input type="text" class="input" id="txtBillNo">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">Bill From Date</label>
+                <input type="text" class="input datepicker" id="txtBillFromDate">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">Bill To Date</label>
+                <input type="text" class="input datepicker" id="txtBillToDate">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="Search();">search</button>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="list-btn" style="margin-top: 31px;">
+                    <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                    <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                    <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+                    <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtCentralRegion" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bill No</th>
+                            <th>Bill Date</th>
+                            <th>BPO</th>
+                            <th>Insp Fee</th>
+                            <th>Tax (Inclusive of EDU + SHE Cess)</th>
+                            <th>Total Fee</th>
+                            <th>IC No.</th>
+                            <th>IC Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="EditPODateModal" class="modal" tabindex="-1" role="dialog">
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        var dt;
+        $(document).ready(function () {
+            //$('#dtCentralRegion').DataTable({ dom: 'rtip' });
+            InitializeDatatable();
+        });
+
+        function Search() {
+            InitializeDatatable();
+        }
+        function InitializeDatatable() {
+            var BillNo = $("#txtBillNo").val();
+            var BillDate = $("#txtBillFromDate").val();
+            dt=$("#dtCentralRegion").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export to Excel',
+                        filename: function () { return getExportFileName('Central_Region_Billing_Information'); },
+                        download: 'open',
+                        orientation: 'landscape',
+                        title: 'Central Region Billing Information ',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                            modifier: {
+                                page: 'all',
+                                search: 'none'
+                            }
+                        },
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        filename: function () { return getExportFileName('Central_Region_Billing_Information '); },
+                        text: 'Export to PDF',
+                        orientation: 'landscape',
+                        title: 'Central Region Billing Information ',
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                            modifier: {
+                                page: 'all',
+                                pageSize: 'LEGAL',
+                                search: 'none',
+                            }
+                        },
+                        customize: function (doc) {
+                            debugger;
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                            doc.pageMargins = [5, 100, 5, 5];
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: 'Central Region Billing Information Bill </br> Details For the Period :',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5,6,7,8]
+                        },
+                    },
+                ],
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            BillNo: BillNo, BillDate: BillDate
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BILL_NO" },
+                    { data: "BILL_DT" },
+                    { data: "BPO" },
+                    { data: "INSP_FEE" },
+                    { data: "TAX" },
+                    { data: "BILL_AMOUNT" },
+                    { data: "IC_NO" },
+                    { data: "IC_DT" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.BILL_NO;
+                            var editUrl = '@Url.Action("Manage", "CentralRegionBillingInformation")?id=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="CentralRegionDelete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+            dt.column(3).visible(false);
+            dt.column(4).visible(false);
+            dt.column(5).visible(false);
+        }
+
+        function CentralRegionDelete(id) {
+            var url = '@Url.Action("Delete", "CentralRegionBillingInformation")?id=' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+        $("#imgExcel").on("click", function () {
+            $('#dtCentralRegion').DataTable().buttons(0, 0).trigger();
+        });
+
+        $("#imgPdf").on("click", function () {
+            $('#dtCentralRegion').DataTable().buttons(0, 1).trigger();
+        });
+
+        $("#imgPrint").on("click", function () {
+            $('#dtCentralRegion').DataTable().buttons(0, 2).trigger();
+        });
+
+    </script>
+}

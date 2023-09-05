@@ -27,5 +27,7 @@ public partial class MenuMaster
 
     public string? Iconpath { get; set; }
 
+    public bool? Isdisplay { get; set; }
+
     public virtual Role? Role { get; set; }
 }
