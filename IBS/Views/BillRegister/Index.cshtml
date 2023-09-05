@@ -208,49 +208,6 @@
 
         });
 
-        //$("#btnSendSAP").click(function () {
-        //    debugger
-        //    //var dataTable;
-        //    //dataTable = $("#dtList").DataTable({
-        //    //    // Your DataTable setup here
-        //    //});
-        //    event.preventDefault();
-
-        //    var dataTableRows = [];
-        //    $("#dtList").DataTable().rows().every(function () {
-        //        var data = this.data();
-        //        var rowId = data.BILL_NO;
-        //        var IsSentToSAP = $(this.node()).find("input[type='checkbox']").is(":checked");
-
-        //        dataTableRows.push({
-        //            BILL_NO: rowId, // Assuming BillNo is an integer
-        //            IsSentToSAP: IsSentToSAP
-        //        });
-        //    });
-
-
-        //    //dataTableRows = [
-        //    //    { BILL_NO: '1', IsSentToSAP: true },
-        //    //    { BILL_NO: '2', IsSentToSAP: true },
-        //    //    { BILL_NO: '3', IsSentToSAP: false }
-        //    // ];
-
-        //    $.ajax({
-        //        url: "@Url.Action("ProcessDataTable", "BillRegister")",
-        //        type: "POST",
-        //        data: JSON.stringify(dataTableRows),
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        success: function (data) {
-        //            // Handle success, if needed
-        //        },
-        //        error: function () {
-        //            // Handle error, if needed
-        //        }
-        //    });
-
-        //});
-
         function InitializeDatatable() {
             var FromDt = $("#FromDt").val();
             var ToDt = $("#ToDt").val();

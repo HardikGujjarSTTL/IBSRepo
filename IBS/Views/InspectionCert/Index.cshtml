@@ -43,32 +43,32 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" asp-for="Bkno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <input type="text" asp-for="Bkno" class="input" maxlength="30" style="text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" asp-for="Setno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <input type="text" asp-for="Setno" class="input" maxlength="30" style="text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" asp-for="Caseno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <input type="text" asp-for="Caseno" class="input" maxlength="30" style="text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" asp-for="Callrecvdt" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <input type="text" asp-for="Callrecvdt" class="datepicker" maxlength="30">
                     </td>
                     <td>
-                        <input type="text" asp-for="Callsno" class="input" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <input type="text" asp-for="Callsno" class="input" maxlength="30" style="text-transform: uppercase;">
                     </td>
                 </tr>
 
             </table>
             <div class="row my-0">
                 <div class="col-md-9 mb-3">
-                    <button type="button" class="reset-btn active" id="btnSearch">Modify</button>
-                    <button type="button" class="reset-btn" id="btnSearch">Delete</button>
-                    <button type="button" class="reset-btn" id="btnSearch">Change Consignee</button>
-                    <button type="button" class="reset-btn" id="btnSearch">Change BPO in Returned Bills</button>
+                    <button type="button" class="reset-btn active" id="btnModify">Modify</button>
+                    <button type="button" class="reset-btn" id="btnDelete">Delete</button>
+                    <button type="button" class="reset-btn" id="btnChangeConsignee">Change Consignee</button>
+                    <button type="button" class="reset-btn" id="btnBPOReturned">Change BPO in Returned Bills</button>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <button type="button" class="reset-btn" id="btnSearch">New Certificate</button>
+                    <button type="button" class="reset-btn" id="btnAddNew">New Certificate</button>
                 </div>
             </div>
             <div class="row my-0">
@@ -86,7 +86,7 @@
                     <table id="dtList" class="table-responsive">
                         <thead>
                             <tr>
-                                <th>Action</th>
+                                <th style="text-align:center">Action</th>
                                 <th>Bill Status</th>
                                 <th>Case No.</th>
                                 <th>Call Date</th>
@@ -113,19 +113,22 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <style>
-        table,
-        table td {
-            border: 1px solid #cccccc;
-        }
-
-        td {
-            height: 80px;
-            width: 160px;
-            text-align: center;
-            vertical-align: middle;
+        #dtList td {
+            word-wrap: anywhere;
         }
     </style>
     <script type="text/javascript">
+        $(document).ready(function () {
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+            if ((Bkno == "" || Bkno == null) && (Setno == "" || Setno == null)) {
+                $("#btnAddNew").show();
+            }
+            else {
+                $("#btnAddNew").hide();
+            }
+            //InitializeDatatable();
+        });
 
         function Save() {
             if ($("#frmDetails").valid()) {
@@ -140,7 +143,8 @@
 
         function InitializeDatatable() {
             var Caseno = $("#Caseno").val();
-            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            //var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callrecvdt = $("#Callrecvdt").val();
             var Callsno = $("#Callsno").val();
 
             $("#dtList").DataTable({
@@ -168,16 +172,25 @@
                         return JSON.stringify(d);
                     }
                 },
-
-                columns: [// Columns Setups
+                columns: [
                     {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.Caseno;
+                            var CallRecvDt = moment(data.Callrecvdt).format("DD-MM-YYYY");
+                            var CallSno = data.Callsno;
+
+                            var Bkno = data.Bkno == null ? "" : data.Bkno;
+                            var Setno = data.Setno == null ? "" : data.Setno;
+
+                            var editUrl = '@Url.Action("Index", "InspectionCert")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&Bkno=" + Bkno + "&Setno=" + Setno;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"btnEditG edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
                         }
                     },
+                    { data: "Status" },
                     { data: "Caseno" },
-                    { data: "Callsno" },
                     {
                         data: "Callrecvdt",
                         render: function (data, type, row) {
@@ -188,32 +201,123 @@
                         }
                     },
 
-                    { data: "Caseno" },
-                    { data: "Caseno" },
-                    { data: "Caseno" },
-                    { data: "Caseno" },
-                    { data: "Caseno" },
-                    { data: "Caseno" },
+                    { data: "Callsno" },
                     {
-                        data: null, orderable: false,
+                        data: null,
                         render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
-                            //var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
-                            var CallRecvDt = moment(data.CallRecvDt).format("YYYY-MM-DD");
-                            //var CallRecvDt = data.CallRecvDt;
-                            var CallSno = data.CallSno;
+                            var Callstatus = row["Callstatus"];
+                            if (Callstatus == "A") {
+                                Callstatus = "Accepted";
+                            }
+                            else {
+                                Callstatus = "Rejected";
+                            }
 
-                            var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
+                            return Callstatus;
                         }
                     },
+                    { data: "Iesname" },
+                    { data: "Icno" },
+                    { data: "Bkno" },
+                    { data: "Setno" },
+                    { data: "Consignee" },
+
 
                 ],
                 "order": [[0, "asc"]]
             });
         }
+
+        $("#btnAddNew").click(function () {
+            var Caseno = $("#Caseno").val();
+            //var Callrecvdt = $("#Callrecvdt").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return false;
+            }
+            if (Callrecvdt == "" || Callrecvdt == null) {
+                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                return false;
+            }
+            if (Callsno == "" || Callsno == null) {
+                ShowHideMsgNew(false, "Please select Call S No.");
+                return false;
+            }
+
+            if (Caseno != "" && Callrecvdt != null && Callsno != "") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&ActionType=A";
+            }
+
+        });
+
+        $("#btnModify").click(function () {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return false;
+            }
+            if (Callrecvdt == "" || Callrecvdt == null) {
+                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                return false;
+            }
+            if (Callsno == "" || Callsno == null) {
+                ShowHideMsgNew(false, "Please select Call S No.");
+                return false;
+            }
+            if (Bkno == "" || Bkno == null) {
+                ShowHideMsgNew(false, "Please select Bk no.");
+                return false;
+            }
+            if (Setno == "" || Setno == null) {
+                ShowHideMsgNew(false, "Please select Set no");
+                return false;
+            }
+            if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+            }
+        });
+
+        $("#btnDelete").click(function () {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return false;
+            }
+            if (Callrecvdt == "" || Callrecvdt == null) {
+                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                return false;
+            }
+            if (Callsno == "" || Callsno == null) {
+                ShowHideMsgNew(false, "Please select Call S No.");
+                return false;
+            }
+            if (Bkno == "" || Bkno == null) {
+                ShowHideMsgNew(false, "Please select Bk no.");
+                return false;
+            }
+            if (Setno == "" || Setno == null) {
+                ShowHideMsgNew(false, "Please select Set no");
+                return false;
+            }
+            if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=D";
+            }
+        });
 
 
     </script>
