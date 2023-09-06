@@ -156,6 +156,7 @@ builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>()
 builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
 builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
 builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
+builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
 
 var app = builder.Build();
 
