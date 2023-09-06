@@ -7,7 +7,7 @@ public partial class T82PoDetail
 {
     public string CaseNo { get; set; } = null!;
 
-    public byte ItemSrno { get; set; }
+    public int ItemSrno { get; set; }
 
     public string? ItemDesc { get; set; }
 
