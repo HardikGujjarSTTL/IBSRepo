@@ -22,6 +22,14 @@ namespace IBS.Controllers.Transaction
         [Authorization("CentralRegionBillingInformation", "Index", "view")]
         public IActionResult Index()
         {
+            string Region = SessionHelper.UserModelDTO.Region;
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            ViewBag.Region= wRegion;
             return View();
         }
         [Authorization("CentralRegionBillingInformation", "Index", "view")]
