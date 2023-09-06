@@ -9,7 +9,7 @@
     </div>
 </div>
 @*<div class="row">*@
-<form asp-action="Manage" id="frmCallMarked">
+<form asp-action="Manage" asp-controller="" id="frmCallMarked">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="accordion-body" id="body">
         <div class="row my-0">
@@ -20,9 +20,11 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">Call Date - SNO :</label>
-                <span id="lblCallDate" style="text-transform: uppercase; color:red;"></span>
-                <span id="lblRegTime" style="text-transform: uppercase; color:red;"></span> -
-                <span id="lblSNo" style="text-transform: uppercase; color:red;"></span>
+                <label>
+                    <span id="lblCallDate" style="text-transform: uppercase; color:red;"></span>
+                    <span id="lblRegTime" style="text-transform: uppercase; color:red;"></span> -
+                    <span id="lblSNo" style="text-transform: uppercase; color:red;"></span>
+                </label>
                 <input type="hidden" asp-for="CALL_RECV_DT" />
                 <input type="hidden" asp-for="REG_TIME" />
                 <input type="hidden" asp-for="CALL_SNO" />
@@ -47,7 +49,7 @@
             <div class="col-md-9 mb-3">
                 <label for="Reference" style="padding-right:71px;">Vendor :</label>
                 <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
-                <input type="text" id="txtCALLLETTERDT" style="width:95px;" />
+                <input type="text" id="txtCALLLETTERDT" style="width:102px;" />
                 <input type="hidden" asp-for="VEND_NAME" />
             </div>
         </div>
@@ -187,6 +189,10 @@
             SaveCallMarkedDetail();
         });
 
+        $("#DEPT_DROPDOWN").change(function(){
+            FillClusterIE();
+        });
+
         $("#btnRejectCall").click(function () {
             $("#rejectCall").css("display", "block");
         });
@@ -198,7 +204,13 @@
         //$("#btnCancel").click(function () {
         //    window.location.href = "@Url.Action("Index","CallMarkedOnline")";
         //});
+        $("#btnSaveReject").click(function () {
+            RejectCall();
+        });
 
+        $("#btnSendMail").click(function () {
+
+        })
 
         $("#lblContractNo").html("@Model.PO_NO");
         $("#lblDate").html("@Model.PO_DT");
@@ -234,6 +246,13 @@
 
         $("#lblCall1").html("@Model.PREV_CALL_1");
         $("#lblCall2").html("@Model.PREV_CALL_2");
+
+        if ($("#lblItem").html() == "" || $("#lblQtyOffer").html() == "" || $("#lblQtyOffer").html() == "0") {
+            $("#btnSendMail").css("display", "block");
+        }
+        else {
+            $("#btnSendMail").css("display", "none");
+        }
     });
 
     function SaveCallMarkedDetail() {
@@ -253,6 +272,86 @@
                     ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
                 }
                 console.log("success");
+            }
+        });
+    }
+
+    function RejectCall() {
+        var formData = new FormData($("#frmCallMarked")[0]);
+        $.ajax({
+            url: '@Url.Action("SendVendorMailForRejectedCall", "CallMarkedOnline")',
+            type: "POST",
+            dataType: "JSON",
+            data: formData,
+            processData: false, // Prevent jQuery from converting the data to a string
+            contentType: false,
+            success: function (response) {
+                debugger
+                if (response) {
+                    ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
+                    setTimeout(function(){
+                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                    },1000);
+                } else {
+                    ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
+                }
+            }
+        });
+    }
+
+    function IncompleteCall() {
+        var formData = new FormData($("#frmCallMarked")[0]);
+        $.ajax({
+            url: '@Url.Action("SendVendorEmailForIncompleteCall", "CallMarkedOnline")',
+            type: "POST",
+            dataType: "JSON",
+            data: formData,
+            processData: false, // Prevent jQuery from converting the data to a string
+            contentType: false,
+            success: function (response) {
+                debugger
+                if (response == 1) {
+                    ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
+                    setTimeout(function(){
+                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                    },1000);
+                }
+                else if (response == 2) {
+                    ShowHideMsgNew(false, "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!");
+                }
+                else {
+                    ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
+                }
+            }
+        });
+    }
+
+    function FillClusterIE() {
+        debugger
+        var dept = $("#DEPT_DROPDOWN").val();
+        $.ajax({
+            url: '@Url.Action("BindClusterIE", "CallMarkedOnline")',
+            type: "GET",
+            dataType: "JSON",
+            data: { DeptName: dept },
+            success: function (contacts) {
+                $("#IE_NAME").html(""); // clear before appending new list
+                $("#IE_NAME").append($('<option></option>').val(0).html("--Select--"));
+                if (contacts && contacts.length > 0) {
+                    $.each(contacts, function (i, cnt) {
+                        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    });
+                    //if (MfgCd1 > 0) {
+                    //    $.each(contacts, function (i, cnt) {
+                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    //    });
+                    //    $("#IE_NAME").val(MfgCd1);
+                    //} else {
+                    //    $.each(contacts, function (i, cnt) {
+                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    //    });
+                    //}
+                }
             }
         });
     }
