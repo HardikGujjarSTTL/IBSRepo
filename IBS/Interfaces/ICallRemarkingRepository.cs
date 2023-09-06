@@ -11,5 +11,11 @@ namespace IBS.Interfaces
         public DTResult<PendingCallsListModel> GetPendingCallsList2(DTParameters dtParameters);
 
         public void SaveDetails(CallRemarkingModel model);
+
+        public DTResult<PendingCallsListModel> GetCallRemarkingListForApproval(DTParameters dtParameters);
+
+        public CallRemarkingApprovalModel FindCallRemarkingDetailsForApproval(int id);
+
+        public void SaveDetails(CallRemarkingApprovalModel model);
     }
 }

@@ -1837,7 +1837,6 @@ namespace IBS.Models
             return objdata;
         }
 
-
         public static List<SelectListItem> GetIeCity(int IeCityId)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -2537,6 +2536,11 @@ namespace IBS.Models
                         Value = c.IeCd.ToString(),
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetActionProposed()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ActionProposed)).ToList();
         }
 
     }

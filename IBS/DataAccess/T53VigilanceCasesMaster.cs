@@ -29,5 +29,7 @@ public partial class T53VigilanceCasesMaster
 
     public DateTime? Datetime { get; set; }
 
-    public decimal Id { get; set; }
+    public int Id { get; set; }
+
+    public virtual ICollection<T54VigilanceCasesDetail> T54VigilanceCasesDetails { get; set; } = new List<T54VigilanceCasesDetail>();
 }

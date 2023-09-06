@@ -12,8 +12,9 @@
 	}
 	//if (isIEver () == 8) {}
 
-	var jsFolder = "js/";
-	var cssFolder = "css/";
+	var jsFolder = "/js/";
+	var cssFolder = "/css/";
+
 	var ww = document.body.clientWidth, wh = document.body.clientHeight;
 	var mobilePort = 800, ipadView = 1024, wideScreen = 1600;
 
@@ -444,22 +445,12 @@
 		}).mask("00/00/0000");
 
 	});
-	/*================= On Document Load End =================*/
 
-	/*================= On Window Resize Start =================*/
 	$(window).bind('resize orientationchange', function () {
 		getWidth();
 		adjustMenu();
 		$('.vCenter').each(function () { $(this).verticalAlign(); });
 	});
-
-	/*================= On Window Resize End =================*/
-
-	/*================= On Window Load Start =================*/
-	$(window).load(function () {
-
-	});
-	/*================= On Document Load End =================*/
 
 	function getWidth() {
 		ww = document.body.clientWidth;
@@ -468,7 +459,6 @@
 		if (ww <= mobilePort) { $('body').removeClass('desktop widerDesktop').addClass('device'); }
 		if (ww > 767 && ww < 1025) { $('body').addClass('ipad'); }
 		else { $('body').removeClass('ipad'); }
-
 	}
 
 	$(".select2").select2();

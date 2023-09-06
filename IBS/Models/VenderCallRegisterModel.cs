@@ -179,7 +179,7 @@ namespace IBS.Models
         //VENDER_CALL_REGISTER_ITEM_VIEW
         public string? Status { get; set; }
 
-        public byte? ItemSrnoPo { get; set; }
+        public int ItemSrnoPo { get; set; }
 
         public string? ItemDescPo { get; set; }
 
