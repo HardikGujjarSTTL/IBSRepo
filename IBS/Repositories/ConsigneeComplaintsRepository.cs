@@ -431,7 +431,7 @@ namespace IBS.Repositories
 
             if (model.AcceptRejornot != "C")
             {
-                if (model.Remarks.Trim() != "")
+                if (model.Remarks != "" && model.Remarks != null)
                 {
                     var complaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 

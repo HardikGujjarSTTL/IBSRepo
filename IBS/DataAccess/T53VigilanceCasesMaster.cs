@@ -29,5 +29,5 @@ public partial class T53VigilanceCasesMaster
 
     public DateTime? Datetime { get; set; }
 
-    public decimal Id { get; set; }
+    public int Id { get; set; }
 }

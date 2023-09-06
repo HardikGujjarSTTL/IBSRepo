@@ -7832,7 +7832,7 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("CLIENTTYPE");
             entity.Property(e => e.Createdby)
-                .HasColumnType("NUMBER(38)")
+                .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
@@ -7841,7 +7841,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER")
                 .HasColumnName("INSPFEE");
             entity.Property(e => e.Isdeleted)
-                .HasColumnType("NUMBER(38)")
+                .HasPrecision(6)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.LetterDate)
                 .HasColumnType("DATE")
@@ -7877,7 +7877,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDATE");
             entity.Property(e => e.Updatedby)
-                .HasColumnType("NUMBER(38)")
+                .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
         });
 
@@ -9530,7 +9530,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CoCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CO_CD");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
@@ -9572,7 +9572,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("LAST_INSP_DT");
             entity.Property(e => e.NoOfInsp)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("NO_OF_INSP");
             entity.Property(e => e.OtherInspDt)
                 .HasMaxLength(100)
@@ -11875,8 +11875,8 @@ public partial class ModelContext : DbContext
             entity.HasIndex(e => e.RefRegNo, "T53_VIGILANCE_CASES_MASTER").IsUnique();
 
             entity.Property(e => e.Id)
+                .HasPrecision(6)
                 .HasDefaultValueSql("\"IBSDEV\".\"T53_VIGILANCE_CASES_MASTER_SEQ\".\"NEXTVAL\"")
-                .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
             entity.Property(e => e.ActionProposed)
                 .HasMaxLength(1)
@@ -13548,7 +13548,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.BasicValue)
                 .HasColumnType("NUMBER(13,2)")
@@ -15230,7 +15230,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeCoCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("IE_CO_CD");
             entity.Property(e => e.Igst)
                 .HasColumnType("NUMBER(10,2)")
@@ -15410,7 +15410,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VENDOR_CITY");
             entity.Property(e => e.Visits)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("VISITS");
             entity.Property(e => e.WriteOffAmt)
                 .HasColumnType("NUMBER(13,2)")

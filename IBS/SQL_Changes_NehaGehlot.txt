@@ -684,3 +684,75 @@ BEGIN
     AND (p_clienttype IS NULL OR CLIENTTYPE = p_clienttype)
     AND isdeleted = 0 OR isdeleted IS NULL;
 END GetContractInfo;
+
+
+==========================================================================================================================================================
+
+create or replace PROCEDURE GetSearchAllData (
+    p_case_no      IN VARCHAR2,
+    p_region      IN VARCHAR2,
+    p_po_no        IN VARCHAR2,
+    p_po_dt        IN VARCHAR2,
+    p_consignee_cd IN VARCHAR2,
+    p_bpo_cd       IN VARCHAR2,
+    p_vend_cd      IN VARCHAR2,
+    p_call_dt      DATE,
+    p_call_sno     IN VARCHAR2,
+    p_ie_cd        IN VARCHAR2,
+    p_bk_no        IN VARCHAR2,
+    p_set_no       IN VARCHAR2,
+    p_bill_no      IN VARCHAR2,
+    p_bill_dt      DATE,
+    p_bill_amt     IN NUMBER,
+    p_ResultSet OUT SYS_REFCURSOR
+) 
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+
+   SELECT
+        T13.CASE_NO,
+        T13.PO_NO,
+        TO_CHAR(T13.PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        T14.CONSIGNEE_CD,
+        T14.BPO_CD,
+        TO_CHAR(T17.CALL_RECV_DT, 'dd/mm/yyyy') AS CALL_RECV_DT,
+        T17.CALL_SNO,
+        T17.IE_CD,
+        T20.BK_NO,
+        T20.SET_NO,
+        T22.BILL_NO,
+        TO_CHAR(T22.BILL_DT, 'dd/mm/yyyy') AS BILL_DT,
+        T09.IE_SNAME,
+        T09.IE_CD,
+        V06.CONSIGNEE_CD || '-' || V06.CONSIGNEE AS CONSIGNEE,
+        T22.INSP_FEE,
+        T22.BILL_AMOUNT
+    FROM
+        T13_PO_MASTER T13
+        JOIN T14_PO_BPO T14 ON T13.CASE_NO = T14.CASE_NO
+        JOIN T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
+        JOIN T20_IC T20 ON T17.CASE_NO = T20.CASE_NO
+        JOIN T22_BILL T22 ON T20.BILL_NO = T22.BILL_NO
+        JOIN T09_IE T09 ON T20.IE_CD = T09.IE_CD
+        JOIN V06_CONSIGNEE V06 ON T20.CONSIGNEE_CD = V06.CONSIGNEE_CD
+        where T13.CASE_NO=T14.CASE_NO and T13.CASE_NO=T17.CASE_NO and T17.CASE_NO = T20.CASE_NO and T17.CALL_RECV_DT=T20.CALL_RECV_DT and T17.CALL_SNO=T20.CALL_SNO and T14.CONSIGNEE_CD = T20.CONSIGNEE_CD and T20.BILL_NO=T22.BILL_NO and T20.IE_CD=T09.IE_CD and T20.CONSIGNEE_CD=V06.CONSIGNEE_CD 
+        And T13.REGION_CODE = p_region
+        And (p_case_no IS NULL OR T13.CASE_NO = p_case_no)
+        AND (p_po_no IS NULL OR UPPER(T13.PO_NO) LIKE UPPER('%' || p_po_no || '%'))
+        AND (p_po_dt IS NULL OR TO_CHAR(T13.PO_DT, 'dd/mm/yyyy') = p_po_dt)
+        AND (p_consignee_cd IS NULL OR T14.CONSIGNEE_CD = p_consignee_cd)
+        AND (p_bpo_cd IS NULL OR T14.BPO_CD = p_bpo_cd)
+        AND (p_vend_cd IS NULL OR T13.VEND_CD = p_vend_cd)
+        AND (p_call_dt IS NULL OR T17.CALL_RECV_DT = p_call_dt)
+        AND (p_call_sno IS NULL OR T17.CALL_SNO = p_call_sno)
+        AND (p_ie_cd IS NULL OR T17.IE_CD = p_ie_cd)
+        AND (p_bk_no IS NULL OR T20.BK_NO = p_bk_no)
+        AND (p_set_no IS NULL OR T20.SET_NO = p_set_no)
+        AND (p_bill_no IS NULL OR T22.BILL_NO = p_bill_no)
+        AND (p_bill_dt IS NULL OR T22.BILL_DT = p_bill_dt)
+        AND (p_bill_amt IS NULL OR T22.BILL_AMOUNT = p_bill_amt)
+    ORDER BY
+        T13.CASE_NO,
+        T17.CALL_RECV_DT;
+END GetSearchAllData;
