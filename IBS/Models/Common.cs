@@ -1823,12 +1823,94 @@ namespace IBS.Models
             return contacts;
         }
 
+        public static List<SelectListItem> GetItemSuperForm(string CaseNo, string CallDate, string CallSNo)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> Super = (from t18 in context.T18CallDetails
+                                          join t17 in context.T17CallRegisters
+                                          on new { t18.CaseNo, t18.CallRecvDt, t18.CallSno }
+                                          equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
+                                          where t17.CaseNo == CaseNo &&
+                                          t17.CallRecvDt == DateTime.ParseExact(CallDate, "dd/MM/yyyy", null) &&
+                                          t17.CallSno == int.Parse(CallSNo)
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = t18.ItemDescPo,
+                                         Value = Convert.ToString(t18.ItemSrnoPo)
+                                     }).ToList();
+            return Super;
+        }
+        public static List<SelectListItem> ItemScope()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "(IAF 12) Chemical/Paints";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 14b) Plastics Pipes & Fittings";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 16) Cement Pipes, AC Pressue Pipes & PCC Poles";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 17b)  Rails, CI/DI Pipes, Steel Tubes and Fittings, Seamless Blocl/Galvanised, Valves";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "S(IAF 19a) Conductor, Cables, Power Transformers, CT/PT Fans, Relay, Panel, DG set, Alternator, Energy Meter";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 22) Railway Rolling Stock";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 28) Water Supply";
+            single.Value = "G";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 28) Construction";
+            single.Value = "H";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 07) Paper for Printing";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 09) Printed Tickes & Ruled Papers";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
 
             List<SelectListItem> contacts = (from v in ModelContext.T08IeControllOfficers
                                              where v.CoStatus == "" && v.CoRegion == GetRegionCode
+                                             orderby v.CoName
+                                             select
+                                     new SelectListItem
+                                     {
+                                         Text = v.CoName,
+                                         Value = Convert.ToString(v.CoCd)
+                                     }).ToList();
+            return contacts;
+        }
+        public static List<SelectListItem> GetCODataSuperForm(string GetRegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from v in ModelContext.T08IeControllOfficers
+                                             where v.CoRegion == GetRegionCode
                                              orderby v.CoName
                                              select
                                      new SelectListItem
