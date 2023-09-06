@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class T93IcType
 {
-    public bool IcTypeId { get; set; }
+    public int IcTypeId { get; set; }
 
     public string? IcType { get; set; }
 

@@ -41,7 +41,7 @@ namespace IBS.Filters
             else if (user != null && userPermissionList != null && !string.IsNullOrEmpty(ControllerName) && !string.IsNullOrEmpty(ActionName) && !string.IsNullOrEmpty(PermissionName))
             {
 
-                currentpermi = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName == ActionName).FirstOrDefault();
+                currentpermi = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName.Contains(ActionName)).FirstOrDefault();
 
                 SessionHelper.CurrentAccess = currentpermi;
 
@@ -49,19 +49,19 @@ namespace IBS.Filters
                 switch (PermissionName.ToLower().Trim())
                 {
                     case "view":
-                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName == ActionName &&
+                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName.Contains(ActionName) &&
                          p.ViewAccess != false && p.ViewAccess != false).Any();
                         break;
                     case "edit":
-                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName == ActionName &&
+                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName.Contains(ActionName) &&
                          p.EditAccess != false && p.EditAccess != false).Any();
                         break;
                     case "add":
-                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName == ActionName &&
+                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName.Contains(ActionName) &&
                          p.AddAccess != false && p.AddAccess != false).Any();
                         break;
                     case "delete":
-                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName == ActionName &&
+                        validpermission = SessionHelper.MenuModelDTO.Where(p => p.ControllerName == ControllerName && p.ActionName.Contains(ActionName) &&
                          p.DeleteAccess != false && p.DeleteAccess != false).Any();
                         break;
                     default:

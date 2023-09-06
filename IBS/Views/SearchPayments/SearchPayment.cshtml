@@ -3,139 +3,8 @@
     ViewData["Title"] = "Contract List";
 }
 
-<style>
-    #showPayment {
-        max-height: 600px;
-        / Set the maximum height for the scrolling area / overflow-y: auto;
-        / Enable vertical scrolling if content exceeds max-height /
-    }
-
-    tr:nth-child(even) {
-        background-color: #f0f8ff;
-        / Light Blue /
-    }
-
-    / Style for table cells /
-    td {
-        height: 50px;
-        padding: 10px;
-        border: 1px solid #b0c4de;
-        vertical-align: top;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        border-top: 2px solid #b0c4de;
-        / Add top border / background-color: #f0f8ff;
-        margin-bottom: 20px;
-        / Add margin at the bottom for spacing /
-    }
-
-    / Style for table cells /
-    td {
-        height: 50px;
-        / Adjust the height of table cells / padding: 5px;
-        vertical-align: top;
-    }
-
-    / Style for labels /
-    label {
-        display: block;
-        / Make labels block-level to occupy the whole cell width / font-weight: bold;
-    }
-
-    / Style for input fields /
-    input[type="text"],
-    input[type="date"] {
-        width: 100%;
-        height: 42px;
-        border: 1px solid #cccccc;
-        border-radius: 6px;
-        padding: 5px;
-        box-sizing: border-box;
-        / Ensure the padding is included in the width /
-    }
-
-    / Style for error message /
-    .text-danger {
-        color: red;
-        margin-left: 6%;
-    }
-
-    / Style for left-aligned button /
-    .left-button {
-        float: left;
-        margin-right: 10px;
-    }
-
-    / Style for right-aligned button /
-    .right-button {
-        float: right;
-        margin-left: 10px;
-    }
-
-    / Clear floating elements /
-    .clearfix::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .table-responsive {
-        overflow-x: auto;
-        height: 190px;
-    }
-
-    .custom-textarea {
-        width: 400px;
-        height: auto;
-    }
-
-    .table-section {
-        width: 100%;
-        /*height: 400px;*/ / Set the desired height / overflow-y: auto;
-        / Enable vertical scrollbar if table exceeds height /
-    }
-
-    / Set table width to 100% and disable horizontal scrollbar /
-    #searchpayment {
-        width: 100%;
-        table-layout: fixed;
-    }
-
-    / Style table header cells /
-    #searchpayment th {
-        background-color: #f2f2f2;
-        border: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    / Style table body cells /
-    #searchpayment td {
-        border: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    / Add custom scrollbar style for the table section /
-    .table-section::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .table-section::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 4px;
-    }
-
-        .table-section::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
-        }
-</style>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">
                 <div class="accordion-body">
                     <div class="row my-0">
@@ -190,7 +59,6 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 </section>
 

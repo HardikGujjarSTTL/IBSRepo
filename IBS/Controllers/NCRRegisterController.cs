@@ -44,12 +44,9 @@ namespace IBS.Controllers
                 }
                 else if (Actions == "M")
                 {
-                    int isButtonDisabled = nCRRegisterRepository.ShouldRemarkDisable(NC_NO);
-                    ViewBag.ShowRemarksButton = isButtonDisabled >= 1 ? false : true;
-
                     ViewBag.ShowNCRButton = false;
                     ViewBag.ShowNCRNO = true;
-                   
+                    ViewBag.ShowRemarksButton = true;
                     ViewBag.ShowSaveButton = false;
                 }
 
@@ -71,10 +68,17 @@ namespace IBS.Controllers
         [Authorization("NCRRegister", "Index", "edit")]
         public IActionResult SaveUpdateNCR(NCRRegister model)
         {
-            bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
-            string extractedText = Request.Form["extractedText"];
-            string msg = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
-
+            string msg = "";
+            try
+            {
+                bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
+                string extractedText = Request.Form["extractedText"];
+                msg = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveUpdateNCR", 1, GetIPAddress());
+            }
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
 
@@ -82,8 +86,15 @@ namespace IBS.Controllers
         [Authorization("NCRRegister", "Index", "edit")]
         public IActionResult SaveRemarks(string NCNO,string UserID, [FromForm] List<Remarks> model)
         {
-
-            string msg = nCRRegisterRepository.SaveRemarks(NCNO, UserID,model);
+            string msg = "";
+            try
+            {
+                msg = nCRRegisterRepository.SaveRemarks(NCNO, UserID, model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveRemarks", 1, GetIPAddress());
+            }
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
 
         }
@@ -93,7 +104,6 @@ namespace IBS.Controllers
         public IActionResult SendToIE(NCRRegister nCRRegister)
         {
             bool msg = nCRRegisterRepository.SendEmail(nCRRegister);
-
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
 

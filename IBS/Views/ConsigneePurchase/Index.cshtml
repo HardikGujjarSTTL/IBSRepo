@@ -1,0 +1,193 @@
+﻿@model IBS.Models.ConsigneePurchaseSearchModel
+
+@{
+    ViewData["Title"] = "Consignee/Purchase Master";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>CONSIGNEE/PURCHASE MASTER</h2>
+    </div>
+    <div>
+        <a asp-area="" asp-controller="ConsigneePurchase" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Form</a>
+    </div>
+</div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneePurchase" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="accordion-body">
+        <div class="row my-0" style="text-align: left;">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Consignee Code</label>
+                    <input type="text" class="input" asp-for="ConsigneeCode" maxlength="90">
+                    @*<span asp-validation-for="ConsigneeCode" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Consignee Designation</label>
+                    <input type="text" class="input" asp-for="ConsigneeDesig" maxlength="90">
+                    @*<span asp-validation-for="ConsigneeDesig" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Railway/Purchase</label>
+                    <input type="text" class="input" asp-for="RailwayPurchase" maxlength="90">
+                    @*<span asp-validation-for="RailwayPurchase" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">City</label>
+                    <input type="text" class="input" asp-for="City" maxlength="90">
+                    @*<span asp-validation-for="City" class="text-danger"></span>*@
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Sap Customer Code</label>
+                    <input type="text" class="input" asp-for="SapCustomerCode" maxlength="90">
+                    @*<span asp-validation-for="SapCustomerCode" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">GSTIN No</label>
+                    <input type="text" class="input" asp-for="GSTIN_No" maxlength="90">
+                    @*<span asp-validation-for="GSTIN_No" class="text-danger"></span>*@
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3" style="text-align: center;">
+                <div class="savenext-btn">
+                    <button type="button" class="reset-btn active" id="btnSearch">Search</button>
+                    @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Consignee code</th>
+                            <th>Consignee Designation/Department</th>
+                            <th>Description</th>
+                            <th>Consignee Firm</th>
+                            <th>Consignee City</th>
+                            <th>Consignee Address</th>
+                            <th>GSTIN No.</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    $(document).ready(function () {
+        $("#btnSearch").click(function () {
+            InitializeDatatable();
+        });
+    });
+
+    function InitializeDatatable() {
+        var ConsigneeCode = $("#ConsigneeCode").val();
+        var ConsigneeDesig = $("#ConsigneeDesig").val();
+        var RailwayPurchase = $("#RailwayPurchase").val();
+        var City = $("#City").val();
+        var SapCustomerCode = $("#SapCustomerCode").val();
+        var GSTIN_No = $("#GSTIN_No").val();
+        $("#dtList").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: false,// Searching Setups
+            ajax: {// Ajax Filter
+                url: "@Url.Action("LoadTable")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        "CONSIGNEE_CD": ConsigneeCode,
+                        "CONSIGNEE_DESIG": ConsigneeDesig,
+                        "CONSIGNEE_FIRM": RailwayPurchase,
+                        "CITY": City,
+                        "SAP_CUST_CD_CON": SapCustomerCode,
+                        "GSTIN_NO": GSTIN_No,
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: "CONSIGNEE_CD" },
+                { data: "CONSIGNEE_NAME" },
+                { data: "DESIG_DESC" },
+                { data: "CONSIGNEE_FIRM" },
+                { data: "CONSIGNEE_ADD1" },
+                { data: "CONSIGNEE_CITY" },
+                { data: "GSTIN_NO" },
+                {
+                    data: null, orderable: false,
+                    render: function (data, type, row) {
+                        var id = row.CONSIGNEE_CD;
+                        var editUrl = '@Url.Action("Manage", "ConsigneePurchase")?CONSIGNEE_CD=' + id;
+                        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                        html += '<a onclick="ConsigneePurchaseDelete(' + id + ')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                        html += '</div>';
+                        return html;
+                    }
+                },
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
+
+    function ConsigneePurchaseDelete(CosigneeCD) {
+        $.ajax({
+            url: "@Url.Action("ConsigneePurchaseDelete","ConsigneePurchase")",
+            type: 'POST',
+            data: { CONSIGNEE_CD: CosigneeCD },
+            success: function (response) {
+                if (response == 1) {
+                    ShowHideMsgNew(true, "Consignee Purchase Detail Delete Successful");
+                    InitializeDatatable();
+                } else if (response == 500) {
+                    ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
+                } else if (response == -1) {
+                    ShowHideMsgNew(false, "Record Not Deleted");
+                } else {
+                    ShowHideMsgNew(false, "Record Not Deleted");
+                }
+                //$("#ConsigneeState").val(response);
+            }
+        });
+    }
+</script>
+

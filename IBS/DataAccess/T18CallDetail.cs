@@ -11,7 +11,7 @@ public partial class T18CallDetail
 
     public short CallSno { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 

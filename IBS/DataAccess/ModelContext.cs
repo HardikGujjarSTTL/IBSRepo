@@ -5661,6 +5661,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Isactive)
                 .HasPrecision(1)
                 .HasColumnName("ISACTIVE");
+            entity.Property(e => e.Isdisplay)
+                .HasPrecision(1)
+                .HasColumnName("ISDISPLAY");
             entity.Property(e => e.Menudescription)
                 .HasMaxLength(250)
                 .HasColumnName("MENUDESCRIPTION");
@@ -8869,7 +8872,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.BasicValue)
                 .HasColumnType("NUMBER(13,2)")
@@ -9096,7 +9099,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(3)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.CoCd)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CO_CD");
             entity.Property(e => e.CountDt)
                 .HasPrecision(1)
@@ -9324,7 +9327,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(5)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.ConsigneeCd)
                 .HasPrecision(8)
@@ -9524,7 +9527,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_DT");
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CoCd)
                 .HasPrecision(3)
@@ -9551,7 +9554,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_SUBMIT_DT");
             entity.Property(e => e.IcTypeId)
-                .HasPrecision(1)
+                .HasPrecision(6)
                 .HasColumnName("IC_TYPE_ID");
             entity.Property(e => e.IeCd)
                 .HasPrecision(6)
@@ -10356,7 +10359,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(15)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -10637,6 +10640,12 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -10662,6 +10671,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InspFee)
                 .HasColumnType("NUMBER(13,2)")
                 .HasColumnName("INSP_FEE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Laying)
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("LAYING");
@@ -10718,6 +10730,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.TotBaseValue)
                 .HasColumnType("NUMBER(15,2)")
                 .HasColumnName("TOT_BASE_VALUE");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -14022,7 +14040,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("T93_IC_TYPES");
 
             entity.Property(e => e.IcTypeId)
-                .HasPrecision(1)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
                 .HasColumnName("IC_TYPE_ID");
             entity.Property(e => e.IcType)
                 .HasMaxLength(17)

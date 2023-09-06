@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IBS.Models.Bill_Paying_Officer_FormModel
+@{
     ViewData["Title"] = "Bill Paying Officer";
 }
 
@@ -10,7 +11,60 @@
         <div class="list-btn">
             <a asp-area="" asp-controller="Bill_Paying_Officer_Form" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New BPO</a>
         </div>
-
+    </div>
+    <div class="accordion-body">
+        <input type="hidden" asp-for="BpoRegion" />
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">BPO Code</label>
+                    <input type="text" asp-for="BpoCd" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">BPO Name</label>
+                    <input type="text" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">BPO Railways Code / Abbreviated Name Of BPO </label>
+                    <input type="text" asp-for="BpoRly" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">City</label>
+                    <input type="text" asp-for="BpoCity" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Sap Customer Code</label>
+                    <input type="text" asp-for="SapCustCdBpo" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">GSTIN NO.</label>
+                    <input type="text" asp-for="GstinNo" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="alert alert-warning center">
+                To Edit/Delete a BPO --> Enter BPO Code & Click on "Modify"/"Delete" button <br />
+                To Search a BPO --> Enter BPO Code or BPO Name or BPO Railways or City and click on "Search BPO" button
+            </div>
+        </div>
+        <div class="savenext-btn center">
+            @*<button type="button" class="save-btn active" id="btnAdd">Add</button>*@
+            <button type="button" class="save-btn" id="btnSearch">Search BPO</button>
+            <a asp-controller="Bill_Paying_Officer_Form" asp-action="Index" class="reset-btn">Cancel</a>
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -21,8 +75,10 @@
                             <th>#</th>
                             <th>BPO Code</th>
                             <th>BPO Name</th>
-                            <th>City</th>
+                            <th>BPO Rly. CD/Abb.Name Of BPO</th>
+                            <th>BPO Address</th>
                             <th>GSTIN NO.</th>
+                            <th>Au</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -43,7 +99,18 @@
             InitializeDatatable();
         });
 
+        $("#btnSearch").click(function(){
+            InitializeDatatable();
+        });
+
         function InitializeDatatable() {
+            var BpoCd = $("#BpoCd").val();
+            var BpoName = $("#BpoName").val();
+            var BpoRly = $("#BpoRly").val();
+            var BpoCity = $("#BpoCity").val();
+            var SapCustCdBpo = $("#SapCustCdBpo").val();
+            var GstinNo = $("#GstinNo").val();
+
             $("#dtBPO").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -61,6 +128,13 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            "BpoCd":BpoCd,
+                            "BpoName": BpoName,
+                            "BpoRly": BpoRly,
+                            "BpoCity": BpoCity,
+                            "SapCustCdBpo": SapCustCdBpo,
+                            "GstinNo": GstinNo
+
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -75,15 +149,17 @@
                     },
                     { data: "BpoCd" },
                     { data: "BpoName" },
-                    { data: "BpoCityCd" },
+                    { data: "BpoRly" },
+                    { data: "BpoAdd" },
                     { data: "GstinNo" },
+                    { data: "Au" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.BpoCd;
-                            var editUrl = '@Url.Action("Manage", "Bill_Paying_Officer_Form")/' + id;
+                            var BpoCd = data.BpoCd;
+                            var editUrl = '@Url.Action("Manage", "Bill_Paying_Officer_Form")?BpoCd=' + BpoCd + "&ActionType=E";
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="BPODelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="BPODelete(this.BpoCd); return false;" href="javascript:void(\'0\');" id=\"' + BpoCd + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -93,9 +169,9 @@
             });
         }
 
-        function UOMDelete(id) {
+        function BPODelete(BpoCd) {
             var url = '@Url.Action("Delete", "Bill_Paying_Officer_Form")';
-            $("#btn-delete-yes").attr("href", url + "/" + id);
+            $("#btn-delete-yes").attr("href", url + "/" + BpoCd);
             $("#modal-delete-conf").modal("show");
         }
     </script>

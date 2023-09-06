@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "MA APPROVE FORM";
+    string clsView = "";
+    if (Model.CaseNo != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="MAapprove" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
@@ -10,6 +15,9 @@
         <div class="tast-list">
             <h2>@ViewData["Title"] </h2>
         </div>
+        <div>
+        <a asp-action="Index" asp-controller="MAapprove" class="formBtn viewall-btn">View List</a>
+    </div>
         <input type="hidden" asp-for="CaseNo" />
         <input type="hidden" asp-for="MaNo" />
         <input type="hidden" asp-for="MaDtc" />
@@ -132,7 +140,7 @@
         </div>
         <div class="savenext-btn">
             <a asp-controller="MAapprove" asp-action="Index" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
         </div>
     </div>
 </form>

@@ -1,0 +1,178 @@
+﻿@model IBS.Models.VendorMasterModel
+
+@{
+    ViewData["Title"] = "Manage Vendor/Manufacturer Master";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Vendor/Manufacturer Master</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <form role="form" asp-controller="Vendor" asp-action="Manage" id="frmVendor" enctype="multipart/form-data">
+            <input type="hidden" name="hdnUploadedDocumentList" id="hdnUploadedDocumentList" value="" />
+            <input type="hidden" asp-for="VendCd" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="VendName">Vendor Name <i class="text-danger">*</i></label>
+                        <input type="text" class="input" asp-for="VendName">
+                        <span asp-validation-for="VendName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendAdd1">Vendor Address <i class="text-danger">*</i></label>
+                        <textarea class="input" asp-for="VendAdd1"></textarea>
+                        <span asp-validation-for="VendAdd1" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendAdd2">Address (Count).</label>
+                        <textarea class="input" asp-for="VendAdd2"></textarea>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="VendCityCd">City <i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.VendCityCd, new SelectList(IBS.Models.Common.GetCity() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="VendCityCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendApproval">Vendor Approval</label>
+                        @Html.DropDownListFor(model => model.VendApproval, new SelectList(IBS.Models.Common.VendorApproval() , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="VendApprovalFr">Approval Period From</label>
+                        <input type="text" class="datepicker" asp-for="VendApprovalFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
+                        <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="VendApprovalTo">Approval Period To</label>
+                        <input type="text" class="datepicker" asp-for="VendApprovalTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
+                        <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="VendContactPer1">Contact Person 1</label>
+                        <input type="text" class="input" asp-for="VendContactPer1">
+                        <span asp-validation-for="VendContactPer1" class="text-danger" data-rule-requiredifVendContactPer1="true"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendContactPer2">Contact Person 2</label>
+                        <input type="text" class="input" asp-for="VendContactPer2">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendContactTel1">Tel No.</label>
+                        <input type="text" class="input" asp-for="VendContactTel1">
+                        <span asp-validation-for="VendContactTel1" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="VendContactTel2">Tel No.</label>
+                        <input type="text" class="input" asp-for="VendContactTel2">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendEmail">Email</label>
+                        <input type="text" class="input" asp-for="VendEmail">
+                        <span asp-validation-for="VendEmail" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="VendStatus">Status</label>
+                        @Html.DropDownListFor(model => model.VendStatus, new SelectList(IBS.Models.Common.VendorStatus() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        <label for="VendStatusDtFr">Date From</label>
+                        <input type="text" class="datepicker" asp-for="VendStatusDtFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendStatus="true">
+                        <span asp-validation-for="VendStatusDtFr" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="VendStatusDtTo">Date To</label>
+                        <input type="text" class="datepicker" asp-for="VendStatusDtTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendStatus="true">
+                        <span asp-validation-for="VendStatusDtTo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="VendInspStopped">Has any item of this Vendor blocked?</label>
+                        @Html.DropDownListFor(model => model.VendInspStopped, new SelectList(Common.ItemBlocked() , "Value", "Text"))
+                    </div>
+                    <div class="col-md-5 mb-3" style="margin-top: 40px">
+                        <i class="text-danger">* If Yes, kindly enter the details of Blocked Item in Remarks column!!!</i>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="VendRemarks">Remarks</label>
+                        <textarea class="input" asp-for="VendRemarks"></textarea>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <label for="OnlineCallStatus">Vendor Online Call Registration Status (Y/N)</label>
+                        @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
+                        <span asp-validation-for="OnlineCallStatus" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-8 mb-3" style="margin-top: 40px">
+                        <i class="text-danger">* Select Yes in case the given Vendor Name & Address is given Vendor ID and Password for online Call Registration.</i>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <partial name="_FileUploader" model="(FileUploaderDTO)ViewBag.Vendor_Manufacturer" />
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="Vendor" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active" onclick="SubmitVendorData();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            jQuery.validator.addMethod("requiredifVendApproval", function (value, element) {
+                if (($("#VendApproval").val() == "R" || $("#VendApproval").val() == "E") && value == "") {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }, "The Approval Period From/To field is required.");
+
+            jQuery.validator.addMethod("requiredifVendStatus", function (value, element) {
+                if (($("#VendStatus").val() == "R" || $("#VendStatus").val() == "E") && value == "") {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }, "The Date From/To field is required.");
+
+            jQuery.validator.addMethod("requiredifVendContactPer1", function (value, element) {
+                if ($("#OnlineCallStatus").val() == "Y" && value == "") {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }, "The Contact Person 1 field is required.");
+        });
+
+        function SubmitVendorData() {
+            if ($("#frmVendor").valid()) {
+                if (!SaveDocuments()) { return; }
+                $("#frmVendor").submit();
+            }
+        }
+
+    </script>
+}

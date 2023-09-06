@@ -622,7 +622,8 @@ CREATE TABLE Menu_Master (
     IconCssClass NVARCHAR2(50),
     IsActive NUMBER(1),
     SortOrder NUMBER(6),
-    IconPath VARCHAR2(50)
+    IconPath VARCHAR2(50),
+    IsDisplay NUMBER(1)
 );
 
 ALTER TABLE Menu_Master
@@ -1041,6 +1042,7 @@ BEGIN
             (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
         FROM MENU_MASTER m
         WHERE m.PARENTID IS NULL
+        AND m.IsDisplay = 1
         CONNECT BY PRIOR m.ID = m.PARENTID
 
         UNION ALL
@@ -1062,8 +1064,290 @@ BEGIN
             (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
         FROM MENU_MASTER p
         JOIN MENU_MASTER c ON p.ID = c.PARENTID
+        AND p.IsDisplay = 1
         CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
 
         ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
 END;
 ====================
+create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
+    p_cs_no VARCHAR2,
+    p_po_no VARCHAR2,
+    p_po_date VARCHAR2,
+    p_vend_name VARCHAR2,
+    p_region_code VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+BEGIN
+    str1 := 'SELECT m.CASE_NO, m.PO_NO, TO_CHAR(m.PO_DT, ''dd/mm/yyyy'') AS PO_DT, ' ||
+            '(DECODE(m.RLY_NONRLY, ''R'', ''Railway'', ''P'', ''Private'', ''S'', ''State Government'', ''F'', ''Foreign Railways'', ''U'', ''PSU'') || ''('' || m.RLY_CD || '')'') AS RLY_CD, ' ||
+            '(v.VEND_NAME || ''('' || NVL2(t.LOCATION, t.LOCATION || '' : '' || t.CITY, t.CITY) || '')'') AS VEND_NAME, ' ||
+            '(NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || ''/'', '''') || NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || ''/'', '''') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME, ' ||
+            'DECODE(m.INSPECTING_AGENCY, ''C'', ''Consignee'', ''X'', ''PO Cancelled'', ''RITES'') AS INSPECTING_AGENCY, ' ||
+            'DECODE(PO_SOURCE, ''V'', ''VENDOR'', ''M'', ''MANUAL'', ''C'', ''IREPS'', ''OTHER'') AS SOURCE, ' ||
+            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, ''CASE_NO/'' || m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
+            '''CASE_NO/'' || m.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
+            'FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t ' ||
+            'WHERE m.VEND_CD = v.VEND_CD ' ||
+            'AND v.VEND_CITY_CD = t.CITY_CD ' ||
+            'AND m.PURCHASER_CD = c.CONSIGNEE_CD(+) ' ||
+            'AND m.REGION_CODE = ''' || p_region_code || '''';
+
+    IF p_cs_no IS NOT NULL THEN
+        str1 := str1 || 'AND TRIM(CASE_NO) = ''' || p_cs_no || ''' ';
+    END IF;
+
+    IF p_po_no IS NOT NULL THEN
+        str1 := str1 || 'AND UPPER(TRIM(PO_NO)) LIKE UPPER(''%' || p_po_no || '%'') ';
+    END IF;
+
+    IF p_po_date IS NOT NULL THEN
+        str1 := str1 || 'AND TO_CHAR(PO_DT, ''dd/mm/yyyy'') = ''' || p_po_date || ''' ';
+    END IF;
+
+    IF p_vend_name IS NOT NULL THEN
+        str1 := str1 || 'AND UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(''' || p_vend_name || '%'') ';
+    END IF;
+
+    str1 := str1 || 'ORDER BY CASE_NO ASC';
+
+    OPEN p_result_cursor FOR str1;
+END;
+
+
+===============================
+
+create or replace PROCEDURE SP_GET_RAILWAY_CODES (
+    p_bpo_type VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+BEGIN
+    IF p_bpo_type = 'R' THEN
+        str1 := 'SELECT RLY_CD FROM T91_RAILWAYS WHERE RLY_CD <> ''CORE'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'P' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''P'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'F' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''F'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'U' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''U'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'S' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''S'' ORDER BY RLY_CD';
+    ELSE
+        -- Handle invalid input here, or provide a default query
+        str1 := 'SELECT RLY_CD FROM T91_RAILWAYS WHERE RLY_CD <> ''CORE'' ORDER BY RLY_CD';
+    END IF;
+
+    OPEN p_result_cursor FOR str1;
+END;
+
+
+==============
+CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
+    p_vend_cd IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT V.VEND_CD as Value,
+           (TRIM(V.VEND_NAME) || '/' || TRIM(V.VEND_ADD1) || '/' || NVL2(C.LOCATION, C.LOCATION || ' / ' || C.CITY, C.CITY)) AS Text
+    FROM T05_VENDOR V
+    JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
+    WHERE V.VEND_NAME IS NOT NULL
+    AND (TRIM(V.VEND_CD) = p_vend_cd OR p_vend_cd IS NULL)
+    ORDER BY VEND_NAME;
+END;
+/
+
+=======================
+
+create or replace PROCEDURE GENERATE_CASE_NO (
+    IN_REGION_CD IN VARCHAR2,
+    IN_PO_DT IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) IS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno VARCHAR2(100) := NULL;
+    w_Case_No VARCHAR2(500) := NULL;
+BEGIN
+    ---
+    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    w_Case_No := w_ctr || w_sno;
+
+    OPEN p_result_cursor FOR
+        SELECT w_Case_No AS CaseNo, 0 AS ERR_CD FROM DUAL;
+
+END;
+
+
+===================
+
+
+CREATE OR REPLACE PROCEDURE GET_PO_BPO_DETAILS (
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT P.CASE_NO,
+           P.CONSIGNEE_CD,
+           P.BPO_CD,
+           (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '') || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '') || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '') || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '') || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))) AS CONSIGNEE_NAME,
+           (B.BPO_CD || ' - ' || B.BPO_NAME || '/' || B.BPO_RLY || '/' || NVL2(B.BPO_ADD, B.BPO_ADD || '/', '') || NVL2(E.LOCATION, E.CITY || '/' || E.LOCATION, E.CITY)) AS BPO_NAME
+    FROM T14_PO_BPO P
+    JOIN T06_CONSIGNEE C ON P.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T12_BILL_PAYING_OFFICER B ON P.BPO_CD = B.BPO_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    JOIN T03_CITY E ON B.BPO_CITY_CD = E.CITY_CD
+    WHERE P.CASE_NO = p_case_no;
+END;
+/
+
+=====================
+create or replace PROCEDURE SP_GET_PO_DETAILSForAdministrator(
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT p.CASE_NO, p.ITEM_SRNO, p.ITEM_DESC,
+           (C.CONSIGNEE_CD || '-' || nvl2(trim(C.CONSIGNEE_DESIG), trim(C.CONSIGNEE_DESIG) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_DEPT), trim(C.CONSIGNEE_DEPT) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_FIRM), trim(C.CONSIGNEE_FIRM) || '/', '') ||
+           NVL2(trim(C.CONSIGNEE_ADD1), trim(C.CONSIGNEE_ADD1) || '/', '') ||
+           NVL2(trim(D.LOCATION), trim(D.LOCATION) || ' : ' || trim(D.CITY), trim(D.CITY))) AS CONSIGNEE_NAME,
+           p.QTY, p.RATE, p.VALUE as DATAVALUE
+    FROM T15_PO_DETAIL p
+    JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE (p.IsDeleted is null or p.IsDeleted =0)  and p.CASE_NO = p_case_no
+    ORDER BY p.ITEM_SRNO;
+END;
+
+
+===================
+
+ALTER TABLE Vendor_Feedback 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE Vendor_Feedback_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE Vendor_Feedback
+   SET ID = Vendor_Feedback_seq.nextval;
+   
+ALTER TABLE Vendor_Feedback
+    MODIFY ID NUMBER(6,0) DEFAULT Vendor_Feedback_seq.nextval;
+    
+ALTER TABLE Vendor_Feedback
+ADD CONSTRAINT Vendor_Feedback_pk  PRIMARY KEY (ID);
+
+======================
+
+ALTER TABLE CLIENT_FEEDBACK 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE CLIENT_FEEDBACK_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE CLIENT_FEEDBACK
+   SET ID = CLIENT_FEEDBACK_seq.nextval;
+   
+ALTER TABLE CLIENT_FEEDBACK
+    MODIFY ID NUMBER(6,0) DEFAULT CLIENT_FEEDBACK_seq.nextval;
+    
+ALTER TABLE CLIENT_FEEDBACK
+ADD CONSTRAINT CLIENT_FEEDBACK_pk  PRIMARY KEY (ID);
+
+======================
+create or replace PROCEDURE SP_Get_ICCancelData (
+    p_BKNo IN VARCHAR2,
+    p_SetNo IN VARCHAR2,
+    p_ISSUE_TO_IECD IN NUMBER,
+    p_Region IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+BEGIN
+    OPEN p_Result FOR
+    SELECT IC.BK_NO,
+           IC.SET_NO,
+           IE.IE_NAME,
+           CASE IC.IC_STATUS
+               WHEN 'C' THEN 'Cancelled'
+               WHEN 'M' THEN 'Missing'
+               WHEN 'L' THEN 'Lost'
+           END AS IC_STATUS,
+           IC.IC_STATUS as STATUS,
+           TO_CHAR(IC.STATUS_DT, 'dd/mm/yyyy') AS STATUS_DT,
+           CASE IC.REGION
+               WHEN 'N' THEN 'Northern'
+               WHEN 'W' THEN 'Western'
+               WHEN 'E' THEN 'Eastern'
+               WHEN 'S' THEN 'South'
+               WHEN 'C' THEN 'Central'
+           END AS REGION,
+           IC.REGION AS REGIONV,
+           IC.REMARKS
+    FROM T16_IC_CANCEL IC
+    INNER JOIN T09_IE IE ON IC.ISSUE_TO_IECD = IE.IE_CD
+    WHERE (IC.BK_NO = UPPER(TRIM(p_BKNo)) OR p_BKNo IS NULL)
+      AND (IC.SET_NO = UPPER(TRIM(p_SetNo)) OR p_SetNo IS NULL)
+      AND (IC.ISSUE_TO_IECD = p_ISSUE_TO_IECD OR p_ISSUE_TO_IECD = 0)
+      AND IC.REGION = p_Region
+    ORDER BY IC.BK_NO, IC.SET_NO;
+END;
+
+===============
+ALTER TABLE T36_BILL ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T36_BILL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T36_BILL ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T36_BILL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0)  
+
+=============
+
+CREATE OR REPLACE PROCEDURE SP_GetBillData (
+    p_Region IN VARCHAR2,
+    p_BillNo IN VARCHAR2,
+    p_BillDate IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+    v_Query VARCHAR2(1000);
+BEGIN
+    v_Query := 'SELECT BILL_NO, TO_CHAR(BILL_DT, ''dd/mm/yyyy'') AS BILL_DT, IC_NO, TO_CHAR(IC_DT, ''dd/mm/yyyy'') AS IC_DT, BILL_AMOUNT , BPO ,INSP_FEE, NVL(SERVICE_TAX,0)+NVL(EDU_CESS,0)+NVL(SHE_CESS,0) TAX ' ||
+               'FROM T36_BILL ' ||
+               'WHERE REGION = ''' || p_Region || '''';
+
+    IF p_BillNo IS NOT NULL THEN
+        v_Query := v_Query || ' AND TRIM(BILL_NO) = ''' || p_BillNo || '''';
+    END IF;
+
+    IF p_BillDate IS NOT NULL THEN
+        v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') = ''' || p_BillDate || '''';
+    END IF;
+
+    v_Query := v_Query || ' AND (ISDELETED = 0 OR ISDELETED IS NULL)';
+    
+    OPEN p_Result FOR v_Query ;
+END SP_GetBillData;
+
+
+=======================

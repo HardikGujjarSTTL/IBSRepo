@@ -11,7 +11,7 @@ public partial class T20Ic
 
     public short CallSno { get; set; }
 
-    public bool? IcTypeId { get; set; }
+    public int? IcTypeId { get; set; }
 
     public int ConsigneeCd { get; set; }
 
@@ -29,7 +29,7 @@ public partial class T20Ic
 
     public DateTime? CallDt { get; set; }
 
-    public byte? CallInstallNo { get; set; }
+    public int? CallInstallNo { get; set; }
 
     public string? FullPart { get; set; }
 

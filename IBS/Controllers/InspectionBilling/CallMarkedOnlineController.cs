@@ -30,6 +30,12 @@ namespace IBS.Controllers.InspectionBilling
 
         [Authorization("CallMarkedOnline", "Index", "view")]
         public IActionResult Index()
+        {            
+            return View();
+        }
+
+        [Authorization("CallMarkedOnline", "Index", "view")]
+        public IActionResult Manage(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CHECK_SELECTED, string RUN_DT)
         {
             var region = GetUserInfo.Region;
             ViewBag.ClusterIEList = callMarkedOnlineRepository.Get_Cluster_IE(region);
@@ -41,55 +47,45 @@ namespace IBS.Controllers.InspectionBilling
                 new SelectListItem { Text = "Textiles", Value = "T" },
             };
 
-            if (Convert.ToString(Request.Query["CASE_NO"]) == null || Convert.ToString(Request.Query["CALL_RECV_DT"]) == null)
-            {
+            var model = new CallMarkedOnlineModel();
+            var CNO = CASE_NO;  //Convert.ToString(Request.Query["CASE_NO"]).Trim();
+            var DT = CALL_RECV_DT;  //Convert.ToString(Request.Query["CALL_RECV_DT"]).Trim();
+            var CSNO = CALL_SNO; //Convert.ToString(Request.Query["CALL_SNO"]).Trim();
+            var wchk_val = CHECK_SELECTED; //Convert.ToString(Request.Query["CHECK_SELECTED"]).Trim();
+            var wrun_dt = RUN_DT; //Convert.ToString(Request.Query["RUN_DT"]).Trim();
 
+            bool RDB1 = false, RDB2 = false, RDB3 = false;
+            if (wchk_val == "1")
+            {
+                RDB1 = true;
             }
-            else
+            else if (wchk_val == "2")
             {
-                var CNO = Convert.ToString(Request.Query["CASE_NO"]).Trim();
-                var DT = Convert.ToString(Request.Query["CALL_RECV_DT"]).Trim();
-                var CSNO = Convert.ToString(Request.Query["CALL_SNO"]).Trim();
-                var wchk_val = Convert.ToString(Request.Query["CHECK_SELECTED"]).Trim();
-                var wrun_dt = Convert.ToString(Request.Query["RUN_DT"]).Trim();
+                RDB2 = true;
+            }
+            else if (wchk_val == "3")
+            {
+                RDB3 = true;
+            }
 
-                bool RDB1 = false, RDB2 = false, RDB3 = false;
-                if (wchk_val == "1")
-                {
-                    RDB1 = true;
-                }
-                else if (wchk_val == "2")
-                {
-                    RDB2 = true;
-                }
-                else if (wchk_val == "3")
-                {
-                    RDB3 = true;
-                }
+            var obj = new CallMarkedOnlineFilter();
+            obj.CASE_NO = CNO;
+            obj.Date = DT;
+            obj.CALL_SNO = CSNO;
 
-                var obj = new CallMarkedOnlineFilter();
-                obj.CASE_NO = CNO;
-                obj.Date = DT;
-                obj.CALL_SNO = CSNO;
-
-                var model = callMarkedOnlineRepository.Get_Call_Marked_Online_Detail(obj);
-                double mat_val = 0;                
-                var data = callMarkedOnlineRepository.Get_Call_Material_Value(obj);
-                if(data.Count > 0)
+            model = callMarkedOnlineRepository.Get_Call_Marked_Online_Detail(obj);
+            double mat_val = 0;
+            var data = callMarkedOnlineRepository.Get_Call_Material_Value(obj);
+            if (data.Count > 0)
+            {
+                foreach (var item in data)
                 {
-                    foreach(var item in data)
-                    {
-                        double val = (Convert.ToDouble(item.VALUE.ToString()) / Convert.ToDouble(item.QTY.ToString())) * Convert.ToDouble(item.QTY_TO_INSP.ToString());
-                        mat_val = mat_val + val;
-                    }
-                }
-                model.CALL_MATERIAL_VALUE = Convert.ToString(Math.Round(mat_val, 2));
-                if (model != null)
-                {
-                    return PartialView("../CallMarkedOnline/Manage", model);
+                    double val = (Convert.ToDouble(item.VALUE.ToString()) / Convert.ToDouble(item.QTY.ToString())) * Convert.ToDouble(item.QTY_TO_INSP.ToString());
+                    mat_val = mat_val + val;
                 }
             }
-            return View();
+            model.CALL_MATERIAL_VALUE = Convert.ToString(Math.Round(mat_val, 2));
+            return View(model);
         }
 
         public IActionResult Get_Call_Marked_Online([FromBody] DTParameters dtParameters)
@@ -198,5 +194,130 @@ namespace IBS.Controllers.InspectionBilling
             return Json(result);
         }
 
+        public IActionResult CaseHistory(string CASE_NO)
+        {
+            var model = new CaseHistoryModel();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                model = callMarkedOnlineRepository.Get_Vendor_Detail_By_CaseNo(CASE_NO, Region);
+                var RegionName = "";
+                if (Convert.ToString(Region) == "N") { RegionName = "Northern Region"; }
+                else if (Convert.ToString(Region) == "S") { RegionName = "Southern Region"; }
+                else if (Convert.ToString(Region) == "E") { RegionName = "Eastern Region"; }
+                else if (Convert.ToString(Region) == "W") { RegionName = "Western Region"; }
+                else if (Convert.ToString(Region) == "C") { RegionName = "Central Region"; }
+
+                ViewBag.Case_NO = CASE_NO;
+                ViewBag.RegionName = RegionName;
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "CaseHistory", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+        //[HttpPost]
+        public IActionResult GetCaseHistoryItem([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryItemModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Item(dTParameters, Region);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetCaseHistoryItem", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetPoIREPSList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryPoIREPSModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_PO_IREPS(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetCaseHistoryItem", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetPoVendorList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryPoVendorModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_PO_Vendor(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetCaseHistoryItem", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetPreviousCallList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryPreviousCallModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Previous_Call(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetPreviousCallList", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetConsigneeComplaintsList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryConsigneeComplaintModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Consignee_Complaints(dTParameters);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetPreviousCallList", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
+
+        [HttpPost]
+        public IActionResult GetCaseHistoryRejectionVendorPlaceList([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CaseHistoryRejectionVendorPlaceModel> dtList = new();
+            try
+            {
+                var Region = GetUserInfo.Region;
+                dtList = callMarkedOnlineRepository.Get_Case_History_Rejection_Vendor_Place(dTParameters, Region);
+            }
+            catch (Exception ex)
+            {
+                dtList.draw = 1;
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "GetPreviousCallList", 1, GetIPAddress());
+            }
+            return Json(dtList);
+        }
     }
 }

@@ -1,0 +1,611 @@
+﻿@model IBS.Models.AdministratorPurchaseOrderModel
+
+@{
+    ViewData["Title"] = "PO Master";
+    string clsView = "";
+    if (Model.CaseNo != null)
+    {
+        clsView = "Permission_View";
+    }
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>PO Master</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="AdministratorPurchaseOrder" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section id="tab-1" class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="AdministratorPurchaseOrder" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <input type="hidden" asp-for="CaseNo" />
+            <input type="hidden" id="hdnType" />
+            <input type="hidden" id="hdnRailway" />
+            <input type="hidden" id="hdnRailwayCode" />
+            <input type="hidden" id="hdnRCD" />
+
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Agency</label>
+                        <input type="text" class="input" value="@ViewBag.Railway" readonly>
+                        <input type="text" class="input" asp-for="RlyNonrly" style="display:none;">
+                        <input type="text" class="input" asp-for="RlyCd" style="display:none;">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" value="@ViewBag.RLY_CD" readonly style="margin-top: 33px;">
+                    </div>
+                    @if (Model.CaseNo != null)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Case Number</label>
+                            <input type="text" class="input" value="@Model.CaseNo" readonly>
+                        </div>
+                    }
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Vendor<i class="text-danger">*</i></label>
+                        <input type="text" class="input" id="txtVend">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="LoadVendor();" style="margin-top: 33px;" title="Enter the Vendor Code or 1st few letters of Vendor then click on select Vendor Button">Select Vendor</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3" style="display:none;" id="dvVendCd">
+                        @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendCd("0") , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();",@style="margin-top: 33px;"})
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="PoOrLetter" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <label for="Reference"><span class="astric">*</span> Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Stock / Non-Stock</label>
+                        @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="StockNonstock" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchase Order No.</label>
+                        <input type="text" class="input" asp-for="PoNo">
+                        <span asp-validation-for="PoNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">POPO Date<span class="astric">*</span></label>
+                        <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="PoDt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Date of Reciept of PO in RITES</label>
+                        <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
+                        <span asp-validation-for="RecvDt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchaser<i class="text-danger">*</i></label>
+                        <input type="text" class="input" id="txtSPur">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SearchPurchaser();" style="margin-top: 33px;">Search Purchaser</button>
+                            <i class="text-danger">*</i>In Case Of other Client
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("","","") , "Value", "Text"),"--Select--",new {@style="margin-top: 33px;"})
+                        <span asp-validation-for="PurchaserCd" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Last 5 digit of PO</label>
+                        <input type="text" class="input" asp-for="L5noPo">
+                        <span asp-validation-for="L5noPo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Inspection Agency/PO Cancelled</label>
+                        @Html.DropDownListFor(model => model.InspectingAgency, new SelectList(IBS.Models.Common.getInspectingAgency() , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();"})
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Remarks</label>
+                        <textarea class="input" asp-for="Remarks"> </textarea>
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0" id="dvNotRailways12" style="display:none;">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Contract No.</label>
+                            <input type="text" class="input" asp-for="ContractNo">
+                            <span asp-validation-for="ContractNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Contract Date</label>
+                            <input id="PoDt" asp-for="ContractDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Service Tax to be Included ?</label>
+                            @Html.DropDownListFor(model => model.WithServTax, new SelectList(IBS.Models.Common.getServTax() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="WithServTax" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Project Reference</label>
+                            <input type="text" class="input" asp-for="ProjectRef">
+                            <span asp-validation-for="ProjectRef" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Min Fee</label>
+                            <input type="text" class="input" asp-for="MinFee">
+                            <span asp-validation-for="MinFee" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Max Fee</label>
+                            <input type="text" class="input" asp-for="MaxFee">
+                            <span asp-validation-for="MaxFee" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
+                                    Same As Vendor
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" asp-for="PoiCd">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" id="btnPOI" class="save-btn active" style="width:auto;" onclick="SelectManufacturer();">Select Manufacturer</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
+                    </div>
+                    <div class="col-md-4 mb-3" style="display:none;" id="dvManufac">
+                        @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();"})
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Place of Inspection</label>
+                        <input type="text" class="input" id="txtMPOI" disabled="disabled">
+                    </div>
+                    @if (Model.CaseNo != null)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_a_scanned_copy" />
+                        </div>
+                    }
+                </div>
+                
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    @if (Model.CaseNo != null)
+    {
+        <div class="list-inner">
+            <div class="tast-list">
+                <h2>Consignee List</h2>
+            </div>
+            <div class="list-btn">
+                <a class="formBtn Permission_Add" onclick="OpenConsigneeModal('',0)"><span class="fa fa-plus"></span> Add New Consignee</a>
+            </div>
+        </div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtConsigneeDetails" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Consignee</th>
+                                <th>BPO</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+</section>
+
+<div id="AddEditConsigneeModal" class="modal" tabindex="-1" role="dialog">
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            InitializeConsigneeDatatable();
+            if ('@ViewBag.Railway' != "Railways") {
+                $("#dvNotRailways12").css("display", "block");
+            }
+            else {
+                $("#dvNotRailways12").css("display", "none");
+            }
+            if ('@Model' != null) {
+                if ('@Model.VendCd' != null && '@Model.VendCd' != '') {
+                    $("#txtVend").val('@Model.VendCd');
+                    LoadVendor();
+                    GetManufVEND();
+                }
+                if ('@Model.PoiCd' != null && '@Model.PoiCd' != '') {
+                    SelectManufacturer();
+                }
+                if ('@Model.MPOI' != null && '@Model.MPOI' != '') {
+                    $("#txtMPOI").val('@Model.MPOI');
+                }
+            }
+            $("#PoOrLetter").val("P");
+            $('#PoDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#RecvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#ContractDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+        });
+
+        function Save() {
+            if ($("#frmPOMaster").valid()) {
+                if ('@Model.CaseNo' != '') {
+                    SaveSingleDocuments("tab-1");
+                }
+                $("#frmPOMaster").submit();
+            }
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
+            }
+
+        };
+
+        function InitializeConsigneeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            $("#dtConsigneeDetails").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("ConsigneeLoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            CaseNo: CaseNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CONSIGNEE_NAME" },
+                    { data: "BPO_NAME" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CASE_NO = data.CASE_NO;
+                            var CONSIGNEE_CD = data.CONSIGNEE_CD;
+                            var BPO_CD = data.BPO_CD;
+                            //var editUrl = '@Url.Action("ManageConsignee", "AdministratorPurchaseOrder")?CASE_NO=' + CASE_NO + "&CONSIGNEE_CD" + CONSIGNEE_CD;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="OpenConsigneeModal(\'' + CASE_NO + '\',' + CONSIGNEE_CD + '); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="ConsigneeDelete(\'' + CASE_NO + '\',\'' + CONSIGNEE_CD + '\',\'' + BPO_CD + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function ConsigneeDelete(CASE_NO, CONSIGNEE_CD, BPO_CD) {
+            var url = '@Url.Action("ConsigneeDelete", "AdministratorPurchaseOrder")?CASE_NO=' + CASE_NO + "&CONSIGNEE_CD=" + CONSIGNEE_CD + "&BPO_CD=" + BPO_CD;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+        function CompareDate(date1, date2) {
+            if (date1 < date2) {
+                ShowHideMsgNew(false, "Date Of Reciept In Rites Cannot Be Less Than PO Date");
+            } else {
+                $("#errorMessage").text("");
+            }
+        }
+
+        function LoadVendor() {
+            var txtVend = $("#txtVend").val();
+            $("#dvVendCd").css("display", "block");
+            $.ajax({
+                url: '@Url.Action("getVendor", "AdministratorPurchaseOrder")?vend_cd=' + txtVend,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#VendCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#VendCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        
+        function Loadvendor_status() {
+            var VendCd = $("#VendCd").val();
+            $.ajax({
+                url: '@Url.Action("Getvendor_status", "AdministratorPurchaseOrder")?VendCd=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    $("#txtVend").val("");
+                }
+                else {
+                    $("#txtVend").val(VendCd);
+                }
+            });
+        }
+
+        function SearchPurchaser() {
+            FillPurchaserCd();
+        }
+
+        function FillPurchaserCd(ids) {
+            var txtSPur = $("#txtSPur").val();
+            $.ajax({
+                url: '@Url.Action("GetPurchaserCd", "AdministratorPurchaseOrder")?consignee=' + txtSPur,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PurchaserCd").html("");
+                    $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#PurchaserCd").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#PurchaserCd").val(ids);
+                    }
+                }
+            });
+        }
+
+        function sameAsVendor() {
+            if ($("#chkManuf").prop('checked') == true) {
+                fill_manufacturer(0);
+                GetManufVEND(0);
+            }
+            else {
+                $("#PoiCd").val("");
+                $("#txtMPOI").val("");
+                $("#ddlManufac").html("");
+                $("#PoiCd").removeAttr("disabled");
+            }
+        }
+
+        function fill_manufacturer(id) {
+            var VendCd = $("#VendCd").val();
+            $.ajax({
+                url: '@Url.Action("GetVendors", "AdministratorPurchaseOrder")?id=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.list != null) {
+                    $("#dvManufac").css("display", "block");
+                    $("#ddlManufac").html("");
+                    $("#ddlManufac").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                    });
+                }
+                else {
+                    ShowHideMsgNew(response.status, "No Vendor Found!!!");
+                }
+            });
+        }
+
+        function GetManufVEND(id) {
+            var VendCd = $("#VendCd").val();
+            $.ajax({
+                url: '@Url.Action("GetManufVEND", "AdministratorPurchaseOrder")?id=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    if (response.getvendor.VendStatus == 'B') {
+                        ShowHideMsgNew(response.getvendor.status, "It is informed that due to unavoidable reasons, online call booking facility has temporarily restricted against your ID From: " + response.getvendor.VendStatusDtFrST);
+                    }
+                    else {
+                        $("#PoiCd").val($("#ddlManufac").val());
+                        $("#txtMPOI").val(response.getvendor.VendAdd1);
+                        $("#PoiCd").attr("disabled", "disabled");
+                    }
+                }
+
+            });
+        }
+
+        function SelectManufacturer() {
+            var PoiCd = $("#PoiCd").val();
+            fill_manufacturer(PoiCd);
+            GetManufVEND(PoiCd);
+        }
+
+        function OpenConsigneeModal(CASE_NO, CONSIGNEE_CD) {
+            var RLY_CD = '@ViewBag.RLY_CD';
+            if (RLY_CD == "") {
+                ShowHideMsgNew(false, "Please fill Consignee.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("AddEditConsignee", "AdministratorPurchaseOrder")?CaseNo=' + CASE_NO + '&Consignee_CD=' + CONSIGNEE_CD + '&RLY_CD=' + RLY_CD,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#AddEditConsigneeModal").html("");
+                    $("#AddEditConsigneeModal").html(response);
+                    $("#AddEditConsigneeModal").modal('show');
+
+                }
+            });
+        }
+
+        function LoadConsignee() {
+            var ConsigneeCd = $("#txtSCon").val();
+            if (ConsigneeCd == "") {
+                ShowHideMsgNew(false, "Please fill BPO.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("getConsignee", "AdministratorPurchaseOrder")?ConsigneeCd=' + ConsigneeCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ConsigneeCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function LoadBPO() {
+            var SBPO = $("#txtSBPO").val();
+            $.ajax({
+                url: '@Url.Action("getBPO", "AdministratorPurchaseOrder")?SBPO=' + SBPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BpoCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function AddEditConsignee() {
+            var CaseNo = $("#CaseNo").val();
+            var ConsigneeCd = $("#ConsigneeCd").val();
+            var BpoCd = $("#BpoCd").val();
+            if (ConsigneeCd == "") {
+                ShowHideMsgNew(false, "Please select consignee.");
+                return;
+            }
+            if (BpoCd == "") {
+                ShowHideMsgNew(false, "Please select BPO.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SaveConsignee", "AdministratorPurchaseOrder")?CaseNo=' + CaseNo + '&ConsigneeCd=' + ConsigneeCd + '&BpoCd=' + BpoCd,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    if (response.status) {
+                        $("#AddEditConsigneeModal").modal('hide');
+                        ShowHideMsgNew(response.status, response.responseText);
+                        InitializeConsigneeDatatable();
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, response.responseText);
+                    }
+                }
+            });
+        }
+    </script>
+}

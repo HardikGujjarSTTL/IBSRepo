@@ -17,6 +17,8 @@
             <input type="hidden" asp-for="FOS" />
             <input type="hidden" asp-for="RegionCode" />
             <input type="hidden" asp-for="UpdateAllowed" />
+            <input type="hidden" asp-for="RlyNonrly" />
+            
 
 
         </div>
@@ -124,8 +126,8 @@
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked</label>
-                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="IeCd" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="ClusterCode" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -167,14 +169,14 @@
 
 
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
                         @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="DepartmentCode" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-5 mb-3">
                     <div class="reference">
                         <label for="Name">State whether the Call is for Final Or Stage Inspection</label>
                         <div class="company-checkbox">
@@ -190,6 +192,12 @@
                         </div>
                         <label for="Name" style="color:DarkMagenta">* Select Stage in case of Stage Inspection Call.</label>
 
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3" id="dvIrfcFunded">
+                    <div class="reference">
+                        <label for="Name"><span style="color:red">In case of IRFC Funded Project, Select 'Yes'</span></label>
+                        @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
             </div>
@@ -261,21 +269,21 @@
                     <div class="reference">
                         <label for="Name">Contact Person's Name</label>
                         <input type="text" class="input" asp-for="VendContactPer1">
-                        <span asp-validation-for="VendContactPer1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactPer1" class="text-danger" id="spnVendContactPer1"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Name">Manufacturer Email</label>
                         <input type="text" class="input" asp-for="VendEmail">
-                        <span asp-validation-for="VendEmail" class="text-danger"></span>
+                        <span asp-validation-for="VendEmail" class="text-danger" id="spnVendEmail"></span>
                     </div>
                 </div>
                 <div class="col-md-2 mb-3">
                     <div class="reference">
                         <label for="Name">Phone No.</label>
                         <input type="text" class="input" asp-for="VendContactTel1">
-                        <span asp-validation-for="VendContactTel1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactTel1" class="text-danger" id="spnVendContactTel1"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -332,7 +340,14 @@
         $(document).ready(function () {
             debugger
             $("#MfgCd").prop("disabled", "disabled");
-
+            if($("#RlyNonrly").val() == "R")
+            {
+                $("#dvIrfcFunded").show();
+            }
+            else
+            {
+                $("#dvIrfcFunded").hide();
+            }
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
             const FOS = urlParams.get('FOS');
@@ -364,6 +379,7 @@
             else if(actiontype == "A")
             {
                 $("#btnCDetails").hide();
+                $("#btnDelete").hide();
                 $("#CallStatus").val("Marked");
             }
 
@@ -472,6 +488,22 @@
         }
 
         $("#btnUpdateMDetails").click(function () {
+            if($("#VendContactPer1").val() == "" || $("#VendContactPer1").val() == null)
+            {
+                $("#spnVendContactPer1").html("Contact Person's Name");
+                //ShowHideMsgNew(false, "Please add Contact Person's Name");
+                return;
+            }
+            if($("#VendEmail").val() == "" || $("#VendEmail").val() == null)
+            {
+                $("#spnVendEmail").html("Manufacturer Email");
+                return;
+            }
+            if($("#VendContactTel1").val() == "" || $("#VendContactTel1").val() == null)
+            {
+                $("#spnVendContactTel1").html("Phone No.");
+                return;
+            }
             var formData = {
                 MfgCd: $("#MfgCd").val(),
                 VendCd: $("#VendCd").val(),
@@ -534,7 +566,7 @@
             event.preventDefault();
 
             var formData = $("#frmDetails").serialize();
-            $.post("@Url.Action("DetailsDelete", "VendorCallRegister")", formData, function (response) {
+            $.post("@Url.Action("DetailsDelete", "CallRegisterIB")", formData, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
                 }
@@ -555,7 +587,7 @@
             else {
                 status = "N";
             }
-            window.location.href = '@Url.Action("CallDetails", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSno + "&cstatus=" + status;
+            window.location.href = '@Url.Action("CallDetails", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSno + "&cstatus=" + status;
         });
 
         $("#btnUpload").click(function () {
