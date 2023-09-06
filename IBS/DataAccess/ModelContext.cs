@@ -7832,7 +7832,7 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("CLIENTTYPE");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasColumnType("NUMBER(38)")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
@@ -7841,7 +7841,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER")
                 .HasColumnName("INSPFEE");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(6)
+                .HasColumnType("NUMBER(38)")
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.LetterDate)
                 .HasColumnType("DATE")
@@ -7877,7 +7877,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDATE");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasColumnType("NUMBER(38)")
                 .HasColumnName("UPDATEDBY");
         });
 

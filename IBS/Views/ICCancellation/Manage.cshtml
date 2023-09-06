@@ -37,14 +37,14 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">IE To Whom Issued</label>
                         @Html.DropDownListFor(model => model.IssueToIecd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(ViewBag.Region) , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="SetNo" class="text-danger"></span>
+                        <span asp-validation-for="IssueToIecd" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Status</label>
                         @Html.DropDownListFor(model => model.IcStatus, new SelectList(IBS.Models.Common.GetIcStatus() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="SetNo" class="text-danger"></span>
+                        <span asp-validation-for="IcStatus" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Status Date</label>

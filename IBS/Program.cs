@@ -7,13 +7,17 @@ using IBS.Interfaces.IE_Reports;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
+using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
+using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
+using IBS.Repositories.Transaction;
 using IBS.Repositories.Vendor;
+using IBS.Repositories.WebsitePages;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -81,6 +85,9 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 
 
+builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
+builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
+builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
 builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
@@ -118,7 +125,7 @@ builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineReposito
 builder.Services.AddScoped<ICityRepository,CityRepository>();
 builder.Services.AddScoped<I_ICBooksetFormRepository,ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
-builder.Services.AddScoped<IHologramSearchForm,HologramSearchForm>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLFormRepository,MasterItemsPLFormRepository>();
 builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
@@ -148,7 +155,7 @@ builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRReposit
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<I_ICBooksetFormRepository, ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
-builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+//builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormRepository>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
@@ -159,6 +166,13 @@ builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationForm
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
 builder.Services.AddScoped<ICallRemarkingRepository, CallRemarkingRepository>();
 builder.Services.AddScoped<IVigilanceCaseMonitoringRepository, VigilanceCaseMonitoringRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
+builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
+builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
+builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRegionBillingInformationRepository>();
+builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
 
 var app = builder.Build();
 

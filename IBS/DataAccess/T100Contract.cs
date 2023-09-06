@@ -39,9 +39,9 @@ public partial class T100Contract
 
     public DateTime? Createddate { get; set; }
 
-    public int? Createdby { get; set; }
+    public decimal? Createdby { get; set; }
 
-    public int? Updatedby { get; set; }
+    public decimal? Updatedby { get; set; }
 
-    public int? Isdeleted { get; set; }
+    public decimal? Isdeleted { get; set; }
 }

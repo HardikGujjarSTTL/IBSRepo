@@ -1,0 +1,167 @@
+﻿@model IBS.Models.ContractEntry
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Contract Entry</h2>
+    </div>
+</div>
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="ContractEntry" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmContrcatEntry">
+    <div class="accordion-body">
+        <div class="row my-0 d-flex align-items-end">
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Client Name</label>
+                @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="ClientName" })
+                <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Client Type</label>
+                @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control", @id="Clienttype" })
+                <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-4 alignBtn">
+                <div class="savenext-btn">
+                    <button type="button" class="reset-btn" id="btnSearch">Search</button>
+                    <a asp-area="" asp-controller="ContractEntry" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Contract</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtcontract" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>CLIENT NAME</th>
+                            <th>LETTER NO.</th>
+                            <th>LETTER DATE</th>
+                            <th>Total LOT OF INSP</th>
+                            <th>MATERIAL VALUE</th>
+                            <th>MATERIAL DESCRIPTION</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $("#btnSearch").click(function () {
+
+            var CnameDropDown = $("#ClientName");
+            var cnameValue = CnameDropDown.val();
+            var cnameValidationSpan = $("[data-valmsg-for='CLIENTNAME']");
+
+            var ctypeDropDown = $("#Clienttype");
+            var ctypeValue = ctypeDropDown.val();
+            var ctypeValidationSpan = $("[data-valmsg-for='CLIENTTYPE']");
+
+            if (cnameValue === "" && ctypeValue === "") {
+                cnameValidationSpan.html("Client Name is required.");
+                ctypeValidationSpan.html("Client Type is required.");
+                cnameValidationSpan.show();
+                ctypeValidationSpan.show();
+                return;
+            } else {
+                if ($("#frmContrcatEntry").valid()) {
+                    $("#frmContrcatEntry").submit();
+                }
+                InitializeDatatable();
+            }
+            ctypeValidationSpan.hide();
+            cnameValidationSpan.hide();
+        });
+
+        function InitializeDatatable() {
+            var Clienttype = $("#Clienttype").val();
+            var ClientName = $("#ClientName").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            $("#dtcontract").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "ClientName": ClientName,
+                            "Clienttype": Clienttype
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "CLIENTNAME" },
+                    { data: "LETTER_NO" },
+                    { data: "LETTER_DATE" },
+                    { data: "LOTOFINSP" },
+                    { data: "MATERIALVALUE" },
+                    { data: "Materialdescription" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.ID;
+                            var editUrl = '@Url.Action("Manage", "ContractEntry")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function Delete(id) {
+            var url = '@Url.Action("Delete", "ContractEntry")?ID=' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+        $("#ClientName").on("change", function () {
+            $("[data-valmsg-for='CLIENTNAME']").hide();
+        });
+
+        $("#ClientName").on("blur", function () {
+            if ($(this).val() === "") {
+                $("[data-valmsg-for='CLIENTNAME']").show();
+            }
+        });
+
+        $("#Clienttype").on("change", function () {
+            $("[data-valmsg-for='CLIENTTYPE']").hide();
+        });
+
+        $("#Clienttype").on("blur", function () {
+            if ($(this).val() === "") {
+                $("[data-valmsg-for='CLIENTTYPE']").show();
+            }
+        });
+    </script>
+}

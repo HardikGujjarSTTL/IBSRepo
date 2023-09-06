@@ -1,0 +1,288 @@
+﻿@model IBS.Models.DownloadBillsModel
+@{
+    ViewData["Title"] = "DOWNLOAD ONLINE BILLS/PO/IC";
+}
+
+
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>DOWNLOAD ONLINE BILLS/PO/IC</h2>
+    </div>
+
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">For the Month</label>
+                    <input type="radio" name="radioGroup" id="rb1" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">For Given Period</label>
+                    <input type="radio" name="radioGroup" id="rb2" />
+                    <span class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="row my-0" id="monthyear" style="display:none;">
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">Month</label>
+                    @Html.DropDownListFor(model => model.Month, new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),new { @id = "ddlmonth", @class = "form-control" })
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">Year</label>
+                    @Html.DropDownListFor(model => model.Year, new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),new { @id = "ddlyear", @class = "form-control" })
+                </div>
+
+            </div>
+            <div class="row my-0" id="fdtodt" style="display:none;">
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">Month</label>
+                    <input type="text" class="input datepicker" id="fdt" />
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">Year</label>
+                    <input type="text" class="input datepicker" id="tdt" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;" id="btngr">Generate Report</button>
+<div style="display:none" id="hide">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtbill" class="table-responsive">
+                    <thead>
+                        <tr>
+
+                            <th>S.No.</th>
+                            <th>RLY</th>
+                            <th>PO No.</th>
+                            <th>PO Dt</th>
+                            <th>Case No.</th>
+                            <th>PO OR Letter</th>
+                            <th>BPO_NAME</th>
+                            <th>Bill No.</th>
+                            <th>Bill Dt.</th>
+                            <th>Invoice No.</th>
+                            <th>AU</th>
+                            <th>IC No.</th>
+                            <th>IC Date</th>
+                            <th>BK No.</th>
+                            <th>Set No.</th>
+                            <th>Bill Amount</th>
+                            <th>Outstanding Amt</th>
+                            <th>Digital Bill Gen Date</th>
+                            <th>Digital Invoice</th>
+                            <th>Digital IC</th>
+                            <th>PO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $("#btngr").click(function () {
+            var Month = $("#ddlmonth").val();
+            var Year = $("#ddlyear").val();
+            var FromDate = $("#fdt").val();
+            var ToDate = $("#tdt").val();
+            InitializeDatatable1(Month, Year, FromDate, ToDate);
+            $("#hide").css("display", "block");
+        })
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
+            });
+            sessionStorage.removeItem("month");
+        });
+        $("#rb1").click(function () {
+            $("#monthyear").css("display", "block");
+            $("#fdtodt").css("display", "none");
+            sessionStorage.setItem("month", true);
+        })
+        $("#rb2").click(function () {
+            $("#fdtodt").css("display", "block");
+            $("#monthyear").css("display", "none");
+        })
+        function InitializeDatatable1(Month, Year, FromDate, ToDate) {
+
+            if (FromDate != "" && ToDate != "") {
+                var parts = FromDate.split('/');
+                var FromDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+                var parts1 = ToDate.split('/');
+                var ToDate = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
+            }
+            $("#dtbill").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            Month: Month,
+                            Year: Year,
+                            FromDate: FromDate,
+                            ToDate: ToDate,
+                            Rb1: sessionStorage.getItem("month")
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                    { data: "BpoRly" },
+                    { data: "PoNo" },
+                    { data: "PoDt" },
+                    { data: "CaseNo" },
+                    { data: "PoOrLetter" },
+                    { data: "BpoName" },
+                    { data: "BillNo" },
+                    { data: "BillDt" },
+                    { data: "InvoiceNo" },
+                    { data: "AuDesc" },
+                    { data: "IcNo" },
+                    { data: "IcDt" },
+                    { data: "BkNo" },
+                    { data: "SetNo" },
+                    { data: "BillAmount" },
+                    { data: "AmountOutstanding" },
+                    { data: "DigBillGenDate" },
+                    //{ data: "OnlineInvoice" },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = 'INVOICE';
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = '';
+                            if (data.ICExists != null){
+                                linkText = 'IC';
+                            }                            
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow1(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = '';
+                            if (data.CaseNoExists != null) {
+                                linkText = 'VIEW PO';
+                            }
+                            
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow2(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
+
+
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+        function editRow(escapedRow) {
+            
+           var fpath1 = escapedRow.OnlineInvoice;
+            window.open(fpath1, "_blank");
+
+        }
+        function editRow1(escapedRow) {
+            var fpath1 = escapedRow.ICPATH;
+            window.open(fpath1, "_blank");
+        }
+        function editRow2(escapedRow) {
+            
+            if (escapedRow.PoSource == "C"){
+                var fpath = 'https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/"' + escapedRow.PoYr + '"/"' + escapedRow.ImmsRlyCd + '"/"' + escapedRow.PoNo + '".pdf'
+            }
+            else
+            {
+                var fpath1 = escapedRow.CASENOPATH;
+                window.open(fpath1, "_blank");
+            }
+        }
+
+                                //function UserDelete(UserId) {
+                                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                                //    $("#btn-delete-yes").attr("href", url);
+                                //    $("#modal-delete-conf").modal("show");
+                                //}
+
+    </script>
+}
