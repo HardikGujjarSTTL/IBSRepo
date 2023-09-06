@@ -1,0 +1,77 @@
+﻿@model IBS.Models.CentralItemDetailModel
+
+@{
+    ViewData["Title"] = "Manage Central Item Details";
+    string clsView = "";
+    if (Model.Id > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Central Item Details</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="CentralItemMaster" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form role="form" asp-controller="CentralItemMaster" asp-action="SaveMasterDetails" id="frmMasterDetails">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="RailId" />
+            <input type="text" class="input" asp-for="RailId" maxlength="30" style="display:none">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rail Price Per Mt</label>
+                        <input type="text" class="input" asp-for="RailPricePerMt" maxlength="30">
+                        <span asp-validation-for="RailPricePerMt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Packing Charge</label>
+                        <input type="text" class="input" asp-for="PackingCharge" maxlength="30">
+                        <span asp-validation-for="PackingCharge" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                    <input type="checkbox" class="input" asp-for="Isactive" /> <lable for="IsArchived">Is Active ? </lable> &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        <span asp-validation-for="Isactive" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Price Date From</label>
+                        <input id="PriceDateFr" asp-for="PriceDateFr" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="PriceDateFr" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Price Date To</label>
+                        <input id="PriceDateTo" asp-for="PriceDateTo" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="PriceDateTo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmMasterDetails").valid()) {
+                $("#frmMasterDetails").submit();
+            }
+        }
+    </script>
+}
