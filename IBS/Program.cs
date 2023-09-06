@@ -74,7 +74,8 @@ builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.Call
 builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vendor.DownloadInspFeeBillRepository>();
 builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Repositories.Vendor.VendorCallsMarkedForSpecificPORepository>();
 builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
-builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
+//builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
+builder.Services.AddScoped<IOnlineComplaintsRepository, OnlineComplaintsRepository>();
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
 builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPhotoEnclosedRepository>();
@@ -161,10 +162,11 @@ builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormReposi
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
 builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
+builder.Services.AddScoped<ICallRemarkingRepository, CallRemarkingRepository>();
+builder.Services.AddScoped<IVigilanceCaseMonitoringRepository, VigilanceCaseMonitoringRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
 builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();

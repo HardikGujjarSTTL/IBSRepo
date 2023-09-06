@@ -3,13 +3,14 @@ using IBS.Filters;
 using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
+using IBS.Interfaces.WebsitePages;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
-namespace IBS.Controllers
+namespace IBS.Controllers.WebsitePages
 {
     public class OnlineComplaintsController : BaseController
     {

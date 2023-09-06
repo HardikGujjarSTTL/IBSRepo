@@ -1,6 +1,6 @@
 ﻿using IBS.Models;
 
-namespace IBS.Interfaces
+namespace IBS.Interfaces.WebsitePages
 {
     public interface IOnlineComplaintsRepository
     {
