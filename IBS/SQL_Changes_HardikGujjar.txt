@@ -1327,7 +1327,8 @@ ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0)
 CREATE OR REPLACE PROCEDURE SP_GetBillData (
     p_Region IN VARCHAR2,
     p_BillNo IN VARCHAR2,
-    p_BillDate IN VARCHAR2,
+    p_BillFromDate IN VARCHAR2,
+    p_BillToDate IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
 ) IS
     v_Query VARCHAR2(1000);
@@ -1339,15 +1340,16 @@ BEGIN
     IF p_BillNo IS NOT NULL THEN
         v_Query := v_Query || ' AND TRIM(BILL_NO) = ''' || p_BillNo || '''';
     END IF;
-
-    IF p_BillDate IS NOT NULL THEN
-        v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') = ''' || p_BillDate || '''';
+   
+    IF p_BillFromDate IS NOT NULL AND p_BillToDate IS NOT NULL THEN
+         v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') BETWEEN ''' || p_BillFromDate || ''' AND ''' || p_BillToDate || '''';
     END IF;
 
     v_Query := v_Query || ' AND (ISDELETED = 0 OR ISDELETED IS NULL)';
     
     OPEN p_Result FOR v_Query ;
 END SP_GetBillData;
+
 
 
 =======================

@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "SUPER SURPRISE CHECK FORM";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>SUPER SURPRISE CHECK LIST</h2>
+        </div>
+        @*<div class="list-btn">
+            <a asp-area="" asp-controller="SuperSurpirseForm" asp-action="SuperSurpirseManage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Super Surpirse</a>
+        </div>*@
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Case No.</label>
+                <input type="text" id="txtcno" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Call Date</label>
+                <input type="text" class="input datepicker" id="dtcdate" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Call SNo.</label>
+                <input type="text" id="txtcsno" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3" style="margin-top:3%;">
+                <button type="button" class="save-btn active" onclick="show();" style="border-radius:8px;">Search</button>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dttraining" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Vendor Code</th>
+                            <th>Manufacturer</th>
+                            <th>IE Name</th>
+                            <th>Case No.</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+        function show() {
+            var CaseNo = $("#txtcno").val();
+            var CallDate = $("#dtcdate").val();
+            var CallSNo = $("#txtcsno").val();
+            InitializeDatatable(CaseNo, CallDate, CallSNo);
+        }
+        function InitializeDatatable(CaseNo, CallDate, CallSNo) {
+
+            $("#dttraining").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            CaseNo: CaseNo,
+                            CallDate: CallDate,
+                            CallSNo: CallSNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "VEND_CD" },
+                    { data: "MFG" },
+                    { data: "IE_NAME" },
+                    { data: "Case_No" },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            
+                            var CaseNo = data.Case_No;
+                            var CallDt = data.CallDt;
+                            var CallSNo = data.CallSNo;
+                            var editUrl = '@Url.Action("SuperSurpirseManage", "SuperSurpirseForm")?CaseNo=' + CaseNo;
+                            //var editUrl = '@Url.Action("SuperSurpirseManage", "SuperSurpriseForm")';
+                            //var editUrl = '@Url.Action("SuperSurpriseForm", "SuperSurpriseForm")' +
+                            //    '?Case_No=' + encodeURIComponent(Case_No) +
+                            //    '&CallDt=' + encodeURIComponent(CallDt) +
+                            //    '&CallSNo=' + encodeURIComponent(CallSNo);
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+                                    //function UserDelete(UserId) {
+                                    //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                                    //    $("#btn-delete-yes").attr("href", url);
+                                    //    $("#modal-delete-conf").modal("show");
+                                    //}
+
+    </script>
+    }

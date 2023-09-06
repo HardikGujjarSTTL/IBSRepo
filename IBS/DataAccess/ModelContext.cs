@@ -291,6 +291,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T33HologramAccountal> T33HologramAccountals { get; set; }
 
+    public virtual DbSet<T34CentralItemMaster> T34CentralItemMasters { get; set; }
+
     public virtual DbSet<T34RailPrice> T34RailPrices { get; set; }
 
     public virtual DbSet<T35RailPriceDetail> T35RailPriceDetails { get; set; }
@@ -9228,7 +9230,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -10545,6 +10547,49 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
+                .HasColumnName("USER_ID");
+        });
+
+        modelBuilder.Entity<T34CentralItemMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T34_CENTRAL_ITEM_MASTER_PK");
+
+            entity.ToTable("T34_CENTRAL_ITEM_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T34_CENTRAL_ITEM_MASTER_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.RailCd)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RAIL_CD");
+            entity.Property(e => e.RailDesc)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("RAIL_DESC");
+            entity.Property(e => e.RailLengthMeter)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("RAIL_LENGTH_METER");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
                 .HasColumnName("USER_ID");
         });
 
@@ -11927,14 +11972,18 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T54VigilanceCasesDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T54_VIGILANCE_CASES_DETAILS");
+            entity.HasKey(e => e.Id).HasName("T54_VIGILANCE_CASES_DETAILS_PK");
+
+            entity.ToTable("T54_VIGILANCE_CASES_DETAILS");
 
             entity.HasIndex(e => new { e.RefRegNo, e.CaseNo, e.BkNo, e.SetNo }, "T54_VIGI_CASES_DETAILS_CASE").IsUnique();
 
             entity.HasIndex(e => new { e.RefRegNo, e.Sno }, "T54_VIGI_CASES_DETAILS_SNO").IsUnique();
 
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T54_VIGILANCE_CASES_DETAILS_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.BillDt)
                 .HasColumnType("DATE")
                 .HasColumnName("BILL_DT");
@@ -11962,7 +12011,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.RefRegNo)
                 .HasMaxLength(7)
@@ -11973,7 +12022,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("SET_NO");
             entity.Property(e => e.Sno)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("SNO");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
@@ -11981,7 +12030,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
 
-            entity.HasOne(d => d.RefRegNoNavigation).WithMany()
+            entity.HasOne(d => d.RefRegNoNavigation).WithMany(p => p.T54VigilanceCasesDetails)
                 .HasPrincipalKey(p => p.RefRegNo)
                 .HasForeignKey(d => d.RefRegNo)
                 .HasConstraintName("FK_T54_VIGILANCE_CASES_DETAILS");
@@ -12371,22 +12420,42 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T60IePoiMapping>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T60_IE_POI_MAPPING");
+            entity.HasKey(e => e.Id).HasName("T60_IE_POI_MAPPING_PK");
 
+            entity.ToTable("T60_IE_POI_MAPPING");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T60_IE_POI_MAPPING_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.IeCd)
                 .HasPrecision(6)
                 .HasColumnName("IE_CD");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.PoiCd)
                 .HasPrecision(6)
                 .HasColumnName("POI_CD");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
 
-            entity.HasOne(d => d.IeCdNavigation).WithMany()
+            entity.HasOne(d => d.IeCdNavigation).WithMany(p => p.T60IePoiMappings)
                 .HasForeignKey(d => d.IeCd)
                 .HasConstraintName("FKT09_IE_CD");
 
-            entity.HasOne(d => d.PoiCdNavigation).WithMany()
+            entity.HasOne(d => d.PoiCdNavigation).WithMany(p => p.T60IePoiMappings)
                 .HasForeignKey(d => d.PoiCd)
                 .HasConstraintName("FKT37_POI_CD");
         });
@@ -18413,14 +18482,17 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
         modelBuilder.HasSequence("T31_HOLOGRAM_ISSUED_SEQ");
         modelBuilder.HasSequence("T32_CLIENT_LOGIN_SEQ");
+        modelBuilder.HasSequence("T34_CENTRAL_ITEM_MASTER_SEQ");
         modelBuilder.HasSequence("T45_CLAIM_MASTER_SEQ");
         modelBuilder.HasSequence("T46_CLAIM_DETAIL_SEQ");
         modelBuilder.HasSequence("T47_IE_WORK_PLAN_SEQ");
         modelBuilder.HasSequence("T50_LAB_REGISTER_SEQ");
         modelBuilder.HasSequence("T53_VIGILANCE_CASES_MASTER_SEQ");
+        modelBuilder.HasSequence("T54_VIGILANCE_CASES_DETAILS_SEQ");
         modelBuilder.HasSequence("T57_ONGOING_CONTRACTSSEQ");
         modelBuilder.HasSequence("T58_CLIENT_CONTACT_SEQ");
         modelBuilder.HasSequence("T59_LAB_EXP_SEQ");
+        modelBuilder.HasSequence("T60_IE_POI_MAPPING_SEQ");
         modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ");
         modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ_1").IncrementsBy(135);
         modelBuilder.HasSequence("T65_LABORATORY_MASTER_SEQ_2");

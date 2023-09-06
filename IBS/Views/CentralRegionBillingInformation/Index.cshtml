@@ -57,6 +57,22 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -70,16 +86,29 @@
     <script type="text/javascript">
         var dt;
         $(document).ready(function () {
-            //$('#dtCentralRegion').DataTable({ dom: 'rtip' });
             InitializeDatatable();
         });
 
         function Search() {
+            var BillFromDate = $("#txtBillFromDate").val();
+            var BillToDate = $("#txtBillToDate").val();
+            if(BillFromDate == "" || BillToDate == "")
+            {
+                ShowHideMsgNew(false, "Please select Date rang.");
+                return;
+            }
             InitializeDatatable();
         }
         function InitializeDatatable() {
+            var Region ='@ViewBag.Region';
             var BillNo = $("#txtBillNo").val();
-            var BillDate = $("#txtBillFromDate").val();
+            var BillFromDate = $("#txtBillFromDate").val();
+            var BillToDate = $("#txtBillToDate").val();
+            var _title=  Region + '\n Bill Details For the Period : All';
+            if(BillFromDate != "" || BillToDate != "")
+            {
+                _title=  Region + '\n Bill Details For the Period :' + BillFromDate +' To ' +BillToDate
+            }
             dt=$("#dtCentralRegion").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -88,7 +117,7 @@
                 processing: true, // ServerSide Setups
                 serverSide: true,
                 destroy: true,
-                paging: true,// Paging Setups
+                paging: false,// Paging Setups
                 searching: true,// Searching Setups
                 dom: 'rtip',
                 buttons: [
@@ -98,7 +127,8 @@
                         filename: function () { return getExportFileName('Central_Region_Billing_Information'); },
                         download: 'open',
                         orientation: 'landscape',
-                        title: 'Central Region Billing Information ',
+                            title:_title,
+                        footer: true,
                         exportOptions: {
                             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                             modifier: {
@@ -112,7 +142,7 @@
                         filename: function () { return getExportFileName('Central_Region_Billing_Information '); },
                         text: 'Export to PDF',
                         orientation: 'landscape',
-                        title: 'Central Region Billing Information ',
+                        title: _title,
                         footer: true,
                         exportOptions: {
                             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -123,16 +153,17 @@
                             }
                         },
                         customize: function (doc) {
-                            debugger;
                             doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
                             doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
                             doc.pageMargins = [5, 100, 5, 5];
+                                
                         }
                     },
                     {
                         extend: 'print',
                         text: 'Print',
-                        title: 'Central Region Billing Information Bill </br> Details For the Period :',
+                        title: _title,
+                        footer: true,
                         exportOptions: {
                             columns: [0, 1, 2, 3, 4, 5,6,7,8]
                         },
@@ -145,7 +176,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            BillNo: BillNo, BillDate: BillDate
+                                BillNo: BillNo, BillFromDate: BillFromDate, BillToDate: BillToDate
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -178,7 +209,55 @@
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                    footerCallback: function (row, data, start, end, display) {
+                        var api = this.api(), data;
+
+                        // converting to interger to find total
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
+                                    i : 0;
+                        };
+
+                        
+                        var InspFee = api
+                            .column(4)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+
+                        var Tax = api
+                            .column(5)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+                        var BillAmount = api
+                            .column(6)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+
+                        InspFee =  $.fn.dataTable.render.number(',', '.', 2).display(InspFee);
+                        Tax =  $.fn.dataTable.render.number(',', '.', 2).display(Tax);
+                        BillAmount =  $.fn.dataTable.render.number(',', '.', 2).display(BillAmount);
+
+                        // Update footer by showing the total with the reference of the column index
+                        $(api.column(0).footer()).html('&nbsp;');
+                        $(api.column(1).footer()).html('&nbsp;');
+                        $(api.column(2).footer()).html('&nbsp;');
+                        $(api.column(2).footer()).html('Total');
+                        $(api.column(4).footer()).html(InspFee);
+                        $(api.column(5).footer()).html(Tax);
+                        $(api.column(6).footer()).html(BillAmount);
+                        $(api.column(7).footer()).html('&nbsp;');
+                        $(api.column(8).footer()).html('&nbsp;');
+                        $(api.column(3).footer()).html('&nbsp;');
+                    },
             });
             dt.column(3).visible(false);
             dt.column(4).visible(false);
