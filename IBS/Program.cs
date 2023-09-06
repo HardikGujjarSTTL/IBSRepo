@@ -162,10 +162,11 @@ builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormReposi
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
 builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
 builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
+builder.Services.AddScoped<ICallRemarkingRepository, CallRemarkingRepository>();
+builder.Services.AddScoped<IVigilanceCaseMonitoringRepository, VigilanceCaseMonitoringRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
 builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();

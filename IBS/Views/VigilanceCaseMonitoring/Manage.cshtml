@@ -1,0 +1,237 @@
+﻿@model IBS.Models.VigilanceCasesMasterModel
+
+@{
+    ViewData["Title"] = "Manage Vigilance Case Monitoring Form";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Vigilance Case Monitoring Form</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="VigilanceCaseMonitoring" asp-action="Manage" id="frmVigilanceCasesMaster">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Region" />
+        <input type="hidden" id="checkedCaseNos" name="checkedCaseNos" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Ref Reg No </label>
+                    <input type="text" class="input" asp-for="RefRegNo" maxlength="7" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Vigilance Letter Ref No</label>
+                    <input type="text" class="input" asp-for="RefNo" maxlength="50">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Vigilance Letter Ref Date <i class="text-danger">*</i></label>
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="RefDt">
+                    <span asp-validation-for="RefDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-8 mb-3">
+                    <label for="Reference">Ref Details </label>
+                    <textarea class="input" asp-for="RefDetails" maxlength="250"></textarea>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Ref Reply Date</label>
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="RefReplyDt">
+                    <span asp-validation-for="RefReplyDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Prelim Investigation Details </label>
+                    <textarea class="input" asp-for="PrelimInvDetails" maxlength="250"></textarea>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Action Proposed </label>
+                    @Html.DropDownListFor(model => model.ActionProposed, new SelectList(Common.GetActionProposed() , "Value", "Text"), "--Select--")
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Action Proposed Date</label>
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="ActionProposedDt">
+                    <span asp-validation-for="ActionProposedDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Final Action Date</label>
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="FinalActionDt">
+                    <span asp-validation-for="FinalActionDt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Final Action </label>
+                    <textarea class="input" asp-for="FinalAction" maxlength="250"></textarea>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Case No <i class="text-danger">*</i></label>
+                    <input type="text" class="input" id="CaseNo" />
+                    <span class="text-danger field-validation-error" id="spnErrorMsgCaseNo"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="savenext-btn" style="margin-top: 30px;">
+                        <button type="button" class="save-btn active" id="btnSearchCaseNo">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0" id="dvVigilanceList1" style="display: none;">
+                <div class="col-md-12 mb-3">
+                    <section class="table-section">
+                        <div class="dash-table">
+                            <table id="dtVigilanceList" class="table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center">
+                                            <input type="checkbox" id="selectallCaseNos" name="selectallCaseNos" style="margin-left: 18px;" checked />
+                                        </th>
+                                        <th>Case No</th>
+                                        <th>BK No</th>
+                                        <th>Set No</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="VigilanceCaseMonitoring" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitVigilanceCasesData();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        var dt;
+
+        $(document).ready(function () {
+            if ('@Model.Id' > 0) {
+                $("#RefDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+                BindVigilanceList("", '@Model.RefRegNo');
+                checkedcaseNos();
+            }
+        });
+
+        $("#btnSearchCaseNo").click(function () {
+            $("#spnErrorMsgCaseNo").html("");
+
+            var CaseNo = $("#CaseNo").val();
+
+            if (CaseNo == '') {
+                $("#spnErrorMsgCaseNo").html("The Vigilance Letter Ref Date field is required.");
+                $("#dvVigilanceList1").css("display", "none");
+                return;
+            }
+
+            BindVigilanceList(CaseNo, "");
+        });
+
+        function BindVigilanceList(_CaseNo, _RefRegNo) {
+
+            dt = $("#dtVigilanceList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: "500px",
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                dom: '<"toolbar">rtip',
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableVigilanceList")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": _CaseNo,
+                            "RefRegNo": _RefRegNo,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            if (data.Id == -1) {
+                                return '<input type="checkbox" class="select-caseNos" name="caseNos" id="' + meta.row + meta.settings._iDisplayStart + 1 + '"><label for="' + meta.row + meta.settings._iDisplayStart + 1 + '"></label>';
+
+                            }
+                            else {
+                                return '<input type="checkbox" class="select-caseNos" name="caseNos" id="' + meta.row + meta.settings._iDisplayStart + 1 + '" checked><label for="' + meta.row + meta.settings._iDisplayStart + 1 + '"></label>';
+                            }
+                        },
+                    },
+                    { data: "CaseNo" },
+                    { data: "BkNo" },
+                    { data: "SetNo" },
+                ]
+            });
+
+            document.querySelector('div.toolbar').innerHTML = "<b>List of IC's on the above Case no</b>";
+            $("#dvVigilanceList1").css("display", "");
+        }
+
+        $("#selectallCaseNos").click(function () {
+            var checkAll = $("#selectallCaseNos").prop('checked');
+            if (checkAll) {
+                $(".select-caseNos").prop("checked", true);
+            } else {
+                $(".select-caseNos").prop("checked", false);
+            }
+        });
+
+        $("#dtVigilanceList").on('change', "input[type='checkbox']", function (e) {
+            checkedcaseNos();
+        });
+
+        function checkedcaseNos() {
+            var totalCount = dt.rows().count();
+            var checkedCount = dt.$(".select-caseNos:checked").length;
+
+            if (totalCount > 0 && totalCount == checkedCount) {
+                $("#selectallCaseNos").prop("checked", true);
+            }
+            else {
+                $("#selectallCaseNos").prop("checked", false);
+            }
+        }
+
+        function SubmitVigilanceCasesData() {
+
+            var checkedCaseNos = [];
+
+            $(dt.$('input[name="caseNos"]:checked').each(function () {
+                var row = dt.row($(this).closest('tr')).data();
+                checkedCaseNos.push(row);
+            }));
+
+            $("#checkedCaseNos").val(JSON.stringify(checkedCaseNos));
+
+            if ($("#frmVigilanceCasesMaster").valid()) {
+                $("#frmVigilanceCasesMaster").submit();
+            }
+        }
+
+    </script>
+}

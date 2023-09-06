@@ -1,0 +1,162 @@
+﻿@{
+    ViewData["Title"] = "Vigilance Case Search";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Vigilance Case Search</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="VigilanceCaseMonitoring" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="RefRegNo">Ref Reg No</label>
+                    <input type="text" class="input" id="RefRegNo">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="RefDate">Vigilance Letter Ref Date</label>
+                    <input type="text" class="datepicker" id="RefDate" placeholder="DD/MM/YYYY">
+                    <span class="text-danger" id="spnErrorRefDate"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="CaseNo">Case No</label>
+                    <input type="text" class="input" id="CaseNo">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="BookNo">Book No</label>
+                    <input type="text" class="input" id="BookNo">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="SetNo">Set No</label>
+                    <input type="text" class="input" id="SetNo">
+                </div>
+            </div>
+            <div class="col-md-1" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="dash-table">
+            <table id="dtVigilanceCaseList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Ref Reg No.</th>
+                        <th>Vigilance Letter Ref Date</th>
+                        <th>Ref Details</th>
+                        <th style="text-align:center">View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('#dtVigilanceCaseList').DataTable({ searching: false, paging: false, ordering: false });
+        });
+
+        function InitializeDatatable() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+            var RefDate = null;
+
+            if ($("#RefDate").val() != '') {
+                if (IsValidDate($("#RefDate").val()) == false) {
+                    $("#spnErrorRefDate").html("Invalid date format");
+                    IsValid = false;
+                }
+                else {
+                    RefDate = moment($('#RefDate').datepicker('getDate')).format("YYYY-MM-DD");
+                }
+            }
+
+            if (!IsValid) return;
+
+            var RefRegNo = $("#RefRegNo").val();
+            var CaseNo = $("#CaseNo").val();
+            var BookNo = $("#BookNo").val();
+            var SetNo = $("#SetNo").val();
+
+            $("#dtVigilanceCaseList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "RefRegNo": RefRegNo,
+                            "RefDate": RefDate,
+                            "CaseNo": CaseNo,
+                            "BookNo": BookNo,
+                            "SetNo": SetNo,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "RefRegNo" },
+                    {
+                        data: "RefDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "RefDetails" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "VigilanceCaseMonitoring")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}

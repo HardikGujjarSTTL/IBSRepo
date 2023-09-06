@@ -1,0 +1,133 @@
+﻿@model IBS.Models.CallRemarkingApprovalModel
+
+@{
+    ViewData["Title"] = "Call Remark Approve Form";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Call Remark Approve Form</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="CallRemarking" asp-action="Manage" id="frmCallRemarkingApproval">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="IeCd" />
+        <input type="hidden" asp-for="CoCd" />
+        <input type="hidden" id="btnStatus" name="btnStatus" />
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Case No</label>
+                    <input type="text" class="input" asp-for="CaseNo" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Call Date</label>
+                    <input type="text" class="datepicker" asp-for="CallRecvDt" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">SNo.</label>
+                    <input type="text" class="input" asp-for="CallSno" style="color: OrangeRed" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                    <input type="text" class="input" asp-for="Mfg" style="color: OrangeRed" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Rly/Non-Rly & Client</label>
+                    <input type="text" class="input" asp-for="RLY" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-8 mb-3">
+                    <label for="Reference">Item</label>
+                    <textarea class="input" asp-for="ItemDescPo" style="color: OrangeRed" readonly></textarea>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Material Value</label>
+                    <input type="text" class="input" asp-for="MAT_VALUE" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">DP</label>
+                    <input type="text" class="datepicker" asp-for="ExtDelvDt" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Inspection Desire Date</label>
+                    <input type="text" class="datepicker" asp-for="DtInspDesire" style="color: OrangeRed" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Pending Since</label>
+                    <input type="text" class="input" asp-for="pending_since" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Remark From IE</label>
+                    <input type="text" class="input" asp-for="FrIeName" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Remark From IE Pending Calls</label>
+                    <input type="text" class="input" asp-for="FrIePendingCalls" style="color: OrangeRed" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Remark To IE</label>
+                    <input type="text" class="input" asp-for="ToIeName" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Remark To IE Pending Calls</label>
+                    <input type="text" class="input" asp-for="ToIePendingCalls" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Remarking Reason</label>
+                    <input type="text" class="input" asp-for="RemarkReason" style="color: OrangeRed" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Remarking Initiated By</label>
+                    <input type="text" class="input" asp-for="UserName" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Call Remarks Status</label>
+                    <input type="text" class="input" asp-for="CallRemarkStatus" style="color: OrangeRed" readonly />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Desire Date</label>
+                    <input type="text" class="datepicker" asp-for="CALL_DES_DT" style="color: OrangeRed" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Remarks</label>
+                    <textarea class="input" asp-for="Remark"></textarea>
+                    <span asp-validation-for="Remark" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="SubmitCallRemarkingData('Approve');">Approve</button>
+                <button type="button" class="save-btn active" onclick="SubmitCallRemarkingData('Reject');">Reject</button>
+                <a asp-controller="CallRemarking" asp-action="CallRemarkingApproval" class="reset-btn">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function SubmitCallRemarkingData(action) {
+            $("#btnStatus").val(action);
+            if ($("#frmCallRemarkingApproval").valid()) {
+                $("#frmCallRemarkingApproval").submit();
+            }
+        }
+
+    </script>
+}
