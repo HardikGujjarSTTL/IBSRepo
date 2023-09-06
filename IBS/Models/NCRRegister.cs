@@ -24,7 +24,7 @@ namespace IBS.Models
         public int? CONSIGNEE_CD { get; set; }
         public byte? CONSIGNEECD { get; set; }
         public string Item { get; set; }
-        public byte Item_Srno_no { get; set; }
+        public int Item_Srno_no { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? IC_DT { get; set; }
         public DateTime? ToDate { get; set; }
