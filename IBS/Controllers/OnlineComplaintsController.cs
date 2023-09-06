@@ -25,21 +25,35 @@ namespace IBS.Controllers
         }
         public IActionResult Index()
         {
-            List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(0));
-            FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
-            FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-            FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
-            FileUploaderUpload_Memo.OthersSection = false;
-            FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
-            FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
-            ViewBag.Upload_Rejection_Memo = FileUploaderUpload_Memo;
+            try
+            {
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(0));
+                FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
+                FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
+                FileUploaderUpload_Memo.OthersSection = false;
+                FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_Rejection_Memo = FileUploaderUpload_Memo;
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlineComplaints", "Index", 1, GetIPAddress());
+            }
             return View();
         }
 
         public ActionResult GetItems(string ItemSno, string bkno,string setno,string InspRegionDropdown)
         {
-            var json = _onlineComplaintsRepository.GetItems(ItemSno,bkno,setno, InspRegionDropdown);
-
+            var json = "";
+            try
+            {
+                 json = _onlineComplaintsRepository.GetItems(ItemSno, bkno, setno, InspRegionDropdown);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlineComplaints", "GetItems", 1, GetIPAddress());
+            }
             return Json(json);
         }
 

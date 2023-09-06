@@ -26,13 +26,13 @@ namespace IBS.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        //[Authorization("IETrainingDetails", "Index", "view")]
+        [Authorization("IETrainingDetails", "Index", "view")]
         public IActionResult Index()
         {
 
             return View();
         }
-        //[Authorization("IETrainingDetails", "Index", "view")]
+        [Authorization("IETrainingDetails", "Index", "view")]
         public IActionResult IETrainingDetails(IETrainingDetailsModel iETrainingDetailsModel)
         {
             //IETrainingDetailsModel iETrainingDetailsModel = new IETrainingDetailsModel();
@@ -67,6 +67,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
+        [Authorization("IETrainingDetails", "Index", "edit")]
         public IActionResult Save(IETrainingDetailsModel iETrainingDetailsModel)
         {
             iETrainingDetailsModel.Regin = GetRegionCode;

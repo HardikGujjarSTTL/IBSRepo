@@ -85,6 +85,7 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 
 
+builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
 builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
 builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
 builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
@@ -170,6 +171,7 @@ builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
 builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
 builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRegionBillingInformationRepository>();
+builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
 
 var app = builder.Build();
 
