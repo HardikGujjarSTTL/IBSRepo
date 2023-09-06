@@ -6,7 +6,7 @@ namespace IBS.Interfaces.Inspection_Billing
     public interface ICallMarkedOnlineRepository
     {
         DTResult<CallMarkedOnlineModel> Get_Call_Marked_Online(DTParameters dTParameters, string Region);
-        List<SelectListItem> Get_Cluster_IE(string Region);
+        List<SelectListItem> Get_Cluster_IE(string Region,string DeptName);
 
         CallMarkedOnlineModel Get_Call_Marked_Online_Detail(CallMarkedOnlineFilter obj);
         List<CallMaterialValueModel> Get_Call_Material_Value(CallMarkedOnlineFilter obj);
@@ -32,6 +32,12 @@ namespace IBS.Interfaces.Inspection_Billing
         string Send_Vendor_Email_For_Incomplete_Call_Details(CallMarkedOnlineModel obj, string Region);
         int Delete_Incomplete_Call(CallMarkedOnlineFilter obj, UserSessionModel model);
         string GetRegionInfo(string Region);
+
+        string Send_Vendor_Email(CallMarkedOnlineModel obj, string Region);
+        #endregion
+
+        #region SMS
+        Task<string> send_IE_smsAsync(CallMarkedOnlineModel model);
         #endregion
     }
 }

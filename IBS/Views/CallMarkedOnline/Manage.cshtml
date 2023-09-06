@@ -189,6 +189,10 @@
             SaveCallMarkedDetail();
         });
 
+        $("#DEPT_DROPDOWN").change(function(){
+            FillClusterIE();
+        });
+
         $("#btnRejectCall").click(function () {
             $("#rejectCall").css("display", "block");
         });
@@ -285,6 +289,9 @@
                 debugger
                 if (response) {
                     ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
+                    setTimeout(function(){
+                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                    },1000);
                 } else {
                     ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
                 }
@@ -305,12 +312,45 @@
                 debugger
                 if (response == 1) {
                     ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
+                    setTimeout(function(){
+                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                    },1000);
                 }
                 else if (response == 2) {
                     ShowHideMsgNew(false, "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!");
-                } 
+                }
                 else {
                     ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
+                }
+            }
+        });
+    }
+
+    function FillClusterIE() {
+        debugger
+        var dept = $("#DEPT_DROPDOWN").val();
+        $.ajax({
+            url: '@Url.Action("BindClusterIE", "CallMarkedOnline")',
+            type: "GET",
+            dataType: "JSON",
+            data: { DeptName: dept },
+            success: function (contacts) {
+                $("#IE_NAME").html(""); // clear before appending new list
+                $("#IE_NAME").append($('<option></option>').val(0).html("--Select--"));
+                if (contacts && contacts.length > 0) {
+                    $.each(contacts, function (i, cnt) {
+                        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    });
+                    //if (MfgCd1 > 0) {
+                    //    $.each(contacts, function (i, cnt) {
+                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    //    });
+                    //    $("#IE_NAME").val(MfgCd1);
+                    //} else {
+                    //    $.each(contacts, function (i, cnt) {
+                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    //    });
+                    //}
                 }
             }
         });

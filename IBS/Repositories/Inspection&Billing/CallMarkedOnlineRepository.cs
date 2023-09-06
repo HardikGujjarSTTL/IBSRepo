@@ -5,14 +5,18 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Drawing;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using static IBS.Helper.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.Inspection_Billing
 {
@@ -35,25 +39,6 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-
-
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "CASE_NO";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            }
-            else
-            {
-                orderCriteria = "CASE_NO";
-                orderAscendingDirection = true;
-            }
-
             string Date = "";
             int RDB1 = 0, RDB2 = 0, RDB3 = 0;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Date"]))
@@ -73,6 +58,27 @@ namespace IBS.Repositories.Inspection_Billing
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Rdb3"]))
             {
                 RDB3 = Convert.ToString(dtParameters.AdditionalValues["Rdb3"]) == "0" ? 0 : 1;
+            }
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "CASE_NO";
+                    if (RDB2 == 1)
+                    {
+                        orderCriteria = "CALL_RECV_DT";
+                    }
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CASE_NO";
+                orderAscendingDirection = true;
             }
 
             Date = Date.ToString() == "" ? string.Empty : Date.ToString();
@@ -111,12 +117,12 @@ namespace IBS.Repositories.Inspection_Billing
             return dTResult;
         }
 
-        public List<SelectListItem> Get_Cluster_IE(string Region)
+        public List<SelectListItem> Get_Cluster_IE(string Region, string DeptName)
         {
             List<SelectListItem> IE = (from t99 in context.T99ClusterMasters
                                        join t101 in context.T101IeClusters on t99.ClusterCode equals t101.ClusterCode
                                        join t09 in context.T09Ies on t101.IeCode equals t09.IeCd
-                                       where t99.RegionCode == Region && t09.IeStatus == null && t99.DepartmentName == "C"
+                                       where t99.RegionCode == Region && t09.IeStatus == null && t99.DepartmentName == DeptName
                                        orderby t99.ClusterName, t09.IeName
                                        select new SelectListItem
                                        {
@@ -285,11 +291,11 @@ namespace IBS.Repositories.Inspection_Billing
         public bool Call_Marked_Online_Save(CallMarkedOnlineModel model, UserSessionModel uModel)
         {
             var flag = false;
-
             using (var trans = context.Database.BeginTransaction())
             {
                 try
                 {
+                    #region Comment
                     //var cl_exist = (from a in context.T100VenderClusters
                     //                join b in context.T99ClusterMasters on Convert.ToByte(a.ClusterCode) equals Convert.ToByte(b.ClusterCode)
                     //                where a.VendorCode == 46040 && a.DepartmentName == "C" && b.RegionCode == "N"
@@ -298,6 +304,8 @@ namespace IBS.Repositories.Inspection_Billing
                     //var IE = (from ieCluster in context.T101IeClusters
                     //          where ieCluster.ClusterCode == Convert.ToByte(677) && ieCluster.DepartmentCode == "C"
                     //          select ieCluster.IeCode).FirstOrDefault();
+
+                    #endregion
 
                     OracleParameter[] par = new OracleParameter[6];
                     par[0] = new OracleParameter("P_VENDOR_CODE", OracleDbType.Varchar2, model.MFG_CD, ParameterDirection.Input);
@@ -312,30 +320,30 @@ namespace IBS.Repositories.Inspection_Billing
                     int cl_exist = 0;
 
                     cl_exist = Convert.ToInt32(ds.Tables[0].Rows[0]["VENDOR_COUNT"]);
-                    var IE = Convert.ToInt32(ds.Tables[1].Rows[0]["IE_CODE"]) == null ? 0 : Convert.ToInt32(ds.Tables[1].Rows[0]["IE_CODE"]);
+                    var IE = Convert.ToInt32(ds.Tables[1].Rows.Count) == 0 ? 0 : Convert.ToInt32(ds.Tables[1].Rows[0]["IE_CODE"]);
+                    model.IE_CD = IE;
                     var Co = (from ie in context.T09Ies
-                              where ie.IeCd == 0
+                              where ie.IeCd == IE
                               select ie.IeCoCd).FirstOrDefault();
 
+                    if (Co == null) { return flag; }
+
+                    var callRecvDt = DateTime.ParseExact(model.CALL_RECV_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     var _data = context.T17CallRegisters
-                                    .Where(x => x.CaseNo == model.CASE_NO && x.CallRecvDt == Convert.ToDateTime(model.CALL_RECV_DT) && x.CallSno == Convert.ToInt32(model.CALL_SNO))
-                                    .Select(x => x);
-                    foreach (var item in _data)
-                    {
-                        item.Remarks = model.REMARKS;
-                        item.IeCd = IE;
-                        item.ClusterCode = Convert.ToByte(model.IE_NAME);
-                        item.CoCd = Convert.ToByte(Co.Value);
-                        item.UserId = uModel.UserName;
-                        if (model.DEPARTMENT_CODE == model.DEPT_DROPDOWN)
-                        {
-                            item.DepartmentCode = model.DEPT_DROPDOWN;
-                        }
-                        item.Datetime = DateTime.Now;
-                        item.Updatedby = Convert.ToString(uModel.UserID);
-                        item.Updateddate = DateTime.Now;
-                    }
+                                .Where(x => x.CaseNo == model.CASE_NO && x.CallLetterDt == callRecvDt && x.CallSno == Convert.ToInt32(model.CALL_SNO))
+                                .Select(x => x).FirstOrDefault();
+
+                    _data.Remarks = model.REMARKS;
+                    _data.IeCd = IE;
+                    _data.ClusterCode = Convert.ToByte(model.IE_NAME);
+                    _data.CoCd = Convert.ToByte(Co.Value);
+                    _data.UserId = uModel.UserName;
+                    _data.DepartmentCode = model.DEPT_DROPDOWN;
+                    _data.Datetime = DateTime.Now;
+                    _data.Updatedby = Convert.ToString(uModel.UserID);
+                    _data.Updateddate = DateTime.Now;
                     context.SaveChanges();
+
                     if (cl_exist == 0)
                     {
                         T100VenderCluster insObj = new T100VenderCluster();
@@ -350,7 +358,7 @@ namespace IBS.Repositories.Inspection_Billing
                         context.SaveChanges();
                     }
                     var ietopoicount = (from mapping in context.T60IePoiMappings
-                                        where mapping.IeCd == 0 && mapping.PoiCd == Convert.ToInt32("46040")
+                                        where mapping.IeCd == model.IE_CD && mapping.PoiCd == Convert.ToInt32(model.MFG_CD)
                                         select mapping).Count();
 
                     if (ietopoicount == 0)
@@ -358,6 +366,8 @@ namespace IBS.Repositories.Inspection_Billing
                         T60IePoiMapping insObj = new T60IePoiMapping();
                         insObj.IeCd = IE;
                         insObj.PoiCd = Convert.ToInt32(model.MFG_CD);
+                        insObj.Createdby = uModel.UserID;
+                        insObj.Createddate = DateTime.Now;
                         context.T60IePoiMappings.Add(insObj);
                         context.SaveChanges();
                     }
@@ -888,7 +898,7 @@ namespace IBS.Repositories.Inspection_Billing
             }
 
 
-            var caseNo = obj.CASE_NO; 
+            var caseNo = obj.CASE_NO;
             var callSno = obj.CALL_SNO;
             var callRecvDt = DateTime.ParseExact(obj.CALL_RECV_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
@@ -985,7 +995,7 @@ namespace IBS.Repositories.Inspection_Billing
                             (call.IeCd == 0 || call.IeCd == null) &&
                             (call.CallStatus == "M" || call.CallStatus == null) &&
                             call.CaseNo == caseNo && call.CallRecvDt == callRecvDate && call.CallSno == callSno
-                        ).Count();                                 
+                        ).Count();
 
             if (detailstatus == 0 && callmarkstatus == 1)
             {
@@ -1035,6 +1045,316 @@ namespace IBS.Repositories.Inspection_Billing
                 msg = "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!";
             }
             return res;
+        }
+
+        public string Send_Vendor_Email(CallMarkedOnlineModel obj, string Region)
+        {
+            //using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            string email = "";
+            string wRegion = "";
+            string sender = "";
+            wRegion = GetRegionInfo(Region);
+            sender = GetSenderMail(Region);
+
+            var query = (from t13 in context.T13PoMasters
+                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
+                         join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                         where t13.CaseNo == obj.CASE_NO
+                         select new
+                         {
+                             VEND_CD = t13.VendCd,
+                             VEND_NAME = t05.VendName,
+                             VEND_ADDRESS = !string.IsNullOrEmpty(t05.VendAdd2) ? t05.VendAdd1 + "/" + t05.VendAdd2 : t05.VendAdd1 + "/" + t03.City,
+                             VEND_EMAIL = t05.VendEmail
+                         }).FirstOrDefault();
+
+            string vend_cd = "", vend_add = "", vend_email = "";
+            if (query != null)
+            {
+                vend_cd = Convert.ToString(query.VEND_CD);
+                vend_add = query.VEND_ADDRESS;
+                vend_email = query.VEND_EMAIL;
+            }
+
+            var caseNo = obj.CASE_NO;
+            var callSno = obj.CALL_SNO;
+            var callRecvDt = DateTime.ParseExact(obj.CALL_RECV_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            var query1 = (from t05 in context.T05Vendors
+                          join t17 in context.T17CallRegisters on t05.VendCd equals t17.MfgCd
+                          where t17.CaseNo == caseNo
+                             && t17.CallRecvDt == callRecvDt
+                             && t17.CallSno == Convert.ToInt32(callSno)
+                          select new
+                          {
+                              VEND_EMAIL = t05.VendEmail,
+                              MFG_CD = t17.MfgCd,
+                              DESIRE_DT = Convert.ToDateTime(t17.DtInspDesire).ToString("dd/MM/yyyy")
+                          }).FirstOrDefault();
+            string manu_mail = "", mfg_cd = "", desire_dt = "";
+            if (query1 != null)
+            {
+                manu_mail = query1.VEND_EMAIL;
+                mfg_cd = Convert.ToString(query1.MFG_CD);
+                desire_dt = query1.DESIRE_DT;
+            }
+
+            var query2 = (from t09 in context.T09Ies
+                          join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
+                          where t09.IeCd == obj.IE_CD
+                          select new
+                          {
+                              IE_PHONE_NO = t09.IePhoneNo,
+                              CO_NAME = t08.CoName,
+                              CO_PHONE_NO = t08.CoPhoneNo,
+                              IE_NAME = t09.IeName,
+                              IE_EMAIL = t09.IeEmail
+                          }).FirstOrDefault();
+            string ie_phone = "", co_name = "", co_mobile = "", ie_name = "", ie_email = "";
+            if (query2 != null)
+            {
+                ie_phone = query2.IE_PHONE_NO;
+                co_name = query2.CO_NAME;
+                co_mobile = query2.CO_PHONE_NO;
+                ie_name = query2.IE_NAME;
+                ie_email = query2.IE_EMAIL;
+            }
+
+            //var caseNo = txtCaseNo.Text.Trim();
+            //var dtOfReceipt = DateTime.ParseExact(txtDtOfReceipt.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            //var ieCd = lblIE_CD.Text;
+            string dateto_attend = "";
+            using (var command = context.Database.GetDbConnection().CreateCommand())
+            {
+                bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    command.CommandText = "SELECT TO_CHAR(DT_INSP_DESIRE + (SELECT ROUND(COUNT(*) / 1.5) DAYS FROM T17_CALL_REGISTER WHERE(CALL_RECV_DT > '01-APR-2017') AND CALL_STATUS IN('M', 'S') AND IE_CD = " + obj.IE_CD + "),'DD/MM/YYYY') INSP_DATE FROM T17_CALL_REGISTER WHERE CASE_NO = '" + obj.CASE_NO.Trim() + "' and CALL_RECV_DT = to_date('" + obj.CALL_RECV_DT + "', 'dd/mm/yyyy') and CALL_SNO =" + obj.CALL_SNO;
+                    dateto_attend = Convert.ToString(command.ExecuteScalar());
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+
+            var callRecvDt1 = DateTime.ParseExact(obj.CALL_RECV_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var _data = (from t17 in context.T17CallRegisters
+                         where t17.CaseNo == caseNo
+                             && t17.CallRecvDt == callRecvDt
+                             && t17.CallSno == Convert.ToInt32(callSno)
+                         select t17).FirstOrDefault();
+            //Where(x => x.CaseNo != caseNo && x.CallRecvDt == callRecvDt1 && x.CallSno == Convert.ToInt32(callSno))
+            //Select(x => x).FirstOrDefault();
+
+            _data.ExpInspDt = Convert.ToDateTime(dateto_attend);
+            context.SaveChanges();
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, caseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAIL_DAYSIC_ITEMCD", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            int days_to_ic = 0;
+            string item_cd = "";
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                days_to_ic = Convert.ToInt32(ds.Tables[0].Rows[0]["DAYS_TO_IC"]);
+                item_cd = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_CD"]);
+            }
+
+            string call_letter_dt = "";
+            if (obj.LETTER_DT == "")
+            {
+                call_letter_dt = "NIL";
+            }
+            else
+            {
+                call_letter_dt = obj.LETTER_DT;
+            }
+
+
+            string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + obj.PO_NO + " & date - " + obj.PO_DT + ", Call has been registered vide Case No -  " + obj.CASE_NO + ", on date: " + obj.CALL_RECV_DT + ", at SNo. " + obj.CALL_SNO + ".<br> ";
+            if (obj.CALL_RECV_DT.Trim() != desire_dt.Trim())
+            {
+                mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + desire_dt.Trim() + ".<br>";
+            }
+
+            if (days_to_ic == 0)
+            {
+                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br>Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            }
+            else if (days_to_ic > 0)
+            {
+                System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
+                System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
+                string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
+                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            }
+            mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.<BR>NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE)";
+
+
+            sender = "hardiksilvertouch007@outlook.com";
+            vend_email = "naimish.rana@silvertouch.com";
+            manu_mail = "neha.gehlot@silvertouch.com";
+            if (vend_cd == mfg_cd && manu_mail != "")
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                sendMailModel.From = sender;
+                sendMailModel.To = manu_mail;
+                sendMailModel.Bcc = "nrinspn@gmail.com";
+                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Message = mail_body;
+                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                email = isSend == true ? "Success" : "Error";
+            }
+            else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                sendMailModel.From = "nrinspn@gmail.com";
+                sendMailModel.To = vend_email + "," + manu_mail;
+                sendMailModel.Bcc = "nrinspn@gmail.com";
+                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Message = mail_body;
+                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                email = isSend == true ? "Success" : "Error";
+            }
+            else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                sendMailModel.From = "nrinspn@gmail.com";
+                if (vend_email == "")
+                {
+                    sendMailModel.To = manu_mail;
+                }
+                else if (manu_mail == "")
+                {
+                    sendMailModel.To = vend_email;
+                }
+                sendMailModel.Bcc = "nrinspn@gmail.com";
+                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Message = mail_body;
+                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                email = isSend == true ? "Success" : "Error";
+            }
+
+            var controlling_email = (from t08 in context.T08IeControllOfficers
+                                     join t09 in context.T09Ies on t08.CoCd equals t09.IeCoCd
+                                     where t09.IeCd == obj.IE_CD
+                                     select t08.CoEmail).FirstOrDefault();
+
+            //var caseNo = obj.CASE_NO.Trim();
+            //var dtOfReceipt = DateTime.ParseExact(obj.CALL_RECV_DT.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            var manu_detail = (from t17 in context.T17CallRegisters
+                               join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                               join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                               where t17.CaseNo == caseNo
+                                  && t17.CallRecvDt == callRecvDt
+                                  && t17.CallSno == Convert.ToInt32(callSno)
+                               select new
+                               {
+                                   VEND_NAME = t05.VendName,
+                                   VEND_ADDRESS = t03.City
+                               }).FirstOrDefault();
+            string manu_name = "", manu_add = "";
+            if (manu_detail != null)
+            {
+                manu_name = manu_detail.VEND_NAME;
+                manu_add = manu_detail.VEND_ADDRESS;
+            }
+
+            if (!string.IsNullOrEmpty(controlling_email))
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                sendMailModel.From = "nrinspn@gmail.com";
+                sendMailModel.To = controlling_email;
+                if (ie_email != "")
+                {
+                    sendMailModel.CC = ie_email;
+                }
+                //sendMailModel.Bcc = "nrinspn@gmail.com";
+                sendMailModel.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
+                sendMailModel.Message = mail_body;
+                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                email = isSend == true ? "Success" : "Error";
+            }
+            return email;
+        }
+
+        public async Task<string> send_IE_smsAsync(CallMarkedOnlineModel model)
+        {
+            string sms = "";
+            string sender = "";
+            string wIEMobile = "", wIEName = "", wVendor = "", wCOMobile = "", wVendMobile = "", wIEMobile_for_SMS = "";
+            if (model.CASE_NO.ToString().Substring(0, 1) == "N") { sender = "NR"; }
+            else if (model.CASE_NO.ToString().Substring(0, 1) == "W") { sender = "WR"; }
+            else if (model.CASE_NO.ToString().Substring(0, 1) == "E") { sender = "ER"; }
+            else if (model.CASE_NO.ToString().Substring(0, 1) == "S") { sender = "SR"; }
+            else if (model.CASE_NO.ToString().Substring(0, 1) == "C") { sender = "CR"; }
+            else { sender = "RITES"; }
+
+            var query = from t09 in context.T09Ies
+                        join t08 in context.T08IeControllOfficers
+                        on t09.IeCoCd equals t08.CoCd into t08Group
+                        from t08 in t08Group.DefaultIfEmpty()
+                        where t09.IeCd == model.IE_CD
+                        select new
+                        {
+                            IE_NAME = t09.IeName.Trim().Substring(0, Math.Min(t09.IeName.Trim().Length, 20)),
+                            IE_PHONE_NO = t09.IePhoneNo.Trim().Substring(0, Math.Min(t09.IePhoneNo.Trim().Length, 10)),
+                            CO_PHONE_NO = t08 != null ? t08.CoPhoneNo.Trim().Substring(0, Math.Min(t08.CoPhoneNo.Trim().Length, 10)) : ""
+                        };
+
+            var result = query.FirstOrDefault();
+
+            if (result != null)
+            {
+                wIEName = result.IE_NAME;
+                wIEMobile = result.IE_PHONE_NO;
+                wIEMobile_for_SMS = result.IE_PHONE_NO;
+                wCOMobile = result.CO_PHONE_NO;
+            }
+
+            var queryNew = from v in context.T05Vendors
+                           join c in context.T03Cities
+                           on v.VendCityCd equals c.CityCd
+                           where v.VendCd == Convert.ToInt32(model.MFG_CD)
+                           select new
+                           {
+                               VEND_NAME = v.VendName.Substring(0, Math.Min(v.VendName.Length, 30)).Replace("&", "AND"),
+                               VEND_TEL = v.VendContactTel1.Trim().Substring(0, Math.Min(v.VendContactTel1.Trim().Length, 10))
+                           };
+
+            var resultNew = queryNew.FirstOrDefault();
+
+            if (resultNew != null)
+            {
+                wVendor = resultNew.VEND_NAME;
+                wVendMobile = resultNew.VEND_TEL;
+            }
+
+            if (wCOMobile != "") { wIEMobile = wIEMobile + "," + wCOMobile; }
+            if (wVendMobile != "") { wIEMobile = wIEMobile + "," + wVendMobile; }
+            string message = "RITES LTD - QA Call Marked, IE-" + wIEName + ",Contact No.:" + wIEMobile_for_SMS + ",RLY-" + model.RLY + ",PO-" + model.PO_NO + ",DT- " + model.PO_DT + ", Firm Name-" + wVendor + ", Call Sno - " + model.CALL_SNO + ",DT- " + model.CALL_RECV_DT + "- RITES/" + sender;
+
+            using (HttpClient client = new HttpClient())
+            {
+                string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+
+                HttpResponseMessage response = await client.GetAsync(baseurl);
+                response.EnsureSuccessStatusCode(); // Ensure a successful response
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseBody);
+
+                sms = "success";
+            }
+
+
+            return sms;
         }
 
         public string GetRegionInfo(string Region)

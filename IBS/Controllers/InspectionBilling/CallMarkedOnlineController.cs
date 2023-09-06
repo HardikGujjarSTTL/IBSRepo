@@ -41,16 +41,7 @@ namespace IBS.Controllers.InspectionBilling
         [Authorization("CallMarkedOnline", "Index", "view")]
         public IActionResult Manage(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CHECK_SELECTED, string RUN_DT)
         {
-            var region = GetUserInfo.Region;
-            ViewBag.ClusterIEList = callMarkedOnlineRepository.Get_Cluster_IE(region);
-            ViewBag.InspectedList = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Mechanical", Value = "M" },
-                new SelectListItem { Text = "Electrical", Value = "E" },
-                new SelectListItem { Text = "Civil", Value = "C" },
-                new SelectListItem { Text = "Textiles", Value = "T" },
-            };
-
+            var region = GetUserInfo.Region;                       
             var model = new CallMarkedOnlineModel();
             var CNO = CASE_NO;  //Convert.ToString(Request.Query["CASE_NO"]).Trim();
             var DT = CALL_RECV_DT;  //Convert.ToString(Request.Query["CALL_RECV_DT"]).Trim();
@@ -89,6 +80,16 @@ namespace IBS.Controllers.InspectionBilling
                 }
             }
             model.CALL_MATERIAL_VALUE = Convert.ToString(Math.Round(mat_val, 2));
+
+            ViewBag.ClusterIEList = callMarkedOnlineRepository.Get_Cluster_IE(region,model.DEPARTMENT_CODE);
+            ViewBag.InspectedList = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Mechanical", Value = "M" },
+                new SelectListItem { Text = "Electrical", Value = "E" },
+                new SelectListItem { Text = "Civil", Value = "C" },
+                new SelectListItem { Text = "Textiles", Value = "T" },
+                new SelectListItem { Text = "M & P", Value = "Z" },
+            };
             return View(model);
         }
 
@@ -126,7 +127,7 @@ namespace IBS.Controllers.InspectionBilling
                 model.CASE_NO = obj.CASE_NO;
                 model.Date = obj.CALL_RECV_DT;
                 model.CALL_SNO = obj.CALL_SNO;
-                result = callMarkedOnlineRepository.Call_Rejected(model, GetUserInfo);
+                result = callMarkedOnlineRepository.Call_Rejected(model, GetUserInfo);                
             }
             catch (Exception ex)
             {
@@ -145,6 +146,11 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 result = callMarkedOnlineRepository.Call_Marked_Online_Save(Model, GetUserInfo);
+                callMarkedOnlineRepository.Send_Vendor_Email(Model,GetUserInfo.Region);
+                if (Model.IE_NAME.Trim() != "" && Model.IE_NAME.Trim() != null)
+                {
+                    var res = callMarkedOnlineRepository.send_IE_smsAsync(Model);
+                }
             }
             catch (Exception ex)
             {
@@ -305,6 +311,12 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "CallMarkedOnline", "SendVendorEmailForIncompleteCall", 1, GetIPAddress());
             }
             return Json(result);
+        }
+
+        public IActionResult BindClusterIE(string DeptName)
+        {
+            var region = GetUserInfo.Region;
+            return Json(callMarkedOnlineRepository.Get_Cluster_IE(region, DeptName));
         }
     }
 }
