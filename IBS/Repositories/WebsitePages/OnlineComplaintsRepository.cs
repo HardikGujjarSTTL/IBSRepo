@@ -15,8 +15,9 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Net;
 using System.Numerics;
+using IBS.Interfaces.WebsitePages;
 
-namespace IBS.Repositories
+namespace IBS.Repositories.WebsitePages
 {
     public class OnlineComplaintsRepository : IOnlineComplaintsRepository
     {

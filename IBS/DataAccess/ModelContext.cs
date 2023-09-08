@@ -295,6 +295,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T34RailPrice> T34RailPrices { get; set; }
 
+    public virtual DbSet<T35CentralItemDetail> T35CentralItemDetails { get; set; }
+
     public virtual DbSet<T35RailPriceDetail> T35RailPriceDetails { get; set; }
 
     public virtual DbSet<T36Bill> T36Bills { get; set; }
@@ -7918,7 +7920,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -10617,6 +10619,58 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
+        });
+
+        modelBuilder.Entity<T35CentralItemDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T35_CENTRAL_ITEM_DETAIL_PK");
+
+            entity.ToTable("T35_CENTRAL_ITEM_DETAIL");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T35_CENTRAL_ITEM_DETAIL_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isactive)
+                .HasPrecision(2)
+                .HasColumnName("ISACTIVE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.PackingCharge)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("PACKING_CHARGE");
+            entity.Property(e => e.PriceDateFr)
+                .HasColumnType("DATE")
+                .HasColumnName("PRICE_DATE_FR");
+            entity.Property(e => e.PriceDateTo)
+                .HasColumnType("DATE")
+                .HasColumnName("PRICE_DATE_TO");
+            entity.Property(e => e.RailId)
+                .HasPrecision(6)
+                .HasColumnName("RAIL_ID");
+            entity.Property(e => e.RailPricePerMt)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RAIL_PRICE_PER_MT");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDDATE");
+
+            entity.HasOne(d => d.Rail).WithMany(p => p.T35CentralItemDetails)
+                .HasForeignKey(d => d.RailId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T35_CENTRAL_ITEM_DETAIL_RAIL_ID_T34_CENTRAL_ITEM_MASTER");
         });
 
         modelBuilder.Entity<T35RailPriceDetail>(entity =>
@@ -18483,6 +18537,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T31_HOLOGRAM_ISSUED_SEQ");
         modelBuilder.HasSequence("T32_CLIENT_LOGIN_SEQ");
         modelBuilder.HasSequence("T34_CENTRAL_ITEM_MASTER_SEQ");
+        modelBuilder.HasSequence("T35_CENTRAL_ITEM_DETAIL_SEQ");
         modelBuilder.HasSequence("T45_CLAIM_MASTER_SEQ");
         modelBuilder.HasSequence("T46_CLAIM_DETAIL_SEQ");
         modelBuilder.HasSequence("T47_IE_WORK_PLAN_SEQ");
