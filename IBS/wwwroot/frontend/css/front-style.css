@@ -46,7 +46,9 @@ ul { padding: 0 0 0 15px; }
 ol { padding: 0 0 0 20px }
 ul ul, ol ol { margin: 10px 0 }
 ul.bulletText { list-style: none; padding: 0; }
-ul.bulletText li { background: url(../images/right-arrow.gif) no-repeat left 7px; padding: 2px 0 2px 15px; }
+ul.bulletText li { padding: 2px 0 2px 0; }
+ul.bulletText li ul{ margin-left:10px;}
+ul.bulletText li:before{font-family: "FontAwesome"; content:"\f105"; margin-right:10px;}
 p, h1, h2, h3, h4, h5, h6, ul, ol, dd, table, fieldset, address { margin: 0 0 25px; }
 input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], select, textarea { height: 43px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; line-height: 26px; padding: 3px 10px; width: 100%; color: #838d94; }
 input[type="submit"], input[type="button"], input[type="reset"], button, .button { background-color: #363e98; color: #fff; border: 1px solid #78a51e; border-radius: 0; }
@@ -605,6 +607,8 @@ label {
 
 .slNo{ width:80px;}
 .astric{ color:#f00;}
+.clientList{ margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap;}
+.clientList li{ margin:20px; padding:10px; border:1px solid #d1d1d1; border-radius:6px; box-shadow:2px 4px 2px 2px #f1f1f1;}
 
 
 /*New Responsive Style*/
