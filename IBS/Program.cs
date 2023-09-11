@@ -172,6 +172,8 @@ builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRReposi
 builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRegionBillingInformationRepository>();
 builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
+builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
+
 
 var app = builder.Build();
 
