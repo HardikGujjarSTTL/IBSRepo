@@ -60,10 +60,11 @@
                                 <li>
                                     <a href="#" title="About Us">About Us</a>
                                     <ul>
-                                        <li><a href="#" title="">Sub-Menu 01</a></li>
-                                        <li><a href="#" title="">Sub-Menu 02</a></li>
-                                        <li><a href="#" title="">Sub-Menu 03</a></li>
-                                        <li><a href="#" title="">Sub-Menu 04</a></li>
+                                        <li><a asp-action="QaDivisionProfile" asp-controller="AboutUs">QA Division Profile</a></li>
+                                        <li><a asp-action="ServiceSpectrum" asp-controller="AboutUs">Service Spectrum</a></li>
+                                        <li><a asp-action="Resources" asp-controller="AboutUs">Resources</a></li>
+                                        <li><a asp-action="OurClients" asp-controller="AboutUs">Our Clients</a></li>
+                                        <li><a asp-action="OurCommittment" asp-controller="AboutUs">Our Commitments</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="#" title="Admin">Admin</a></li>
@@ -84,7 +85,13 @@
                                 </li>
                                 <li><a href="#" title="Inspection engineer Interface">Inspection engineer Interface</a></li>
                                 <li><a href="#" title="Quick Links">Quick Links</a></li>
-                                <li><a href="#" title="Miscellaneous">Miscellaneous</a></li>
+                                <li><a href="#" title="Miscellaneous">Miscellaneous</a>
+                                    <ul>
+                                        <li><a asp-action="InfoInstructions" asp-controller="Miscellaneous">Info &amp; Instructions</a></li>
+                                        <li><a asp-action="PhotoGallery" asp-controller="Miscellaneous">Photo Gallery</a></li>
+                                        <li><a asp-action="QaChannelYouTube" asp-controller="Miscellaneous">QA Channel (YouTube)</a></li>
+                                    </ul>
+                                </li>
                                 <li><a href="#" title="Contact Us">Contact Us</a></li>
                             </ul>
                         </div>
