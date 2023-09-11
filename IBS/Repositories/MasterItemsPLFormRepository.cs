@@ -50,9 +50,14 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
+            string ItemDescription = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ItemDescription"]) ? Convert.ToString(dtParameters.AdditionalValues["ItemDescription"]) : "";
+            string PLNO = !string.IsNullOrEmpty(dtParameters.AdditionalValues["PLNO"]) ? Convert.ToString(dtParameters.AdditionalValues["PLNO"]) : "";
+
             query = from t62 in context.T62MasterItemPlnos
                     join t61 in context.T61ItemMasters on t62.ItemCd equals t61.ItemCd
                     where t62.Isdeleted != 1
+                    && (!string.IsNullOrEmpty(ItemDescription) ? t61.ItemDesc.ToLower().Contains(ItemDescription.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(PLNO) ? t62.PlNo.ToLower().Contains(PLNO.ToLower()) : true)
                     select new MasterItemsPLFormModel
                     {
                         ItemCd = t62.ItemCd,

@@ -52,12 +52,15 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = from l in context.T07RitesDesigs
-                    where l.Isdeleted != 1
+            string Designation = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Designation"]) ? Convert.ToString(dtParameters.AdditionalValues["Designation"]) : "";
+
+            query = from t07 in context.T07RitesDesigs
+                    where t07.Isdeleted != 1
+                    && (!string.IsNullOrEmpty(Designation) ? t07.RDesignation.ToLower().Contains(Designation.ToLower()) : true)
                     select new RDMModel
                     {
-                        RDesigCd = l.RDesigCd,
-                        RDesignation = l.RDesignation,
+                        RDesigCd = t07.RDesigCd,
+                        RDesignation = t07.RDesignation,
                     };
 
             dTResult.recordsTotal = query.Count();

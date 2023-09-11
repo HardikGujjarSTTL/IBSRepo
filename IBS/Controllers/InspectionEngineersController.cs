@@ -10,12 +10,11 @@ namespace IBS.Controllers
 {
     public class InspectionEngineersController : BaseController
     {
-        #region Variables
         private readonly IInspectionEngineers inspectionEngineers;
         private readonly IDocument iDocument;
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration _config;
-        #endregion
+
         public InspectionEngineersController(IInspectionEngineers _inspectionEngineers, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             inspectionEngineers = _inspectionEngineers;
@@ -23,23 +22,22 @@ namespace IBS.Controllers
             env = _environment;
             _config = configuration;
         }
-        public IActionResult Index(int IeCd)
-        {
-            InspectionEngineersModel model = new();
-            model.IeRegion = GetRegionCode;
-            if (IeCd > 0)
-            {
-                model = inspectionEngineers.FindByID(IeCd);
-            }
 
-            return View(model);
+        public IActionResult Index()
+        {
+            return View();
         }
 
-        public IActionResult Manage(int IeCd, string ActionType)
+        public IActionResult Manage(int Id)
         {
-            InspectionEngineersModel model = new();
+            InspectionEngineersModel model = new() { IeRegion = Region };
 
-            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEFullSignature, Convert.ToString(IeCd));
+            if (Id > 0)
+            {
+                model = inspectionEngineers.FindManageByID(Id);
+            }
+
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEFullSignature, Convert.ToString(Id));
             FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
             FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.IEFullSignature).ToList();
@@ -48,7 +46,7 @@ namespace IBS.Controllers
             FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IEFullSignature = FileUploaderCOI;
 
-            List<IBS_DocumentDTO> lstDocumentSignature = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEInitials, Convert.ToString(IeCd));
+            List<IBS_DocumentDTO> lstDocumentSignature = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEInitials, Convert.ToString(Id));
             FileUploaderDTO FileUploaderCOISignature = new FileUploaderDTO();
             FileUploaderCOISignature.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderCOISignature.IBS_DocumentList = lstDocumentSignature.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.IEInitials).ToList();
@@ -57,11 +55,6 @@ namespace IBS.Controllers
             FileUploaderCOISignature.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IEInitials = FileUploaderCOISignature;
 
-            model.IeRegion = GetRegionCode;
-            if (IeCd > 0)
-            {
-                model = inspectionEngineers.FindManageByID(IeCd, ActionType, GetRegionCode);
-            }
             return View(model);
         }
 
@@ -70,22 +63,6 @@ namespace IBS.Controllers
         {
             DTResult<InspectionEngineersModel> dTResult = inspectionEngineers.GetInspectionEngineersList(dtParameters);
             return Json(dTResult);
-        }
-        public IActionResult Delete(int id)
-        {
-            try
-            {
-                if (inspectionEngineers.Remove(id, UserId))
-                    AlertDeletedSuccess();
-                else
-                    AlertDanger();
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "Delete", 1, GetIPAddress());
-                AlertDanger();
-            }
-            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -160,7 +137,7 @@ namespace IBS.Controllers
         {
             try
             {
-                List<SelectListItem> ClusterLst = Common.GetClusterByIE(GetRegionCode,IeDepartment);
+                List<SelectListItem> ClusterLst = Common.GetClusterByIE(GetRegionCode, IeDepartment);
                 return Json(new { status = true, list = ClusterLst });
             }
             catch (Exception ex)

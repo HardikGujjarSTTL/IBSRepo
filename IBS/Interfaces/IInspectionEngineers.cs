@@ -4,9 +4,9 @@ namespace IBS.Interfaces
 {
     public interface IInspectionEngineers
     {
-        public InspectionEngineersModel FindByID(int IeCd);
+        public InspectionEngineersModel FindByID(int Id);
 
-        public InspectionEngineersModel FindManageByID(int IeCd,string ActionType,string GetRegionCode);
+        public InspectionEngineersModel FindManageByID(int Id);
 
         DTResult<InspectionEngineersModel> GetInspectionEngineersList(DTParameters dtParameters);
 
