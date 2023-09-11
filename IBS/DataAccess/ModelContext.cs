@@ -7854,6 +7854,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(12)
                 .IsUnicode(false)
                 .HasColumnName("IE_EMP_NO");
+            entity.Property(e => e.IeJobType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("IE_JOB_TYPE");
             entity.Property(e => e.IeJoinDt)
                 .HasColumnType("DATE")
                 .HasColumnName("IE_JOIN_DT");
@@ -8045,7 +8050,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T101_IE_CLUSTER");
 
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.DepartmentCode)
                 .HasMaxLength(1)

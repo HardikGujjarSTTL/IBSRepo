@@ -73,6 +73,8 @@ public partial class T09Ie
 
     public DateTime? RepatriationDt { get; set; }
 
+    public string? IeJobType { get; set; }
+
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 
     public virtual T07RitesDesig? IeDesigNavigation { get; set; }

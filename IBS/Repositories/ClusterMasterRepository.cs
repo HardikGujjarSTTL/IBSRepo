@@ -59,15 +59,24 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            var lstQuery = (from l in context.T99ClusterMasters
-                            where l.Isdeleted != 1
+            int? ClusterCode = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ClusterCode"]) ? Convert.ToInt32(dtParameters.AdditionalValues["ClusterCode"]) : null;
+            string ClusterName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ClusterName"]) ? Convert.ToString(dtParameters.AdditionalValues["ClusterName"]) : "";
+            string GeographicalArea = !string.IsNullOrEmpty(dtParameters.AdditionalValues["GeographicalArea"]) ? Convert.ToString(dtParameters.AdditionalValues["GeographicalArea"]) : "";
+            string DepartmentName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["DepartmentName"]) ? Convert.ToString(dtParameters.AdditionalValues["DepartmentName"]) : "";
+
+            var lstQuery = (from t99 in context.T99ClusterMasters
+                            where t99.Isdeleted != 1
+                            && ((ClusterCode != null) ? t99.ClusterCode == ClusterCode : true)
+                            && (!string.IsNullOrEmpty(ClusterName) ? t99.ClusterName.ToLower().Contains(ClusterName.ToLower()) : true)
+                            && (!string.IsNullOrEmpty(GeographicalArea) ? t99.GeographicalPartition.ToLower().Contains(GeographicalArea.ToLower()) : true)
+                            && (!string.IsNullOrEmpty(DepartmentName) ? t99.DepartmentName == DepartmentName : true)
                             select new ClusterMasterModel
                             {
-                                ClusterCode = l.ClusterCode,
-                                ClusterName = l.ClusterName,
-                                GeographicalPartition = l.GeographicalPartition,
-                                DepartmentName = EnumUtility<Enums.Department>.GetDescriptionByKey(l.DepartmentName),
-                                RegionCode = EnumUtility<Enums.Region>.GetDescriptionByKey(l.RegionCode),
+                                ClusterCode = t99.ClusterCode,
+                                ClusterName = t99.ClusterName,
+                                GeographicalPartition = t99.GeographicalPartition,
+                                DepartmentName = EnumUtility<Enums.Department>.GetDescriptionByKey(t99.DepartmentName),
+                                RegionCode = EnumUtility<Enums.Region>.GetDescriptionByKey(t99.RegionCode),
                             }).ToList();
 
             query = lstQuery.AsQueryable();

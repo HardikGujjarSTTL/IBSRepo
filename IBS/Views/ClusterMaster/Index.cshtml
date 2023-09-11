@@ -10,30 +10,67 @@
         <a asp-area="" asp-controller="ClusterMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtClusterList" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>Cluster Code</th>
-                        <th>Cluster Name</th>
-                        <th>Geographical Area</th>
-                        <th>Department Name</th>
-                        <th>Region Name</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="ClusterCode">Cluster Code</label>
+                    <input type="text" class="input" id="ClusterCode" onkeypress="return isNumber(event)" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="ClusterName">Cluster Name</label>
+                    <input type="text" class="input" id="ClusterName" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-search">
+                    <label for="GeographicalArea">Geographical Area</label>
+                    <input type="text" class="input" id="GeographicalArea" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="DepartmentName">Department Name</label>
+                    @Html.DropDownList("DepartmentName", new SelectList(Common.GetDepartment() , "Value", "Text"), "--Select--",  new { @class = "" })
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtClusterList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Cluster Code</th>
+                            <th>Cluster Name</th>
+                            <th>Geographical Area</th>
+                            <th>Department Name</th>
+                            <th>Region Name</th>
+                            <th style="text-align:center">View Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -41,6 +78,12 @@
         });
 
         function InitializeDatatable() {
+
+            var ClusterCode = $("#ClusterCode").val();
+            var ClusterName = $("#ClusterName").val();
+            var GeographicalArea = $("#GeographicalArea").val();
+            var DepartmentName = $("#DepartmentName").val();
+
             $("#dtClusterList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -58,6 +101,10 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            "ClusterCode": ClusterCode,
+                            "ClusterName": ClusterName,
+                            "GeographicalArea": GeographicalArea,
+                            "DepartmentName": DepartmentName,
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -83,6 +130,15 @@
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function CLearControls() {
+            $("#ClusterCode").val("");
+            $("#ClusterName").val("");
+            $("#GeographicalArea").val("");
+            $("#DepartmentName").val("");
+
+            InitializeDatatable();
         }
 
         function Delete(id) {

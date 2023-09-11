@@ -7,33 +7,64 @@
         <h2>Unit of Measurements</h2>
     </div>
     <div class="list-btn">
-        <a asp-area="" asp-controller="UnitOfMeasurementsMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New UOM</a>
+        <a asp-area="" asp-controller="UnitOfMeasurementsMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtUOM" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>UOM Code</th>
-                        <th>UOM Short Description</th>
-                        <th>UOM Long Description</th>
-                        <th>Division Factor</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="UOMShortDescription">UOM Short Description</label>
+                    <input type="text" class="input" id="UOMShortDescription" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-search">
+                    <label for="UOMLongDescription">UOM Long Description</label>
+                    <input type="text" class="input" id="UOMLongDescription" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="DivisionFactor">Division Factor</label>
+                    <input type="text" class="input" id="DivisionFactor" onkeypress="return isNumberWithDot(event)" />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtUOM" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>UOM Code</th>
+                            <th>UOM Short Description</th>
+                            <th>UOM Long Description</th>
+                            <th>Division Factor</th>
+                            <th style="text-align:center">View Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -41,6 +72,11 @@
         });
 
         function InitializeDatatable() {
+
+            var UOMShortDescription = $("#UOMShortDescription").val();
+            var UOMLongDescription = $("#UOMLongDescription").val();
+            var DivisionFactor = $("#DivisionFactor").val();
+
             $("#dtUOM").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -58,6 +94,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            UOMShortDescription, UOMLongDescription, DivisionFactor
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -88,6 +125,14 @@
                 ],
                 "order": [[2, "asc"]]
             });
+        }
+
+        function CLearControls() {
+            $("#UOMShortDescription").val("");
+            $("#UOMLongDescription").val("");
+            $("#DivisionFactor").val("");
+
+            InitializeDatatable();
         }
 
         function Delete(id) {
