@@ -301,6 +301,62 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        
+        public static List<SelectListItem> FeedBackRegion()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Northern Region";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Eastern Region";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Western Region";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Southern Region";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CENTRAL REGION";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CO QA DIVISION";
+            single.Value = "Q";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        
+        public static List<SelectListItem> ParticularAction()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No Action Required";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Warning Letter";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Minor Penalty";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Major Penalty";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> NOJIReasons()
         {

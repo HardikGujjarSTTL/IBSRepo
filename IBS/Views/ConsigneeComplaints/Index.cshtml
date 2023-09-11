@@ -104,15 +104,13 @@
             setDefaultDate();
         });
 
-        //var dataTableInstance;
-        function Search() {
-            //if ($("#frmComplaintDetails").valid()) {
-            //    $("#frmComplaintDetails").submit();
-            //}
-            //InitializeDatatable();
-        }
-
         $("#btnSearch").click(function () {
+            var PoNo = $("#PoNo").val();
+            var PoDt = $("#PoDt").val();
+            if (PoNo == "" && PoDt == "") {
+                ShowHideMsgNew(false, "Please select Date Either Enter PONO.");
+                return;
+            }
             InitializeDatatable();
         });
 
