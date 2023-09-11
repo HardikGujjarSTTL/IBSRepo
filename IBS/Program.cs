@@ -175,6 +175,7 @@ builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorP
 builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRegionBillingInformationRepository>();
 builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
 builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterRepository>();
+builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
 
 var app = builder.Build();
 

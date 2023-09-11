@@ -67,6 +67,14 @@ public partial class T09Ie
 
     public DateTime? Updateddate { get; set; }
 
+    public DateTime? CallMarkingStartDt { get; set; }
+
+    public DateTime? InspectionStartDt { get; set; }
+
+    public DateTime? RepatriationDt { get; set; }
+
+    public string? IeJobType { get; set; }
+
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 
     public virtual T07RitesDesig? IeDesigNavigation { get; set; }
@@ -74,6 +82,8 @@ public partial class T09Ie
     public virtual T01Region? IeRegionNavigation { get; set; }
 
     public virtual ICollection<NoIeWorkPlan> NoIeWorkPlans { get; set; } = new List<NoIeWorkPlan>();
+
+    public virtual ICollection<Regionalhrdataofie> Regionalhrdataofies { get; set; } = new List<Regionalhrdataofie>();
 
     public virtual ICollection<T10IcBookset> T10IcBooksets { get; set; } = new List<T10IcBookset>();
 

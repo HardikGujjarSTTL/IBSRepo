@@ -1416,4 +1416,125 @@ ALTER TABLE T35_Central_Item_Detail
     MODIFY ID NUMBER(6,0) DEFAULT T35_Central_Item_Detail_seq.nextval;
     
 ==================
+CREATE TABLE RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0) NOT NULL,
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE RegionalHRDataOfIE ADD (
+  CONSTRAINT RegionalHRDataOfIE_PK PRIMARY KEY (ID));
+
+ALTER TABLE RegionalHRDataOfIE
+ADD CONSTRAINT FK_RegionalHRDataOfIE_IE_CD_T09_IE FOREIGN KEY (IE_CD)
+REFERENCES T09_IE (IE_CD);
+
+CREATE SEQUENCE RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE RegionalHRDataOfIE
+    MODIFY ID NUMBER(6,0) DEFAULT RegionalHRDataOfIE_seq.nextval;
+
+
+==================================
+CREATE TABLE Log_RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0),
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0),
+    ActionType VARCHAR2(50 BYTE),
+    ActionDate TIMESTAMP(6),
+    ActionUserID VARCHAR2(50 BYTE)
+);
+
+  ======================
+
+
+CREATE OR REPLACE TRIGGER Update_RegionalHRDataOfIE_Trigger
+    BEFORE UPDATE ON RegionalHRDataOfIE
+    FOR EACH ROW
+BEGIN
+    
+    INSERT INTO Log_RegionalHRDataOfIE (
+        id,
+        ie_cd,
+        disclipline,
+        joiningdate,
+        postingdate,
+        retirementdate,
+        transferdate,
+        deputationfromdate,
+        deputationtodate,
+        repetriationdate,
+        ietenurefromdate,
+        ietenuretodate,
+        createdby,
+        createddate,
+        updatedby,
+        updateddate,
+        isdeleted,
+        ActionType,
+        ActionDate,
+        ActionUserID
+    ) VALUES (
+        :OLD.id,
+        :OLD.ie_cd,
+        :OLD.disclipline,
+        :OLD.joiningdate,
+        :OLD.postingdate,
+        :OLD.retirementdate,
+        :OLD.transferdate,
+        :OLD.deputationfromdate,
+        :OLD.deputationtodate,
+        :OLD.repetriationdate,
+        :OLD.ietenurefromdate,
+        :OLD.ietenuretodate,
+        :OLD.createdby,
+        :OLD.createddate,
+        :NEW.updatedby,
+        SYSTIMESTAMP,
+        :OLD.isdeleted,
+        'U',
+        SYSTIMESTAMP,
+        :NEW.updatedby
+    );
+END;
+/
+
+========================
+
+
+
+
+
 
