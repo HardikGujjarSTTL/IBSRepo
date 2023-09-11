@@ -71,18 +71,66 @@
                                 <li>
                                     <a href="#" title="Client">Client</a>
                                     <ul>
+                                        <li><a asp-action="Index" asp-controller="Home">Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Vendor Performance</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Specific PO/CALL Status With Ddownloading facility of IC/TEST Plan</a></li>
                                         <li><a asp-action="Index" asp-controller="ClientFeedback">Client Feedback</a></li>
-                                        <li><a asp-action="Index" asp-controller="OnlineComplaints">Register Online Rejection</a></li>
+                                        <li><a asp-action="Index" asp-controller="OnlineComplaints">Facility to Register Online Rejection Advice</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a href="#" title="Vendor">Vendor</a>
                                     <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">Guidelines for Call Registration(for New, Existing Vendors & Uploading of Lab Payment Reciept)</a>
+                                            <ul>
+                                                <li><a href="~/frontend/pdf/IVRS_NEW.pdf" target="_blank">Interactive Automatic Call Desk Helpline No. 1800 425 7000 (Toll Free)</a></li>
+                                                <li><a href="~/frontend/pdf/General-Guidelines.PDF" target="_blank">General Guidelines to Regsiter Inspection Call</a></li>
+                                                <li><a href="~/frontend/pdf/Indicative-Guidelines.PDF" target="_blank">Indicative Guidelines to Suppliers For TPI</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="~/frontend/pdf/Vendor-Lab-Reciept-Upload-Mannual.pdf" target="_blank">Guidance for Uploading Lab Charges Payment Reciept</a></li>
+                                        <li>
+                                            <a href="javascript:void(0);">Inspection</a>
+                                            <ul>
+                                                <li><a asp-action="Index" asp-controller="Home">Po/call Registration</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Qty Enhancement</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">New Items In Alreday Registered Loa</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Documents Upload</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Specific Po/call Status</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Download Insp Invoice</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a asp-action="Index" asp-controller="Home">Online Payment Through Gateway</a></li>
+                                        <li><a href="~/frontend/pdf/CRCharges.pdf" target="_blank">Cancellation Charges</a></li>
+                                        <li><a href="~/frontend/pdf/CRCharges.pdf" target="_blank">Rejection Charges</a></li>
+                                        <li><a href="javascript:void(0);" target="_blank">Lab Charges</a>
+                                            <ul>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-NR.pdf" target="_blank">Northern Region</a></li>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-WR.pdf" target="_blank">Western Region</a></li>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-SR.pdf" target="_blank">Southern Region</a></li>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-ER.pdf" target="_blank">Eastern Region</a></li>
+                                            </ul>    
+                                        </li>
                                         <li><a asp-action="Index" asp-controller="VendorFeedback">Vendor Feedback</a></li>
+                                        <li><a href="~/frontend/pdf/BANK-DETAILS.PDF" target="_blank">Bank Details of All Regions</a></li>
+                                        <li><a href="javascript:void(0);" target="_blank">Manual Insp Call Format</a></li>
+                                        <li><a href="~/frontend/pdf/Online-Inspection-Invoice-of-RITES.pdf" target="_blank">Online Insp Invoice of Rites</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="#" title="Inspection engineer Interface">Inspection engineer Interface</a></li>
-                                <li><a href="#" title="Quick Links">Quick Links</a></li>
+                                <li><a href="#" title="Quick Links">Quick Links</a>
+                                    <ul>
+                                        <li><a asp-action="Index" asp-controller="Home">Client Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Vendor Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">IE Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">User Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Online Payment Through Gateway</a></li>
+                                        <li><a asp-action="Index" asp-controller="FeedbackSuggestion">FeddBack & Suggestions</a></li>
+                                        <li><a href="https://rites.com/" target="_blank">Online Payment Through Gateway</a></li>
+                                    </ul>
+                                </li>
                                 <li><a href="#" title="Miscellaneous">Miscellaneous</a>
                                     <ul>
                                         <li><a asp-action="InfoInstructions" asp-controller="Miscellaneous">Info &amp; Instructions</a></li>
@@ -90,7 +138,16 @@
                                         <li><a asp-action="QaChannelYouTube" asp-controller="Miscellaneous">QA Channel (YouTube)</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#" title="Contact Us">Contact Us</a></li>
+                                <li><a href="#" title="Contact Us">Contact Us</a>
+                                    <ul>
+                                        <li><a asp-action="NorthernRegion" asp-controller="ContactUs">Northern Region</a></li>
+                                        <li><a asp-action="WesternRegion" asp-controller="ContactUs">Western Region</a></li>
+                                        <li><a asp-action="SouthernRegion" asp-controller="ContactUs">Southern Region</a></li>
+                                        <li><a asp-action="EasternRegion" asp-controller="ContactUs">Eastern Region</a></li>
+                                        <li><a asp-action="CentralRegion" asp-controller="ContactUs">Central Region</a></li>
+                                        <li><a asp-action="ForeignInspection" asp-controller="ContactUs">Foreign Inspection</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>

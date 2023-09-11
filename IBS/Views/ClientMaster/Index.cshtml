@@ -53,6 +53,11 @@
     <script type="text/javascript">
 
         $("#btnSearch").click(function () {
+            var clientname = $("#clientname").val();
+            if (clientname == "") {
+                ShowHideMsgNew(false, "Please Enter ClientName.");
+                return;
+            }
             InitializeDatatable();
         });
 

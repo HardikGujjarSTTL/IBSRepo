@@ -76,11 +76,11 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 .toggleMenu .iconBar { float:right; width:25px; height:25px; background:url(../images/mobile-menu.png) no-repeat center center; background-position:right bottom; }
 #nav, #nav ul { list-style:none; margin:0; padding:0; }
 #nav li { float:left; margin:0; padding:0; position:relative; display:inline }
-#nav li a { padding: 10px 25px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; text-transform: uppercase; }
+#nav li a { padding: 10px 25px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; }
 #nav ul { width:300px; top:100%; padding:0; left:0; position:absolute; }
 .hasJS #nav ul { opacity:0; transition: opacity 400ms linear; -webkit-transition: opacity 400ms linear; }
 #nav ul li { float:left; height:auto; width:100%; margin:0; padding:0; }
-#nav ul li a { display: block; background-color: #F4F5F6; line-height: 32px; color: #323232; border: none; border-top: 1px solid #ccc; padding: 5px 15px 5px 15px; text-align: left; }
+#nav ul li a { display: block; background-color: #1E2E6C; line-height: 18px; color: #fff; border: none; border-top: 1px solid #0c1846; padding: 8px 15px 8px 15px; text-align: left; }
 #nav ul ul { top:0; left:300px }
 #nav ul a:hover, .noJS #nav ul a:focus, #nav ul a.selected { color:#fff; }
 #nav ul, #nav :hover ul ul, #nav .hover ul ul, #nav .focus ul ul { margin-left:-9999px }
@@ -88,9 +88,9 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav > li > a:hover, #nav > li.hover > a, #nav > li.focus > a, #nav > .highlight > a { background:#1E2E6C; color: #fff; }
 #nav li ul li a:hover, #nav li ul li > a.selected, #nav ul a:hover, .noJS #nav ul a:focus, #nav ul a.selected, #nav ul > .highlight > a { background-color: #ccc; color: #323232; }
 #nav ul li.focus > a { background-color:#e9e9e9; color:#060613; display:block; }
-#nav .menuIcon { display:none; position:absolute; right:5px; top:20px; width:9px; height:9px; }
-#nav li .menuIcon { background:url(../images/down-arrow.gif) no-repeat right center; z-index:10 }
-#nav li li .menuIcon { display:block; background:url(../images/right-arrow.gif) no-repeat right center; top:13px; right:10px; z-index:11 }
+#nav .menuIcon { position:absolute; right:5px; top:20px; width:9px; height:9px; }
+#nav li .menuIcon { background:url(../../frontend/images/down-arrow.gif) no-repeat right center; z-index:10 }
+#nav li li .menuIcon { display:block; background:url(../../frontend/images/right-arrow.gif) no-repeat right center; top:13px; right:10px; z-index:11 }
 #nav li li li .menuIcon { z-index:12 }
 #nav li .menuIcon.active { transform:rotate(180deg); -webkit-transform:rotate(180deg); }
 .noJS #nav ul a:focus { width:200px; }
@@ -100,7 +100,7 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav > li > a:hover:before { width: 100%; }
 #nav > li.hover > a:before { width: 100%; }
 #nav > li > a:before { width: 0; content: ""; background:#FC5518; height: 3px; position: absolute; bottom: 0; left: 0; right: 0; margin: auto; transition: all 0.5s; -webkit-transition: all 0.5s; -moz-transition: all 0.5s; -o-transition: all 0.5s; }
-.down-arrow { background: url(../images/down-arrow.png); background-repeat: no-repeat; background-position: right 5px center; }
+#nav li:last-child.hover ul{ left:inherit; right:0;}
 /*****/
 
 
@@ -262,7 +262,7 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .noJS .marqueeScrolling { overflow-y:hidden; overflow-x:auto }
 .noJS .marquee { width:240% }
 .updateSection { background:#EEF0F5; padding:0 0 60px; }
-.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; z-index: 9999999999; position: sticky; }
+.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; position:relative;}
 .aboutSection .latestNews { display: inline-block; width: 100%; overflow: hidden; position: relative; }
 .aboutSection .latestNews h2.newsTitle { float: left; margin: 0 10px 0 0; padding: 0; font-size:22px; line-height: 27px; color: #323232; font-weight: 600; }
 .aboutSection .latestNews .tickerNews { padding: 0; }
@@ -1047,11 +1047,24 @@ img.mfp-img {
     opacity: 0;
 }
 
+.heading3{font-size:20px; font-weight:600; position:relative;  color:#118133;}
+.subName{ font-size:14px; font-weight:600; color:#999; font-style:italic;}
+.heading3:before{ background:#FC5518; content:""; width:20%; height:2px; position:absolute; bottom:-10px; left:0;}
+.heading4{font-size:16px; font-weight:600;}
+.orangeText{ color:#FC5518;}
+.borderTable{ border-left:1px solid #d1d1d1; border-top:1px solid #d1d1d1;}
+.borderTable th{ font-weight:600; font-size:14px; background:#1E2E6C; color:#fff;}
+.borderTable th, .borderTable td{ padding:2px; border-right:1px solid #d1d1d1; border-bottom:1px solid #d1d1d1; font-size:12px;}
 
 
 /*New Responsive Style*/
 @media only screen and (min-width: 1170px) {
 #nav ul {display:block;}
+}
+@media only screen and (max-width:1599px) {
+#nav li a{
+    padding:10px 16px;
+}
 }
 
 @media only screen and (max-width:1169px) {
@@ -1136,7 +1149,7 @@ font-size:16px;
 padding:7px 55px 7px 25px;
 display:block;
 line-height:21px;
-background:url(../images/right-arrow.gif) no-repeat 15px 15px;
+background:url(../../frontend/images/right-arrow.gif) no-repeat 15px 15px;
 color:#fff;
 border:none
 }

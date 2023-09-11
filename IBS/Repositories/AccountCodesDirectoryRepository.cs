@@ -54,13 +54,18 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = from l in context.T95AccountCodes
-                    where l.Isdeleted == 0 || l.Isdeleted == null
+            int? AccountCD = !string.IsNullOrEmpty(dtParameters.AdditionalValues["AccountCD"]) ? Convert.ToInt32(dtParameters.AdditionalValues["AccountCD"]) : null;
+            string AccountDesc = !string.IsNullOrEmpty(dtParameters.AdditionalValues["AccountDesc"]) ? Convert.ToString(dtParameters.AdditionalValues["AccountDesc"]) : "";
+
+            query = from t95 in context.T95AccountCodes
+                    where t95.Isdeleted != 1
+                    && ((AccountCD != null) ? t95.AccCd == AccountCD : true)
+                    && (!string.IsNullOrEmpty(AccountDesc) ? t95.AccDesc.ToLower().Contains(AccountDesc.ToLower()) : true)
                     select new AccountCodesDirectoryModel
                     {
-                        AccCd = l.AccCd,
-                        AccountCode = Convert.ToString(l.AccCd),
-                        AccDesc = l.AccDesc,
+                        AccCd = t95.AccCd,
+                        AccountCode = Convert.ToString(t95.AccCd),
+                        AccDesc = t95.AccDesc,
                     };
 
             dTResult.recordsTotal = query.Count();

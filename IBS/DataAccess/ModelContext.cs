@@ -8050,7 +8050,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T101_IE_CLUSTER");
 
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.DepartmentCode)
                 .HasMaxLength(1)
