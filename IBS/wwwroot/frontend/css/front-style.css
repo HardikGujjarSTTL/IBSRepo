@@ -76,11 +76,11 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 .toggleMenu .iconBar { float:right; width:25px; height:25px; background:url(../images/mobile-menu.png) no-repeat center center; background-position:right bottom; }
 #nav, #nav ul { list-style:none; margin:0; padding:0; }
 #nav li { float:left; margin:0; padding:0; position:relative; display:inline }
-#nav li a { padding: 10px 25px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; text-transform: uppercase; }
+#nav li a { padding: 10px 25px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; }
 #nav ul { width:300px; top:100%; padding:0; left:0; position:absolute; }
 .hasJS #nav ul { opacity:0; transition: opacity 400ms linear; -webkit-transition: opacity 400ms linear; }
 #nav ul li { float:left; height:auto; width:100%; margin:0; padding:0; }
-#nav ul li a { display: block; background-color: #F4F5F6; line-height: 32px; color: #323232; border: none; border-top: 1px solid #ccc; padding: 5px 15px 5px 15px; text-align: left; }
+#nav ul li a { display: block; background-color: #F4F5F6; line-height: 18px; color: #323232; border: none; border-top: 1px solid #ccc; padding: 8px 15px 8px 15px; text-align: left; }
 #nav ul ul { top:0; left:300px }
 #nav ul a:hover, .noJS #nav ul a:focus, #nav ul a.selected { color:#fff; }
 #nav ul, #nav :hover ul ul, #nav .hover ul ul, #nav .focus ul ul { margin-left:-9999px }
