@@ -8,41 +8,49 @@
     <div class="innerContent">
         <div class="list-inner">
             <div class="tast-list">
-                <h2>FEEDBACK & SUGGESTION CORNER</h2>
+                <h2>Feedback & Suggestion Corner</h2>
             </div>
         </div>
-        <div class="accordion-body">
+        <div class="accordion-body p-4">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="FeedbackSuggestion" asp-action="FeedbackSave" data-ajax-method="post" data-ajax-complete="completed" id="frmfeedback" enctype="multipart/form-data">
-                <div class="row my-0">
-                    <div class="col-md-4 mb-4">
-                        <label> To Region</label>
-                        @Html.DropDownListFor(model => model.ToRegion, new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
-                        <span asp-validation-for="ToRegion" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference"> From Email</label>
-                        <input type="email" class="input" ASP-FOR="Email" maxlength="50" required />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-10 mb-10">
-                        <label for="Reference">Subject</label>
-                        <input type="text" class="input" ASP-FOR="Subject" maxlength="50" required />
-                        <span asp-validation-for="Subject" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-10 mb-10">
-                        <label for="Reference">Description </label>
-                        <textarea class="input" asp-for="Description"> </textarea>
-                    </div>
-                    <div class="col-md-4 mb-4">
+                <div class="row">
+
+                    <div class="col-md-6 mb-4">
                         <label for="Reference">Name </label>
                         <input type="text" class="input" ASP-FOR="Name" maxlength="50" required />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
                         <label for="Reference">Mobile No. </label>
                         <input type="text" class="input" ASP-FOR="MobileNo" maxlength="10" required />
                         <span asp-validation-for="MobileNo" class="text-danger"></span>
                     </div>
+                    </div>
+                <div class="row">
+
+                    <div class="col-md-6 mb-4">
+                        <label> To Region</label>
+                        @Html.DropDownListFor(model => model.ToRegion, new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                        <span asp-validation-for="ToRegion" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="Reference"> From Email</label>
+                        <input type="email" class="input" ASP-FOR="Email" maxlength="50" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="Reference">Subject</label>
+                        <input type="text" class="input" ASP-FOR="Subject" maxlength="50" required />
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <label for="Reference">Description </label>
+                        <textarea class="input" asp-for="Description"> </textarea>
+                    </div>                   
                 </div>
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" id="btnsubmit">Submit</button>
