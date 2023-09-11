@@ -88,9 +88,9 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav > li > a:hover, #nav > li.hover > a, #nav > li.focus > a, #nav > .highlight > a { background:#1E2E6C; color: #fff; }
 #nav li ul li a:hover, #nav li ul li > a.selected, #nav ul a:hover, .noJS #nav ul a:focus, #nav ul a.selected, #nav ul > .highlight > a { background-color: #ccc; color: #323232; }
 #nav ul li.focus > a { background-color:#e9e9e9; color:#060613; display:block; }
-#nav .menuIcon { display:none; position:absolute; right:5px; top:20px; width:9px; height:9px; }
-#nav li .menuIcon { background:url(../images/down-arrow.gif) no-repeat right center; z-index:10 }
-#nav li li .menuIcon { display:block; background:url(../images/right-arrow.gif) no-repeat right center; top:13px; right:10px; z-index:11 }
+#nav .menuIcon { position:absolute; right:5px; top:20px; width:9px; height:9px; }
+#nav li .menuIcon { background:url(../../frontend/images/down-arrow.gif) no-repeat right center; z-index:10 }
+#nav li li .menuIcon { display:block; background:url(../../frontend/images/right-arrow.gif) no-repeat right center; top:13px; right:10px; z-index:11 }
 #nav li li li .menuIcon { z-index:12 }
 #nav li .menuIcon.active { transform:rotate(180deg); -webkit-transform:rotate(180deg); }
 .noJS #nav ul a:focus { width:200px; }
@@ -100,7 +100,7 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav > li > a:hover:before { width: 100%; }
 #nav > li.hover > a:before { width: 100%; }
 #nav > li > a:before { width: 0; content: ""; background:#FC5518; height: 3px; position: absolute; bottom: 0; left: 0; right: 0; margin: auto; transition: all 0.5s; -webkit-transition: all 0.5s; -moz-transition: all 0.5s; -o-transition: all 0.5s; }
-.down-arrow { background: url(../images/down-arrow.png); background-repeat: no-repeat; background-position: right 5px center; }
+#nav li:last-child.hover ul{ left:inherit; right:0;}
 /*****/
 
 
@@ -262,7 +262,7 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .noJS .marqueeScrolling { overflow-y:hidden; overflow-x:auto }
 .noJS .marquee { width:240% }
 .updateSection { background:#EEF0F5; padding:0 0 60px; }
-.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; z-index: 9999999999; position: sticky; }
+.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; position:relative;}
 .aboutSection .latestNews { display: inline-block; width: 100%; overflow: hidden; position: relative; }
 .aboutSection .latestNews h2.newsTitle { float: left; margin: 0 10px 0 0; padding: 0; font-size:22px; line-height: 27px; color: #323232; font-weight: 600; }
 .aboutSection .latestNews .tickerNews { padding: 0; }
@@ -1149,7 +1149,7 @@ font-size:16px;
 padding:7px 55px 7px 25px;
 display:block;
 line-height:21px;
-background:url(../images/right-arrow.gif) no-repeat 15px 15px;
+background:url(../../frontend/images/right-arrow.gif) no-repeat 15px 15px;
 color:#fff;
 border:none
 }
