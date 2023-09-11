@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Inspection Certificate Book Set";
+    string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
 }
 
 <div class="list-inner">
@@ -10,29 +11,60 @@
         <a asp-area="" asp-controller="IC_Bookset_Form" asp-action="Manage" class="formBtn">Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtBookSet" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>Book No</th>
-                        <th>Set No. From</th>
-                        <th>Set No. To</th>
-                        <th>Issue Date to IE</th>
-                        <th>IE to Whom Issued</th>
-                        <th>Book Submitted</th>
-                        <th>Book Submit Date</th>
-                        <th>Book Issued To Region</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="BookNo">Book No.</label>
+                    <input type="text" class="input" id="BookNo" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="SetNoFrom">Set No. From</label>
+                    <input type="text" class="input" id="SetNoFrom" onkeypress="return isNumber(event)" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="IssueToIecd">IE to Whom Issued</label>
+                    @Html.DropDownList("IssueToIecd", Common.GetIEIEToWhomIssued(Region), "--Select--",  new { @class = "" })
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtBookSet" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Book No</th>
+                            <th>Set No. From</th>
+                            <th>Set No. To</th>
+                            <th>Issue Date to IE</th>
+                            <th>IE to Whom Issued</th>
+                            <th>Book Submitted</th>
+                            <th>Book Submit Date</th>
+                            <th>Book Issued To Region</th>
+                            <th style="text-align:center">View Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -44,6 +76,11 @@
         });
 
         function InitializeDatatable() {
+
+            var BookNo = $("#BookNo").val();
+            var SetNoFrom = $("#SetNoFrom").val();
+            var IssueToIecd = $("#IssueToIecd").val();
+
             $("#dtBookSet").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -61,6 +98,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            BookNo, SetNoFrom, IssueToIecd
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -97,7 +135,7 @@
                             var id = data.Id;
                             var editUrl = '@Url.Action("Manage", "IC_Bookset_Form")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="BookSetDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -107,11 +145,36 @@
             });
         }
 
-        function BooksetDelete(id) {
+         function CLearControls() {
+            $("#BookNo").val("");
+            $("#SetNoFrom").val("");
+            $("#IssueToIecd").val("");
+
+            InitializeDatatable();
+        }
+
+        function Delete(id) {
             var url = '@Url.Action("Delete", "IC_Bookset_Form")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
+
+        $("#SetNoFrom").on("blur", function () {
+            $(this).addLeadingZeros(3);
+        });
+
+        $.fn.addLeadingZeros = function (length) {
+            if (this.val() == "") return;
+            for (var el of this) {
+                _value = el.value.replace(/^0+/, '');
+                length = length - _value.length;
+                if (length > 0) {
+                    while (length--) _value = '0' + _value;
+                }
+                el.value = _value;
+            }
+        };
+
 
     </script>
 }

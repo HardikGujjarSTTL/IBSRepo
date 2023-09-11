@@ -417,6 +417,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> ItemBlocked()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -754,6 +755,7 @@ namespace IBS.Models
                         Value = Convert.ToString(a.IeCd)
                     }).OrderBy(c => c.Text).ToList();
         }
+
         public static List<SelectListItem> GetInspEngCd(string IeRegion)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1150,7 +1152,8 @@ namespace IBS.Models
             return IE;
 
         }
-        public static List<SelectListItem> CourseName(string RegionCode,string TrainingType,string TrainingArea)
+
+        public static List<SelectListItem> CourseName(string RegionCode, string TrainingType, string TrainingArea)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> IE = (from a in ModelContext.TrainingCourseMasters
@@ -1207,7 +1210,7 @@ namespace IBS.Models
             return Role;
 
         }
-        
+
         public static List<SelectListItem> GetClientName()
         {
             ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
@@ -1344,6 +1347,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> Category()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1362,6 +1366,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> Qualification()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1380,6 +1385,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> TrainingType()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1402,6 +1408,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> TrainingArea()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1516,7 +1523,6 @@ namespace IBS.Models
 
             return textValueDropDownDTO;
         }
-
 
         public static List<SelectListItem> CallCancelStatus()
         {
@@ -1841,6 +1847,7 @@ namespace IBS.Models
                                      }).ToList();
             return Super;
         }
+
         public static List<SelectListItem> ItemScope()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1890,6 +1897,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1905,6 +1913,7 @@ namespace IBS.Models
                                      }).ToList();
             return contacts;
         }
+
         public static List<SelectListItem> GetCODataSuperForm(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2876,6 +2885,18 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ActionProposed)).ToList();
         }
 
+        public static List<SelectListItem> GetIeCity()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = (from a in context.T03Cities
+                                            where a.City != null && a.Location != null
+                                            select new SelectListItem
+                                            {
+                                                Value = a.CityCd.ToString(),
+                                                Text = a.Location != null ? a.Location + " : " + a.City : a.City,
+                                            }).ToList();
+            return objdata;
+        }
     }
 
     public static class DbContextHelper

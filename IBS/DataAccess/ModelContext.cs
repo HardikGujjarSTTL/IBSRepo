@@ -57,6 +57,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ErpProblem> ErpProblems { get; set; }
 
+    public virtual DbSet<Feedbacksuggestion> Feedbacksuggestions { get; set; }
+
     public virtual DbSet<GeneralFile> GeneralFiles { get; set; }
 
     public virtual DbSet<Generatevoucher> Generatevouchers { get; set; }
@@ -170,6 +172,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<R25R26> R25R26s { get; set; }
 
     public virtual DbSet<R29> R29s { get; set; }
+
+    public virtual DbSet<Regionalhrdataofie> Regionalhrdataofies { get; set; }
 
     public virtual DbSet<ReturnedBillsBpoChange> ReturnedBillsBpoChanges { get; set; }
 
@@ -1470,6 +1474,39 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("RESOLUTION");
+        });
+
+        modelBuilder.Entity<Feedbacksuggestion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C009285");
+
+            entity.ToTable("FEEDBACKSUGGESTION");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Description)
+                .HasMaxLength(250)
+                .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .HasColumnName("EMAIL");
+            entity.Property(e => e.Mobileno)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MOBILENO");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.Region)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("REGION");
+            entity.Property(e => e.Subject)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("SUBJECT");
         });
 
         modelBuilder.Entity<GeneralFile>(entity =>
@@ -6431,6 +6468,72 @@ public partial class ModelContext : DbContext
                 .HasColumnName("REGION");
         });
 
+        modelBuilder.Entity<Regionalhrdataofie>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("REGIONALHRDATAOFIE_PK");
+
+            entity.ToTable("REGIONALHRDATAOFIE");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"REGIONALHRDATAOFIE_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Deputationfromdate)
+                .HasColumnType("DATE")
+                .HasColumnName("DEPUTATIONFROMDATE");
+            entity.Property(e => e.Deputationtodate)
+                .HasColumnType("DATE")
+                .HasColumnName("DEPUTATIONTODATE");
+            entity.Property(e => e.Disclipline)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("DISCLIPLINE");
+            entity.Property(e => e.IeCd)
+                .HasPrecision(6)
+                .HasColumnName("IE_CD");
+            entity.Property(e => e.Ietenurefromdate)
+                .HasColumnType("DATE")
+                .HasColumnName("IETENUREFROMDATE");
+            entity.Property(e => e.Ietenuretodate)
+                .HasColumnType("DATE")
+                .HasColumnName("IETENURETODATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Joiningdate)
+                .HasColumnType("DATE")
+                .HasColumnName("JOININGDATE");
+            entity.Property(e => e.Postingdate)
+                .HasColumnType("DATE")
+                .HasColumnName("POSTINGDATE");
+            entity.Property(e => e.Repetriationdate)
+                .HasColumnType("DATE")
+                .HasColumnName("REPETRIATIONDATE");
+            entity.Property(e => e.Retirementdate)
+                .HasColumnType("DATE")
+                .HasColumnName("RETIREMENTDATE");
+            entity.Property(e => e.Transferdate)
+                .HasColumnType("DATE")
+                .HasColumnName("TRANSFERDATE");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDDATE");
+
+            entity.HasOne(d => d.IeCdNavigation).WithMany(p => p.Regionalhrdataofies)
+                .HasForeignKey(d => d.IeCd)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_REGIONALHRDATAOFIE_IE_CD_T09_IE");
+        });
+
         modelBuilder.Entity<ReturnedBillsBpoChange>(entity =>
         {
             entity
@@ -7704,6 +7807,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.AltIeTwo)
                 .HasPrecision(6)
                 .HasColumnName("ALT_IE_TWO");
+            entity.Property(e => e.CallMarkingStartDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_MARKING_START_DT");
             entity.Property(e => e.CallMarkingStoppingDt)
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_MARKING_STOPPING_DT");
@@ -7748,6 +7854,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(12)
                 .IsUnicode(false)
                 .HasColumnName("IE_EMP_NO");
+            entity.Property(e => e.IeJobType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("IE_JOB_TYPE");
             entity.Property(e => e.IeJoinDt)
                 .HasColumnType("DATE")
                 .HasColumnName("IE_JOIN_DT");
@@ -7788,9 +7899,15 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("IE_TYPE");
+            entity.Property(e => e.InspectionStartDt)
+                .HasColumnType("DATE")
+                .HasColumnName("INSPECTION_START_DT");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.RepatriationDt)
+                .HasColumnType("DATE")
+                .HasColumnName("REPATRIATION_DT");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
@@ -7933,7 +8050,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T101_IE_CLUSTER");
 
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.DepartmentCode)
                 .HasMaxLength(1)
@@ -18524,6 +18641,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
+        modelBuilder.HasSequence("REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("RITESPOSEQ");
         modelBuilder.HasSequence("ROLES_SEQ");
         modelBuilder.HasSequence("T02_USERS_SEQ");

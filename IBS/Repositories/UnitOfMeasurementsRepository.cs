@@ -37,14 +37,21 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = from l in context.T04Uoms
-                    where l.Isdeleted != 1
+            string UOMShortDescription = !string.IsNullOrEmpty(dtParameters.AdditionalValues["UOMShortDescription"]) ? Convert.ToString(dtParameters.AdditionalValues["UOMShortDescription"]) : "";
+            string UOMLongDescription = !string.IsNullOrEmpty(dtParameters.AdditionalValues["UOMLongDescription"]) ? Convert.ToString(dtParameters.AdditionalValues["UOMLongDescription"]) : "";
+            decimal? DivisionFactor = !string.IsNullOrEmpty(dtParameters.AdditionalValues["DivisionFactor"]) ? Convert.ToDecimal(dtParameters.AdditionalValues["DivisionFactor"]) : null;
+
+            query = from t04 in context.T04Uoms
+                    where t04.Isdeleted != 1
+                    && (!string.IsNullOrEmpty(UOMShortDescription) ? t04.UomSDesc.ToLower().Contains(UOMShortDescription.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(UOMLongDescription) ? t04.UomLDesc.ToLower().Contains(UOMLongDescription.ToLower()) : true)
+                    && ((DivisionFactor != null) ? t04.UomFactor == DivisionFactor : true)
                     select new UOMModel
                     {
-                        UomCd = l.UomCd,
-                        UomSDesc = l.UomSDesc,
-                        UomLDesc = l.UomLDesc,
-                        UomFactor = l.UomFactor,
+                        UomCd = t04.UomCd,
+                        UomSDesc = t04.UomSDesc,
+                        UomLDesc = t04.UomLDesc,
+                        UomFactor = t04.UomFactor,
                     };
 
             dTResult.recordsTotal = query.Count();
