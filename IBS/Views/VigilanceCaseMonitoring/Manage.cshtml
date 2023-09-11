@@ -118,6 +118,10 @@
 
         var dt;
 
+        $(function () {
+            dt = $("#dtVigilanceList").DataTable();
+        });
+        
         $(document).ready(function () {
             if ('@Model.Id' > 0) {
                 $("#RefDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
@@ -219,16 +223,16 @@
 
         function SubmitVigilanceCasesData() {
 
-            var checkedCaseNos = [];
-
-            $(dt.$('input[name="caseNos"]:checked').each(function () {
-                var row = dt.row($(this).closest('tr')).data();
-                checkedCaseNos.push(row);
-            }));
-
-            $("#checkedCaseNos").val(JSON.stringify(checkedCaseNos));
-
             if ($("#frmVigilanceCasesMaster").valid()) {
+
+                var checkedCaseNos = [];
+                $(dt.$('input[name="caseNos"]:checked').each(function () {
+                    var row = dt.row($(this).closest('tr')).data();
+                    checkedCaseNos.push(row);
+                }));
+
+                $("#checkedCaseNos").val(JSON.stringify(checkedCaseNos));
+
                 $("#frmVigilanceCasesMaster").submit();
             }
         }
