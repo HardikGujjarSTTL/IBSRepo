@@ -425,7 +425,7 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    msg = "already Exist";
+                    msg = "Already Exist";
                 }
                
             }      

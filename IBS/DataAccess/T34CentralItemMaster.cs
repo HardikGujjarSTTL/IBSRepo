@@ -24,4 +24,6 @@ public partial class T34CentralItemMaster
     public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public virtual ICollection<T35CentralItemDetail> T35CentralItemDetails { get; set; } = new List<T35CentralItemDetail>();
 }

@@ -1,0 +1,317 @@
+﻿@model IBS.Models.CallRemarkingModel
+
+@{
+    ViewData["Title"] = "IE Wise Call Remarked";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>IE Wise Call Remarked</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <form role="form" asp-controller="CallRemarking" asp-action="SaveCallRemarkingRequestDetails" id="frmCallRemarkingRequest">
+            <input type="hidden" id="checkedCaseNos" name="checkedCaseNos" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="COCd">Controlling Officer <i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.COCd, Common.GetControllingOfficers(Model.Region), "--Select--",  new { @class = "" })
+                        <span asp-validation-for="COCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="FrIeCd">Inspection Engineer <i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.FrIeCd, Common.GetIEByCo(Model.Region, Model.COCd), "--Select--",  new { @class = "" })
+                        <span asp-validation-for="FrIeCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="FrIePendingCalls">No of Pending Calls From IE</label>
+                        <input type="text" class="input" asp-for="FrIePendingCalls" style="color: Crimson" readonly />
+                    </div>
+                </div>
+                <div class="row my-0 iedata">
+                    <div class="table-title" style="justify-content: center; margin-top: 30px;">
+                        <h4 class="headingh3" style="color: Crimson;">List of No of Pending Calls From IE</h4>
+                    </div>
+                </div>
+                <div class="row my-0 iedata">
+                    <div class="col-md-12 mb-3">
+                        <div class="dash-table">
+                            <table id="dtPendingCallsList1" class="table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Case No.</th>
+                                        <th>Call Date</th>
+                                        <th>Call SNo.</th>
+                                        <th>Call Status</th>
+                                        <th>Manufacturer</th>
+                                        <th>Manufacturer Place</th>
+                                        <th>Manufacturer City</th>
+                                        <th>Desire Dt</th>
+                                        <th>Call Remark Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0 iedata">
+                    <div class="table-title" style="justify-content: center; margin-top: 30px">
+                        <h4 class="headingh3" style="color: Crimson;">*** Proposed for remarking should be posted by 14:30 - hrs for same date. ***</h4>
+                    </div>
+                </div>
+                <div class="row my-0 iedata">
+                    <div class="col-md-4 mb-3">
+                        <label for="ToIeCd">Remarking To Inspection Engineer <i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.ToIeCd, Common.GetRemarkingToIE(Model.Region), "--Select--",  new { @class = "" })
+                        <span asp-validation-for="ToIeCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="ToIePendingCalls">No of Pending Calls To IE </label>
+                        <input type="text" class="input" asp-for="ToIePendingCalls" style="color: Crimson" readonly />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="RemarkingStatus">Reason of Call Marking <i class="text-danger">*</i></label>
+                        <textarea class="input" asp-for="RemarkingStatus" maxlength="400"></textarea>
+                        <span asp-validation-for="RemarkingStatus" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn iedata">
+                    <button type="button" class="save-btn active" onclick="SubmitCallRemarkingData();">Save</button>
+                </div>
+                <div class="row my-0 iedata">
+                    <div class="col-md-12 mb-3">
+                        <div class="dash-table">
+                            <table id="dtPendingCallsList2" class="table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Case No.</th>
+                                        <th>Call Date</th>
+                                        <th>Call SNo.</th>
+                                        <th>Call Status</th>
+                                        <th>From IE</th>
+                                        <th>To IE</th>
+                                        <th>Initiated By</th>
+                                        <th>Initiated DateTime</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            $(".iedata").hide();
+            $('#dtPendingCallsList1').DataTable({ searching: false, paging: false, ordering: false, info: false });
+            $('#dtPendingCallsList2').DataTable({ searching: false, paging: false, ordering: false, info: false });
+        });
+
+        $("#COCd").change(function () {
+            BindIE('@Model.Region', this.value);
+        });
+
+        $("#FrIeCd").change(function () {
+            PendingCallsFromIE(this.value);
+            BindPendingCallsList1('@Model.Region', this.value);
+            BindPendingCallsList2('@Model.Region', this.value);
+            if (this.value == "") $(".iedata").hide(); else $(".iedata").show();
+        });
+
+        $("#ToIeCd").change(function () {
+            PendingCallsToIE(this.value);
+        });
+
+        function PendingCallsFromIE(IeCd) {
+            $.get("@Url.Action("GetPendingCallsFromIE", "CallRemarking")", { IeCd }, function (response) {
+                if (response.status) {
+                    $("#FrIePendingCalls").val(response.responseText);
+                }
+                else {
+                    $("#FrIePendingCalls").val('');
+                }
+            });
+        }
+
+        function PendingCallsToIE(IeCd) {
+            $.get("@Url.Action("GetPendingCallsFromIE", "CallRemarking")", { IeCd }, function (response) {
+                if (response.status) {
+                    $("#ToIePendingCalls").val(response.responseText);
+                }
+                else {
+                    $("#ToIePendingCalls").val('');
+                }
+            });
+        }
+
+        function BindIE(Region, COCd) {
+            $("#FrIeCd").empty();
+            $("#FrIeCd").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetIEByCo", "CallRemarking")", { Region, COCd }, function (response) {
+                if (response != null) {
+                    $("#FrIeCd").empty();
+                    $("#FrIeCd").append($('<option value="">--Select--</option>'));
+                    $.each(response, function (ind, val) {
+                        $("#FrIeCd").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
+        }
+
+        function BindPendingCallsList1(_Region, _IeCd) {
+            $("#dtPendingCallsList1").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: '500px',
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTablePendingCalls1")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Region": _Region,
+                            "IeCd": _IeCd,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            var CaseNo = data.CaseNo ?? "";
+                            var CallRecvDt = data.CallRecvDt ?? "";
+                            var CallSno = data.CallSno ?? "";
+                            var id = CaseNo + "##" + CallRecvDt + "##" + CallSno;
+                            return '<input type="checkbox" name="CaseNos" id="' + id + '"><label for="' + id + '"></label>';
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "CallStatus" },
+                    { data: "VendName" },
+                    { data: "MfgPlace" },
+                    { data: "Mfg_City" },
+                    {
+                        data: "DtInspDesire",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallRemarkStatus" },
+                ],
+            });
+        }
+
+        function BindPendingCallsList2(_Region, _IeCd) {
+            $("#dtPendingCallsList2").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: '500px',
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTablePendingCalls2")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Region": _Region,
+                            "IeCd": _IeCd,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "CallRemarkStatus" },
+                    { data: "FrIeName" },
+                    { data: "ToIeName" },
+                    { data: "UserName" },
+                    {
+                        data: "RemInitDatetime",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "";
+                            }
+                            return data;
+                        }
+                    },
+                ],
+            });
+        }
+
+        function SubmitCallRemarkingData() {
+
+            var checkedCaseNos = [];
+
+            var dt = $('#dtPendingCallsList1').DataTable();
+            $(dt.$('input[name="CaseNos"]:checked').each(function () {
+                checkedCaseNos.push($(this).attr('id'));
+            }));
+
+            $("#checkedCaseNos").val(checkedCaseNos);
+
+            if ($("#frmCallRemarkingRequest").valid()) {
+                $("#frmCallRemarkingRequest").submit();
+            }
+        }
+
+    </script>
+}

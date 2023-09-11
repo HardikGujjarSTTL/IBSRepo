@@ -416,6 +416,20 @@ namespace IBS.Helper
             [Description("Lost / Theft")]
             L,
         }
+
+        public enum ActionProposed
+        {
+            [Description("No Action Required")]
+            N,
+            [Description("Warning Letter")]
+            W,
+            [Description("Minor Penalty")]
+            I,
+            [Description("Major Penalty")]
+            J,
+            [Description("Others")]
+            O,
+        }
     }
 
     public class EnumUtility<T>
