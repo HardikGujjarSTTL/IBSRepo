@@ -815,18 +815,18 @@ namespace IBS.Repositories.Inspection_Billing
             string mail_body = "Dear Sir/Madam,\n\n Call Letter dated:  " + obj.LETTER_DT + " for inspection of material against PO No. - " + obj.PO_NO + " dated - " + obj.PO_DT + ", Case No -  " + obj.CASE_NO + ", on date: " + obj.CALL_RECV_DT + ", at SNo. " + obj.CALL_SNO + ". The Call is rejected due to following Reason:- " + obj.REJECT_REASON + ", so not marked and deleted. Please Resubmit the call after making necessary corrections. \n\n Thanks for using RITES Inspection Services. \n\n" + wRegion + ".";
             mail_body = mail_body + "\n\n THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS";
 
-            string BCC = ""; //"nrinspn@gmail.com";
-            // sender for local mail testing
-            sender = "hardiksilvertouch007@outlook.com";
-            vend_email = "naimish.rana@silvertouch.com";
-            manu_mail = "neha.gehlot@silvertouch.com";
+            string BCC = "nrinspn@gmail.com";
+            //// sender for local mail testing
+            //sender = "hardiksilvertouch007@outlook.com";
+            //vend_email = "naimish.rana@silvertouch.com";
+            //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 SendMailModel sendMailModel = new SendMailModel();
                 sendMailModel.From = sender;
                 sendMailModel.To = manu_mail;
                 sendMailModel.Bcc = BCC;
-                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Subject = "Your Call for Inspection By RITES";
                 sendMailModel.Message = mail_body;
                 bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 email = isSend == true ? "Success" : "Error";
@@ -839,7 +839,7 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.From = sender;
                     sendMailModel.To = manu_mail;
                     sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
                     bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
@@ -861,7 +861,7 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.From = sender;
                     sendMailModel.To = vend_email + "," + manu_mail;
                     sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
                     bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
@@ -931,18 +931,18 @@ namespace IBS.Repositories.Inspection_Billing
 
             string mail_body = "Dear Sir/Madam,\n\n Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + obj.PO_NO + " dated - " + obj.PO_DT + ", Case No -  " + obj.CASE_NO + ", on date: " + obj.CALL_RECV_DT + ", at SNo. " + obj.CALL_SNO + ". The Call submitted with incomplete details, so not marked and deleted.\n\nPlease re-submit with complete details.\n\n Thanks for using RITES Inspection Services. \n\n" + wRegion + ".";
 
-            string BCC = ""; //"nrinspn@gmail.com";
-            // sender for local mail testing
-            sender = "hardiksilvertouch007@outlook.com";
-            vend_email = "naimish.rana@silvertouch.com";
-            manu_mail = "neha.gehlot@silvertouch.com";
+            string BCC = "nrinspn@gmail.com";
+            //// sender for local mail testing
+            //sender = "hardiksilvertouch007@outlook.com";
+            //vend_email = "naimish.rana@silvertouch.com";
+            //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 SendMailModel sendMailModel = new SendMailModel();
                 sendMailModel.From = sender;
                 sendMailModel.To = manu_mail;
                 sendMailModel.Bcc = BCC;
-                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Subject = "Your Call for Inspection By RITES";
                 sendMailModel.Message = mail_body;
                 bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 email = isSend == true ? "Success" : "Error";
@@ -955,7 +955,7 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.From = sender;
                     sendMailModel.To = vend_email;
                     sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
                     bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
@@ -966,7 +966,7 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.From = sender;
                     sendMailModel.To = manu_mail;
                     sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
                     bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
@@ -1196,16 +1196,16 @@ namespace IBS.Repositories.Inspection_Billing
             mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.<BR>NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE)";
 
 
-            sender = "hardiksilvertouch007@outlook.com";
-            vend_email = "naimish.rana@silvertouch.com";
-            manu_mail = "neha.gehlot@silvertouch.com";
+            //sender = "hardiksilvertouch007@outlook.com";
+            //vend_email = "naimish.rana@silvertouch.com";
+            //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 SendMailModel sendMailModel = new SendMailModel();
                 sendMailModel.From = sender;
                 sendMailModel.To = manu_mail;
                 sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Subject = "Your Call for Inspection By RITES";
                 sendMailModel.Message = mail_body;
                 bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 email = isSend == true ? "Success" : "Error";
@@ -1216,7 +1216,7 @@ namespace IBS.Repositories.Inspection_Billing
                 sendMailModel.From = "nrinspn@gmail.com";
                 sendMailModel.To = vend_email + "," + manu_mail;
                 sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Subject = "Your Call for Inspection By RITES";
                 sendMailModel.Message = mail_body;
                 bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 email = isSend == true ? "Success" : "Error";
@@ -1234,7 +1234,7 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.To = vend_email;
                 }
                 sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                sendMailModel.Subject = "Your Call for Inspection By RITES";
                 sendMailModel.Message = mail_body;
                 bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 email = isSend == true ? "Success" : "Error";

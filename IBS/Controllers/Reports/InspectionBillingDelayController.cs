@@ -1,4 +1,5 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
@@ -19,6 +20,14 @@ namespace IBS.Controllers.Reports
         [Authorization("InspectionBillingDelay", "Index", "view")]
         public IActionResult Index()
         {
+            string Region = SessionHelper.UserModelDTO.Region;
+            string wRegion = "";
+            if (Region == "N") { wRegion = "RITES LTD. (NORTHERN REGION)"; }
+            else if (Region == "S") { wRegion = "RITES LTD. (SOUTHERN REGION)"; }
+            else if (Region == "E") { wRegion = "RITES LTD. (EASTERN REGION)"; }
+            else if (Region == "W") { wRegion = "RITES LTD. (WESTERN REGION)"; }
+            else if (Region == "C") { wRegion = "RITES LTD. (CENTRAL REGION)"; }
+            ViewBag.Region = wRegion;
             if (Request.Query["Action"] != "")
             {
 

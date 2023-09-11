@@ -106,7 +106,8 @@ namespace IBS.Repositories
                                     //RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select ur.RoleId).FirstOrDefault()),
                                     //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
                                     RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.UserId ?? "").ToString() select ur.RoleId).FirstOrDefault()),
-                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
+                                    //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
+                                    RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where ur.UserId == u.UserId select r.Rolename).FirstOrDefault()),
                                     OrgnTypeL = Convert.ToString((from t106 in context.T106LoOrgns
                                                                   join u1 in context.T02Users on t106.Mobile equals u1.UserId into userGroup
                                                                   from user in userGroup.DefaultIfEmpty()
@@ -118,15 +119,19 @@ namespace IBS.Repositories
                                                                       where t106.Mobile == model.UserName.Trim()
                                                                       select t106.OrgnChased).FirstOrDefault()),
                                     OrgnType = Convert.ToString((from t32 in context.T32ClientLogins
-                                                                  join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
-                                                                  from user in userGroup.DefaultIfEmpty()
-                                                                  where t32.Mobile == model.UserName.Trim()
-                                                                  select t32.OrgnType).FirstOrDefault()),
-                                    Organisation = Convert.ToString((from t32 in context.T32ClientLogins
                                                                  join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
                                                                  from user in userGroup.DefaultIfEmpty()
                                                                  where t32.Mobile == model.UserName.Trim()
-                                                                 select t32.Organisation).FirstOrDefault())
+                                                                 select t32.OrgnType).FirstOrDefault()),
+                                    Organisation = Convert.ToString((from t32 in context.T32ClientLogins
+                                                                     join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
+                                                                     from user in userGroup.DefaultIfEmpty()
+                                                                     where t32.Mobile == model.UserName.Trim()
+                                                                     select t32.Organisation).FirstOrDefault()),
+                                    IeCd = (from t09 in context.T09Ies
+                                                //join ul in context.T02Users on t09.IeEmpNo equals ul.UserId
+                                            where t09.IeEmpNo == model.UserName
+                                            select t09.IeCd).FirstOrDefault()
                                 }).FirstOrDefault();
             return userSessionModel;
 
@@ -243,7 +248,7 @@ namespace IBS.Repositories
                         Updateddate = l.Updateddate,
                         Updatedby = l.Updatedby,
                         RoleName = (from u in context.Userroles join r in context.Roles on u.RoleId equals r.RoleId where u.UserId == l.UserId select r.Rolename).FirstOrDefault(),
-        };
+                    };
 
             dTResult.recordsTotal = query.Count();
 
@@ -273,7 +278,8 @@ namespace IBS.Repositories
             context.SaveChanges();
 
             var roles = (from ur in context.Userroles where ur.UserId == UserID select ur).FirstOrDefault();
-            if (roles != null) {
+            if (roles != null)
+            {
                 roles.Isdeleted = Convert.ToByte(true);
                 roles.Updatedby = User.Id;
                 roles.Updateddate = DateTime.Now;

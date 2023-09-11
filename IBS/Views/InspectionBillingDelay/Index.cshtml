@@ -7,8 +7,19 @@
         <div class="tast-list">
             <h2>STATEMENT OF INSPECTION BILLING & DELAY'S</h2>
         </div>
+        <div>
+            @*<div class="col-md-4 mb-3">*@
+            <div class="list-btn" style="margin-top: 0px;">
+                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+                @*<a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>*@
+            </div>
+            @*</div>*@
+        </div>
     </div>
     <div class="accordion-body">
+
         <div class="row my-0">
             <div class="col-md-6 mb-3">
                 <label for="reference"></label>
@@ -27,14 +38,6 @@
             @*<div class="col-md-2 mb-3">
             <div class="savenext-btn" style="margin-top: 31px;">
             <button type="button" class="save-btn active" onclick="Search();">search</button>
-            </div>
-            </div>*@
-            @*<div class="col-md-4 mb-3">
-            <div class="list-btn" style="margin-top: 31px;">
-            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-            <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
             </div>
             </div>*@
         </div>
@@ -77,7 +80,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtInspBillDelay" class="table-responsive">
+                <table id="dtInspBillDelay" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -89,10 +92,10 @@
                             <th>CALL/MATERIAL READINESS DATE</th>
                             <th>FIRST INS. DATE</th>
                             <th>LAST INS. DATE</th>
-                            <th>INS.</th>
-                            <th>IC</th>
-                            <th>SUBM</th>
-                            <th>BILL</th>
+                            <th>DELAY INS.</th>
+                            <th>DELAY IC</th>
+                            <th>DELAY SUBM</th>
+                            <th>DELAY BILL</th>
                             <th>BILL NO</th>
                             <th>BILL DATE</th>
                             <th>IE NAME</th>
@@ -103,22 +106,31 @@
                     </thead>
                     <tbody>
                     </tbody>
-                   @* <tfoot>
+                    <tfoot>
                         <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
-                    </tfoot>*@
-                   @* <tbody>
-                    </tbody>*@
+                    </tfoot>
+                    <tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -131,6 +143,7 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        var Region = "@ViewBag.Region";
         $(document).ready(function () {
             Manage();
             $('input[type=radio][name=rdbInspBill]').change(function () {
@@ -139,6 +152,18 @@
 
             $("#btnSearch").click(function () {
                 InitializeDatatable();
+            });
+
+            $("#imgExcel").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 0).trigger();
+            });
+
+            $("#imgPdf").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 1).trigger();
+            });
+
+            $("#imgPrint").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 2).trigger();
             });
         });
 
@@ -160,17 +185,11 @@
         }
 
         function InitializeDatatable() {
-            //var Region = '@ViewBag.Region';
-            //var BillNo = $("#txtBillNo").val();
-            //var BillFromDate = $("#txtBillFromDate").val();
-            //var BillToDate = $("#txtBillToDate").val();
-            //var _title = Region + '\n Bill Details For the Period : All';
-            //if (BillFromDate != "" || BillToDate != "") {
-            //    _title = Region + '\n Bill Details For the Period :' + BillFromDate + ' To ' + BillToDate
-            //}
-            debugger
-            var _title = "Inspection Billing and Delay";
-            var MonthWise = $("#rdbMonth").is(":checked") == true ? "true":"false";
+            var SortOn = "";
+            var totalRec = 0;
+            var w_DELAY_INSP = 0, w_DELAY_IC = 0, w_DELAY_SUBM = 0, w_DELAY_BILL = 0;
+            //var _title = "Inspection Billing and Delay";
+            var MonthWise = $("#rdbMonth").is(":checked") == true ? "true" : "false";
             var DateWise = $("#rdbDate").is(":checked") == true ? "true" : "false";
             var Month = $("#lstMonths").val();
             var Year = $("#lstYears").val();
@@ -179,8 +198,23 @@
             var BillDate = $("#rdbBillDate").is(":checked") == true ? "true" : "false";
             var IcDt = $("#rdbICDate").is(":checked") == true ? "true" : "false";
             var FInspDt = $("#rdbFisrtInspDate").is(":checked") == true ? "true" : "false";
-            var LFnspDt = $("#rdbLastInspDate").is(":checked") == true ? "true":"false";
+            var LFnspDt = $("#rdbLastInspDate").is(":checked") == true ? "true" : "false";
             var IECD = "0";
+
+            if (IcDt == "true") { SortOn = "Report Sorted on IC Date" }
+            else if (FInspDt == "true") { SortOn = "Report Sorted on First Inspection Date" }
+            else if (LFnspDt == "true") { SortOn = "Report Sorted on Last Inspection Date" }
+            else { SortOn = "Report Sorted on Bill Date" }
+
+            if (MonthWise == "true") {
+                _wHdr = $("#lstMonths option:selected").text() + ", " + $("#lstYears").val()//$("#lstMonths").val();
+                _title = "STATEMENT OF INSPECTION BILLING GENERATED AS ON " + _wHdr + " (" + SortOn + ")";
+            } else {
+                _wHdr = $("#txtBillFromDate").val() + " - " + $("#txtBillToDate").val();
+                _title = "STATEMENT OF INSPECTION BILLING GENERATED FOR THE PERIOD " + _wHdr + " (" + SortOn + ")";
+            }
+
+
             dt = $("#dtInspBillDelay").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -189,58 +223,59 @@
                 processing: true, // ServerSide Setups
                 serverSide: true,
                 destroy: true,
-                paging: true,// Paging Setups
+                paging: false,// Paging Setups
                 searching: true,// Searching Setups
-                //dom: 'rtip',
-                //buttons: [
-                //    {
-                //        extend: 'excel',
-                //        text: 'Export to Excel',
-                //        filename: function () { return getExportFileName('Central_Region_Billing_Information'); },
-                //        download: 'open',
-                //        orientation: 'landscape',
-                //        title: _title,
-                //        footer: true,
-                //        exportOptions: {
-                //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                //            modifier: {
-                //                page: 'all',
-                //                search: 'none'
-                //            }
-                //        },
-                //    },
-                //    {
-                //        extend: 'pdfHtml5',
-                //        filename: function () { return getExportFileName('Central_Region_Billing_Information '); },
-                //        text: 'Export to PDF',
-                //        orientation: 'landscape',
-                //        title: _title,
-                //        footer: true,
-                //        exportOptions: {
-                //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                //            modifier: {
-                //                page: 'all',
-                //                pageSize: 'LEGAL',
-                //                search: 'none',
-                //            }
-                //        },
-                //        customize: function (doc) {
-                //            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                //            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                //            doc.pageMargins = [5, 100, 5, 5];
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export to Excel',
+                        filename: function () { return getExportFileName('Inspection_Billing_Delay'); },
+                        download: 'open',
+                        orientation: 'landscape',
+                        title: Region + "\n" + _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                            modifier: {
+                                page: 'all',
+                                search: 'none'
+                            }
+                        },
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        filename: function () { return getExportFileName('Inspection_Billing_Delay'); },
+                        text: 'Export to PDF',
+                        orientation: 'landscape',
+                        title: Region + "\n" + _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                            modifier: {
+                                page: 'all',
+                                pageSize: 'LEGAL',
+                                search: 'none',
+                            }
+                        },
+                        customize: function (doc) {
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                            doc.pageMargins = [5, 100, 5, 5];
 
-                //        }
-                //    },
-                //    {
-                //        extend: 'print',
-                //        text: 'Print',
-                //        title: _title,
-                //        footer: true,
-                //        exportOptions: {
-                //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-                //        },
-                //    },
-                //],
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        orientation: 'landscape',
+                        title: Region + "\n" + _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                        },
+                    },
+                ],
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -276,79 +311,130 @@
                     { data: "IC_SUBMIT_DATE" },
                     { data: "Bk_No" },
                     { data: "Set_No" },
-                    { data: "Call_Dt" },
-                    { data: "First_Insp_Dt" },
-                    { data: "Last_Insp_Dt" },
+                    {
+                        data: "Call_Dt", width: "10%",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "First_Insp_Dt", width: "10%",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "Last_Insp_Dt", width: "10%",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "Delay_Insp" },
                     { data: "Delay_Ic" },
                     { data: "Delay_Subm" },
                     { data: "Delay_Bill" },
                     { data: "Bill_No" },
-                    { data: "Bill_Dt" },
+                    {
+                        data: "Bill_Dt", width: "10%",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "Ie_Name" },
                     { data: "Vendor" },
+                    { data: "Vendor_City" },
                     { data: "Bill_Amount" },
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var id = data.BILL_NO;
-                    //        var editUrl = '@Url.Action("Manage", "CentralRegionBillingInformation")?id=' + id;
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                    //        html += '<a onclick="CentralRegionDelete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
-                    //        html += '</div>';
-                    //        return html;
-                    //    }
-                    //},
                 ],
                 "order": [[0, "asc"]],
-                //footerCallback: function (row, data, start, end, display) {
-                //    var api = this.api(), data;
+                footerCallback: function (row, data, start, end, display) {
+                    debugger
+                    var api = this.api(), data;
 
-                //    // converting to interger to find total
-                //    var intVal = function (i) {
-                //        return typeof i === 'string' ?
-                //            i.replace(/[\$,]/g, '') * 1 :
-                //            typeof i === 'number' ?
-                //                i : 0;
-                //    };
+                    // converting to interger to find total
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                    ;
+                    var TotalRec = api
+                        .column(1)
+                        .data()
+                        .reduce(function (a, b) {
+                            totalRec = totalRec + 1
+                            return totalRec;
+                        }, 0);
+                    var DELAY_INSP = api
+                        .column(9)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var DELAY_IC = api
+                        .column(10)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var DELAY_SUBM = api
+                        .column(11)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var DELAY_BILL = api
+                        .column(12)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var BillAmount = api
+                        .column(18)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    TotalRec = $.fn.dataTable.render.number(',', '.', 0).display(TotalRec);
+                    DELAY_INSP = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_INSP);
+                    DELAY_IC = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_IC);
+                    DELAY_SUBM = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_SUBM);
+                    DELAY_BILL = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_BILL);
+                    BillAmount = $.fn.dataTable.render.number(',', '.', 2).display(BillAmount);
 
-
-                //    var InspFee = api
-                //        .column(4)
-                //        .data()
-                //        .reduce(function (a, b) {
-                //            return intVal(a) + intVal(b);
-                //        }, 0);
-
-                //    var Tax = api
-                //        .column(5)
-                //        .data()
-                //        .reduce(function (a, b) {
-                //            return intVal(a) + intVal(b);
-                //        }, 0);
-                //    var BillAmount = api
-                //        .column(6)
-                //        .data()
-                //        .reduce(function (a, b) {
-                //            return intVal(a) + intVal(b);
-                //        }, 0);
-
-                //    InspFee = $.fn.dataTable.render.number(',', '.', 2).display(InspFee);
-                //    Tax = $.fn.dataTable.render.number(',', '.', 2).display(Tax);
-                //    BillAmount = $.fn.dataTable.render.number(',', '.', 2).display(BillAmount);
-
-                //    // Update footer by showing the total with the reference of the column index
-                //    //$(api.column(0).footer()).html('&nbsp;');
-                //    //$(api.column(1).footer()).html('&nbsp;');
-                //    //$(api.column(2).footer()).html('&nbsp;');
-                //    //$(api.column(2).footer()).html('Total');
-                //    //$(api.column(4).footer()).html(InspFee);
-                //    //$(api.column(5).footer()).html(Tax);
-                //    //$(api.column(6).footer()).html(BillAmount);
-                //    //$(api.column(7).footer()).html('&nbsp;');
-                //    //$(api.column(8).footer()).html('&nbsp;');
-                //    //$(api.column(3).footer()).html('&nbsp;');
-                //},
+                    // Update footer by showing the total with the reference of the column index
+                    $(api.column(0).footer()).html('&nbsp;');
+                    $(api.column(1).footer()).html("No. Of IC's: ");
+                    $(api.column(2).footer()).html(TotalRec);
+                    $(api.column(3).footer()).html('&nbsp;');
+                    $(api.column(4).footer()).html();
+                    $(api.column(5).footer()).html('&nbsp;');
+                    $(api.column(6).footer()).html('&nbsp;');
+                    $(api.column(7).footer()).html('&nbsp;');
+                    $(api.column(8).footer()).html('Average Delay:');
+                    $(api.column(9).footer()).html(parseFloat(DELAY_INSP / TotalRec).toFixed(2));
+                    $(api.column(10).footer()).html(parseFloat(DELAY_IC / TotalRec).toFixed(2));
+                    $(api.column(11).footer()).html(parseFloat(DELAY_SUBM / TotalRec).toFixed(2));
+                    $(api.column(12).footer()).html(parseFloat(DELAY_BILL / TotalRec).toFixed(2));
+                    $(api.column(13).footer()).html('&nbsp;');
+                    $(api.column(14).footer()).html('&nbsp;');
+                    $(api.column(15).footer()).html('&nbsp;');
+                    $(api.column(16).footer()).html('&nbsp;');
+                    $(api.column(17).footer()).html('&nbsp;');
+                    $(api.column(18).footer()).html(BillAmount);
+                },
             });
             //dt.column(3).visible(false);
             //dt.column(4).visible(false);

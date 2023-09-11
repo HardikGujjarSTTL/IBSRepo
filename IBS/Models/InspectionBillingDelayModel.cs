@@ -4,10 +4,10 @@
     {
         public string Ic_No { get; set; }
         public string Ic_Dt { get; set; }
-        public DateTime IC_SUBMIT_DATE { get; set; }
+        public string IC_SUBMIT_DATE { get; set; } //DateTime?
         public string Bk_No { get; set; }
         public string Set_No { get; set; }
-        public DateTime Call_Dt { get; set; }
+        public DateTime? Call_Dt { get; set; }
         public DateTime First_Insp_Dt { get; set; }
         public DateTime Last_Insp_Dt { get; set; }
         public double Delay_Insp { get; set; }

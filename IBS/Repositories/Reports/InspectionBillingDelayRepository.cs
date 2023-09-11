@@ -76,7 +76,7 @@ namespace IBS.Repositories.Reports
                     else if (LFnspDt) { orderCriteria = "Last_Insp_Dt"; }
                     else { orderCriteria = "Bill_Dt"; }
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
@@ -87,7 +87,7 @@ namespace IBS.Repositories.Reports
                 orderAscendingDirection = true;
             }
 
-            if (model.UserName != "")
+            if (model.UserName != "" && model.RoleId != 2)
             {
                 IECD = "0";
             }
@@ -95,6 +95,7 @@ namespace IBS.Repositories.Reports
             {
                 IECD = model.IeCd.ToString();
             }
+            //IECD = "885"; //model.Region
 
             string MonthYear = Year + Month;
             OracleParameter[] par = new OracleParameter[8];
@@ -112,7 +113,7 @@ namespace IBS.Repositories.Reports
             {
                 Ic_No = Convert.ToString(row["Ic_No"]),
                 Ic_Dt = Convert.ToString(row["IC_DT"]),
-                IC_SUBMIT_DATE = Convert.ToDateTime(row["IC_SUBMIT_DATE"]),
+                IC_SUBMIT_DATE = Convert.ToString(row["IC_SUBMIT_DATE"]),
                 Bk_No = Convert.ToString(row["BK_NO"]),
                 Set_No = Convert.ToString(row["SET_NO"]),
                 Call_Dt = Convert.ToDateTime(row["CALL_DT"]),
@@ -137,6 +138,7 @@ namespace IBS.Repositories.Reports
             else { query = query.OrderBy(x => x.Bill_Dt).Select(x => x); }
             dTResult.recordsTotal = query.ToList().Count();
             dTResult.recordsFiltered = query.ToList().Count();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
