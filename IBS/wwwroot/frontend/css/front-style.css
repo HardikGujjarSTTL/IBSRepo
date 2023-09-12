@@ -266,7 +266,7 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .aboutSection .latestNews { display: inline-block; width: 100%; overflow: hidden; position: relative; }
 .aboutSection .latestNews h2.newsTitle { float: left; margin: 0 10px 0 0; padding: 0; font-size:22px; line-height: 27px; color: #323232; font-weight: 600; }
 .aboutSection .latestNews .tickerNews { padding: 0; }
-.latestNews .marqueeScrolling { position: relative; padding-right: 125px; }
+.latestNews .marqueeScrolling { position: relative; }
 .aboutSection .latestNews .tickerNews a.btnMPause { float: left; margin: 2px 30px 0 0; font-size: 0; background: url(../images/play-pause-icon.png) no-repeat 0 0; width: 20px; height: 20px; cursor: pointer; }
 .aboutSection .latestNews .tickerNews a.btnMPause.play { background-position: 0-20px; }
 .aboutSection .latestNews .tickerNews ul { margin: 0; }
@@ -1055,6 +1055,28 @@ img.mfp-img {
 .borderTable{ border-left:1px solid #d1d1d1; border-top:1px solid #d1d1d1;}
 .borderTable th{ font-weight:600; font-size:14px; background:#1E2E6C; color:#fff;}
 .borderTable th, .borderTable td{ padding:2px; border-right:1px solid #d1d1d1; border-bottom:1px solid #d1d1d1; font-size:12px;}
+
+.mfp-with-zoom .mfp-container,
+.mfp-with-zoom.mfp-bg {
+	opacity: 0;
+	-webkit-backface-visibility: hidden;
+	-webkit-transition: all 0.3s ease-out; 
+	-moz-transition: all 0.3s ease-out; 
+	-o-transition: all 0.3s ease-out; 
+	transition: all 0.3s ease-out;
+}
+
+.mfp-with-zoom.mfp-ready .mfp-container {
+		opacity: 1;
+}
+.mfp-with-zoom.mfp-ready.mfp-bg {
+		opacity: 0.8;
+}
+
+.mfp-with-zoom.mfp-removing .mfp-container, 
+.mfp-with-zoom.mfp-removing.mfp-bg {
+	opacity: 0;
+}
 
 
 /*New Responsive Style*/

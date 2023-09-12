@@ -33,11 +33,11 @@
                     <div class="marqueeScrolling cf">
                         <a class="btnMPause">Pause</a>
                         <ul id="js_Notification" class="marquee cf">
-                            <li><a target="_blank" href="#" title="Vacancy Circular for Engagement of Consultant in National Skill Development Fund/Trust on contractual basis">Vacancy Circular for Engagement of Consultant in National Skill Development Fund/Trust on contractual basis</a></li>
-                            <li><a target="_blank" href="#" title="Vacancy Circular for Engagement of Consultant in National Skill Development Fund/Trust on contractual basis">Vacancy Circular for Engagement of Consultant in National Skill Development Fund/Trust on contractual basis</a></li>
-                            <li><a target="_blank" href="#" title="Vacancy Circular for Engagement of Consultant in National Skill Development Fund/Trust on contractual basis">Vacancy Circular for Engagement of Consultant in National Skill Development Fund/Trust on contractual basis</a></li>
+                            <li><a target="_blank" href="#" title="Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted. Any incomplete inspection call not be considered and summarily rejected. Further in cases requiring lab testing outside the vendor premises, additional time required for testing should also provided for.  ">Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted. Any incomplete inspection call not be considered and summarily rejected. Further in cases requiring lab testing outside the vendor premises, additional time required for testing should also provided for.  </a></li>
+                            <li><a target="_blank" href="#" title="Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted. Any incomplete inspection call not be considered and summarily rejected. Further in cases requiring lab testing outside the vendor premises, additional time required for testing should also provided for.  ">Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted. Any incomplete inspection call not be considered and summarily rejected. Further in cases requiring lab testing outside the vendor premises, additional time required for testing should also provided for.  </a></li>
+                            <li><a target="_blank" href="#" title="Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted. Any incomplete inspection call not be considered and summarily rejected. Further in cases requiring lab testing outside the vendor premises, additional time required for testing should also provided for.  ">Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted. Any incomplete inspection call not be considered and summarily rejected. Further in cases requiring lab testing outside the vendor premises, additional time required for testing should also provided for.  </a></li>
                         </ul>
-                        <a href="latest-news.htm" class="viewAllLink" title="View All">View All <img src="images/arrow-right.png" alt="View All" /></a>
+                        @*<a href="latest-news.htm" class="viewAllLink" title="View All">View All <img src="images/arrow-right.png" alt="View All" /></a>*@
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                 <div class="col-md-3 p-0">
                     <div class="overViewRightSection">
                         <p>We kindly request our esteemed partners (Vendors) to participate in CVC drive for eradication of corruption by signing Organisation Integrity Pledge, as available on the CVC Website.</p>
-                        <a class="knowMoreButton" href="#">Know More</a>
+                        <a class="knowMoreButton" href="http://pledge.cvc.nic.in/" target="_blank">Know More</a>
                     </div>
                 </div>
             </div>
@@ -93,13 +93,13 @@
                             <div class="swiper-container">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <div class="certificateImageBox"> <img src="images/certificate-01.jpg" alt="Certification" /> <span>ISO 9001:2015 Certification</span></div>
+                                        <div class="certificateImageBox"><a href="~/frontend/images/ISO-9001.jpg" class="homeImgPopup"> <img src="images/certificate-01.jpg" alt="Certification" /> <span>ISO 9001:2015 Certification</span></a></div>
                                     </div>
                                     <div class="swiper-slide">
-                                        <div class="certificateImageBox"> <img src="images/certificate-02.jpg" alt="Certification" /> <span>ISO/IEC 17020:2012 Accreditation</span></div>
+                                        <div class="certificateImageBox"><a href="~/frontend/images/IEC-17020-2012.jpg" class="homeImgPopup"> <img src="images/certificate-02.jpg" alt="Certification" /> <span>ISO/IEC 17020:2012 Accreditation</span></a></div>
                                     </div>
                                     <div class="swiper-slide">
-                                        <div class="certificateImageBox"> <img src="images/certificate-03.jpg" alt="Certification" /> <span>ISO/IEC 17025 Accredited Labs</span></div>
+                                        <div class="certificateImageBox"><a href="~/frontend/images/certificate-03.jpg" class="homeImgPopup"> <img src="images/certificate-03.jpg" alt="Certification" /> <span>ISO/IEC 17025 Accredited Labs</span></a></div>
                                     </div>
                                 </div>
                             </div>
@@ -115,13 +115,13 @@
                             <div class="swiper-container">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <div class="awardImageBox"> <img src="images/award-01.jpg" alt="Award" /> </div>
+                                        <div class="awardImageBox"> <a href="~/frontend/images/A1.jpg" class="homeImgPopup"><img src="images/award-01.jpg" alt="Award" /></a> </div>
                                     </div>
                                     <div class="swiper-slide">
-                                        <div class="awardImageBox"> <img src="images/award-02.jpg" alt="Award" /> </div>
+                                        <div class="awardImageBox"> <a href="~/frontend/images/A2.jpg" class="homeImgPopup"><img src="images/award-02.jpg" alt="Award" /></a> </div>
                                     </div>
                                     <div class="swiper-slide">
-                                        <div class="awardImageBox"> <img src="images/award-03.jpg" alt="Award" /> </div>
+                                        <div class="awardImageBox"> <a href="~/frontend/images/A5.jpg" class="homeImgPopup"><img src="images/award-03.jpg" alt="Award" /></a> </div>
                                     </div>
                                 </div>
                             </div>
@@ -134,3 +134,21 @@
         </div>
     </div>
     </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $('.homeImgPopup').magnificPopup({
+        type: 'image',
+        closeOnContentClick: true,
+        closeBtnInside: false,
+        fixedContentPos: true,
+        mainClass: 'mfp-no-margins mfp-with-zoom', 
+        image: {
+            verticalFit: true
+        },
+        zoom: {
+            enabled: true,
+            duration: 300 
+        }
+    });
+    });
+</script>
