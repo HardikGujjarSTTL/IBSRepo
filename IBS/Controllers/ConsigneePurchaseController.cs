@@ -10,10 +10,8 @@ namespace IBS.Controllers
     [Authorization]
     public class ConsigneePurchaseController : BaseController
     {
-        #region Variables
-        //private readonly IConsignee_PMForm consignee_PMForm;
         private readonly IConsigneePurchaseRepository consigneePurchaseRepository;
-        #endregion
+
         public ConsigneePurchaseController(IConsigneePurchaseRepository _consigneePurchaseRepository)
         {
             consigneePurchaseRepository = _consigneePurchaseRepository;
@@ -28,66 +26,70 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            var dTResult = new DTResult<ConsigneePurchaseMasterSearchModel>();
-            try
-            {
-                dTResult = consigneePurchaseRepository.Get_Consignee_Purchase(dtParameters);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneePurchase", "LoadTable", 1, GetIPAddress());
-            }
+            DTResult<ConsigneePurchaseMasterSearchModel> dTResult = consigneePurchaseRepository.GetConsigneePurchaseList(dtParameters);
             return Json(dTResult);
         }
+
         [Authorization("ConsigneePurchase", "Index", "view")]
-        public IActionResult Manage()
+        public IActionResult Manage(int id)
         {
+            //ConsigneePurchaseModel model = new();
+            //if (Convert.ToString(Request.Query["CONSIGNEE_CD"]) != null || Convert.ToString(Request.Query["CONSIGNEE_CD"]) != "")
+            //{
+            //    var consignee_cd = Convert.ToInt32(Request.Query["CONSIGNEE_CD"]);
+            //    model = consigneePurchaseRepository.Get_Consignee_Purchase_Detail(consignee_cd);
+            //    if (model != null)
+            //    {
+            //        var state = consigneePurchaseRepository.Get_State(Convert.ToString(model.ConsigneeCity));
+            //        model.ConsigneeState = state;
+            //    }
+            //}
+            //ViewBag.ConsigneeType = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Text = "Railway", Value = "R" },
+            //    new SelectListItem { Text = "Private", Value = "P" },
+            //    new SelectListItem { Text = "Foreign Railway", Value = "F" },
+            //    new SelectListItem { Text = "PSU", Value = "U" },
+            //    new SelectListItem { Text = "State Government", Value = "S" },
+            //};
+            //return View(model);
+
             ConsigneePurchaseModel model = new();
-            if (Convert.ToString(Request.Query["CONSIGNEE_CD"]) != null || Convert.ToString(Request.Query["CONSIGNEE_CD"]) != "")
+            if (id > 0)
             {
-                var consignee_cd = Convert.ToInt32(Request.Query["CONSIGNEE_CD"]);
-                model = consigneePurchaseRepository.Get_Consignee_Purchase_Detail(consignee_cd);
-                if (model != null)
-                {
-                    var state = consigneePurchaseRepository.Get_State(Convert.ToString(model.ConsigneeCity));
-                    model.ConsigneeState = state;
-                }
+                model = consigneePurchaseRepository.FindByID(id);
             }
-            ViewBag.ConsigneeType = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Railway", Value = "R" },
-                new SelectListItem { Text = "Private", Value = "P" },
-                new SelectListItem { Text = "Foreign Railway", Value = "F" },
-                new SelectListItem { Text = "PSU", Value = "U" },
-                new SelectListItem { Text = "State Government", Value = "S" },
-            };
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorization("ConsigneePurchase", "Index", "edit")]
-        public IActionResult ConsigneePurchaseDetailsSave(ConsigneePurchaseModel model)
+        public IActionResult Manage(ConsigneePurchaseModel model)
         {
             try
             {
-                string msg = "Consignee Purchase Master Inserted Successfully.";
-                if (model.ConsigneeCd > 0)
+                if (model.ConsigneeCd == 0)
                 {
-                    msg = "Consignee Purchase Master Updated Successfully.";
+                    model.Createdby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    consigneePurchaseRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
                     model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    consigneePurchaseRepository.SaveDetails(model);
+                    AlertAddSuccess("Record Updated Successfully.");
                 }
-                int id = consigneePurchaseRepository.CongsigneePurchaseInsertUpdate(model, GetUserInfo);
-                if (id > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneePurchase", "ConsigneePurchaseDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneePurchase", "Manage", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
         }
 
         [HttpPost]
@@ -104,22 +106,24 @@ namespace IBS.Controllers
             }
             return Json(state);
         }
-
+        
         [HttpPost]
         [Authorization("ConsigneePurchase", "Index", "delete")]
-        public IActionResult ConsigneePurchaseDelete(int CONSIGNEE_CD)
+        public IActionResult Delete(int id)
         {
-            var flag = 0;
             try
             {
-                flag = consigneePurchaseRepository.ConsigneePurchaseDelete(CONSIGNEE_CD);
+                if (consigneePurchaseRepository.Remove(id, UserId))
+                    AlertDeletedSuccess();
+                else
+                    AlertDanger();
             }
             catch (Exception ex)
             {
-                flag = 500;
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneePurchase", "GetState", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneePurchase", "Delete", 1, GetIPAddress());
+                AlertDanger();
             }
-            return Json(flag);
+            return RedirectToAction("Index");
         }
     }
 }
