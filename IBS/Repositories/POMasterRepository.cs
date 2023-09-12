@@ -355,7 +355,7 @@ namespace IBS.Repositories
             {
                 T82PoDetail obj = new T82PoDetail();
                 obj.CaseNo = model.CaseNo;
-                obj.ItemSrno = model.ItemSrno;
+                obj.ItemSrno = (byte)model.ItemSrno;
                 obj.PlNo = model.PlNo;
                 obj.BpoCd = model.BpoCd;
                 obj.ItemDesc = model.ItemDesc;

@@ -1,0 +1,206 @@
+﻿@model IBS.Models.LabSamInfoReportModel
+@{
+    ViewData["Title"] = "LAB SAMPLE INFO DETAILS";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB SAMPLE INFO DETAILS</h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+         <div class="row my-0">
+             <label for="PropertyId">Report Status</label>
+                <div class="col-md-4 mb-3">            
+                    @Html.DropDownListFor(model => model.status, Common.LabInfoReportStatus(), new { @id="ddlstatus"})
+                    <span asp-validation-for="status" class="text-danger"></span>
+                </div>
+            </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Sample Receive Date Wise</label>
+                <input type="radio" name="radioGroup" id="rb1" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="PropertyId">Sample Approved By Finance Date Wise</label>
+                <input type="radio" name="radioGroup" id="rb2" />
+                <span class="text-danger"></span>
+            </div>
+            
+        </div>
+        
+    </div>
+    <div class="savenext-btn" style="margin-left:45%;">
+        <button type="button" class="save-btn active" onclick="show();">Search</button>
+    </div>
+</div>
+<div id="hide" style="display:none">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtlarpt" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>DATE OF REGISTRATION OF SAMPLE IN LAB</th>
+                            <th>SAMPLE REGISTRATION NO</th>
+                            <th>CASE NO.</th>
+                            <th>NAME OF IE</th>
+                            <th>NAME OF VENDOR</th>
+                            <th>NAME OF MANUFACTURER</th>
+                            <th>LIKELY DATE OF RELEASE OF REPORT</th>
+                            <th>STATUS BY LAB</th>
+                            <th>TESTING CHARGES SUBMITTED BY LAB OFFICIAL</th>
+                            <th>TESTING CHARGES SUBMITTED BY VENDOR</th>
+                            <th>TDS SUBMITTED BY VENDOR</th>
+                            <th>SUBMISSION OF TESTING CHARGES DOCUMENT BY VENDOR</th>
+                            <th>SUBMISSION OF TESTING CHARGES DOCUMENT UPLOADED DATETIME BY VENDOR</th>
+                            <th>UTR NO.</th>
+                            <th>UTR DATE</th>
+                            <th>APPROAVAL BY FINANCE</th>
+                            <th>DATETIME OF APPROAVAL BY FINANCE</th>
+                            <th>LAB TEST REPORT</th>
+                            <th>REMARKS</th>
+                            <th>REJECTION REMARKS</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            if($("#dtfrom").val() == ''){
+                alert("Please Select From Date");
+                return false;
+            }
+            else if($("#dtto").val() == ''){
+                alert("Please Select To Date");
+                return false;
+            }
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            var status = $("#ddlstatus").val();
+            var rbrecdt = sessionStorage.getItem("rbb1");
+            
+            InitializeDatatable(wFrmDtO, wToDt, status, rbrecdt);
+            $("#hide").css("display", "block");
+        }
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.setItem("rbb1", true);
+                
+            }
+            else if (selectedId == "rb2") {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.setItem("rbb1", true);
+                
+            }
+           
+        });
+        
+        
+        $(function () {
+            $("#rb1").prop("checked", true);
+        });
+
+        function InitializeDatatable(wFrmDtO, wToDt, status, rbrecdt) {
+
+            $("#dtlarpt").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            wFrmDtO: wFrmDtO,
+                            wToDt: wToDt,
+                            status: status,
+                            rbrecdt: rbrecdt
+                            
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    { data: "SampleRecvDt" },
+                    { data: "SampleRegNo" },
+                    { data: "CaseNo" },
+                    { data: "IeName" },
+                    { data: "VendName" },
+                    { data: "MfgName" },
+                    { data: "LikelyDtReport" },
+                    { data: "LabStatus" },
+                    { data: "TestingChargesByLab" },
+                    { data: "TestingChargesByVendor" },
+                    { data: "TdsChargesByVendor" },
+                    { data: "" },
+                    { data: "VendInitDt" },
+                    { data: "UtrNo" },
+                    { data: "UtrDate" },
+                    { data: "DocStatusFin" },
+                    { data: "FinInitDt" },
+                    { data: "" },
+                    { data: "Remarks" },
+                    { data: "DocRejRemark" }
+                    
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+
+
+
+    </script>
+}

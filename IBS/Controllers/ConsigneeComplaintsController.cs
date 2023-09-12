@@ -42,46 +42,45 @@ namespace IBS.Controllers
 
             try
             {
-                if(ComplaintId != "" && ComplaintId != null)
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(model.ComplaintId));
+                FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
+                FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
+                FileUploaderUpload_Memo.OthersSection = false;
+                FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_Rejection_Memo = FileUploaderUpload_Memo;
+
+                List<IBS_DocumentDTO> lstDocumentUpload_Tech_Ref = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
+                FileUploaderDTO FileUploaderUpload_Tech_Ref = new FileUploaderDTO();
+                FileUploaderUpload_Tech_Ref.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Tech_Ref.IBS_DocumentList = lstDocumentUpload_Tech_Ref.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref1).ToList();
+                FileUploaderUpload_Tech_Ref.OthersSection = false;
+                FileUploaderUpload_Tech_Ref.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Tech_Ref.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_Tech_Ref = FileUploaderUpload_Tech_Ref;
+
+                List<IBS_DocumentDTO> lstDocumentUpload_Ji_Case = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
+                FileUploaderDTO FileUploaderUpload_Ji_Case = new FileUploaderDTO();
+                FileUploaderUpload_Ji_Case.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Ji_Case.IBS_DocumentList = lstDocumentUpload_Ji_Case.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Case).ToList();
+                FileUploaderUpload_Ji_Case.OthersSection = false;
+                FileUploaderUpload_Ji_Case.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Ji_Case.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_JI_Case = FileUploaderUpload_Ji_Case;
+
+                List<IBS_DocumentDTO> lstDocumentUpload_Ji_report = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
+                FileUploaderDTO FileUploaderUpload_Ji_report = new FileUploaderDTO();
+                FileUploaderUpload_Ji_report.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderUpload_Ji_report.IBS_DocumentList = lstDocumentUpload_Ji_report.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Report).ToList();
+                FileUploaderUpload_Ji_report.OthersSection = false;
+                FileUploaderUpload_Ji_report.MaxUploaderinOthers = 5;
+                FileUploaderUpload_Ji_report.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.Upload_JI_Report = FileUploaderUpload_Ji_report;
+                if (ComplaintId != "" && ComplaintId != null)
                 {
                     model = consigneeComplaints.FindByCompID(ComplaintId);
                     ViewBag.Showcomplaint = true;
-
-                    List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(model.ComplaintId));
-                    FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
-                    FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-                    FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
-                    FileUploaderUpload_Memo.OthersSection = false;
-                    FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
-                    FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
-                    ViewBag.Upload_Rejection_Memo = FileUploaderUpload_Memo;
-
-                    List<IBS_DocumentDTO> lstDocumentUpload_Tech_Ref = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
-                    FileUploaderDTO FileUploaderUpload_Tech_Ref = new FileUploaderDTO();
-                    FileUploaderUpload_Tech_Ref.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-                    FileUploaderUpload_Tech_Ref.IBS_DocumentList = lstDocumentUpload_Tech_Ref.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref1).ToList();
-                    FileUploaderUpload_Tech_Ref.OthersSection = false;
-                    FileUploaderUpload_Tech_Ref.MaxUploaderinOthers = 5;
-                    FileUploaderUpload_Tech_Ref.FilUploadMode = (int)Enums.FilUploadMode.Single;
-                    ViewBag.Upload_Tech_Ref = FileUploaderUpload_Tech_Ref;
-
-                    List<IBS_DocumentDTO> lstDocumentUpload_Ji_Case = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
-                    FileUploaderDTO FileUploaderUpload_Ji_Case = new FileUploaderDTO();
-                    FileUploaderUpload_Ji_Case.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-                    FileUploaderUpload_Ji_Case.IBS_DocumentList = lstDocumentUpload_Ji_Case.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Case).ToList();
-                    FileUploaderUpload_Ji_Case.OthersSection = false;
-                    FileUploaderUpload_Ji_Case.MaxUploaderinOthers = 5;
-                    FileUploaderUpload_Ji_Case.FilUploadMode = (int)Enums.FilUploadMode.Single;
-                    ViewBag.Upload_JI_Case = FileUploaderUpload_Ji_Case;
-
-                    List<IBS_DocumentDTO> lstDocumentUpload_Ji_report = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
-                    FileUploaderDTO FileUploaderUpload_Ji_report = new FileUploaderDTO();
-                    FileUploaderUpload_Ji_report.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-                    FileUploaderUpload_Ji_report.IBS_DocumentList = lstDocumentUpload_Ji_report.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Report).ToList();
-                    FileUploaderUpload_Ji_report.OthersSection = false;
-                    FileUploaderUpload_Ji_report.MaxUploaderinOthers = 5;
-                    FileUploaderUpload_Ji_report.FilUploadMode = (int)Enums.FilUploadMode.Single;
-                    ViewBag.Upload_JI_Report = FileUploaderUpload_Ji_report;
                 }
                 if (CASE_NO != null && BK_NO != null && SET_NO != null)
                 {

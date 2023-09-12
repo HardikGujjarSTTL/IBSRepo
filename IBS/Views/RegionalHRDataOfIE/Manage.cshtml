@@ -1,0 +1,130 @@
+﻿@model IBS.Models.RegionalHRDataOfIEModel
+
+@{
+    ViewData["Title"] = "Manage Regional HR Data Of IE";
+    string clsView = "";
+    if (Model.Id > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Regional HR Data Of IE</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="RegionalHRDataOfIE" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+            <form role="form" asp-controller="RegionalHRDataOfIE" asp-action="InsertUpdate" id="frmRegionalHRDataOfIE">
+            <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">IE Name<i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetInspEngCd(0) , "Value", "Text"),"--Select--", new { @class = "select2",@onChange="FillData();" })
+                        <span asp-validation-for="IeCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Disclipline</label>
+                        <input type="text" class="input" asp-for="Disclipline">
+                        <span asp-validation-for="Disclipline" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Joining Date<i class="text-danger">*</i></label>
+                        <input id="Joiningdate" asp-for="Joiningdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Joiningdate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Posting Date<i class="text-danger">*</i></label>
+                        <input id="Postingdate" asp-for="Postingdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Postingdate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Retirement Date</label>
+                        <input id="Retirementdate" asp-for="Retirementdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Retirementdate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Transfer Date</label>
+                        <input id="Transferdate" asp-for="Transferdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Transferdate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Deputation From Date (For Contratual Employee)</label>
+                        <input id="Deputationfromdate" asp-for="Deputationfromdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Deputationfromdate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Deputation To Date (For Contratual Employee)</label>
+                        <input id="Deputationtodate" asp-for="Deputationtodate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Deputationtodate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">IE Tenure From Date</label>
+                        <input id="Ietenurefromdate" asp-for="Ietenurefromdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Ietenurefromdate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">IE Tenure To Date</label>
+                        <input id="Ietenuretodate" asp-for="Ietenuretodate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Ietenuretodate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Repetriation From Date (For Contratual Employee)</label>
+                        <input id="Repetriationdate" asp-for="Repetriationdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
+                        <span asp-validation-for="Repetriationdate" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(".select2").select2();
+        $(function () {
+        });
+        function FillData()
+        {
+            var IeCd = $("#IeCd").val();
+            $.ajax({
+                url: '@Url.Action("GetIEData", "RegionalHRDataOfIE")?IeCd=' + IeCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#Joiningdate").val(moment(response.obj.Joiningdate).format("DD/MM/YYYY"));
+                    $("#Retirementdate").val(moment(response.obj.Retirementdate).format("DD/MM/YYYY"));
+                }
+            });
+        }
+
+        function Save() {
+            if ($("#frmRegionalHRDataOfIE").valid()) {
+                $("#frmRegionalHRDataOfIE").submit();
+            }
+        }
+    </script>
+}

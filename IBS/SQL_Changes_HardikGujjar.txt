@@ -1327,7 +1327,8 @@ ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0)
 CREATE OR REPLACE PROCEDURE SP_GetBillData (
     p_Region IN VARCHAR2,
     p_BillNo IN VARCHAR2,
-    p_BillDate IN VARCHAR2,
+    p_BillFromDate IN VARCHAR2,
+    p_BillToDate IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
 ) IS
     v_Query VARCHAR2(1000);
@@ -1339,9 +1340,9 @@ BEGIN
     IF p_BillNo IS NOT NULL THEN
         v_Query := v_Query || ' AND TRIM(BILL_NO) = ''' || p_BillNo || '''';
     END IF;
-
-    IF p_BillDate IS NOT NULL THEN
-        v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') = ''' || p_BillDate || '''';
+   
+    IF p_BillFromDate IS NOT NULL AND p_BillToDate IS NOT NULL THEN
+         v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') BETWEEN ''' || p_BillFromDate || ''' AND ''' || p_BillToDate || '''';
     END IF;
 
     v_Query := v_Query || ' AND (ISDELETED = 0 OR ISDELETED IS NULL)';
@@ -1350,4 +1351,190 @@ BEGIN
 END SP_GetBillData;
 
 
+
 =======================
+
+
+CREATE TABLE T34_CENTRAL_ITEM_MASTER (
+    ID NUMBER(6, 0) NOT NULL,
+    RAIL_CD VARCHAR2(50 BYTE),
+    RAIL_DESC VARCHAR2(100 BYTE),
+    RAIL_LENGTH_METER VARCHAR2(20 BYTE),
+    USER_ID VARCHAR2(20 BYTE),
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE T34_CENTRAL_ITEM_MASTER ADD (
+  CONSTRAINT T34_CENTRAL_ITEM_MASTER_PK PRIMARY KEY (ID));
+
+CREATE SEQUENCE T34_CENTRAL_ITEM_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+   
+ALTER TABLE T34_CENTRAL_ITEM_MASTER
+    MODIFY ID NUMBER(6,0) DEFAULT T34_CENTRAL_ITEM_MASTER_seq.nextval;
+    
+==============
+
+
+CREATE TABLE T35_Central_Item_Detail (
+    ID NUMBER(6, 0) NOT NULL,
+    RAIL_ID NUMBER(6, 0) NOT NULL,
+    RAIL_PRICE_PER_MT VARCHAR2(50 BYTE),
+    PACKING_CHARGE VARCHAR2(100 BYTE),
+    PRICE_DATE_FR Date ,
+    PRICE_DATE_TO Date,
+    ISACTIVE NUMBER(2,0),
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE T35_Central_Item_Detail ADD (
+  CONSTRAINT T35_Central_Item_Detail_PK PRIMARY KEY (ID));
+
+ALTER TABLE T35_Central_Item_Detail
+ADD CONSTRAINT FK_T35_Central_Item_Detail_RAIL_ID_T34_CENTRAL_ITEM_MASTER FOREIGN KEY (RAIL_ID)
+REFERENCES T34_CENTRAL_ITEM_MASTER (ID);
+
+CREATE SEQUENCE T35_Central_Item_Detail_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE T35_Central_Item_Detail
+    MODIFY ID NUMBER(6,0) DEFAULT T35_Central_Item_Detail_seq.nextval;
+    
+==================
+CREATE TABLE RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0) NOT NULL,
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE RegionalHRDataOfIE ADD (
+  CONSTRAINT RegionalHRDataOfIE_PK PRIMARY KEY (ID));
+
+ALTER TABLE RegionalHRDataOfIE
+ADD CONSTRAINT FK_RegionalHRDataOfIE_IE_CD_T09_IE FOREIGN KEY (IE_CD)
+REFERENCES T09_IE (IE_CD);
+
+CREATE SEQUENCE RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE RegionalHRDataOfIE
+    MODIFY ID NUMBER(6,0) DEFAULT RegionalHRDataOfIE_seq.nextval;
+
+
+==================================
+CREATE TABLE Log_RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0),
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0),
+    ActionType VARCHAR2(50 BYTE),
+    ActionDate TIMESTAMP(6),
+    ActionUserID VARCHAR2(50 BYTE)
+);
+
+  ======================
+
+
+CREATE OR REPLACE TRIGGER Update_RegionalHRDataOfIE_Trigger
+    BEFORE UPDATE ON RegionalHRDataOfIE
+    FOR EACH ROW
+BEGIN
+    
+    INSERT INTO Log_RegionalHRDataOfIE (
+        id,
+        ie_cd,
+        disclipline,
+        joiningdate,
+        postingdate,
+        retirementdate,
+        transferdate,
+        deputationfromdate,
+        deputationtodate,
+        repetriationdate,
+        ietenurefromdate,
+        ietenuretodate,
+        createdby,
+        createddate,
+        updatedby,
+        updateddate,
+        isdeleted,
+        ActionType,
+        ActionDate,
+        ActionUserID
+    ) VALUES (
+        :OLD.id,
+        :OLD.ie_cd,
+        :OLD.disclipline,
+        :OLD.joiningdate,
+        :OLD.postingdate,
+        :OLD.retirementdate,
+        :OLD.transferdate,
+        :OLD.deputationfromdate,
+        :OLD.deputationtodate,
+        :OLD.repetriationdate,
+        :OLD.ietenurefromdate,
+        :OLD.ietenuretodate,
+        :OLD.createdby,
+        :OLD.createddate,
+        :NEW.updatedby,
+        SYSTIMESTAMP,
+        :OLD.isdeleted,
+        'U',
+        SYSTIMESTAMP,
+        :NEW.updatedby
+    );
+END;
+/
+
+========================
+
+
+
+
+
+

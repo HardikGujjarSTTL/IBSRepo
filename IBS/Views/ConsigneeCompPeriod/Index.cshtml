@@ -1,0 +1,141 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>CONSIGNEE COMPLAINTS REPORT</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-2 mb-3">
+            <label for="reference">Complaints Recieved From Date</label>
+            <input type="text" class="input datepicker" id="compfromdt">
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="reference">To Date</label>
+            <input type="text" class="input datepicker" id="comptodt">
+        </div>
+        <div class="col-md-4 mb-4">
+            <label for="reference">Inspection Region</label>
+            <div class="col-md-2 mb-2">
+                <input type="radio" id="allRegions" name="inspectionRegion" value="All Regions">
+                <label for="allRegions">All Regions</label><br>
+
+                <input type="radio" id="northern" name="inspectionRegion" value="Northern">
+                <label for="northern">Northern</label><br>
+
+                <input type="radio" id="southern" name="inspectionRegion" value="Southern">
+                <label for="southern">Southern</label><br>
+
+                <input type="radio" id="eastern" name="inspectionRegion" value="Eastern">
+                <label for="eastern">Eastern</label><br>
+
+                <input type="radio" id="western" name="inspectionRegion" value="Western">
+                <label for="western">Western</label><br>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <label for="reference">Joint Inspection Region</label>
+            <div class="col-md-2 mb-2">
+                <input type="radio" id="allRegions" name="inspectionRegion" value="All Regions">
+                <label for="allRegions">All Regions</label><br>
+
+                <input type="radio" id="northern" name="inspectionRegion" value="Northern">
+                <label for="northern">Northern</label><br>
+
+                <input type="radio" id="southern" name="inspectionRegion" value="Southern">
+                <label for="southern">Southern</label><br>
+
+                <input type="radio" id="eastern" name="inspectionRegion" value="Eastern">
+                <label for="eastern">Eastern</label><br>
+
+                <input type="radio" id="western" name="inspectionRegion" value="Western">
+                <label for="western">Western</label><br>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <label for="reference">Include Complaints Where JI Required ?</label>
+            <div class="col-md-3 mb-3">
+                <input type="radio" id="all" name="inspectionRegion" value="All">
+                <label for="allRegions">All</label><br>
+
+                <input type="radio" id="Yes" name="inspectionRegion" value="Yes">
+                <label for="northern">Yes</label><br>
+
+                <input type="radio" id="No" name="inspectionRegion" value="No">
+                <label for="southern">No</label><br>
+
+                <input type="radio" id="Cancelled" name="inspectionRegion" value="Cancelled">
+                <label for="eastern">Cancelled</label><br>
+
+                <input type="radio" id="Under Consideration" name="inspectionRegion" value="Under Consideration">
+                <label for="western">Under Consideration</label><br>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <label for="reference">Action Proposed</label>
+            <div class="col-md-4 mb-4">
+                <input type="radio" id="allaction" name="inspectionRegion" value="allaction">
+                <label for="allaction">All</label><br>
+
+                 <input type="radio" id="ParticularAction" name="inspectionRegion" value="ParticularAction">
+                <label for="ParticularAction">Particular Action</label><br>
+
+                @Html.DropDownList("ParticularAction", new SelectList(IBS.Models.Common.ParticularAction(), "Value", "Text"), "--Select--", new { id = "ParticularAction" })
+
+                </div>
+            </div>
+        <div class="col-md-3 mb-3">
+            <div class="savenext-btn" style="margin-top: 31px;">
+                <button type="button" class="save-btn active" id="btnSearch">search</button>
+             </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="list-btn" style="margin-top: 31px;">
+                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtCentralRegion" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Bill No</th>
+                        <th>Bill Date</th>
+                        <th>BPO</th>
+                        <th>Insp Fee</th>
+                        <th>Tax (Inclusive of EDU + SHE Cess)</th>
+                        <th>Total Fee</th>
+                        <th>IC No.</th>
+                        <th>IC Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>*@

@@ -24,9 +24,8 @@
             <h5>PO DETAILS</h5>
         </div>
         <div class="savenext-btn">
-            <button type="button" class="save-btn" id="btnBack">Back</button>
-            <button type="button" class="save-btn active" id="btnPrint">Print</button>
-            @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
+            <button type="button" class="save-btn" id="btnBack" onclick="window.history.back">Back</button>
+            @*<button type="button" class="save-btn active" id="btnPrint">Print</button>*@
         </div>
     </div>
     <div class="accordion-body">
@@ -37,7 +36,7 @@
             </div>
             <div class="col-md-5 mb-3">
                 <label for="Reference" style="padding-right:10px;">Vendor :</label>
-                <span id="lblVendor" style="text-transform: uppercase; color:red;"></span>
+                <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">Po No :</label>
@@ -595,7 +594,7 @@
             //    'print'
             //],
             ajax: {
-                url: "@Url.Action("GetCaseHistoryRejectionVendorPlaceList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
+                url: "@Url.Action("GetCaseHistoryRejectionVendorPlaceList", "CallMarkedOnline")",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

@@ -1,7 +1,4 @@
-﻿using IBS.DataAccess;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -9,40 +6,54 @@ namespace IBS.Models
     {
         public int IeCd { get; set; }
 
-        [Display(Name = "Ie Name")]
+        [Display(Name = "IE Name")]
         [Required]
         public string? IeName { get; set; }
 
-        [Display(Name = "Ie Short Name")]
+        [Display(Name = "IE Short Name")]
         [Required]
         public string? IeSname { get; set; }
 
+        [Display(Name = "Employee No")]
+        [Required]
         public string? IeEmpNo { get; set; }
 
         public int? IeDesig { get; set; }
 
         public int? IeSealNo { get; set; }
 
+        [Display(Name = "Department")]
+        [Required]
         public string? IeDepartment { get; set; }
 
         public string IeCityCd { get; set; }
 
-        [Range(0, 1000, ErrorMessage = "City Id must number.")]
+        [Display(Name = "IE City")]
+        [Required]
         public int IeCityId { get; set; }
 
-        [Phone]
+        [Display(Name = "IE Phone No")]
+        [Required]
         public string? IePhoneNo { get; set; }
 
         public byte? IeCoCd { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? IeJoinDt { get; set; }
 
         public string? IeStatus { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? IeStatusDt { get; set; }
 
+        [Display(Name = "IE Posting")]
+        [Required]
         public string? IeType { get; set; }
 
+        [Display(Name = "IE Region")]
+        [Required]
         public string? IeRegion { get; set; }
 
         public string? IePwd { get; set; }
@@ -51,9 +62,11 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
-        [EmailAddress(ErrorMessage = "Email must be proper.")]
+        [EmailAddress]
         public string? IeEmail { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? IeDob { get; set; }
 
         public int? AltIe { get; set; }
@@ -64,9 +77,14 @@ namespace IBS.Models
 
         public int? AltIeThree { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? CallMarkingStoppingDt { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? DscExpiryDt { get; set; }
+
         public byte? Isdeleted { get; set; }
 
         public int? Createdby { get; set; }
@@ -77,6 +95,22 @@ namespace IBS.Models
 
         public DateTime? Updateddate { get; set; }
 
-        public string Cluster { get; set; }
+        [Display(Name = "Cluster Name")]
+        [Required]
+        public int Cluster { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallMarkingStartDt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? InspectionStartDt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? RepatriationDt { get; set; }
+
+        public string? IeJobType { get; set; }
     }
 }

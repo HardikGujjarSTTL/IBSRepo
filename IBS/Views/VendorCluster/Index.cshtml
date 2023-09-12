@@ -10,26 +10,62 @@
         <a asp-area="" asp-controller="VendorCluster" asp-action="Manage" class="formBtn"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtVendorClusterList" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Vendor Name</th>
-                        <th>Department Name</th>
-                        <th>Cluster Name</th>
-                        <th>Geographical Partition</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="VendorName">Vendor Name</label>
+                    <input type="text" class="input" id="VendorName" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="DepartmentName">Department Name</label>
+                    @Html.DropDownList("DepartmentName", new SelectList(Common.GetDepartment() , "Value", "Text"), "--Select--",  new { @class = "" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="ClusterName">Cluster Name</label>
+                    <input type="text" class="input" id="ClusterName" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="GeographicalPartition">Geographical Partition</label>
+                    <input type="text" class="input" id="GeographicalPartition" />
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtVendorClusterList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Vendor Name</th>
+                            <th>Department Name</th>
+                            <th>Cluster Name</th>
+                            <th>Geographical Partition</th>
+                            <th style="text-align:center">View Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -42,6 +78,12 @@
         });
 
         function InitializeDatatable() {
+
+            var VendorName = $("#VendorName").val();
+            var DepartmentName = $("#DepartmentName").val();
+            var ClusterName = $("#ClusterName").val();
+            var GeographicalPartition = $("#GeographicalPartition").val();
+
             $("#dtVendorClusterList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -59,6 +101,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            VendorName, DepartmentName, ClusterName, GeographicalPartition
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -80,7 +123,7 @@
                         render: function (data, type, row) {
                             var VendorCode = data.VendorCode;
                             var DepartmentCode = data.DepartmentCode;
-                            let myObject = {VendorCode, DepartmentCode};
+                            let myObject = { VendorCode, DepartmentCode };
                             var editUrl = '@Url.Action("ManageVendorCluster", "VendorCluster")?' + $.param(myObject);
                             var id = VendorCode + "-" + DepartmentCode;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
@@ -92,6 +135,15 @@
                 ],
                 "order": [[1, "asc"]]
             });
+        }
+
+        function CLearControls() {
+            $("#VendorName").val("");
+            $("#DepartmentName").val("");
+            $("#ClusterName").val("");
+            $("#GeographicalPartition").val("");
+
+            InitializeDatatable();
         }
 
         function Delete(id) {

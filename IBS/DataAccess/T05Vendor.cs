@@ -71,6 +71,8 @@ public partial class T05Vendor
 
     public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();
 
+    public virtual ICollection<T60IePoiMapping> T60IePoiMappings { get; set; } = new List<T60IePoiMapping>();
+
     public virtual ICollection<T80PoMaster> T80PoMasters { get; set; } = new List<T80PoMaster>();
 
     public virtual T03City? VendCityCdNavigation { get; set; }

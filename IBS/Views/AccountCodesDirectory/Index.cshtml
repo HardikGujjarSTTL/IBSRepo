@@ -9,26 +9,49 @@
     <div class="list-btn">
         <a asp-area="" asp-controller="AccountCodesDirectory" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
-
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtACD" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Account Code</th>
-                        <th>Account Description</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="AccountCD">Account CD</label>
+                    <input type="text" class="input" id="AccountCD" onkeypress="return isNumber(event)" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-search">
+                    <label for="AccountDesc">Account Desc</label>
+                    <input type="text" class="input" id="AccountDesc" />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtACD" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Account Code</th>
+                            <th>Account Description</th>
+                            <th style="text-align:center">View Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -41,6 +64,10 @@
         });
 
         function InitializeDatatable() {
+
+            var AccountCD = $("#AccountCD").val();
+            var AccountDesc = $("#AccountDesc").val();
+
             $("#dtACD").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -58,6 +85,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            AccountCD, AccountDesc
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -86,6 +114,13 @@
                 ],
                 "order": [[1, "asc"]]
             });
+        }
+
+        function CLearControls() {
+            $("#AccountCD").val("");
+            $("#AccountDesc").val("");
+
+            InitializeDatatable();
         }
 
         function Delete(id) {

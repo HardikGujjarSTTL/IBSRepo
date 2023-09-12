@@ -95,22 +95,28 @@ namespace IBS.Repositories.Transaction
                 orderAscendingDirection = true;
             }
 
-            string BillNo = "", BillDate = "";
+            string BillNo = "", BillFromDate = "", BillToDate = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BillNo"]))
             {
                 BillNo = Convert.ToString(dtParameters.AdditionalValues["BillNo"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BillDate"]))
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BillFromDate"]))
             {
-                BillDate = Convert.ToString(dtParameters.AdditionalValues["BillDate"]);
+                BillFromDate = Convert.ToString(dtParameters.AdditionalValues["BillFromDate"]);
             }
-            OracleParameter[] par = new OracleParameter[4];
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BillToDate"]))
+            {
+                BillToDate = Convert.ToString(dtParameters.AdditionalValues["BillToDate"]);
+            }
+            OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region.ToString() == "" ? DBNull.Value : Region.ToString(), ParameterDirection.Input);
             par[1] = new OracleParameter("p_BillNo", OracleDbType.Varchar2, BillNo.ToString() == "" ? DBNull.Value : BillNo.ToString(), ParameterDirection.Input);
-            par[2] = new OracleParameter("p_BillDate", OracleDbType.Varchar2, BillDate.ToString() == "" ? DBNull.Value : BillDate.ToString(), ParameterDirection.Input);
-            par[3] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("p_BillFromDate", OracleDbType.Varchar2, BillFromDate.ToString() == "" ? DBNull.Value : BillFromDate.ToString(), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_BillToDate", OracleDbType.Varchar2, BillToDate.ToString() == "" ? DBNull.Value : BillToDate.ToString(), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_GetBillData", par, 1);
+            
             DataTable dt = ds.Tables[0];
 
 
@@ -130,7 +136,7 @@ namespace IBS.Repositories.Transaction
                 );
 
             dTResult.recordsFiltered = query.Count();
-
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;

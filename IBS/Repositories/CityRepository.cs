@@ -57,11 +57,20 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
+            string Location = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Location"]) ? Convert.ToString(dtParameters.AdditionalValues["Location"]) : "";
+            string City = !string.IsNullOrEmpty(dtParameters.AdditionalValues["City"]) ? Convert.ToString(dtParameters.AdditionalValues["City"]) : "";
+            string Pincode = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Pincode"]) ? Convert.ToString(dtParameters.AdditionalValues["Pincode"]) : "";
+            byte? StateCd = !string.IsNullOrEmpty(dtParameters.AdditionalValues["StateCd"]) ? Convert.ToByte(dtParameters.AdditionalValues["StateCd"]) : null;
+
             query = from c in context.T03Cities
                     join tmp1 in context.T92States on c.StateCd equals tmp1.StateCd into _tmp1
                     from s in _tmp1.DefaultIfEmpty()
                     join tmp2 in context.CountryMasters on c.CountryCd equals tmp2.CountryCode into _tmp2
                     from cn in _tmp2.DefaultIfEmpty()
+                    where (!string.IsNullOrEmpty(Location) ? c.Location.ToLower().Contains(Location.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(City) ? c.City.ToLower().Contains(City.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(Pincode) ? c.PinCode.ToLower().Contains(Pincode.ToLower()) : true)
+                    && ((StateCd != null) ? c.StateCd ==  StateCd : true)
                     select new CityMasterModel
                     {
                         CityCd = c.CityCd,

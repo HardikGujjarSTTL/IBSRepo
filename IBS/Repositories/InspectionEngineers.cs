@@ -16,6 +16,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
+
         public InspectionEngineersModel FindByID(int IeCd)
         {
             InspectionEngineersModel model = new();
@@ -37,12 +38,12 @@ namespace IBS.Repositories
             return model;
         }
 
-        public InspectionEngineersModel FindManageByID(int IeCd, string ActionType, string GetRegionCode)
+        public InspectionEngineersModel FindManageByID(int Id)
         {
             InspectionEngineersModel model = new();
 
             model = (from t09 in context.T09Ies
-                     where t09.IeCd == Convert.ToInt32(IeCd)
+                     where t09.IeCd == Id
                      select new InspectionEngineersModel
                      {
                          IeCd = t09.IeCd,
@@ -53,7 +54,7 @@ namespace IBS.Repositories
                          IeSealNo = t09.IeSealNo,
                          IeDepartment = t09.IeDepartment,
                          IeCityCd = Convert.ToString(t09.IeCityCd),
-                         IeCityId = Convert.ToInt32(t09.IeCityCd),
+                         IeCityId = t09.IeCityCd ?? 0,
                          IePhoneNo = t09.IePhoneNo,
                          IeCoCd = Convert.ToByte(t09.IeCoCd),
                          IeJoinDt = t09.IeJoinDt,
@@ -64,15 +65,18 @@ namespace IBS.Repositories
                          IePwd = t09.IePwd,
                          IeEmail = t09.IeEmail,
                          IeDob = t09.IeDob,
+                         IeJobType = t09.IeJobType,
                          AltIe = t09.AltIe,
                          IeCallMarking = t09.IeCallMarking,
                          AltIeTwo = t09.AltIeTwo,
                          AltIeThree = t09.AltIeThree,
                          CallMarkingStoppingDt = t09.CallMarkingStoppingDt,
-
+                         CallMarkingStartDt = t09.CallMarkingStartDt,
+                         InspectionStartDt = t09.InspectionStartDt,
+                         RepatriationDt = t09.RepatriationDt,
+                         Cluster = context.T101IeClusters.Where(x => x.IeCode == Id).Select(x => x.ClusterCode).SingleOrDefault(),
                      }).FirstOrDefault();
 
-            model.IeRegion = GetRegionCode;
             return model;
         }
 
@@ -86,56 +90,30 @@ namespace IBS.Repositories
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
-            if (dtParameters.Order != null)
+            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
             {
-                // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "IeName";
-                }
+                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "IeName";
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
-                // if we have an empty search then just order the results by Id ascending
                 orderCriteria = "IeName";
                 orderAscendingDirection = true;
             }
 
-            string IeCd = "", IeSname = "", IeName = "", IeCoCd = "";
-
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IeCd"]))
-            {
-                IeCd = Convert.ToString(dtParameters.AdditionalValues["IeCd"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IeSname"]))
-            {
-                IeSname = Convert.ToString(dtParameters.AdditionalValues["IeSname"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IeName"]))
-            {
-                IeName = Convert.ToString(dtParameters.AdditionalValues["IeName"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IeCoCd"]))
-            {
-                IeCoCd = Convert.ToString(dtParameters.AdditionalValues["IeCoCd"]);
-            }
-
-            IeCd = IeCd.ToString() == "" ? string.Empty : IeCd.ToString();
-            IeSname = IeSname.ToString() == "" ? string.Empty : IeSname.ToString();
-            IeName = IeName.ToString() == "" ? string.Empty : IeName.ToString();
-            IeCoCd = IeCoCd.ToString() == "" ? string.Empty : IeCoCd.ToString();
+            int? IeCd = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeCd"]) ? Convert.ToInt32(dtParameters.AdditionalValues["IeCd"]) : null;
+            string IeSname = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeSname"]) ? Convert.ToString(dtParameters.AdditionalValues["IeSname"]) : "";
+            string IeName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeName"]) ? Convert.ToString(dtParameters.AdditionalValues["IeName"]) : "";
+            int? IeCoCd = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeCoCd"]) ? Convert.ToInt32(dtParameters.AdditionalValues["IeCoCd"]) : null;
 
             query = from v in context.T09Ies
                     join c in context.T03Cities on v.IeCityCd equals c.CityCd into cityJoin
                     from c in cityJoin.DefaultIfEmpty()
-                    where (string.IsNullOrEmpty(IeCd) || v.IeCd == Convert.ToInt32(IeCd))
-                        && (string.IsNullOrEmpty(IeName) || v.IeName.Equals(IeName))
-                        && (string.IsNullOrEmpty(IeSname) || v.IeSname.Equals(IeSname))
-                        && (string.IsNullOrEmpty(IeCoCd) || v.IeCoCd == Convert.ToInt32(IeCoCd))
-
+                    where ((IeCd != null) ? v.IeCd == IeCd : true)
+                     && (!string.IsNullOrEmpty(IeSname) ? v.IeSname.ToLower().Contains(IeSname.ToLower()) : true)
+                     && (!string.IsNullOrEmpty(IeName) ? v.IeName.ToLower().Contains(IeName.ToLower()) : true)
+                     && ((IeCoCd != null) ? v.IeCoCd == IeCoCd : true)
                     select new InspectionEngineersModel
                     {
                         IeCd = v.IeCd,
@@ -146,8 +124,6 @@ namespace IBS.Repositories
                         IeCityCd = c.Location != null ? c.Location + " : " + c.City : c.City,
                         IeRegion = v.IeRegion
                     };
-
-
 
             dTResult.recordsTotal = query.Count();
 
@@ -182,9 +158,9 @@ namespace IBS.Repositories
             string status = "";
             int code = new int();
 
-            var ClusterDetails = context.T101IeClusters.Where(x=>x.ClusterCode == Convert.ToByte(model.Cluster) && x.DepartmentCode == model.IeDepartment).FirstOrDefault();
+            var ClusterDetails = context.T101IeClusters.Where(x => x.ClusterCode == Convert.ToByte(model.Cluster) && x.DepartmentCode == model.IeDepartment).FirstOrDefault();
 
-            if (model.IeCd == null || model.IeCd == 0)
+            if (model.IeCd == 0)
             {
                 int count = context.T09Ies.Where(t09 => t09.IeRegion == model.IeRegion && (t09.IeSname == model.IeSname || t09.IeEmpNo == model.IeEmpNo)).Count();
                 if (count == 0)
@@ -210,6 +186,7 @@ namespace IBS.Repositories
                     obj.IeRegion = model.IeRegion;
                     obj.IeJoinDt = model.IeJoinDt;
                     obj.IeDob = model.IeDob;
+                    obj.IeJobType = model.IeJobType;
                     obj.AltIe = model.AltIe;
                     obj.AltIeTwo = model.AltIeTwo;
                     obj.AltIeThree = model.AltIeThree;
@@ -218,9 +195,9 @@ namespace IBS.Repositories
                     obj.UserId = model.UserId;
                     obj.Datetime = DateTime.Now.Date;
                     obj.CallMarkingStoppingDt = model.CallMarkingStoppingDt;
-                    //obj.IEJOBTYPE = model.IEJOBTYPE;
-                    //obj.CONTALTIE = model.CONTALTIE;
-
+                    obj.CallMarkingStartDt = model.CallMarkingStartDt;
+                    obj.InspectionStartDt = model.InspectionStartDt;
+                    obj.RepatriationDt = model.RepatriationDt;
                     obj.Createdby = model.Createdby;
                     obj.Createddate = DateTime.Now;
                     obj.Isdeleted = Convert.ToByte(false);
@@ -228,10 +205,13 @@ namespace IBS.Repositories
                     context.T09Ies.Add(obj);
                     context.SaveChanges();
                     status = Convert.ToString(obj.IeCd);
+
+                    model.IeCd = obj.IeCd;
                 }
                 else
                 {
                     status = "Exists";
+                    return status;
                 }
             }
             else
@@ -258,14 +238,15 @@ namespace IBS.Repositories
                     IE.Datetime = DateTime.Now.Date;
                     IE.IeEmail = model.IeEmail;
                     IE.IeDob = model.IeDob;
+                    IE.IeJobType = model.IeJobType;
                     IE.AltIe = model.AltIe;
                     IE.AltIeTwo = model.AltIeTwo;
                     IE.AltIeThree = model.AltIeThree;
                     IE.IeCallMarking = model.IeCallMarking;
                     IE.CallMarkingStoppingDt = model.CallMarkingStoppingDt;
-                    //IE.IEJOBTYPE = model.IEJOBTYPE;
-                    //IE.CONT_ALT_IE = model.CONT_ALT_IE;
-
+                    IE.CallMarkingStartDt = model.CallMarkingStartDt;
+                    IE.InspectionStartDt = model.InspectionStartDt;
+                    IE.RepatriationDt = model.RepatriationDt;
                     IE.Updatedby = model.Updatedby;
                     IE.Updateddate = DateTime.Now;
                     context.SaveChanges();
@@ -274,6 +255,7 @@ namespace IBS.Repositories
                 else
                 {
                     status = "0";
+                    return status;
                 }
             }
 
@@ -281,7 +263,7 @@ namespace IBS.Repositories
             {
                 T101IeCluster Cster = new T101IeCluster();
                 Cster.IeCode = model.IeCd;
-                Cster.ClusterCode = Convert.ToByte(model.Cluster);
+                Cster.ClusterCode = model.Cluster;
                 Cster.DepartmentCode = model.IeDepartment;
                 Cster.UserId = model.UserId;
                 Cster.Datetime = DateTime.Now.Date;

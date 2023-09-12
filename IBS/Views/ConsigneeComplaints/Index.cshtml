@@ -32,6 +32,9 @@
                     </div>
                 </div>
            @* </form>*@
+    <div class="alert alert-secondary center mb-3">
+        <span id="Label8">IC Details against Given PO No. & Po Date ( Click on Select to register new Complaint against the given IC )</span>
+    </div>
         <section class="table-section">
             <div class="task-listinput">
                 <div class="dash-table">
@@ -57,6 +60,9 @@
                 </div>
             </div>
         </section>
+    <div class="alert alert-secondary center mb-3">
+        <span id="Label8">Complaint Details against Given PO No. & Po Date( Click on Complaint ID to modify the existing complaint against the given IC )</span>
+    </div>
         <section class="table-section" id="complaint">
             <div class="task-listinput">
                 <div class="dash-table">
@@ -98,15 +104,13 @@
             setDefaultDate();
         });
 
-        //var dataTableInstance;
-        function Search() {
-            //if ($("#frmComplaintDetails").valid()) {
-            //    $("#frmComplaintDetails").submit();
-            //}
-            //InitializeDatatable();
-        }
-
         $("#btnSearch").click(function () {
+            var PoNo = $("#PoNo").val();
+            var PoDt = $("#PoDt").val();
+            if (PoNo == "" && PoDt == "") {
+                ShowHideMsgNew(false, "Please select Date Either Enter PONO.");
+                return;
+            }
             InitializeDatatable();
         });
 
