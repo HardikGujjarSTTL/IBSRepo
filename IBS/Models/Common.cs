@@ -18,7 +18,6 @@ namespace IBS.Models
 {
     public static class Common
     {
-
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
         public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
@@ -2952,6 +2951,16 @@ namespace IBS.Models
                                                 Text = a.Location != null ? a.Location + " : " + a.City : a.City,
                                             }).ToList();
             return objdata;
+        }
+
+        public static List<TextValueDropDownDTO> GetConsigneeType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ConsigneeType)).ToList();
+        }
+
+        public static string ConvertToUpper(string str)
+        {
+            return str != null ? str.ToUpper() : "";
         }
     }
 
