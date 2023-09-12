@@ -87,6 +87,7 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 
 
+builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
 builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
 builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsheetReportRepository>();
 builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
