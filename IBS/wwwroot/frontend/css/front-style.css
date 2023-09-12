@@ -80,7 +80,7 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav ul { width:300px; top:100%; padding:0; left:0; position:absolute; }
 .hasJS #nav ul { opacity:0; transition: opacity 400ms linear; -webkit-transition: opacity 400ms linear; }
 #nav ul li { float:left; height:auto; width:100%; margin:0; padding:0; }
-#nav ul li a { display: block; background-color: #1E2E6C; line-height: 18px; color: #fff; border: none; border-top: 1px solid #0c1846; padding: 8px 15px 8px 15px; text-align: left; }
+#nav ul li a { display: block; background-color: #1E2E6C; font-size:0.85em; line-height: 18px; color: #fff; border: none; border-top: 1px solid #0c1846; padding: 8px 15px 8px 15px; text-align: left; }
 #nav ul ul { top:0; left:300px }
 #nav ul a:hover, .noJS #nav ul a:focus, #nav ul a.selected { color:#fff; }
 #nav ul, #nav :hover ul ul, #nav .hover ul ul, #nav .focus ul ul { margin-left:-9999px }
@@ -88,7 +88,7 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav > li > a:hover, #nav > li.hover > a, #nav > li.focus > a, #nav > .highlight > a { background:#1E2E6C; color: #fff; }
 #nav li ul li a:hover, #nav li ul li > a.selected, #nav ul a:hover, .noJS #nav ul a:focus, #nav ul a.selected, #nav ul > .highlight > a { background-color: #ccc; color: #323232; }
 #nav ul li.focus > a { background-color:#e9e9e9; color:#060613; display:block; }
-#nav .menuIcon { display:none; position:absolute; right:5px; top:20px; width:9px; height:9px; }
+#nav .menuIcon { position:absolute; right:5px; top:20px; width:9px; height:9px; }
 #nav li .menuIcon { background:url(../images/down-arrow.gif) no-repeat right center; z-index:10 }
 #nav li li .menuIcon { display:block; background:url(../images/right-arrow.gif) no-repeat right center; top:13px; right:10px; z-index:11 }
 #nav li li li .menuIcon { z-index:12 }
@@ -100,7 +100,7 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 #nav > li > a:hover:before { width: 100%; }
 #nav > li.hover > a:before { width: 100%; }
 #nav > li > a:before { width: 0; content: ""; background:#FC5518; height: 3px; position: absolute; bottom: 0; left: 0; right: 0; margin: auto; transition: all 0.5s; -webkit-transition: all 0.5s; -moz-transition: all 0.5s; -o-transition: all 0.5s; }
-.down-arrow { background: url(../images/down-arrow.png); background-repeat: no-repeat; background-position: right 5px center; }
+#nav li:last-child.hover ul{ left:inherit; right:0;}
 /*****/
 
 
@@ -262,7 +262,7 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .noJS .marqueeScrolling { overflow-y:hidden; overflow-x:auto }
 .noJS .marquee { width:240% }
 .updateSection { background:#EEF0F5; padding:0 0 60px; }
-.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; z-index: 9999999999; position: sticky; }
+.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; position:relative;}
 .aboutSection .latestNews { display: inline-block; width: 100%; overflow: hidden; position: relative; }
 .aboutSection .latestNews h2.newsTitle { float: left; margin: 0 10px 0 0; padding: 0; font-size:22px; line-height: 27px; color: #323232; font-weight: 600; }
 .aboutSection .latestNews .tickerNews { padding: 0; }
@@ -1069,8 +1069,8 @@ img.mfp-img {
 
 @media only screen and (max-width:1169px) {
 .hasJS .menuPart #nav a:focus + ul, .hasJS .menuPart #nav li.focus > ul, .hasJS .menuPart #nav ul ul {
- opacity: 1;
- display: block;
+ opacity: 0;
+ display: none;
 }
 /*Navigation*/
 #nav {
@@ -1078,7 +1078,7 @@ display:none;
 position:absolute;
 left:0;
 right:0;
-background:#1E7FC4;
+background:#1E2E6C;
 }
 #nav ul {
 background:#305d93;
@@ -1087,19 +1087,19 @@ background:#305d93;
 display:block;
 }
 #nav li {
-float:none;
+width:100%;
 display:block;
 border:none;
 }
 #nav li a {
-border-top:1px solid #4F9FD8;
+border-top:1px solid #1d2732;
 }
 #nav li.parent {
 position:relative;
 }
 #nav li .menuIcon, #nav li li .menuIcon {
 width:46px;
-height:auto;
+height:46px;
 background-color:#002d63;
 background-color: rgba(0, 45, 99, 0.5);
 background-image:url(../images/down-arrow.gif);
@@ -1142,8 +1142,8 @@ margin-left:0;
 padding-left:15px;
 padding-right:15px;
 display:block;
-line-height:30px;
-font-size:16px;
+line-height:25px;
+font-size:14px;
 }
 #nav li ul li a {
 padding:7px 55px 7px 25px;
@@ -1191,7 +1191,7 @@ ul.rightLinks li {float: none;	display: inline-block;}
 ul.rightLinks li.langSelectBoxIn {background: none; padding-left:0; padding-right:0;}
 .langSelectBoxIn label{display:none;}
 .bannerCaption{width:90%;}
-.bannerCaption .mainCaption {font-size: 35px; font-weight: 500;	line-height: normal;	margin-bottom: 0;}
+.bannerCaption .mainCaption {font-size: 16px; font-weight: 500;	line-height: normal; margin-bottom: 0;}
 .overViewContent {padding: 25px;}
 .overViewContent .bulletTextList{ margin:0;}
 .overViewSection .row{margin:0;}
@@ -1207,4 +1207,14 @@ ul.rightLinks li.langSelectBoxIn {background: none; padding-left:0; padding-righ
 .awardCollectionContentPart .certificationWrap, 
 .awardCollectionContentPart .awardWrap {background: #fff; padding: 20px;}
 .ourClientSection {padding: 25px 0;}
+.aboutSection{ margin-top:0px;}
+.aboutSection .latestNews h2.newsTitle{ font-size:14px; margin:0;}
+.aboutSection .latestNews .tickerNews a.btnMPause{ margin:5px 2px; background-size:70%; height:15px;}
+.latestNews .marqueeScrolling .viewAllLink{ font-size:14px; top:4px;}
+.latestNews .marqueeScrolling{ padding-right:70px;}
+.aboutSection .latestNews .tickerNews ul li a{ font-size:14px;}
+.aboutSection{ padding:10px 20px 0;}
+#nav li a:before, #nav li a:after{content:""; display:table;}
+#nav li a:after{ clear:both;}
+#nav li a:before{ display:none;}
 }
