@@ -2,7 +2,19 @@
 @{
     ViewData["Title"] = "LAB REGISTER REPORT";
 }
-
+<style>
+    a.btnicons {
+        transition: all 0.4s;
+        border: 1px solid #848484;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 50%;
+        margin: 0 6px;
+    }
+</style>
 <div>
     <div class="list-inner">
         <div class="tast-list">
@@ -12,29 +24,29 @@
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-2 mb-3">
                 <label for="PropertyId">From Date</label>
                 <input type="text" class="input datepicker" id="dtfrom" />
                 <span class="text-danger"></span>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-2 mb-3">
                 <label for="PropertyId">To Date</label>
                 <input type="text" class="input datepicker" id="dtto" />
                 <span class="text-danger"></span>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
+        @*</div>
+        <div class="row my-0">*@
+            <div class="col-md-2 mb-3" style="margin-top:auto;">
                 <label for="PropertyId">IE Wise</label>
                 <input type="radio" name="radioGroup" id="rb1" />
                 <span class="text-danger"></span>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-2 mb-3" style="margin-top:auto;">
                 <label for="PropertyId">Vendor Wise</label>
                 <input type="radio" name="radioGroup" id="rb2" />
                 <span class="text-danger"></span>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3 mb-3" style="margin-top:auto;">
                 <label for="PropertyId">Lab Wise</label>
                 <input type="radio" name="radioGroup" id="rb3" />
                 <span class="text-danger"></span>
@@ -138,7 +150,9 @@
     </div>
     <div class="savenext-btn" style="margin-left:50%;">
         <button type="button" class="save-btn active" onclick="show();">Search</button>
+        <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
     </div>
+    
 </div>
 <div id="hide" style="display:none">
     <section class="table-section">
@@ -359,7 +373,11 @@
         });
 
         function InitializeDatatable(wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus,lstIE,ddlVender,lstLab) {
-
+            var _title = '\n LAB REGISTER REPORT';
+            if(wFrmDtO != "" || wToDt != "")
+            {
+                _title = '\n LAB REGISTER REPORT For the Period :' + wFrmDtO +' To ' +wToDt
+            }
             $("#dtlarpt").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -370,6 +388,18 @@
                 destroy: true,
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+                        },
+                    },
+                ],
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -439,7 +469,9 @@
 
         }
 
-
+        $("#imgPrint").on("click", function () {
+            $('#dtlarpt').DataTable().buttons(0, 0).trigger();
+        });
 
     </script>
 }
