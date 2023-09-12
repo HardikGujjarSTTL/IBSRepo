@@ -24,7 +24,8 @@ var mobilePort = 800, ipadView = 1024, wideScreen = 1600;
 
 /*================= On Document Load Start =================*/	
 $(document).ready( function(){
-$('body').removeClass('noJS').addClass("hasJS");	
+	$('body').removeClass('noJS').addClass("hasJS");	
+
 // marquee
  if( $(".marqueeScrolling li").length > 1){
                 var $mq = $('.marquee').marquee({
@@ -45,8 +46,6 @@ $('body').removeClass('noJS').addClass("hasJS");
                 });
         };
         
-
-
 //Home Banner
 	if($(".homeBannerImg").length){
 		$(".homeBannerImg").each(function(){
@@ -160,6 +159,14 @@ $('body').removeClass('noJS').addClass("hasJS");
 		$("#nav li.parent").each(function () {
 			if ($(this).has(".menuIcon").length <= 0) $(this).append('<i class="menuIcon">&nbsp;</i>')
 		});
+		setTimeout(function () {
+			$(".menuIcon").click(function () {
+				$(this).prev().slideToggle();
+				//if (!$(this).parent().hasClass("hover")) {
+				//	$("#nav li").find("ul").siblings().slideUp();
+				//}
+			});
+		}, 500);
 		dropdown('nav', 'hover', 1);
 		adjustMenu();
 	};
@@ -208,29 +215,6 @@ $('body').removeClass('noJS').addClass("hasJS");
 		
 		});
 	}
-
-	/*Navigation */
-	if ($("#nav").length) {
-		if ($(".toggleMenu").length == 0) {
-			$("#mainNav").prepend('<a href="#" class="toggleMenu"><span class="mobileMenu">Menu</span><span class="iconBar"></span></a>');
-		}
-		$(".toggleMenu").click(function () {
-			$(this).toggleClass("active");
-			$("#nav").slideToggle();
-			return false;
-		});
-		$("#nav li a").each(function () {
-			if ($(this).next().length) {
-				$(this).parent().addClass("parent");
-			};
-		})
-		$("#nav li.parent").each(function () {
-			if ($(this).has(".menuIcon").length <= 0) $(this).append('<i class="menuIcon">&nbsp;</i>')
-		});
-		dropdown('nav', 'hover', 1);
-		adjustMenu();
-	};
-
 
 });	
 })(jQuery);
