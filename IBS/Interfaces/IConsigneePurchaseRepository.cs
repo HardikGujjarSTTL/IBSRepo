@@ -4,11 +4,14 @@ namespace IBS.Interfaces
 {
     public interface IConsigneePurchaseRepository
     {
-        DTResult<ConsigneePurchaseMasterSearchModel> Get_Consignee_Purchase(DTParameters dtParameters);
-        string Get_State(string city_CD);
-        ConsigneePurchaseModel Get_Consignee_Purchase_Detail(int Consignee_CD);
-        int ConsigneePurchaseDelete(int Consignee_CD);
-        int CongsigneePurchaseInsertUpdate(ConsigneePurchaseModel model, UserSessionModel uModel);
+        public DTResult<ConsigneePurchaseMasterSearchModel> GetConsigneePurchaseList(DTParameters dtParameters);
 
+        public ConsigneePurchaseModel FindByID(int Id);
+
+        public string Get_State(string city_CD);
+
+        public int SaveDetails(ConsigneePurchaseModel model);
+
+        public bool Remove(int Id, int UserID);
     }
 }
