@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Regional HR Data Of IE List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Regional HR Data Of IE List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="RegionalHRDataOfIE" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Regional HR Data Of IE</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtRegionalHRDataOfIE" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>IE NAME</th>
+                            <th>Disclipline</th>
+                            <th>Joining Date</th>
+                            <th>Posting Date</th>
+                            <th>Retirement Date</th>
+                            <th>Transfer Date</th>
+                            <th>Deputation From Date</th>
+                            <th>Deputation To Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtRegionalHRDataOfIE").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "IE_NAME" },
+                    { data: "Disclipline" },
+                    {
+                        data: "Joiningdate",
+                        render: function (data, type, row) {
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "Postingdate",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "Retirementdate",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "Transferdate",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "Deputationfromdate",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "Deputationtodate",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var EncryptedId = data.EncryptedId;
+                            var editUrl = '@Url.Action("Manage", "RegionalHRDataOfIE")/' + EncryptedId;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="RoleDelete(\'' + EncryptedId + '\'); return false;" href="javascript:void(\'0\');" id=\"' + EncryptedId + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function RoleDelete(id) {
+            var url = '@Url.Action("Delete", "RegionalHRDataOfIE")';
+            $("#btn-delete-yes").attr("href", url + "/" + id);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

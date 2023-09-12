@@ -141,7 +141,28 @@ $('body').removeClass('noJS').addClass("hasJS");
 		
 		});
 	}
-	
+
+	/*Navigation */
+	if ($("#nav").length) {
+		if ($(".toggleMenu").length == 0) {
+			$("#mainNav").prepend('<a href="#" class="toggleMenu"><span class="mobileMenu">Menu</span><span class="iconBar"></span></a>');
+		}
+		$(".toggleMenu").click(function () {
+			$(this).toggleClass("active");
+			$("#nav").slideToggle();
+			return false;
+		});
+		$("#nav li a").each(function () {
+			if ($(this).next().length) {
+				$(this).parent().addClass("parent");
+			};
+		})
+		$("#nav li.parent").each(function () {
+			if ($(this).has(".menuIcon").length <= 0) $(this).append('<i class="menuIcon">&nbsp;</i>')
+		});
+		dropdown('nav', 'hover', 1);
+		adjustMenu();
+	};
 	
 	//Our Clients Slider
 	if($(".ourClientSlider").length){
@@ -187,5 +208,29 @@ $('body').removeClass('noJS').addClass("hasJS");
 		
 		});
 	}
+
+	/*Navigation */
+	if ($("#nav").length) {
+		if ($(".toggleMenu").length == 0) {
+			$("#mainNav").prepend('<a href="#" class="toggleMenu"><span class="mobileMenu">Menu</span><span class="iconBar"></span></a>');
+		}
+		$(".toggleMenu").click(function () {
+			$(this).toggleClass("active");
+			$("#nav").slideToggle();
+			return false;
+		});
+		$("#nav li a").each(function () {
+			if ($(this).next().length) {
+				$(this).parent().addClass("parent");
+			};
+		})
+		$("#nav li.parent").each(function () {
+			if ($(this).has(".menuIcon").length <= 0) $(this).append('<i class="menuIcon">&nbsp;</i>')
+		});
+		dropdown('nav', 'hover', 1);
+		adjustMenu();
+	};
+
+
 });	
 })(jQuery);

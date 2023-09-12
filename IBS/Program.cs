@@ -181,6 +181,7 @@ builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepos
 builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterRepository>();
 builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
 
+builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
 
 var app = builder.Build();
 
