@@ -178,7 +178,62 @@ namespace IBS.Models
                                      }).ToList();
             return state;
         }
-
+        public static List<SelectListItem> LabInfoReportStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Lab Report Uploaded";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Lab Report Not Uploaded";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> GetStatusLabRpt()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Confirm";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Not Confirm";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "No Comments";
+            single.Value = "X";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static IEnumerable<SelectListItem> GetVendorLabRpt()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = (from v in ModelContext.T05Vendors
+                                             join c in ModelContext.T03Cities on v.VendCityCd equals c.CityCd
+                                             where v.VendName != null
+                                             orderby (v.VendName.Trim() + "/" + v.VendAdd1.Trim() + "/" +
+                     (c.Location != null ? (c.Location.Trim() + " / " + c.City) : c.City))
+                                             select new SelectListItem
+                                             {
+                                                 Text = v.VendName.Trim() + "/" + v.VendAdd1.Trim() + "/" +
+                            (c.Location != null ? (c.Location.Trim() + " / " + c.City) : c.City),
+                                                 Value = Convert.ToString(v.VendCd)
+                                             }).ToList();
+            return dropList;
+        }
         public static List<SelectListItem> GetCountry()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());

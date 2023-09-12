@@ -105,6 +105,7 @@
                 alert("Please Select To Date");
                 return false;
             }
+            debugger;
             var wFrmDtO = $("#dtfrom").val();
             var wToDt = $("#dtto").val();
             var status = $("#ddlstatus").val();
@@ -123,7 +124,7 @@
             }
             else if (selectedId == "rb2") {
                 sessionStorage.removeItem("rbb1");
-                sessionStorage.setItem("rbb1", true);
+                sessionStorage.setItem("rbb1", false);
                 
             }
            
@@ -132,6 +133,8 @@
         
         $(function () {
             $("#rb1").prop("checked", true);
+
+            sessionStorage.setItem("rbb1", true)
         });
 
         function InitializeDatatable(wFrmDtO, wToDt, status, rbrecdt) {
@@ -183,13 +186,49 @@
                     { data: "TestingChargesByLab" },
                     { data: "TestingChargesByVendor" },
                     { data: "TdsChargesByVendor" },
-                    { data: "" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            debugger;
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = '';
+                            if (data.ICExists != null) {
+                                linkText = 'VIEW VENDOR PAYMENT RECEIPT';
+                            }
+                            
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
                     { data: "VendInitDt" },
                     { data: "UtrNo" },
                     { data: "UtrDate" },
                     { data: "DocStatusFin" },
                     { data: "FinInitDt" },
-                    { data: "" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                            var linkText = '';
+                            if (data.CaseNoExists != null) {
+                                linkText = 'VIEW LAB REPORT';
+                            }
+                            
+                            var editLink = '<a href="javascript:void(0);" ' +
+                                'onclick="editRow1(' + escapedRow + ')" ' +
+                                'style="color: blue; text-decoration: underline;">' +
+                                linkText +
+                                '</a>';
+
+                            return editLink;
+                        }
+                    },
                     { data: "Remarks" },
                     { data: "DocRejRemark" }
                     
@@ -199,7 +238,16 @@
             });
 
         }
+        function editRow(escapedRow) {
 
+            var fpath1 = escapedRow.ICPATH;
+            window.open(fpath1, "_blank");
+
+        }
+        function editRow1(escapedRow) {
+            var fpath1 = escapedRow.CASENOPATH;
+            window.open(fpath1, "_blank");
+        }
 
 
     </script>

@@ -182,6 +182,12 @@ builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingD
 
 builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
 builder.Services.AddScoped<ILabRegisterReportRepository, LabRegisterReportRRepository>();
+builder.Services.AddScoped<ILabPerfomanceReportRepository, LabPerformanceReportRRepository>();
+builder.Services.AddScoped<ILabPostingReportRepository, LabPostingReportRRepository>();
+builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRRepository>();
+builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
+builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
+
 
 var app = builder.Build();
 

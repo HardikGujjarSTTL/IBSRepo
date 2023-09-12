@@ -37,64 +37,57 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "sampleRegNo";
+                    orderCriteria = "NO_OF_TEST";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "sampleRegNo";
+                orderCriteria = "NO_OF_TEST";
                 orderAscendingDirection = true;
             }
-            
-            OracleParameter[] par = new OracleParameter[4];
-            par[0] = new OracleParameter("wFrmDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
-            par[1] = new OracleParameter("wToDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
-            par[2] = new OracleParameter("result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-            
-            var ds = DataAccessDB.GetDataSet("Lab_Register_Report_Performance", par, 3);
 
-            List<LabRegisterReport> modelList = new List<LabRegisterReport>();
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("wFrmDt", OracleDbType.Varchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
+            par[1] = new OracleParameter("wToDt", OracleDbType.Varchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[2] = new OracleParameter("result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("Lab_Performance_Report", par, 2);
+
+            List<LabPerfomanceReport> modelList = new List<LabPerfomanceReport>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
-                    LabRegisterReport model = new LabRegisterReport
+                    LabPerfomanceReport model = new LabPerfomanceReport
                     {
-                        sampleRegNo = Convert.ToString(row["SAMPLE_REG_NO"]),
-                        sampleRegDate = Convert.ToString(row["SAMPLE_REG_DATE"]),
-                        caseNo = Convert.ToString(row["CASE_NO"]),
-                        callRecvDate = Convert.ToString(row["CALL_RECV_DATE"]),
-                        callSno = Convert.ToString(row["CALL_SNO"]),
-                        vendor = Convert.ToString(row["VENDOR"]),
-                        ieName = Convert.ToString(row["IE_NAME"]),
-                        amountReceived = Convert.ToString(row["AMOUNT_RECIEVED"]),
-                        totalLabCharges = Convert.ToString(row["TOTAL_LAB_CHARGES"]),
-                        tdsAmt = Convert.ToString(row["TDS_AMT"]),
-                        tdsDate = Convert.ToString(row["TDS_DATE"]),
-                        amtDue = Convert.ToString(row["AMT_DUE"]),
-                        chqNo = Convert.ToString(row["CHQ_NO"]),
-                        chqDate = Convert.ToString(row["CHQ_DATE"]),
-                        amount = Convert.ToString(row["AMOUNT"]),
-                        chqCaseNo = Convert.ToString(row["CHQ_CASE_NO"]),
-                        amountAdjusted = Convert.ToString(row["AMOUNT_ADJUSTED"]),
-                        suspenseAmt = Convert.ToString(row["SUSPENSE_AMT"]),
+                        LAB = Convert.ToString(row["LAB"]),
+                        NO_OF_TEST = Convert.ToString(row["NO_OF_TEST"]),
+                        NO_OF_SAMPLES = Convert.ToString(row["NO_OF_SAMPLES"]),
+                        NO_OF_FAILURE = Convert.ToString(row["NO_OF_FAILURE"]),
+                        NO_OF_FAIL_SAMPLES = Convert.ToString(row["NO_OF_FAIL_SAMPLES"]),
+                        NO_OFNOCOMMENTS = Convert.ToString(row["NO_OFNOCOMMENTS"]),
+                        MAXM_DAYS = Convert.ToString(row["MAXM_DAYS"]),
+                        MIN_DAYS = Convert.ToString(row["MIN_DAYS"]),
+                        AVG_DAYS = Convert.ToString(row["AVG_DAYS"]),
+                        TOTAL_FEE = Convert.ToString(row["TOTAL_FEE"]),
+
                     };
 
                     modelList.Add(model);
                 }
             }
 
-            
+
 
             query = modelList.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.ieName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.ieName).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.LAB).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.LAB).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -113,6 +106,6 @@ namespace IBS.Repositories
 
             //return dTResult;
         }
-       
+
     }
 }

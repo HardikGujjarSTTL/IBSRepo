@@ -1,0 +1,445 @@
+﻿@model IBS.Models.LabRegisterReport
+@{
+    ViewData["Title"] = "LAB REGISTER REPORT";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB REGISTER REPORT</h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">IE Wise</label>
+                <input type="radio" name="radioGroup" id="rb1" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Vendor Wise</label>
+                <input type="radio" name="radioGroup" id="rb2" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Lab Wise</label>
+                <input type="radio" name="radioGroup" id="rb3" />
+                <span class="text-danger"></span>
+            </div>
+
+
+
+        </div>
+        <div class="row my-0">
+
+            <div class="col-md-3 mb-3" style="display:none" id="ie1">
+                <label for="PropertyId">All IE</label>
+                <input type="radio" name="child1" id="rbc1" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3" style="display:none" id="ie2">
+                <label for="PropertyId">Particular IE</label>
+                <input type="radio" name="child1" id="rbc2" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" style="display:none" id="dd1">
+                    
+                    @Html.DropDownListFor(model => model.Test, Common.GetInspEngCd(Model.Region), new { @id="ddl1p"})
+                    <span asp-validation-for="Test" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3" style="display:none" id="ie3">
+                <label for="PropertyId">All Vendors</label>
+                <input type="radio" name="child2" id="rbc3" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3" style="display:none" id="ie4">
+                <label for="PropertyId">Particular Vendor</label>
+                <input type="radio" name="child2" id="rbc4" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-8 mb-3" style="display:none" id="dd2">
+                    
+                    @Html.DropDownListFor(model => model.Test, Common.GetVendorLabRpt(), new { @id="ddl2p"})
+                    <span asp-validation-for="Test" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3" style="display:none" id="ie5">
+                <label for="PropertyId">All Lab</label>
+                <input type="radio" name="child3" id="rbc5" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3" style="display:none" id="ie6">
+                <label for="PropertyId">Particular Lab</label>
+                <input type="radio" name="child3" id="rbc6" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" style="display:none" id="dd3">
+
+                    @Html.DropDownListFor(model => model.Test, Common.GetLab(), new { @id="ddl3p"})
+                    <span asp-validation-for="Test" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="PropertyId">Test Result</label>
+                @Html.DropDownListFor(model => model.Test, Common.GetStatusLabRpt(), new { @id="ddlstatus"})
+                <span asp-validation-for="Test" class="text-danger"></span>
+            </div>
+        </div>
+        <label>Report Type -></label>
+        <div class="row my-0">
+
+            <div class="col-md-3 mb-3">
+
+                <label for="PropertyId">All Records</label>
+                <input type="radio" name="Group" id="r1" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Pending Records (Where Test Report Not Recieved)</label>
+                <input type="radio" name="Group" id="r2" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Paid Records (Where Full Payment Recieved from the Vendor)</label>
+                <input type="radio" name="Group" id="r3" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Due Records (Where Full Payment Not Recieved from the Vendor)</label>
+                <input type="radio" name="Group" id="r4" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Partly Paid Records (Where Part Payment not Recieved from the Vendor)</label>
+                <input type="radio" name="Group" id="r5" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="savenext-btn" style="margin-left:50%;">
+        <button type="button" class="save-btn active" onclick="show();">Search</button>
+    </div>
+</div>
+<div id="hide" style="display:none">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtlarpt" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Sample Reg No.</th>
+                            <th>Sample Reg Date</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call Sno</th>
+                            <th>Testing Type</th>
+                            <th>Code No</th>
+                            <th>Code Date</th>
+                            <th>Vendor</th>
+                            <th>IE</th>
+                            <th>Lab</th>
+                            <th>Item</th>
+                            <th>Test</th>
+                            <th>Sample Dispatch to Lab Date</th>
+                            <th>Test Report Receipt Date</th>
+                            <th>Testing Result</th>
+                            <th>Remarks</th>
+                            <th>Testing Charges</th>
+                            <th>Service Tax</th>
+                            <th>Handling Charges</th>
+                            <th>Amount Cleared By DD</th>
+                            <th>TDS</th>
+                            <th>TDS Date</th>
+                            <th>Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            if($("#dtfrom").val() == ''){
+                alert("Please Select From Date");
+                return false;
+            }
+            else if($("#dtto").val() == ''){
+                alert("Please Select To Date");
+                return false;
+            }
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            var rdbIEWise = sessionStorage.getItem("rbb1");
+            var rdbPIE = sessionStorage.getItem("ch2");
+            var rdbVendWise = sessionStorage.getItem("rbb2");
+            var rdbPVend = sessionStorage.getItem("ch4");
+            var rdbLabWise = sessionStorage.getItem("rbb3");
+            var rdbPLab = sessionStorage.getItem("ch6");
+            var rdbPending = sessionStorage.getItem("rr2");
+            var rdbPaid = sessionStorage.getItem("rr3");
+            var rdbDue = sessionStorage.getItem("rr4");
+            var rdbPartlyPaid = sessionStorage.getItem("rr5");
+            var lstTStatus = $("#ddlstatus").val();
+           var lstIE = $("#ddl1p").val();
+           var ddlVender = $("#ddl2p").val();
+           var lstLab = $("#ddl3p").val();
+
+            InitializeDatatable(wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus,lstIE,ddlVender,lstLab);
+            $("#hide").css("display", "block");
+        }
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.setItem("rbb1", true);
+                $("#ie1").css("display", "block");
+                $("#ie2").css("display", "block");
+                $("#rbc1").prop("checked", true);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+            }
+            else if (selectedId == "rb2") {
+                sessionStorage.removeItem("rbb2");
+                sessionStorage.setItem("rbb2", true);
+                $("#ie3").css("display", "block");
+                $("#ie4").css("display", "block");
+                $("#rbc3").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+            }
+            else if (selectedId == "rb3") {
+                sessionStorage.removeItem("rbb3");
+                sessionStorage.setItem("rbb3", true);
+                $("#ie5").css("display", "block");
+                $("#ie6").css("display", "block");
+                $("#rbc5").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+
+            }
+
+        });
+        $('input[name="child1"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc1") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                 $("#dd1").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd1").css("display", "block");
+            }
+        });
+        $('input[name="child2"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc3") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd2").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd2").css("display", "block");
+            }
+        });
+        $('input[name="child3"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc5") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                 $("#dd3").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd3").css("display", "block");
+            }
+        });
+        $('input[name="Group"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "r1") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr1", true);
+            }
+            else if (selectedId == "r2") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr2", true);
+            }
+            else if (selectedId == "r3") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr3", true);
+            }
+            else if (selectedId == "r4") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr4", true);
+            }
+            else if (selectedId == "r5") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr5", true);
+            }
+        });
+        $(function () {
+            $("#r1").prop("checked", true);
+        });
+
+        function InitializeDatatable(wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus,lstIE,ddlVender,lstLab) {
+
+            $("#dtlarpt").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            wFrmDtO: wFrmDtO,
+                            wToDt: wToDt,
+                            rdbIEWise: rdbIEWise,
+                            rdbPIE: rdbPIE,
+                            rdbVendWise: rdbVendWise,
+                            rdbPVend:rdbPVend,
+                            rdbLabWise:rdbLabWise,
+                            rdbPLab:rdbPLab,
+                            rdbPending:rdbPending,
+                            rdbPaid:rdbPaid,
+                            rdbDue:rdbDue,
+                            rdbPartlyPaid: rdbPartlyPaid,
+                            lstTStatus: lstTStatus,
+                            lstIE:lstIE,
+                            ddlVender:ddlVender,
+                            lstLab:lstLab
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    { data: "sampleRegNo" },
+                    { data: "sampleRegDate" },
+                    { data: "caseNo" },
+                    { data: "callRecvDate" },
+                    { data: "callSno" },
+                    { data: "TestingType" },
+                    { data: "CodeNo" },
+                    { data: "CodeDt" },
+                    { data: "vendor" },
+                    { data: "ieName" },
+                    { data: "Lab" },
+                    { data: "ItemDesc" },
+                    { data: "Test" },
+                    { data: "SampleDispatchDt" },
+                    { data: "TestRptDt" },
+                    { data: "TestStatus" },
+                    { data: "Remarks" },
+                    { data: "TestingFee" },
+                    { data: "ServiceTax" },
+                    { data: "HandlingCharge" },
+                    { data: "amountReceived" },
+                    { data: "tdsAmt" },
+                    { data: "tdsDate" },
+                    { data: "amtDue" }
+
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+
+
+
+    </script>
+}

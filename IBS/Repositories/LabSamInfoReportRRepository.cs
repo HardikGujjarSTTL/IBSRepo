@@ -52,8 +52,8 @@ namespace IBS.Repositories
             par[0] = new OracleParameter("p_lstStatus", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("status"), ParameterDirection.Input);
             par[1] = new OracleParameter("rdbrecvdt", OracleDbType.Boolean, dtParameters.AdditionalValues?.GetValueOrDefault("rbrecdt"), ParameterDirection.Input);
             par[2] = new OracleParameter("p_Region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
-            par[3] = new OracleParameter("p_frmDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
-            par[4] = new OracleParameter("p_toDt", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_frmDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_toDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
             par[5] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("getLabSampleInfoReport", par, 5);
@@ -63,6 +63,27 @@ namespace IBS.Repositories
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
+                    string PReciept = Path.GetFullPath("PReciept/" + row["case_no"].ToString() +"_"+ row["call_sno"].ToString() + "_" + row["call_doc_dt"].ToString() + ".PDF");
+                    string LAB = Path.GetFullPath("LAB/" + row["case_no"].ToString() + "_" + row["call_sno"].ToString() + "_" + row["call_doc_dt"].ToString() + ".PDF");
+                    string ICPath = PReciept;
+                    string CaseNoPath = LAB;
+                    if (File.Exists(PReciept) == true)
+                    {
+                        ICPath = PReciept;
+                    }
+                    else
+                    {
+                        ICPath = "";
+                    }
+                    if (File.Exists(LAB) == true)
+                    {
+                        CaseNoPath = LAB;
+                    }
+                    else
+                    {
+                        CaseNoPath = "";
+                    }
+
                     LabSamInfoReportModel model = new LabSamInfoReportModel
                     {
                         CaseNo = row["case_no"].ToString(),
@@ -86,6 +107,10 @@ namespace IBS.Repositories
                         SampleRecvDt = row["SAMPLE_RECV_DT"].ToString(),
                         UtrNo = row["UTR_NO"].ToString(),
                         UtrDate = row["UTR_DATE"].ToString(),
+                        ICExists = ICPath,
+                        CaseNoExists = CaseNoPath,
+                        ICPATH = ICPath,
+                        CASENOPATH = CaseNoPath,
                     };
 
                     modelList.Add(model);

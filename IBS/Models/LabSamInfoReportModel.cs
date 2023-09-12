@@ -25,5 +25,9 @@
         public string UtrDate { get; set; }
         public string Region { get; set; }
         public string status { get; set; }
+        public string ICExists { get; set; }
+        public string CaseNoExists { get; set; }
+        public string ICPATH { get; set; }
+        public string CASENOPATH { get; set; }
     }
 }
