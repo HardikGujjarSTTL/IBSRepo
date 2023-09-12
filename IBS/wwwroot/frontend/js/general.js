@@ -101,8 +101,14 @@ $(document).ready( function(){
 		  simulateTouch: true,
 		  centerSlide:true,
         }
-      }
+			}
+		});
 		
+		$('.certificationSlider .swiper-container').on('mouseenter', function (e) {
+			certificationSlider.autoplay.stop();
+		})
+		$('.certificationSlider .swiper-container').on('mouseleave', function (e) {
+			certificationSlider.autoplay.start();
 		});
 	}
 	
@@ -138,6 +144,12 @@ $(document).ready( function(){
         }
       }
 		
+		});
+		$('.awardsSlider .swiper-container').on('mouseenter', function (e) {
+			awardsSlider.autoplay.stop();
+		})
+		$('.awardsSlider .swiper-container').on('mouseleave', function (e) {
+			awardsSlider.autoplay.start();
 		});
 	}
 
