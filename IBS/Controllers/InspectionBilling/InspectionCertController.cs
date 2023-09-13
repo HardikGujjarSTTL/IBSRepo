@@ -18,7 +18,7 @@ namespace IBS.Controllers.InspectionBilling
             inpsRepository = _inpsRepository;
         }
 
-        public IActionResult Index(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno,string Setno)
+        public IActionResult Index(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno)
         {
             InspectionCertModel model = new();
             if (CaseNo != "" && CallRecvDt != null && CallSno > 0)
@@ -40,7 +40,7 @@ namespace IBS.Controllers.InspectionBilling
             InspectionCertModel model = new();
             if (CaseNo != "" && CallRecvDt != null && CallSno > 0)
             {
-                model = inpsRepository.FindByInspDetailsID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode,RoleId);
+                model = inpsRepository.FindByInspDetailsID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode, RoleId);
             }
             return View(model);
         }
@@ -142,9 +142,6 @@ namespace IBS.Controllers.InspectionBilling
                     }
                     AlertDanger(mess);
                 }
-
-
-
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {
                     model.UserId = UserName;
@@ -194,6 +191,90 @@ namespace IBS.Controllers.InspectionBilling
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "ReturnBillSubmit", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult Validation(InspectionCertModel model)
+        {
+            try
+            {
+                string str = "";
+                str = inpsRepository.Validation(model, GetRegionCode);
+                if (str != "")
+                {
+                    return Json(new { status = true, responseText = str });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "Validation", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableDetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<InspectionCertModel> dTResult = inpsRepository.GetLoadTableDetails(dtParameters, GetRegionCode);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult BillUpdate(InspectionCertModel model)
+        {
+            try
+            {
+                string i = "";
+                string msg = "Update Successfully.";
+
+                string myYear, myMonth, myDay;
+                myYear = Convert.ToString(model.BillDt).Substring(6, 4);
+                myMonth = Convert.ToString(model.BillDt).Substring(3, 2);
+                myDay = Convert.ToString(model.BillDt).Substring(0, 2);
+                string dt1 = myYear + myMonth + myDay;
+                int idt = dt1.CompareTo(DateTime.Now.Date);
+                model.Regioncode = GetRegionCode;
+                int fyr = inpsRepository.financial_year_check(model);
+                if (fyr == 1)
+                {
+                    AlertDanger("Bill must be generated within the same financial year in which IC was Issued!!!" + ". \\n(ie. Certificate Date & Bill Date shoud be in same financial year)");
+                }
+                else if (idt > 0)
+                {
+                    AlertDanger("Bill Date Cannot be greater then Current Date!!!");
+                }
+                else if (model.BpoType == "R" && model.Au == "" && !(model.BpoRly == "RCF" || model.BpoRly == "ICF" || model.BpoRly == "RWF"))
+                {
+                    AlertDanger("AU Cannot be Blank For Railways Bills, Kindly Update the AU for the BPO and then Generate the Bill!!!");
+                }
+                else
+                {
+                    
+                    i = inpsRepository.BillUpdate(model, GetRegionCode);
+                }
+
+
+
+                //if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
+                //{
+                //    model.UserId = UserName;
+                //    model.Createdby = UserName;
+                //    i = inpsRepository.InspectionCertSave(model, GetRegionCode);
+                //}
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, Id = i });
+                }
+                else
+                {
+                    msg = "This Call cannot be deleted. because IC is present for this call!!!";
+                    return Json(new { status = false, responseText = msg, Id = i });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VenderCallRegisterModel", "DetailsDelete", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

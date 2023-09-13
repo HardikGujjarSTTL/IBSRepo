@@ -21,5 +21,13 @@ namespace IBS.Interfaces.InspectionBilling
         string InspectionCertSave(InspectionCertModel model,string GetRegionCode);
 
         string ReturnBillSubmit(InspectionCertModel model, string GetRegionCode);
+
+        string Validation(InspectionCertModel model, string GetRegionCode);
+
+        DTResult<InspectionCertModel> GetLoadTableDetails(DTParameters dtParameters, string GetRegionCode);
+
+        int financial_year_check(InspectionCertModel model);
+
+        string BillUpdate(InspectionCertModel model, string GetRegionCode);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Humanizer.Localisation.TimeToClockNotation;
+using NuGet.Protocol.Plugins;
 using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
@@ -8,6 +9,8 @@ namespace IBS.Models
         public string Icno { get; set; }
 
         public string Caseno { get; set; } = null!;
+
+        public string STS { get; set; }
 
         public string? Bkno { get; set; }
 
@@ -99,6 +102,17 @@ namespace IBS.Models
 
         public string BillNo { get; set; }
 
+        public decimal TMValue { get; set; }
+
+        public decimal? TIFee { get; set; }
+
+        public decimal? NetFee { get; set; }
+
+        public string InvoiceNo { get; set; }
+
+        public string AdvBill { get; set; }
+
+
         public string CertNo { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
@@ -113,15 +127,15 @@ namespace IBS.Models
 
         public DateTime? CallDt { get; set; }
 
-        public DateTime? FirstInspDt { get; set; }
+        public DateTime FirstInspDt { get; set; }
 
-        public DateTime? LastInspDt { get; set; }
+        public DateTime LastInspDt { get; set; }
 
-        public DateTime? LabTstRectDt { get; set; }
+        public DateTime LabTstRectDt { get; set; }
 
-        public DateTime? OtherInspDt { get; set; }
+        public DateTime OtherInspDt { get; set; }
 
-        public DateTime? ICSubmitDt { get; set; }
+        public DateTime ICSubmitDt { get; set; }
 
         public string StampPatternCd { get; set; }
 
@@ -154,6 +168,30 @@ namespace IBS.Models
         public string ActionType { get; set; }
 
         public string AccGroup { get; set; }
+
+        public string BPOCall { get; set; }
+
+        public string GSTINCall { get; set; }
+
+
+        public int ItemSrnoPo { get; set; }
+        public string ItemDescPo { get; set; }
+        public string UomSDesc { get; set; }
+        public decimal? QtyOrdered { get; set; }
+        public decimal? CumQtyPrevOffered { get; set; }
+        public decimal? CumQtyPrevPassed { get; set; }
+        public decimal? QtyToInsp { get; set; }
+        public decimal? QtyPassed { get; set; }
+        public decimal? QtyRejected { get; set; }
+        public decimal? QtyDue { get; set; }
+        public decimal? Rate { get; set; }
+        public decimal? SalesTaxPer { get; set; }
+        public decimal? SalesTax { get; set; }
+        public decimal? ExcisePer { get; set; }
+        public decimal? Excise { get; set; }
+        public decimal? DiscountPer { get; set; }
+        public decimal? Discount { get; set; }
+        public decimal? OtherCharges { get; set; }
 
     }
 }

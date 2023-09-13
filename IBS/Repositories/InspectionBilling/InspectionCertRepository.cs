@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Dynamic;
 using System.Globalization;
 
@@ -255,7 +256,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.Consignee = Convert.ToString(GetIC.ic.ConsigneeCd);
                     model.Bkno = GetIC.ic.BkNo;
                     model.Setno = GetIC.ic.SetNo;
-                    model.LabTstRectDt = GetIC.ic.LabTstRectDt;
+                    model.LabTstRectDt = Convert.ToDateTime(GetIC.ic.LabTstRectDt);
                     model.NoOfInsp = Convert.ToInt32(GetIC.ic.NumVisits);
                     model.CertDt = GetIC.ic.Datetime;
                 }
@@ -290,7 +291,7 @@ namespace IBS.Repositories.InspectionBilling
                             int i = dt.CompareTo(dt1);
                             if (i > 0)
                             {
-                                model.LastInspDt = GetIC.ic.LabTstRectDt;
+                                model.LastInspDt = Convert.ToDateTime(GetIC.ic.LabTstRectDt);
                             }
                         }
                     }
@@ -318,118 +319,470 @@ namespace IBS.Repositories.InspectionBilling
             {
                 if (ActionType == "M")
                 {
-                    if (Bkno != null && Setno != null && CaseNo != null)
-                    {
-                        var GetDetails = (from C in context.T20Ics
-                                          join I in context.T09Ies on C.IeCd equals I.IeCd
-                                          where C.BkNo == Bkno &&
-                                                C.SetNo == Setno &&
-                                                C.CaseNo.Substring(0, 1) == GetRegionCode
-                                          select new
-                                          {
-                                              C,
-                                              I
-                                          }).FirstOrDefault();
-                        if (GetDetails == null)
-                        {
-                            return model;
-                        }
-                        else
-                        {
-                            model.Caseno = GetDetails.C.CaseNo;
-                            model.Callrecvdt = GetDetails.C.CallRecvDt;
-                            model.Callsno = GetDetails.C.CallSno;
-                            model.IcTypeId = Convert.ToInt32(GetDetails.C.IcTypeId);
-                            model.Consignee = Convert.ToString(GetDetails.C.ConsigneeCd);
-                            model.BpoCd = GetDetails.C.BpoCd;
-                            model.Bkno = GetDetails.C.BkNo;
-                            model.Setno = GetDetails.C.SetNo;
-                            model.IeName = GetDetails.I.IeName;
-                            model.IeCd = GetDetails.C.IeCd;
-                            model.CertNo = GetDetails.C.IcNo;
-                            model.CertDt = GetDetails.C.IcDt;
-                            model.CallDt = GetDetails.C.CallDt;
-                            model.CallInstallNo = Convert.ToInt32(GetDetails.C.CallInstallNo);
-                            model.FullPart = GetDetails.C.FullPart;
-                            model.NoOfInsp = Convert.ToInt32(GetDetails.C.NoOfInsp);
-                            model.FirstInspDt = GetDetails.C.FirstInspDt;
-                            model.LastInspDt = GetDetails.C.LastInspDt;
-                            model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
-                            model.StampPattern = GetDetails.C.StampPattern;
-                            model.ReasonReject = GetDetails.C.ReasonReject;
-                            model.BillNo = GetDetails.C.BillNo;
-                            model.ICSubmitDt = GetDetails.C.IcSubmitDt.HasValue ? GetDetails.C.IcSubmitDt.Value : null;
-                            model.Photo = GetDetails.C.Photo;
-                            model.StampPatternCd = GetDetails.C.StampPatternCd;
-                            model.AccGroup = GetDetails.C.AccGroup ?? "XXXX";
-                            model.IrfcBpo = GetDetails.C.IrfcBpoCd;
-                            model.IrfcFunded = GetDetails.C.IrfcFunded;
-
-                            model.GstinNo = GetDetails.C.RecipientGstinNo;
-
-                            string myYear1 = "", myMonth1 = "", myDay1 = "";
-                            if (model.CertDt != null)
-                            {
-                                myYear1 = Convert.ToString(model.CertDt).Substring(6, 4);
-                                myMonth1 = Convert.ToString(model.CertDt).Substring(3, 2);
-                                myDay1 = Convert.ToString(model.CertDt).Substring(0, 2);
-                            }
-                            string certdt = myYear1 + myMonth1 + myDay1;
-                            if (certdt != "")
-                            {
-                                if (Convert.ToInt32(certdt) >= 20170701)
-                                {
-                                    if (GetDetails.C.RecipientGstinNo != "")
-                                    {
-                                        if (GetRegionCode == "N" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "07")
-                                        {
-                                            model.BpoTaxType = "C";
-                                        }
-                                        else if (GetRegionCode == "S" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "33")
-                                        {
-                                            model.BpoTaxType = "C";
-                                        }
-                                        else if (GetRegionCode == "E" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "19")
-                                        {
-                                            model.BpoTaxType = "C";
-                                        }
-                                        else if (GetRegionCode == "W" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "27")
-                                        {
-                                            model.BpoTaxType = "C";
-                                        }
-                                        else if (GetRegionCode == "C" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "22")
-                                        {
-                                            model.BpoTaxType = "C";
-                                        }
-                                        else if (GetRegionCode == "Q" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "06")
-                                        {
-                                            model.BpoTaxType = "C";
-                                        }
-                                        else
-                                        {
-                                            model.BpoTaxType = "I";
-                                        }
-                                    }
-                                }
-                                else
-                                {
-
-                                }
-                            }
-                        }
-
-                    }
-                    else if (ActionType == "D")
-                    {
-
-                    }
-
+                    show(model, CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode, RoleId);
+                }
+                else if (ActionType == "D")
+                {
+                    show(model, CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode, RoleId);
                 }
 
             }
             return model;
         }
 
+        void get_legalname(InspectionCertModel model, int code, string type)
+        {
+            if (type == "C")
+            {
+                var GetLegalD = (from consignee in context.T06Consignees
+                                 join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
+                                 join state in context.T92States on city.StateCd equals state.StateCd into stateGroup
+                                 from stateItem in stateGroup.DefaultIfEmpty()
+                                 where consignee.ConsigneeCd == code
+                                 select new
+                                 {
+                                     LegalName = consignee.LegalName,
+                                     PinCode = consignee.PinCode,
+                                     City = city.City,
+                                     State = stateItem != null ? Convert.ToString(stateItem.StateCd).PadLeft(2, '0') + "-" + stateItem.StateName : null
+                                 }).FirstOrDefault();
+
+                model.LegalName = GetLegalD.LegalName;
+                model.City = GetLegalD.City;
+                model.State = GetLegalD.State;
+                model.Pincode = GetLegalD.PinCode;
+            }
+            else if (type == "B")
+            {
+                var GetLegalD = (from bpo in context.T12BillPayingOfficers
+                                 join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                                 join state in context.T92States on city.StateCd equals state.StateCd into stateGroup
+                                 from stateItem in stateGroup.DefaultIfEmpty()
+                                 where bpo.BpoCd == Convert.ToString(code)
+                                 select new
+                                 {
+                                     LegalName = bpo.LegalName,
+                                     PinCode = bpo.PinCode,
+                                     City = city.City,
+                                     State = stateItem != null ? Convert.ToString(stateItem.StateCd).PadLeft(2, '0') + "-" + stateItem.StateName : null
+                                 }).FirstOrDefault();
+                if (GetLegalD != null)
+                {
+                    model.LegalName = GetLegalD.LegalName;
+                    model.City = GetLegalD.City;
+                    model.State = GetLegalD.State;
+                    model.Pincode = GetLegalD.PinCode;
+                }
+            }
+        }
+
+        void getconsignee_gstno(InspectionCertModel model)
+        {
+            if (model.SelectRadio == "rdbConsignee")
+            {
+                var query = (from t06 in context.T06Consignees
+                             join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                             join t92 in context.T92States on t03.StateCd equals t92.StateCd
+                             where t06.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                             select new
+                             {
+                                 GstinNo = t06.GstinNo ?? "X",
+                                 t06.LegalName,
+                                 t03.PinCode,
+                                 t03.City,
+                                 State = Convert.ToString(t92.StateCd).PadLeft(2, '0') + "-" + t92.StateName
+                             }).FirstOrDefault();
+                if (query != null)
+                {
+                    if (model.GstinNo != "X")
+                    {
+                        if (model.LegalName != "")
+                        {
+                            model.LegalName = query.LegalName;
+                        }
+                        else
+                        {
+                            model.LegalName = "";
+                        }
+                        model.GstinNo = query.GstinNo;
+                        model.City = query.City;
+                        model.State = query.State;
+                        model.Pincode = query.PinCode;
+
+                    }
+                }
+
+            }
+            if (model.SelectRadio == "rdbBPO")
+            {
+                var query = (from t12 in context.T12BillPayingOfficers
+                             join t03 in context.T03Cities on t12.BpoCityCd equals t03.CityCd
+                             join t92 in context.T92States on t03.StateCd equals t92.StateCd
+                             where t12.BpoCd == model.BpoCd
+                             select new
+                             {
+                                 GstinNo = t12.GstinNo ?? "X",
+                                 t12.LegalName,
+                                 t12.PinCode,
+                                 t03.City,
+                                 State = Convert.ToString(t92.StateCd).PadLeft(2, '0') + "-" + t92.StateName
+                             }).FirstOrDefault();
+                if (query != null)
+                {
+                    if (model.GstinNo != "X")
+                    {
+                        if (model.LegalName != "")
+                        {
+                            model.LegalName = query.LegalName;
+                        }
+                        else
+                        {
+                            model.LegalName = "";
+                        }
+                        model.GstinNo = query.GstinNo;
+                        model.City = query.City;
+                        model.State = query.State;
+                        model.Pincode = query.PinCode;
+                    }
+                }
+            }
+        }
+
+        void get_irfc_bpo_gst_detail(InspectionCertModel model)
+        {
+            var query = (from t12 in context.T12BillPayingOfficers
+                         join t03 in context.T03Cities on t12.BpoCityCd equals t03.CityCd
+                         join t92 in context.T92States on t03.StateCd equals t92.StateCd into stateJoin
+                         from t92 in stateJoin.DefaultIfEmpty() // Perform a left outer join
+                         where t12.BpoCd == model.BpoCd
+                         select new
+                         {
+                             GstinNo = t12.GstinNo ?? "X",
+                             t12.LegalName,
+                             t12.PinCode,
+                             t03.City,
+                             State = (t92 != null) ? (Convert.ToString(t92.StateCd).PadLeft(2, '0') + "-" + t92.StateName) : null
+                         }).FirstOrDefault();
+            if (query != null)
+            {
+                if (query.GstinNo != "X")
+                {
+                    if (query.LegalName != "" || query.LegalName != null)
+                    {
+                        model.LegalName = query.LegalName;
+                    }
+                    else
+                    {
+                        model.LegalName = "";
+                    }
+                    model.GstinNo = query.GstinNo;
+                    model.City = query.City;
+                    model.State = query.State;
+                    model.Pincode = query.PinCode;
+                }
+                else
+                {
+                    model.GstinNo = "";
+                }
+            }
+        }
+
+        void showmaxamt(InspectionCertModel model)
+        {
+            var MaxVal = context.T14aPoNonrlies.Where(x => x.CaseNo == model.Caseno).FirstOrDefault();
+            if (MaxVal != null)
+            {
+                model.MaxFee = Convert.ToInt16(MaxVal.MaxFee);
+                model.MinFee = Convert.ToInt16(MaxVal.MinFee);
+            }
+        }
+
+        void show3(InspectionCertModel model)
+        {
+            var query = (from p in context.T13PoMasters
+                         join v in context.T05Vendors on p.VendCd equals v.VendCd
+                         join c in context.T03Cities on v.VendCityCd equals c.CityCd
+                         where p.CaseNo == model.Caseno
+                         select new
+                         {
+                             p.PoNo,
+                             PoDt = p.PoDt,
+                             VendName = v.VendName.Trim() + "/" + v.VendAdd1.Trim() + "/" + (c.Location != null ? c.Location.Trim() + "/" + c.City.Trim() : c.City.Trim()),
+                             PoSource = (p.PoSource == "C") ? "CRIS" : (p.PoSource == "V") ? "VENDOR" : "MANUAL",
+                             p.RlyNonrly,
+                             StockNonstock = (p.StockNonstock == "S") ? "Stock" : "Non-Stock"
+                         }).FirstOrDefault();
+            if (query != null)
+            {
+                model.PoNo = query.PoNo;
+                model.PoDt = query.PoDt;
+                model.VendName = query.VendName;
+                model.StockNonstock = query.StockNonstock;
+                model.PoSource = query.PoSource;
+            }
+        }
+
+        void show(InspectionCertModel model, string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string ActionType, string GetRegionCode, int RoleId)
+        {
+            if (Bkno != null && Setno != null && CaseNo != null)
+            {
+                var GetDetails = (from C in context.T20Ics
+                                  join I in context.T09Ies on C.IeCd equals I.IeCd
+                                  where C.BkNo == Bkno &&
+                                        C.SetNo == Setno &&
+                                        C.CaseNo.Substring(0, 1) == GetRegionCode
+                                  select new
+                                  {
+                                      C,
+                                      I
+                                  }).FirstOrDefault();
+                if (GetDetails != null)
+                {
+                    model.Caseno = GetDetails.C.CaseNo;
+                    model.Callrecvdt = GetDetails.C.CallRecvDt;
+                    model.Callsno = GetDetails.C.CallSno;
+                    model.IcTypeId = Convert.ToInt32(GetDetails.C.IcTypeId);
+                    model.Consignee = Convert.ToString(GetDetails.C.ConsigneeCd);
+                    model.BpoCd = GetDetails.C.BpoCd;
+                    model.Bkno = GetDetails.C.BkNo;
+                    model.Setno = GetDetails.C.SetNo;
+                    model.IeName = GetDetails.I.IeName;
+                    model.IeCd = GetDetails.C.IeCd;
+                    model.CertNo = GetDetails.C.IcNo;
+                    model.CertDt = GetDetails.C.IcDt;
+                    model.CallDt = GetDetails.C.CallDt;
+                    model.CallInstallNo = Convert.ToInt32(GetDetails.C.CallInstallNo);
+                    model.FullPart = GetDetails.C.FullPart;
+                    model.NoOfInsp = Convert.ToInt32(GetDetails.C.NoOfInsp);
+                    model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
+                    model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
+                    model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
+                    model.StampPattern = GetDetails.C.StampPattern;
+                    model.ReasonReject = GetDetails.C.ReasonReject;
+                    model.BillNo = GetDetails.C.BillNo;
+                    model.ICSubmitDt = GetDetails.C.IcSubmitDt.HasValue ? Convert.ToDateTime(GetDetails.C.IcSubmitDt.Value) : Convert.ToDateTime(null);
+                    model.Photo = GetDetails.C.Photo;
+                    model.StampPatternCd = GetDetails.C.StampPatternCd;
+                    model.AccGroup = GetDetails.C.AccGroup ?? "XXXX";
+                    model.IrfcBpo = GetDetails.C.IrfcBpoCd;
+                    model.IrfcFunded = GetDetails.C.IrfcFunded;
+
+                    model.GstinNo = GetDetails.C.RecipientGstinNo;
+
+                    string myYear1 = "", myMonth1 = "", myDay1 = "";
+                    if (model.CertDt != null)
+                    {
+                        myYear1 = Convert.ToString(model.CertDt).Substring(6, 4);
+                        myMonth1 = Convert.ToString(model.CertDt).Substring(3, 2);
+                        myDay1 = Convert.ToString(model.CertDt).Substring(0, 2);
+                    }
+                    string certdt = myYear1 + myMonth1 + myDay1;
+                    if (certdt != "")
+                    {
+                        if (Convert.ToInt32(certdt) >= 20170701)
+                        {
+                            if (GetDetails.C.RecipientGstinNo != "")
+                            {
+                                if (GetRegionCode == "N" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "07")
+                                {
+                                    model.BpoTaxType = "C";
+                                }
+                                else if (GetRegionCode == "S" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "33")
+                                {
+                                    model.BpoTaxType = "C";
+                                }
+                                else if (GetRegionCode == "E" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "19")
+                                {
+                                    model.BpoTaxType = "C";
+                                }
+                                else if (GetRegionCode == "W" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "27")
+                                {
+                                    model.BpoTaxType = "C";
+                                }
+                                else if (GetRegionCode == "C" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "22")
+                                {
+                                    model.BpoTaxType = "C";
+                                }
+                                else if (GetRegionCode == "Q" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "06")
+                                {
+                                    model.BpoTaxType = "C";
+                                }
+                                else
+                                {
+                                    model.BpoTaxType = "I";
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                        //Bhavesh Pending work
+                    }
+                    if (GetDetails.C.IrfcFunded == null || GetDetails.C.IrfcFunded == "")
+                    {
+                        model.IrfcBpo = "N";
+                    }
+                    if (GetDetails.C.AccGroup == "Z006")
+                    {
+                        get_legalname(model, Convert.ToInt32(GetDetails.C.BpoCd), "B");
+                        getconsignee_gstno(model);
+                    }
+                    else if (GetDetails.C.AccGroup == "Z007")
+                    {
+                        get_legalname(model, Convert.ToInt32(GetDetails.C.ConsigneeCd), "C");
+                        getconsignee_gstno(model);
+                    }
+                    else
+                    {
+                        get_legalname(model, Convert.ToInt32(GetDetails.C.BpoCd), "B");
+                        get_irfc_bpo_gst_detail(model);
+                    }
+
+                    if (GetDetails.C.BillNo != null || GetDetails.C.BillNo != "")
+                    {
+                        model.BillNo = GetDetails.C.BillNo;
+                        var query1 = (from p in context.T20Ics
+                                      join b in context.T12BillPayingOfficers on p.BpoCd equals b.BpoCd
+                                      join c in context.T03Cities on b.BpoCityCd equals c.CityCd
+                                      where p.CaseNo == CaseNo && p.CallRecvDt == CallRecvDt && p.CallSno == CallSno
+                                            && p.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                                      select new
+                                      {
+                                          BpoCd = p.BpoCd,
+                                          //BpoName = $"{b.BpoCd}-{b.BpoName}/{(b.BpoAdd ?? "/")}{(c.Location != null ? $"{c.City}/{c.Location}" : c.City)}/{b.BpoRly}",
+                                          BpoName = b.BpoCd + "-" + b.BpoName + "/" + (b.BpoAdd ?? "/") + (c.Location != null ? c.City + "/" + c.Location : c.City) + "/" + b.BpoRly,
+                                          b.BpoRly,
+                                          b.Au
+                                      }).FirstOrDefault();
+                        if (query1 != null)
+                        {
+                            model.Bpo = query1.BpoName;
+                            model.BpoCd = query1.BpoCd;
+                            model.BpoRly = query1.BpoRly;
+                            model.Au = query1.Au;
+                        }
+                        var query3 = (from b in context.T22Bills
+                                      where b.BillNo == model.BillNo
+                                      select new
+                                      {
+                                          BillDt = b.BillDt,
+                                          FeeRate = b.FeeRate ?? 0,
+                                          b.FeeType,
+                                          TaxType = b.TaxType ?? "X",
+                                          MaterialValue = b.MaterialValue ?? 0,
+                                          b.InspFee,
+                                          b.MinFee,
+                                          b.MaxFee,
+                                          b.BillAmount,
+                                          b.Remarks,
+                                          AdvBill = b.AdvBill ?? "X",
+                                          b.InvoiceNo,
+                                          b.CnoteBillNo,
+                                          b.SentToSap,
+                                          b.BillFinalised
+                                      }).FirstOrDefault();
+                        if (query3 != null)
+                        {
+                            model.BpoFee = query3.FeeRate;
+                            model.BpoFeeType = query3.FeeType;
+                            if (Convert.ToInt32(certdt) >= 20170701)
+                            {
+                                model.TaxType = query3.TaxType;
+                            }
+                            else
+                            {
+                                model.BpoTaxType = query3.TaxType;
+                            }
+                            model.TMValue = query3.MaterialValue;
+                            model.TIFee = query3.InspFee;
+                            model.NetFee = query3.BillAmount;
+                            model.MaxFee = Convert.ToInt16(query3.MaxFee);
+                            model.MinFee = Convert.ToInt16(query3.MinFee);
+                            model.BillDt = query3.BillDt;
+                            model.Remarks = query3.Remarks;
+                            model.InvoiceNo = query3.InvoiceNo;
+                            if (query3.AdvBill == "A")
+                            {
+
+                            }
+                            else
+                            {
+
+                            }
+                            if (model.IcTypeId == 9)
+                            {
+                                model.BillNo = query3.CnoteBillNo;
+                            }
+                            if (query3.SentToSap == "X" || query3.BillFinalised == "Y")
+                            {
+                                model.STS = "X";
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        var query1 = (from p in context.T14PoBpos
+                                      join b in context.T12BillPayingOfficers on p.BpoCd equals b.BpoCd
+                                      join c in context.T03Cities on b.BpoCityCd equals c.CityCd
+                                      where p.CaseNo == CaseNo &&
+                                            p.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                                      select new
+                                      {
+                                          BpoCd = p.BpoCd,
+                                          BpoName = $"{b.BpoCd}-{b.BpoName}/{(b.BpoAdd ?? "/")}{(c.Location != null ? $"{c.City}/{c.Location}" : c.City)}/{b.BpoRly}",
+                                          b.BpoRly,
+                                          b.BpoFee,
+                                          b.BpoFeeType,
+                                          BpoTaxType = b.BpoTaxType ?? "X",
+                                          b.Au,
+                                          b.BpoType
+                                      }).FirstOrDefault();
+                        if (query1 != null)
+                        {
+                            model.Bpo = query1.BpoName;
+                            model.BpoCd = query1.BpoCd;
+                            model.BpoRly = query1.BpoRly;
+                            model.BpoType = query1.BpoType;
+                            if (query1.BpoType == "R" && query1.BpoFeeType == "P" && model.IcTypeId == 1)
+                            {
+
+                            }
+                            else
+                            {
+                                model.BpoFee = query1.BpoFee;
+                            }
+                            model.BpoFeeType = query1.BpoFeeType;
+                            model.TaxType = query1.BpoTaxType;
+                            model.Au = query1.Au;
+                        }
+
+                        showmaxamt(model);
+                    }
+
+                    var query2 = (from c in context.T17CallRegisters
+                                  where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno
+                                  select new
+                                  {
+                                      BPO = c.Bpo.ToUpper(),
+                                      c.RecipientGstinNo
+                                  }).FirstOrDefault();
+                    if (query2 != null)
+                    {
+                        model.BPOCall = query2.BPO;
+                        model.GSTINCall = query2.RecipientGstinNo;
+                    }
+
+                    show3(model);
+                }
+
+            }
+            else if (ActionType == "D")
+            {
+
+            }
+        }
         public string GetConsigneeID(string CaseNo, DateTime? CallRecvDt, int CallSno)
         {
             string Cd = "";
@@ -650,6 +1003,106 @@ namespace IBS.Repositories.InspectionBilling
                         }
                     }
                 }
+                else if (model.ActionType == "M")
+                {
+                    if (model.IrfcFunded == "Y")
+                    {
+                        w_irfc_funded = model.IrfcFunded;
+                        w_irfc_bpo = model.IrfcBpo;
+                        acc_group = "";
+                    }
+                    else
+                    {
+                        w_irfc_funded = "N";
+                    }
+                    var GetCall = context.T20Ics.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                    #region Details update
+                    if (GetCall != null)
+                    {
+                        GetCall.IcTypeId = model.IcTypeId;
+                        GetCall.BkNo = model.Bkno;
+                        GetCall.SetNo = model.Setno;
+                        GetCall.IcNo = model.Icno;
+                        GetCall.IcDt = model.CertDt;
+                        GetCall.CallDt = model.CallDt;
+                        GetCall.CallInstallNo = model.CallInstallNo;
+                        GetCall.FullPart = model.FullPart;
+                        GetCall.StampPattern = model.StampPattern;
+                        GetCall.ReasonReject = model.ReasonReject;
+                        GetCall.NoOfInsp = model.NoOfInsp;
+                        GetCall.FirstInspDt = model.FirstInspDt;
+                        GetCall.LastInspDt = model.LastInspDt;
+
+                        GetCall.OtherInspDt = Convert.ToString(model.OtherInspDt);
+                        GetCall.IcSubmitDt = model.ICSubmitDt;
+                        GetCall.UserId = model.UserId;
+                        GetCall.Datetime = DateTime.Now.Date;
+                        GetCall.Photo = model.Photo;
+                        GetCall.StampPatternCd = model.StampPatternCd;
+                        GetCall.RecipientGstinNo = model.RecipientGstinNo;
+                        GetCall.AccGroup = model.AccGroup;
+                        GetCall.IrfcFunded = model.IrfcFunded;
+                        GetCall.IrfcBpoCd = model.IrfcBpo;
+
+                        context.SaveChanges();
+                        //ID = model.Caseno;
+                    }
+                    #endregion
+                    Cstatus = setCallStatus(model);
+                    var T17 = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno).FirstOrDefault();
+                    #region Details update
+                    if (T17 != null)
+                    {
+                        T17.CallStatus = Cstatus;
+                        T17.UpdateAllowed = "N";
+                        T17.Datetime = DateTime.Now.Date;
+                        T17.UserId = model.UserId;
+                        T17.Updatedby = model.UserId;
+                        T17.Updateddate = DateTime.Now.Date;
+
+                        context.SaveChanges();
+                        //ID = model.Caseno;
+                    }
+                    #endregion
+                }
+            }
+
+            string myYear1, myMonth1, myDay1;
+
+            myYear1 = Convert.ToString(model.CertDt).Substring(6, 4);
+            myMonth1 = Convert.ToString(model.CertDt).Substring(3, 2);
+            myDay1 = Convert.ToString(model.CertDt).Substring(0, 2);
+            string certdt = myYear1 + myMonth1 + myDay1;
+            if (Convert.ToInt32(certdt) >= 20170701)
+            {
+                if (GetRegionCode == "N" && model.GstinNo.Substring(0, 2) == "07")
+                {
+                    model.TaxType = "C";
+                }
+                else if (GetRegionCode == "S" && model.GstinNo.Substring(0, 2) == "33")
+                {
+                    model.TaxType = "C";
+                }
+                else if (GetRegionCode == "E" && model.GstinNo.Substring(0, 2) == "19")
+                {
+                    model.TaxType = "C";
+                }
+                else if (GetRegionCode == "W" && model.GstinNo.Substring(0, 2) == "27")
+                {
+                    model.TaxType = "C";
+                }
+                else if (GetRegionCode == "C" && model.GstinNo.Substring(0, 2) == "22")
+                {
+                    model.TaxType = "C";
+                }
+                else if (GetRegionCode == "Q" && model.GstinNo.Substring(0, 2) == "06")
+                {
+                    model.TaxType = "C";
+                }
+                else
+                {
+                    model.TaxType = "I";
+                }
             }
             return msg;
         }
@@ -694,6 +1147,329 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             return msg;
+        }
+
+        public string Validation(InspectionCertModel model, string GetRegionCode)
+        {
+            string msg = "";
+            checkManDay(model);
+            var bscheck = (context.T10IcBooksets.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
+                        && Convert.ToInt32(model.Setno) >= Convert.ToInt32(x.SetNoFr) && Convert.ToInt32(model.Setno) <= Convert.ToInt32(x.SetNoTo)
+                        && x.IssueToIecd == model.IeCd).Select(x => x.IssueToIecd)).FirstOrDefault();
+
+            var bscheck1 = (context.T16IcCancels.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
+                        && x.SetNo.Trim() == model.Setno && x.Region == GetRegionCode).Select(x => x.IssueToIecd)).FirstOrDefault();
+
+            string bscheck2 = "";
+            if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
+            {
+                bscheck2 = "N";
+            }
+            int bscheck3 = 0;
+            if ((model.SelectRadio != "rdbConsignee" && model.SelectRadio != "rdbBPO" && model.IrfcFunded == "N") || (model.SelectRadio != "rdbConsignee" && model.SelectRadio != "rdbBPO" && model.IrfcFunded == "Y" && model.IrfcBpo == ""))
+            {
+                bscheck3 = 1;
+            }
+
+            if (bscheck == null)
+            {
+                msg = "Book No. and Set No. specified is not issued to the Selected Inspection Engineer!!!";
+                return msg;
+            }
+            else if (bscheck1 != null)
+            {
+                msg = "Book No. and Set No. specified is being Cancelled or Missed!!!";
+                return msg;
+            }
+            else if (bscheck2 != null)
+            {
+                msg = "Recipient GST No. State Code Does not match with the State Code of the Recipient!!!";
+                return msg;
+            }
+            else if (bscheck3 == 1)
+            {
+                msg = "Select the one of the Options for GST Recipient, i.e. Consignee, BPO or IRFC BPO!!!";
+                return msg;
+            }
+            return msg;
+        }
+
+        string checkManDay(InspectionCertModel model)
+        {
+            string msg = "";
+            var PurchaserCd = context.T13PoMasters.Where(x => x.CaseNo == model.Caseno).FirstOrDefault();
+            var query = from m in context.T13PoMasters
+                        join i in context.T20Ics on m.CaseNo equals i.CaseNo
+                        where i.IeCd == model.IeCd && m.CaseNo == model.Caseno && m.RlyNonrly != "R"
+                                && (i.FirstInspDt <= model.FirstInspDt && (i.LastInspDt == null || i.LastInspDt >= model.LastInspDt))
+                                && m.PurchaserCd == Convert.ToInt32(PurchaserCd.PurchaserCd)
+                        group i by new { i.BillNo, i.BkNo, i.SetNo } into g
+                        select new
+                        {
+                            g.Key.BillNo,
+                            g.Key.BkNo,
+                            g.Key.SetNo
+                        };
+            var results = query.ToList();
+            if (results.Count > 1)
+            {
+                msg = "IC With the given inspection date, IE and Purchaser Already Exists: \n";
+                int j = 1;
+                foreach (var result in results)
+                {
+                    if (result.BkNo + result.SetNo != model.Bkno + model.Setno)
+                    {
+                        msg += j + ") Bill No: " + result.BillNo + " vide Book NO=" + result.BkNo + " & Set No.=" + result.SetNo + ". \n";
+                        j++;
+                    }
+                }
+                msg += " So Plz Check These Cases, Before Proceeding !!!";
+            }
+            return msg;
+        }
+
+        public DTResult<InspectionCertModel> GetLoadTableDetails(DTParameters dtParameters, string GetRegionCode)
+        {
+            DTResult<InspectionCertModel> dTResult = new() { draw = 0 };
+            IQueryable<InspectionCertModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "ItemSrnoPo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "ItemSrnoPo";
+                orderAscendingDirection = true;
+            }
+
+            string Caseno = "", Callrecvdt = "", Callsno = "", Consignee = "";
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Caseno"]))
+            {
+                Caseno = Convert.ToString(dtParameters.AdditionalValues["Caseno"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Callrecvdt"]))
+            {
+                Callrecvdt = Convert.ToString(dtParameters.AdditionalValues["Callrecvdt"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Callsno"]))
+            {
+                Callsno = Convert.ToString(dtParameters.AdditionalValues["Callsno"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Consignee"]))
+            {
+                Consignee = Convert.ToString(dtParameters.AdditionalValues["Consignee"]);
+            }
+
+            Caseno = Caseno.ToString() == "" ? string.Empty : Caseno.ToString();
+            //DateTime? _CallRecvDt = Callrecvdt == "" ? null : DateTime.ParseExact(Callrecvdt, "dd/MM/yyyy", null);
+            Callsno = Callsno.ToString() == "" ? string.Empty : Callsno.ToString();
+            Consignee = Consignee.ToString() == "" ? string.Empty : Consignee.ToString();
+
+            query = from c in context.T18CallDetails
+                    join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+                    join u in context.T04Uoms on p.UomCd equals u.UomCd
+                    where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == Caseno
+                           && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
+                           && c.CallSno == Convert.ToInt16(Callsno)
+                           && c.ConsigneeCd == Convert.ToInt32(Consignee)
+                    select new InspectionCertModel
+                    {
+                        ItemSrnoPo = c.ItemSrnoPo,
+                        ItemDescPo = c.ItemDescPo,
+                        UomSDesc = u.UomSDesc,
+                        QtyOrdered = c.QtyOrdered,
+                        CumQtyPrevOffered = c.CumQtyPrevOffered,
+                        CumQtyPrevPassed = c.CumQtyPrevPassed,
+                        QtyToInsp = c.QtyToInsp,
+                        QtyPassed = c.QtyPassed,
+                        QtyRejected = c.QtyRejected,
+                        QtyDue = c.QtyDue,
+                        Rate = p.Rate,
+                        SalesTaxPer = p.SalesTaxPer,
+                        SalesTax = p.SalesTax,
+                        ExcisePer = p.ExcisePer,
+                        Excise = p.Excise,
+                        DiscountPer = p.DiscountPer,
+                        Discount = p.Discount,
+                        OtherCharges = p.OtherCharges,
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.ItemSrnoPo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public int financial_year_check(InspectionCertModel model)
+        {
+            int Id = 0;
+            var IcData = context.T20Ics.Where(ic => ic.BkNo.Trim() == model.Bkno && ic.SetNo == model.Setno && ic.CaseNo.Substring(0, 1) == model.Regioncode).Select(ic => ic.IcDt);
+            string myYear, myMonth;
+            int fin_year_IC = 0;
+            myYear = Convert.ToString(IcData).Substring(0, 4);
+            myMonth = Convert.ToString(IcData).Substring(4, 2);
+
+            if (Convert.ToInt16(myMonth) >= 4 && Convert.ToInt16(myMonth) <= 12)
+            {
+                fin_year_IC = Convert.ToInt16(myYear);
+            }
+            else
+            {
+                fin_year_IC = Convert.ToInt16(myYear) - 1;
+            }
+
+            string myYear1, myMonth1;
+            int fin_year_BILL = 0;
+            myYear1 = Convert.ToString(model.BillDt).Substring(6, 4);
+            myMonth1 = Convert.ToString(model.BillDt).Substring(3, 2);
+            if (Convert.ToInt16(myMonth1) >= 4 && Convert.ToInt16(myMonth1) <= 12)
+            {
+                fin_year_BILL = Convert.ToInt16(myYear1);
+            }
+            else
+            {
+                fin_year_BILL = Convert.ToInt16(myYear1) - 1;
+            }
+            if (fin_year_BILL == fin_year_IC)
+            {
+                return (0);
+            }
+            else
+            {
+                return (1);
+            }
+
+        }
+
+        public string BillUpdate(InspectionCertModel model, string GetRegionCode)
+        {
+            string str = "";
+            if (model.BillNo == null || model.BillNo == "")
+            {
+                if (chk_bill_dt(Convert.ToString(model.BillDt), GetRegionCode) == 1)
+                {
+                    if (model.IcTypeId == 9)
+                    {
+                        gen_credit_note(model);
+                    }
+                }
+            }
+            else if (model.BillNo != null)
+            {
+            }
+            return str;
+        }
+
+
+        int chk_bill_dt(string BillDt, string GetRegionCode)
+        {
+            if (GetRegionCode != "Q")
+            {
+                var allowstatus = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.AllowOldBillDt).FirstOrDefault();
+                var min_bill_dt = context.T87BillControls.FirstOrDefault();
+
+                string myYear, myMonth, myDay;
+                myYear = Convert.ToString(BillDt).Substring(6, 4);
+                myMonth = Convert.ToString(BillDt).Substring(3, 2);
+                myDay = Convert.ToString(BillDt).Substring(0, 2);
+                string dt1 = myYear + myMonth + myDay;
+
+                if (allowstatus == "N")
+                {
+                    //Bhavesh changes pending datetime.now.add - GraceDays
+                    int? grace_days = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.GraceDays).FirstOrDefault();
+
+
+                    if (grace_days != null)
+                    {
+                        if (dt1.CompareTo(grace_days) > 0 || dt1.CompareTo(grace_days) == 0)
+                        {
+                            if (dt1.CompareTo(min_bill_dt) > 0)
+                            {
+                                return (1);
+                            }
+                            else
+                            {
+                                return (0);
+                            }
+                        }
+                        else
+                        {
+
+                            return (0);
+                        }
+                    }
+                    else
+                    {
+                        return (0);
+                    }
+                }
+                else
+                {
+                    if (dt1.CompareTo(min_bill_dt) > 0)
+                    {
+                        return (1);
+                    }
+                    else
+                    {
+                        return (0);
+                    }
+                }
+            }
+            else
+            {
+                return (1);
+            }
+        }
+
+        void gen_credit_note(InspectionCertModel model)
+        {
+            if (model.BpoCd != model.Bpo)
+            {
+                var T20 = context.T20Ics.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                if (T20 != null)
+                {
+                    T20.BpoCd = model.Bpo;
+                    context.SaveChanges();
+                }
+            }
+            string c_note_bno = "";
+            if (model.BillNo != null)
+            {
+                c_note_bno = model.BillNo;
+            }
+            if (c_note_bno != "")
+            {
+                string myYear1, myMonth1, myDay1;
+
+                myYear1 = Convert.ToString(model.CertDt).Substring(6, 4);
+                myMonth1 = Convert.ToString(model.CertDt).Substring(3, 2);
+                myDay1 = Convert.ToString(model.CertDt).Substring(0, 2);
+                string certdt = myYear1 + myMonth1 + myDay1;
+            }
+
         }
     }
 }

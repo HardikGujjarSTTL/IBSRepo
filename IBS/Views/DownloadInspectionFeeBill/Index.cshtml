@@ -3,7 +3,8 @@
     ViewData["Title"] = "INSPECTION FEE BILLDOWNLOAD FORM";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="DownloadInspectionFeeBill" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+@*<form data-ajax="true" asp-antiforgery="true" asp-controller="DownloadInspectionFeeBill" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">*@
+    <form role="form" asp-controller="DownloadInspectionFeeBill" asp-action="Index" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
             <h2>INSPECTION FEE BILLDOWNLOAD FORM</h2>
@@ -15,42 +16,42 @@
                 <div class="reference">
                     <label for="Reference">Case No.</label>
                     <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    @*<span asp-validation-for="CaseNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">BK No.</label>
                     <input type="text" class="input" asp-for="BkNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="BkNo" class="text-danger"></span>
+                    @*<span asp-validation-for="BkNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Set No.</label>
                     <input type="text" class="input" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="SetNo" class="text-danger"></span>
+                    @*<span asp-validation-for="SetNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Call Date</label>
                     <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    <span asp-validation-for="CallRecvDt" class="text-danger"></span>
+                    @*<span asp-validation-for="CallRecvDt" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">PO No.</label>
                     <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="PoNo" class="text-danger"></span>
+                    @*<span asp-validation-for="PoNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
                     <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    <span asp-validation-for="PoDt" class="text-danger"></span>
+                    @*<span asp-validation-for="PoDt" class="text-danger"></span>*@
                 </div>
             </div>
         </div>
@@ -96,8 +97,6 @@
 
     <script type="text/javascript">
         $(function () {
-            setDefaultDate();
-            InitializeDatatable();
         });
 
         $("#btnSearch").click(function () {
@@ -106,20 +105,6 @@
 
         function Search() {
             //InitializeDatatable();
-        }
-        function setDefaultDate() {
-            $('#PoDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-            $('#CallRecvDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-
-
         }
 
         function InitializeDatatable() {
@@ -215,85 +200,5 @@
             });
         }
 
-        $("#btnModify").click(function () {
-            var CaseNo = $("#CaseNo").val();
-            var CallRecvDt = $("#CallRecvDt").val();
-            var CallSNo = $("#CallSNo").val();
-
-            debugger
-            var w_itemBlocked = "";
-            var w_remarksVend = "";
-            $.ajax({
-                url: '@Url.Action("GetModifyClick", "CallRegister")',
-                type: "GET",
-                dataType: "JSON",
-                data: { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSNo": CallSNo },
-                success: function (contacts) {
-                    if (contacts.data && contacts.data.length > 0) {
-                        // Get the values from the response
-                        var vendCd = contacts.data[0].VendCd;
-                        var VendInspStopped = contacts.data[0].VendInspStopped;
-                        var VendRemarks = contacts.data[0].VendRemarks;
-                        // Redirect to the URL with parameters
-                        w_itemBlocked = "Y";
-                        //w_itemBlocked = VendInspStopped;
-                        w_remarksVend = VendRemarks;
-
-                        $.ajax({
-                            url: '@Url.Action("GetMatch", "CallRegister")',
-                            type: "GET",
-                            dataType: "JSON",
-                            data: { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSNo": CallSNo },
-                            success: function (contacts) {
-                                if (contacts.data && contacts.data.length > 0) {
-                                    // Get the values from the response
-                                    var VendCd = contacts.data[0].VendCd;
-                                    var MfgCd = contacts.data[0].MfgCd;
-                                    var CallStatus = contacts.data[0].CallStatus;
-                                    // Redirect to the URL with parameters
-                                    var Check = "";
-                                    if (VendCd == "0" && MfgCd == "0") {
-                                        Check = "0";
-                                        alert('No Record Present for the Given Case No, Call Date and Call SNo!!!');
-                                    }
-                                    //else if ((VendCd == VendCd || MfgCd == MfgCd) && CallStatus == "M") {
-                                    else if (VendCd == VendCd || MfgCd == MfgCd && CallStatus == "M") {
-                                        Check = "2";
-                                    }
-                                    else {
-                                        Check = "1";
-                                        alert('You are not Authorised to Update The Call For Other Vendors OR For Call Status Other than Pending.!!!');
-                                        return;
-                                    }
-                                    if (Check == "2") {
-                                        if (w_itemBlocked == "Y") {
-                                            var msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + w_remarksVend + "\\nDo You Still Want to Register/Update This Call?";
-                                            var d = confirm(msg);
-                                            if (d === false) {
-                                                window.location.href = '@Url.Action("Index", "CallRegister")';
-                                            } else {
-                                                window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&CallStatus=M";
-                                            }
-                                        }
-                                        else {
-                                            //window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&CallStatus=M";
-                                        }
-
-                                    }
-
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        });
-
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/CallRegister";
-            window.location.href = '@Url.Action("Index", "CallRegister")';
-        };
     </script>
     }

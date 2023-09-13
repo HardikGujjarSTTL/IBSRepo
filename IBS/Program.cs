@@ -7,6 +7,7 @@ using IBS.Interfaces.IE_Reports;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
+using IBS.Interfaces.Reports.Billing;
 using IBS.Interfaces.Vendor;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
@@ -71,7 +72,7 @@ builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vend
 builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Repositories.Vendor.VendorCallsMarkedForSpecificPORepository>();
 builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
 builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
-builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
+
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
 builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPhotoEnclosedRepository>();
 builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
@@ -81,6 +82,8 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
 
+builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
+builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
 
 builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
