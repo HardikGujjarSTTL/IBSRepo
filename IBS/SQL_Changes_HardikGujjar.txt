@@ -1534,6 +1534,131 @@ END;
 ========================
 
 
+create or replace PROCEDURE SP_DetailedReport_POofSpecificValues(
+    p_SelCriteria IN VARCHAR2,   
+    p_Region IN VARCHAR2,
+    p_frmDt IN VARCHAR2,
+    p_toDt IN VARCHAR2,
+    p_wAgency IN VARCHAR2,
+    p_wClient IN VARCHAR2,
+    p_wFrmAmt IN NUMBER,
+    p_wToAmt IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        P.CLIENT CLIENT,
+        P.CASE_NO,
+        P.PO_NO PO_NO,
+        TO_CHAR(P.PO_DT, 'dd/mm/yyyy') PO_DT,
+        P.PO_VALUE PO_VALUE,
+        P.VENDOR VENDOR,
+        P.CONSIGNEE CONSIGNEE,
+        TRIM(T15.ITEM_DESC) ITEM_DESC
+    FROM
+    (
+        SELECT
+            T13.CASE_NO CASE_NO,
+            T13.PO_NO PO_NO,
+            T13.PO_DT PO_DT,
+            SUM(NVL(T15.VALUE, 0)) PO_VALUE,
+            V05.VENDOR VENDOR,
+            V06.CONSIGNEE CONSIGNEE,
+            T13.RLY_CD CLIENT
+        FROM
+            T13_PO_MASTER T13,
+            T15_PO_DETAIL T15,
+            V05_VENDOR V05,
+            V06_CONSIGNEE V06
+        WHERE
+            T13.CASE_NO = T15.CASE_NO
+            AND T13.VEND_CD = V05.VEND_CD
+            AND T13.PURCHASER_CD = V06.CONSIGNEE_CD(+)
+            AND T13.REGION_CODE = p_Region
+            AND (CASE
+                    WHEN p_SelCriteria = 'P' THEN T13.PO_DT
+                    ELSE T13.RECV_DT
+                END
+                 BETWEEN p_frmDt AND p_toDt)
+            AND T13.RLY_NONRLY = p_wAgency
+            AND (RLY_CD = p_wClient or RLY_CD IS NULL)
+        GROUP BY
+            T13.CASE_NO,
+            T13.PO_NO,
+            T13.PO_DT,
+            V05.VENDOR,
+            V06.CONSIGNEE,
+            T13.RLY_CD
+    ) P,
+    T15_PO_DETAIL T15
+    WHERE
+        P.CASE_NO = T15.CASE_NO
+        AND (P.PO_VALUE BETWEEN p_wFrmAmt AND p_wToAmt)
+    GROUP BY
+        P.CLIENT,
+        P.CASE_NO,
+        P.PO_NO,
+        TO_CHAR(P.PO_DT, 'dd/mm/yyyy'),
+        P.PO_VALUE,
+        P.VENDOR,
+        P.CONSIGNEE,
+        TRIM(T15.ITEM_DESC);
+END SP_DetailedReport_POofSpecificValues;
+
+=========================
+
+create or replace PROCEDURE SP_SummarizedReport_POofSpecificValues(
+    p_SelCriteria IN VARCHAR2,  
+    p_wRegion IN VARCHAR2,
+    p_frmDt IN DATE,
+    p_toDt IN DATE,
+    p_wAgency IN VARCHAR2,  
+    p_wFrmAmt IN NUMBER,
+    p_wToAmt IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        P.CLIENT CLIENT,
+        COUNT(*) No_OF_PO,
+        SUM(P.PO_VALUE) PO_VALUE
+    FROM
+    (
+        SELECT
+            T13.CASE_NO,
+            T13.RLY_CD CLIENT,
+            SUM(NVL(T15.VALUE, 0)) PO_VALUE
+        FROM
+            T13_PO_MASTER T13,
+            T15_PO_DETAIL T15
+        WHERE
+            T13.CASE_NO = T15.CASE_NO
+            AND (CASE
+                    WHEN p_SelCriteria = 'P' THEN T13.PO_DT
+                    ELSE T13.RECV_DT
+                END
+                 BETWEEN p_frmDt AND p_toDt)
+            AND T13.RLY_NONRLY = p_wAgency
+            AND T13.REGION_CODE = p_wRegion
+        GROUP BY
+            T13.CASE_NO,
+            T13.RLY_CD
+    ) P
+    WHERE
+        P.PO_VALUE BETWEEN p_wFrmAmt AND p_wToAmt
+    GROUP BY
+        P.CLIENT
+    ORDER BY
+        P.CLIENT;
+END SP_SummarizedReport_POofSpecificValues;
+
+
+
+
 
 
 

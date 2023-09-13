@@ -1,0 +1,72 @@
+﻿@model List<IBS.Models.PurchaseOrdersofSpecificValueModel>
+
+@{
+    Layout = "";
+}
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+}
+
+.no-print {
+    display: none;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<a href="#" id="printButton">Print</a>
+<h4>@ViewBag.Region</h4> <br />
+<h4>@ViewBag.Title</h4>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table" id="dvDetailedRepor">
+            <table id="dtDetailedReport" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>SNO.</th>
+                        <th>CASE NO.</th>
+                        <th>PO NO.</th>
+                        <th>PO Date</th>
+                        <th>Client</th>
+                        <th>Vendor</th>
+                        <th>Purchaser</th>
+                        <th>Value</th>
+                        <th>Item Desc</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@item.PO_NO</td>
+                            <td>@item.PO_DT</td>
+                            <td>@item.CLIENT</td>
+                            <td>@item.VENDOR</td>
+                            <td>@item.CONSIGNEE</td>
+                            <td>@item.PO_VALUE</td>
+                            <td>@item.ITEM_DESC</td>
+                        </tr>
+                        i = i + 1;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    $(document).ready(function () {
+        $("#printButton").click(function () {
+            window.print();
+            return false; 
+        });
+    });
+</script>

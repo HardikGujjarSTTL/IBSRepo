@@ -430,6 +430,13 @@ namespace IBS.Helper
             [Description("Others")]
             O,
         }
+        public enum Criteria
+        {
+            [Description("PO Date")]
+            P,
+            [Description("Date of Reciept of PO in RITES")]
+            R,
+        }
     }
 
     public class EnumUtility<T>

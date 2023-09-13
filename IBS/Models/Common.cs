@@ -2953,6 +2953,11 @@ namespace IBS.Models
                                             }).ToList();
             return objdata;
         }
+
+        public static IEnumerable<TextValueDropDownDTO> GetCriteria()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Criteria)).ToList();
+        }
     }
 
     public static class DbContextHelper

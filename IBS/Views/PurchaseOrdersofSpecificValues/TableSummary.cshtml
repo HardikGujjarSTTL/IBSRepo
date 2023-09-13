@@ -1,0 +1,56 @@
+﻿@model List<IBS.Models.PurchaseOrdersofSummaryModel>
+
+@{
+    Layout = "";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .no-print {
+        display: none;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<a href="#" id="printButton">Print</a>
+<h4>@ViewBag.Region</h4>
+<br />
+<h4>@ViewBag.Title</h4>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table" id="dvDetailedRepor">
+            <table id="dtDetailedReport" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>No. of PO's.</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.CLIENT</td>
+                            <td>@item.No_OF_PO</td>
+                            <td>@item.PO_VALUE</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $("#printButton").click(function () {
+            window.print();
+            return false;
+        });
+    });
+</script>
