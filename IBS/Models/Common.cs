@@ -13,6 +13,8 @@ using Humanizer.Localisation;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 using System.Collections.Generic;
+using static IBS.Helper.Enums;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Models
 {
@@ -354,6 +356,72 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Others";
             single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        
+        public static List<SelectListItem> FinancialYear()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "08-09";
+            single.Value = "08";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "09-10";
+            single.Value = "09";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "10-11";
+            single.Value = "10";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "11-12";
+            single.Value = "11";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "12-13";
+            single.Value = "12";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "13-14";
+            single.Value = "13";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "14-15";
+            single.Value = "14";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "15-16";
+            single.Value = "15";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "16-17";
+            single.Value = "16";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "17-18";
+            single.Value = "17";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "18-19";
+            single.Value = "18";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "19-20";
+            single.Value = "19";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "20-21";
+            single.Value = "20";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "21-22";
+            single.Value = "21";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "22-23";
+            single.Value = "22";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -854,6 +922,33 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Approved";
             single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        
+        public static List<SelectListItem> ClientWise()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PSU";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Govt";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Foreign Railways";
+            single.Value = "F";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
