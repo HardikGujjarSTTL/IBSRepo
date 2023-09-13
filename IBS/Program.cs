@@ -7,6 +7,7 @@ using IBS.Interfaces.IE_Reports;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
+using IBS.Interfaces.Reports.Billing;
 using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
