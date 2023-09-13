@@ -11,16 +11,18 @@
    }
 
 </style>
+<div class="row my-0">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>New Register</h2>
+        </div>
+    </div>
+</div>
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
     
     <div class="accordion-body" id="BYIE">
-    <div class="row my-0">
-        <div class="list-inner">
-          <div class="tast-list">
-          <h3>New Register</h3>
-        </div>
-    </div>
+        <div class="row my-0">
     <div class="col-md-3 mb-3">
         <label for="PropertyId">IE</label>
         @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIENameWithoutCode(), "Value", "Text"), "--Select--", new { id = "IENAME" })
