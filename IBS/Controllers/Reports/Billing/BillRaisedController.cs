@@ -1,4 +1,6 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Interfaces.Reports.Billing;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
@@ -21,55 +23,48 @@ namespace IBS.Controllers.Reports.Billing
             BillRaisedModel model = new();
             model.Region = Region;
             model.ActionType = ActionType;
-            if(ActionType == "SWBills")
+            if (ActionType == "SWBills")
             {
-                model.Title = "SECTOR WISE BILLING SUMMARY";
+                model.Title = "Sector wise billing summary";
             }
             else if (ActionType == "CWBills")
             {
-                model.Title = "CLIENT WISE BILLING SUMMARY";
+                model.Title = "Client wise billing summary";
             }
             else if (ActionType == "POCWBills")
             {
-                model.Title = "PO/PURCHASER CLIENT WISE BILLING SUMMARY";
+                model.Title = "Po/purchaser client wise billing summary";
             }
             else if (ActionType == "CWCalls")
             {
-                model.Title = "SUMMARY OF CLIENT WISE CALLS";
+                model.Title = "Summary of client wise calls";
             }
             else if (ActionType == "R")
             {
-                model.Title = "CLIENT WISE BILLING & REALISATION";
+                model.Title = "Client wise billing & realisation";
             }
             else if (ActionType == "RWB")
             {
-                model.Title = "REGION WISE BILLING SUMMARY";
+                model.Title = "Region wise billing summary";
             }
             else if (ActionType == "CWR")
             {
-                model.Title = "CLIENT WISE REALISATION";
+                model.Title = "Client wise realisation";
             }
             else if (ActionType == "CRWB")
             {
-                model.Title = "CLIENT AND REGION WISE BILLING SUMMARY";
+                model.Title = "Client and region wise billing summary";
             }
             else if (ActionType == "CDWB")
             {
-                model.Title = "CLIENT AND DISCIPLINE WISE BILLING SUMMARY";
+                model.Title = "Client and discipline wise billing summary";
             }
             else if (ActionType == "CWOUTS")
             {
-                model.Title = "CLIENT WISE OUTSTANDING SUMMARY FOR SERVICE TAX PURPOSE";
+                model.Title = "Client wise outstanding summary for service tax purpose";
             }
             return View(model);
         }
-
-        public IActionResult FetchData(BillRaisedModel model)
-        {
-            List<BillRaisedModel> billingData = billraisedRepository.GetBillingData(model);
-            return Json(billingData);
-        }
-
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
@@ -78,5 +73,43 @@ namespace IBS.Controllers.Reports.Billing
             return Json(dTResult);
         }
 
+        public IActionResult BillRaisedReport(int FromMn, int FromYr, int ToMn, int ToYr, string ActionType, string rdo)
+        {
+            BillRaisedModel model = new();
+            model.Region = Region;
+            if (ActionType == "SWBills")
+                model.Title = "Sector wise billing summary";
+            if (ActionType == "CWBills")
+                model.Title = "Client wise billing summary";
+            if (ActionType == "POCWBills")
+                model.Title = "Po/purchaser client wise billing summary";
+            if (ActionType == "CWCalls")
+                model.Title = "Summary of client wise calls";
+            if (ActionType == "R")
+                model.Title = "Client wise billing & realisation";
+            if (ActionType == "RWB")
+                model.Title = "Region wise billing summary";
+            if (ActionType == "CWR")
+                model.Title = "Client wise realisation";
+            if (ActionType == "CRWB")
+                model.Title = "Client and region wise billing summary";
+            if (ActionType == "CDWB")
+                model.Title = "Client and discipline wise billing summary";
+            if (ActionType == "CWOUTS")
+                model.Title = "Client wise outstanding summary for service tax purpose";
+
+            model.FromMn = FromMn;
+            model.FromYr = FromYr;
+            model.ToMn = ToMn;
+            model.ToYr = ToYr;
+            model.BillSummary = rdo;
+
+            List<BillRaisedModel> list = new List<BillRaisedModel>();
+            if (FromMn > 0 && FromYr > 0)
+            {
+                list = billraisedRepository.GetReportList(model);
+            }
+            return View(list);
+        }
     }
 }
