@@ -1,0 +1,40 @@
+﻿//using CrystalDecisions.CrystalReports.Engine;
+//using CrystalDecisions.Shared;
+using IBS.DataAccess;
+using IBS.Interfaces;
+using IBS.Models;
+using IBS.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Drawing;
+using System.Text.Json;
+
+namespace IBS.Controllers
+{
+    public class LabInvoiceReportController : BaseController
+    {
+        #region Variables
+        private readonly ILabInvoiceReportRepository LabInvoiceReportRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        #endregion
+        public LabInvoiceReportController(ILabInvoiceReportRepository _LabInvoiceReportRepository, IWebHostEnvironment webHostEnvironment)
+        {
+            LabInvoiceReportRepository = _LabInvoiceReportRepository;
+            _webHostEnvironment = webHostEnvironment;
+        }
+        
+        public IActionResult LabInvoiceReport()
+        {
+            
+            return View();
+        }        
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            string Regin = GetRegionCode;
+            DTResult<LabInvoiceReportModel> dTResult = LabInvoiceReportRepository.LabInvoiceReport(dtParameters, Regin);          
+            return Json(dTResult);
+        }
+        
+    }
+}

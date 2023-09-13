@@ -436,6 +436,20 @@ namespace IBS.Helper
             [Description("Others")]
             O,
         }
+
+        public enum ConsigneeType
+        {
+            [Description("Railway")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("Foreign Railway")]
+            F,
+            [Description("PSU")]
+            U,
+            [Description("State Government")]
+            S,
+        }
     }
 
     public class EnumUtility<T>

@@ -24,6 +24,11 @@
                 @Html.DropDownListFor(model => model.Region, Common.GetRegion(Model.Region), new { })
                 @*<span asp-validation-for="Region" class="text-danger"></span>*@
             </div>
+              <div class="col-md-4 mb-3">
+                <label for="Reference">No. Of Grace Days</label>
+                <input type="text" class="input" asp-for="GraceDays" maxlength="30" style="text-transform: uppercase;">
+                <span asp-validation-for="GraceDays" class="text-danger"></span>
+            </div>
             <div class="col-md-4 mb-3">
                 <div class="custom-readio">
                     <label for="Reference">Allow Old Bill Date (Y/N)</label>
@@ -41,11 +46,7 @@
                 </div>
             </div>
             
-            <div class="col-md-4 mb-3">
-                <label for="Reference">No. Of Grace Days</label>
-                <input type="text" class="input" asp-for="GraceDays" maxlength="30" style="text-transform: uppercase;">
-                <span asp-validation-for="GraceDays" class="text-danger"></span>
-            </div>
+          
         </div>
         <div class="savenext-btn">
             <a asp-controller="Allow_Old_Bill_Date" asp-action="Allow_Old_Bill_DateMaster" class="reset-btn">Cancel</a>
