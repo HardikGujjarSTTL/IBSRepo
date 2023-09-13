@@ -1,0 +1,324 @@
+﻿@model IBS.Models.InspectionCertModel
+
+@{
+    ViewData["Title"] = "Inspection Certificate";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Inspection Certificate</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="InspectionCert" asp-action="Index" id="frmDetails">
+        <div class="accordion-body" style="overflow-x: auto;">
+            <table>
+                <tr>
+                    <td style="background-color:#ccccff" colSpan="2">
+                        <span>UPDATE INSPECTION CERTIFICATE</span>
+                    </td>
+                    <td colSpan="1">
+                    </td>
+                    <td style="background-color:#ccccff" colSpan="3">
+                        <span>NEW INSPECTION CERTIFICATE</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Book No.</span>
+                    </td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Set No.</span>
+                    </td>
+                    <td rowspan="2"></td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Case No.</span>
+                    </td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Call Recieve Date</span>
+                    </td>
+                    <td align="center" style="background-color:#ffcccc" colSpan="1">
+                        <span>Call SNO.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" asp-for="Bkno" class="input" maxlength="30" style="text-transform: uppercase;">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Setno" class="input" maxlength="30" style="text-transform: uppercase;">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Caseno" class="input" maxlength="30" style="text-transform: uppercase;">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Callrecvdt" class="datepicker" maxlength="30">
+                    </td>
+                    <td>
+                        <input type="text" asp-for="Callsno" class="input" maxlength="30" style="text-transform: uppercase;">
+                    </td>
+                </tr>
+
+            </table>
+            <div class="row my-0">
+                <div class="col-md-9 mb-3">
+                    <button type="button" class="reset-btn active" id="btnModify">Modify</button>
+                    <button type="button" class="reset-btn" id="btnDelete">Delete</button>
+                    <button type="button" class="reset-btn" id="btnChangeConsignee">Change Consignee</button>
+                    <button type="button" class="reset-btn" id="btnBPOReturned">Change BPO in Returned Bills</button>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <button type="button" class="reset-btn" id="btnAddNew">New Certificate</button>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-4 text-center">
+                    <button type="button" class="reset-btn" id="btnSearch" onclick="Search();">Search</button>
+                </div>
+            </div>
+            <div class="alert alert-warning center">
+                Search Result is Sorted on [Call Date]
+            </div>
+        </div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">Action</th>
+                                <th>Bill Status</th>
+                                <th>Case No.</th>
+                                <th>Call Date</th>
+                                <th>Call SNo.</th>
+                                <th>Call Status</th>
+                                <th>IE</th>
+                                <th>IC NO</th>
+                                <th>Book No</th>
+                                <th>Set No.</th>
+                                <th>Consignee</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        #dtList td {
+            word-wrap: anywhere;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+            if ((Bkno == "" || Bkno == null) && (Setno == "" || Setno == null)) {
+                $("#btnAddNew").show();
+            }
+            else {
+                $("#btnAddNew").hide();
+            }
+            //InitializeDatatable();
+        });
+
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+
+        }
+
+        function Search() {
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+            var Caseno = $("#Caseno").val();
+            //var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable", "InspectionCert")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Caseno": Caseno,
+                            "Callrecvdt": Callrecvdt,
+                            "Callsno": Callsno
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.Caseno;
+                            var CallRecvDt = moment(data.Callrecvdt).format("DD-MM-YYYY");
+                            var CallSno = data.Callsno;
+
+                            var Bkno = data.Bkno == null ? "" : data.Bkno;
+                            var Setno = data.Setno == null ? "" : data.Setno;
+
+                            var editUrl = '@Url.Action("Index", "InspectionCert")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&Bkno=" + Bkno + "&Setno=" + Setno;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"btnEditG edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    { data: "Status" },
+                    { data: "Caseno" },
+                    {
+                        data: "Callrecvdt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+
+                    { data: "Callsno" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var Callstatus = row["Callstatus"];
+                            if (Callstatus == "A") {
+                                Callstatus = "Accepted";
+                            }
+                            else {
+                                Callstatus = "Rejected";
+                            }
+
+                            return Callstatus;
+                        }
+                    },
+                    { data: "Iesname" },
+                    { data: "Icno" },
+                    { data: "Bkno" },
+                    { data: "Setno" },
+                    { data: "Consignee" },
+
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        $("#btnAddNew").click(function () {
+            var Caseno = $("#Caseno").val();
+            //var Callrecvdt = $("#Callrecvdt").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return false;
+            }
+            if (Callrecvdt == "" || Callrecvdt == null) {
+                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                return false;
+            }
+            if (Callsno == "" || Callsno == null) {
+                ShowHideMsgNew(false, "Please select Call S No.");
+                return false;
+            }
+
+            if (Caseno != "" && Callrecvdt != null && Callsno != "") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&ActionType=A";
+            }
+
+        });
+
+        $("#btnModify").click(function () {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return false;
+            }
+            if (Callrecvdt == "" || Callrecvdt == null) {
+                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                return false;
+            }
+            if (Callsno == "" || Callsno == null) {
+                ShowHideMsgNew(false, "Please select Call S No.");
+                return false;
+            }
+            if (Bkno == "" || Bkno == null) {
+                ShowHideMsgNew(false, "Please select Bk no.");
+                return false;
+            }
+            if (Setno == "" || Setno == null) {
+                ShowHideMsgNew(false, "Please select Set no");
+                return false;
+            }
+            if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+            }
+        });
+
+        $("#btnDelete").click(function () {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Callsno = $("#Callsno").val();
+
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return false;
+            }
+            if (Callrecvdt == "" || Callrecvdt == null) {
+                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                return false;
+            }
+            if (Callsno == "" || Callsno == null) {
+                ShowHideMsgNew(false, "Please select Call S No.");
+                return false;
+            }
+            if (Bkno == "" || Bkno == null) {
+                ShowHideMsgNew(false, "Please select Bk no.");
+                return false;
+            }
+            if (Setno == "" || Setno == null) {
+                ShowHideMsgNew(false, "Please select Set no");
+                return false;
+            }
+            if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=D";
+            }
+        });
+
+
+    </script>
+}

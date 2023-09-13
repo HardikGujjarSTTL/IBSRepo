@@ -2008,6 +2008,72 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> GetICType()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> IC = (from t93 in ModelContext.T93IcTypes
+                                       orderby t93.IcType
+
+                                       select new SelectListItem
+                                       {
+                                           Text = t93.IcType,
+                                           Value = Convert.ToString(t93.IcTypeId)
+
+                                       }).ToList();
+
+            return IC;
+        }
+
+        public static List<SelectListItem> GetSealing()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> Sealing = (from t68 in ModelContext.T68SealingPatternCodes
+                                            select new SelectListItem
+                                            {
+                                                Text = t68.SealingPatternDesc,
+                                                Value = Convert.ToString(t68.SealingPatternCd)
+
+                                            }).ToList();
+
+            return Sealing;
+        }
+
+        public static List<SelectListItem> GetBPOList(string BPOCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> Sealing = new();
+            if (BPOCd == "")
+            {
+                Sealing = (from t12 in ModelContext.T12BillPayingOfficers
+                           join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                           select new SelectListItem
+                           {
+                               Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                               Value = Convert.ToString(t12.BpoCd)
+
+                           }).ToList();
+            }
+            else
+            {
+                Sealing = (from t12 in ModelContext.T12BillPayingOfficers
+                           join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                           where (t12.BpoCd.Trim().ToUpper() == BPOCd.ToUpper() || t12.BpoName.Trim().ToUpper().StartsWith(BPOCd.ToUpper()))
+                           select new SelectListItem
+                           {
+                               Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                               Value = Convert.ToString(t12.BpoCd)
+
+                           }).ToList();
+            }
+            
+
+            return Sealing;
+        }
+
+
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2640,36 +2706,36 @@ namespace IBS.Models
             return list;
         }
 
-        public static IEnumerable<SelectListItem> GetFeeType()
-        {
-            IEnumerable<SelectListItem> item1 = new SelectListItem[] { new SelectListItem { Text = "Man days Basis", Value = "D" } };
-            IEnumerable<SelectListItem> item2 = new SelectListItem[] { new SelectListItem { Text = "Hourly Basis", Value = "M" } };
-            IEnumerable<SelectListItem> item3 = new SelectListItem[] { new SelectListItem { Text = "Lump sum", Value = "L" } };
-            IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Percentage Basis", Value = "P" } };
+        //public static IEnumerable<SelectListItem> GetFeeType()
+        //{
+        //    IEnumerable<SelectListItem> item1 = new SelectListItem[] { new SelectListItem { Text = "Man days Basis", Value = "D" } };
+        //    IEnumerable<SelectListItem> item2 = new SelectListItem[] { new SelectListItem { Text = "Hourly Basis", Value = "M" } };
+        //    IEnumerable<SelectListItem> item3 = new SelectListItem[] { new SelectListItem { Text = "Lump sum", Value = "L" } };
+        //    IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Percentage Basis", Value = "P" } };
 
-            return item1.Concat(item2).Concat(item3).Concat(item4);
-        }
+        //    return item1.Concat(item2).Concat(item3).Concat(item4);
+        //}
 
-        public static IEnumerable<SelectListItem> GetTaxType()
-        {
-            IEnumerable<SelectListItem> item1 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive Service Tax", Value = "I" } };
-            IEnumerable<SelectListItem> item2 = new SelectListItem[] { new SelectListItem { Text = "Service Tax Charged separately", Value = "X" } };
-            IEnumerable<SelectListItem> item3 = new SelectListItem[] { new SelectListItem { Text = "No Service Tax(RITES Billing)", Value = "N" } };
-            IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive of Service Tax (Don't Print S.Tax in Bill)", Value = "D" } };
+        //public static IEnumerable<SelectListItem> GetTaxType()
+        //{
+        //    IEnumerable<SelectListItem> item1 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive Service Tax", Value = "I" } };
+        //    IEnumerable<SelectListItem> item2 = new SelectListItem[] { new SelectListItem { Text = "Service Tax Charged separately", Value = "X" } };
+        //    IEnumerable<SelectListItem> item3 = new SelectListItem[] { new SelectListItem { Text = "No Service Tax(RITES Billing)", Value = "N" } };
+        //    IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive of Service Tax (Don't Print S.Tax in Bill)", Value = "D" } };
 
-            return item1.Concat(item2).Concat(item3).Concat(item4);
-        }
+        //    return item1.Concat(item2).Concat(item3).Concat(item4);
+        //}
 
-        public static IEnumerable<SelectListItem> GetTaxType_GST()
-        {
-            IEnumerable<SelectListItem> item1 = new SelectListItem[] { new SelectListItem { Text = "IGST @ 18%", Value = "I" } };
-            IEnumerable<SelectListItem> item2 = new SelectListItem[] { new SelectListItem { Text = "CGST @ 9% & SGST @ 9%", Value = "C" } };
-            IEnumerable<SelectListItem> item3 = new SelectListItem[] { new SelectListItem { Text = "NO GST", Value = "X" } };
-            IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive of IGST @ 18%", Value = "Y" } };
-            IEnumerable<SelectListItem> item5 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive of CGST @ 9% & SGST @ 9%", Value = "Z" } };
+        //public static IEnumerable<SelectListItem> GetTaxType_GST()
+        //{
+        //    IEnumerable<SelectListItem> item1 = new SelectListItem[] { new SelectListItem { Text = "IGST @ 18%", Value = "I" } };
+        //    IEnumerable<SelectListItem> item2 = new SelectListItem[] { new SelectListItem { Text = "CGST @ 9% & SGST @ 9%", Value = "C" } };
+        //    IEnumerable<SelectListItem> item3 = new SelectListItem[] { new SelectListItem { Text = "NO GST", Value = "X" } };
+        //    IEnumerable<SelectListItem> item4 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive of IGST @ 18%", Value = "Y" } };
+        //    IEnumerable<SelectListItem> item5 = new SelectListItem[] { new SelectListItem { Text = "Fee Inclusive of CGST @ 9% & SGST @ 9%", Value = "Z" } };
 
-            return item1.Concat(item2).Concat(item3).Concat(item4).Concat(item5);
-        }
+        //    return item1.Concat(item2).Concat(item3).Concat(item4).Concat(item5);
+        //}
 
         public static IEnumerable<SelectListItem> GetStates()
         {
@@ -2930,6 +2996,26 @@ namespace IBS.Models
         public static IEnumerable<TextValueDropDownDTO> GetSector()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Sector)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetFPart()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.FPart)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetTAXType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TAXType)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetFeeType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOFeeType)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetTaxType_GST()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST)).ToList();
         }
 
         public static string[] GetVenderDetails(int VendCd)

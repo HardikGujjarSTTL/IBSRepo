@@ -57,36 +57,36 @@
             <div class="col-md-12 mb-3">
                 <div class="reference">
                     <div for="Reference">State whether the Call is for Final Or Stage Inspection <label id="lblInspStage" name="lblInspStage" asp-for=CallRecvDt></label></div>
-                    
+
                 </div>
             </div>
-           
-        <div class="row my-0">
-            <div class="col-md-1 mb-2">
-                <input type="radio" id="huey" name="drone" checked>
-                <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
-            </div>
-            <div class="col-md-1 mb-2">
-                <input type="radio" id="dewey" name="drone">
-                <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-12 mb-3">
-                <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">* Select Stage in case of Stage Inspection/Raw Material Inspection.</label>
 
-                <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">To Search a Call-> Enter Case No. Or PO No. and Click on [Search] Button</label>
-                <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">To Register New Call --> Enter Case No then Click on [New Call] Button, Kindly Search Before Registering Your Call.</label>
-            </div>
-        </div>
-
-       
-                <div class="savenext-btn">
-                    <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">New Call</a>
-                    <button type="button" class="save-btn active" onclick="Search();">Search</button>
+            <div class="row my-0">
+                <div class="col-md-1 mb-2">
+                    <input type="radio" id="huey" name="drone" checked>
+                    <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
                 </div>
-        
-    </div>
+                <div class="col-md-1 mb-2">
+                    <input type="radio" id="dewey" name="drone">
+                    <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">* Select Stage in case of Stage Inspection/Raw Material Inspection.</label>
+
+                    <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">To Search a Call-> Enter Case No. Or PO No. and Click on [Search] Button</label>
+                    <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">To Register New Call --> Enter Case No then Click on [New Call] Button, Kindly Search Before Registering Your Call.</label>
+                </div>
+            </div>
+
+
+            <div class="savenext-btn">
+                <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">New Call</a>
+                <button type="button" class="save-btn active" onclick="Search();">Search</button>
+            </div>
+
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">

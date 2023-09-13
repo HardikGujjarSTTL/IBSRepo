@@ -18,7 +18,7 @@
             <input type="hidden" asp-for="RegionCode" />
             <input type="hidden" asp-for="UpdateAllowed" />
             <input type="hidden" asp-for="RlyNonrly" />
-            
+
 
 
         </div>
@@ -340,12 +340,10 @@
         $(document).ready(function () {
             debugger
             $("#MfgCd").prop("disabled", "disabled");
-            if($("#RlyNonrly").val() == "R")
-            {
+            if ($("#RlyNonrly").val() == "R") {
                 $("#dvIrfcFunded").show();
             }
-            else
-            {
+            else {
                 $("#dvIrfcFunded").hide();
             }
             const urlParams = new URLSearchParams(window.location.search);
@@ -376,8 +374,7 @@
                 $("#btnRegiserCallSave").hide();
                 $("#btnCDetails").show();
             }
-            else if(actiontype == "A")
-            {
+            else if (actiontype == "A") {
                 $("#btnCDetails").hide();
                 $("#btnDelete").hide();
                 $("#CallStatus").val("Marked");
@@ -488,19 +485,16 @@
         }
 
         $("#btnUpdateMDetails").click(function () {
-            if($("#VendContactPer1").val() == "" || $("#VendContactPer1").val() == null)
-            {
+            if ($("#VendContactPer1").val() == "" || $("#VendContactPer1").val() == null) {
                 $("#spnVendContactPer1").html("Contact Person's Name");
                 //ShowHideMsgNew(false, "Please add Contact Person's Name");
                 return;
             }
-            if($("#VendEmail").val() == "" || $("#VendEmail").val() == null)
-            {
+            if ($("#VendEmail").val() == "" || $("#VendEmail").val() == null) {
                 $("#spnVendEmail").html("Manufacturer Email");
                 return;
             }
-            if($("#VendContactTel1").val() == "" || $("#VendContactTel1").val() == null)
-            {
+            if ($("#VendContactTel1").val() == "" || $("#VendContactTel1").val() == null) {
                 $("#spnVendContactTel1").html("Phone No.");
                 return;
             }
@@ -577,17 +571,20 @@
         $("#btnCDetails").click(function () {
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
             const urlParams = new URLSearchParams(window.location.search);
-            var CallSno = urlParams.get('CallSno');
+            //var CallSNo = urlParams.get('CallSNo');
+            var cstatus = urlParams.get('cstatus');
             var status = "";
-
-            if ($('#btnRegiserCallSave').prop('disabled') === false || $('#btnDelete').prop('disabled') === false) {
+            debugger
+            //if ($('#btnRegiserCallSave').prop('disabled') === false || $('#btnDelete').prop('disabled') === false) {
+            if ($('#btnRegiserCallSave').hide() === true || $('#btnDelete').hide() === true) {
                 status = "M";
             }
             else {
                 status = "N";
             }
-            window.location.href = '@Url.Action("CallDetails", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSno + "&cstatus=" + status;
+            window.location.href = '@Url.Action("CallDetails", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&cstatus=" + status;
         });
 
         $("#btnUpload").click(function () {
