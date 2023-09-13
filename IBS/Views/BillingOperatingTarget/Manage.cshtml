@@ -22,44 +22,37 @@
             <input type="hidden" asp-for="Be_Per" />
             <div class="accordion-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-2 mb-4">
-                                <label class="lable-control" for="Reference"><b>For the Period : </b></label>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <label for="Reference">Year: </label>
-                                @Html.DropDownListFor(model => model.Be_Per, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
-                                <span asp-validation-for="Be_Per" class="text-danger"></span>
-                            </div>
+                    <div class="col-md-12 mb-4">
+                        <h3 class="heading3">For the Period</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="Reference">Year: </label>
+                            @Html.DropDownListFor(model => model.Be_Per, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
+                            <span asp-validation-for="Be_Per" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mb-4">
                         <div class="row">
-                            <div class="col-md-2 mb-4">
-                            </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                 <label for="Reference">Billing Target Amount (In lac of Rs.)</label>
                                 <input type="text" class="input" asp-for="B_Target" maxlength="5000" />
                                 <span asp-validation-for="B_Target" class="text-danger"></span>
                             </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                 <label for="Reference">Operating Ratio Target</label>
                                 <input type="text" class="input" asp-for="E_Target" maxlength="5000" />
                                 <span asp-validation-for="E_Target" class="text-danger"></span>
                             </div>
-                            <div class="row">
-                                <div class="col-md-2 mb-4">
-                                </div>
-                                <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                     <label for="Reference">Expenditure Target Amount (In lac of Rs.)</label>
                                     <input type="text" class="input" asp-for="Ex_Target" maxlength="5000" />
                                     <span asp-validation-for="Ex_Target" class="text-danger"></span>
                                 </div>
-                            </div>
+                            
                         </div>
                     </div>
-                    <div class="savenext-btn" style="justify-content:center">
+                    <div class="savenext-btn">
                         @*<a asp-controller="BillingOperatingTarget" asp-action="Index" class="reset-btn">Cancel</a>*@
                         <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>
