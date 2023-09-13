@@ -181,6 +181,7 @@ builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterReposi
 builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
 
 builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
+builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 
 var app = builder.Build();
 
