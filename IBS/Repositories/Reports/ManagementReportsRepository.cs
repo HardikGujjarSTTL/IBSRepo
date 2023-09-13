@@ -2,7 +2,6 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models.Reports;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
@@ -42,11 +41,12 @@ namespace IBS.Repositories.Reports
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 lstPerformance = JsonConvert.DeserializeObject<List<IEPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
+                lstPerformance.ToList().ForEach(i => { i.C3 = decimal.Truncate(i.C3); i.C7 = decimal.Truncate(i.C7); i.CM7 = decimal.Truncate(i.CM7); i.C10 = decimal.Truncate(i.C10); i.CALLS = decimal.Truncate(i.CALLS); i.CALL_CANCEL = decimal.Truncate(i.CALL_CANCEL); i.REJECTIONS = decimal.Truncate(i.REJECTIONS); });
+               
                 model.RejectionsIssued = Convert.ToInt32(ds.Tables[1].Rows[0]["REJECTIONS_ISSUED"]);
                 model.TotalICs = Convert.ToInt32(ds.Tables[1].Rows[0]["TOTAL_IC"]);
                 model.CallsAttendedWithin7Days = Convert.ToInt32(ds.Tables[1].Rows[0]["CALLS_ATTENDED_WITHIN"]);
                 model.CallsAttendedBeyond7Days = Convert.ToInt32(ds.Tables[1].Rows[0]["CALLS_ATTENDED_BEYOND"]);
-
             }
 
             model.lstPerformance = lstPerformance;
@@ -61,6 +61,7 @@ namespace IBS.Repositories.Reports
                 C7 = lstPerformance.Sum(x => x.C7),
                 CM7 = lstPerformance.Sum(x => x.CM7),
                 REJECTIONS = lstPerformance.Sum(x => x.REJECTIONS),
+                INSP_FEE = lstPerformance.Sum(x => x.INSP_FEE),
                 MATERIAL_VALUE = lstPerformance.Sum(x => x.MATERIAL_VALUE),
                 AVERAGE_FEE = lstPerformance.Sum(x => x.AVERAGE_FEE),
                 C3 = lstPerformance.Sum(x => x.C3),
@@ -90,6 +91,5 @@ namespace IBS.Repositories.Reports
         }
 
     }
-
 }
 
