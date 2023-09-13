@@ -83,6 +83,13 @@
         public string IMMS_RLY_CD { get; set; }
         public string RLY_CD { get; set; }
         public string REMARKS { get; set; }
+        public List<CaseHistoryItemModel> itemList { get; set; }
+        public List<CaseHistoryPoIREPSModel> poIrepsList { get; set; }
+        public List<CaseHistoryPoVendorModel> poVendorList { get; set; }
+        public List<CaseHistoryPreviousCallModel> PrevCallList { get; set; }
+        public List<CaseHistoryConsigneeComplaintModel> ConsingCompList { get; set; }
+        public List<CaseHistoryRejectionVendorPlaceModel> RejectVendorList { get; set; }
+        
     }
 
     public class CaseHistoryItemModel
@@ -158,5 +165,5 @@
         public string IE_NAME { get; set; }
         public string VENDOR { get; set; }
         public string ITEM_DESC_PO { get; set; }
-    }
+    }    
 }

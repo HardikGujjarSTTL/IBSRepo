@@ -54,6 +54,25 @@
                 <input type="text" class="input datepicker clsDate" id="txtBillToDate">
             </div>
         </div>
+        @if (@ViewBag.Action == "U")
+        {
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                        <label for="Name">Status of IE</label>
+                        @Html.RadioButton("rdType", "AllIES", new {@id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt" }) All IE'S
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdType", "ParticularIE", new { @id="rdPartiIE",@class = "text-darkblue font-bold font-size-8pt" }) For Particular IE
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3" id="IEStatus" style="display:none;">
+                    <div class="reference">
+                        <label for="Name" id="lblIECM"></label>
+                        @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.RegionCode) , "Value", "Text"),"--Select--", new{@id="DpIE"})
+                    </div>
+                </div>
+            </div>
+        }
         <div class="row my-0">
             <div class="col-md-2 mb-3">
                 <label>Report to be sorted on</label>
@@ -61,6 +80,12 @@
             <div class="col-md-1 mb-3">
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Bill Date", new {  @id="rdbBillDate", @checked = true }) Bill Date</label>
             </div>
+            @if (@ViewBag.Action == "U")
+            {
+                <div class="col-md-1 mb-3">
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IE Name", new {  @id="rdbIEName", }) IE Name</label>
+                </div>
+            }
             <div class="col-md-1 mb-3">
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IC Date", new {  @id="rdbICDate" }) IC Date</label>
             </div>
@@ -144,6 +169,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         var Region = "@ViewBag.Region";
+        var Action = "@ViewBag.Action";
         $(document).ready(function () {
             Manage();
             $('input[type=radio][name=rdbInspBill]').change(function () {
@@ -164,6 +190,17 @@
 
             $("#imgPrint").on("click", function () {
                 $('#dtInspBillDelay').DataTable().buttons(0, 2).trigger();
+            });
+
+            $('input[type=radio][name=rdType]').change(function () {
+                debugger
+                var value = $(this).val();
+
+                if (value == "AllIES") {
+                    $("#IEStatus").css("display", "none");
+                } else {
+                    $("#IEStatus").css("display", "block");
+                }
             });
         });
 
@@ -196,10 +233,13 @@
             var FromDate = $("#txtBillFromDate").val();
             var ToDate = $("#txtBillToDate").val();
             var BillDate = $("#rdbBillDate").is(":checked") == true ? "true" : "false";
+            var IEName = $("#rdbIEName").is(":checked") == true ? "true" : "false";
             var IcDt = $("#rdbICDate").is(":checked") == true ? "true" : "false";
             var FInspDt = $("#rdbFisrtInspDate").is(":checked") == true ? "true" : "false";
             var LFnspDt = $("#rdbLastInspDate").is(":checked") == true ? "true" : "false";
-            var IECD = "0";
+            var AllIE = $("#rdAllIE").is(":checked") == true ? "true" : "false";
+            var PartiIE = $("#rdPartiIE").is(":checked") == true ? "true" : "false";
+            var IECD = $("#lstIE").val() == undefined ? null : $("#lstIE").val();
 
             if (IcDt == "true") { SortOn = "Report Sorted on IC Date" }
             else if (FInspDt == "true") { SortOn = "Report Sorted on First Inspection Date" }
@@ -289,10 +329,13 @@
                             Year: Year,
                             FromDate: FromDate,
                             ToDate: ToDate,
-                            BillDate: BillDate,
-                            IcDt: IcDt,
-                            FInspDt: FInspDt,
-                            LFnspDt: LFnspDt,
+                            IsBillDate: BillDate,
+                            IsIEName: IEName,
+                            IsIcDt: IcDt,
+                            IsFInspDt: FInspDt,
+                            IsLFnspDt: LFnspDt,
+                            IsAllIE: AllIE,
+                            IsPartiIE: PartiIE,
                             IECD: IECD
                         };
                         d.AdditionalValues = AdditionalValues;
@@ -377,6 +420,7 @@
                             totalRec = totalRec + 1
                             return totalRec;
                         }, 0);
+                    debugger
                     var DELAY_INSP = api
                         .column(9)
                         .data()
@@ -407,12 +451,12 @@
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
-                    TotalRec = $.fn.dataTable.render.number(',', '.', 0).display(TotalRec);
-                    DELAY_INSP = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_INSP);
-                    DELAY_IC = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_IC);
-                    DELAY_SUBM = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_SUBM);
-                    DELAY_BILL = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_BILL);
-                    BillAmount = $.fn.dataTable.render.number(',', '.', 2).display(BillAmount);
+                    //TotalRec = $.fn.dataTable.render.number(',', '.', 0).display(TotalRec);
+                    //DELAY_INSP = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_INSP);
+                    //DELAY_IC = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_IC);
+                    //DELAY_SUBM = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_SUBM);
+                    //DELAY_BILL = $.fn.dataTable.render.number(',', '.', 2).display(DELAY_BILL);
+                    //BillAmount = $.fn.dataTable.render.number(',', '.', 2).display(BillAmount);
 
                     // Update footer by showing the total with the reference of the column index
                     $(api.column(0).footer()).html('&nbsp;');

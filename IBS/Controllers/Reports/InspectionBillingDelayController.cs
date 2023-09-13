@@ -21,17 +21,16 @@ namespace IBS.Controllers.Reports
         public IActionResult Index()
         {
             string Region = SessionHelper.UserModelDTO.Region;
+            var Action = Convert.ToString(Request.Query["Action"].FirstOrDefault());
             string wRegion = "";
             if (Region == "N") { wRegion = "RITES LTD. (NORTHERN REGION)"; }
             else if (Region == "S") { wRegion = "RITES LTD. (SOUTHERN REGION)"; }
             else if (Region == "E") { wRegion = "RITES LTD. (EASTERN REGION)"; }
             else if (Region == "W") { wRegion = "RITES LTD. (WESTERN REGION)"; }
             else if (Region == "C") { wRegion = "RITES LTD. (CENTRAL REGION)"; }
+            ViewBag.RegionCode = GetUserInfo.Region;
             ViewBag.Region = wRegion;
-            if (Request.Query["Action"] != "")
-            {
-
-            }
+            ViewBag.Action = Action;
             return View();
         }
 

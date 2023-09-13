@@ -409,15 +409,15 @@ namespace IBS.Repositories.Inspection_Billing
             return data;
         }
 
-        public DTResult<CaseHistoryItemModel> Get_Case_History_Item(DTParameters dtParameters, string Region)
+        public List<CaseHistoryItemModel> Get_Case_History_Item(DTParameters dtParameters, string Case_NO, string Region)
         {
             DTResult<CaseHistoryItemModel> dTResult = new() { draw = 0 };
             IQueryable<CaseHistoryItemModel> query = null;
-            var Case_NO = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
-            {
-                Case_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
-            }
+            //var Case_NO = "";
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            //{
+            //    Case_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            //}
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, Case_NO, ParameterDirection.Input);
             par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
@@ -436,31 +436,31 @@ namespace IBS.Repositories.Inspection_Billing
                 BALANCE_QTY = (Convert.ToInt32(row["QTY"]) - Convert.ToInt32(row["PASSED"])),
                 REJECTED = Convert.ToInt32(row["REJECTED"])
             }).ToList();
+            return list;
+            //query = list.AsQueryable();
 
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, "ITEM_SRNO", true).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, "ITEM_SRNO", true).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
-        public DTResult<CaseHistoryPoIREPSModel> Get_Case_History_PO_IREPS(DTParameters dtParameters)//, string PO_DT
+        public List<CaseHistoryPoIREPSModel> Get_Case_History_PO_IREPS(DTParameters dtParameters,string PO_NO ,string PO_DT)//, string PO_DT
         {
-            string PO_NO = "", PO_DT = "";
+            //string PO_NO = "", PO_DT = "";
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_NO"]))
-            {
-                PO_NO = Convert.ToString(dtParameters.AdditionalValues["PO_NO"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_DT"]))
-            {
-                PO_DT = Convert.ToString(dtParameters.AdditionalValues["PO_DT"]);
-            }
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_NO"]))
+            //{
+            //    PO_NO = Convert.ToString(dtParameters.AdditionalValues["PO_NO"]);
+            //}
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_DT"]))
+            //{
+            //    PO_DT = Convert.ToString(dtParameters.AdditionalValues["PO_DT"]);
+            //}
 
             DTResult<CaseHistoryPoIREPSModel> dTResult = new() { draw = 0 };
             IQueryable<CaseHistoryPoIREPSModel> query = null;
@@ -486,17 +486,17 @@ namespace IBS.Repositories.Inspection_Billing
                 MA_DT = Convert.ToString(row["MA_DT"]),
                 MA_STATUS = Convert.ToString(row["MA_STATUS"])
             }).ToList();
+            return list;
+            //query = list.AsQueryable();
 
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, "MA_NO", true).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, "MA_NO", true).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
-        public DTResult<CaseHistoryPoVendorModel> Get_Case_History_PO_Vendor(DTParameters dtParameters)//, string PO_DT
+        public List<CaseHistoryPoVendorModel> Get_Case_History_PO_Vendor(DTParameters dtParameters, string CASE_NO)//, string PO_DT
         {
             DTResult<CaseHistoryPoVendorModel> dTResult = new() { draw = 0 };
             IQueryable<CaseHistoryPoVendorModel> query = null;
@@ -504,11 +504,11 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string CASE_NO = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
-            {
-                CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
-            }
+            //string CASE_NO = "";
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            //{
+            //    CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            //}
 
             if (dtParameters.Order != null)
             {
@@ -545,17 +545,17 @@ namespace IBS.Repositories.Inspection_Billing
                 NEW_PO_VALUE = Convert.ToString(row["NEW_PO_VALUE"]),
                 MA_STATUS = Convert.ToString(row["MA_STATUS"])
             }).ToList();
+            return list;
+            //query = list.AsQueryable();
 
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
-        public DTResult<CaseHistoryPreviousCallModel> Get_Case_History_Previous_Call(DTParameters dtParameters)
+        public List<CaseHistoryPreviousCallModel> Get_Case_History_Previous_Call(DTParameters dtParameters,string CASE_NO)
         {
             DTResult<CaseHistoryPreviousCallModel> dTResult = new() { draw = 0 };
             IQueryable<CaseHistoryPreviousCallModel> query = null;
@@ -563,11 +563,11 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string CASE_NO = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
-            {
-                CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
-            }
+            //string CASE_NO = "";
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            //{
+            //    CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            //}
 
             if (dtParameters.Order != null)
             {
@@ -603,17 +603,17 @@ namespace IBS.Repositories.Inspection_Billing
                 REASON_REJECT = Convert.ToString(row["REASON_REJECT"]),
                 REASON = Convert.ToString(row["REASON"])
             }).ToList();
+            return list;
+            //query = list.AsQueryable();
 
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
-        public DTResult<CaseHistoryConsigneeComplaintModel> Get_Case_History_Consignee_Complaints(DTParameters dtParameters)
+        public List<CaseHistoryConsigneeComplaintModel> Get_Case_History_Consignee_Complaints(DTParameters dtParameters,string VEND_CD)
         {
             DTResult<CaseHistoryConsigneeComplaintModel> dTResult = new() { draw = 0 };
             IQueryable<CaseHistoryConsigneeComplaintModel> query = null;
@@ -621,11 +621,11 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string VEND_CD = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VEND_CD"]))
-            {
-                VEND_CD = Convert.ToString(dtParameters.AdditionalValues["VEND_CD"]);
-            }
+            //string VEND_CD = "";
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VEND_CD"]))
+            //{
+            //    VEND_CD = Convert.ToString(dtParameters.AdditionalValues["VEND_CD"]);
+            //}
 
             if (dtParameters.Order != null)
             {
@@ -660,17 +660,17 @@ namespace IBS.Repositories.Inspection_Billing
                 CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
                 JI_STATUS_DESC = Convert.ToString(row["JI_STATUS_DESC"])
             }).ToList();
+            return list;
+            //query = list.AsQueryable();
 
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
-        public DTResult<CaseHistoryRejectionVendorPlaceModel> Get_Case_History_Rejection_Vendor_Place(DTParameters dtParameters, string region)
+        public List<CaseHistoryRejectionVendorPlaceModel> Get_Case_History_Rejection_Vendor_Place(DTParameters dtParameters,string CASE_NO, string VEND_CD, string region)
         {
             DTResult<CaseHistoryRejectionVendorPlaceModel> dTResult = new() { draw = 0 };
             IQueryable<CaseHistoryRejectionVendorPlaceModel> query = null;
@@ -678,15 +678,15 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string CASE_NO = "", VEND_CD = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
-            {
-                CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VEND_CD"]))
-            {
-                VEND_CD = Convert.ToString(dtParameters.AdditionalValues["VEND_CD"]);
-            }
+            //string CASE_NO = "", VEND_CD = "";
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
+            //{
+            //    CASE_NO = Convert.ToString(dtParameters.AdditionalValues["CASE_NO"]);
+            //}
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VEND_CD"]))
+            //{
+            //    VEND_CD = Convert.ToString(dtParameters.AdditionalValues["VEND_CD"]);
+            //}
 
             if (dtParameters.Order != null)
             {
@@ -725,13 +725,14 @@ namespace IBS.Repositories.Inspection_Billing
                 ITEM_DESC_PO = Convert.ToString(row["ITEM_DESC_PO"])
             }).ToList();
 
-            query = list.AsQueryable();
+            return list;
+            //query = list.AsQueryable();
 
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count; //query.ToList().Count();  //ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
         public string Send_Vendor_Mail_For_Rejected_Call(CallMarkedOnlineModel obj, string Region)

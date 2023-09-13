@@ -1,10 +1,11 @@
 ﻿@model IBS.Models.CaseHistoryModel
 @{
+    //Layout = "";
     ViewData["Title"] = "Case History";
     var ViewPoURL = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.RLY_CD + "/" + Model.PO_NO + ".pdf";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="HologramAccountal" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+<form id="frmDetails">
     <input type="hidden" asp-for="CASE_NO" />
     <input type="hidden" asp-for="VEND_CD" />
     <input type="hidden" asp-for="VENDOR" />
@@ -19,12 +20,12 @@
 
     <div class="list-inner">
         <div class="tast-list">
-            <h2>History for Case No. - @ViewBag.Case_NO (@ViewBag.RegionName)</h2>
+            <h2 style="text-align:center">History for Case No. - @ViewBag.Case_NO (@ViewBag.RegionName)</h2>
             </br>
             <h5>PO DETAILS</h5>
         </div>
         <div class="savenext-btn">
-            <button type="button" class="save-btn" id="btnBack" onclick="window.history.back">Back</button>
+            @*<button type="button" class="save-btn" id="btnBack" onclick="window.history.back">Back</button>*@
             @*<button type="button" class="save-btn active" id="btnPrint">Print</button>*@
         </div>
     </div>
@@ -32,50 +33,67 @@
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Case No :</label>
-                <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
+                <label id="lblCaseNo" style="text-transform: uppercase; color:red;">@Model.CASE_NO</label>
             </div>
             <div class="col-md-5 mb-3">
                 <label for="Reference" style="padding-right:10px;">Vendor :</label>
-                <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
+                <label id="lblVendor" style="text-transform: uppercase; color:red;">@Model.VENDOR</label>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">Po No :</label>
-                <label id="lblPoNo" style="text-transform: uppercase; color:red;"></label>
+                <label id="lblPoNo" style="text-transform: uppercase; color:red;">@Model.PO_NO</label>
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Dated :</label>
-                <label id="lblDate" style="text-transform: uppercase; color:red;"></label>
+                <label id="lblDate" style="text-transform: uppercase; color:red;">@Model.PO_DT</label>
             </div>
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Client :</label>
-                <label id="lblClient" style="text-transform: uppercase; color:red;"></label>
+                <label id="lblClient" style="text-transform: uppercase; color:red;">@Model.RLY_CD</label>
             </div>
         </div>
     </div>
 </form>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtItemList" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>Item SrNo</th>
-                        <th>Item Description</th>
-                        <th>Qty Ordered</th>
-                        <th>Qty Passed</th>
-                        <th>Qty Rejected</th>
-                        <th>BALANCE QTY (Qty Ordered - Qty Passed)</th>
-                        <th>Delv Period</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+@if (@Model.itemList.Count() < 0)
+{
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtItemList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Item SrNo</th>
+                            <th>Item Description</th>
+                            <th>Qty Ordered</th>
+                            <th>Qty Passed</th>
+                            <th>Qty Rejected</th>
+                            <th>BALANCE QTY (Qty Ordered - Qty Passed)</th>
+                            <th>Delv Period</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model.itemList)
+                            {
+                                <tr>
+                                    <td>@item.ITEM_SRNO</td>
+                                    <td>@item.ITEM_DESC</td>
+                                    <td>@item.QTY</td>
+                                    <td>@item.PASSED</td>
+                                    <td>@item.REJECTED</td>
+                                    <td>@item.BALANCE_QTY</td>
+                                    <td>@item.DELV_DATE</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 <div style="text-align:center;">
     @if (Model.PO_SOURCE == "C")
     {
@@ -96,90 +114,157 @@
     }
 </div>
 
-<div id="tblPOIreps">
-    <div>
-        <h5>PO AMMENDMENTS IREPS</h5>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>SrNo</th>
-                            <th>MA No.</th>
-                            <th>MA Date</th>
-                            <th>MA Field</th>
-                            <th>OLD Value</th>
-                            <th>New Value</th>
-                            <th>Status</th>
-                            <th>PDF</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+@if (@Model.poIrepsList.Count() > 0 && @Model.poIrepsList != null)
+{
+    <div id="tblPOIreps">
+        <div>
+            <h5>PO AMMENDMENTS IREPS</h5>
         </div>
-    </section>
-</div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SrNo</th>
+                                <th>MA No.</th>
+                                <th>MA Date</th>
+                                <th>MA Field</th>
+                                <th>OLD Value</th>
+                                <th>New Value</th>
+                                <th>Status</th>
+                                <th>PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model.poIrepsList)
+                                {
+                                    var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.RLY_CD + "/" + Model.PO_NO + "_" + item.MA_NO + ".pdf";
+                                    <tr>
+                                        <td>@item.SLNO</td>
+                                        <td>@item.MA_NO</td>
+                                        <td>@item.MA_DT</td>
+                                        <td>@item.MA_FLD_DESCR</td>
+                                        <td>@item.OLD_VALUE</td>
+                                        <td>@item.NEW_VALUE</td>
+                                        <td>@item.MA_STATUS</td>
 
-<div id="tblPoVendor">
-    <div>
-        <h5>PO AMMENDMENTS VENDOR</h5>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtVendorList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>SrNo</th>
-                            <th>MA No.</th>
-                            <th>MA Date</th>
-                            <th>MA Field</th>
-                            <th>OLD Value</th>
-                            <th>New Value</th>
-                            <th>Status</th>
-                            <th>PDF</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                                        <td>
+                                            <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;">
+                                                <a href=@urlireps>View</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
+}
 
-<div id="tblPreviousCall">
-    <div>
-        <h5>PREVIOUS CALL DETAILS</h5>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtPreviousCallList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>SrNo</th>
-                            <th>Call Letter Date</th>
-                            <th>Call Recieving Date</th>
-                            <th>Call Sno</th>
-                            <th>Call Install No.</th>
-                            <th>IE</th>
-                            <th>Status</th>
-                            <th>Cancel Reason</th>
-                            <th>Rejection Reason</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+@if (@Model.poVendorList.Count() > 0 && @Model.poVendorList != null)
+{
+    <div id="tblPoVendor">
+        <div>
+            <h5>PO AMMENDMENTS VENDOR</h5>
         </div>
-    </section>
-</div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtVendorList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SrNo</th>
+                                <th>MA No.</th>
+                                <th>MA Date</th>
+                                <th>MA Field</th>
+                                <th>OLD Value</th>
+                                <th>New Value</th>
+                                <th>Status</th>
+                                <th>PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model.poVendorList)
+                                {
+                                    var urlvendor = "/RBS/Vendor/MA/" + @item.CASE_NO + "_" + @item.MA_NO + "_" + @item.MA_DT + ".pdf";
+                                    <tr>
+                                        <td>@item.MA_SNO</td>
+                                        <td>@item.MA_NO</td>
+                                        <td>@item.MA_DT</td>
+                                        <td>@item.MA_DESC</td>
+                                        <td>@item.OLD_PO_VALUE</td>
+                                        <td>@item.NEW_PO_VALUE</td>
+                                        <td>@item.MA_STATUS</td>
+                                        <td>
+                                            <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;">
+                                                <a href="@urlvendor">View MA</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+@if (@Model.PrevCallList.Count() > 0 && @Model.PrevCallList != null)
+{
+    <div id="tblPreviousCall">
+        <div>
+            <h5>PREVIOUS CALL DETAILS</h5>
+        </div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtPreviousCallList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SrNo</th>
+                                <th>Call Letter Date</th>
+                                <th>Call Recieving Date</th>
+                                <th>Call Sno</th>
+                                <th>Call Install No.</th>
+                                <th>IE</th>
+                                <th>Status</th>
+                                <th>Cancel Reason</th>
+                                <th>Rejection Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var SrNo = 0;
+                                foreach (var item in Model.PrevCallList)
+                                {
+                                    SrNo = SrNo + 1;
+                                    <tr>
+                                        <td>@SrNo</td>
+                                        <td>@item.CALL_DATE</td>
+                                        <td>@item.LETTER_DATE</td>
+                                        <td>@item.CALL_SNO</td>
+                                        <td>@item.CALL_INSTALL_NO</td>
+                                        <td>@item.IE_NAME</td>
+                                        <td>@item.CALL_STATUS</td>
+                                        <td>@(item.REASON_REJECT == "" ? '-' : item.REASON_REJECT)</td>
+                                        <td>@(item.REASON == "**" ? "-" : item.REASON)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+}
 
 <div id="SpecialRemark">
     <h5>SPECIAL REMARKS</h5>
@@ -187,70 +272,107 @@
         <div class="row my-0">
             <div class="col-md-12">
                 <label for="Reference" style="padding-right:10px;">PO :</label>
-                <label id="lblPO" style="text-transform: uppercase; color:red;">@Model.REMARKS</label>
+                <label id="lblPO" style="text-transform: uppercase; color:red;">@(Model.REMARKS != null ? Model.REMARKS : "Nil")</label>
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-12">
                 <label for="Reference" style="padding-right:10px;">Vendor/Firm :</label>
-                <label id="lblVendorFirm" style="text-transform: uppercase; color:red;">@Model.VEND_REMARKS</label>
+                <label id="lblVendorFirm" style="text-transform: uppercase; color:red;">@(Model.VEND_REMARKS != null ? Model.VEND_REMARKS : "Nil")</label>
             </div>
         </div>
     </section>
 </div>
 
-<div id="tblConsigneeComplaints">
-    <div>
-        <h5>CONSIGNEE COMPLAINTS</h5>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtConsigneeComplaintsList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>SrNo</th>
-                            <th>Item</th>
-                            <th>Rej Memo Date</th>
-                            <th>Rejection Reason</th>
-                            <th>BK No & Set No.</th>
-                            <th>Consignee</th>
-                            <th>JI Outcome</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+@if (@Model.ConsingCompList.Count() > 0 && @Model.ConsingCompList != null)
+{
+    <div id="tblConsigneeComplaints">
+        <div>
+            <h5>CONSIGNEE COMPLAINTS</h5>
         </div>
-    </section>
-</div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtConsigneeComplaintsList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SrNo</th>
+                                <th>Item</th>
+                                <th>Rej Memo Date</th>
+                                <th>Rejection Reason</th>
+                                <th>BK No & Set No.</th>
+                                <th>Consignee</th>
+                                <th>JI Outcome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var SrNo = 0;
+                                foreach (var item in Model.ConsingCompList)
+                                {
+                                    SrNo = SrNo + 1;
+                                    <tr>
+                                        <td>@SrNo</td>
+                                        <td>@item.ITEM_DESC</td>
+                                        <td>@item.REJ_MEMO_DATE</td>
+                                        <td>@item.REJECTION_REASON</td>
+                                        <td>@(item.BK_NO + " & " + item.SET_NO)</td>
+                                        <td>@item.CONSIGNEE</td>
+                                        <td>@item.JI_STATUS_DESC</td>
+                                    </tr>
+                                }                                    
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+}
 
-<div id="tblRejectionVendor">
-    <div>
-        <h5>REJECTION AT VENDOR PLACE</h5>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtRejectionVendorPlaceList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>SrNo</th>
-                            <th>Item</th>
-                            <th>IC Date</th>
-                            <th>Rejection Reason</th>
-                            <th>BK No & Set No.</th>
-                            <th>IE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+@if (@Model.RejectVendorList.Count() > 0 && @Model.RejectVendorList != null)
+{
+    <div id="tblRejectionVendor">
+        <div>
+            <h5>REJECTION AT VENDOR PLACE</h5>
         </div>
-    </section>
-</div>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtRejectionVendorPlaceList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SrNo</th>
+                                <th>Item</th>
+                                <th>IC Date</th>
+                                <th>Rejection Reason</th>
+                                <th>BK No & Set No.</th>
+                                <th>IE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var SrNo = 0;
+                                foreach(var item in Model.RejectVendorList)
+                                {
+                                    SrNo = SrNo + 1;
+                                    <tr>
+                                        <td>@SrNo</td>
+                                        <td>@item.ITEM_DESC_PO</td>
+                                        <td>@item.IC_DATE</td>                                        
+                                        <td>@item.REASON_REJECT</td>
+                                        <td>@(item.BK_NO + " & " + item.SET_NO)</td>
+                                        <td>@item.IE_NAME</td>
+                                    </tr>                                    
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+}
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -271,10 +393,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.13/jspdf.plugin.autotable.min.js"></script>
 }
-<script type="text/javascript">
+@*<script type="text/javascript">
     var RegionName = "@ViewBag.RegionName";
     var CaseNo = "@ViewBag.Case_NO";
-    
+
     $(document).ready(function () {
         //window.jsPDF = window.jspdf.jsPDF;
 
@@ -301,7 +423,7 @@
         BindConsigneeComplaintDataTable();
         BindRejectionVendorPlaceDataTable();
 
-        function PrintAll() {            
+        function PrintAll() {
             var table1 = $('#dtVendorList').DataTable();
             var table2 = $('#dtPreviousCallList').DataTable();
             pdf.setFontSize(14);
@@ -623,11 +745,11 @@
                         return row.BK_NO + " & " + row.SET_NO;
                     }
                 },
-                { data: "IE_NAME" },                
+                { data: "IE_NAME" },
             ],
             "order": [[0, "asc"]]
         });
     }
-   
-</script>
+
+</script>*@
 
