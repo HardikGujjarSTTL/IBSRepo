@@ -1,0 +1,175 @@
+﻿@model IBS.Models.LabPerfomanceReport
+@{
+    ViewData["Title"] = "LAB PERFORMANCE REPORT";
+}
+<style>
+    a.btnicons {
+        transition: all 0.4s;
+        border: 1px solid #848484;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 50%;
+        margin: 0 6px;
+    }
+</style>
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>LAB PERFORMANCE REPORT</h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="savenext-btn col-md-2 mb-3" style="margin-top:auto;">
+                <button type="button" class="save-btn active" onclick="show();">Search</button>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
+<div id="hide" style="display:none">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtlarpt" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>LAB</th>
+                            <th>NO.OF TEST</th>
+                            <th>No.Of Samples</th>
+                            <th>No. Of Failures</th>
+                            <th>No. Of Fail Samples</th>
+                            <th>No. Of No Comments</th>
+                            <th>Maximum Testing Days</th>
+                            <th>Minimum Testing Days</th>
+                            <th>Average Testing Days</th>
+                            <th>Total Fees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            if($("#dtfrom").val() == ''){
+                alert("Please Select From Date");
+                return false;
+            }
+            else if($("#dtto").val() == ''){
+                alert("Please Select To Date");
+                return false;
+            }
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            
+            InitializeDatatable(wFrmDtO, wToDt);
+            $("#hide").css("display", "block");
+        }
+        
+        $(function () {
+            $("#r1").prop("checked", true);
+        });
+
+        function InitializeDatatable(wFrmDtO, wToDt) {
+            var _title = '\n LAB PERFORMANCE REPORT';
+            if (wFrmDtO != "" || wToDt != "") {
+                _title = '\n LAB PERFORMANCE REPORT For the Period :' + wFrmDtO + ' To ' + wToDt
+            }
+            $("#dtlarpt").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        },
+                    },
+                ],
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            wFrmDtO: wFrmDtO,
+                            wToDt: wToDt
+                            
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    { data: "LAB" },
+                    { data: "NO_OF_TEST" },
+                    { data: "NO_OF_SAMPLES" },
+                    { data: "NO_OF_FAILURE" },
+                    { data: "NO_OF_FAIL_SAMPLES" },
+                    { data: "NO_OFNOCOMMENTS" },
+                    { data: "MAXM_DAYS" },
+                    { data: "MIN_DAYS" },
+                    { data: "AVG_DAYS" },
+                    { data: "TOTAL_FEE" }
+                    
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+
+        $("#imgPrint").on("click", function () {
+            $('#dtlarpt').DataTable().buttons(0, 0).trigger();
+        });
+
+    </script>
+}

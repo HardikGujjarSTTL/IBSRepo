@@ -37,7 +37,9 @@
                     @Html.DropDownList("StateCd", Common.GetStates(), "--Select--",  new { @class = "" })
                 </div>
             </div>
-            <div class="col-md-2" style="margin-top: 30px;">
+            </div>
+            <div class="row">
+            <div class="col-md-12">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
                     <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
@@ -58,7 +60,7 @@
                             <th>Pin</th>
                             <th>State</th>
                             <th>Country</th>
-                            <th style="text-align:center">View Details</th>
+                            <th style="text-align:center">Action</th>
                         </tr>
                     </thead>
                     <tbody>

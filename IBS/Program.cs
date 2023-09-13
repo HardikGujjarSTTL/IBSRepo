@@ -181,6 +181,14 @@ builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterReposi
 builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
 
 builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
+builder.Services.AddScoped<ILabRegisterReportRepository, LabRegisterReportRRepository>();
+builder.Services.AddScoped<ILabPerfomanceReportRepository, LabPerformanceReportRRepository>();
+builder.Services.AddScoped<ILabPostingReportRepository, LabPostingReportRRepository>();
+builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRRepository>();
+builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
+builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
+
+builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 
 var app = builder.Build();

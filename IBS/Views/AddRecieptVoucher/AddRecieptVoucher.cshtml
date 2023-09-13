@@ -9,9 +9,8 @@
         <h2>Generate Voucher</h2>
     </div>
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">
                 <div class="accordion-body">
                     <div class="row my-0">
@@ -73,7 +72,7 @@
                             <label  for="Reference">Case No</label>
                             <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
                             <br ></br>
-                            <button type="button" class="save-btn active" onclick="ButtonClick();">Select BPO</button>
+                        <button type="button" class="commonBtn" onclick="ButtonClick();">Select BPO</button>
                             <span asp-validation-for="CASE_NO" class="text-danger"></span>
                             
                         </div>
@@ -81,7 +80,7 @@
                             <label  for="Reference">BPO</label>
                             <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
                             <br></br>
-                            <button type="button" class="save-btn active" onclick="ButtonClick()">Select BPO</button>
+                            <button type="button" class="commonBtn" onclick="ButtonClick()">Select BPO</button>
                             <span asp-validation-for="BPO_CD" class="text-danger"></span>
 
                         </div>
@@ -114,7 +113,6 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 </section>
 
