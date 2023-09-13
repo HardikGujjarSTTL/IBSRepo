@@ -1,16 +1,19 @@
 ﻿@model IBS.Models.OnlineComplaints
 
-<div class="list-inner">
-    <div class="tast-list">
-        <h3>ONLINE REJECTION ADVICE REGISTERATION FORM</h3>
-    </div>
-</div>
+@{
+    Layout = "~/Views/Shared/_FrontendLayout.cshtml";
+}
 
-<section id="tab-1">
-    <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="OnlineComplaints" asp-action="ComplaintsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
-            <div class="accordion-body">
-                <div class="row my-0">
+<div class="container">
+    <div class="innerContent">
+        <div class="list-inner">
+            <div class="tast-list">
+                <h2>Online Rejection Advice Registration Form</h2>
+            </div>
+        </div>
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="OnlineComplaints" asp-action="ComplaintsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
+                <div class="row m-3">
                     <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                     <input type="text" asp-for="ItemSrnoPo" id="ItemSrnoPo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="UomCd" id="UomCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
@@ -23,7 +26,7 @@
                     <input type="text" asp-for="CoCd" id="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ITEM_DESC_PO" id="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <label id="datetimeLabel" asp-for="Registrationdt"></label>
-                    <p><u><b>Consignee Details</b></u></p>
+                    <h3 class="heading3 mb-4">Consignee Details</h3>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Name</label>
                         <input type="text" class="input" ASP-FOR="Name" maxlength="300" required />
@@ -31,7 +34,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Designation</label>
-                        <input type="text" class="input" ASP-FOR="Designation" maxlength="300" required/>
+                        <input type="text" class="input" ASP-FOR="Designation" maxlength="300" required />
                         <span asp-validation-for="Designation" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -45,8 +48,8 @@
                         <span asp-validation-for="MobileNO" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row my-0">
-                    <p><u><b>Rejection Details</b></u></p>
+                <div class="row m-3">
+                    <h3 class="heading3 mb-4">Rejection Details</h3>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Book No.</label>
                         <input type="text" class="input" ASP-FOR="BKNo" maxlength="300" id="bkno" required />
@@ -77,7 +80,7 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Reasons of Rejection</label>
-                        <input type="text" class="input" ASP-FOR="RejectionReason" maxlength="300" required/>
+                        <input type="text" class="input" ASP-FOR="RejectionReason" maxlength="300" required />
                         <span asp-validation-for="RejectionReason" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
@@ -99,19 +102,19 @@
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
                     </div>
                     @*<div class="col-md-4 mb-4">
-                        <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
-                        <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
+                    <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
+                    <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
                     </div>*@
-                    <div class="savenext-btn" style="margin-left:80%;">
-                        <a class="reset-btn" onclick="btnredirect();">Cancel</a>
+                    <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
                 </div>
-               
-            </div>
-        </form>
+
+            </form>
+        </div>
     </div>
-</section>
+</div>
+
 
 
 @section scripts{
@@ -179,10 +182,6 @@
                 }
             });
         });
-
-        function btnredirect(){
-            window.location.href = "http://www.ritesinsp.com";
-        }
 
         function Save(){
             if ($("#frmComplaints").valid()) {

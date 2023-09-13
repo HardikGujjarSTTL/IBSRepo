@@ -622,7 +622,8 @@ CREATE TABLE Menu_Master (
     IconCssClass NVARCHAR2(50),
     IsActive NUMBER(1),
     SortOrder NUMBER(6),
-    IconPath VARCHAR2(50)
+    IconPath VARCHAR2(50),
+    IsDisplay NUMBER(1)
 );
 
 ALTER TABLE Menu_Master
@@ -1041,6 +1042,7 @@ BEGIN
             (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
         FROM MENU_MASTER m
         WHERE m.PARENTID IS NULL
+        AND m.IsDisplay = 1
         CONNECT BY PRIOR m.ID = m.PARENTID
 
         UNION ALL
@@ -1062,6 +1064,7 @@ BEGIN
             (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
         FROM MENU_MASTER p
         JOIN MENU_MASTER c ON p.ID = c.PARENTID
+        AND p.IsDisplay = 1
         CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
 
         ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
@@ -1233,3 +1236,305 @@ END;
 
 
 ===================
+
+ALTER TABLE Vendor_Feedback 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE Vendor_Feedback_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE Vendor_Feedback
+   SET ID = Vendor_Feedback_seq.nextval;
+   
+ALTER TABLE Vendor_Feedback
+    MODIFY ID NUMBER(6,0) DEFAULT Vendor_Feedback_seq.nextval;
+    
+ALTER TABLE Vendor_Feedback
+ADD CONSTRAINT Vendor_Feedback_pk  PRIMARY KEY (ID);
+
+======================
+
+ALTER TABLE CLIENT_FEEDBACK 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE CLIENT_FEEDBACK_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE CLIENT_FEEDBACK
+   SET ID = CLIENT_FEEDBACK_seq.nextval;
+   
+ALTER TABLE CLIENT_FEEDBACK
+    MODIFY ID NUMBER(6,0) DEFAULT CLIENT_FEEDBACK_seq.nextval;
+    
+ALTER TABLE CLIENT_FEEDBACK
+ADD CONSTRAINT CLIENT_FEEDBACK_pk  PRIMARY KEY (ID);
+
+======================
+create or replace PROCEDURE SP_Get_ICCancelData (
+    p_BKNo IN VARCHAR2,
+    p_SetNo IN VARCHAR2,
+    p_ISSUE_TO_IECD IN NUMBER,
+    p_Region IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+BEGIN
+    OPEN p_Result FOR
+    SELECT IC.BK_NO,
+           IC.SET_NO,
+           IE.IE_NAME,
+           CASE IC.IC_STATUS
+               WHEN 'C' THEN 'Cancelled'
+               WHEN 'M' THEN 'Missing'
+               WHEN 'L' THEN 'Lost'
+           END AS IC_STATUS,
+           IC.IC_STATUS as STATUS,
+           TO_CHAR(IC.STATUS_DT, 'dd/mm/yyyy') AS STATUS_DT,
+           CASE IC.REGION
+               WHEN 'N' THEN 'Northern'
+               WHEN 'W' THEN 'Western'
+               WHEN 'E' THEN 'Eastern'
+               WHEN 'S' THEN 'South'
+               WHEN 'C' THEN 'Central'
+           END AS REGION,
+           IC.REGION AS REGIONV,
+           IC.REMARKS
+    FROM T16_IC_CANCEL IC
+    INNER JOIN T09_IE IE ON IC.ISSUE_TO_IECD = IE.IE_CD
+    WHERE (IC.BK_NO = UPPER(TRIM(p_BKNo)) OR p_BKNo IS NULL)
+      AND (IC.SET_NO = UPPER(TRIM(p_SetNo)) OR p_SetNo IS NULL)
+      AND (IC.ISSUE_TO_IECD = p_ISSUE_TO_IECD OR p_ISSUE_TO_IECD = 0)
+      AND IC.REGION = p_Region
+    ORDER BY IC.BK_NO, IC.SET_NO;
+END;
+
+===============
+ALTER TABLE T36_BILL ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T36_BILL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T36_BILL ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T36_BILL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0)  
+
+=============
+
+CREATE OR REPLACE PROCEDURE SP_GetBillData (
+    p_Region IN VARCHAR2,
+    p_BillNo IN VARCHAR2,
+    p_BillFromDate IN VARCHAR2,
+    p_BillToDate IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+    v_Query VARCHAR2(1000);
+BEGIN
+    v_Query := 'SELECT BILL_NO, TO_CHAR(BILL_DT, ''dd/mm/yyyy'') AS BILL_DT, IC_NO, TO_CHAR(IC_DT, ''dd/mm/yyyy'') AS IC_DT, BILL_AMOUNT , BPO ,INSP_FEE, NVL(SERVICE_TAX,0)+NVL(EDU_CESS,0)+NVL(SHE_CESS,0) TAX ' ||
+               'FROM T36_BILL ' ||
+               'WHERE REGION = ''' || p_Region || '''';
+
+    IF p_BillNo IS NOT NULL THEN
+        v_Query := v_Query || ' AND TRIM(BILL_NO) = ''' || p_BillNo || '''';
+    END IF;
+   
+    IF p_BillFromDate IS NOT NULL AND p_BillToDate IS NOT NULL THEN
+         v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') BETWEEN ''' || p_BillFromDate || ''' AND ''' || p_BillToDate || '''';
+    END IF;
+
+    v_Query := v_Query || ' AND (ISDELETED = 0 OR ISDELETED IS NULL)';
+    
+    OPEN p_Result FOR v_Query ;
+END SP_GetBillData;
+
+
+
+=======================
+
+
+CREATE TABLE T34_CENTRAL_ITEM_MASTER (
+    ID NUMBER(6, 0) NOT NULL,
+    RAIL_CD VARCHAR2(50 BYTE),
+    RAIL_DESC VARCHAR2(100 BYTE),
+    RAIL_LENGTH_METER VARCHAR2(20 BYTE),
+    USER_ID VARCHAR2(20 BYTE),
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE T34_CENTRAL_ITEM_MASTER ADD (
+  CONSTRAINT T34_CENTRAL_ITEM_MASTER_PK PRIMARY KEY (ID));
+
+CREATE SEQUENCE T34_CENTRAL_ITEM_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+   
+ALTER TABLE T34_CENTRAL_ITEM_MASTER
+    MODIFY ID NUMBER(6,0) DEFAULT T34_CENTRAL_ITEM_MASTER_seq.nextval;
+    
+==============
+
+
+CREATE TABLE T35_Central_Item_Detail (
+    ID NUMBER(6, 0) NOT NULL,
+    RAIL_ID NUMBER(6, 0) NOT NULL,
+    RAIL_PRICE_PER_MT VARCHAR2(50 BYTE),
+    PACKING_CHARGE VARCHAR2(100 BYTE),
+    PRICE_DATE_FR Date ,
+    PRICE_DATE_TO Date,
+    ISACTIVE NUMBER(2,0),
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE T35_Central_Item_Detail ADD (
+  CONSTRAINT T35_Central_Item_Detail_PK PRIMARY KEY (ID));
+
+ALTER TABLE T35_Central_Item_Detail
+ADD CONSTRAINT FK_T35_Central_Item_Detail_RAIL_ID_T34_CENTRAL_ITEM_MASTER FOREIGN KEY (RAIL_ID)
+REFERENCES T34_CENTRAL_ITEM_MASTER (ID);
+
+CREATE SEQUENCE T35_Central_Item_Detail_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE T35_Central_Item_Detail
+    MODIFY ID NUMBER(6,0) DEFAULT T35_Central_Item_Detail_seq.nextval;
+    
+==================
+CREATE TABLE RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0) NOT NULL,
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE RegionalHRDataOfIE ADD (
+  CONSTRAINT RegionalHRDataOfIE_PK PRIMARY KEY (ID));
+
+ALTER TABLE RegionalHRDataOfIE
+ADD CONSTRAINT FK_RegionalHRDataOfIE_IE_CD_T09_IE FOREIGN KEY (IE_CD)
+REFERENCES T09_IE (IE_CD);
+
+CREATE SEQUENCE RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE RegionalHRDataOfIE
+    MODIFY ID NUMBER(6,0) DEFAULT RegionalHRDataOfIE_seq.nextval;
+
+
+==================================
+CREATE TABLE Log_RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0),
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0),
+    ActionType VARCHAR2(50 BYTE),
+    ActionDate TIMESTAMP(6),
+    ActionUserID VARCHAR2(50 BYTE)
+);
+
+  ======================
+
+
+CREATE OR REPLACE TRIGGER Update_RegionalHRDataOfIE_Trigger
+    BEFORE UPDATE ON RegionalHRDataOfIE
+    FOR EACH ROW
+BEGIN
+    
+    INSERT INTO Log_RegionalHRDataOfIE (
+        id,
+        ie_cd,
+        disclipline,
+        joiningdate,
+        postingdate,
+        retirementdate,
+        transferdate,
+        deputationfromdate,
+        deputationtodate,
+        repetriationdate,
+        ietenurefromdate,
+        ietenuretodate,
+        createdby,
+        createddate,
+        updatedby,
+        updateddate,
+        isdeleted,
+        ActionType,
+        ActionDate,
+        ActionUserID
+    ) VALUES (
+        :OLD.id,
+        :OLD.ie_cd,
+        :OLD.disclipline,
+        :OLD.joiningdate,
+        :OLD.postingdate,
+        :OLD.retirementdate,
+        :OLD.transferdate,
+        :OLD.deputationfromdate,
+        :OLD.deputationtodate,
+        :OLD.repetriationdate,
+        :OLD.ietenurefromdate,
+        :OLD.ietenuretodate,
+        :OLD.createdby,
+        :OLD.createddate,
+        :NEW.updatedby,
+        SYSTIMESTAMP,
+        :OLD.isdeleted,
+        'U',
+        SYSTIMESTAMP,
+        :NEW.updatedby
+    );
+END;
+/
+
+========================
+
+
+
+
+
+

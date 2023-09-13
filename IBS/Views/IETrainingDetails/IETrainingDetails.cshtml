@@ -1,0 +1,279 @@
+﻿@model IBS.Models.IETrainingDetailsModel
+
+@*@{
+    ViewData["Title"] = "Manage Laboratory";
+}*@
+@{
+    ViewData["Title"] = "IE TRAINING DETAILS";
+    string clsView = "";
+    //if (Model.LabId > 0)
+    //{        
+    //    clsView = "Permission_View";
+    //}
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>IE Training Details</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="IETrainingDetails" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="IETrainingDetails" asp-action="Save" data-ajax-method="post" data-ajax-complete="completed" id="frmtrainingDetails">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Name</label>
+                        @Html.DropDownListFor(model => model.Name, Common.GetInspEngCd(Model.Regin.ToString()),"", new { @onchange = "IEFetchData()",@id="ddlname" })
+                        @*<span asp-validation-for="Name" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3" style="display:none;">
+                        <label for="Reference"></label>
+                        <input type="hidden" class="input" asp-for="hdnName" readonly="true" id="hdnname">
+                        @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Emp No.</label>
+                        <input type="text" class="input" asp-for="EmpNo" readonly="true" id="txtempno">
+                        @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="PropertyId">Discipline</label>
+                        @Html.DropDownListFor(model => model.Discipline, Common.Departmentlist(), new { @id="ddldis" })
+                        @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
+                    </div>
+                   
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">DOB</label>
+                        <input type="text" class="input datepicker" asp-for="DOB" id="txtdob">
+                        @*<span asp-validation-for="DOB" class="text-danger"></span>*@
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">DOJ</label>
+                        <input type="text" class="input datepicker" asp-for="DOJ" id="txtdoj">
+                        @*<span asp-validation-for="DOJ" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3" style="margin-top:3%">
+                        <label for="Reference">Photo</label>
+                        <input type="file" class="form-control-file" id="photofile" name="Photo" accept=".pdf">
+                        
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Category</label>
+                        @Html.DropDownListFor(model => model.Category, Common.Category(),"", new { @id="ddlcat" })
+                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3" style="display:none;" id="catother">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="CategoryOther" id="txtcato">
+                        @*<span asp-validation-for="DOJ" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Qualification</label>
+                        @Html.DropDownListFor(model => model.Qualification, Common.Qualification(),"", new { @id="ddlqual"})
+                        @*<span asp-validation-for="Qualification" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3" style="display:none;" id="quothar">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="QualificationOther" id="txtqualo">
+                        @*<span asp-validation-for="DOJ" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="PropertyId">Institute</label>
+                        <textarea id="textAreaInput"  asp-for="Institute"></textarea>
+                        @*<span asp-validation-for="Institute" class="text-danger"></span>*@
+                    </div>
+@*                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save" style="margin-left:42%" id="btnsaveemp" onclick="SaveEmp();">Save</button>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 class="heading3">Training Details</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Training Type</label>
+                        @Html.DropDownListFor(model => model.TrainingType, Common.TrainingType(),"", new { @id="ddlTrType"})
+                        @*<span asp-validation-for="TrainingType" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Training Area</label>
+                        @Html.DropDownListFor(model => model.TrainingArea, Common.TrainingArea(),"", new { @id="ddlTrArea",onChange="BindCourseName()"})
+                        @*<span asp-validation-for="TrainingArea" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Training Category</label>
+                        <br />
+                        @Html.RadioButtonFor(m => m.training_category, "O",new { id = "out",name = "trainingCategory" })
+                            Outside
+
+
+                        @Html.RadioButtonFor(m => m.training_category, "I",new { id = "in",name = "trainingCategory" })
+                            In-House
+                        
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Course Name</label>
+                        @Html.DropDownListFor(model => model.course_name, Common.CourseName(Model.Regin.ToString(),Model.TrainingType,Model.TrainingArea),"", new { @id="ddlcourse",onChange="TrainingDFetchData()"})
+                        @*<span asp-validation-for="course_name" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="CourseNameOther" style="font-size:inherit;" id="txtcourseother">
+                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Institue</label>
+                        <input type="text" class="input" asp-for="Institue" id="txtinst">
+                        @*<span asp-validation-for="Institue" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">From</label>
+                        <input type="text" class="input datepicker" asp-for="From" id="txtfrom">
+                        @*<span asp-validation-for="From" class="text-danger"></span>*@
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">To</label>
+                        <input type="text" class="input datepicker" asp-for="To" id="txtto">
+                        @*<span asp-validation-for="To" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Certificate</label>
+                        <input type="text" class="input" asp-for="certificate" id="txtcert">
+                        @*<span asp-validation-for="certificate" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Fees</label>
+                        <input type="text" class="input" asp-for="Fees" id="txtfees">
+                        @*<span asp-validation-for="Fees" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Validity</label>
+                        <input type="text" class="input" asp-for="Validity" id="txtvalidity">
+                        @*<span asp-validation-for="Validity" class="text-danger"></span>*@
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" style="margin-left:42%" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            
+            $("#out").prop("checked", true);
+            $("#ddldis").prop("disabled", true);
+            $(".datepicker").datepicker({
+                dateFormat: "dd-mm-yy" // Set the date format to "dd/mm/yy"
+            });
+        });
+        function Save() {
+            
+            
+                $("#frmtrainingDetails").submit();
+            completed = function (response) {
+                var res = response.responseJSON;
+                ShowHideMsgNew(res.status, res.responseText);
+                //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
+                window.location.href = '@Url.Action("Index", "IETrainingDetails")';
+            };
+        }
+
+        $("#ddlname").change(function () {
+
+            var input_string = $("#ddlname option:selected").text();
+
+            $("#hdnname").val(input_string);
+        })
+        function BindCourseName() {
+            var TrainingType = $("#ddlTrType").val();
+            var TrainingArea = $("#ddlTrArea").val();
+            $.ajax({
+                url: '/IETrainingDetails/BindCourseName',
+                type: "POST",
+                dataType: "JSON",
+                data: { TrainingType: TrainingType, TrainingArea: TrainingArea },
+
+                success: function (success) {
+                    $.each(success.list, function (index, value) {
+                        $("#ddlcourse").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+
+            });
+        }
+        function IEFetchData() {
+            var Name = $("#ddlname").val();
+            $.ajax({
+                url: '/IETrainingDetails/IEFetchData',
+                type: "POST",
+                dataType: "JSON",
+                data: { Name: Name },
+
+                success: function (success) {
+                    if (success.EmpNo == null){
+                        $("#txtempno").val(" ");
+                    }
+                    else{
+                        $("#txtempno").val(success.EmpNo);
+                        $("#ddldis").val(success.Discipline);
+                        $("#txtdob").val(success.DOB);
+                        $("#txtdoj").val(success.DOJ);
+                        $("#ddlcat").val(success.Category);
+                        $("#txtcato").val(success.CategoryOther);
+                        $("#ddlqual").val(success.Qualification);
+                        $("#txtqualo").val(success.QualificationOther);
+                        $("#textAreaInput").val(success.Institute);
+                    }
+                    
+                }
+
+            });
+        }
+
+        function TrainingDFetchData(){
+            var Course = $("#ddlcourse").val();
+            $.ajax({
+                url: '/IETrainingDetails/TrainingDFetchData',
+                type: "POST",
+                dataType: "JSON",
+                data: { Course: Course },
+
+                success: function (success) {
+                    
+                    $("#txtcourseother").val(success.CourseNameOther);
+                    $("#txtinst").val(success.Institue);
+                    $("#txtfrom").val(success.From);
+                    $("#txtto").val(success.To);
+                    $("#txtcert").val(success.certificate);
+                    $("#txtfees").val(success.Fees);
+                    $("#txtvalidity").val(success.Validity);
+                   if(success.training_category == "I"){
+                        
+                        $("#in").prop("checked", true);
+                   }
+                   else
+                   {
+                        $("#out").prop("checked", true);
+                        
+                   }
+                   
+                    
+                }
+
+            });
+        }
+    </script>
+}

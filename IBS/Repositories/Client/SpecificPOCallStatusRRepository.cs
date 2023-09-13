@@ -21,7 +21,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public DTResult<ClientCallRptModel> GetPOCallStatusIndex(DTParameters dtParameters)
+        public DTResult<ClientCallRptModel> GetPOCallStatusIndex(DTParameters dtParameters, string OrgType, string Org)
         {
 
             DTResult<ClientCallRptModel> dTResult = new() { draw = 0 };
@@ -64,8 +64,8 @@ namespace IBS.Repositories
             //else
             //{
             OracleParameter[] par = new OracleParameter[4];
-            par[0] = new OracleParameter("ORGN_TYPE_IN", OracleDbType.NVarchar2, "U", ParameterDirection.Input);
-            par[1] = new OracleParameter("ORGN_IN", OracleDbType.NVarchar2, "SAIL", ParameterDirection.Input);
+            par[0] = new OracleParameter("ORGN_TYPE_IN", OracleDbType.NVarchar2, OrgType, ParameterDirection.Input);
+            par[1] = new OracleParameter("ORGN_IN", OracleDbType.NVarchar2, Org, ParameterDirection.Input);
             par[2] = new OracleParameter("PODT_IN", OracleDbType.Date, dtParameters.AdditionalValues?.GetValueOrDefault("PODate"), ParameterDirection.Input);
             par[3] = new OracleParameter("RESULT", OracleDbType.RefCursor, ParameterDirection.Output);
 

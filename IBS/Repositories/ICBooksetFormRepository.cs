@@ -23,7 +23,7 @@ namespace IBS.Repositories
                 return model;
             else
             {
-                model.Id= bookset.Id;
+                model.Id = bookset.Id;
                 model.BkNo = bookset.BkNo;
                 model.SetNoFr = bookset.SetNoFr;
                 model.SetNoTo = bookset.SetNoTo;
@@ -59,9 +59,16 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
+            string BookNo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["BookNo"]) ? Convert.ToString(dtParameters.AdditionalValues["BookNo"]) : "";
+            string SetNoFrom = !string.IsNullOrEmpty(dtParameters.AdditionalValues["SetNoFrom"]) ? Convert.ToString(dtParameters.AdditionalValues["SetNoFrom"]) : "";
+            int? IssueToIecd = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IssueToIecd"]) ? Convert.ToInt32(dtParameters.AdditionalValues["IssueToIecd"]) : null;
+
             query = from t10 in context.T10IcBooksets
                     join t09 in context.T09Ies on t10.IssueToIecd equals t09.IeCd
                     where t10.Isdeleted != 1
+                     && (!string.IsNullOrEmpty(BookNo) ? t10.BkNo.ToLower().Contains(BookNo.ToLower()) : true)
+                     && (!string.IsNullOrEmpty(SetNoFrom) ? t10.SetNoFr == SetNoFrom : true)
+                      && ((IssueToIecd != null) ? t10.IssueToIecd == IssueToIecd : true)
                     select new IC_Bookset_FormModel
                     {
                         Id = t10.Id,

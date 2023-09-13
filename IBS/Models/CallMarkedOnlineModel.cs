@@ -14,7 +14,7 @@
         public string PO_DT { get; set; }
         public string VENDOR { get; set; }
         public string IE_NAME { get; set; }
-
+        public int IE_CD { get; set; }
         public string RLY { get; set; }
         public string L5NO_PO { get; set; }
         public string VEND_NAME { get; set; }

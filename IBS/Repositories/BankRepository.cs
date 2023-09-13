@@ -52,13 +52,18 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = from l in context.T94Banks
-                    where l.Isdeleted != 1
+            string BankName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["BankName"]) ? Convert.ToString(dtParameters.AdditionalValues["BankName"]) : "";
+            int? FMISBankCD = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FMISBankCD"]) ? Convert.ToInt32(dtParameters.AdditionalValues["FMISBankCD"]) : null;
+
+            query = from t94 in context.T94Banks
+                    where t94.Isdeleted != 1
+                     && (!string.IsNullOrEmpty(BankName) ? t94.BankName.ToLower().Contains(BankName.ToLower()) : true)
+                     && ((FMISBankCD != null) ? t94.FmisBankCd == FMISBankCD : true)
                     select new BankMasterModel
                     {
-                        BankCd = l.BankCd,
-                        BankName = l.BankName,
-                        FmisBankCd = l.FmisBankCd
+                        BankCd = t94.BankCd,
+                        BankName = t94.BankName,
+                        FmisBankCd = t94.FmisBankCd
                     };
 
             dTResult.recordsTotal = query.Count();

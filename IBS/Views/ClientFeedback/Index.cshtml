@@ -1,0 +1,233 @@
+﻿@model IBS.Models.ClientFeedbackModel
+
+@{
+    Layout = "~/Views/Shared/_FrontendLayout.cshtml";
+}
+
+<div class="container">
+    <div class="innerContent">
+        <div class="row m-0">
+            <div class="col-lg-12">
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>RITES QA Division (Gurugram)  Vendor Feedback Form</h2>
+    </div>
+</div>
+<div class="accordion-body">
+    <form role="form" asp-controller="ClientFeedback" asp-action="SaveClientFeedback" id="frmClientFeedback">
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <label for="NameOfOrganisation">Name Of Organisation</label>
+                <input type="text" class="input" asp-for="Client">
+                <span asp-validation-for="Client" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="NameoftheOfficialFillingtheform">Name of the Official Filling the form</label>
+                <input type="text" class="input" asp-for="OffName">
+                <span asp-validation-for="OffName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="MobileNo">Mobile No.</label>
+                <input type="text" class="input" asp-for="Mobile">
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="Email">Email</label>
+                <input type="text" class="input" asp-for="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+
+        <h3 class="headingh3">Region for which Feedbak to be submitted</h3>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <label for="RegionFeedbakSubmitted" class="d-none">Region for which Feedbak to be submitted</label>
+                @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                <span asp-validation-for="RegionCode" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+        <div class="row my-0">
+            <div class="col-md-12">
+                <div class="tableScroll">
+                    <table>
+                        <tr>
+                            <th class="slNo">Sr No.</th>
+                            <th class="width50p">Description</th>
+                            <th>Rating</th>
+                        </tr>
+                        @for (int j = 1; j <= 11; j++)
+                        {
+                            <tr>
+                                @{
+                                    var i = j;
+                                    var name = "Field" + j;
+                                    var BelowAverage = "BelowAverage" + j;
+                                    var Good = "Good" + j;
+                                    var VeryGood = "VeryGood" + j;
+                                    var Excellent = "Excellent" + j;
+                                }
+                                <td>@i.</td>
+                                @if (i == 1)
+                                {
+                                    <td>
+                                        Response of RITES office in attending to priorities given by the Railways.
+                                    </td>
+                                }
+                                else if (i == 2)
+                                {
+                                    <td>
+                                        Completion of inspections in time by RITES Inspecting Engineer.
+                                    </td>
+                                }
+                                else if (i == 3)
+                                {
+                                    <td>
+                                        Quality of Inspections and Rejection Advices on RITES website for JI Registration.
+                                    </td>
+                                }
+                                else if (i == 4)
+                                {
+                                    <td>
+                                        Ease of Registering of Rejection Advices on RITES website for JI Registration.
+                                    </td>
+                                }
+                                else if (i == 5)
+                                {
+                                    <td>
+                                        Response of RITES in attending to Joint Inspection requests for Rejection Cases.
+                                    </td>
+                                }
+                                else if (i == 6)
+                                {
+                                    <td>
+                                         Nature of Technical references sent by RITES and suggestions on improvement of material quality.
+                                    </td>
+                                }
+                                else if (i == 7)
+                                {
+                                    <td>
+                                        Liaison by RITES officials with your office and their responsiveness.
+                                    </td>
+                                }
+                                else if (i == 8)
+                                {
+                                    <td>
+                                        Quality of RITES website and dissemination of information for the clients.
+                                    </td>
+                                }
+                                else if (i == 9)
+                                {
+                                    <td>
+                                        Accessibility of IC issued by RITES on IREPS portal.
+                                    </td>
+                                }
+                                else if (i == 10)
+                                {
+                                    <td>
+                                        Responsiveness of the Inspection Engineer to queries raised by your office.
+                                    </td>
+                                }
+                                else if (i == 11)
+                                {
+                                    <td>
+                                        Overall experience with RITES QA divison.
+                                    </td>
+                                }
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="startRating">
+                                            <div class="ratingGroup">
+                                                <input disabled checked class="ratingInput ratingInputNone" name="@name" id="ratingNone" value="0" type="radio">
+                                                <label class="ratingLabel" for="@BelowAverage"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@BelowAverage" type="radio" value="1">
+                                                <label class="ratingLabel" for="@Good"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@Good" type="radio" value="2">
+                                                <label class="ratingLabel" for="@VeryGood"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@VeryGood" type="radio" value="3">
+                                                <label class="ratingLabel" for="@Excellent"><i class="ratingIcon ratingIconStar fa fa-star"></i></label>
+                                                <input class="ratingInput" name="@name" asp-for="@name" id="@Excellent" type="radio" value="4">
+                                            </div>
+                                        </div>
+                                        <div class="ratingText"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>12.</td>
+                            <td>Any other Comments/Suggestiong regarding functioning RITES QA system.<br /><span class="note astric">(250 Chars Maxm)</span></td>
+                            <td>
+                                <textarea class="input" asp-for="Field12" maxlength="250"> </textarea>
+                                <span asp-validation-for="Field12" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+        </div>
+    </form>
+</div>
+</div>
+        </div>
+    </div>
+</div>
+@section scripts{
+        <partial name="_ValidationScriptsPartial" />
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                $('input:radio[name]').change(function () {
+                    var radioValue = this.value
+                    var val="";
+                    if (radioValue == 1)
+                    {
+                        val = "Below Average";
+                    }
+                    else if (radioValue == 2) {
+                        val = "Good";
+                    }
+                    else if (radioValue == 3) {
+                        val = "Very Good";
+                    }
+                    else if (radioValue == 4) {
+                        val = "Excellent";
+                    }
+
+                    $(this).parent().parent().next().text('(' + val + ')');
+                });
+            });
+
+            function CheckValidation()
+            {
+                var returnVal=true;
+                for (var i = 1; i <= 11; i++)
+                {
+                    var BelowAverage= $("#BelowAverage"+i).is(":checked");
+                    var Good = $("#Good" + i).is(":checked");
+                    var VeryGood = $("#VeryGood" + i).is(":checked");
+                    var Excellent = $("#Excellent" + i).is(":checked");
+                    if (!BelowAverage && !Good && !VeryGood && !Excellent)
+                    {
+                        returnVal = false;
+                    }
+                }
+                return returnVal;
+            }
+
+            function Save() {
+                    if (!CheckValidation())
+                    {
+                        ShowHideMsgNew(false, "Please select rating.");
+                        return;
+                    }
+                if ($("#frmClientFeedback").valid()) {
+                    $("#frmClientFeedback").submit();
+                }
+            }
+        </script>
+}

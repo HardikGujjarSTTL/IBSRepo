@@ -10,9 +10,8 @@
         <a asp-area="" asp-controller="Vendor" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
-
-<section class="table-section">
-    <div class="task-listinput">
+<div class="task-listinput">
+    <div class="accordion-body">
         <div class="task-inner row">
             <div class="col-md-2">
                 <div class="input-search">
@@ -45,26 +44,30 @@
                 </div>
             </div>
         </div>
-        <div class="dash-table">
-            <table id="dtVendors" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Vendor Code</th>
-                        <th>Vendor Name</th>
-                        <th>Vendor Address</th>
-                        <th>Vendor City</th>
-                        <th>Vendor Tel No.</th>
-                        <th>Email</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtVendors" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Vendor Code</th>
+                            <th>Vendor Name</th>
+                            <th>Vendor Address</th>
+                            <th>Vendor City</th>
+                            <th>Vendor Tel No.</th>
+                            <th>Email</th>
+                            <th style="text-align:center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -77,6 +80,12 @@
         });
 
         function InitializeDatatable() {
+
+            var VendorCode = $("#VendorCode").val();
+            var VendorName = $("#VendorName").val();
+            var VendorAddress = $("#VendorAddress").val();
+            var VendorCity = $("#VendorCity").val();
+
             $("#dtVendors").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -94,10 +103,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            "VendorCode": ($("#VendorCode").val() == undefined ? '' : $("#VendorCode").val()),
-                            "VendorName": ($("#VendorName").val() == undefined ? '' : $("#VendorName").val()),
-                            "VendorAddress": ($("#VendorAddress").val() == undefined ? '' : $("#VendorAddress").val()),
-                            "VendorCity": ($("#VendorCity").val() == undefined ? '' : $("#VendorCity").val()),
+                            VendorCode, VendorName, VendorAddress, VendorCity
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);

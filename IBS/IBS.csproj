@@ -26,6 +26,13 @@
 		<None Include="wwwroot\css\fonts\Poppins-Regular.woff2" />
 		<None Include="wwwroot\css\fonts\Poppins-SemiBold.svg" />
 		<None Include="wwwroot\css\fonts\Poppins-SemiBold.woff2" />
+		<None Include="wwwroot\frontend\css\fonts\fontawesome-webfont.svg" />
+		<None Include="wwwroot\frontend\css\fonts\fontawesome-webfont.woff2" />
+		<None Include="wwwroot\frontend\js\bootstrap.min.js" />
+		<None Include="wwwroot\frontend\js\functions.js" />
+		<None Include="wwwroot\frontend\js\general.js" />
+		<None Include="wwwroot\frontend\js\jquery-min.js" />
+		<None Include="wwwroot\frontend\js\modernizr.js" />
 		<None Include="wwwroot\js\site.js" />
 		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
 		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
@@ -56,6 +63,24 @@
 		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
 		<None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
 		<None Include="wwwroot\lib\bootstrap\LICENSE" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.colVis.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.colVis.min.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.colVis.min.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.colVis.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.flash.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.flash.min.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.html5.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.html5.min.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.html5.min.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.html5.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.print.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.print.min.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.print.min.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\buttons.print.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\dataTables.buttons.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\dataTables.buttons.min.js" />
+		<None Include="wwwroot\lib\datatables-buttons\js\dataTables.buttons.min.mjs" />
+		<None Include="wwwroot\lib\datatables-buttons\js\dataTables.buttons.mjs" />
 		<None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
 		<None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
 		<None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
@@ -66,6 +91,14 @@
 		<None Include="wwwroot\lib\jquery\dist\jquery.js" />
 		<None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
 		<None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+		<None Include="wwwroot\lib\jszip\jszip.js" />
+		<None Include="wwwroot\lib\jszip\jszip.min.js" />
+		<None Include="wwwroot\lib\pdfmake\pdfmake.js" />
+		<None Include="wwwroot\lib\pdfmake\pdfmake.js.map" />
+		<None Include="wwwroot\lib\pdfmake\pdfmake.min.js" />
+		<None Include="wwwroot\lib\pdfmake\pdfmake.min.js.map" />
+		<None Include="wwwroot\lib\pdfmake\vfs_fonts.js" />
+		<None Include="wwwroot\lib\pdfmake\vfs_fonts.min.js" />
 	</ItemGroup>
 
 	<ItemGroup>

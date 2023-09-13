@@ -51,11 +51,16 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = from l in context.T90RlyDesignations
+            string DesignationCode = !string.IsNullOrEmpty(dtParameters.AdditionalValues["DesignationCode"]) ? Convert.ToString(dtParameters.AdditionalValues["DesignationCode"]) : "";
+            string Designation = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Designation"]) ? Convert.ToString(dtParameters.AdditionalValues["Designation"]) : "";
+
+            query = from t90 in context.T90RlyDesignations
+                    where (!string.IsNullOrEmpty(DesignationCode) ? t90.RlyDesigCd.ToLower().Contains(DesignationCode.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(Designation) ? t90.RlyDesigDesc.ToLower().Contains(Designation.ToLower()) : true)
                     select new Rly_Designation_FormModel
                     {
-                        RlyDesigCd = l.RlyDesigCd,
-                        RlyDesigDesc = l.RlyDesigDesc,
+                        RlyDesigCd = t90.RlyDesigCd,
+                        RlyDesigDesc = t90.RlyDesigDesc,
                     };
 
             dTResult.recordsTotal = query.Count();

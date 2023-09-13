@@ -32,6 +32,9 @@
                     </div>
                 </div>
            @* </form>*@
+    <div class="alert alert-secondary center mb-3">
+        <span id="Label8">IC Details against Given PO No. & Po Date ( Click on Select to register new Complaint against the given IC )</span>
+    </div>
         <section class="table-section">
             <div class="task-listinput">
                 <div class="dash-table">
@@ -57,6 +60,9 @@
                 </div>
             </div>
         </section>
+    <div class="alert alert-secondary center mb-3">
+        <span id="Label8">Complaint Details against Given PO No. & Po Date( Click on Complaint ID to modify the existing complaint against the given IC )</span>
+    </div>
         <section class="table-section" id="complaint">
             <div class="task-listinput">
                 <div class="dash-table">
@@ -98,15 +104,13 @@
             setDefaultDate();
         });
 
-        //var dataTableInstance;
-        function Search() {
-            //if ($("#frmComplaintDetails").valid()) {
-            //    $("#frmComplaintDetails").submit();
-            //}
-            //InitializeDatatable();
-        }
-
         $("#btnSearch").click(function () {
+            var PoNo = $("#PoNo").val();
+            var PoDt = $("#PoDt").val();
+            if (PoNo == "" && PoDt == "") {
+                ShowHideMsgNew(false, "Please select Date Either Enter PONO.");
+                return;
+            }
             InitializeDatatable();
         });
 
@@ -154,49 +158,6 @@
                 "order": [[0, "asc"]]
             });
         }
-        
-
-        //function InitializeDatatable() {
-        //    var PoNo = $("#PoNo").val();
-        //    var PoDt = $("#PoDt").val();
-        //    debugger
-        //    $("#dtList").DataTable({
-        //        stateSave: false,
-        //        autoWidth: true,
-        //        scrollX: true,
-        //        scrollCollapse: true,
-        //        processing: true,
-        //        serverSide: true,
-        //        destroy: true,
-        //        paging: true,
-        //        searching: true,
-        //        ajax: {
-        //            url: "@Url.Action("GetCombinedData", "ConsigneeComplaints")",
-        //            type: "POST",
-        //            contentType: "application/json; charset=utf-8",
-        //            dataType: "json",
-        //            data: function (d) {
-        //                var AdditionalValues = {
-        //                    "PoNo": PoNo,
-        //                    "PoDt": PoDt
-        //                };
-        //                d.AdditionalValues = AdditionalValues;
-        //                return JSON.stringify(d);
-        //            }
-        //        },
-        //        columns: [
-        //            {
-        //                data: '', orderable: false, width: '5%',
-        //                render: function (data, type, row, meta) {
-        //                    return meta.row + meta.settings._iDisplayStart + 1;
-        //                }
-        //            },
-        //            { data: "CASE_NO" }
-        //        ],
-        //        "order": [[0, "asc"]]
-        //    });
-
-        //}
 
         function InitializeDatatable() {
             var PoNo = $("#PoNo").val();

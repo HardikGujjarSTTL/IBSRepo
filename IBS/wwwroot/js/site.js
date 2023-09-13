@@ -59,3 +59,17 @@ function IsValidDate(myInput) {
     }
 }
 
+function getExportFileName(title) {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    var mi = today.getMinutes();
+    mi = mi > 9 ? mi : '0' + mi;
+    var sec = today.getSeconds();
+    sec = sec > 9 ? sec : '0' + sec;
+
+    return title + '_' + dd + '_' + mm + '_' + yyyy + '_' + hh + '_' + mi + '_' + sec;
+}

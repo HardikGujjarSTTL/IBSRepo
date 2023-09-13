@@ -1,0 +1,121 @@
+﻿@model IBS.Models.Clientmaster
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Client Master</h2>
+    </div>
+</div>
+<form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmclient" >
+    <div class="accordion-body">
+        <div class="row my-0 d-flex align-items-end">
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Client Name</label>
+                <input type="text" id="clientname" class="input" asp-for="USER_NAME" maxlength="200" />
+            </div>
+
+            <div class="col-md-6 mb-4 alignBtn">
+                <div class="savenext-btn">
+                    <button type="button" class="reset-btn" id="btnSearch">Search</button>
+                    <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+        
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtclient" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Client Name</th>
+                            <th>ORGANISATION</th>
+                            <th>DESIGNATION</th>
+                            <th>MOBILE</th>
+                            <th>EMAIL</th>
+                            <th>UNIT</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $("#btnSearch").click(function () {
+            var clientname = $("#clientname").val();
+            if (clientname == "") {
+                ShowHideMsgNew(false, "Please Enter ClientName.");
+                return;
+            }
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            var clientname = $("#clientname").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            $("#dtclient").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "clientname": clientname
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "USER_NAME"},
+                    { data: "ORGANISATION"},
+                    { data: "DESIGNATION"},
+                    { data: "MOBILE"},
+                    { data: "EMAIL"},
+                    { data: "UNIT"},
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "ClientMaster")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function Delete(id) {
+            var url = '@Url.Action("Delete", "ClientMaster")?ID=' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

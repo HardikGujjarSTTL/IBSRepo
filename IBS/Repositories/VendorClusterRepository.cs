@@ -40,7 +40,7 @@ namespace IBS.Repositories
                                                City = c.City ?? ""
                                            }).FirstOrDefault();
 
-                if(data != null)
+                if (data != null)
                 {
                     model.VendFullName = data.VendName + "/" + data.VendAdd1 + "/" + data.Location + " / " + data.City;
                     model.VendAdd1 = data.VendAdd1;
@@ -75,11 +75,19 @@ namespace IBS.Repositories
             }
 
             string Region = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]) ? Convert.ToString(dtParameters.AdditionalValues["Region"]) : "";
+            string VendorName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorName"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorName"]) : "";
+            string DepartmentName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["DepartmentName"]) ? Convert.ToString(dtParameters.AdditionalValues["DepartmentName"]) : "";
+            string ClusterName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ClusterName"]) ? Convert.ToString(dtParameters.AdditionalValues["ClusterName"]) : "";
+            string GeographicalPartition = !string.IsNullOrEmpty(dtParameters.AdditionalValues["GeographicalPartition"]) ? Convert.ToString(dtParameters.AdditionalValues["GeographicalPartition"]) : "";
 
             var lstQuery = (from vc in context.T100VenderClusters
                             join cm in context.T99ClusterMasters on vc.ClusterCode equals cm.ClusterCode
                             join v in context.T05Vendors on vc.VendorCode equals v.VendCd
                             where cm.RegionCode == Region
+                             && (!string.IsNullOrEmpty(VendorName) ? v.VendName.ToLower().Contains(VendorName.ToLower()) : true)
+                             && (!string.IsNullOrEmpty(DepartmentName) ? vc.DepartmentName == DepartmentName : true)
+                             && (!string.IsNullOrEmpty(ClusterName) ? cm.ClusterName.ToLower().Contains(ClusterName.ToLower()) : true)
+                             && (!string.IsNullOrEmpty(GeographicalPartition) ? cm.GeographicalPartition.ToLower().Contains(GeographicalPartition.ToLower()) : true)
                             select new VendorClusterModel
                             {
                                 VendorCode = vc.VendorCode,

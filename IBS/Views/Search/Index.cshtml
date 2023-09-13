@@ -1,0 +1,286 @@
+﻿@model IBS.Models.Search
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Search Master</h2>
+    </div>
+</div>
+
+<form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmsearch">
+    <div class="accordion-body">
+        <div class="row my-0 d-flex align-items-end">
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Case No.</label>
+                <input type="text" id="caseno" class="input" asp-for="CaseNo" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">PO No.</label>
+                <input type="text" id="pono" class="input" asp-for="PONO" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">PO Date</label>
+                <input type="text" id="podt" class="input datepicker" asp-for="PODT" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Book No.</label>
+                <input type="text" id="bkno" class="input" asp-for="BKNO" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Set No.</label>
+                <input type="text" id="setno" class="input" asp-for="SetNo" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Call Date</label>
+                <input type="text" id="calldt" class="input datepicker" asp-for="Calldt" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Call SNo.</label>
+                <input type="text" id="callsno" class="input" asp-for="Calldt" maxlength="200" />
+            </div>
+            <div class="col-md-3 mb-4">
+                <label for="PropertyId">IE</label>
+                @Html.DropDownList("IEName", new SelectList(IBS.Models.Common.GetIEName(@ViewBag.Region) , "Value", "Text"),"--Select--", new { id = "IENAME" })
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Bill No.</label>
+                <input type="text" id="billno" class="input" asp-for="BillNo" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Bill Date</label>
+                <input type="text" id="billdt" class="input datepicker" asp-for="BillDt" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Bill Amount</label>
+                <input type="text" id="billamount" class="input" asp-for="BillDt" maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">BPO</label>
+                <input type="text" id="bpo" class="input" maxlength="3" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Consignee</label>
+                <input type="text" id="consignee" class="input" maxlength="3" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">Vendor</label>
+                <input type="text" id="vendor" class="input" maxlength="3" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="btnsearch">Search</button>
+                </div>
+            </div>
+            <div class="alert alert-warning center">
+                <span id="Label8">At least one field is required to search data.</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtsearch" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Case No.</th>
+                        <th>PO No.</th>
+                        <th>PO Date</th>
+                        <th>Call Date</th>
+                        <th>Call SNo.</th>
+                        <th>Book No.</th>
+                        <th>Set No.</th>
+                        <th>IE</th>
+                        <th>Consignee</th>
+                        <th>Bill No.</th>
+                        <th>Bill Dt</th>
+                        <th>Insp Fee</th>
+                        <th>Bill Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+   @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $("#btnsearch").click(function () {
+                InitializeDatatable();
+            });
+
+            function InitializeDatatable() {
+                debugger
+                var caseno = $("#caseno").val();
+                var pono = $("#pono").val();
+                var podt = $("#podt").val();
+                var bkno = $("#bkno").val();
+                var setno = $("#setno").val();
+                var calldt = $("#calldt").val();
+                var billno = $("#billno").val();
+                var billdt = $("#billdt").val();
+                var billamount = $("#billamount").val();
+                var bpo = $("#bpo").val();
+                var consignee = $("#consignee").val();
+                var vendor = $("#vendor").val();
+                var IENAME = $("#IENAME").val();
+                var callsno = $("#callsno").val();
+
+                var indexOfHyphen = vendor.indexOf("-");
+                var vendcd = vendor.substr(0, indexOfHyphen).trim();
+
+                var indexOfHyphen = consignee.indexOf("-");
+                var consigneecd = consignee.substr(0, indexOfHyphen).trim();
+
+                var indexOfHyphen = bpo.indexOf("-");
+                var bpocd = bpo.substr(0, indexOfHyphen).trim();
+
+                var ajaxUrl = "@Url.Action("LoadTable")";
+
+                $("#dtsearch").DataTable({
+                    stateSave: false,
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true,
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,
+                    searching: true,
+                    ajax: {
+                        url: ajaxUrl,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                                "caseno": caseno,
+                                "pono": pono,
+                                "podt": podt,
+                                "bkno": bkno,
+                                "setno": setno,
+                                "calldt": calldt,
+                                "callsno": callsno,
+                                "billno": billno,
+                                "billdt": billdt,
+                                "billamount": billamount,
+                                "bpocd": bpocd,
+                                "consigneecd": consigneecd,
+                                "vendcd": vendcd,
+                                "IENAME": IENAME,
+                            };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        },
+                    },
+                    columns: [
+                        { data: "CaseNo" },
+                        { data: "PONO" },
+                        {
+                            data: "PODT",
+                            render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            data: "Calldt",
+                            render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        { data: "CallSno" },
+                        { data: "BKNO" },
+                        { data: "SetNo" },
+                        { data: "IEName" },
+                        { data: "Consignee" },
+                        { data: "BillNo" },
+                        {
+                            data: "BillDt",
+                            render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        { data: "InspFee" },
+                        { data: "BillAmount" },
+                    ],
+                    "order": [[0, "asc"]]
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            $("#bpo").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetBPOData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.BPO_NAME, value: item.BPO_NAME };
+                            }))
+
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
+            $("#consignee").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetConsigneeData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CONSIGNEE, value: item.CONSIGNEE };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
+            $("#vendor").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+        });
+
+    </script>
+}

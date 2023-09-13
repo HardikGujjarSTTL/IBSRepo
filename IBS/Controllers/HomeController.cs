@@ -109,6 +109,10 @@ namespace IBS.Controllers
                             new Claim("AuthLevl", userMaster.AuthLevl != null ? userMaster.AuthLevl.ToString() : ""),
                             new Claim("RoleId", Convert.ToString(userMaster.RoleId)),
                             new Claim("RoleName", userMaster.RoleName != null ? Convert.ToString(userMaster.RoleName) : ""),
+                            new Claim("OrgnTypeL", userMaster.OrgnTypeL != null ? Convert.ToString(userMaster.OrgnTypeL) : ""),
+                            new Claim("OrganisationL", userMaster.OrganisationL != null ? Convert.ToString(userMaster.OrganisationL) : ""),
+                            new Claim("OrgnType", userMaster.OrgnType != null ? Convert.ToString(userMaster.OrgnTypeL) : ""),
+                            new Claim("Organisation", userMaster.Organisation != null ? Convert.ToString(userMaster.OrganisationL) : ""),
                          };
                         var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                         var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });

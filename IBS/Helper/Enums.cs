@@ -42,15 +42,17 @@ namespace IBS.Helper
             CallRegistrationDoc = 10,
             [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
             AdministratorPurchaseOrder = 13,
-            [Description("/ReadWriteData/Online_Comp_Document")]
+            [Description("/ReadWriteData/Files/Online_Comp_Document")]
             OnlineComplaints = 11,
-            [Description("/ReadWriteData/Consignee_Comp_Document")]
+            [Description("/ReadWriteData/Files/Consignee_Comp_Document")]
             ConsigneeComplaints = 12,
 
             [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
             IEFullSignature = 13,
             [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
             IEInitials = 14,
+            [Description("/ReadWriteData/Files/ContractEntry")]
+            ContractEntry = 15,
         }
 
         public enum DocumentCategory : int
@@ -69,6 +71,7 @@ namespace IBS.Helper
             ConsigneeComplaints = 12,
             IEFullSignature = 14,
             IEInitials = 15,
+            ContractEntryDoc=16,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -88,6 +91,7 @@ namespace IBS.Helper
             Upload_JI_Case=51,
             Upload_JI_Report=52,
             Upload_Tech_Ref1 = 53,
+            Upload_Contract_Doc=16,
 
         }
 
@@ -411,6 +415,34 @@ namespace IBS.Helper
             M,
             [Description("Lost / Theft")]
             L,
+        }
+
+        public enum ActionProposed
+        {
+            [Description("No Action Required")]
+            N,
+            [Description("Warning Letter")]
+            W,
+            [Description("Minor Penalty")]
+            I,
+            [Description("Major Penalty")]
+            J,
+            [Description("Others")]
+            O,
+        }
+
+        public enum ConsigneeType
+        {
+            [Description("Railway")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("Foreign Railway")]
+            F,
+            [Description("PSU")]
+            U,
+            [Description("State Government")]
+            S,
         }
 
         public enum FPart

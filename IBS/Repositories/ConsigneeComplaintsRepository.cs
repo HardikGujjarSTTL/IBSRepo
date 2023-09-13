@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
+using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Dynamic;
 using System.Globalization;
+using System.Reflection;
 using System.Security.Cryptography;
 
 using System.Xml.Linq;
@@ -429,7 +431,7 @@ namespace IBS.Repositories
 
             if (model.AcceptRejornot != "C")
             {
-                if (model.Remarks.Trim() != "")
+                if (model.Remarks != "" && model.Remarks != null)
                 {
                     var complaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -738,9 +740,17 @@ namespace IBS.Repositories
 
             if (model.CASE_NO.Substring(0, 1) == inspRegionFirstChar)
             {
-                SendMailModel.To = ie_email + ";" + co_email;
-                SendMailModel.CC = cc + ";" + JI_IE ;
-                SendMailModel.From = "nrinspn@gmail.com"; ;
+                //SendMailModel.To = ie_email + ";" + co_email;
+                //SendMailModel.CC = cc + ";" + JI_IE ;
+                //SendMailModel.From = "nrinspn@gmail.com"; ;
+                //SendMailModel.Subject = "Consignee Complaint Has Been Registered for Joint Inspection (JI)";
+                //SendMailModel.Message = mail_body;
+
+                // sender for local mail testing
+                senderEmail = "hardiksilvertouch007@outlook.com";
+                SendMailModel.From = senderEmail;
+                SendMailModel.To = ie_email;
+                SendMailModel.To = co_email;
                 SendMailModel.Subject = "Consignee Complaint Has Been Registered for Joint Inspection (JI)";
                 SendMailModel.Message = mail_body;
             }
@@ -762,11 +772,24 @@ namespace IBS.Repositories
                         break;
                 }
 
-                SendMailModel.To = cc + ";" + JI_IE;
-                SendMailModel.CC = ie_email + ";" + co_email;
-                SendMailModel.From = "nrinspn@gmail.com"; ;
+
+                // sender for local mail testing
+                senderEmail = "hardiksilvertouch007@outlook.com";
+                SendMailModel.CC = cc;
+                SendMailModel.CC = JI_IE;
+                SendMailModel.To = ie_email;
+                SendMailModel.To = co_email;
+                SendMailModel.From = senderEmail;
                 SendMailModel.Subject = "Consignee Complaint Has Been Registered for Joint Inspection (JI)";
                 SendMailModel.Message = mail_body;
+
+                //SendMailModel.CC = cc;
+                //SendMailModel.CC = JI_IE;
+                //SendMailModel.To = ie_email;
+                //SendMailModel.To = co_email;
+                //SendMailModel.From = "nrinspn@gmail.com"; ;
+                //SendMailModel.Subject = "Consignee Complaint Has Been Registered for Joint Inspection (JI)";
+                //SendMailModel.Message = mail_body;
             }
 
             bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
@@ -852,11 +875,24 @@ namespace IBS.Repositories
 
             if (model.CASE_NO.Substring(0, 1) == inspRegionFirstChar)
             {
-                SendMailModel.To = ie_email + ";" + co_email;
-                SendMailModel.CC = cc + ";" + JI_IE + ";" + "nrinspn@gmail.com"; ;
-                SendMailModel.From = "nrinspn@gmail.com"; ;
+                // sender for local mail testing
+                sender = "hardiksilvertouch007@outlook.com";
+                SendMailModel.CC = cc;
+                SendMailModel.CC = JI_IE;
+                SendMailModel.To = ie_email;
+                SendMailModel.To = co_email;
+                SendMailModel.To = "nrinspn@gmail.com";
+                SendMailModel.From = sender;
                 SendMailModel.Subject = "Consignee Complaint Has Concluded";
                 SendMailModel.Message = mail_body;
+
+                //SendMailModel.CC = cc;
+                //SendMailModel.CC = JI_IE;
+                //SendMailModel.To = ie_email;
+                //SendMailModel.To = co_email;
+                //SendMailModel.From = "nrinspn@gmail.com"; ;
+                //SendMailModel.Subject = "Consignee Complaint Has Concluded";
+                //SendMailModel.Message = mail_body;
             }
             else
             {
@@ -876,11 +912,27 @@ namespace IBS.Repositories
                         break;
                 }
 
-                SendMailModel.To = cc + ";" + JI_IE;
-                SendMailModel.CC = ie_email + ";" + co_email + ";" + "nrinspn@gmail.com";
-                SendMailModel.From = "nrinspn@gmail.com"; ;
+                // sender for local mail testing
+                sender = "hardiksilvertouch007@outlook.com";
+                SendMailModel.CC = ie_email;
+                SendMailModel.CC = co_email;
+                SendMailModel.CC = "nrinspn@gmail.com";
+                SendMailModel.To = cc;
+                SendMailModel.To = JI_IE;
+                SendMailModel.To = "nrinspn@gmail.com";
+                SendMailModel.From = sender;
                 SendMailModel.Subject = "Consignee Complaint Has Concluded";
                 SendMailModel.Message = mail_body;
+
+                //SendMailModel.CC = ie_email;
+                //SendMailModel.CC = co_email;
+                //SendMailModel.CC = "nrinspn@gmail.com";
+                //SendMailModel.To = cc;
+                //SendMailModel.To = JI_IE;
+                //SendMailModel.To = "nrinspn@gmail.com"; 
+                //SendMailModel.From = "nrinspn@gmail.com"; ;
+                //SendMailModel.Subject = "Consignee Complaint Has Concluded";
+                //SendMailModel.Message = mail_body;
             }
 
             bool isSend = pSendMailRepository.SendMail(SendMailModel, null);

@@ -18,7 +18,6 @@ namespace IBS.Models
 {
     public static class Common
     {
-
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
         public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
@@ -179,7 +178,62 @@ namespace IBS.Models
                                      }).ToList();
             return state;
         }
-
+        public static List<SelectListItem> LabInfoReportStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Lab Report Uploaded";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Lab Report Not Uploaded";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> GetStatusLabRpt()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Confirm";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Not Confirm";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "No Comments";
+            single.Value = "X";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static IEnumerable<SelectListItem> GetVendorLabRpt()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = (from v in ModelContext.T05Vendors
+                                             join c in ModelContext.T03Cities on v.VendCityCd equals c.CityCd
+                                             where v.VendName != null
+                                             orderby (v.VendName.Trim() + "/" + v.VendAdd1.Trim() + "/" +
+                     (c.Location != null ? (c.Location.Trim() + " / " + c.City) : c.City))
+                                             select new SelectListItem
+                                             {
+                                                 Text = v.VendName.Trim() + "/" + v.VendAdd1.Trim() + "/" +
+                            (c.Location != null ? (c.Location.Trim() + " / " + c.City) : c.City),
+                                                 Value = Convert.ToString(v.VendCd)
+                                             }).ToList();
+            return dropList;
+        }
         public static List<SelectListItem> GetCountry()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -301,6 +355,62 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        
+        public static List<SelectListItem> FeedBackRegion()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Northern Region";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Eastern Region";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Western Region";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Southern Region";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CENTRAL REGION";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "CO QA DIVISION";
+            single.Value = "Q";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        
+        public static List<SelectListItem> ParticularAction()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "No Action Required";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Warning Letter";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Minor Penalty";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Major Penalty";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> NOJIReasons()
         {
@@ -417,6 +527,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> ItemBlocked()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -748,6 +859,18 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             return (from a in ModelContext.T09Ies
                     where a.IeRegion == IeRegion
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.IeName),
+                        Value = Convert.ToString(a.IeCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetInspEngCd(string IeRegion)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T09Ies
+                    where a.IeStatus == null && a.IeRegion == IeRegion
                     select new SelectListItem
                     {
                         Text = Convert.ToString(a.IeName),
@@ -1140,6 +1263,22 @@ namespace IBS.Models
 
         }
 
+        public static List<SelectListItem> CourseName(string RegionCode, string TrainingType, string TrainingArea)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.TrainingCourseMasters
+                                       where a.TrainingType == TrainingType && a.TrainingField == TrainingArea && a.Region == RegionCode
+                                       orderby a.CourseName
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = Convert.ToString(a.CourseName + "(" + Convert.ToDateTime(a.CourseDurFr).ToString("dd/MM/yyyy") + Convert.ToDateTime(a.CourseDurTo).ToString("dd/MM/yyyy") + ")"),
+                                      Value = Convert.ToString(a.CourseId)
+                                  }).ToList();
+            return IE;
+
+        }
+
         public static List<SelectListItem> GetItem(string CaseNo, string CallRecDt, string CallSNO)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1179,6 +1318,17 @@ namespace IBS.Models
                                         Value = Convert.ToString(a.TestCategoryCd)
                                     }).ToList();
             return Role;
+
+        }
+
+        public static List<SelectListItem> GetClientName()
+        {
+            ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> distinctUserNames = modelContext.T32ClientLogins
+                    .Select(t => new SelectListItem { Value = t.UserName, Text = t.UserName })
+                    .Distinct()
+                    .ToList();
+            return distinctUserNames;
 
         }
 
@@ -1266,6 +1416,25 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> Orgn_Type()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railway";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Government";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Other";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> LabSmapleStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1287,6 +1456,182 @@ namespace IBS.Models
             single.Value = "O";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> Category()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Regular";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Deputation";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Other";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> Qualification()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Degree";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Diploma";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Other";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> TrainingType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Induction";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Orientation";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Refresh";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Technical";
+            single.Value = "T";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> TrainingArea()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Welding",
+                Value = "W"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "NDT",
+                Value = "N"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Metrology",
+                Value = "M"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Plastic",
+                Value = "P"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Textile",
+                Value = "T"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Paint",
+                Value = "A"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Transformer",
+                Value = "R"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Cable",
+                Value = "C"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Energy Audit",
+                Value = "E"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Pressure Vessel",
+                Value = "V"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Pipeline",
+                Value = "I"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Rubber",
+                Value = "B"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "M&P",
+                Value = "X"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "ISO",
+                Value = "O"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "DRG Reading",
+                Value = "D"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "FR Item",
+                Value = "F"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "OHE",
+                Value = "H"
+            });
+
+            textValueDropDownDTO.Add(new SelectListItem
+            {
+                Text = "Other",
+                Value = "Y"
+            });
+
+            return textValueDropDownDTO;
         }
 
         public static List<SelectListItem> CallCancelStatus()
@@ -1594,6 +1939,75 @@ namespace IBS.Models
             return contacts;
         }
 
+        public static List<SelectListItem> GetItemSuperForm(string CaseNo, string CallDate, string CallSNo)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> Super = (from t18 in context.T18CallDetails
+                                          join t17 in context.T17CallRegisters
+                                          on new { t18.CaseNo, t18.CallRecvDt, t18.CallSno }
+                                          equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
+                                          where t17.CaseNo == CaseNo &&
+                                          t17.CallRecvDt == DateTime.ParseExact(CallDate, "dd/MM/yyyy", null) &&
+                                          t17.CallSno == int.Parse(CallSNo)
+                                          select
+                                     new SelectListItem
+                                     {
+                                         Text = t18.ItemDescPo,
+                                         Value = Convert.ToString(t18.ItemSrnoPo)
+                                     }).ToList();
+            return Super;
+        }
+
+        public static List<SelectListItem> ItemScope()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "(IAF 12) Chemical/Paints";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 14b) Plastics Pipes & Fittings";
+            single.Value = "B";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 16) Cement Pipes, AC Pressue Pipes & PCC Poles";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 17b)  Rails, CI/DI Pipes, Steel Tubes and Fittings, Seamless Blocl/Galvanised, Valves";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "S(IAF 19a) Conductor, Cables, Power Transformers, CT/PT Fans, Relay, Panel, DG set, Alternator, Energy Meter";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 22) Railway Rolling Stock";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 28) Water Supply";
+            single.Value = "G";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 28) Construction";
+            single.Value = "H";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 07) Paper for Printing";
+            single.Value = "I";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "(IAF 09) Printed Tickes & Ruled Papers";
+            single.Value = "J";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> GetICType()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -1666,6 +2080,22 @@ namespace IBS.Models
 
             List<SelectListItem> contacts = (from v in ModelContext.T08IeControllOfficers
                                              where v.CoStatus == "" && v.CoRegion == GetRegionCode
+                                             orderby v.CoName
+                                             select
+                                     new SelectListItem
+                                     {
+                                         Text = v.CoName,
+                                         Value = Convert.ToString(v.CoCd)
+                                     }).ToList();
+            return contacts;
+        }
+
+        public static List<SelectListItem> GetCODataSuperForm(string GetRegionCode)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from v in ModelContext.T08IeControllOfficers
+                                             where v.CoRegion == GetRegionCode
                                              orderby v.CoName
                                              select
                                      new SelectListItem
@@ -1902,7 +2332,6 @@ namespace IBS.Models
                                        }).ToList();
             return objdata;
         }
-
 
         public static List<SelectListItem> GetIeCity(int IeCityId)
         {
@@ -2558,6 +2987,7 @@ namespace IBS.Models
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
         }
+
         public static List<TextValueDropDownDTO> GetIcStatus()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IcStatus)).ToList();
@@ -2588,8 +3018,93 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST)).ToList();
         }
 
+        public static string[] GetVenderDetails(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
 
+            var objData = (from t05 in ModelContext.T05Vendors
+                           join t03 in ModelContext.T03Cities on t05.VendCityCd equals t03.CityCd
+                           where t05.VendCd == VendCd
+                           select new
+                           {
+                               VENDOR = t05.VendName + "," +
+                                        (t05.VendAdd2 != null ? (t05.VendAdd1 + "/" + t05.VendAdd2) : t05.VendAdd1) + "/" + t03.City,
+                               t05.VendEmail
+                           }).FirstOrDefault();
+            string[] strings = new string[2];
+            if (objData != null)
+            {
+                strings[0] = objData.VENDOR;
+                strings[1] = objData.VendEmail;
+            }
+            return strings;
+        }
+
+        public static List<SelectListItem> GetControllingOfficers(string Region)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from a in context.T08IeControllOfficers
+                    where a.CoStatus == null && a.CoRegion == Region
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.CoName),
+                        Value = Convert.ToString(a.CoCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<SelectListItem> GetIEByCo(string Region, int COCd)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region && c.IeCoCd == COCd
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetRemarkingToIE(string Region)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetActionProposed()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ActionProposed)).ToList();
+        }
+
+        public static List<SelectListItem> GetIeCity()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = (from a in context.T03Cities
+                                            where a.City != null && a.Location != null
+                                            select new SelectListItem
+                                            {
+                                                Value = a.CityCd.ToString(),
+                                                Text = a.Location != null ? a.Location + " : " + a.City : a.City,
+                                            }).ToList();
+            return objdata;
+        }
+
+        public static List<TextValueDropDownDTO> GetConsigneeType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ConsigneeType)).ToList();
+        }
+
+        public static string ConvertToUpper(string str)
+        {
+            return str != null ? str.ToUpper() : "";
+        }
     }
+
     public static class DbContextHelper
     {
         public static DbContextOptions<ModelContext> GetDbContextOptions()
