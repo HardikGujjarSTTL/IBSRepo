@@ -77,5 +77,38 @@ namespace IBS.Helper
             }
             return ds;
         }
+
+        public static DataSet GetDataSet(string procedurename, OracleParameter[] parameters)
+        {
+            DataSet ds = new DataSet();
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            using (var command = context.Database.GetDbConnection().CreateCommand())
+            {
+                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    command.CommandText = procedurename;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddRange(parameters);
+                    
+                    var reader = command.ExecuteReader();
+                    do
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+                        ds.Tables.Add(tb);
+
+                    } while (!reader.IsClosed);
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+
+            return ds;
+        }
     }
 }
