@@ -1377,7 +1377,54 @@ namespace IBS.Models
             return CoName;
 
         }
-
+        public static List<SelectListItem> TestToBe()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Manual";
+            single.Value = "M";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Default";
+            single.Value = "D";
+            textValueDropDownDTO.Add(single);           
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> TestToBeConducted()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Chemical Testing By Spectro";
+            single.Value = "CS";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Chemical Testing By Wet";
+            single.Value = "CW";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "UTS, YS & % Elongation";
+            single.Value = "UT";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Hardness Test";
+            single.Value = "HT";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "EPDM/PVC Confirmation";
+            single.Value = "EC";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Radiograpgy Test";
+            single.Value = "RT";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Others";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
         public static List<SelectListItem> PaymentStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();

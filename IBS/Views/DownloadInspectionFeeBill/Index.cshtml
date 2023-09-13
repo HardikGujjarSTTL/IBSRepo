@@ -58,7 +58,7 @@
         <div class="savenext-btn">
             <a asp-controller="DownloadInspectionFeeBill" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" id="btnSearch">Search</button>
-            <button type="button" class="save-btn" id="btnDownload">Download Inspection Fee Bill</button>
+            <button type="button" class="save-btn" id="btnDownload" onclick="Download()">Download Inspection Fee Bill</button>
         </div>
     </div>
     <section class="table-section">
@@ -295,5 +295,25 @@
             //window.location.href = "/CallRegister";
             window.location.href = '@Url.Action("Index", "CallRegister")';
         };
+        function Download(){
+            var CaseNo = $("#CaseNo").val();
+            var BkNo = $("#BkNo").val();
+            var SetNo = $("#SetNo").val();
+            var QueryString = "RptFlag=3" +
+                "&CaseNo=" + encodeURIComponent(CaseNo) +
+                "&BkNo=" + encodeURIComponent(BkNo) +
+                "&SetNo=" + encodeURIComponent(SetNo);
+                
+
+            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
+            
+        }
     </script>
     }
