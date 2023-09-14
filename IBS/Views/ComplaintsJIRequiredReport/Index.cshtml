@@ -1,0 +1,628 @@
+﻿
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>JI CONSIGNEE COMPLAINTS</h2>
+    </div>
+</div>
+
+<style>
+    .Datefieldcls {
+        margin-left: -110px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            <input type="radio" id="FinancialYear" name="FinancialYear" value="FinancialYear">
+            <label for="FinancialYear">For The Financial Year</label>
+            @Html.DropDownList("FinancialYears", new SelectList(IBS.Models.Common.FinancialYear(), "Value", "Text"), "--Select--", new { id = "FinancialYears" })
+        </div>
+        <div class="col-md-4 mb-4">
+            <input type="radio" id="JIDecidedDT" name="FinancialYear" value="JIDecidedDT">
+            <label for="JIDecidedDT">JI Decided on For The Period(From Date - To Date)</label>
+            <div class="col-md-10 mb-6">
+                <input type="text" class="input datepicker" id="FromDate">
+            </div>
+        </div>
+        <div class="col-md-3 mb-3 Datefieldcls">
+            <label for="JIDecidedDT"></label><br />
+            <input type="text" class="input datepicker" id="ToDate">
+        </div>
+        <div class="col-md-4 mb-4">
+            <input type="radio" id="CMWise" name="CMWises" value="CMWise">
+            <label for="CMWise">CM Wise</label>
+            <div class="col-md-4 mb-4" id="AllCMWise">
+                <input type="radio" id="AllCM" name="CMWise" value="AllCM">
+                <label for="AllCM">All CM </label>
+
+                <input type="radio" id="ParticularCMs" name="CMWise" value="ParticularCMs">
+                <label for="ParticularCMs">Particular CM</label>
+            </div>
+            <div class="col-md-6 mb-6" id="particularCM">
+                @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <input type="radio" id="IEWise" name="CMWises" value="IEWise">
+            <label for="IEWise">IE Wise</label>
+            <div class="col-md-4 mb-4" id="AllIE">
+                <input type="radio" id="AllIEs" name="IEWise" value="AllIE">
+                <label for="AllIEs">All IE</label>
+
+                <input type="radio" id="ParticularIEs" name="IEWise" value="ParticularIEs">
+                <label for="ParticularIEs">Particular IE</label>
+            </div>
+            <div class="col-md-6 mb-6" id="particularIE">
+                @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <input type="radio" id="VendorWise" name="CMWises" value="VendorWise">
+            <label for="VendorWise">Vendor Wise</label>
+            <div class="col-md-5 mb-5" id="vendorrdo">
+                <input type="radio" id="AllVendors" name="VendorWise" value="AllVendors">
+                <label for="AllVendors">All Vendors</label>
+
+                <input type="radio" id="ParticularVendor" name="VendorWise" value="ParticularVendor">
+                <label for="ParticularVendor">Particular Vendor</label>
+            </div>
+            <div class="col-md-8 mb-8" id="vendor">
+                <label for="Reference">Vendor</label>
+                <input type="text" id="vendor" class="input" maxlength="3" />
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <input type="radio" id="ClientWise" name="CMWises" value="ClientWise">
+            <label for="ClientWise">Client Wise</label>
+            <div class="col-md-4 mb-4" id="clientwises">
+                <input type="radio" id="AllClient" name="ClientWise" value="AllClient">
+                <label for="AllClient">All Client</label>
+
+                <input type="radio" id="ParticularClients" name="ClientWise" value="ParticularClients">
+                <label for="ParticularClients">Particular Client</label>
+            </div>
+            <div class="col-md-6 mb-6" id="particularclient">
+                @Html.DropDownList("Clientwise", new SelectList(IBS.Models.Common.ClientWise(), "Value", "Text"), "--Select--", new { id = "Clientwiseddl" })
+                <select id="Item" class="form-control" required></select>
+            </div>
+        </div>
+        <div class="col-md-5 mb-5">
+            <input type="radio" id="ConsigneeWise" name="CMWises" value="ConsigneeWise">
+            <label for="ConsigneeWise">Consignee Wise</label>
+            <div class="col-md-5 mb-5" id="consignees">
+                <input type="radio" id="AllConsignee" name="ConsigneeWise" value="AllConsignee">
+                <label for="AllConsignee">All Consignee</label>
+
+                <input type="radio" id="ParticularConsignee" name="ConsigneeWise" value="ParticularConsignee">
+                <label for="ParticularConsignee">Particular Consignee</label>
+            </div>
+            <div class="col-md-5 mb-5" id="consignee">
+                <label for="Reference">Consignee</label>
+                <input type="text" id="consignee" class="input" maxlength="3" />
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <label>Report Type</label>
+            <div class="col-md-4 mb-4" id="reporttypes">
+                <input type="radio" id="Compact" name="Compact" value="Compact">
+                <label for="Compact">Compact </label>
+
+                <input type="radio" id="Detailed" name="Compact" value="Detailed">
+                <label for="Detailed">Detailed</label>
+            </div>
+            <div class="col-md-7 mb-7" id="detaileds">
+                <input type="radio" id="AwaitingJI" name="Detaileds" value="AwaitingJI">
+                <label for="AwaitingJI">Awaiting JI </label><br />
+
+                <input type="radio" id="JIConclusion" name="Detaileds" value="JIConclusion">
+                <label for="JIConclusion">Awaiting JI Conclusion</label><br />
+
+                <input type="radio" id="JIConclusionfollowup" name="Detaileds" value="JIConclusionfollowup">
+                <label for="JIConclusionfollowup">Awaiting Action on JI Conclusion follow up</label><br />
+
+                <input type="radio" id="JIconclusionreport" name="Detaileds" value="JIconclusionreport">
+                <label for="JIconclusionreport">Awaiting Final disposal of JI conclusion report</label><br />
+
+                <input type="radio" id="All" name="Detaileds" value="All">
+                <label for="All">All </label>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" id="btnSearch">Search</button>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="list-btn" style="margin-top: 31px;">
+            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+        </div>
+    </div>
+</div>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtJISNO" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Total No. of Inspections</th>
+                        <th>Total Value of Inspections</th>
+                        <th>Recd</th>
+                        <th>Finalised</th>
+                        <th>Pending</th>
+                        <th>Accepted</th>
+                        <th>Upheld (1)</th>
+                        <th>Sorting (2)</th>
+                        <th>Rectification (3)</th>
+                        <th>Price Reduction (4)</th>
+                        <th>Lifted Before JI (5)</th>
+                        <th>Not On Rites A/c</th>
+                        <th>Transit Damage</th>
+                        <th>Unstamped</th>
+                        <th>Total (1+2+3+4+5)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#particularCM").hide();
+            $("#particularIE").hide();
+            $("#vendor").hide();
+            $("#particularclient").hide();
+            $("#consignee").hide();
+            $("#AllCMWise").hide();
+            $("#AllIE").hide();
+            $("#vendorrdo").hide();
+            $("#clientwises").hide();
+            $("#consignees").hide();
+            $("#detaileds").hide();
+            $("#Compact").prop("checked", true);
+            $("#FinancialYear").prop("checked", true);
+
+            $("#btnSearch").click(function () {
+                debugger
+                //var JISNO = $("#JISNO").val();
+                //if (JISNO == "") {
+                //    ShowHideMsgNew(false, "Please Enter JI Sno.");
+                //    return;
+                //}
+                InitializeDatatable();
+            });
+
+            function InitializeDatatable() {
+                debugger
+                var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+                var AllIEs = $("#AllIEs").is(":checked") == true ? "true" : "false";
+                var AllVendors = $("#AllVendors").is(":checked") == true ? "true" : "false";
+                var AllClient = $("#AllClient").is(":checked") == true ? "true" : "false";
+                var AllConsignee = $("#AllConsignee").is(":checked") == true ? "true" : "false";
+                var Compact = $("#Compact").is(":checked") == true ? "true" : "false";
+                var AwaitingJI = $("#AwaitingJI").is(":checked") == true ? "true" : "false";
+                var JIConclusion = $("#JIConclusion").is(":checked") == true ? "true" : "false";
+                var JIConclusionfollowup = $("#JIConclusionfollowup").is(":checked") == true ? "true" : "false";
+                var JIconclusionreport = $("#JIconclusionreport").is(":checked") == true ? "true" : "false";
+                var JIDecidedDT = $("#JIDecidedDT").is(":checked") == true ? "true" : "false";
+                var All = $("#All").is(":checked") == true ? "true" : "false";
+                var ParticularIEs = $("#ParticularIEs").is(":checked") == true ? "true" : "false";
+                var IEWise = $("#IEWise").is(":checked") == true ? "true" : "false";
+                var CMWise = $("#CMWise").is(":checked") == true ? "true" : "false";
+                var VendorWise = $("#VendorWise").is(":checked") == true ? "true" : "false";
+                var ClientWise = $("#ClientWise").is(":checked") == true ? "true" : "false";
+                var ConsigneeWise = $("#ConsigneeWise").is(":checked") == true ? "true" : "false";
+                var FinancialYear = $("#FinancialYear").is(":checked") == true ? "true" : "false";
+                var ParticularCMs = $("#ParticularCMs").is(":checked") == true ? "true" : "false";
+                var ParticularClients = $("#ParticularClients").is(":checked") == true ? "true" : "false";
+                var FromDate = $('#FromDate').val();
+                var FinancialYears = $('#FinancialYears option:selected').text();
+                var ToDate = $('#ToDate').val();
+                var ddlsupercm = $('#ddlsupercm').val();
+                var ddliename = $('#ddliename').val();
+                var Clientwiseddl = $('#Clientwiseddl').val();
+                var vendor = $('#vendor').val();
+                var Item = $('#Item').val();
+                var consignee = $('#consignee').val();
+
+                var Region = '@ViewBag.Regions';
+                var _title = Region;
+
+                $("#dtJISNO").DataTable({
+                    stateSave: false,// Design Assets
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true, // ServerSide Setups
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,// Paging Setups
+                    searching: true,// Searching Setups
+                    dom: 'rtip',
+                    buttons: [
+                        //{
+                        //    extend: 'excel',
+                        //    text: 'Export to Excel',
+                        //    filename: function () { return getExportFileName('Consignee_Complaints_Information'); },
+                        //    download: 'open',
+                        //    orientation: 'landscape',
+                        //    title: _title,
+                        //    footer: true,
+                        //    exportOptions: {
+                        //        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17],
+                        //        modifier: {
+                        //            page: 'all',
+                        //            search: 'none'
+                        //        }
+                        //    },
+                        //},
+                        //{
+                        //    extend: 'pdfHtml5',
+                        //    filename: function () { return getExportFileName('Consignee_Complaints_Information '); },
+                        //    text: 'Export to PDF',
+                        //    orientation: 'landscape',
+                        //    title: _title,
+                        //    footer: true,
+                        //    exportOptions: {
+                        //        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                        //        modifier: {
+                        //            page: 'all',
+                        //            pageSize: 'LEGAL',
+                        //            search: 'none',
+                        //        }
+                        //    },
+                        //    customize: function (doc) {
+                        //        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                        //        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                        //        doc.pageMargins = [5, 100, 5, 5];
+                        //    }
+                        //},
+                        //{
+                        //    extend: 'print',
+                        //    text: 'Print',
+                        //    title: _title,
+                        //    footer: true,
+                        //    exportOptions: {
+                        //        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                        //    },
+                        //},
+                    ],
+                    ajax: {// Ajax Filter
+                        url: "@Url.Action("LoadTable")",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                                "AllCM": AllCM,
+                                "AllIEs": AllIEs,
+                                "AllVendors": AllVendors,
+                                "AllClient": AllClient,
+                                "AllConsignee": AllConsignee,
+                                "Compact": Compact,
+                                "AwaitingJI": AwaitingJI,
+                                "JIConclusion": JIConclusion,
+                                "JIConclusionfollowup": JIConclusionfollowup,
+                                "JIconclusionreport": JIconclusionreport,
+                                "All": All,
+                                "FinancialYear": FinancialYear,
+                                "FromDate": FromDate,
+                                "ToDate": ToDate,
+                                "ddlsupercm": ddlsupercm,
+                                "ddliename": ddliename,
+                                "consignee": consignee,
+                                "vendor": vendor,
+                                "JIDecidedDT": JIDecidedDT,
+                                "ParticularIEs": ParticularIEs,
+                                "IEWise": IEWise,
+                                "CMWise": CMWise,
+                                "ConsigneeWise": ConsigneeWise,
+                                "VendorWise": VendorWise,
+                                "Item": Item,
+                                "FinancialYears": FinancialYears,
+                                "ParticularClients": ParticularClients,
+                                "Clientwiseddl": Clientwiseddl,
+                                "ParticularCMs": ParticularCMs,
+                                "ClientWise": ClientWise
+                            };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        }
+                    },
+                    columns: [
+                        { data: "IE" },
+                        { data: "NO_OF_INSPECTION" },
+                        { data: "MATERIAL_VALUE" },
+                        { data: "RECD" },
+                        { data: "FINALISED" },
+                        { data: "PENDING" },
+                        { data: "ACCEPTED" },
+                        { data: "UPHELD" },
+                        { data: "SORTING" },
+                        { data: "RECTIFICATION" },
+                        { data: "PRICE_REDUCTION" },
+                        { data: "LIFTED_BEFORE_JI" },
+                        { data: "TRANSIT_DEMAGE" },
+                        { data: "UNSTAMPED" },
+                        { data: "NOT_ON_RITES_AC" },
+                        { data: "Total" },
+                    ],
+                    "order": [[0, "asc"]]
+                });
+            }
+
+            $("#vendor").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
+            $("#consignee").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetConsigneeData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CONSIGNEE, value: item.CONSIGNEE };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
+            $("#Clientwise").change(function () {
+                var Clientwise = $(this).val();
+                debugger
+                $.ajax({
+                    url: '/ComplaintsJIRequiredReport/GetClientType',
+                    type: 'GET',
+                    data: { Clientwise: Clientwise },
+                    success: function (data) {
+                        var Item = $("#Item");
+                        Item.empty();
+                        Item.append($('<option>').text('--Select--').val(''));
+
+                        var items = JSON.parse(data);
+
+                        $.each(items, function (index, item) {
+                            Item.append($('<option>').text(item.Text).val(item.Value));
+                        });
+                    }
+                });
+            });
+
+            $('#CMWise').change(function () {
+                $("#AllCMWise").show();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+            });
+            $('#ParticularCMs').change(function () {
+                $("#particularCM").show();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+            });
+
+            $('#IEWise').change(function () {
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#AllIE").show();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#AllCMWise").hide();
+            });
+            $('#ParticularIEs').change(function () {
+                $("#particularIE").show();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#AllCMWise").hide();
+            });
+
+            $('#VendorWise').change(function () {
+                $("#vendorrdo").show();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+            });
+            $('#ParticularVendor').change(function () {
+                $("#vendor").show();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#AllCMWise").hide();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#AllIE").hide();
+            });
+
+            $('#ClientWise').change(function () {
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#consignees").hide();
+                $("#clientwises").show();
+            });
+            $('#ParticularClients').change(function () {
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#consignee").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").show();
+                $("#consignees").hide();
+                $("#particularclient").show();
+            });
+
+            $('#ConsigneeWise').change(function () {
+                debugger
+                $("#consignees").show();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+            });
+            $('#ParticularConsignee').change(function () {
+                debugger
+                $("#consignee").hide();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignee").show();
+            });
+
+            $('#Detailed').change(function () {
+                $("#detaileds").show();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+            });
+
+            $('#AllCM').change(function () {
+                $("#particularCM").hide();
+            });
+            $('#AllIEs').change(function () {
+                $("#particularIE").hide();
+            });
+            $('#AllVendors').change(function () {
+                $("#vendor").hide();
+            });
+            $('#AllClient').change(function () {
+                $("#particularclient").hide();
+            });
+            $('#AllConsignee').change(function () {
+                $("#consignee").hide();
+            });
+            $('#Compact').change(function () {
+                $("#detaileds").hide();
+            });
+
+          
+            $("#imgExcel").on("click", function () {
+                $('#dtJISNO').DataTable().buttons(0, 0).trigger();
+            });
+
+            $("#imgPdf").on("click", function () {
+                $('#dtJISNO').DataTable().buttons(0, 1).trigger();
+            });
+
+            $("#imgPrint").on("click", function () {
+                $('#dtJISNO').DataTable().buttons(0, 2).trigger();
+            });
+
+        });
+
+
+    </script>
+}

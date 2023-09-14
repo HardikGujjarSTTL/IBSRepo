@@ -7,6 +7,14 @@
         <div class="tast-list">
             <h2>Central Region Billing Information List</h2>
         </div>
+        <div class="col-md-3">
+            <div class="list-btn">
+                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+                <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
+            </div>
+        </div>
     </div>
     <div class="accordion-body">
         <div class="row my-0">
@@ -27,14 +35,7 @@
                     <button type="button" class="save-btn active" onclick="Search();">search</button>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="savenext-btn" style="margin-top: 31px;">
-                    <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-                    <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-                    <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-                    <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
-                </div>
-            </div>
+           
         </div>
     </div>
     <section class="table-section">

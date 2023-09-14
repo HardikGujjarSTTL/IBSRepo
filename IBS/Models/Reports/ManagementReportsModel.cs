@@ -1,5 +1,17 @@
 ﻿namespace IBS.Models.Reports
 {
+    public class ManagementReportsModel
+    {
+        public string ReportType { get; set; }
+
+        public string ReportTitle { get; set; }
+
+        public DateTime FromDate { get; set; }
+
+        public DateTime ToDate { get; set; }
+
+    }
+
     public class IEPerformanceModel
     {
         public int RejectionsIssued { get; set; }

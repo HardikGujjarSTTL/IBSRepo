@@ -23,39 +23,40 @@
             <div class="accordion-body">
                 <div class="row">
                     <div class="col-md-12">
+                        <h3 class="heading3">For the Period</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="row"> 
-                            <div class="col-md-2 mb-4">
-                                <label class="lable-control" for="Reference"><b>For the Period : </b></label>
-                            </div> 
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                 <label for="Reference">Month: </label>                                 
                                 @Html.DropDownListFor(model => model.ExpPerMonth, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="ExpPerMonth" class="text-danger"></span>
                             </div> 
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                 <label for="Reference">Year: </label>                                
                                 @Html.DropDownListFor(model => model.ExpPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="ExpPerYear" class="text-danger"></span>
                             </div> 
                         </div>
                     </div>
+
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-2 mb-4">
-                                </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                 <label for="Expenditure">Expenditure Amount Fee(In Rs.)</label>
                                 <input type="text" class="input" asp-for="ExpAmt" maxlength="500" />
                                 <span asp-validation-for="ExpAmt" class="text-danger"></span>
                             </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4">
                                 <label for="Expenditure">Tax Amount Fee(In Rs.)</label>
                                 <input type="text" class="input" asp-for="TaxAmt" maxlength="500" />
                                 <span asp-validation-for="TaxAmt" class="text-danger"></span>
                             </div>  
                         </div>
                     </div> 
-                    <div class="savenext-btn" style="justify-content:center">
+                    <div class="savenext-btn">
                         @*<a asp-controller="Expenditure" asp-action="Index" class="reset-btn">Cancel</a>*@
                         <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                     </div>

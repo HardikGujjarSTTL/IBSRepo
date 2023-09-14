@@ -16,7 +16,6 @@ namespace IBS.Controllers
             clientMasterRepository = _clientMasterRepository;
         }
 
-        [Authorization("ClientMaster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -29,7 +28,6 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        [Authorization("ClientMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             Clientmaster model = new();

@@ -1,12 +1,12 @@
 ﻿@model IBS.Models.VendrorCallDetailsModel
 @{
-    ViewData["Title"] = "OFFERED QUANTITY ENHANCEMENT FORM";
+    ViewData["Title"] = "Call Details";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="CallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+<form role="form" asp-controller="CallRegisterIB" asp-action="CallDetails" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>OFFERED QUANTITY ENHANCEMENT FORM</h2>
+            <h2>Call Details</h2>
         </div>
         <input type="hidden" id="hdnQtyToInsp" asp-for="QtyToInsp" />
         <input type="hidden" asp-for="CaseNo" />
@@ -101,16 +101,16 @@
                 <div class="savenext-btn">
                     <a asp-controller="CallRegister" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" class="save-btn active" id="btnSave">Save</button>
+                    <button type="button" class="save-btn" id="btnDelete" onclick="CallDetailsDelete();">Delete</button>
                 </div>
             </div>
         </div>
     </div>
     <div class="row my-0">
-        <div class="col-md-3 mb-3">
-            <div class="reference">
-                <label for="Name" style="color:red;text-decoration:underline;font-size:15pt;">ITEMS MARKED/AVAILABLE FOR INSPECTION</label>
-            </div>
+        <div class="alert alert-warning center">
+            ITEMS MARKED/AVAILABLE FOR INSPECTION
         </div>
+
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -149,10 +149,10 @@
 
             $("#lblCaseNo").text($("#CaseNo").val());
             $("#lblCallRecvDt").text($("#CallRecvDt").val());
-            $("#lblCallSNo").text($("#CallSNo").val());
+            $("#lblCallSNo").text($("#CallSno").val());
             $("#lblPoNo").text($("#PoNo").val());
             $("#lblPoDt").text($("#PoDt").val());
-            $("#lblIE_SName").text($("#IE_SName").val());
+            $("#lblIE_SName").text($("#IESName").val());
 
 
 
@@ -165,35 +165,37 @@
                     $("#QtyToInsp").val(hdnQtyToInsp);
                 }
             });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            var cstatus = urlParams.get('cstatus');
+            if(cstatus == "N")
+            {
+                $("#btnSave").hide();
+                $("#btnDelete").hide();
+                
+            }
+            else
+            {
+                $("#btnSave").show();
+                $("#btnDelete").show();
+            }
+
         });
 
         $(function () {
-            //InitializeDatatable();
-        });
-
-        $("#btnSearch").click(function () {
             InitializeDatatable();
         });
 
-        function setDefaultDate() {
-            $('#PoDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-            $('#CallRecvDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-
-
-        }
-
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val();
-            var CallRecvDt = $("#CallRecvDt").val();
-            var CallSNo = $("#CallSNo").val();
+            var CallSNo = $("#CallSno").val();
+
+            var getDt = moment('@Model.CallRecvDt', "DD/MM/YYYY");
+            var setDt = getDt.toDate();
+            var CallRecvDt = moment(setDt).format("DD/MM/YYYY");
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            var cstatus = urlParams.get('cstatus');
 
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -206,7 +208,7 @@
                 paging: true,// Paging Setups
                 searching: false,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTableDetails", "CallRegister")",
+                    url: '@Url.Action("LoadTableCallDetails", "CallRegisterIB")',
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -242,10 +244,8 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            //var CaseNo = data.CaseNo;
-                            //var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
-                            //var CallSNo = data.CallSNo;
-                            var editUrl = '@Url.Action("Manage", "CallRegister")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&ItemSrNoPo=" + data.ItemSrNoPo + "&CallStatus=M";
+
+                            var editUrl = '@Url.Action("CallDetails", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSNo + "&ItemSrNoPo=" + data.ItemSrNoPo + "&cstatus=" + cstatus + "&status=" + data.Status;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
@@ -253,7 +253,7 @@
                     },
 
                 ],
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         }
 
@@ -282,7 +282,7 @@
                 var formData = new FormData($("#frmDetails")[0]);
                 debugger
                 $.ajax({
-                    url: '@Url.Action("DetailsSave", "CallRegister")',
+                    url: '@Url.Action("CallDetailsSave", "CallRegisterIB")',
                     type: "POST",
                     dataType: "JSON",
                     //data: details,
@@ -301,7 +301,7 @@
                                 var msg = "Record Update Successfully.";
                                 var d = confirm(msg);
                                 if (d === true) {
-                                    window.location.href = '@Url.Action("Index", "CallRegister")';
+                                    window.location.href = '@Url.Action("Index", "CallRegisterIB")';
                                 }
                             }
                         }
@@ -309,6 +309,12 @@
                 });
             }
         });
+
+        function CallDetailsDelete() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
 
         completed = function (response) {
             var res = response.responseJSON;
