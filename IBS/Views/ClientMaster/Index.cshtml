@@ -1,50 +1,51 @@
-﻿@model IBS.Models.Clientmaster
+﻿@{
+    ViewData["Title"] = "Client Master";
+}
 
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Client Master</h2>
     </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Client</a>
+    </div>
 </div>
-<form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmclient" >
-    <div class="accordion-body">
-        <div class="row my-0 d-flex align-items-end">
-            <div class="col-md-2 mb-4">
-                <label for="Reference">Client Name</label>
-                <input type="text" id="clientname" class="input" asp-for="USER_NAME" maxlength="200" />
-            </div>
-
-            <div class="col-md-6 mb-4 alignBtn">
-                <div class="savenext-btn">
-                    <button type="button" class="reset-btn" id="btnSearch">Search</button>
-                    <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client</a>
-                </div>
+<div class="accordion-body">
+    <div class="row my-0 d-flex align-items-end">
+        <div class="col-md-2 mb-4">
+            <label for="Reference">Client Name</label>
+            <input type="text" id="clientname" class="input"  maxlength="200" />
+        </div>
+        <div class="col-md-6 mb-4 alignBtn">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
             </div>
         </div>
     </div>
-</form>
+</div>
         
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtclient" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Client Name</th>
-                            <th>ORGANISATION</th>
-                            <th>DESIGNATION</th>
-                            <th>MOBILE</th>
-                            <th>EMAIL</th>
-                            <th>UNIT</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtclient" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Client Name</th>
+                        <th>ORGANISATION</th>
+                        <th>DESIGNATION</th>
+                        <th>MOBILE</th>
+                        <th>EMAIL</th>
+                        <th>UNIT</th>
+                        <th style="text-align:center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-    </section>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -52,15 +53,11 @@
 
     <script type="text/javascript">
 
-        $("#btnSearch").click(function () {
-            var clientname = $("#clientname").val();
-            if (clientname == "") {
-                ShowHideMsgNew(false, "Please Enter ClientName.");
-                return;
-            }
+
+        $(function () {
             InitializeDatatable();
         });
-
+        
         function InitializeDatatable() {
             var clientname = $("#clientname").val();
 

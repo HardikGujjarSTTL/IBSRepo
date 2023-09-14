@@ -17,5 +17,6 @@
         public int TRANSIT_DEMAGE { get; set; }
         public int UNSTAMPED { get; set; }
         public int NOT_ON_RITES_AC { get; set; }
+        public int Total { get; set; }
     }
 }
