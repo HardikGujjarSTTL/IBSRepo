@@ -32,62 +32,150 @@
     </style>
 </head>
 <body>
-    <a href="#" id="printButton">Print</a>
-    <table>
-        <thead>
-            <tr>
+    <p align="right">
+        <input type="button" value="Print" id="btnPrint" />
+        <input type="button" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <table>
+            <thead>
+                <tr>
                     <td width="100%" colspan="9">
-                        <H5 align="center"><font face="Verdana">@ViewBag.Region</font><br></p>
-                        <H5 align="center"><font face="Verdana">@ViewBag.Title</font><br></p>
+                        <H5 align="center">
+                            <font face="Verdana">@ViewBag.Region</font><br></p>
+                            <H5 align="center"><font face="Verdana">@ViewBag.Title</font><br></p>
                     </td>
                 </tr>
 
-            <tr>
-                <th width="8.5%">SNO.</th>
-                <th width="8.5%">CASE NO.</th>
-                <th width="8.5%">PO NO.</th>
-                <th width="8.5%">PO Date</th>
-                <th width="8.5%">Client</th>
-                <th width="20%">Vendor</th>
-                <th width="8.5%">Purchaser</th>
-                <th width="8.5%">Value</th>
-                <th width="20%">Item Desc</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int i = 1;
-            }
-            @if (Model != null && Model.Count > 0)
-            {
-                foreach (var item in Model)
-                {
-                    <tr>
-                                <td>@i</td>
-                                    <td>@item.CASE_NO</td>
-                                    <td>@item.PO_NO</td>
-                                    <td>@item.PO_DT</td>
-                                    <td>@item.CLIENT</td>
-                                    <td>@item.VENDOR</td>
-                                    <td>@item.CONSIGNEE</td>
-                                    <td>@item.PO_VALUE</td>
-                                    <td>@item.ITEM_DESC</td>
-                                </tr>
-                    i = i + 1;
+                <tr>
+                    <th width="8.5%">SNO.</th>
+                    <th width="8.5%">CASE NO.</th>
+                    <th width="8.5%">PO NO.</th>
+                    <th width="8.5%">PO Date</th>
+                    <th width="8.5%">Client</th>
+                    <th width="20%">Vendor</th>
+                    <th width="8.5%">Purchaser</th>
+                    <th width="8.5%">Value</th>
+                    <th width="20%">Item Desc</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
                 }
-            }
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@item.PO_NO</td>
+                            <td>@item.PO_DT</td>
+                            <td>@item.CLIENT</td>
+                            <td>@item.VENDOR</td>
+                            <td>@item.CONSIGNEE</td>
+                            <td>@item.PO_VALUE</td>
+                            <td>@item.ITEM_DESC</td>
+                        </tr>
+                        i = i + 1;
+                    }
+                }
             </tbody>
-    </table>
-
-    
+        </table>
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+   
 </body>
 </html>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#printButton").click(function () {
-            window.print();
-            return false;
-        });
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/jspdf.debug.js"></script>
+<script src="~/js/html2canvas.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
     });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName("DetailedReport_POofSpecificValues") + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var quotes = document.getElementById('dvReportViewer');
+
+        quotes.style.width = "920px";
+
+        html2canvas(quotes, {
+            onrendered: function (canvas) {
+                var pdf = new jsPDF('p', 'pt', 'letter');
+                for (var i = 0; i <= quotes.clientHeight / 980; i++) {
+                    var srcImg = canvas;
+                    var sX = 0;
+                    var sY = 980 * i; // start 980 pixels down for every new page
+                    var sWidth = 920;
+                    var sHeight = 980;
+                    var dX = 0;
+                    var dY = 0;
+                    var dWidth = 920;
+                    var dHeight = 980;
+
+                    window.onePageCanvas = document.createElement("canvas");
+                    onePageCanvas.setAttribute('width', 920);
+                    onePageCanvas.setAttribute('height', 980);
+                    var ctx = onePageCanvas.getContext('2d');
+                    ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+                    var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+
+                    var width = onePageCanvas.width;
+                    var height = onePageCanvas.clientHeight;
+
+                    //! If we're on anything other than the first page,
+                    // add another page
+                    if (i > 0) {
+                        pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
+                    }
+                    //! now we declare that we're working on that page
+                    pdf.setPage(i + 1);
+                    //! now we add content to that page!
+                    pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
+
+                }
+
+                quotes.style.width = "100%";
+
+                if (isPrint) {
+                    pdf.autoPrint();
+                    window.open(pdf.output('bloburl'), '_blank');
+                }
+                else {
+                    pdf.save(getExportFileName('DetailedReport_POofSpecificValues') + '.pdf');
+                }
+            }
+        });
+    }
 </script>
