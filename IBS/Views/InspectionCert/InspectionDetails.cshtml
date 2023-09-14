@@ -1,0 +1,905 @@
+﻿@model IBS.Models.InspectionCertModel
+
+@{
+    ViewData["Title"] = "Inspection Certificate";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Inspection Certificate</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="InspectionCert" asp-action="InspectionDetails" id="frmDetails">
+        <input type="hidden" asp-for="Caseno" />
+        <input type="hidden" asp-for="Callrecvdt" />
+        <input type="hidden" asp-for="Callsno" />
+        <input type="hidden" asp-for="SelectRadio" />
+        <input type="hidden" asp-for="ActionType" />
+        <input type="hidden" asp-for="State" />
+
+        <input type="hidden" asp-for="Au" />
+        <input type="hidden" asp-for="Bpo" />
+
+        <table border="1">
+            <tr>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Case No :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.Caseno</label>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Stock/Non Stock :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.StockNonstock</label>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Call Date - SNo. :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.Callrecvdt</label> -
+                    <label style="text-transform: uppercase; color:red;">@Model.Callsno</label>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Contract No. :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.PoNo</label>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>PO Source :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.PoSource</label>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Date :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.PoDt</label>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Vendor :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.VendName</label>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>Inspecting Er. :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.IeName</label>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color:#ccccff" colSpan="2">
+                    <span>Name & Address of the party in whose favour invoice is to be raised. :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.BPOCall</label>
+                </td>
+
+                <td style="background-color:#ccccff" colSpan="2">
+                    <span>GSTIN No. of the party in whose favour invoice is to be raised. :</span>
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <label style="text-transform: uppercase; color:red;">@Model.GSTINCall</label>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color:#ccccff" colSpan="1">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span>IRFC Funded :</span>
+                </td>
+                <td style="background-color:white" colSpan="1">
+                    @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color:#ccccff" colSpan="2">
+                </td>
+                <td style="background-color:#ccccff" colSpan="1">
+                    <span id="lblIrfcBpo">IRFC BPO :</span>
+                </td>
+                <td style="background-color:white" colSpan="3">
+                    @Html.DropDownListFor(model => model.IrfcBpo, new SelectList(IBS.Models.Common.GetBPOList("") , "Value", "Text"),"--Select--")
+                </td>
+            </tr>
+            @if (Model.BillNo != null)
+            {
+                <tr>
+                    <td style="background-color:white" colSpan="2">
+                        <span style="text-transform: uppercase; color:green;">Bill No :</span>
+                        <label style="text-transform: uppercase; color:green;"><b>@Model.BillNo</b></label>
+                    </td>
+                    <td style="background-color:white" colSpan="2">
+                        <span style="text-transform: uppercase; color:green;">Material Value :</span>
+                        <label style="text-transform: uppercase; color:green;"><b>@Model.TMValue</b></label>
+                    </td>
+                    <td style="background-color:white" colSpan="2">
+                        <span style="text-transform: uppercase; color:green;">Insp Fee :</span>
+                        <label style="text-transform: uppercase; color:green;"><b>@Model.TIFee</b></label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background-color:white" colSpan="2">
+                        <span style="text-transform: uppercase; color:green;">Net Fee :</span>
+                        <label style="text-transform: uppercase; color:green;"><b>@Model.NetFee</b></label>
+                    </td>
+                    @if (Model.InvoiceNo != null)
+                    {
+                        <td style="background-color:white" colSpan="2">
+                            <span style="text-transform: uppercase; color:green;">Invoice No. :</span>
+                            <label style="text-transform: uppercase; color:green;"><b>@Model.InvoiceNo</b></label>
+                        </td>
+                    }
+                    @if (Model.ActionType == "A")
+                    {
+                        <td style="background-color:white" colSpan="2">
+                            <span style="text-transform: uppercase; color:green;">Advance :</span>
+                            <label style="text-transform: uppercase; color:green;"><b>@Model.AdvBill</b></label>
+                        </td>
+                    }
+                </tr>
+
+            }
+        </table>
+
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Consignee</label>
+                        @Html.DropDownListFor(model => model.Consignee, new SelectList(IBS.Models.Common.GetConsignee(Model.Caseno) , "Value", "Text"))
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="custom-readio">
+                        <label for="Reference">Recipient GSTIN No.</label>
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" asp-for="ConsigneeGST" value="rdbConsignee" id="ConsigneeGST_Y" />
+                                    <label for="ConsigneeGST_Y">Consignee GSTIN</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" asp-for="ConsigneeGST" value="rdbBPO" id="ConsigneeGST_N" />
+                                    <label for="ConsigneeGST_N">BPO GSTIN</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">GSTIN No.</label>
+                        <input type="text" class="input" asp-for="GstinNo" maxlength="30" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Legal Name</label>
+                        <input type="text" class="input" asp-for="LegalName" maxlength="100" style="text-transform: uppercase;">
+                        @*<span id="lblCity" style="color:red;"></span>
+                        <span id="lblState" style="color:red;"></span>
+                        <span id="lblPincode" style="color:red;"></span>*@
+                        <span style="color:red;">@Model.City</span>
+                        <span style="color:red;">@Model.State</span>
+                        <span style="color:red;">@Model.Pincode</span>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">GSTIN No. & Legal Name</label>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="btnGSTNUpdate" onclick="GSTNUpdate();">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">AU Code</label>
+                        <label style="text-transform: uppercase; color:red;">@Model.Au</label>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Bill Paying Officer</label>
+                        @*<input type="text" class="input" asp-for="Bpo" maxlength="100" style="text-transform: uppercase;color:red;" readonly>*@
+                        <label style="text-transform: uppercase; color:red;">@Model.Bpo</label>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">IC Type</label>
+                        @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Bill No. for which Credit Note is biegn prepared</label>
+                        <input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference"><br /></label>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="btnBillVerify">Verify</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Book No.</label>
+                        <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Set No.</label>
+                        <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Cert No.</label>
+                        <input type="text" class="input" asp-for="CertNo" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Cert Date (DD/MM/YYYY)</label>
+                        <input type="text" class="datepicker" asp-for="CertDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-1 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Install No</label>
+                        <input type="text" class="input" asp-for="CallInstallNo" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Install Part</label>
+                        @Html.DropDownListFor(model => model.FullPart, new SelectList(IBS.Models.Common.GetFPart() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">No. of Visits</label>
+                        <input type="text" class="input" asp-for="NoOfInsp" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Call/Material Readiness Date</label>
+                        <input type="text" class="datepicker" asp-for="CallDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">First Insp Date(dd/mm/yyyy)</label>
+                        <input type="text" class="datepicker" asp-for="FirstInspDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Last Insp Date(dd/mm/yyyy)</label>
+                        <input type="text" class="datepicker" asp-for="LastInspDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Other Insp Dates</label>
+                        <input type="text" class="datepicker" asp-for="OtherInspDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">IC Submit Date</label>
+                        <input type="text" class="datepicker" asp-for="ICSubmitDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Sealing Pattern</label>
+                        @Html.DropDownListFor(model => model.StampPatternCd, new SelectList(IBS.Models.Common.GetSealing() , "Value", "Text"),"--Select--")
+                        <textarea class="input" asp-for="StampPattern" style="text-transform: uppercase;display:none;"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-7 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Reasons for Rejection</label>
+                        <textarea class="input" asp-for="ReasonReject"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Photo Attached</label>
+                        @Html.DropDownListFor(model => model.Photo, new SelectList(IBS.Models.Common.GetYesNoCommon() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="savenext-btn center">
+                @if (@Model.STS != "X")
+                {
+                    <button type="button" class="save-btn active" id="btnSave">Save</button>
+                    <button type="button" class="save-btn" id="btnDelete" style="display:none;">Delete</button>
+                }
+                <a asp-controller="InspectionCert" asp-action="Index" class="reset-btn">Cancel</a>
+            </div>
+        </div>
+
+        <div id="divgrid">
+            <section class="table-section">
+                <div class="task-listinput">
+                    <div class="dash-table">
+                        <table id="dtList" class="table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Item SNo.</th>
+                                    <th>Item Desc</th>
+                                    <th>UOM</th>
+                                    <th>Qty. Ord</th>
+                                    <th>Cumm Qty off Prev</th>
+                                    <th>Qty Prev Passed</th>
+                                    <th>Qty Off Now</th>
+                                    <th>Qty Passed</th>
+                                    <th>Qty Rejected</th>
+                                    <th>Qty Due</th>
+                                    <th>Rate</th>
+                                    <th>Sales Tax(%)</th>
+                                    <th>Sales Tax</th>
+                                    <th>Excise (%)</th>
+                                    <th>Excise</th>
+                                    <th>Discount (%)</th>
+                                    <th>Discount</th>
+                                    <th>Other Charges</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="alert alert-warning center">
+            BILL GENERATION  <span style="color:red;">(Don't use this option for Mulitiple IC - One Bill generation)</span>
+        </div>
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Bill Date</label>
+                        <input type="text" class="datepicker" asp-for="BillDt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-1 mb-3">
+                    <div class="reference">
+                        <label for="Reference" id="lblBillDtUpdate">Bill Date</label>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="btnBillDtUpdate">Update</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Min Fee Payble (if any)</label>
+                        <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Max Fee Allowed (if any)</label>
+                        <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">FEE</label>
+                        <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">FEE Type</label>
+                        @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                @if (@Model.CertDt >= Convert.ToDateTime("2017-07-01"))
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="reference">
+                            <label for="Reference">TAX Type</label>
+                            @Html.DropDownListFor(model => model.BpoTaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"),"--Select--")
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="reference">
+                            <label for="Reference">TAX GST Type</label>
+                            @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"),"--Select--")
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">BPO.</label>
+                        <input type="text" class="input" asp-for="BpoCd" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference"><span style="color:red;">Only For Display in Invoice</span></label>
+                        @Html.DropDownListFor(model => model.Bpo, new SelectList(IBS.Models.Common.GetBPOList(Model.BpoCd) , "Value", "Text"))
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <div class="custom-control custom-checkbox">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="chkABill" />
+                                Advance Bill
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-9 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Remarks (if any)</label>
+                        <textarea class="input" asp-for="Remarks"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Cancellation OR Rejection Fee Bills</label>
+                        @Html.DropDownListFor(model => model.CanOrRejctionFee, new SelectList(IBS.Models.Common.GetYesNoCommon() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference"><span style="color:red;">* Enter Fee Details Before Generating Bill !!!</span></label>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    @if (@Model.STS != "X")
+                    {
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="btnGBill" ToolTip="Please Save the Inspection Certificate and Edit Items Qty Passed, Rejected and Due before Generating the Bill!!!">Generate Bill</button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-9 mb-3" style="display:none;">
+                    <div class="reference">
+                        <label for="Reference">Upload a scanned copy of Invoice Supporting Documents in "PDF" format from here. Scanned copy should be in Black & White and Low DPI.</label>
+                        <label>File Upload</label>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" id="btnUpload" style="display:none;">Upload Invoice Supporting Docs</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Bill Date</label>
+                        <label style="text-transform: uppercase; color:red;">@Model.BillDt</label>
+                    </div>
+                </div>
+                <div class="col-md-10 mb-3">
+                    <div class="reference">
+                        <label for="Reference"><span style="color:red;">* Enter Remarks (If Any) before clicking "Return Bills to Railways" button, these Remarks will be saved in IBS & sent to Railways in Returned Bill.</span></label>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="btnReturnBill">Return Bills to Railways</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        #dtList td {
+            word-wrap: anywhere;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var GSTNo = $("#GstinNo").val();
+            if (GSTNo == "") {
+                $('#GstinNo').prop('readonly', false);
+                $("#btnGSTNUpdate").show();
+            }
+            if ($("#IrfcFunded").val() == "N") {
+                $("#IrfcBpo").hide();
+                $("#lblIrfcBpo").hide();
+            }
+            else {
+                $("#IrfcBpo").show();
+                $("#lblIrfcBpo").show();
+            }
+            if($("#STS").val() != "X")
+            {
+                $("#btnGBill").text("Update Bill");
+            }
+            ConsigneeGSTChanged();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('ActionType');
+            $("#ActionType").val(actiontype);
+            if (actiontype == "A") {
+                $("#IrfcBpo").hide();
+                $("#lblIrfcBpo").hide();
+                $("#btnGBill").hide();
+
+                $("#lblBillDtUpdate").hide();
+                $("#btnBillDtUpdate").hide();
+            }
+            if (actiontype == "M") {
+                InitializeDatatable();
+                $("#btnGBill").text("Update Bill");
+            }
+            if (actiontype == "D") {
+                $("#btnDelete").show();
+                $("#btnSave").hide();
+            }
+        });
+
+        function Validation() {
+
+        }
+
+        $("#StampPatternCd").change(function () {
+            if ($("#StampPatternCd").val() == "O") {
+                $("#StampPattern").show();
+            }
+            else {
+                $("#StampPattern").hide();
+            }
+        });
+
+        $("#IrfcFunded").change(function () {
+            if ($("#IrfcFunded").val() == "Y") {
+                $("#IrfcBpo").show();
+                $("#lblIrfcBpo").show();
+                $("input[name='ConsigneeGST']").prop('disabled', false);
+                $("#btnGSTNUpdate").prop('disabled', false);
+            }
+            else {
+                $("#IrfcBpo").hide();
+                $("#lblIrfcBpo").hide();
+                $("input[name='ConsigneeGST']").prop('disabled', true);
+                $("#btnGSTNUpdate").prop('disabled', true);
+            }
+        });
+
+        $("#BpoCd").change(function () {
+            var BpoCd = $("#BpoCd").val();
+            $.ajax({
+                url: '@Url.Action("GetBPOList", "InspectionCert")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "BpoCd": BpoCd },
+                success: function (contacts) {
+                    $("#Bpo").html(""); // clear before appending new list
+                    //$("#Bpo").append($('<option></option>').val(0).html("--Select--"));
+                    if (contacts && contacts.length > 0) {
+                        if (Bpo > 0) {
+                            $.each(contacts, function (i, cnt) {
+                                $("#Bpo").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                            });
+                            $("#Bpo").val(Bpo);
+                        } else {
+                            $.each(contacts, function (i, cnt) {
+                                $("#Bpo").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                            });
+                        }
+                    }
+                }
+            });
+        });
+
+        function GSTNUpdate() {
+            var ConsigneeGST = $("input[name='ConsigneeGST']:checked").val();
+            $("#SelectRadio").val(ConsigneeGST);
+            var GstinNo = $("#GstinNo").val();
+            var LegalName = $("#LegalName").val();
+            if (GstinNo == "" || GstinNo == null) {
+                ShowHideMsgNew(false, "Please add Gstin No");
+                return;
+            }
+            if (LegalName == "" || LegalName == null) {
+                ShowHideMsgNew(false, "Please add Legal Name");
+                return;
+            }
+            var formData = new FormData($("#frmDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("UpdateGST", "InspectionCert")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        ShowHideMsgNew(true, "GSTIN NO. & LEGAL NAME HAS BEEN UPDATED!!!");
+                    }
+                }
+            });
+        }
+
+        function ConsigneeGSTChanged() {
+            $('input[type=radio][name=ConsigneeGST]').change(function () {
+                var ConsigneeCd = $("#Consignee").val();
+                if (this.value === 'rdbConsignee') {
+                    $.ajax({
+                        url: '@Url.Action("GetConsignee", "InspectionCert")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { "ConsigneeCd": ConsigneeCd },
+                        success: function (contacts) {
+                            if (contacts.data && contacts.data.length > 0) {
+                                //$("#lblCity").text("City : " + contacts.data[0].City);
+                                //$("#lblState").text(",State : " + contacts.data[0].State);
+                                //$("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
+
+                                $("#GstinNo").val(contacts.data[0].GstinNo);
+                                $("#LegalName").val(contacts.data[0].LegalName);
+
+                                $('#GstinNo').prop('readonly', true);
+                            }
+                        }
+                    });
+                } else if (this.value === 'rdbBPO') {
+                    var BPOCd = $("#BpoCd").val();
+                    $.ajax({
+                        url: '@Url.Action("GetBPO", "InspectionCert")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { "BPOCd": BPOCd },
+                        success: function (contacts) {
+                            if (contacts.data && contacts.data.length > 0) {
+                                if (contacts.data && contacts.data.length > 0) {
+                                    //$("#lblCity").text("City : " + contacts.data[0].City);
+                                    //$("#lblState").text(",State : " + contacts.data[0].State);
+                                    //$("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
+
+                                    $("#GstinNo").val(contacts.data[0].GstinNo);
+                                    $("#LegalName").val(contacts.data[0].LegalName);
+
+                                    $('#GstinNo').prop('readonly', true);
+                                }
+                            }
+                        }
+                    });
+                }
+
+
+            });
+
+
+        }
+
+        $("#btnBillVerify").click(function () {
+            var BillNo = $("#BillNo").val();
+            var CaseNo = $("#Caseno").val();
+
+            if (BillNo == "" || BillNo == null) {
+                ShowHideMsgNew(false, "Please add Bill No");
+                return false;
+            }
+
+            if (BillNo != "" && CaseNo != null) {
+                $.ajax({
+                    url: '@Url.Action("GetBillDetails", "InspectionCert")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { "BillNo": BillNo },
+                    success: function (contacts) {
+                        if (contacts.data && contacts.data.length > 0) {
+                            var CaseN = contacts.data[0].Caseno;
+                            if (CaseNo == CaseN) {
+                                $("#btnBillVerify").hide();
+
+                            }
+                            else {
+                                ShowHideMsgNew(false, "Invalid Bill No. This Bill No. does not belong to this PO");
+                            }
+
+                        }
+                    }
+                });
+            }
+
+        });
+
+        $("#btnSave").click(function () {
+            debugger
+            event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+            $.get("@Url.Action("Validation", "InspectionCert")", formData, function (response) {
+                if (response.status) {
+                    if (response.responseText != "") {
+                        ShowHideMsgNew(false, response.responseText);
+                    }
+                    else {
+                        $.post("@Url.Action("InspectionCertSave", "InspectionCert")", formData, function (response) {
+                            ShowHideMsgNew(response.status, response.responseText);
+                            if (response.status) {
+                            }
+                        });
+                    }
+                }
+            });
+
+            //event.preventDefault();
+            //var formData = $("#frmDetails").serialize();
+
+            return false;
+        });
+
+        $("#btnReturnBill").click(function () {
+            if ($("#BillNo").val() == "" || $("#BillNo").val() == null) {
+                ShowHideMsgNew(false, "Please add Bill number.");
+                return;
+            }
+            event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+            $.post("@Url.Action("ReturnBillSubmit", "InspectionCert")", formData, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                }
+            });
+            return false;
+        });
+
+        function InitializeDatatable() {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
+            var Consignee = $("#Consignee").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableDetails", "InspectionCert")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Caseno": Caseno,
+                            "Callrecvdt": Callrecvdt,
+                            "Callsno": Callsno,
+                            "Consignee": Consignee
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var CallSno = data.CallSno;
+                            var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
+                            var editUrl = '@Url.Action("VendorCallRegisterDetail", "InspectionCert")?Action=M' + "&CaseNo=" + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil \" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+
+                    { data: "ItemSrnoPo" },
+                    { data: "ItemDescPo" },
+                    { data: "UomSDesc" },
+                    { data: "QtyOrdered" },
+                    { data: "CumQtyPrevOffered" },
+                    { data: "CumQtyPrevPassed" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassed" },
+                    { data: "QtyRejected" },
+                    { data: "QtyDue" },
+                    { data: "Rate" },
+                    { data: "SalesTaxPer" },
+                    { data: "SalesTax" },
+                    { data: "ExcisePer" },
+                    { data: "Excise" },
+                    { data: "DiscountPer" },
+                    { data: "Discount" },
+                    { data: "OtherCharges" },
+
+
+
+                ],
+                "order": [[0, "desc"]]
+            });
+        }
+
+        $("#btnGBill").click(function()
+        {
+            event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+            $.post("@Url.Action("BillUpdate", "InspectionCert")", formData, function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        });
+
+    </script>
+}

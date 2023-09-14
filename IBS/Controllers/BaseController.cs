@@ -114,6 +114,14 @@ namespace IBS.Controllers
             }
         }
 
+        public int RoleId
+        {
+            get
+            {
+                return (GetUserInfo.RoleId);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))

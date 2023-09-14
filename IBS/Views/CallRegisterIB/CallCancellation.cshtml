@@ -274,8 +274,6 @@
             var CallSno = $("#CallSno").val();
 
 
-            alert(CallRecvDt);
-
             $.get("@Url.Action("CallCancelDelete", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {

@@ -450,6 +450,40 @@ namespace IBS.Helper
             [Description("State Government")]
             S,
         }
+
+        public enum FPart
+        {
+            [Description("Final")]
+            F,
+            [Description("Part")]
+            P,
+        }
+
+        public enum TAXType
+        {
+            [Description("Fee Inclusive Service Tax")]
+            I,
+            [Description("Service Tax Charged separately")]
+            X,
+            [Description("No Service Tax(RITES Billing)")]
+            N,
+            [Description("Fee Inclusive of Service Tax (Don't Print S.Tax in Bill)")]
+            D,
+        }
+
+        public enum TaxType_GST
+        {
+            [Description("IGST @ 18%")]
+            I,
+            [Description("CGST @ 9% & SGST @ 9%")]
+            C,
+            [Description("NO GST")]
+            X,
+            [Description("Fee Inclusive of IGST @ 18%")]
+            Y,
+            [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
+            Z,
+        }
     }
 
     public class EnumUtility<T>
