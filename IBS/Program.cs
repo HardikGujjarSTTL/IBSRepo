@@ -91,6 +91,7 @@ builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.Inspectio
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
 
+builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
 builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
 builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsheetReportRepository>();
 builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
@@ -193,6 +194,7 @@ builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRReposit
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
+builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 
 var app = builder.Build();
 

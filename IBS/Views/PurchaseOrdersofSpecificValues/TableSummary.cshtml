@@ -1,0 +1,88 @@
+﻿@model List<IBS.Models.PurchaseOrdersofSummaryModel>
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Summary Report - P O of Specific Values</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .no-print {
+            display: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid #111111;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" id="printButton">Print</a>
+    <table>
+        <thead>
+            <tr>
+                    <td width="100%" colspan="3">
+                        <H5 align="center"><font face="Verdana">@ViewBag.Region</font><br></p>
+                        <H5 align="center"><font face="Verdana">@ViewBag.Title</font><br></p>
+                    </td>
+                </tr>
+
+            <tr>
+                <th width="50%"><b>Client</b></th>
+                <th width="15%"><b>No. of PO's</b></th>
+                <th width="35%"><b>Value</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                double wTotPO = 0, wTotPOValue = 0;
+            }
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    wTotPO = wTotPO + Convert.ToDouble(item.No_OF_PO);
+                    wTotPOValue = wTotPOValue + Convert.ToDouble(item.PO_VALUE);
+                    <tr>
+                        <td>@item.CLIENT</td>
+                                <td>@item.No_OF_PO</td>
+                        <td>@item.PO_VALUE</td>
+                    </tr>
+
+                }
+                    <tr>
+                        <td><font face="Verdana"><B>Total</B></font></td>
+                        <td>@wTotPO.ToString("N2")</td>
+                        <td>@wTotPOValue.ToString("N2")</td>
+                    </tr>
+            }
+            </tbody>
+    </table>
+
+
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#printButton").click(function () {
+            window.print();
+            return false;
+        });
+    });
+</script>

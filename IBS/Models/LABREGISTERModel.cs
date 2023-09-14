@@ -30,6 +30,7 @@ namespace IBS.Models
         public string CodeNo { get; set; }
         public string CodeDate { get; set; }
         public string Item { get; set; }
+        public string TestToBe { get; set; }
         public string ItemNm { get; set; }
         public string NofSample { get; set; }
         public string TestCategory { get; set; }

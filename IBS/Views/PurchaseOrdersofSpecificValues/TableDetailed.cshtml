@@ -1,0 +1,93 @@
+﻿@model List<IBS.Models.PurchaseOrdersofSpecificValueModel>
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Detailed Report - P O of Specific Values</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .no-print {
+            display: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid #111111;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" id="printButton">Print</a>
+    <table>
+        <thead>
+            <tr>
+                    <td width="100%" colspan="9">
+                        <H5 align="center"><font face="Verdana">@ViewBag.Region</font><br></p>
+                        <H5 align="center"><font face="Verdana">@ViewBag.Title</font><br></p>
+                    </td>
+                </tr>
+
+            <tr>
+                <th width="8.5%">SNO.</th>
+                <th width="8.5%">CASE NO.</th>
+                <th width="8.5%">PO NO.</th>
+                <th width="8.5%">PO Date</th>
+                <th width="8.5%">Client</th>
+                <th width="20%">Vendor</th>
+                <th width="8.5%">Purchaser</th>
+                <th width="8.5%">Value</th>
+                <th width="20%">Item Desc</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+            }
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                                <td>@i</td>
+                                    <td>@item.CASE_NO</td>
+                                    <td>@item.PO_NO</td>
+                                    <td>@item.PO_DT</td>
+                                    <td>@item.CLIENT</td>
+                                    <td>@item.VENDOR</td>
+                                    <td>@item.CONSIGNEE</td>
+                                    <td>@item.PO_VALUE</td>
+                                    <td>@item.ITEM_DESC</td>
+                                </tr>
+                    i = i + 1;
+                }
+            }
+            </tbody>
+    </table>
+
+    
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#printButton").click(function () {
+            window.print();
+            return false;
+        });
+    });
+</script>
