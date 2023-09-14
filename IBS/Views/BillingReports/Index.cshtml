@@ -10,10 +10,11 @@
 </div>
 
 <div class="task-listinput">
-    <form role="form" asp-controller="BillRaised" asp-action="Index" id="frmBillRaised">
-        <input type="hidden" asp-for="Region" />
-        <input type="hidden" asp-for="ActionType" />
-        <table id="Table2" border="1" cellSpacing="1" borderColor="#b0c4de" cellPadding="1" width="80%" bgColor="#f0f8ff">
+    <input type="hidden" asp-for="Region" />
+    <input type="hidden" asp-for="ActionType" />
+    <table id="Table2" border="1" cellSpacing="1" borderColor="#b0c4de" cellPadding="1" width="80%" bgColor="#f0f8ff">
+        @if (Model.ActionType == "CWBills" || Model.ActionType == "SWBills")
+        {
             <tr>
                 <td colSpan="3">
                     <div class="custom-readio">
@@ -64,49 +65,50 @@
                         @Html.DropDownListFor(model => model.ToYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
                 </td>
             </tr>
-        </table>
-        <div class="savenext-btn">
-            <a asp-controller="BillRaised" asp-action="Index" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active" id="btnView">View</button>
-            <button type="button" class="save-btn active" id="btnReport">Report</button>
-        </div>
+            @if (Model.ActionType == "SWBills")
+            {
+                <tr>
+                    <td style="WIDTH: 411px">
+                        <label id="Label2" runat="server" Width="192px" Font-Names="Verdana" Font-Size="8pt" ForeColor="DarkBlue" Font-Bold="True">Include RITES Billing (Y/N)</label>
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
+                    </td>
+                    <td></td>
+                </tr>
+            }
+        }
 
-        <section class="table-section">
-            <div class="task-listinput">
-                <h5 align="center"><font face="Verdana">North Region</font></h5>
-                <h5 align="center"><font face="Verdana">Client Wise Billing Summary For the Month January - 2022</font></h5>
-                <div class="dash-table">
-                    <table id="dtList" class="table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Railway/Client</th>
-                                <th>Insp Fee</th>
-                                <th>Tax</th>
-                                <th>Billing Amount</th>
-                                <th>No. Of Bills</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-    </form>
+        @if (Model.ActionType == "RlyBills")
+        {
+            <tr>
+                <td colSpan="3">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" asp-for="BillSummary" value="M" id="BillSummary_M" checked="checked" />
+                                    <label for="BillSummary_M">Summary Report For the Month</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" asp-for="BillSummary" value="P" id="BillSummary_P" />
+                                    <label for="BillSummary_P">Summary Report For the Given Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ViewReport();" style="display:none;">Report</button>
+        <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+        <button type="button" class="save-btn active" onclick="NewViewReport();">Get Report</button>
+    </div>
 </div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
-
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -193,76 +195,14 @@
             });
         }
 
-        $("#btnView").click(function () {
-            if ($("#frmBillRaised").valid()) {
-                InitializeDatatable();
-            }
-        });
-
-        function InitializeDatatable() {
-            var FromMn = $("#FromMn").val();
-            var FromYr = $("#FromYr").val();
-            var ToMn = $("#ToMn").val();
-            var ToYr = $("#ToYr").val();
-
-
-            var radioM = $("#BillSummary_M");
-            var radioP = $("#BillSummary_P");
-            var rdo = "";
-            if (radioM.is(":checked")) {
-                rdo = "M";
-            }
-            else {
-                rdo = "P";
-            }
-            var Region = $("#Region").val();
-
-            $("#dtList").DataTable({
-                stateSave: false,
-                autoWidth: false,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                paging: true,
-                searching: true,
-                dom: 'Brti',
-                buttons: [
-                    'csv', 'excel', 'print'
-                ],
-                ajax: {
-                    url: "@Url.Action("LoadTable", "BillRaised")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "FromMn": FromMn,
-                            "FromYr": FromYr,
-                            "ToMn": ToMn,
-                            "ToYr": ToYr,
-                            "rdo": rdo,
-                            "Region": Region
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-
-                columns: [
-                    { data: "BPO_ORGN" },
-                    { data: "INSP_FEE" },
-                    { data: "TAX" },
-                    { data: "BILL_AMOUNT" },
-                    { data: "NO_OF_BILLS" },
-                ],
-
-                "order": [[0, "asc"]]
-            });
+        function ClearControls() {
+            $("#FromMn").val("");
+            $("#FromYr").val("");
+            $("#ToMn").val("");
+            $("#ToYr").val("");
         }
 
-        $("#btnReport").click(function () {
+        function ViewReport() {
             var FromMn = $("#FromMn").val();
             var FromYr = $("#FromYr").val();
             var ToMn = $("#ToMn").val();
@@ -280,7 +220,44 @@
                 rdo = "P";
             }
 
-            window.location.href = '@Url.Action("BillRaisedReport", "BillRaised")' + '?FromMn=' + FromMn + "&FromYr=" + FromYr + "&ToMn=" + ToMn + "&ToYr=" + ToYr + "&ActionType=" + ActionType + "&rdo=" + rdo;
-        });
+            let myObject = { FromMn, FromYr, ToMn, ToYr, Region, ActionType, rdo };
+            var url = '@Url.Action("BillRaisedReport", "BillingReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function NewViewReport() {
+            var FromMn = $("#FromMn").val();
+            var FromYr = $("#FromYr").val();
+            var ToMn = $("#ToMn").val();
+            var ToYr = $("#ToYr").val();
+            var Region = $("#Region").val();
+            var ActionType = $("#ActionType").val();
+
+            var radioM = $("#BillSummary_M");
+            var radioP = $("#BillSummary_P");
+            var rdo = "";
+            if (radioM.is(":checked")) {
+                rdo = "M";
+            }
+            else {
+                rdo = "P";
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('ActionType');
+            if (actiontype == "CWBills") {
+                let myObject = { FromMn, FromYr, ToMn, ToYr, Region, ActionType, rdo };
+                var url = '@Url.Action("BillingClientReport", "BillingReports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            }
+            else if (actiontype == "SWBills") {
+                var IncRites = $("#IncRites").val();
+                let myObject = { FromMn, FromYr, ToMn, ToYr, Region, ActionType, rdo, IncRites };
+                var url = '@Url.Action("BillingSectorReport", "BillingReports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            }
+
+
+        }
     </script>
 }
