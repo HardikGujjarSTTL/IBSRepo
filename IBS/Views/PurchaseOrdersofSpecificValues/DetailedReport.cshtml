@@ -151,8 +151,10 @@
                 type = 'S';
             }
             var p_wAgency = type;
-            var p_frmDt = $("#txtFromDate").val();
-            var p_toDt = $("#txtToDate").val();
+            //var p_frmDt = $("#txtFromDate").val();
+            //var p_toDt = $("#txtToDate").val();
+            var p_frmDt = moment($('#txtFromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var p_toDt = moment($('#txtToDate').datepicker('getDate')).format("YYYY-MM-DD");
             var p_SelCriteria = $("#ddlSelCriteria").val();
             var p_wClient = $("#dllRCode").val();
             var p_wFrmAmt = $("#txtFrmAmt").val();
