@@ -121,6 +121,13 @@ namespace IBS.Controllers
                 return (GetUserInfo.RoleId);
             }
         }
+        public String RoleName
+        {
+            get
+            {
+                return (GetUserInfo.RoleName);
+            }
+        }
 
         public void AlertAddSuccess(string message = "")
         {
