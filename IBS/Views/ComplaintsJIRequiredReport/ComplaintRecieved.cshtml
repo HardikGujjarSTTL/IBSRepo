@@ -1,0 +1,154 @@
+﻿@model IBS.Models.JIRequiredReport
+
+<div>
+    <p align="center"><font size="3" face="Verdana"><b><u>@ViewBag.Regions</u></b></font></p>
+    @if (@ViewBag.FromDT != null)
+    {
+        <p align="center"><font size="3" face="Verdana"><b><u>Complaint Recieved For The Period: (@ViewBag.FromDT To @ViewBag.ToDT)  @((Model.ClientWise == "true") ? "(Client Wise)" : "")@((Model.ConsigneeWise == "true") ? "(Consignee Wise)" : "")@((Model.IEWise == "true") ? "(IE Wise)" : "") @((Model.VendorWise == "true") ? "(Vendor Wise)" : "") @((Model.CMWise == "true") ? "(CM Wise)" : "")</u></b></font></p>
+    }
+    else
+    {
+        <p align="center"><font size="3" face="Verdana"><b><u>Complaint Recieved For The Period: (@ViewBag.Financialperiod)  @((Model.ClientWise == "true") ? "(Client Wise)" : "")@((Model.ConsigneeWise == "true") ? "(Consignee Wise)" : "")@((Model.IEWise == "true") ? "(IE Wise)" : "") @((Model.VendorWise == "true") ? "(Vendor Wise)" : "") @((Model.CMWise == "true") ? "(CM Wise)" : "")</u></b></font></p>
+    }
+    <br>
+    <br>
+    <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <tbody>
+            <tr>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Name</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Inspections</font></b></th>
+                <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total Value of Inspections</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Recd</font></b></th>
+                <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Finalised</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Pending</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Accepted</font></b></th>
+                <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Upheld (1)</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Sorting (2)</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Rectification (3)</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Price Reduction (4)</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Lifted Before JI (5)</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Not On Rites A/c</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Transit Damage</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Unstamped</font></b></th>
+                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Total (1+2+3+4+5)</font></b></th>
+            </tr>
+            @if (Model != null && Model.lstJIRequiredList.Count > 0)
+            {
+                decimal totmaterial = 0, toRecd = 0, tofinalised = 0, topending = 0, toaccepted = 0, touheld = 0, tosorting = 0, torectification = 0, toprice = 0, tounstamped = 0, toliftedji = 0, toritesac = 0, todemage = 0, tosubtotal=0;
+                @foreach (var item in Model.lstJIRequiredList)
+                {
+                    totmaterial = totmaterial + item.MATERIAL_VALUE;
+                    toRecd = toRecd + item.RECD;
+                    tofinalised = tofinalised + item.FINALISED;
+                    topending = topending + item.PENDING;
+                    toaccepted = toaccepted + item.ACCEPTED;
+                    touheld = touheld + item.UPHELD;
+                    tosorting = tosorting + item.SORTING;
+                    torectification = torectification + item.RECTIFICATION;
+                    toprice = toprice + item.PRICE_REDUCTION;
+                    toliftedji = toliftedji + item.LIFTED_BEFORE_JI;
+                    toritesac = toritesac + item.NOT_ON_RITES_AC;
+                    todemage = todemage + item.TRANSIT_DEMAGE;
+                    tounstamped = tounstamped + item.UNSTAMPED;
+                    tosubtotal = tosubtotal + item.Total;
+                    <tr>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE</font></td>
+                        <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.NO_OF_INSPECTION</font></td>
+                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.RECD</font></td>
+                        <td width="6%" valign="top" align="right"><font size="1" face="Verdana">@item.FINALISED</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.PENDING</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.ACCEPTED</font></td>
+                        <td width="6%" valign="top" align="right"><font size="1" face="Verdana">@item.UPHELD</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.SORTING</font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.RECTIFICATION</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.PRICE_REDUCTION</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.LIFTED_BEFORE_JI</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.NOT_ON_RITES_AC</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.TRANSIT_DEMAGE</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.UNSTAMPED</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.Total</font></td>
+                    </tr>
+                }
+                <tr>
+                    <td width="15%" valign="top" align="Left" colspan="2"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                    <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b>@totmaterial</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toRecd</b></font></td>
+                    <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@tofinalised</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@topending</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toaccepted</b></font></td>
+                    <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@touheld</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@tosorting</b></font></td>
+                    <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@torectification</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toprice</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toliftedji</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toritesac</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@todemage</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@tounstamped</b></font></td>
+                    <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@tosubtotal</b></font></td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="60%">
+        <tbody>
+            <tr>
+                <th width="100%" valign="top" align="Center" colspan="3"><font size="2" face="Verdana">Performance Summary</font></th>
+            </tr>
+            <tr>
+                <th width="20%" valign="top" align="right"><b><font size="1" face="Verdana">Region</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Unique SNO.</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Firm</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">PO No.</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Date</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">BK NO & Set NO</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Date of IC</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Item</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">IE</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Qty Offered</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Qty Rejected</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Value of Rejected Stores</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Discipline</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Date of 1st Reference</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">REJ MEMO</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Reason of Rejection</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Reason of No JI</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Date of JI</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Inspection Document</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Status (Decision taken by JI Committe)</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">JI REPORT</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Defect Code</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Classfication</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Conclusion Dt</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">CM</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">JI Engineer</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Root Cause Analysis</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Checksheet Status</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Tech Ref</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">D&AR Proposed</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Any Other</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Status of CAPA</font></b></th>
+                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">D&AR Status (if Any)</font></b></th>
+            </tr>
+            @if (Model != null && Model.lstConsigneeComplaints.Count > 0)
+            {
+                @foreach (var item in Model.lstConsigneeComplaints)
+                {
+                    <tr>
+                        <td width="45%" valign="top" align="Left"><font size="1" face="Verdana">@item.RLY_NONRLY</font></td>
+                        <td width="20%" valign="top" align="right"><font size="1" face="Verdana">@item.IC_COUNT</font></td>
+                        <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <br>
+</div>
+
+

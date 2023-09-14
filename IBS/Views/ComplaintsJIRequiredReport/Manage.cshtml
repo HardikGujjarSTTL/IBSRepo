@@ -1,8 +1,7 @@
-﻿@model IBS.Models.Reports.ManagementReportsModel
+﻿@model IBS.Models.JIRequiredReport
 
 @{
     Layout = null;
-    string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
 }
@@ -43,13 +42,31 @@
     });
 
     $(document).ready(function () {
-        if ('@ReportType' == 'IE_X') {
+        debugger
             loadIEPerformance();
-        }
     });
 
     function loadIEPerformance() {
-        $("#dvReportViewer").load("@Url.Action("IEPerformance")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("ComplaintRecieved")", {
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', AllIEs: '@Model.AllIEs', AllVendors: '@Model.AllVendors', AllClient: '@Model.AllClient', AllConsignee: '@Model.AllConsignee', Compact: '@Model.Compact', AwaitingJI: '@Model.AwaitingJI', JIConclusion: '@Model.JIConclusion',
+            JIConclusionfollowup: '@Model.JIConclusionfollowup', JIconclusionreport: '@Model.JIconclusionreport', JIDecidedDT: '@Model.JIDecidedDT', All: '@Model.All', ParticularIEs: '@Model.ParticularIEs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise',
+            VendorWise: '@Model.VendorWise',
+            ClientWise: '@Model.ClientWise',
+            ConsigneeWise: '@Model.ConsigneeWise',
+            FinancialYear: '@Model.FinancialYear',
+            ParticularCMs: '@Model.ParticularCMs',
+            ParticularClients: '@Model.ParticularClients',
+            ParticularConsignee: '@Model.ParticularConsignee',
+            ParticularVendor : '@Model.ParticularVendor',
+            Detailed: '@Model.Detailed',
+            FinancialYears: '@Model.FinancialYears',
+            ddlsupercm: '@Model.ddlsupercm',
+            ddliename: '@Model.ddliename',
+            Clientwiseddl: '@Model.Clientwiseddl',
+            vendor: '@Model.vendor',
+            Item: '@Model.Item',
+            consignee: '@Model.consignee'
+        }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -68,7 +85,7 @@
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
-            download: getExportFileName("Complaint_Recieved") + ".xls"
+            download: getExportFileName("IE_Performance") + ".xls"
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
@@ -121,7 +138,7 @@
                     window.open(pdf.output('bloburl'), '_blank');
                 }
                 else {
-                    pdf.save(getExportFileName('Complaint_Recieved') + '.pdf');
+                    pdf.save(getExportFileName('IE_Performance') + '.pdf');
                 }
             }
         });

@@ -23,12 +23,12 @@
             <input type="radio" id="JIDecidedDT" name="FinancialYear" value="JIDecidedDT">
             <label for="JIDecidedDT">JI Decided on For The Period(From Date - To Date)</label>
             <div class="col-md-10 mb-6">
-                <input type="text" class="input datepicker" id="FromDate">
+                <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
             </div>
         </div>
         <div class="col-md-3 mb-3 Datefieldcls">
             <label for="JIDecidedDT"></label><br />
-            <input type="text" class="input datepicker" id="ToDate">
+            <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
         </div>
         <div class="col-md-4 mb-4">
             <input type="radio" id="CMWise" name="CMWises" value="CMWise">
@@ -131,72 +131,13 @@
         </div>
 
     </div>
-    <div class="col-md-3 mb-3">
+    <div class="col-md-3" style="margin-top: 30px;">
         <div class="savenext-btn">
-            <button type="button" class="save-btn active" id="btnSearch">Search</button>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="list-btn" style="margin-top: 31px;">
-            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
         </div>
     </div>
 </div>
 
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtJISNO" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Total No. of Inspections</th>
-                        <th>Total Value of Inspections</th>
-                        <th>Recd</th>
-                        <th>Finalised</th>
-                        <th>Pending</th>
-                        <th>Accepted</th>
-                        <th>Upheld (1)</th>
-                        <th>Sorting (2)</th>
-                        <th>Rectification (3)</th>
-                        <th>Price Reduction (4)</th>
-                        <th>Lifted Before JI (5)</th>
-                        <th>Not On Rites A/c</th>
-                        <th>Transit Damage</th>
-                        <th>Unstamped</th>
-                        <th>Total (1+2+3+4+5)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -221,175 +162,6 @@
             $("#detaileds").hide();
             $("#Compact").prop("checked", true);
             $("#FinancialYear").prop("checked", true);
-
-            $("#btnSearch").click(function () {
-                debugger
-                //var JISNO = $("#JISNO").val();
-                //if (JISNO == "") {
-                //    ShowHideMsgNew(false, "Please Enter JI Sno.");
-                //    return;
-                //}
-                InitializeDatatable();
-            });
-
-            function InitializeDatatable() {
-                debugger
-                var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
-                var AllIEs = $("#AllIEs").is(":checked") == true ? "true" : "false";
-                var AllVendors = $("#AllVendors").is(":checked") == true ? "true" : "false";
-                var AllClient = $("#AllClient").is(":checked") == true ? "true" : "false";
-                var AllConsignee = $("#AllConsignee").is(":checked") == true ? "true" : "false";
-                var Compact = $("#Compact").is(":checked") == true ? "true" : "false";
-                var AwaitingJI = $("#AwaitingJI").is(":checked") == true ? "true" : "false";
-                var JIConclusion = $("#JIConclusion").is(":checked") == true ? "true" : "false";
-                var JIConclusionfollowup = $("#JIConclusionfollowup").is(":checked") == true ? "true" : "false";
-                var JIconclusionreport = $("#JIconclusionreport").is(":checked") == true ? "true" : "false";
-                var JIDecidedDT = $("#JIDecidedDT").is(":checked") == true ? "true" : "false";
-                var All = $("#All").is(":checked") == true ? "true" : "false";
-                var ParticularIEs = $("#ParticularIEs").is(":checked") == true ? "true" : "false";
-                var IEWise = $("#IEWise").is(":checked") == true ? "true" : "false";
-                var CMWise = $("#CMWise").is(":checked") == true ? "true" : "false";
-                var VendorWise = $("#VendorWise").is(":checked") == true ? "true" : "false";
-                var ClientWise = $("#ClientWise").is(":checked") == true ? "true" : "false";
-                var ConsigneeWise = $("#ConsigneeWise").is(":checked") == true ? "true" : "false";
-                var FinancialYear = $("#FinancialYear").is(":checked") == true ? "true" : "false";
-                var ParticularCMs = $("#ParticularCMs").is(":checked") == true ? "true" : "false";
-                var ParticularClients = $("#ParticularClients").is(":checked") == true ? "true" : "false";
-                var FromDate = $('#FromDate').val();
-                var FinancialYears = $('#FinancialYears option:selected').text();
-                var ToDate = $('#ToDate').val();
-                var ddlsupercm = $('#ddlsupercm').val();
-                var ddliename = $('#ddliename').val();
-                var Clientwiseddl = $('#Clientwiseddl').val();
-                var vendor = $('#vendor').val();
-                var Item = $('#Item').val();
-                var consignee = $('#consignee').val();
-
-                var Region = '@ViewBag.Regions';
-                var _title = Region;
-
-                $("#dtJISNO").DataTable({
-                    stateSave: false,// Design Assets
-                    autoWidth: true,
-                    scrollX: true,
-                    scrollCollapse: true,
-                    processing: true, // ServerSide Setups
-                    serverSide: true,
-                    destroy: true,
-                    paging: true,// Paging Setups
-                    searching: true,// Searching Setups
-                    dom: 'rtip',
-                    buttons: [
-                        //{
-                        //    extend: 'excel',
-                        //    text: 'Export to Excel',
-                        //    filename: function () { return getExportFileName('Consignee_Complaints_Information'); },
-                        //    download: 'open',
-                        //    orientation: 'landscape',
-                        //    title: _title,
-                        //    footer: true,
-                        //    exportOptions: {
-                        //        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17],
-                        //        modifier: {
-                        //            page: 'all',
-                        //            search: 'none'
-                        //        }
-                        //    },
-                        //},
-                        //{
-                        //    extend: 'pdfHtml5',
-                        //    filename: function () { return getExportFileName('Consignee_Complaints_Information '); },
-                        //    text: 'Export to PDF',
-                        //    orientation: 'landscape',
-                        //    title: _title,
-                        //    footer: true,
-                        //    exportOptions: {
-                        //        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
-                        //        modifier: {
-                        //            page: 'all',
-                        //            pageSize: 'LEGAL',
-                        //            search: 'none',
-                        //        }
-                        //    },
-                        //    customize: function (doc) {
-                        //        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                        //        doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                        //        doc.pageMargins = [5, 100, 5, 5];
-                        //    }
-                        //},
-                        //{
-                        //    extend: 'print',
-                        //    text: 'Print',
-                        //    title: _title,
-                        //    footer: true,
-                        //    exportOptions: {
-                        //        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
-                        //    },
-                        //},
-                    ],
-                    ajax: {// Ajax Filter
-                        url: "@Url.Action("LoadTable")",
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        data: function (d) {
-                            var AdditionalValues = {
-                                "AllCM": AllCM,
-                                "AllIEs": AllIEs,
-                                "AllVendors": AllVendors,
-                                "AllClient": AllClient,
-                                "AllConsignee": AllConsignee,
-                                "Compact": Compact,
-                                "AwaitingJI": AwaitingJI,
-                                "JIConclusion": JIConclusion,
-                                "JIConclusionfollowup": JIConclusionfollowup,
-                                "JIconclusionreport": JIconclusionreport,
-                                "All": All,
-                                "FinancialYear": FinancialYear,
-                                "FromDate": FromDate,
-                                "ToDate": ToDate,
-                                "ddlsupercm": ddlsupercm,
-                                "ddliename": ddliename,
-                                "consignee": consignee,
-                                "vendor": vendor,
-                                "JIDecidedDT": JIDecidedDT,
-                                "ParticularIEs": ParticularIEs,
-                                "IEWise": IEWise,
-                                "CMWise": CMWise,
-                                "ConsigneeWise": ConsigneeWise,
-                                "VendorWise": VendorWise,
-                                "Item": Item,
-                                "FinancialYears": FinancialYears,
-                                "ParticularClients": ParticularClients,
-                                "Clientwiseddl": Clientwiseddl,
-                                "ParticularCMs": ParticularCMs,
-                                "ClientWise": ClientWise
-                            };
-                            d.AdditionalValues = AdditionalValues;
-                            return JSON.stringify(d);
-                        }
-                    },
-                    columns: [
-                        { data: "IE" },
-                        { data: "NO_OF_INSPECTION" },
-                        { data: "MATERIAL_VALUE" },
-                        { data: "RECD" },
-                        { data: "FINALISED" },
-                        { data: "PENDING" },
-                        { data: "ACCEPTED" },
-                        { data: "UPHELD" },
-                        { data: "SORTING" },
-                        { data: "RECTIFICATION" },
-                        { data: "PRICE_REDUCTION" },
-                        { data: "LIFTED_BEFORE_JI" },
-                        { data: "TRANSIT_DEMAGE" },
-                        { data: "UNSTAMPED" },
-                        { data: "NOT_ON_RITES_AC" },
-                        { data: "Total" },
-                    ],
-                    "order": [[0, "asc"]]
-                });
-            }
 
             $("#vendor").autocomplete({
                 source: function (request, response) {
@@ -623,6 +395,50 @@
 
         });
 
+        function ViewReport() {
 
+            var IsValid = true;
+
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
+            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+            var AllIEs = $("#AllIEs").is(":checked") == true ? "true" : "false";
+            var AllVendors = $("#AllVendors").is(":checked") == true ? "true" : "false";
+            var AllClient = $("#AllClient").is(":checked") == true ? "true" : "false";
+            var AllConsignee = $("#AllConsignee").is(":checked") == true ? "true" : "false";
+            var Compact = $("#Compact").is(":checked") == true ? "true" : "false";
+            var AwaitingJI = $("#AwaitingJI").is(":checked") == true ? "true" : "false";
+            var JIConclusion = $("#JIConclusion").is(":checked") == true ? "true" : "false";
+            var JIConclusionfollowup = $("#JIConclusionfollowup").is(":checked") == true ? "true" : "false";
+            var JIconclusionreport = $("#JIconclusionreport").is(":checked") == true ? "true" : "false";
+            var JIDecidedDT = $("#JIDecidedDT").is(":checked") == true ? "true" : "false";
+            var All = $("#All").is(":checked") == true ? "true" : "false";
+            var ParticularIEs = $("#ParticularIEs").is(":checked") == true ? "true" : "false";
+            var IEWise = $("#IEWise").is(":checked") == true ? "true" : "false";
+            var CMWise = $("#CMWise").is(":checked") == true ? "true" : "false";
+            var VendorWise = $("#VendorWise").is(":checked") == true ? "true" : "false";
+            var ClientWise = $("#ClientWise").is(":checked") == true ? "true" : "false";
+            var ConsigneeWise = $("#ConsigneeWise").is(":checked") == true ? "true" : "false";
+            var FinancialYear = $("#FinancialYear").is(":checked") == true ? "true" : "false";
+            var ParticularCMs = $("#ParticularCMs").is(":checked") == true ? "true" : "false";
+            var ParticularClients = $("#ParticularClients").is(":checked") == true ? "true" : "false";
+            var ParticularConsignee = $("#ParticularConsignee").is(":checked") == true ? "true" : "false";
+            var ParticularVendor = $("#ParticularVendor").is(":checked") == true ? "true" : "false";
+            var Detailed = $("#Detailed").is(":checked") == true ? "true" : "false";
+            var FinancialYears = $('#FinancialYears option:selected').text();
+            var ddlsupercm = $('#ddlsupercm').val();
+            var ddliename = $('#ddliename').val();
+            var Clientwiseddl = $('#Clientwiseddl').val();
+            var vendor = $('#vendor').val();
+            var Item = $('#Item').val();
+            var consignee = $('#consignee').val();
+            let myObject = { FromDate, ToDate, AllCM, AllIEs, AllVendors, AllClient, AllConsignee, Compact, AwaitingJI, JIConclusion, JIConclusionfollowup, JIconclusionreport,
+                JIDecidedDT, All, ParticularIEs, IEWise, CMWise, VendorWise, ClientWise, ConsigneeWise, FinancialYear, ParticularCMs, ParticularClients, ParticularConsignee, ParticularVendor,
+                Detailed, FinancialYears, ddlsupercm, ddliename, Clientwiseddl, vendor, Item, consignee
+            };
+
+            var url = '@Url.Action("Manage", "ComplaintsJIRequiredReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
     </script>
 }

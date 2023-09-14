@@ -5,6 +5,7 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -74,158 +75,21 @@ namespace IBS.Repositories
             return json;
         }
 
-        public DTResult<JIRequiredReport> GetJIRequiredList(DTParameters dtParameters, string Region)
+        public JIRequiredReport GetJIRequiredList(string FromDate, string ToDate, string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
+            string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
+            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee,string Region)
         {
-            DTResult<JIRequiredReport> dTResult = new() { draw = 0 };
-            IQueryable<JIRequiredReport>? query = null;
-            DataTable dt = new DataTable();
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            JIRequiredReport model = new();
+            List<JIRequiredList> lstJIRequiredList = new();
+            // List<IEPerformanceSummaryListModel> lstPerformanceSummaryList = new();
             DataSet ds = null;
-            if (dtParameters.Order != null)
-            {
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            DataTable dt = new DataTable();
 
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "IE";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                orderCriteria = "IE";
-                orderAscendingDirection = true;
-            }
-
-            string AllCM = "", AllIEs = "", AllVendors = "", AllClient = "", AllConsignee = "", Compact = "", AwaitingJI = "", JIConclusion = "", JIConclusionfollowup = "",
-            JIconclusionreport = "", All = "", FinancialYear = "", ParticularClients="", IEWise ="", ParticularCMs="", Clientwiseddl="", VendorWise ="", ParticularVendor="", FinancialYears ="", ConsigneeWise ="", ClientWise ="", CMWise ="", FromDate = null, ToDate = null, ParticularIEs="", JIDecidedDT ="", ddlsupercm = "", ddliename = "", vendor = "", Item = "", consignee = "";
-
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["AllCM"]))
-            {
-                AllCM = Convert.ToString(dtParameters.AdditionalValues["AllCM"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["AllIEs"]))
-            {
-                AllIEs = Convert.ToString(dtParameters.AdditionalValues["AllIEs"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["AllVendors"]))
-            {
-                AllVendors = Convert.ToString(dtParameters.AdditionalValues["AllVendors"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["AllClient"]))
-            {
-                AllClient = Convert.ToString(dtParameters.AdditionalValues["AllClient"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["AllConsignee"]))
-            {
-                AllConsignee = Convert.ToString(dtParameters.AdditionalValues["AllConsignee"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Compact"]))
-            {
-                Compact = Convert.ToString(dtParameters.AdditionalValues["Compact"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["AwaitingJI"]))
-            {
-                AwaitingJI = Convert.ToString(dtParameters.AdditionalValues["AwaitingJI"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["JIConclusion"]))
-            {
-                JIConclusion = Convert.ToString(dtParameters.AdditionalValues["JIConclusion"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["JIConclusionfollowup"]))
-            {
-                JIConclusionfollowup = Convert.ToString(dtParameters.AdditionalValues["JIConclusionfollowup"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["JIconclusionreport"]))
-            {
-                JIconclusionreport = Convert.ToString(dtParameters.AdditionalValues["JIconclusionreport"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["All"]))
-            {
-                All = Convert.ToString(dtParameters.AdditionalValues["All"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FinancialYear"]))
-            {
-                FinancialYear = Convert.ToString(dtParameters.AdditionalValues["FinancialYear"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            {
-                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            {
-                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ddlsupercm"]))
-            {
-                ddlsupercm = Convert.ToString(dtParameters.AdditionalValues["ddlsupercm"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ddliename"]))
-            {
-                ddliename = Convert.ToString(dtParameters.AdditionalValues["ddliename"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["vendor"]))
-            {
-                vendor = Convert.ToString(dtParameters.AdditionalValues["vendor"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Item"]))
-            {
-                Item = Convert.ToString(dtParameters.AdditionalValues["Item"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["consignee"]))
-            {
-                consignee = Convert.ToString(dtParameters.AdditionalValues["consignee"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["JIDecidedDT"]))
-            {
-                JIDecidedDT = Convert.ToString(dtParameters.AdditionalValues["JIDecidedDT"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ParticularIEs"]))
-            {
-                ParticularIEs = Convert.ToString(dtParameters.AdditionalValues["ParticularIEs"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IEWise"]))
-            {
-                IEWise = Convert.ToString(dtParameters.AdditionalValues["IEWise"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CMWise"]))
-            {
-                CMWise = Convert.ToString(dtParameters.AdditionalValues["CMWise"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorWise"]))
-            {
-                VendorWise = Convert.ToString(dtParameters.AdditionalValues["VendorWise"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ClientWise"]))
-            {
-                ClientWise = Convert.ToString(dtParameters.AdditionalValues["ClientWise"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ConsigneeWise"]))
-            {
-                ConsigneeWise = Convert.ToString(dtParameters.AdditionalValues["ConsigneeWise"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FinancialYears"]))
-            {
-                FinancialYears = Convert.ToString(dtParameters.AdditionalValues["FinancialYears"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ParticularVendor"]))
-            {
-                ParticularVendor = Convert.ToString(dtParameters.AdditionalValues["ParticularVendor"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ParticularCMs"]))
-            {
-                ParticularCMs = Convert.ToString(dtParameters.AdditionalValues["ParticularCMs"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Clientwiseddl"]))
-            {
-                Clientwiseddl = Convert.ToString(dtParameters.AdditionalValues["Clientwiseddl"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ParticularClients"]))
-            {
-                ParticularClients = Convert.ToString(dtParameters.AdditionalValues["ParticularClients"]);
-            }
+            model.FromDate = FromDate;model.ToDate = ToDate;model.AllCM = AllCM;model.AllIEs = AllIEs;model.AllVendors = AllVendors;model.AllClient = AllClient;model.AllConsignee = AllConsignee;
+            model.Compact = Compact;model.AwaitingJI = AwaitingJI;model.JIConclusion = JIConclusion;model.JIConclusionfollowup = JIConclusionfollowup;model.JIconclusionreport = JIconclusionreport;model.JIDecidedDT = JIDecidedDT;
+            model.All = All;model.ParticularIEs = ParticularIEs;model.IEWise = IEWise;model.CMWise = CMWise;model.VendorWise = VendorWise;model.ClientWise = ClientWise;model.ConsigneeWise = ConsigneeWise;
+            model.FinancialYear = FinancialYear;model.ParticularCMs = ParticularCMs;model.ParticularClients = ParticularClients;model.ParticularConsignee = ParticularConsignee;model.ParticularVendor = ParticularVendor;model.Detailed = Detailed;
+            model.FinancialYears = FinancialYears;model.ddlsupercm = ddlsupercm;model.ddliename = ddliename;model.Clientwiseddl = Clientwiseddl;model.vendor = vendor;model.Item = Item;model.consignee = consignee;
 
             if (Convert.ToBoolean(Compact) == true)
             {
@@ -247,17 +111,18 @@ namespace IBS.Repositories
                 }
                 else if (Convert.ToBoolean(ConsigneeWise) == true)
                 {
-                    compliants_statement_ConsigneeWise();
+                    ds = compliants_statement_ConsigneeWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllConsignee, ParticularConsignee, consignee, FinancialYears);
                 }
             }
-            else 
+            else
             {
-                ji_compliants_statement1();
+                ds = ji_compliants_statement(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, Compact, AwaitingJI, JIConclusion, JIConclusionfollowup, All, Detailed, FinancialYears, consignee, ddlsupercm, ddliename, vendor, Clientwiseddl, Item);
             }
+
             dt = ds.Tables[0];
-            List<JIRequiredReport> list = dt.AsEnumerable().Select(row => new JIRequiredReport
+            List<JIRequiredList> list = dt.AsEnumerable().Select(row => new JIRequiredList
             {
-                IE = row.Field<string>("IE"),
+                IE = row.Field<string>("Name"),
                 NO_OF_INSPECTION = Convert.ToInt32(row.Field<decimal>("NO_OF_INSPECTION")),
                 MATERIAL_VALUE = row.Field<decimal>("MATERIAL_VALUE"),
                 RECD = Convert.ToInt32(row.Field<decimal>("RECD")),
@@ -274,29 +139,21 @@ namespace IBS.Repositories
                 TRANSIT_DEMAGE = Convert.ToInt32(row.Field<decimal>("TRANSIT_DEMAGE")),
                 UNSTAMPED = Convert.ToInt32(row.Field<decimal>("UNSTAMPED")),
                 NOT_ON_RITES_AC = Convert.ToInt32(row.Field<decimal>("NOT_ON_RITES_AC")),
+                Region =Region,
+                FromDate = Convert.ToDateTime(FromDate),
+                ToDate = Convert.ToDateTime(ToDate),
 
-             }).ToList();
+            }).ToList();
 
             foreach (var item in list)
             {
                 item.Total = item.UPHELD + item.SORTING + item.RECTIFICATION + item.PRICE_REDUCTION + item.LIFTED_BEFORE_JI;
             }
-
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.IE).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            model.lstJIRequiredList = list;
+            return model;
         }
+
+       
 
         public DataSet compliants_statement_IEWise(string FromDateFor,string ToDateFor, string Region,string FinancialYear, string JIDecidedDT, string ParticularIEs, string AllIEs, string ddliename,string FinancialYears)
         {
@@ -410,13 +267,60 @@ namespace IBS.Repositories
             return ds;
         }
 
-        public void compliants_statement_ConsigneeWise()
+        public DataSet compliants_statement_ConsigneeWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllConsignee,string ParticularConsignee,string consignee,string FinancialYears)
         {
-
+            DataSet ds = null;
+            if (Convert.ToBoolean(JIDecidedDT) == true)
+            {
+                if (Convert.ToBoolean(AllConsignee) == true)
+                {
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                }
+                else if (Convert.ToBoolean(ParticularConsignee) == true)
+                {
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                }
+            }
+            else if (Convert.ToBoolean(FinancialYear) == true)
+            {
+                if (Convert.ToBoolean(AllConsignee) == true)
+                {
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                }
+                else if (Convert.ToBoolean(ParticularConsignee) == true)
+                {
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                }
+            }
+            return ds;
         }
-        public void ji_compliants_statement1()
-        {
 
+        public DataSet ji_compliants_statement(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string Compact,string AwaitingJI,string JIConclusion,string JIConclusionfollowup,string All,string Detailed,string FinancialYears,string consignee,string ddlsupercm,string ddliename,string vendor,string Clientwiseddl,string Item)
+        {
+            DataSet ds = null;
+            if (Convert.ToBoolean(JIDecidedDT) == true)
+            {
+                if (Convert.ToBoolean(Compact) == true)
+                {
+                    ds = ALLReportTye(FromDate, ToDate, Region, AwaitingJI, JIConclusion, JIConclusionfollowup, All, FinancialYears, consignee, ddlsupercm, ddliename, vendor, Clientwiseddl, Item);
+                }
+                else if (Convert.ToBoolean(Detailed) == true)
+                {
+                    ds = ALLReportTye(FromDate, ToDate, Region, AwaitingJI, JIConclusion, JIConclusionfollowup, All, FinancialYears, consignee, ddlsupercm, ddliename, vendor, Clientwiseddl, Item);
+                }
+            }
+            else if (Convert.ToBoolean(FinancialYear) == true)
+            {
+                if (Convert.ToBoolean(Compact) == true)
+                {
+                    ds = ALLReportTye(FromDate, ToDate, Region, AwaitingJI, JIConclusion, JIConclusionfollowup, All, FinancialYears, consignee, ddlsupercm, ddliename, vendor, Clientwiseddl, Item);
+                }
+                else if (Convert.ToBoolean(Detailed) == true)
+                {
+                    ds = ALLReportTye(FromDate, ToDate, Region, AwaitingJI, JIConclusion, JIConclusionfollowup, All, FinancialYears, consignee, ddlsupercm, ddliename, vendor, Clientwiseddl, Item);
+                }
+            }
+            return ds;
         }
 
         public DataSet AllIE(string FromDateFor, string ToDateFor, string Region, string ddliename, string FinancialYears)
@@ -472,6 +376,44 @@ namespace IBS.Repositories
             par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_AllClient_Report", par, 1);
+            return ds;
+        }
+        
+        public DataSet ALLConsignee(string FromDate,string ToDate,string Region,string consignee,string FinancialYears)
+        {
+            DataSet ds = null;
+            OracleParameter[] par = new OracleParameter[6];
+            par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("compliants_statement_AllConsignee_Report", par, 1);
+            return ds;
+        }
+        
+        public DataSet ALLReportTye(string FromDate,string ToDate,string Region,string AwaitingJI,string JIConclusion,string JIConclusionfollowup,string All,string FinancialYears, string consignee, string ddlsupercm, string ddliename, string vendor, string Clientwiseddl, string Item)
+        {
+            DataSet ds = null;
+            OracleParameter[] par = new OracleParameter[16];
+            par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_co", OracleDbType.Varchar2, ddlsupercm, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_ie", OracleDbType.Varchar2, ddliename, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, vendor, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_today_dt", OracleDbType.Varchar2, DateTime.Now, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_bpo_rly", OracleDbType.Varchar2, Item, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_clienttype", OracleDbType.Varchar2, Clientwiseddl, ParameterDirection.Input);
+            par[10] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[11] = new OracleParameter("p_awaitingji", OracleDbType.Varchar2, AwaitingJI, ParameterDirection.Input);
+            par[12] = new OracleParameter("p_awaitingconclusion", OracleDbType.Varchar2, JIConclusion, ParameterDirection.Input);
+            par[13] = new OracleParameter("p_awaitingaction", OracleDbType.Varchar2, JIConclusionfollowup, ParameterDirection.Input);
+            par[14] = new OracleParameter("p_awaitingfinalaction", OracleDbType.Varchar2, All, ParameterDirection.Input);
+            par[15] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("compliants_statement_reporttypes_Report", par, 1);
             return ds;
         }
 
