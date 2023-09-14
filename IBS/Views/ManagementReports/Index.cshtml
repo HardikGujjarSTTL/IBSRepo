@@ -5,6 +5,8 @@
 
     if (ReportType == "IE_X") ReportTitle = "IE Performance";
     else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
+    else if (ReportType == "RWB") ReportTitle = "Region Wise Billing Summary";
+
     ViewData["Title"] = ReportTitle;
 }
 
@@ -15,7 +17,7 @@
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
-        <div class="task-inner row">
+        <div class="task-inner row report1" style="display: none">
             <div class="col-md-3">
                 <div class="input-search">
                     <label for="FromDate">For The Period From</label>
@@ -32,8 +34,50 @@
             </div>
             <div class="col-md-3" style="margin-top: 30px;">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report2" style="display: none">
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="SummaryReport1" name="RWBSummaryReport" value="SummaryReport1" checked>
+                                <label for="SummaryReport1">Summary Report For the Month</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="SummaryReport2" name="RWBSummaryReport" value="SummaryReport2">
+                                <label for="SummaryReport2">Summary Report For the Given Period</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="FromMonth" id="lblFromMonth">Month</label> <br />
+                @Html.DropDownList("FromMonth", Common.GetMonths())
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="FromYear" id="lblFromYear">Year</label> <br />
+                @Html.DropDownList("FromYear", Common.GetYears())
+            </div>
+            <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
+                <label for="ToMonth">To Month</label> <br />
+                @Html.DropDownList("ToMonth", Common.GetMonths())
+            </div>
+            <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
+                <label for="ToYear">To Year</label> <br />
+                @Html.DropDownList("ToYear", Common.GetYears())
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportRWB();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsRWB();">Clear</button>
                 </div>
             </div>
         </div>
@@ -46,14 +90,18 @@
 
     <script type="text/javascript">
 
-        function ClearControls() {
-            $("#FromDate").val("");
-            $("#ToDate").val("");
-            $("#spnErrorFromDate").html("");
-            $("#spnErrorToDate").html("");
-        }
+        $(document).ready(function () {
+            if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X') {
+                $(".report1").css("display", "")
+                $(".report2").css("display", "none")
+            }
+            else if ('@ReportType' == 'RWB') {
+                $(".report1").css("display", "none")
+                $(".report2").css("display", "")
+            }
+        });
 
-        function ViewReport() {
+        function ViewReport1() {
 
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
@@ -87,6 +135,62 @@
 
             var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
             window.open(url, '_blank');
+        }
+
+        function ClearControls1() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+        }
+
+        $('input[type=radio][name="RWBSummaryReport"]').change(function () {
+            if (this.value == "SummaryReport1") {
+                $("#lblFromMonth").text("Month");
+                $("#lblFromYear").text("Year");
+                $(".RWBSummaryReportTo").css("display", "none");
+            }
+            else {
+                $("#lblFromMonth").text("From Month");
+                $("#lblFromYear").text("From Year");
+                $(".RWBSummaryReportTo").css("display", "")
+            }
+        });
+
+        function ViewReportRWB() {
+
+            var ReportType = '@ReportType';
+
+            var FromYearMonth = '', ToYearMonth = '';
+
+            var _RWBSummaryReport = $('input[name="RWBSummaryReport"]:checked').val();
+
+            FromYearMonth = $("FromMonth").val() + $("FromYear").val();
+
+            if (_RWBSummaryReport == "SummaryReport2") {
+                ToYearMonth = $("ToMonth").val();
+                ToYear = $("ToYear").val();
+            }
+
+            let myObject = { ReportType, FromMonth, FromYear, ToMonth, ToYear };
+
+            var url = '@Url.Action("ManageRWB", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsRWB() {
+
+            $("input[type=radio][name=RWBSummaryReport][value=SummaryReport1]").prop('checked', true);
+            $('input[type=radio][name="RWBSummaryReport"]').change();
+
+            $("#lblFromMonth").text("Month");
+            $("#lblFromYear").text("Year");
+            $(".RWBSummaryReportTo").css("display", "none");
+
+            $("#FromMonth").get(0).selectedIndex = 0;
+            $("#FromYear").get(0).selectedIndex = 0;
+            $("#ToMonth").get(0).selectedIndex = 0;
+            $("#ToYear").get(0).selectedIndex = 0;
         }
 
     </script>

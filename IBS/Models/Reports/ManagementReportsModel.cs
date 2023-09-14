@@ -10,6 +10,9 @@
 
         public DateTime ToDate { get; set; }
 
+        public string FromYearMonth { get; set; }
+
+        public string ToYearMonth { get; set; }
     }
 
     public class IEPerformanceModel

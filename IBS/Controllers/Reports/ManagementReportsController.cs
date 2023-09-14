@@ -25,7 +25,15 @@ namespace IBS.Controllers.Reports
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
             if (ReportType == "IE_X") model.ReportTitle = "IE Performance";
             else if (ReportType == "CLUSTER_X") model.ReportTitle = "Cluster Wise Performance Report";
+
             return View(model);
+        }
+
+        public IActionResult ManageRWB(string ReportType, string FromYearMonth, string ToYearMonth)
+        {
+            ManagementReportsModel model = new() { ReportType = ReportType, FromYearMonth = FromYearMonth, ToYearMonth = ToYearMonth };
+            if (ReportType == "RWB") model.ReportTitle = "Region Wise Billing Summary";
+            return View("Manage", model);
         }
 
         public IActionResult IEPerformance(DateTime FromDate, DateTime ToDate)
@@ -37,6 +45,12 @@ namespace IBS.Controllers.Reports
         public IActionResult ClusterPerformance(DateTime FromDate, DateTime ToDate)
         {
             ClusterPerformanceModel model = managementReportsRepository.GetClusterPerformanceData(FromDate, ToDate, Region);
+            return PartialView(model);
+        }
+
+        public IActionResult RWBSummary(int FromMonth, int FromYear, int ToMonth, int ToYear)
+        {
+            //ClusterPerformanceModel model = managementReportsRepository.GetClusterPerformanceData(FromDate, ToDate, Region);
             return PartialView(model);
         }
 

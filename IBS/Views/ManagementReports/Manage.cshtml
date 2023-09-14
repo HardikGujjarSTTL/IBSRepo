@@ -66,6 +66,13 @@
         });
     }
 
+    function loadRWBSummary() {
+        $("#dvReportViewer").load("@Url.Action("RWBSummary")", { FromYearMonth: '@Model.FromYearMonth', ToYearMonth: '@Model.ToYearMonth' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
     $("#btnPrint").click(function () {
         generatePdf(true);
     });
@@ -106,7 +113,7 @@
                 window.open(pdfObj.output('bloburl'), '_blank');
             });
         }
-        else{
+        else {
             html2pdf().set(options).from(element).save();
         }
 
@@ -120,5 +127,6 @@
     $(document).ajaxComplete(function () {
         $(".overlayLoader").hide();
     });
+
 
 </script>
