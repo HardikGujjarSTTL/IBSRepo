@@ -23,10 +23,10 @@
         <div class="row my-0">
             <ul class="radioListForm">
                 <li>
-                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month --></label>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month </label>
                 </li>
                 <li>
-                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) --></label>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) </label>
                 </li>
             </ul>
             <div class="col-md-3">
@@ -51,14 +51,9 @@
             </div>
             </div>*@
         </div>
-        <div class="row my-0">          
+        <div class="row my-0">
         </div>
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <div class="mt-3">
-                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) --></label>
-                </div>
-            </div>
             <div class="col-md-3 mb-3">
                 <input type="text" class="input datepicker clsDate" id="txtBillFromDate">
             </div>
@@ -66,16 +61,6 @@
                 <input type="text" class="input datepicker clsDate" id="txtBillToDate">
             </div>
         </div>
-        <div class="row">
-        <div class="col-md-12">
-            <h3 class="heading3">Report to be sorted on</h3>
-        </div>
-        </div>
-        <ul class="radioListForm">
-            <li>
-                <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Bill Date", new {  @id="rdbBillDate", @checked = true }) Bill Date</label>
-            </li>
-            <li>
         @if (@ViewBag.Action == "U")
         {
             <div class="row my-0">
@@ -90,25 +75,27 @@
                 <div class="col-md-4 mb-3" id="IEStatus" style="display:none;">
                     <div class="reference">
                         <label for="Name" id="lblIECM"></label>
-                        @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.RegionCode) , "Value", "Text"),"--Select--", new{@id="DpIE"})
+                        @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.RegionCode) , "Value", "Text"),"--Select--")
                     </div>
                 </div>
             </div>
         }
-        <div class="row my-0">
-            <div class="col-md-2 mb-3">
-                <label>Report to be sorted on</label>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="heading3">Report to be sorted on</h3>
             </div>
-            <div class="col-md-1 mb-3">
+        </div>
+        <ul class="radioListForm">
+            <li>
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Bill Date", new {  @id="rdbBillDate", @checked = true }) Bill Date</label>
-            </div>
+            </li>
             @if (@ViewBag.Action == "U")
             {
-                <div class="col-md-1 mb-3">
+                <li>
                     <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IE Name", new {  @id="rdbIEName", }) IE Name</label>
-                </div>
+                </li>
             }
-            <div class="col-md-1 mb-3">
+            <li>
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IC Date", new {  @id="rdbICDate" }) IC Date</label>
             </li>
             <li>
@@ -262,7 +249,7 @@
             var AllIE = $("#rdAllIE").is(":checked") == true ? "true" : "false";
             var PartiIE = $("#rdPartiIE").is(":checked") == true ? "true" : "false";
             var IECD = $("#lstIE").val() == undefined ? null : $("#lstIE").val();
-
+            
             if (IcDt == "true") { SortOn = "Report Sorted on IC Date" }
             else if (FInspDt == "true") { SortOn = "Report Sorted on First Inspection Date" }
             else if (LFnspDt == "true") { SortOn = "Report Sorted on Last Inspection Date" }
