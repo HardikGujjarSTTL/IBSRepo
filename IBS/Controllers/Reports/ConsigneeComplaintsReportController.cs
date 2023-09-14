@@ -40,7 +40,7 @@ namespace IBS.Controllers.Reports
             return Json(dtResult);
         }
         [HttpGet]
-        public IActionResult Report(string FromDate,string ToDate)
+        public IActionResult Report(string FromDate, string ToDate)
         {
             //string FromDate = null, ToDate = null;
             if (Request.Query["FromDate"] != "")
@@ -51,8 +51,10 @@ namespace IBS.Controllers.Reports
             {
                 ToDate = Convert.ToString(Request.Query["ToDate"]);
             }
+            ViewBag.FromDate = FromDate;
+            ViewBag.ToDate = ToDate;
             DTParameters dtParameters = new DTParameters();
-            var dtResult = consigneeComplaintsReportRepository.Get_Consignee_Complaints(dtParameters,FromDate,ToDate, GetUserInfo);
+            var dtResult = consigneeComplaintsReportRepository.Get_Consignee_Complaints(dtParameters, FromDate, ToDate, GetUserInfo);
             ViewBag.DataList = dtResult;
             return View(dtResult);
         }

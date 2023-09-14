@@ -68,7 +68,7 @@
             processing: true, // ServerSide Setups
             serverSide: true,
             destroy: true,
-            paging: true,// Paging Setups
+            paging: false,// Paging Setups
             searching: true,// Searching Setups
             dom: 'Bfrtip',
             buttons: [
@@ -76,7 +76,6 @@
                 //{ extend: 'csv', exportOptions: { modifier: { page: 'all', search: 'none' } } },
                 //{ extend: 'excel', exportOptions: { modifier: { page: 'all', search: 'none' } }, action: newexportaction },
                 //{ extend: 'print', exportOptions: { modifier: { page: 'all', search: 'none' } }, action: newexportaction },
-
             ],
             ajax: {// Ajax Filter
                 url: "@Url.Action("Get_IC_Issue_Not_Receive", "IC_Receipt")",
@@ -144,7 +143,7 @@
                         var html = "";
                         if (rdType == "IE Wise") {
                             if (row.RLY_NONRLY == "R" && row.PO_SOURCE == "C") {
-                                html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + " / " + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>" + row.CASE_NO + " </font></a></div>";
+                                html = "<div width='10%' valign='top' align='center'><a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.IMMS_RLY_CD + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>" + row.CASE_NO + " </font></a></div>";
                             }
                             else {
                                 if (row.IsTIF == true) {

@@ -47,6 +47,7 @@ namespace IBS.Controllers.Reports
                 partialView = "../Reports/Pending_JI_Cases_Partial";
             }
             ViewBag.PartialView = partialView;
+            ViewBag.RoleName = GetUserInfo.RoleName;
             return View();
         }
 

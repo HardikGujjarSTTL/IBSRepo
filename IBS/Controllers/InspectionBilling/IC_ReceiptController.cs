@@ -196,9 +196,10 @@ namespace IBS.Controllers.InspectionBilling
                 var region = GetUserInfo.Region;
                 var username = GetUserInfo.UserName;
                 var iccd = Convert.ToString(GetUserInfo.IeCd);
-                dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
-                
-                foreach(var row in dtList.data)
+                //dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
+                dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, GetUserInfo);
+
+                foreach (var row in dtList.data)
                 {                    
                     var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO+ ".TIF");
                     var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");

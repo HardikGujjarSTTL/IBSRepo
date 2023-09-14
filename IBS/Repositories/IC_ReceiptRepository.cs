@@ -311,7 +311,8 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
+        public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, UserSessionModel model)
+        //public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
         {
             DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
             IQueryable<ICIssueNotReceiveModel>? query = null;
@@ -347,16 +348,16 @@ namespace IBS.Repositories
             {
                 ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
             }
-            if (!string.IsNullOrEmpty(Region))
+            if (!string.IsNullOrEmpty(model.Region))
             {
-                REGION = Region;
+                REGION = model.Region;
             }
 
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
             ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
             REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
 
-            var IE_CD = (UserName != "" && UserName != null) ? null : Ic_Cd;
+            var IE_CD = (model.RoleName != "Inspection Engineer (IE)") ? null : Convert.ToString(model.IeCd);
 
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
@@ -390,6 +391,7 @@ namespace IBS.Repositories
 
             dTResult.recordsTotal = ds.Tables[0].Rows.Count;
             dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;

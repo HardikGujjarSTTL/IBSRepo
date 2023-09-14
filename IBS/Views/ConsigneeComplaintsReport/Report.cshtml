@@ -1,104 +1,106 @@
 ﻿@model List<ConsigneeComplaintsReportModel>
 @{
-    Layout = "";
-    ViewBag.Title = "Consignee Complaints Report";
-    var list = new List<ConsigneeComplaintsReportModel>();
-    list = ViewBag.DataList;
+    Layout = null;
+    ViewData["Title"] = "Consignee Complaints Report";
 }
-<div class="savenext-btn">
-    <button type="button" class="save-btn active" onclick="history.go(-1)">Back</button>
-    @*<button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>*@
-</div>
-<div class="task-listinput">
-    <div class="dash-table">
-        <h3>Compliant Recieved During the Period: 01/09/2020 to 10/08/2023</h3>
-        <table id="dtConsigneeComplaints" class="table-responsive nowrap">
-            <thead>
-                <tr>
-                    <th colspan="28">Compliant Recieved During the Period: 01/09/2020 to 10/08/2023</th>
-                    <th colspan="6">Corrective & Preventive Action Identified</th>
-                </tr>
-                <tr>
-                    <th>S.No.</th>
-                    <th>Region</th>
-                    <th>Complaint ID</th>
-                    <th>Unique SNO.</th>
-                    <th>Firm</th>
-                    <th>PO No.</th>
-                    <th>Date</th>
-                    <th>BK NO & Set NO</th>
-                    <th>Date of IC</th>
-                    <th>Item</th>
-                    <th>Consignee</th>
-                    <th>IE</th>
-                    <th>Qty Offered</th>
-                    <th>Qty Rejected</th>
-                    <th>Value of Rejected Stores</th>
-                    <th>Discipline</th>
-                    <th>Date of 1st Reference</th>
-                    <th>REJ MEMO</th>
-                    <th>Reason of Rejection</th>
-                    <th>Reason of No JI</th>
-                    <th>Date of JI</th>
-                    <th>Inspection Document</th>
-                    <th>Status (Decision taken by JI Committe)</th>
-                    <th>JI REPORT</th>
-                    <th>Defect Code</th>
-                    <th>Classfication</th>
-                    <th>Conclusion Dt</th>
-                    <th>CM</th>
-                    <th>JI Engineer</th>
-                    <th>Root Cause Analysis</th>
-                    <th>Checksheet Status</th>
-                    <th>Tech Ref</th>
-                    <th>D&AR Proposed</th>
-                    <th>Any Other</th>
-                    <th>Status of CAPA</th>
-                    <th>D&AR Status (if Any)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var item in Model)
+
+<html>
+<head>
+    <title>Consignee Complaints Report</title>
+</head>
+<body>
+    <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <thead>
+            <tr>
+                <th colspan="29" width="15%" valign="top" align="center"><b><font size="2" face="Verdana">Compliant Recieved During the Period: @ViewBag.FromDate to @ViewBag.ToDate</font></b></th>
+                <th colspan="7" width="15%" valign="top" align="center"><b><font size="2" face="Verdana">Corrective & Preventive Action Identified</font></b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Unique SNO.</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Firm</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">PO No.</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO & Set NO</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Date of IC</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Offered</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rejected</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Value of Rejected Stores</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Discipline</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Date of 1st Reference</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">REJ MEMO</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of Rejection</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of No JI</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection Document</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Status (Decision taken by JI Committe)</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">JI REPORT</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Defect Code</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Classfication</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Conclusion Dt</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">JI Engineer</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Root Cause Analysis</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Checksheet Status</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Tech Ref</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">D&AR Proposed</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Any Other</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Status of CAPA</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">D&AR Status (if Any)</font></b></th>
+            </tr>
+            @{
+                var SrNo = 0;
+                @foreach (var item in Model)
                 {
+                    SrNo = SrNo + 1;
                     <tr>
-                        <td>@item.IN_REGION</td>
-                        <td>@item.COMPLAINT_ID</td>
-                        <td>@item.JI_SNO</td>
-                        <td>@item.VENDOR</td>
-                        <td>@item.PO_NO</td>
-                        <td>@item.PO_DATE</td>
-                        <td>@item.BK_SET</td>
-                        <td>@item.IC_DATE</td>
-                        <td>@item.ITEM_DESC</td>
-                        <td>@item.CONSIGNEE</td>
-                        <td>@item.IE_NAME</td>
-                        <td>@item.QTY_OFF</td>
-                        <td>@item.QTY_REJECTED</td>
-                        <td>@item.REJECTION_VALUE</td>
-                        <td>@item.DEPT</td>
-                        <td>@item.COMPLAINT_DATE</td>
-                        <td>@item.REJECTIONMEMOPATH</td> @*Path*@
-                        <td>@item.REJECTION_REASON</td>
-                        <td>@item.NO_JI_RES</td>
-                        <td>@item.JI_DATE</td>
-                        <td>@item.COMPLAINTSCASESPATH</td> @*Path*@
-                        <td>@item.STATUS</td>
-                        <td>@item.COMPLAINTSREPORTPATH</td> @*Path*@
-                        <td>@item.DEFECT_DESC</td>
-                        <td>@item.JI_STATUS_DESC</td>
-                        <td>@item.CONCLUSION_DATE</td>
-                        <td>@item.CO_NAME</td>
-                        <td>@item.JI_IE_NAME</td>
-                        <td>@item.ROOT_CAUSE_ANALYSIS</td>
-                        <td>@item.CHK_STATUS</td>
-                        <td>@item.TECH_REF</td>
-                        <td>@item.ACTION_PROPOSED</td>
-                        <td>@item.ANY_OTHER</td>
-                        <td>@item.CAPA_STATUS</td>
-                        <td>@item.DANDAR_STATUS</td>                        
-                    </tr>                    
+                        <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IN_REGION</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINT_ID</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_SNO</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_DATE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BK_SET</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.QTY_OFF</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.QTY_REJECTED</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.REJECTION_VALUE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.DEPT</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINT_DATE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.REJECTIONMEMOPATH</font></td> @*Path*@
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.NO_JI_RES</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_DATE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINTSCASESPATH</font></td> @*Path*@
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.STATUS</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINTSREPORTPATH</font></td> @*Path*@
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.DEFECT_DESC</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_STATUS_DESC</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CONCLUSION_DATE</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_IE_NAME</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ROOT_CAUSE_ANALYSIS</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CHK_STATUS</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.TECH_REF</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ACTION_PROPOSED</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ANY_OTHER</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CAPA_STATUS</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.DANDAR_STATUS</font></td>
+                    </tr>
                 }
-            </tbody>
-        </table>
-    </div>
-</div>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
