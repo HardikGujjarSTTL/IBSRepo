@@ -64,3 +64,11 @@ ALTER TABLE T09_IE ADD IE_JOB_TYPE CHAR(1);
 ALTER TABLE T101_IE_CLUSTER MODIFY CLUSTER_CODE NUMBER(6,0);
 
 Create new Procedure ==> SP_GET_IE_PERFORMANCE_DETAILS
+
+UPDATE menu_master set actionname = 'Index?ReportType=IE_X' WHERE ID = 15;
+
+INSERT INTO menu_master VALUES(435, 14, 'ManagementReports', 'Index?ReportType=CLUSTER_X', 'Cluster Performance', null, null, null, 1, 16, null, 1);
+
+INSERT INTO menurolemapping VALUES(1727, 1, 435, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==> SP_GET_CLUSTER_PERFORMANCE_DETAILS

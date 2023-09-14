@@ -178,6 +178,7 @@ namespace IBS.Models
                                      }).ToList();
             return state;
         }
+
         public static List<SelectListItem> LabInfoReportStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -196,6 +197,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> GetStatusLabRpt()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -218,6 +220,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static IEnumerable<SelectListItem> GetVendorLabRpt()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -234,6 +237,7 @@ namespace IBS.Models
                                              }).ToList();
             return dropList;
         }
+
         public static List<SelectListItem> GetCountry()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -3102,6 +3106,13 @@ namespace IBS.Models
         public static string ConvertToUpper(string str)
         {
             return str != null ? str.ToUpper() : "";
+        }
+
+        public static int DiffDays(DateTime StartDate, DateTime EndDate)
+        {
+            TimeSpan difference = EndDate - StartDate;
+            int daysDifference = (int)difference.TotalDays;
+            return daysDifference;
         }
     }
 

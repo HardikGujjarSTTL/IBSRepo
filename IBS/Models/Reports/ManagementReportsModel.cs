@@ -77,4 +77,50 @@
 
         public decimal MATERIAL_VALUE { get; set; }
     }
+
+    public class ClusterPerformanceModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<ClusterPerformanceListModel> lstPerformance { get; set; }
+
+        public ClusterPerformanceListModel lstTotalPerformance { get; set; }
+    }
+
+    public class ClusterPerformanceListModel
+    {
+        public string CLUSTER_NAME { get; set; }
+
+        public string DEPT { get; set; }
+
+        public decimal C3 { get; set; }
+
+        public decimal C7 { get; set; }
+
+        public decimal CM7 { get; set; }
+
+        public decimal C10 { get; set; }
+
+        public decimal C0 { get; set; }
+
+        public decimal INSP_FEE { get; set; }
+
+        public decimal MATERIAL_VALUE { get; set; }
+
+        public decimal AVERAGE_FEE { get; set; }
+
+        public decimal CALLS { get; set; }
+
+        public decimal CALL_CANCEL { get; set; }
+
+        public decimal REJECTIONS { get; set; }
+    }
 }
