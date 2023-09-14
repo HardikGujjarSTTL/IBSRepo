@@ -13,7 +13,9 @@ namespace IBS.Models
         public string INSP_FEE { get; set; }
 
         public string Region { get; set; }
+        public string Month { get; set; }
+        public string Year { get; set; }
 
-        
+
     }
 }

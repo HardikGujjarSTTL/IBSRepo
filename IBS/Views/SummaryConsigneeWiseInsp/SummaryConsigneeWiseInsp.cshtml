@@ -1,0 +1,427 @@
+﻿@model IBS.Models.SummaryConsigneeWiseInspModel
+@{
+    ViewData["Title"] = "SUMMARY OF CONSIGNEE WISE INSPECTIONS";
+}
+<style>
+    a.btnicons {
+        transition: all 0.4s;
+        border: 1px solid #848484;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 50%;
+        margin: 0 6px;
+    }
+</style>
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>SUMMARY OF CONSIGNEE WISE INSPECTIONS</h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-5 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For All Consignee's</label>
+                <input type="radio" name="radioGroup" id="rb1" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-5 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For Particular Consignee</label>
+                <input type="radio" name="radioGroup" id="rb2" />
+                <span class="text-danger"></span>
+            </div>
+            
+        </div>
+        <div class="row my-0">
+            <div class="col-md-2 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For the Month</label>
+                <input type="radio" name="radioGroup2" id="rb3" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For Given Period</label>
+                <input type="radio" name="radioGroup2" id="rb4" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" style="display:none">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" style="display:none">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" id="dd1">
+                 <label for="PropertyId">Month</label>
+                @Html.DropDownListFor(model => model.Month, Common.GetMonth(), new { @id="ddlmonth"})
+                <span asp-validation-for="Month" class="text-danger"></span>
+            </div>
+             <div class="col-md-2 mb-3"  id="dd2">
+                 <label for="PropertyId">Year</label>
+                @Html.DropDownListFor(model => model.Year, Common.GetYear(), new { @id="ddlyear"})
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <label>Report based on </label>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">IC Date</label>
+                <input type="radio" name="radioGroup3" id="rb5" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3" >
+                <label for="PropertyId">Bill Date</label>
+                <input type="radio" name="radioGroup3" id="rb6" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <label>Report to be Sorted on </label>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Consignee Name</label>
+                <input type="radio" name="radioGroup4" id="rb7" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Material Value</label>
+                <input type="radio" name="radioGroup4" id="rb8" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="savenext-btn" style="margin-left:50%;">
+        <button type="button" class="save-btn active" onclick="show();">Search</button>
+        
+    </div>
+
+</div>
+<div id="hide" style="display:none">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtlarpt" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Sample Reg No.</th>
+                            <th>Sample Reg Date</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call Sno</th>
+                            <th>Testing Type</th>
+                            <th>Code No</th>
+                            <th>Code Date</th>
+                            <th>Vendor</th>
+                            <th>IE</th>
+                            <th>Lab</th>
+                            <th>Item</th>
+                            <th>Test</th>
+                            <th>Sample Dispatch to Lab Date</th>
+                            <th>Test Report Receipt Date</th>
+                            <th>Testing Result</th>
+                            <th>Remarks</th>
+                            <th>Testing Charges</th>
+                            <th>Service Tax</th>
+                            <th>Handling Charges</th>
+                            <th>Amount Cleared By DD</th>
+                            <th>TDS</th>
+                            <th>TDS Date</th>
+                            <th>Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function show() {
+            if ($("#dtfrom").val() == '') {
+                alert("Please Select From Date");
+                return false;
+            }
+            else if ($("#dtto").val() == '') {
+                alert("Please Select To Date");
+                return false;
+            }
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            var rdbIEWise = sessionStorage.getItem("rbb1");
+            var rdbPIE = sessionStorage.getItem("ch2");
+            var rdbVendWise = sessionStorage.getItem("rbb2");
+            var rdbPVend = sessionStorage.getItem("ch4");
+            var rdbLabWise = sessionStorage.getItem("rbb3");
+            var rdbPLab = sessionStorage.getItem("ch6");
+            var rdbPending = sessionStorage.getItem("rr2");
+            var rdbPaid = sessionStorage.getItem("rr3");
+            var rdbDue = sessionStorage.getItem("rr4");
+            var rdbPartlyPaid = sessionStorage.getItem("rr5");
+            var lstTStatus = $("#ddlstatus").val();
+            var lstIE = $("#ddl1p").val();
+            var ddlVender = $("#ddl2p").val();
+            var lstLab = $("#ddl3p").val();
+
+            InitializeDatatable(wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab);
+            $("#hide").css("display", "block");
+        }
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.setItem("rbb1", true);
+                $("#ie1").css("display", "block");
+                $("#ie2").css("display", "block");
+                $("#rbc1").prop("checked", true);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+            }
+            else if (selectedId == "rb2") {
+                sessionStorage.removeItem("rbb2");
+                sessionStorage.setItem("rbb2", true);
+                $("#ie3").css("display", "block");
+                $("#ie4").css("display", "block");
+                $("#rbc3").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+            }
+            else if (selectedId == "rb3") {
+                sessionStorage.removeItem("rbb3");
+                sessionStorage.setItem("rbb3", true);
+                $("#ie5").css("display", "block");
+                $("#ie6").css("display", "block");
+                $("#rbc5").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+
+            }
+
+        });
+        $('input[name="child1"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc1") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd1").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd1").css("display", "block");
+            }
+        });
+        $('input[name="child2"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc3") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd2").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd2").css("display", "block");
+            }
+        });
+        $('input[name="child3"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc5") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd3").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd3").css("display", "block");
+            }
+        });
+        $('input[name="Group"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "r1") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr1", true);
+            }
+            else if (selectedId == "r2") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr2", true);
+            }
+            else if (selectedId == "r3") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr3", true);
+            }
+            else if (selectedId == "r4") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr4", true);
+            }
+            else if (selectedId == "r5") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr5", true);
+            }
+        });
+        $(function () {
+            $("#rb1").prop("checked", true);
+            $("#rb3").prop("checked", true);
+            $("#rb5").prop("checked", true);
+            $("#rb7").prop("checked", true);
+        });
+
+        function InitializeDatatable(wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab) {
+            var _title = '\n LAB REGISTER REPORT';
+            if (wFrmDtO != "" || wToDt != "") {
+                _title = '\n LAB REGISTER REPORT For the Period :' + wFrmDtO + ' To ' + wToDt
+            }
+            $("#dtlarpt").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+                        },
+                    },
+                ],
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            wFrmDtO: wFrmDtO,
+                            wToDt: wToDt,
+                            rdbIEWise: rdbIEWise,
+                            rdbPIE: rdbPIE,
+                            rdbVendWise: rdbVendWise,
+                            rdbPVend: rdbPVend,
+                            rdbLabWise: rdbLabWise,
+                            rdbPLab: rdbPLab,
+                            rdbPending: rdbPending,
+                            rdbPaid: rdbPaid,
+                            rdbDue: rdbDue,
+                            rdbPartlyPaid: rdbPartlyPaid,
+                            lstTStatus: lstTStatus,
+                            lstIE: lstIE,
+                            ddlVender: ddlVender,
+                            lstLab: lstLab
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+
+                    { data: "sampleRegNo" },
+                    { data: "sampleRegDate" },
+                    { data: "caseNo" },
+                    { data: "callRecvDate" },
+                    { data: "callSno" },
+                    { data: "TestingType" },
+                    { data: "CodeNo" },
+                    { data: "CodeDt" },
+                    { data: "vendor" },
+                    { data: "ieName" },
+                    { data: "Lab" },
+                    { data: "ItemDesc" },
+                    { data: "Test" },
+                    { data: "SampleDispatchDt" },
+                    { data: "TestRptDt" },
+                    { data: "TestStatus" },
+                    { data: "Remarks" },
+                    { data: "TestingFee" },
+                    { data: "ServiceTax" },
+                    { data: "HandlingCharge" },
+                    { data: "amountReceived" },
+                    { data: "tdsAmt" },
+                    { data: "tdsDate" },
+                    { data: "amtDue" }
+
+                ],
+
+                "order": [[0, "asc"]]
+            });
+
+        }
+
+        $("#imgPrint").on("click", function () {
+            $('#dtlarpt').DataTable().buttons(0, 0).trigger();
+        });
+
+    </script>
+}

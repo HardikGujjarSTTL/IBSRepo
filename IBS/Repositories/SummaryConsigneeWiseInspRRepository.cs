@@ -48,15 +48,20 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[6];
-            par[0] = new OracleParameter("p_lstStatus", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("status"), ParameterDirection.Input);
-            par[1] = new OracleParameter("rdbrecvdt", OracleDbType.Boolean, dtParameters.AdditionalValues?.GetValueOrDefault("rbrecdt"), ParameterDirection.Input);
-            par[2] = new OracleParameter("p_Region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
-            par[3] = new OracleParameter("p_frmDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
-            par[4] = new OracleParameter("p_toDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
-            par[5] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            OracleParameter[] par = new OracleParameter[11];
+            par[0] = new OracleParameter("P_REGION_CODE", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_ForGPer", OracleDbType.Boolean, dtParameters.AdditionalValues?.GetValueOrDefault("rbrecdt"), ParameterDirection.Input);
+            par[2] = new OracleParameter("P_rdbICDT", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("status"), ParameterDirection.Input);
+            par[3] = new OracleParameter("P_rdbPart", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
+            par[4] = new OracleParameter("P_rdbMatValue", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[5] = new OracleParameter("p_From_Date", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[6] = new OracleParameter("p_To_Date", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[7] = new OracleParameter("P_lstConsignee", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[8] = new OracleParameter("p_Year", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[9] = new OracleParameter("p_Month", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[10] = new OracleParameter("P_CONSIGNEE_INFO", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("getLabSampleInfoReport", par, 5);
+            var ds = DataAccessDB.GetDataSet("GET_CONSIGNEE_INFO", par, 10);
 
             List<SummaryConsigneeWiseInspModel> modelList = new List<SummaryConsigneeWiseInspModel>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
