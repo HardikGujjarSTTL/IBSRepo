@@ -324,7 +324,7 @@ namespace IBS.Controllers.InspectionBilling
                         }
                     }
                 }
-                return Json(new { status = true, responseText = "", code = "", dt = "", w_itemBlocked = "" });
+                return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, CallSno= CallSno, w_itemBlocked = "" });
             }
             catch (Exception ex)
             {
@@ -417,7 +417,7 @@ namespace IBS.Controllers.InspectionBilling
                 string msg = "Insert Successfully.";
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
                 {
-                    i = callregisterRepository.CallDetailsSave(model, UserName);
+                    i = callregisterRepository.CallCancellationSave(model, UserName);
                 }
                 if (i != "")
                 {
@@ -489,17 +489,68 @@ namespace IBS.Controllers.InspectionBilling
             return View(model);
         }
 
-        public IActionResult CallDetails(string CaseNo, string _CallRecvDt, int CallSno, string ActionType)
+        public IActionResult CallDetails(string CaseNo, string _CallRecvDt, int CallSno, int ItemSrNoPo)
         {
             VendrorCallDetailsModel model = new();
-            if (CaseNo != null && _CallRecvDt != null && CallSno > 0 && ActionType != null)
+            if (CaseNo != null && _CallRecvDt != null && CallSno > 0)
             {
-                model = callregisterRepository.CallDetailsFindByID(CaseNo, _CallRecvDt, CallSno, ActionType);
+                model = callregisterRepository.CallDetailsFindByID(CaseNo, _CallRecvDt, CallSno, ItemSrNoPo);
             }
 
 
             return View(model);
+            //return View();
         }
 
+        [HttpPost]
+        public IActionResult LoadTableCallDetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VendrorCallDetailsModel> dTResult = callregisterRepository.GetCallDetailsList(dtParameters);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CallDetailsSave(VendrorCallDetailsModel model)
+        {
+            try
+            {
+                string msg = "Inserted Successfully.";
+                if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0 && model.ItemSrNoPo > 0)
+                {
+                    msg = "Updated Successfully.";
+                    model.Updatedby = UserName;
+                }
+
+                int i = callregisterRepository.CallDetailsSave(model, UserName);
+                if (i > 0)
+                {
+                    return Json(new { success = true, responseText = msg, Status = i });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallDetailsSave", 1, GetIPAddress());
+            }
+            return Json(new { success = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+
+        public IActionResult CallDetailsDelete(VendrorCallDetailsModel model)
+        {
+            try
+            {
+                if (callregisterRepository.CallDetailsRemove(model))
+                    AlertDeletedSuccess();
+                else
+                    AlertDanger();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallDelete", 1, GetIPAddress());
+                AlertDanger();
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

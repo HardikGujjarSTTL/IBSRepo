@@ -44,8 +44,8 @@ namespace IBS.Helper
             AdministratorPurchaseOrder = 13,
             [Description("/ReadWriteData/Files/Online_Comp_Document")]
             OnlineComplaints = 11,
-            [Description("/ReadWriteData/Files/Consignee_Comp_Document")]
-            ConsigneeComplaints = 12,
+            [Description("/ReadWriteData/Files/Complaint_Case")]
+            ComplaintCase = 12,
 
             [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
             IEFullSignature = 13,
@@ -53,6 +53,12 @@ namespace IBS.Helper
             IEInitials = 14,
             [Description("/ReadWriteData/Files/ContractEntry")]
             ContractEntry = 15,
+            [Description("/ReadWriteData/Files/Rejection_Memo")]
+            RejectionMemo = 16,
+            [Description("/ReadWriteData/Files/Complaints_Report")]
+            COMPLAINTSREPORT = 17,
+            [Description("/ReadWriteData/Files/Complaints_Tech_Ref")]
+            ComplaintTechRef = 17,
         }
 
         public enum DocumentCategory : int
@@ -443,6 +449,40 @@ namespace IBS.Helper
             U,
             [Description("State Government")]
             S,
+        }
+
+        public enum FPart
+        {
+            [Description("Final")]
+            F,
+            [Description("Part")]
+            P,
+        }
+
+        public enum TAXType
+        {
+            [Description("Fee Inclusive Service Tax")]
+            I,
+            [Description("Service Tax Charged separately")]
+            X,
+            [Description("No Service Tax(RITES Billing)")]
+            N,
+            [Description("Fee Inclusive of Service Tax (Don't Print S.Tax in Bill)")]
+            D,
+        }
+
+        public enum TaxType_GST
+        {
+            [Description("IGST @ 18%")]
+            I,
+            [Description("CGST @ 9% & SGST @ 9%")]
+            C,
+            [Description("NO GST")]
+            X,
+            [Description("Fee Inclusive of IGST @ 18%")]
+            Y,
+            [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
+            Z,
         }
     }
 

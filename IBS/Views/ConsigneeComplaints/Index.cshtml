@@ -1,5 +1,4 @@
-﻿@model IBS.Models.ConsigneeComplaints
-@{
+﻿@{
     ViewData["Title"] = "ConsigneeComplaints";
 }
 
@@ -12,26 +11,24 @@
     </div>
 
     <div class="task-listinput">
-        @*<form data-ajax="true" asp-antiforgery="true" asp-controller="ConsigneeComplaints" asp-action="GetCombinedData" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaintDetails">*@
             <div class="accordion-body">
                 <div class="row my-0 d-flex align-items-end">
                     <div class="col-md-4 mb-3">
                         <label for="reference">Po/offer letter no.</label>
-                        <input type="text" class="input" asp-for="PO_NO" maxlength="50" id="PoNo">
+                        <input type="text" class="input"  maxlength="50" id="PoNo">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="reference">Po Date</label>
-                        <input type="text" class="input datepicker" asp-for="PO_DT" readonly="true" id="PoDt">
+                        <input type="text" class="input datepicker"  readonly="true" id="PoDt">
                         </div>
                 <div class="col-md-4 mb-3">
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" id="btnSearch">search</button>
                     </div>
-                        </div>
-                        </div>
-                    </div>
+                 </div>
                 </div>
-           @* </form>*@
+             </div>
+     </div>
     <div class="alert alert-secondary center mb-3">
         <span id="Label8">IC Details against Given PO No. & Po Date ( Click on Select to register new Complaint against the given IC )</span>
     </div>
@@ -88,9 +85,6 @@
                 </div>
             </div>
         </section>
-
-        @*</form>*@
-    </div>
 </div>
 
 

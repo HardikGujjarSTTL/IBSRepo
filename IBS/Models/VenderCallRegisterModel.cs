@@ -523,11 +523,11 @@ namespace IBS.Models
         [Required(ErrorMessage = "Please enter a Qty To Insp")]
         public decimal? QtyToInsp { get; set; }
 
-        public int? QtyPassed { get; set; }
+        public decimal? QtyPassed { get; set; }
 
-        public int? QtyRejected { get; set; }
+        public decimal? QtyRejected { get; set; }
 
-        public int? QtyDue { get; set; }
+        public decimal? QtyDue { get; set; }
 
         public string? Consignee { get; set; }
 
@@ -544,5 +544,13 @@ namespace IBS.Models
         public string? Remarks { get; set; }
 
         public string? IESName { get; set; }
+
+        public string Createdby { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+
+        public string Updatedby { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
     }
 }

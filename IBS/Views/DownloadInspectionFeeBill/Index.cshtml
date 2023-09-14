@@ -3,7 +3,8 @@
     ViewData["Title"] = "INSPECTION FEE BILLDOWNLOAD FORM";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="DownloadInspectionFeeBill" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+@*<form data-ajax="true" asp-antiforgery="true" asp-controller="DownloadInspectionFeeBill" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">*@
+    <form role="form" asp-controller="DownloadInspectionFeeBill" asp-action="Index" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
             <h2>INSPECTION FEE BILLDOWNLOAD FORM</h2>
@@ -15,42 +16,42 @@
                 <div class="reference">
                     <label for="Reference">Case No.</label>
                     <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    @*<span asp-validation-for="CaseNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">BK No.</label>
                     <input type="text" class="input" asp-for="BkNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="BkNo" class="text-danger"></span>
+                    @*<span asp-validation-for="BkNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Set No.</label>
                     <input type="text" class="input" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="SetNo" class="text-danger"></span>
+                    @*<span asp-validation-for="SetNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Call Date</label>
                     <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    <span asp-validation-for="CallRecvDt" class="text-danger"></span>
+                    @*<span asp-validation-for="CallRecvDt" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">PO No.</label>
                     <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="PoNo" class="text-danger"></span>
+                    @*<span asp-validation-for="PoNo" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
                     <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    <span asp-validation-for="PoDt" class="text-danger"></span>
+                    @*<span asp-validation-for="PoDt" class="text-danger"></span>*@
                 </div>
             </div>
         </div>
@@ -96,8 +97,6 @@
 
     <script type="text/javascript">
         $(function () {
-            setDefaultDate();
-            InitializeDatatable();
         });
 
         $("#btnSearch").click(function () {
@@ -106,20 +105,6 @@
 
         function Search() {
             //InitializeDatatable();
-        }
-        function setDefaultDate() {
-            $('#PoDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-            $('#CallRecvDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-
-
         }
 
         function InitializeDatatable() {

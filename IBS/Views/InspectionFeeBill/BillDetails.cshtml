@@ -44,12 +44,15 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="FeeType">Fee Type</label>
-                @Html.DropDownListFor(model => model.FeeType, Common.GetFeeType(), "",  new { @class = ""})
+                @*@Html.DropDownListFor(model => model.FeeType, Common.GetFeeType(), "",  new { @class = ""})*@
+                @Html.DropDownListFor(model => model.FeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"))
             </div>
             <div class="col-md-4 mb-3">
                 <label for="TaxType">Tax Type</label>
-                @Html.DropDownListFor(model => model.TaxType, Common.GetTaxType(), "",  new { @class = ""})
-                @Html.DropDownListFor(model => model.TaxType_GST, Common.GetTaxType_GST(), new { @class = ""})
+                @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"))
+                @Html.DropDownListFor(model => model.TaxType_GST, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"))
+                @*@Html.DropDownListFor(model => model.TaxType, Common.GetTaxType(), "",  new { @class = ""})
+                @Html.DropDownListFor(model => model.TaxType_GST, Common.GetTaxType_GST(), new { @class = ""})*@
             </div>
         </div>
         <div class="row my-0">
