@@ -16,9 +16,16 @@ namespace IBS.Controllers.Vendor
             downloadRepository = _downloadRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string CaseNo, string BkNo, string SetNo)
         {
-            return View();
+            DownloadInspectionFeeBillModel model = new();
+            if (CaseNo != null && BkNo != null && SetNo != null)
+            {
+                model.CaseNo = CaseNo;
+                model.BkNo = BkNo;
+                model.SetNo = SetNo;
+            }
+            return View(model);
         }
 
         [HttpPost]

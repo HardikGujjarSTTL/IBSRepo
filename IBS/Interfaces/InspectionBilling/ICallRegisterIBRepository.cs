@@ -39,7 +39,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallCancellationModel CancelCallFindByIDM(string CaseNo, string CallRecvDt, int CallSno, string ActionType);
 
-        string CallDetailsSave(VenderCallCancellationModel model,  string UserName);
+        string CallCancellationSave(VenderCallCancellationModel model,  string UserName);
 
         string CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno);
 
@@ -47,7 +47,12 @@ namespace IBS.Interfaces.InspectionBilling
 
         string Save(VenderCallStatusModel model);
 
-        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, string ActionType);
+        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo);
 
+        DTResult<VendrorCallDetailsModel> GetCallDetailsList(DTParameters dtParameters);
+
+        int CallDetailsSave(VendrorCallDetailsModel model, string UserName);
+
+        bool CallDetailsRemove(VendrorCallDetailsModel model);
     }
 }

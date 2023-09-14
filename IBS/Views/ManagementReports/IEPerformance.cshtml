@@ -1,15 +1,6 @@
 ﻿@model IBS.Models.Reports.IEPerformanceModel
 
-@{
-    Layout = null;
-    ViewData["Title"] = "IE Performance";
-}
-
-<html>
-<head>
-    <title>IE Performance</title>
-</head>
-<body>
+<div>
     <p align="center"><font size="3" face="Verdana"><b><u>IE Performance For The Period: @Model.Display_FromDate To @Model.Display_ToDate (@Model.Region)</u></b></font></p>
     <br>
     <font size="2" face="Verdana">Rejections Issued by I.E During The Period:  @Model.RejectionsIssued</font>
@@ -102,6 +93,6 @@
         </tbody>
     </table>
     <br>
-</body>
-</html>
+</div>
+
 

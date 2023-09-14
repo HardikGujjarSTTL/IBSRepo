@@ -21,17 +21,19 @@
     <div class="accordion-body">
 
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <label for="reference"></label>
-                <div class="mt-3">
+            <ul class="radioListForm">
+                <li>
                     <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month --></label>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
+                </li>
+                <li>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) --></label>
+                </li>
+            </ul>
+            <div class="col-md-3">
                 <label for="reference" id="lblHeader1">From</label>
                 @Html.DropDownList("lstMonths", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3">
                 <label for="reference" id="lblHeader2">To</label>
                 @Html.DropDownList("lstYears", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})
             </div>
@@ -40,6 +42,16 @@
             <button type="button" class="save-btn active" onclick="Search();">search</button>
             </div>
             </div>*@
+            @*<div class="col-md-4 mb-3">
+            <div class="list-btn" style="margin-top: 31px;">
+            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
+            </div>
+            </div>*@
+        </div>
+        <div class="row my-0">          
         </div>
         <div class="row my-0">
             <div class="col-md-6 mb-3">
@@ -54,6 +66,16 @@
                 <input type="text" class="input datepicker clsDate" id="txtBillToDate">
             </div>
         </div>
+        <div class="row">
+        <div class="col-md-12">
+            <h3 class="heading3">Report to be sorted on</h3>
+        </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Bill Date", new {  @id="rdbBillDate", @checked = true }) Bill Date</label>
+            </li>
+            <li>
         @if (@ViewBag.Action == "U")
         {
             <div class="row my-0">
@@ -88,14 +110,14 @@
             }
             <div class="col-md-1 mb-3">
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IC Date", new {  @id="rdbICDate" }) IC Date</label>
-            </div>
-            <div class="col-md-2 mb-3" style="width: 11%;">
+            </li>
+            <li>
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "First Insp Date", new {  @id="rdbFisrtInspDate" }) First Insp Date</label>
-            </div>
-            <div class="col-md-2 mb-3">
+            </li>
+            <li>
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Last Insp Date", new {  @id="rdbLastInspDate" }) Last Insp Date</label>
-            </div>
-        </div>
+            </li>
+        </ul>
         <div class="row my-0">
             <div class="savenext-btn" style="margin-top: 0px;">
                 <button type="button" class="save-btn active" id="btnSearch">Submit</button>
