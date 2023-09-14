@@ -3250,7 +3250,10 @@ namespace IBS.Models
             return str != null ? str.ToUpper() : "";
         }
 
-
+        public static IEnumerable<TextValueDropDownDTO> GetCriteria()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Criteria)).ToList();
+        }
 
         public static int DiffDays(DateTime StartDate, DateTime EndDate)
         {
