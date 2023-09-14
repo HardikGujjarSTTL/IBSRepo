@@ -414,8 +414,6 @@ namespace IBS.Controllers.Reports.Queries
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-
-
         #endregion
     }
 }

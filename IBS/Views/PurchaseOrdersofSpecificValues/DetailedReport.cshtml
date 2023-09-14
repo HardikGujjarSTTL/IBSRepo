@@ -160,18 +160,9 @@
             var p_wFrmAmt = $("#txtFrmAmt").val();
             var p_wToAmt = $("#txtToAmt").val();
 
-            $.ajax({
-                url: '@Url.Action("TableDetailed", "PurchaseOrdersofSpecificValues")?p_wAgency=' + p_wAgency + '&p_frmDt=' + p_frmDt + '&p_toDt=' + p_toDt + '&p_SelCriteria=' + p_SelCriteria + '&p_wClient=' + p_wClient + '&p_wFrmAmt=' + p_wFrmAmt + '&p_wToAmt=' + p_wToAmt,
-                type: 'POST',
-                cache: false,
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                var newTab = window.open('', '_blank');
-                newTab.document.open();
-                newTab.document.write(response);
-                newTab.document.close();
-            });
+            let myObject = { p_wAgency, p_frmDt, p_toDt, p_SelCriteria, p_wClient, p_wFrmAmt, p_wToAmt };
+            var url = '@Url.Action("TableDetailed", "PurchaseOrdersofSpecificValues")?' + $.param(myObject);
+            window.open(url, '_blank');
         }
 
     </script>
