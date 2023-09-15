@@ -36,6 +36,13 @@ namespace IBS.Controllers.Reports
             return View("Manage", model);
         }
 
+        public IActionResult ManageRWCO(string ReportType, DateTime FromDate)
+        {
+            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate };
+            if (ReportType == "R") model.ReportTitle = "Region Wise Comparison of Outstanding";
+            return View("Manage", model);
+        }
+
         public IActionResult IEPerformance(DateTime FromDate, DateTime ToDate)
         {
             IEPerformanceModel model = managementReportsRepository.GetIEPerformanceData(FromDate, ToDate, Region);
@@ -51,6 +58,12 @@ namespace IBS.Controllers.Reports
         public IActionResult RegionWiseBillingSummary(string FromYearMonth, string ToYearMonth)
         {
             RWBSummaryModel model = managementReportsRepository.GetRWBSummaryData(FromYearMonth, ToYearMonth);
+            return PartialView(model);
+        }
+
+        public IActionResult RegionWiseComparisonOutstanding(DateTime FromDate)
+        {
+            RWCOModel model = managementReportsRepository.GetRWCOData(FromDate);
             return PartialView(model);
         }
 

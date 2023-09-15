@@ -48,6 +48,10 @@
             loadRWBSummary();
             fileName = 'Region_Wise_Billing_Summary';
         }
+        else if ('@ReportType' == 'R') {
+            loadRWCO();
+            fileName = 'Region_Wise_Comparison_Outstanding';
+        }
     });
 
     function loadIEPerformance() {
@@ -66,6 +70,13 @@
 
     function loadRWBSummary() {
         $("#dvReportViewer").load("@Url.Action("RegionWiseBillingSummary")", { FromYearMonth: '@Model.FromYearMonth', ToYearMonth: '@Model.ToYearMonth' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadRWCO() {
+        $("#dvReportViewer").load("@Url.Action("RegionWiseComparisonOutstanding")", { FromDate: '@Model.FromDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

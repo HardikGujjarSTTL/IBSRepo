@@ -192,4 +192,45 @@
         public decimal NO_OF_BILLLS { get; set; }
     }
 
+    public class RWCOModel
+    {
+        public DateTime FromDate { get; set; }
+
+        public string Display_FromDate { get { return Common.ConvertDateFormat(this.FromDate); } }
+
+        public List<RWCOListModel> lsttRWCOList { get; set; }
+    }
+
+    public class RWCOListModel
+    {
+        public string BPO_TYPE { get; set; }
+
+        public string BPO_RLY { get; set; }
+
+        public string BPO_ORGN { get; set; }
+
+        public string BPO_TYPE_CD { get; set; }
+
+        public decimal NR_OUTSTANDING { get; set; }
+
+        public decimal WR_OUTSTANDING { get; set; }
+
+        public decimal ER_OUTSTANDING { get; set; }
+
+        public decimal SR_OUTSTANDING { get; set; }
+
+        public decimal CR_OUTSTANDING { get; set; }
+
+        public decimal TOT_SUSPENSE_NR { get; set; }
+
+        public decimal TOT_SUSPENSE_WR { get; set; }
+
+        public decimal TOT_SUSPENSE_ER { get; set; }
+
+        public decimal TOT_SUSPENSE_SR { get; set; }
+
+        public decimal TOT_SUSPENSE_CR { get; set; }
+
+    }
+
 }

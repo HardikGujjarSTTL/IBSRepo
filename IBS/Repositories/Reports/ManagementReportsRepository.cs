@@ -186,6 +186,31 @@ namespace IBS.Repositories.Reports
             return model;
         }
 
+        public RWCOModel GetRWCOData(DateTime FromDate)
+        {
+            RWCOModel model = new();
+
+            model.FromDate = FromDate;
+
+            List<RWCOListModel> lstRWCOList = new();
+
+            OracleParameter[] parameter = new OracleParameter[2];
+            parameter[0] = new OracleParameter("p_FROM_DT", OracleDbType.Date, FromDate, ParameterDirection.Input);
+            parameter[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("SP_GET_REGION_WISE_COMPARISON_OUTSTANDING_RPT", parameter);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lstRWCOList = JsonConvert.DeserializeObject<List<RWCOListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
+            model.lsttRWCOList = lstRWCOList;
+
+            return model;
+        }
+
         public string GetFilterTitle(string YearMonth)
         {
             string filterTitle = string.Empty;

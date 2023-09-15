@@ -213,5 +213,35 @@
             $("#ToYear").get(0).selectedIndex = 0;
         }
 
+        function ViewReportRWCO() {
+
+            $("#spnErrorFromDate_RWCO").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDate_RWCO").val() == "") {
+                $("#spnErrorFromDate_RWCO").html("The Date field is required.");
+                IsValid = false;
+            }
+            if ($("#FromDate_RWCO").val() != "" && IsValidDate($("#FromDate_RWCO").val()) == false) {
+                $("#spnErrorFromDate_RWCO").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate_RWCO').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = { ReportType, FromDate };
+
+            var url = '@Url.Action("ManageRWCO", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsRWCO() {
+            $("#FromDate_RWCO").val("");
+            $("#spnErrorFromDate_RWCO").html("");
+        }
+
     </script>
 }
