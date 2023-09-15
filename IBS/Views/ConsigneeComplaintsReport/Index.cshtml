@@ -5,20 +5,7 @@
 <div class="list-inner">
     <div class="tast-list">
         <h2>CONSIGNEE COMPLAINTS</h2>
-    </div>
-    @*<div class="list-btn">
-    <a asp-area="" asp-controller="ConsigneeComplaintsReport" asp-action="Index" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
-    </div>*@
-    <div>
-        @*<div class="col-md-4 mb-3">*@
-        <div class="list-btn" style="margin-top: 0px;">
-            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-            @*<a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>*@
-        </div>
-        @*</div>*@
-    </div>
+    </div>   
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
@@ -32,13 +19,13 @@
             <div class="col-md-2">
                 <div class="input-search">
                     <label for="txtFromDate">From</label>
-                    <input type="text" class="input datepicker" id="txtFromDate" />
+                    <input type="text" class="input datepicker" id="txtFromDate" placeholder="DD/MM/YYYY" />
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="input-search">
                     <label for="txtToDate">To</label>
-                    <input type="text" class="input datepicker" id="txtToDate" />
+                    <input type="text" class="input datepicker" id="txtToDate" placeholder="DD/MM/YYYY" />
                 </div>
             </div>
             <div class="col-md-3" style="margin-top: 30px;">
@@ -130,31 +117,31 @@
             var ToDate = $("#txtToDate").val();
             var url= "@Url.Action("Report", "ConsigneeComplaintsReport")?FromDate=" + FromDate + "&ToDate=" + ToDate;
             window.open(url, "_blank");
-            _title = "Compliant Recieved  During the Period: " + FromDate + " to " + ToDate;
-            $.ajax({
-                async: false,
-                url: "@Url.Action("Report", "ConsigneeComplaintsReport")?FromDate=" + FromDate + "&ToDate=" + ToDate,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                //data: function (d) {
-                //    var AdditionalValues = {
-                //        FromDate: FromDate,
-                //        ToDate: ToDate
-                //    };
-                //    d.AdditionalValues = AdditionalValues;
-                //    return JSON.stringify(d);
-                //},
-                success: function (response) {
-                    debugger
-                    if (response.redirectToIndex === true) {
-                        alert(response.alertMessage);
-                        $("#btnsave").hide();
-                        $("#btnsavechoice").hide();
-                        $("#btnCancelJI").hide();
-                    }
-                }
-            });
+            //_title = "Compliant Recieved  During the Period: " + FromDate + " to " + ToDate;
+            //$.ajax({
+            //    async: false,
+            //    url: "@Url.Action("Report", "ConsigneeComplaintsReport")?FromDate=" + FromDate + "&ToDate=" + ToDate,
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    //data: function (d) {
+            //    //    var AdditionalValues = {
+            //    //        FromDate: FromDate,
+            //    //        ToDate: ToDate
+            //    //    };
+            //    //    d.AdditionalValues = AdditionalValues;
+            //    //    return JSON.stringify(d);
+            //    //},
+            //    success: function (response) {
+            //        debugger
+            //        if (response.redirectToIndex === true) {
+            //            alert(response.alertMessage);
+            //            $("#btnsave").hide();
+            //            $("#btnsavechoice").hide();
+            //            $("#btnCancelJI").hide();
+            //        }
+            //    }
+            //});
             //$("#dtConsigneeComplaints").DataTable({
             //    stateSave: false,// Design Assets
             //    autoWidth: true,

@@ -51,4 +51,18 @@
         public string COMPLAINTSREPORTPATH { get; set; } //=> "/COMPLAINTS_REPORT/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
 
     }
+
+    public class ConsigneeReportsModel
+    {
+        public string ReportType { get; set; }
+
+        public string ReportTitle { get; set; }
+
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+    }
 }

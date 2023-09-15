@@ -37,19 +37,6 @@
                 <label for="reference" id="lblHeader2">To</label>
                 @Html.DropDownList("lstYears", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})
             </div>
-            @*<div class="col-md-2 mb-3">
-            <div class="savenext-btn" style="margin-top: 31px;">
-            <button type="button" class="save-btn active" onclick="Search();">search</button>
-            </div>
-            </div>*@
-            @*<div class="col-md-4 mb-3">
-            <div class="list-btn" style="margin-top: 31px;">
-            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-            <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
-            </div>
-            </div>*@
         </div>
         <div class="row my-0">
         </div>
@@ -232,6 +219,7 @@
 
         function InitializeDatatable() {
             var SortOn = "";
+            var ReportTitle = "";
             var totalRec = 0;
             var w_DELAY_INSP = 0, w_DELAY_IC = 0, w_DELAY_SUBM = 0, w_DELAY_BILL = 0;
             //var _title = "Inspection Billing and Delay";
@@ -249,7 +237,7 @@
             var AllIE = $("#rdAllIE").is(":checked") == true ? "true" : "false";
             var PartiIE = $("#rdPartiIE").is(":checked") == true ? "true" : "false";
             var IECD = $("#lstIE").val() == undefined ? null : $("#lstIE").val();
-            
+
             if (IcDt == "true") { SortOn = "Report Sorted on IC Date" }
             else if (FInspDt == "true") { SortOn = "Report Sorted on First Inspection Date" }
             else if (LFnspDt == "true") { SortOn = "Report Sorted on Last Inspection Date" }
@@ -257,12 +245,18 @@
 
             if (MonthWise == "true") {
                 _wHdr = $("#lstMonths option:selected").text() + ", " + $("#lstYears").val()//$("#lstMonths").val();
-                _title = "STATEMENT OF INSPECTION BILLING GENERATED AS ON " + _wHdr + " (" + SortOn + ")";
+                ReportTitle = "STATEMENT OF INSPECTION BILLING GENERATED AS ON " + _wHdr + " (" + SortOn + ")";
             } else {
                 _wHdr = $("#txtBillFromDate").val() + " - " + $("#txtBillToDate").val();
-                _title = "STATEMENT OF INSPECTION BILLING GENERATED FOR THE PERIOD " + _wHdr + " (" + SortOn + ")";
+                ReportTitle = "STATEMENT OF INSPECTION BILLING GENERATED FOR THE PERIOD " + _wHdr + " (" + SortOn + ")";
             }
 
+            var ToDate = $("#txtBillToDate").val();
+            var ToDate = $("#txtBillToDate").val();
+            let myObject = { MonthWise, DateWise, Month, Year, FromDate, ToDate, BillDate, IEName, IcDt, FInspDt, LFnspDt, AllIE, PartiIE, IECD, ReportTitle };
+
+            var url = '@Url.Action("Report", "InspectionBillingDelay")?' + $.param(myObject);
+            window.open(url, '_blank');
 
             dt = $("#dtInspBillDelay").DataTable({
                 stateSave: false,// Design Assets

@@ -1,15 +1,15 @@
-﻿@*@model List<ConsigneeComplaintsReportModel>*@
-@model IBS.Models.ConsigneeReportsModel
+﻿@model IBS.Models.InspectionBillingDelayReportModel
+
 @{
-    Layout = null;    
-    string ReportType = (Model != null ? Model.ReportType : "");
+    Layout = null;
+    //string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
 }
 
 <html>
 <head>
-    <title>Consignee Complaints Report</title>
+    <title>@ReportTitle</title>
 </head>
 <body>
     <p align="right">
@@ -22,7 +22,7 @@
         <div class="loaderHolder">
             <div class="lds-dual-ring"></div>
         </div>
-    </div>       
+    </div>
 </body>
 </html>
 
@@ -33,6 +33,7 @@
 <script src="~/js/site.js"></script>
 
 <script type="text/javascript">
+
     $(document).ajaxSend(function () {
         $(".overlayLoader").show();
     });
@@ -42,13 +43,30 @@
     });
 
     $(document).ready(function () {
-        //if ('@ReportType' == 'IE_X') {
-        loadConsigneeComplaints();
+        //if ('ReportType' == 'IE_X') {
+        loadIEPerformance();
         //}
     });
 
-    function loadConsigneeComplaints() {
-        $("#dvReportViewer").load("@Url.Action("ConsigneeComplaints")", { FromDate: '@Model.Display_FromDate', ToDate: '@Model.Display_ToDate' }, function (response) {
+    function loadIEPerformance() {
+        $("#dvReportViewer").load("@Url.Action("InspectionBillingDelay")", 
+            { 
+                MonthWise: '@Model.MonthWise', 
+                DateWise: '@Model.DateWise', 
+                Month: '@Model.Month', 
+                Year: '@Model.Year', 
+                FromDate: '@Model.FromDate', 
+                ToDate: '@Model.ToDate', 
+                BillDate: '@Model.IsBillDate',
+                IEName: '@Model.IsIEName',
+                IcDt: '@Model.IsIcDt',
+                FInspDt: '@Model.IsFInspDt', 
+                LFnspDt: '@Model.IsLFnspDt', 
+                AllIE: '@Model.IsAllIE',
+                PartiIE: '@Model.IsPartiIE',
+                IECD: '@Model.IECD',
+                ReportTitle: '@Model.ReportTitle'
+            }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -67,7 +85,7 @@
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
-            download: getExportFileName("Consignee_Complaints_Report") + ".xls"
+            download: getExportFileName("Inspection_Billing_Delay") + ".xls"
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
@@ -120,7 +138,7 @@
                     window.open(pdf.output('bloburl'), '_blank');
                 }
                 else {
-                    pdf.save(getExportFileName('Consignee_Complaints_Report') + '.pdf');
+                    pdf.save(getExportFileName('Inspection_Billing_Delay') + '.pdf');
                 }
             }
         });

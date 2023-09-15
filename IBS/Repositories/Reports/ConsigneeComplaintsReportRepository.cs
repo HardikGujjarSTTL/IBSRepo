@@ -8,26 +8,26 @@ namespace IBS.Repositories.Reports
 {
     public class ConsigneeComplaintsReportRepository : IConsigneeComplaintsReportRepository
     {
-        public List<ConsigneeComplaintsReportModel> Get_Consignee_Complaints(DTParameters dtParameters,string FromDate, string ToDate, UserSessionModel model)
+        public List<ConsigneeComplaintsReportModel> Get_Consignee_Complaints(string FromDate, string ToDate, UserSessionModel model)
         {
-            DTResult<ConsigneeComplaintsReportModel> dTResult = new() { draw = 0 };
-            IQueryable<ConsigneeComplaintsReportModel>? query = null;
+            //DTResult<ConsigneeComplaintsReportModel> dTResult = new() { draw = 0 };
+            //IQueryable<ConsigneeComplaintsReportModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            //var searchBy = dtParameters.Search?.Value;
+            //var orderCriteria = string.Empty;
+            //var orderAscendingDirection = true;
 
-            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
-            {
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "JI_SNO";
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                orderCriteria = "JI_SNO";
-                orderAscendingDirection = true;
-            }
+            //if (dtParameters.Order != null && dtParameters.Order.Length > 0)
+            //{
+            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            //    if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "JI_SNO";
+            //    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            //}
+            //else
+            //{
+            //    orderCriteria = "JI_SNO";
+            //    orderAscendingDirection = true;
+            //}
 
             //string FromDate = null, ToDate = null;
             //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))

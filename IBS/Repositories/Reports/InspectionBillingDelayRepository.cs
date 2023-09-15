@@ -20,76 +20,76 @@ namespace IBS.Repositories.Reports
             this.context = context;
             this.configuration = configuration;
         }
-        public DTResult<InspectionBillingDelayModel> Get_Inspection_Billing_Delay(DTParameters dtParameters, UserSessionModel model)
+        public List<InspectionBillingDelayModel> Get_Inspection_Billing_Delay(InspectionBillingDelayReportModel obj, UserSessionModel model)
         {
             DTResult<InspectionBillingDelayModel> dTResult = new() { draw = 0 };
             IQueryable<InspectionBillingDelayModel> query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            //var searchBy = dtParameters.Search?.Value;
+            //var orderCriteria = string.Empty;
+            //var orderAscendingDirection = true;
 
             string wYrMth = "";
 
             bool IsBillDt = false, IsIEName = false, IsIcDt = false, IsFInspDt = false, IsLFnspDt = false, IsAllIE = false, IsPartiIE = false;
             int MonthWise = 0, DateWise = 0;
-            string Month = "", Year = "", FromDate = "", ToDate = "", IECD = "0";
-            MonthWise = Convert.ToBoolean(dtParameters.AdditionalValues["MonthWise"]) == true ? 1 : 0;
-            DateWise = Convert.ToBoolean(dtParameters.AdditionalValues["DateWise"]) == true ? 1 : 0;
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Month"]))
+            string Month = "", Year = "", FromDate = "", ToDate = "", IECD = null;
+            MonthWise = obj.MonthWise == true ? 1 : 0;//dtParameters.AdditionalValues["MonthWise"]) == true ? 1 : 0;
+            DateWise = obj.DateWise == true ? 1 : 0; // Convert.ToBoolean(dtParameters.AdditionalValues["DateWise"]) == true ? 1 : 0;
+            if (!string.IsNullOrEmpty(obj.Month))//dtParameters.AdditionalValues["Month"]))
             {
-                Month = Convert.ToString(dtParameters.AdditionalValues["Month"]);
+                Month = Convert.ToString(obj.Month);
                 Month = (Month.Length == 1) ? "0" + Month : Month;
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Year"]))
+            if (!string.IsNullOrEmpty(obj.Year))//dtParameters.AdditionalValues["Year"]))
             {
-                Year = Convert.ToString(dtParameters.AdditionalValues["Year"]);
+                Year = Convert.ToString(obj.Year);//dtParameters.AdditionalValues["Year"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            if (!string.IsNullOrEmpty(obj.FromDate))//dtParameters.AdditionalValues["FromDate"]))
             {
-                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+                FromDate = Convert.ToString(obj.FromDate);//dtParameters.AdditionalValues["FromDate"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            if (!string.IsNullOrEmpty(obj.ToDate))//dtParameters.AdditionalValues["ToDate"]))
             {
-                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+                ToDate = Convert.ToString(obj.ToDate);//dtParameters.AdditionalValues["ToDate"]);
             }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IECD"]))
+            if (!string.IsNullOrEmpty(obj.IECD))//dtParameters.AdditionalValues["IECD"]))
             {
-                IECD = Convert.ToString(dtParameters.AdditionalValues["IECD"]);
+                IECD = Convert.ToString(obj.IECD);//dtParameters.AdditionalValues["IECD"]);
             }
 
-            IsBillDt = Convert.ToBoolean(dtParameters.AdditionalValues["IsBillDate"]);
-            IsIEName = Convert.ToBoolean(dtParameters.AdditionalValues["IsIEName"]);
-            IsIcDt = Convert.ToBoolean(dtParameters.AdditionalValues["IsIcDt"]);
-            IsFInspDt = Convert.ToBoolean(dtParameters.AdditionalValues["IsFInspDt"]);
-            IsLFnspDt = Convert.ToBoolean(dtParameters.AdditionalValues["IsLFnspDt"]);
-            IsAllIE = Convert.ToBoolean(dtParameters.AdditionalValues["IsAllIE"]);
-            IsPartiIE = Convert.ToBoolean(dtParameters.AdditionalValues["IsPartiIE"]);
+            IsBillDt = Convert.ToBoolean(obj.IsBillDate); //dtParameters.AdditionalValues["IsBillDate"]);
+            IsIEName = Convert.ToBoolean(obj.IsIEName); //dtParameters.AdditionalValues["IsIEName"]);
+            IsIcDt = Convert.ToBoolean(obj.IsIcDt); //dtParameters.AdditionalValues["IsIcDt"]);
+            IsFInspDt = Convert.ToBoolean(obj.IsFInspDt); //dtParameters.AdditionalValues["IsFInspDt"]);
+            IsLFnspDt = Convert.ToBoolean(obj.IsLFnspDt); //dtParameters.AdditionalValues["IsLFnspDt"]);
+            IsAllIE = Convert.ToBoolean(obj.IsAllIE); //dtParameters.AdditionalValues["IsAllIE"]);
+            IsPartiIE = Convert.ToBoolean(obj.IsPartiIE); //dtParameters.AdditionalValues["IsPartiIE"]);
 
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            //if (dtParameters.Order != null)
+            //{
+            //    // in this example we just default sort on the 1st column
+            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "")
-                {
-                    if (IsIcDt) { orderCriteria = "Ic_Dt"; }
-                    else if (IsFInspDt) { orderCriteria = "First_Insp_Dt"; }
-                    else if (IsLFnspDt) { orderCriteria = "Last_Insp_Dt"; }
-                    else if (IsIEName) { orderCriteria = "Ie_Name"; }
-                    else { orderCriteria = "Bill_Dt"; }
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                if (IsIcDt) { orderCriteria = "Ic_Dt"; }
-                else if (IsFInspDt) { orderCriteria = "First_Insp_Dt"; }
-                else if (IsLFnspDt) { orderCriteria = "Last_Insp_Dt"; }
-                else if (IsIEName) { orderCriteria = "Ie_Name"; }
-                else { orderCriteria = "Bill_Dt"; }
-                orderAscendingDirection = true;
-            }
+            //    if (orderCriteria == "")
+            //    {
+            //        if (IsIcDt) { orderCriteria = "Ic_Dt"; }
+            //        else if (IsFInspDt) { orderCriteria = "First_Insp_Dt"; }
+            //        else if (IsLFnspDt) { orderCriteria = "Last_Insp_Dt"; }
+            //        else if (IsIEName) { orderCriteria = "Ie_Name"; }
+            //        else { orderCriteria = "Bill_Dt"; }
+            //    }
+            //    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            //}
+            //else
+            //{
+            //    if (IsIcDt) { orderCriteria = "Ic_Dt"; }
+            //    else if (IsFInspDt) { orderCriteria = "First_Insp_Dt"; }
+            //    else if (IsLFnspDt) { orderCriteria = "Last_Insp_Dt"; }
+            //    else if (IsIEName) { orderCriteria = "Ie_Name"; }
+            //    else { orderCriteria = "Bill_Dt"; }
+            //    orderAscendingDirection = true;
+            //}
 
             if (model.UserName != "" && model.RoleName != "Inspection Engineer (IE)")
             {
@@ -118,11 +118,11 @@ namespace IBS.Repositories.Reports
             par[4] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[5] = new OracleParameter("P_IECD", OracleDbType.Varchar2, IECD, ParameterDirection.Input);
             par[6] = new OracleParameter("P_REGION", OracleDbType.Varchar2, model.Region, ParameterDirection.Input);
-            par[7] = new OracleParameter("P_ISBILLDATE", OracleDbType.Int16, IsBillDt ? 1 : 0, ParameterDirection.Input);
-            par[8] = new OracleParameter("P_ISIENAME", OracleDbType.Int16, IsIEName ? 1 : 0, ParameterDirection.Input);
-            par[9] = new OracleParameter("P_ISICDT", OracleDbType.Int16, IsIcDt ? 1 : 0, ParameterDirection.Input);
-            par[10] = new OracleParameter("P_ISFINSPDT", OracleDbType.Int16, IsFInspDt ? 1 : 0, ParameterDirection.Input);
-            par[11] = new OracleParameter("P_ISLINSPDT", OracleDbType.Int16, IsLFnspDt ? 1 : 0, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_ISBILLDATE", OracleDbType.Varchar2, IsBillDt ? "1" : null, ParameterDirection.Input);
+            par[8] = new OracleParameter("P_ISIENAME", OracleDbType.Varchar2, IsIEName ? "1" : null, ParameterDirection.Input);
+            par[9] = new OracleParameter("P_ISICDT", OracleDbType.Varchar2, IsIcDt ? "1" : null, ParameterDirection.Input);
+            par[10] = new OracleParameter("P_ISFINSPDT", OracleDbType.Varchar2, IsFInspDt ? "1" : null, ParameterDirection.Input);
+            par[11] = new OracleParameter("P_ISLINSPDT", OracleDbType.Varchar2, IsLFnspDt ? "1" : null, ParameterDirection.Input);
             par[12] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("SP_GET_INSPECTION_BILLING_DELAY", par, 1);
             DataTable dt = ds.Tables[0];
@@ -148,18 +148,19 @@ namespace IBS.Repositories.Reports
                 Bill_Amount = Convert.ToDecimal(row["BILL_AMOUNT"]),
             }).ToList();
 
-            query = list.AsQueryable();
-            //if (IsIcDt) { query = query.OrderBy(x => x.Ic_Dt).Select(x => x); }
-            //else if (IsFInspDt) { query = query.OrderBy(x => x.First_Insp_Dt).Select(x => x); }
-            //else if (IsLFnspDt) { query = query.OrderBy(x => x.Last_Insp_Dt).Select(x => x); }
-            //else { query = query.OrderBy(x => x.Bill_Dt).Select(x => x); }
-            //if (IsAllIE) { query = query.OrderBy(x => x.Ie_Name).Select(x => x); }
-            dTResult.recordsTotal = query.ToList().Count();
-            dTResult.recordsFiltered = query.ToList().Count();
-            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            return list;
+            //query = list.AsQueryable();
+            ////if (IsIcDt) { query = query.OrderBy(x => x.Ic_Dt).Select(x => x); }
+            ////else if (IsFInspDt) { query = query.OrderBy(x => x.First_Insp_Dt).Select(x => x); }
+            ////else if (IsLFnspDt) { query = query.OrderBy(x => x.Last_Insp_Dt).Select(x => x); }
+            ////else { query = query.OrderBy(x => x.Bill_Dt).Select(x => x); }
+            ////if (IsAllIE) { query = query.OrderBy(x => x.Ie_Name).Select(x => x); }
+            //dTResult.recordsTotal = query.ToList().Count();
+            //dTResult.recordsFiltered = query.ToList().Count();
+            //if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
     }
 }

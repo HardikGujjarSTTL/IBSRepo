@@ -2,6 +2,7 @@
 using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc;
 using static IBS.Helper.Enums;
 
@@ -24,39 +25,36 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-        {
-            DTResult<ConsigneeComplaintsReportModel> dtResult = consigneeComplaintsReportRepository.Get_Consignee_Complaints(dtParameters, GetUserInfo);
-            var data = dtResult.data;
-
-            foreach (var item in data)
-            {
-                var fileName = item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO;
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.ConsigneeComplaints), fileName);
-                var tif = Path.Combine(env.WebRootPath, Enums.GetEnumDescription(Enums.FolderPath.ConsigneeComplaints), fileName);
-                //item.REJECTIONMEMOPATH =
-            }
-            return Json(dtResult);
-        }
-        [HttpGet]
+        //[HttpPost]
+        //public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        //{
+        //    DTResult<ConsigneeComplaintsReportModel> dtResult = consigneeComplaintsReportRepository.Get_Consignee_Complaints(dtParameters, GetUserInfo);
+        //    var data = dtResult.data;
+        //    foreach (var item in data)
+        //    {
+        //        var fileName = item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO;
+        //        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.ConsigneeComplaints), fileName);
+        //        var tif = Path.Combine(env.WebRootPath, Enums.GetEnumDescription(Enums.FolderPath.ConsigneeComplaints), fileName);
+        //        //item.REJECTIONMEMOPATH =
+        //    }
+        //    return Json(dtResult);
+        //}
+        
         public IActionResult Report(string FromDate, string ToDate)
-        {
-            //string FromDate = null, ToDate = null;
-            if (Request.Query["FromDate"] != "")
-            {
-                FromDate = Convert.ToString(Request.Query["FromDate"]);
-            }
-            if (Request.Query["ToDate"] != "")
-            {
-                ToDate = Convert.ToString(Request.Query["ToDate"]);
-            }
+        {            
+            ConsigneeReportsModel model = new() { ReportType = "", FromDate = Convert.ToDateTime(FromDate), ToDate = Convert.ToDateTime(ToDate) };
+            model.ReportTitle = "Consignee Complaints Report";
+            ViewBag.FromDate = FromDate;
+            ViewBag.ToDate = ToDate;            
+            return View(model);
+        }
+
+        public IActionResult ConsigneeComplaints(string FromDate, string ToDate)
+        {            
+            var data = consigneeComplaintsReportRepository.Get_Consignee_Complaints(FromDate, ToDate, GetUserInfo);            
             ViewBag.FromDate = FromDate;
             ViewBag.ToDate = ToDate;
-            DTParameters dtParameters = new DTParameters();
-            var dtResult = consigneeComplaintsReportRepository.Get_Consignee_Complaints(dtParameters, FromDate, ToDate, GetUserInfo);
-            ViewBag.DataList = dtResult;
-            return View(dtResult);
+            return PartialView(data);
         }
     }
 }
