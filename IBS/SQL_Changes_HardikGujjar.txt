@@ -1826,6 +1826,9 @@ ALTER TABLE T16_Ic_Cancel ADD Status NUMBER(2,0)
 --update T16_Ic_Cancel set status=1
 
 =====================
+ALTER TABLE T13_Po_Master ADD IsPriceVariation NUMBER(2,0)
+ALTER TABLE T13_Po_Master ADD IsStageInspection NUMBER(2,0)
+======================
 
 
 

@@ -1872,7 +1872,7 @@ namespace IBS.Models
                        }).ToList();
                 dropDownDTOs.AddRange(dropList);
             }
-            else if (RlyNonrly != "")
+            else if (RlyNonrly != "" && RlyNonrly != null)
             {
                 List<SelectListItem> dropList = new List<SelectListItem>();
                 dropList = (from a in ModelContext.T12BillPayingOfficers

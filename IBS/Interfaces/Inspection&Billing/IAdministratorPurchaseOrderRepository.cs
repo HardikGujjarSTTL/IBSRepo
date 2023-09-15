@@ -7,6 +7,9 @@ namespace IBS.Interfaces.Inspection_Billing
         public AdministratorPurchaseOrderModel FindByID(string CaseNo);
         DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters,string region_code);
         bool Remove(string CaseNo, int UserID);
+
+        PO_MasterModel alreadyExistT80_PO_MASTER(AdministratorPurchaseOrderModel model);
+        PO_MasterModel alreadyExistT13_PO_MASTER(AdministratorPurchaseOrderModel model);
         string POMasterDetailsInsertUpdate(AdministratorPurchaseOrderModel model);
         public PO_MasterModel FindCaseNo(string CaseNo,int VendCd);
         DTResult<PO_MasterDetailListModel> GetPOMasterDetailsList(DTParameters dtParameters);

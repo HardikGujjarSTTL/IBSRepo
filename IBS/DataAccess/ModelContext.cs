@@ -8881,6 +8881,12 @@ public partial class ModelContext : DbContext
                 .HasPrecision(2)
                 .HasDefaultValueSql("0")
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Ispricevariation)
+                .HasPrecision(2)
+                .HasColumnName("ISPRICEVARIATION");
+            entity.Property(e => e.Isstageinspection)
+                .HasPrecision(2)
+                .HasColumnName("ISSTAGEINSPECTION");
             entity.Property(e => e.L5noPo)
                 .HasMaxLength(5)
                 .IsUnicode(false)
