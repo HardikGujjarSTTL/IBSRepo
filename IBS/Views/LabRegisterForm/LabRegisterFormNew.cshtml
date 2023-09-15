@@ -219,6 +219,14 @@ input[type="date"] {
                     @Html.RadioButtonFor(m => m.TestingType, "Re-Testing", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "RT",@onchange = "ToggleInfo(this);"})
                     Re-Testing
                 </label>
+                <label>
+                        @Html.RadioButtonFor(m => m.TestingType, "Private_Case", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "5",@id = "PC",@onchange = "ToggleInfo(this);"})
+                        Private Case
+                    </label>
+                    <label>
+                        @Html.RadioButtonFor(m => m.TestingType, "IREPS_Case", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "IC",@onchange = "ToggleInfo(this);"})
+                        IREPS Case
+                    </label>
             </td>
         </tr>
         <tr>
@@ -343,11 +351,16 @@ input[type="date"] {
         </td>
         <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5"> 
                 <label>Test to be Conducted</label>
-               <textarea asp-for="TestTobeCon" class="form-control custom-textarea" id="txttesttobeCon"></textarea>
+                @Html.DropDownListFor(model => model.TestToBe, new SelectList(IBS.Models.Common.TestToBe() , "Value", "Text"),new { @id = "ddltestto", @class = "form-control" })
             </td>
+             
         </tr>
         <tr>
-        
+                <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+                    @*<label>Test to be Conducted</label>*@
+                    @Html.DropDownListFor(model => model.TestTobeCon, new SelectList(IBS.Models.Common.TestToBeConducted() , "Value", "Text"),new { @id = "ddltesttobecon", @class = "form-control",style="display:none;" })
+                    <textarea asp-for="TestTobeCon" class="form-control custom-textarea" id="txttesttobeCon" style="display:none;"></textarea>
+                </td>
             
         
         </tr>
@@ -365,7 +378,7 @@ input[type="date"] {
                 <label class="control-label">Date of Sample Dispatched to Lab</label>
             </td>
             <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <input class="input datepicker" id="dtofdistolab" />
+                    <input class="input datepicker" id="dtofdistolab" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
                 <span asp-validation-for="DtofDisToLab" class="text-danger"></span>
             </td>
             
@@ -373,7 +386,7 @@ input[type="date"] {
                 <label class="control-label">Date of Test Report Required</label>
             </td>
             <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <input class="input datepicker" id="dtofrr" />
+            <input class="input datepicker" id="dtofrr" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
                 <span asp-validation-for="DtofRR" class="text-danger"></span>
             </td>
         </tr>
@@ -382,7 +395,7 @@ input[type="date"] {
                 <label class="control-label">Date of Receipt of Test Report</label>
             </td>
             <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <input class="input datepicker" id="dtoftestr" />
+            <input class="input datepicker" id="dtoftestr" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;"  />
                 <span asp-validation-for="DtofTestR" class="text-danger"></span>
             </td>
        
@@ -495,6 +508,17 @@ input[type="date"] {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
+        $("#ddltestto").change(function(){
+            if($("#ddltestto").val() == "D"){
+                $("#txttesttobeCon").css("display", "none");
+                $("#ddltesttobecon").css("display","block"); 
+            }
+            else
+            {
+                $("#ddltesttobecon").css("display","none");
+                $("#txttesttobeCon").css("display", "block");
+            }
+        })
          function InitializeDatatable() {
         
             $("#dtlabregdtl").DataTable({
@@ -669,7 +693,7 @@ input[type="date"] {
         
         }
         $(function () {
-            
+            $("#txttesttobeCon").css("display", "block");
             $('#N').prop('checked', true);
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
@@ -774,6 +798,8 @@ input[type="date"] {
                 ItemDesc: $("#txtitemnm").val(),
                 Qty: $("#txtnofsm").val(),
                 TestCategoryCode: $("#ddlcat").val(),
+                TestToBe: $("#ddltestto").val(),
+                TestTobeCon: $("#ddltesttobecon").val(),
                 Test: $("#txttesttobeCon").val(),
                 LabID: $("#ddllab").val(),
                 DTestingFee: $("#testingfee").val(),

@@ -2,10 +2,10 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models.Reports;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Globalization;
 
 namespace IBS.Repositories.Reports
 {
@@ -42,30 +42,25 @@ namespace IBS.Repositories.Reports
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 lstPerformance = JsonConvert.DeserializeObject<List<IEPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
+                lstPerformance.ToList().ForEach(i =>
+                {
+                    i.C3 = decimal.Truncate(i.C3);
+                    i.C7 = decimal.Truncate(i.C7);
+                    i.CM7 = decimal.Truncate(i.CM7);
+                    i.C10 = decimal.Truncate(i.C10);
+                    i.C0 = decimal.Truncate(i.C0);
+                    i.CALLS = decimal.Truncate(i.CALLS);
+                    i.CALL_CANCEL = decimal.Truncate(i.CALL_CANCEL);
+                    i.REJECTIONS = decimal.Truncate(i.REJECTIONS);
+                });
+
                 model.RejectionsIssued = Convert.ToInt32(ds.Tables[1].Rows[0]["REJECTIONS_ISSUED"]);
                 model.TotalICs = Convert.ToInt32(ds.Tables[1].Rows[0]["TOTAL_IC"]);
                 model.CallsAttendedWithin7Days = Convert.ToInt32(ds.Tables[1].Rows[0]["CALLS_ATTENDED_WITHIN"]);
                 model.CallsAttendedBeyond7Days = Convert.ToInt32(ds.Tables[1].Rows[0]["CALLS_ATTENDED_BEYOND"]);
-
             }
 
             model.lstPerformance = lstPerformance;
-
-            model.lstTotalPerformance = new()
-            {
-                IE_NAME = "Totals",
-                DEPT = "",
-                CALLS = lstPerformance.Sum(x => x.CALLS),
-                CALL_CANCEL = lstPerformance.Sum(x => x.CALL_CANCEL),
-                C0 = lstPerformance.Sum(x => x.C0),
-                C7 = lstPerformance.Sum(x => x.C7),
-                CM7 = lstPerformance.Sum(x => x.CM7),
-                REJECTIONS = lstPerformance.Sum(x => x.REJECTIONS),
-                MATERIAL_VALUE = lstPerformance.Sum(x => x.MATERIAL_VALUE),
-                AVERAGE_FEE = lstPerformance.Sum(x => x.AVERAGE_FEE),
-                C3 = lstPerformance.Sum(x => x.C3),
-                C10 = lstPerformance.Sum(x => x.C10),
-            };
 
             model.lstPerformanceSummaryList = (from t20 in context.T20Ics
                                                join t13 in context.T13PoMasters on t20.CaseNo equals t13.CaseNo
@@ -82,14 +77,126 @@ namespace IBS.Repositories.Reports
             return model;
         }
 
-        public int DiffDays(DateTime StartDate, DateTime EndDate)
+        public ClusterPerformanceModel GetClusterPerformanceData(DateTime FromDate, DateTime ToDate, string Region)
         {
-            TimeSpan difference = EndDate - StartDate;
-            int daysDifference = (int)difference.TotalDays;
-            return daysDifference;
+            ClusterPerformanceModel model = new();
+            List<ClusterPerformanceListModel> lstPerformance = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            OracleParameter[] parameter = new OracleParameter[4];
+            parameter[0] = new OracleParameter("p_FROM_DT", OracleDbType.Date, FromDate, ParameterDirection.Input);
+            parameter[1] = new OracleParameter("p_TO_DT", OracleDbType.Date, ToDate, ParameterDirection.Input);
+            parameter[2] = new OracleParameter("p_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            parameter[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("SP_GET_CLUSTER_PERFORMANCE_DETAILS", parameter);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lstPerformance = JsonConvert.DeserializeObject<List<ClusterPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                lstPerformance.ToList().ForEach(i =>
+                {
+                    i.C3 = decimal.Truncate(i.C3);
+                    i.C7 = decimal.Truncate(i.C7);
+                    i.CM7 = decimal.Truncate(i.CM7);
+                    i.C10 = decimal.Truncate(i.C10);
+                    i.C0 = decimal.Truncate(i.C0);
+                    i.CALLS = decimal.Truncate(i.CALLS);
+                    i.CALL_CANCEL = decimal.Truncate(i.CALL_CANCEL);
+                    i.REJECTIONS = decimal.Truncate(i.REJECTIONS);
+                });
+            }
+
+            model.lstPerformance = lstPerformance;
+
+            return model;
+        }
+
+        public RWBSummaryModel GetRWBSummaryData(string FromYearMonth, string ToYearMonth)
+        {
+            RWBSummaryModel model = new();
+            List<RWBSummaryListModel> lstRWBSummaryList = new();
+            List<RBWSectorListModel> lstRBWSectorList = new();
+
+            if (!string.IsNullOrEmpty(ToYearMonth))
+            {
+                model.FilterTitle = "The Period " + GetFilterTitle(FromYearMonth) + " to " + GetFilterTitle(ToYearMonth);
+            }
+            else
+            {
+                model.FilterTitle = "The Month of " + GetFilterTitle(FromYearMonth);
+            }
+
+            OracleParameter[] parameter = new OracleParameter[4];
+            parameter[0] = new OracleParameter("p_FROM_DT", OracleDbType.Varchar2, FromYearMonth, ParameterDirection.Input);
+            parameter[1] = new OracleParameter("p_TO_DT", OracleDbType.Varchar2, string.IsNullOrEmpty(ToYearMonth) ? FromYearMonth : ToYearMonth, ParameterDirection.Input);
+            parameter[2] = new OracleParameter("p_result_cursor1", OracleDbType.RefCursor, ParameterDirection.Output);
+            parameter[3] = new OracleParameter("p_result_cursor2", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("SP_GET_REGION_WISE_BILLING_SUMMARY", parameter);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lstRWBSummaryList = JsonConvert.DeserializeObject<List<RWBSummaryListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt2 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                lstRBWSectorList = JsonConvert.DeserializeObject<List<RBWSectorListModel>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                lstRWBSummaryList.ToList().ForEach(i =>
+                {
+                    i.NR_FEE = decimal.Truncate(i.NR_FEE);
+                    i.NR_TAX = decimal.Truncate(i.NR_TAX);
+                    i.NR_BILL_AMT = decimal.Truncate(i.NR_BILL_AMT);
+                    i.NR_BILLLS = decimal.Truncate(i.NR_BILLLS);
+                    i.WR_FEE = decimal.Truncate(i.WR_FEE);
+                    i.WR_TAX = decimal.Truncate(i.WR_TAX);
+                    i.WR_BILL_AMT = decimal.Truncate(i.WR_BILL_AMT);
+                    i.WR_BILLLS = decimal.Truncate(i.WR_BILLLS);
+                    i.ER_FEE = decimal.Truncate(i.ER_FEE);
+                    i.ER_TAX = decimal.Truncate(i.ER_TAX);
+                    i.ER_BILL_AMT = decimal.Truncate(i.ER_BILL_AMT);
+                    i.ER_BILLLS = decimal.Truncate(i.ER_BILLLS);
+                    i.SR_FEE = decimal.Truncate(i.SR_FEE);
+                    i.SR_TAX = decimal.Truncate(i.SR_TAX);
+                    i.SR_BILL_AMT = decimal.Truncate(i.SR_BILL_AMT);
+                    i.SR_BILLLS = decimal.Truncate(i.SR_BILLLS);
+                    i.CR_FEE = decimal.Truncate(i.CR_FEE);
+                    i.CR_TAX = decimal.Truncate(i.CR_TAX);
+                    i.CR_BILL_AMT = decimal.Truncate(i.CR_BILL_AMT);
+                    i.CR_BILLLS = decimal.Truncate(i.CR_BILLLS);
+                });
+
+                lstRBWSectorList.ToList().ForEach(i =>
+                {
+                    i.INSP_FEE = decimal.Truncate(i.INSP_FEE);
+                    i.BILL_AMOUNT = decimal.Truncate(i.BILL_AMOUNT);
+                    i.NO_OF_BILLLS = decimal.Truncate(i.NO_OF_BILLLS);
+                });
+            }
+
+            model.lstRWBSummaryList = lstRWBSummaryList;
+            model.lstRBWSectorList = lstRBWSectorList;
+
+            return model;
+        }
+
+        public string GetFilterTitle(string YearMonth)
+        {
+            string filterTitle = string.Empty;
+            if (!string.IsNullOrEmpty(YearMonth))
+            {
+                string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(YearMonth.Substring(4, 2)));
+                filterTitle = monthName + "-" + YearMonth.Substring(0, 4);
+            }
+            return filterTitle;
         }
 
     }
-
 }
 

@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.AdministratorPurchaseOrderModel
 
 @{
-    ViewData["Title"] = "PO Master";
+    ViewData["Title"] = "Manage Purchase Order";
     string clsView = "";
     if (Model.CaseNo != null)
     {
@@ -10,7 +10,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>PO Master</h2>
+        <h2>Manage Purchase Order</h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="AdministratorPurchaseOrder" class="formBtn viewall-btn">View List</a>
@@ -50,7 +50,7 @@
                         <label for="Reference">Vendor<i class="text-danger">*</i></label>
                         <input type="text" class="input" id="txtVend">
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-4 mb-3">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="LoadVendor();" style="margin-top: 33px;" title="Enter the Vendor Code or 1st few letters of Vendor then click on select Vendor Button">Select Vendor</button>
                         </div>
@@ -67,7 +67,7 @@
                         <span asp-validation-for="PoOrLetter" class="text-danger"></span>
                     </div>
                     <div class="col-md-5 mb-3">
-                        <label for="Reference"><span class="astric">*</span> Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
+                        <label for="Reference" style="font-size: 13px;"><span class="astric">*</span> Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Stock / Non-Stock</label>
@@ -82,7 +82,7 @@
                         <span asp-validation-for="PoNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">POPO Date<span class="astric">*</span></label>
+                        <label for="Reference">PO Date<span class="astric">*</span></label>
                         <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                         <span asp-validation-for="PoDt" class="text-danger"></span>
                     </div>
@@ -100,7 +100,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="SearchPurchaser();" style="margin-top: 33px;">Search Purchaser</button>
-                            <i class="text-danger">*</i>In Case Of other Client
+                            <label for="Reference" style="font-size: 13px;"><i class="text-danger">*</i>In Case Of other Client</label>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -202,6 +202,28 @@
                             <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_a_scanned_copy" />
                         </div>
                     }
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" asp-for="Ispricevariation" />
+                                    Price Variation
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" asp-for="Isstageinspection" />
+                                    Stage Inspection
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="savenext-btn">

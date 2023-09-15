@@ -55,6 +55,10 @@ public partial class T13PoMaster
 
     public int? Id { get; set; }
 
+    public byte? Ispricevariation { get; set; }
+
+    public byte? Isstageinspection { get; set; }
+
     public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
     public virtual T01Region? RegionCodeNavigation { get; set; }

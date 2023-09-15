@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class ICCancellationController : BaseController
     {
         #region Variables
@@ -16,6 +17,7 @@ namespace IBS.Controllers.InspectionBilling
         {
             iCCancellationRepository = _iCCancellationRepository;
         }
+        [Authorization("ICCancellation", "Index", "view")]
         public IActionResult Index()
         {
             string Region = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region);
@@ -31,6 +33,7 @@ namespace IBS.Controllers.InspectionBilling
             return Json(dTResult);
         }
 
+        [Authorization("ICCancellation", "Index", "view")]
         public IActionResult Manage(string REGION,string BK_NO,string SET_NO)
         {
             ICCancellationModel model = new();
@@ -49,11 +52,12 @@ namespace IBS.Controllers.InspectionBilling
             return View(model);
         }
 
+        [Authorization("ICCancellation", "Index", "delete")]
         public IActionResult Delete(string REGION, string BK_NO, string SET_NO)
         {
             try
             {
-                if (iCCancellationRepository.Remove(REGION, BK_NO, SET_NO))
+                if (iCCancellationRepository.Remove(REGION, BK_NO, SET_NO,UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -68,17 +72,32 @@ namespace IBS.Controllers.InspectionBilling
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("ICCancellation", "Index", "edit")]
         public IActionResult ICCancellationSave(ICCancellationModel model)
         {
             try
             {
                 if (model.IsEdit > 0)
                 {
+                    model.Updatedby = UserId;
+                    if (RoleName != "Inspection Engineer (IE)")
+                    {
+                        model.IsAdmin = true;
+                    }
                     iCCancellationRepository.ICCancellationSave(model);
                     AlertAddSuccess("IC Cancellation Updated Successfully.");
                 }
                 else
                 {
+                    model.Createdby = UserId;
+                    if(RoleName == "Inspection Engineer (IE)")
+                    {
+                        model.Status = false;
+                    }
+                    else
+                    {
+                        model.Status = true;
+                    }
                     iCCancellationRepository.ICCancellationSave(model);
                     AlertAddSuccess("IC Cancellation Inserted Successfully.");
                 }
