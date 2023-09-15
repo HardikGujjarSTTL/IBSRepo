@@ -1,6 +1,7 @@
 ﻿using IBS.Interfaces.Reports.Billing;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.Reports.Billing
 {
@@ -64,6 +65,14 @@ namespace IBS.Controllers.Reports.Billing
             {
                 model.Title = "Railway online bills";
             }
+            else if (ActionType == "NSC")
+            {
+                model.Title = "Bills Not Submitted to CRIS";
+            }
+            else if (ActionType == "RBNRS")
+            {
+                model.Title = "Returned Bills yet to be Submitted to CRIS (Under Testing)";
+            }
 
             return View(model);
         }
@@ -79,5 +88,33 @@ namespace IBS.Controllers.Reports.Billing
             BillRaisedModel model = billraisedRepository.GetBillingSector(FromMn, FromYr, ToMn, ToYr, ActionType, rdo, Region, IncRites);
             return View(model);
         }
+
+        public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType,string chkRegion)
+        {
+            BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType,Region, chkRegion);
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetAU(string RlyCd)
+        {
+            try
+            {
+                List<SelectListItem> lstAu = Common.GetAUCrisByRlyCd(RlyCd);
+                return Json(new { status = true, list = lstAu });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillingReports", "GetAU", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult BillsNotCrisReport(DateTime FromDate, DateTime ToDate, string chkRegion,string ClientType, string lstAU, string actiontype,string rdbPRly, string rdbPAU)
+        {
+            BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype,Region, rdbPRly, rdbPAU);
+            return View(model);
+        }
+
     }
 }
