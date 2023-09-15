@@ -67,6 +67,9 @@
         public string? MPOI { get; set; }
         public DateTime? PoDtNew { get; set; }
 
+        public bool Ispricevariation { get; set; }
+        public bool Isstageinspection { get; set; }
+
     }
 
     public class AdministratorPurchaseOrderListModel

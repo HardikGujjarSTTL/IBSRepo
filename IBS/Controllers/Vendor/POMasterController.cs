@@ -79,7 +79,18 @@ namespace IBS.Controllers.Vendor
                 {
                     model.PoiCd = VendCd;
                 }
-
+                PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
+                if (pO_MasterModel != null)
+                {
+                    var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
+                    return Json(new { status = false, responseText = Retmsg });
+                }
+                PO_MasterModel pO_MasterModel2 = pOMasterRepository.alreadyExistT13_PO_MASTER(model);
+                if (pO_MasterModel2 != null)
+                {
+                    var Retmsg = "This Po No. Already Registered Vide Case No." + pO_MasterModel2.CaseNo + " And PO Date: " + pO_MasterModel2.PoDt + ". Use this Case No. to register the call using Call for Inspection Menu.";
+                    return Json(new { status = false, responseText = Retmsg });
+                }
                 string i = pOMasterRepository.POMasterDetailsInsertUpdate(model);
                 if (i != "" && i != null)
                 {
