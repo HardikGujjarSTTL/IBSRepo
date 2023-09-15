@@ -48,9 +48,9 @@ namespace IBS.Controllers.Reports
             return PartialView(model);
         }
 
-        public IActionResult RWBSummary(int FromMonth, int FromYear, int ToMonth, int ToYear)
+        public IActionResult RegionWiseBillingSummary(string FromYearMonth, string ToYearMonth)
         {
-            //ClusterPerformanceModel model = managementReportsRepository.GetClusterPerformanceData(FromDate, ToDate, Region);
+            RWBSummaryModel model = managementReportsRepository.GetRWBSummaryData(FromYearMonth, ToYearMonth);
             return PartialView(model);
         }
 

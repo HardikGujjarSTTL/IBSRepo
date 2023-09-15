@@ -159,20 +159,17 @@
 
         function ViewReportRWB() {
 
-            var ReportType = '@ReportType';
-
-            var FromYearMonth = '', ToYearMonth = '';
-
+            var ReportType = '@ReportType', FromYearMonth = '', ToYearMonth = '';
+            
             var _RWBSummaryReport = $('input[name="RWBSummaryReport"]:checked').val();
 
-            FromYearMonth = $("FromMonth").val() + $("FromYear").val();
+            FromYearMonth = $("#FromYear").val() + ('0'.repeat(2) + $("#FromMonth").val()).slice(-2);
 
             if (_RWBSummaryReport == "SummaryReport2") {
-                ToYearMonth = $("ToMonth").val();
-                ToYear = $("ToYear").val();
+                ToYearMonth = $("#ToYear").val() + ('0'.repeat(2) + $("#ToMonth").val()).slice(-2);
             }
 
-            let myObject = { ReportType, FromMonth, FromYear, ToMonth, ToYear };
+            let myObject = { ReportType, FromYearMonth, ToYearMonth };
 
             var url = '@Url.Action("ManageRWB", "ManagementReports")?' + $.param(myObject);
             window.open(url, '_blank');

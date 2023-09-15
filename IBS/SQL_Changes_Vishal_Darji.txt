@@ -76,3 +76,5 @@ Create new Procedure ==> SP_GET_CLUSTER_PERFORMANCE_DETAILS
 INSERT INTO menu_master VALUES(444, 14, 'ManagementReports', 'Index?ReportType=RWB', 'Region Wise Billing Summary', null, null, null, 1, 20, null, 1);
 
 INSERT INTO menurolemapping VALUES(1777, 1, 444, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==> SP_GET_REGION_WISE_BILLING_SUMMARY
