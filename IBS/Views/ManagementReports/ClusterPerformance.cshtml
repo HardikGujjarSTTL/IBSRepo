@@ -1,17 +1,13 @@
-﻿@model IBS.Models.Reports.IEPerformanceModel
+﻿@model IBS.Models.Reports.ClusterPerformanceModel
+
 <div>
-    <h3 class="heading3">IE Performance For The Period <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (@Model.Region)</h3>
-    <ul class="reportLabelList">
-        <li><span class="labelName">Rejections Issued by I.E During The Period:</span> @Model.RejectionsIssued</li>
-        <li><span class="labelName">No. Of IC's:</span> @Model.TotalICs</li>
-        <li><span class="labelName">Calls Attended within 7 Days:</span> @Model.CallsAttendedWithin7Days</li>
-        <li><span class="labelName">Calls Attended Beyond 7 Days:</span> @Model.CallsAttendedBeyond7Days</li>
-    </ul>
-   <div class="tableOuter">
-    <table class="borderTable" cellpadding="0" cellspacing="0">
+    <p align="center"><font size="3" face="Verdana"><b><u>Cluster Performance For The Period: @Model.Display_FromDate To @Model.Display_ToDate (@Model.Region)</u></b></font></p>
+    <br>
+    <br>
+    <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
         <tbody>
             <tr>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Cluster Name</font></b></th>
                 <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Dept</font></b></th>
                 <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total Calls</font></b></th>
                 <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Calls Cancelled</font></b></th>
@@ -30,7 +26,7 @@
                 @foreach (var item in Model.lstPerformance)
                 {
                     <tr>
-                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CLUSTER_NAME</font></td>
                         <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.DEPT</font></td>
                         <td width="7%" valign="top" align="right"><font size="1" face="Verdana">@item.CALLS</font></td>
                         <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.CALL_CANCEL</font></td>
@@ -45,7 +41,7 @@
                         <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.C10</font></td>
                     </tr>
                 }
-                <tr class="reportTotal">
+                <tr>
                     <td width="15%" valign="top" align="Left" colspan="2"><font size="1" face="Verdana"><b>Totals</b></font></td>
                     <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstTotalPerformance.CALLS</b></font></td>
                     <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstTotalPerformance.CALL_CANCEL</b></font></td>
@@ -59,34 +55,10 @@
                     <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstTotalPerformance.C3</b></font></td>
                     <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstTotalPerformance.C10</b></font></td>
                 </tr>
-
             }
         </tbody>
     </table>
-    </div>
-    <h3 class="heading3">Performance Summary</h3>
-    <div class="tableOuter">
-    <table class="borderTable" cellpadding="0" cellspacing="0" width="50%">
-        <tbody>
-            <tr>
-                <th width="45%" valign="top" align="center"><b><font size="1" face="Verdana">&nbsp;</font></b></th>
-                <th width="20%" valign="top" align="right"><b><font size="1" face="Verdana">No. of IC</font></b></th>
-                <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Material Value</font></b></th>
-            </tr>
-            @if (Model != null && Model.lstPerformanceSummaryList.Count > 0)
-            {
-                @foreach (var item in Model.lstPerformanceSummaryList)
-                {
-                    <tr>
-                        <td width="45%" valign="top" align="Left"><font size="1" face="Verdana">@item.RLY_NONRLY</font></td>
-                        <td width="20%" valign="top" align="right"><font size="1" face="Verdana">@item.IC_COUNT</font></td>
-                        <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-    </div>
+    <br>
 </div>
 
 

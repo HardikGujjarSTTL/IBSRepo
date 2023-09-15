@@ -1,10 +1,16 @@
-﻿@{
-    ViewData["Title"] = "IE Performance";
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "IE_X") ReportTitle = "IE Performance";
+    else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
+    ViewData["Title"] = ReportTitle;
 }
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>IE Performance</h2>
+        <h2>@ReportTitle</h2>
     </div>
 </div>
 <div class="task-listinput">
@@ -74,7 +80,7 @@
 
             if (!IsValid) return;
 
-            var ReportType = "IE_X";
+            var ReportType = '@ReportType';
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
             let myObject = { ReportType, FromDate, ToDate };

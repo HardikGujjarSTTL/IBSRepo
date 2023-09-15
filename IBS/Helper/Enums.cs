@@ -44,8 +44,8 @@ namespace IBS.Helper
             AdministratorPurchaseOrder = 13,
             [Description("/ReadWriteData/Files/Online_Comp_Document")]
             OnlineComplaints = 11,
-            [Description("/ReadWriteData/Files/Consignee_Comp_Document")]
-            ConsigneeComplaints = 12,
+            [Description("/ReadWriteData/Files/Complaint_Case")]
+            ComplaintCase = 12,
 
             [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
             IEFullSignature = 13,
@@ -53,6 +53,12 @@ namespace IBS.Helper
             IEInitials = 14,
             [Description("/ReadWriteData/Files/ContractEntry")]
             ContractEntry = 15,
+            [Description("/ReadWriteData/Files/Rejection_Memo")]
+            RejectionMemo = 16,
+            [Description("/ReadWriteData/Files/Complaints_Report")]
+            COMPLAINTSREPORT = 17,
+            [Description("/ReadWriteData/Files/Complaints_Tech_Ref")]
+            ComplaintTechRef = 17,
         }
 
         public enum DocumentCategory : int
@@ -477,6 +483,13 @@ namespace IBS.Helper
             Y,
             [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
             Z,
+        }
+        public enum Criteria
+        {
+            [Description("PO Date")]
+            P,
+            [Description("Date of Reciept of PO in RITES")]
+            R,
         }
     }
 

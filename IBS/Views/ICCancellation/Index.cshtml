@@ -46,6 +46,7 @@
                             <th>Status Date</th>
                             <th>Remarks</th>
                             <th>Region</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -109,6 +110,12 @@
                     { data: "STATUS_DT" },
                     { data: "REMARKS" },
                     { data: "REGION" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            return data.IStatus=="1" ? "Aprroved" : "Pending";
+                        }
+                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {

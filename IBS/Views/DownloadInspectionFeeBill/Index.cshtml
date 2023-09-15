@@ -59,7 +59,7 @@
         <div class="savenext-btn">
             <a asp-controller="DownloadInspectionFeeBill" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" id="btnSearch">Search</button>
-            <button type="button" class="save-btn" id="btnDownload">Download Inspection Fee Bill</button>
+            <button type="button" class="save-btn" id="btnDownload" onclick="Download()">Download Inspection Fee Bill</button>
         </div>
     </div>
     <section class="table-section">
@@ -200,5 +200,105 @@
             });
         }
 
+        $("#btnModify").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSNo = $("#CallSNo").val();
+
+            debugger
+            var w_itemBlocked = "";
+            var w_remarksVend = "";
+            $.ajax({
+                url: '@Url.Action("GetModifyClick", "CallRegister")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSNo": CallSNo },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        // Get the values from the response
+                        var vendCd = contacts.data[0].VendCd;
+                        var VendInspStopped = contacts.data[0].VendInspStopped;
+                        var VendRemarks = contacts.data[0].VendRemarks;
+                        // Redirect to the URL with parameters
+                        w_itemBlocked = "Y";
+                        //w_itemBlocked = VendInspStopped;
+                        w_remarksVend = VendRemarks;
+
+                        $.ajax({
+                            url: '@Url.Action("GetMatch", "CallRegister")',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSNo": CallSNo },
+                            success: function (contacts) {
+                                if (contacts.data && contacts.data.length > 0) {
+                                    // Get the values from the response
+                                    var VendCd = contacts.data[0].VendCd;
+                                    var MfgCd = contacts.data[0].MfgCd;
+                                    var CallStatus = contacts.data[0].CallStatus;
+                                    // Redirect to the URL with parameters
+                                    var Check = "";
+                                    if (VendCd == "0" && MfgCd == "0") {
+                                        Check = "0";
+                                        alert('No Record Present for the Given Case No, Call Date and Call SNo!!!');
+                                    }
+                                    //else if ((VendCd == VendCd || MfgCd == MfgCd) && CallStatus == "M") {
+                                    else if (VendCd == VendCd || MfgCd == MfgCd && CallStatus == "M") {
+                                        Check = "2";
+                                    }
+                                    else {
+                                        Check = "1";
+                                        alert('You are not Authorised to Update The Call For Other Vendors OR For Call Status Other than Pending.!!!');
+                                        return;
+                                    }
+                                    if (Check == "2") {
+                                        if (w_itemBlocked == "Y") {
+                                            var msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + w_remarksVend + "\\nDo You Still Want to Register/Update This Call?";
+                                            var d = confirm(msg);
+                                            if (d === false) {
+                                                window.location.href = '@Url.Action("Index", "CallRegister")';
+                                            } else {
+                                                window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&CallStatus=M";
+                                            }
+                                        }
+                                        else {
+                                            //window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo + "&CallStatus=M";
+                                        }
+
+                                    }
+
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/CallRegister";
+            window.location.href = '@Url.Action("Index", "CallRegister")';
+        };
+        function Download(){
+            var CaseNo = $("#CaseNo").val();
+            var BkNo = $("#BkNo").val();
+            var SetNo = $("#SetNo").val();
+            var QueryString = "RptFlag=3" +
+                "&CaseNo=" + encodeURIComponent(CaseNo) +
+                "&BkNo=" + encodeURIComponent(BkNo) +
+                "&SetNo=" + encodeURIComponent(SetNo);
+                
+
+            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
+            
+        }
     </script>
     }

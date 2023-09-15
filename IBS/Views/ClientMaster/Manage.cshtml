@@ -1,13 +1,8 @@
 ﻿@model IBS.Models.Clientmaster
 
 @{
-    string clsView = "";
-    if (Model.Id > 0)
-    {
-        clsView = "Permission_View";
-    }
+    ViewData["Title"] = "Manage Client Master";
 }
-
 <div class="list-inner">
     <div class="tast-list">
         <h2>Manage Client</h2>
@@ -17,10 +12,9 @@
     </div>
 </div>
 
-<section class="@clsView">
+
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientMaster" asp-action="ClientDetailsave" data-ajax-method="post" data-ajax-complete="completed" id="frmUserRole">
-            <input type="hidden" asp-for="Id" />
+    <form asp-controller="ClientMaster" asp-action="ClientDetailsave" role="form" id="frmUserRole">
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -80,15 +74,12 @@
             </div>
         </form>
     </div>
-</section>
+
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         function Save() {
-            debugger
-
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
 
@@ -101,13 +92,6 @@
                 }
             }
         }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            if (res.status) {
-                window.location.href = '@Url.Action("Index", "ClientMaster")';
-            }
-        };
 
     </script>
 }

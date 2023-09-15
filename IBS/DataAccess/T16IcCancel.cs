@@ -19,5 +19,17 @@ public partial class T16IcCancel
 
     public string? Remarks { get; set; }
 
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public byte? Status { get; set; }
+
     public virtual T09Ie? IssueToIecdNavigation { get; set; }
 }
