@@ -6,6 +6,7 @@
     if (ReportType == "IE_X") ReportTitle = "IE Performance";
     else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
     else if (ReportType == "RWB") ReportTitle = "Region Wise Billing Summary";
+    else if (ReportType == "R") ReportTitle = "Region Wise Comparison of Outstanding";
 
     ViewData["Title"] = ReportTitle;
 }
@@ -39,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="task-inner row report2" style="display: none">
+        <div class="task-inner row RWB" style="display: none">
             <div class="col-md-12 mb-3">
                 <div class="custom-readio">
                     <div class="company-checkbox">
@@ -81,6 +82,21 @@
                 </div>
             </div>
         </div>
+        <div class="task-inner row RWCO" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate_RWCO">Client wise Outstanding Statement as on</label>
+                    <input type="text" class="datepicker" id="FromDate_RWCO" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate_RWCO"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportRWCO();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsRWCO();">Clear</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -93,11 +109,18 @@
         $(document).ready(function () {
             if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X') {
                 $(".report1").css("display", "")
-                $(".report2").css("display", "none")
+                $(".RWB").css("display", "none")
+                $(".RWCO").css("display", "none")
             }
             else if ('@ReportType' == 'RWB') {
                 $(".report1").css("display", "none")
-                $(".report2").css("display", "")
+                $(".RWB").css("display", "")
+                $(".RWCO").css("display", "none")
+            }
+            else if ('@ReportType' == 'R') {
+                $(".report1").css("display", "none")
+                $(".RWB").css("display", "none")
+                $(".RWCO").css("display", "")
             }
         });
 
