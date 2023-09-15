@@ -1,0 +1,187 @@
+﻿@model IBS.Models.Reports.RWBSummaryModel
+@{
+    string currDate = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
+}
+
+<div>
+    <h3 class="heading3">Bills Raised During <span class="orangeText"> @Model.FilterTitle </span> (all figures in Rs.) ---- Status as on : <span class="orangeText">@currDate </span></h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="4%" valign="top"><b><font size="1" face="Verdana">SL.No.</font></b></th>
+                    <th width="12%" valign="top" align="left"><b><font size="1" face="Verdana">SECTOR</font></b></th>
+                    <th width="28%" valign="top" align="center" colspan="5"><b><font size="1" face="Verdana">INSP.FEE (Without Tax)</font></b></th>
+                    <th width="28%" valign="top" align="center" colspan="5"><b><font size="1" face="Verdana">INSP.FEE (Inclusive of All Tax &amp; Cess)</font></b></th>
+                    <th width="28%" valign="top" align="center" colspan="5"><b><font size="1" face="Verdana">NO. OF BILLS.</font></b></th>
+                </tr>
+                <tr>
+                    <th width="16%" valign="top" colspan="2"></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Northern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Western Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Eastern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Southern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Central Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Northern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Western Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Eastern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Southern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Central Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Northern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Western Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Eastern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Southern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Central Region</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstRWBSummaryList != null && Model.lstRWBSummaryList.Count > 0)
+                {
+                    int SrNo = 1;
+                    @foreach (var item in Model.lstRWBSummaryList)
+                    {
+                        <tr>
+                            <td width="4%" valign="top" align="center"> <font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="12%" valign="top" align="left"> <font size="1" face="Verdana">@item.SECTOR.Substring(1)</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.NR_FEE</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.WR_FEE</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.ER_FEE</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.SR_FEE</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.CR_FEE</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.NR_BILL_AMT</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.WR_BILL_AMT</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.ER_BILL_AMT</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.SR_BILL_AMT</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.CR_BILL_AMT</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.NR_BILLLS</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.WR_BILLLS</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.ER_BILLLS</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.SR_BILLLS</font></td>
+                            <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@item.CR_BILLLS</font></td>
+                        </tr>
+                        SrNo = SrNo + 1;
+                    }
+                    <tr class="reportTotal">
+                        <td width="16%" valign="top" align="center" colspan="2"> <font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.NR_FEE)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.WR_FEE)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.ER_FEE)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.SR_FEE)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.CR_FEE)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.NR_BILL_AMT)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.WR_BILL_AMT)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.ER_BILL_AMT)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.SR_BILL_AMT)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.CR_BILL_AMT)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.NR_BILLLS)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.WR_BILLLS)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.ER_BILLLS)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.SR_BILLLS)</b></font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.CR_BILLLS)</b></font></td>
+                    </tr>
+                    <tr class="reportTotal">
+                        <td width="16%" valign="top" align="center" colspan="2"> <font size="1" face="Verdana"><b>Grand Totals</b></font></td>
+                        <td width="28%" valign="top" align="center" colspan="5"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.NR_FEE + x.WR_FEE + x.ER_FEE + x.SR_FEE + x.CR_FEE)</b></font></td>
+                        <td width="7%" valign="top" align="center" colspan="5"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.NR_BILL_AMT + x.WR_BILL_AMT + x.ER_BILL_AMT + x.SR_BILL_AMT + x.CR_BILL_AMT)</b></font></td>
+                        <td width="7%" valign="top" align="center" colspan="5"> <font size="1" face="Verdana"><b>@Model.lstRWBSummaryList.Sum(x => x.NR_BILLLS + x.WR_BILLLS + x.ER_BILLLS + x.SR_BILLLS + x.CR_BILLLS)</b></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="17" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <h3 class="heading3">Bills of Value less than 100 generated during above period for Railways for which no revenue to be collected</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="4%" valign="top"></th>
+                    <th width="12%" valign="top" align="left"><b><font size="1" face="Verdana">SECTOR</font></b></th>
+                    <th width="28%" valign="top" align="center" colspan="5"><b><font size="1" face="Verdana">INSP.FEE (Without Tax)</font></b></th>
+                    <th width="28%" valign="top" align="center" colspan="5"><b><font size="1" face="Verdana">INSP.FEE (Inclusive of All Tax &amp; Cess)</font></b></th>
+                    <th width="28%" valign="top" align="center" colspan="5"><b><font size="1" face="Verdana">NO. OF BILLS.</font></b></th>
+                </tr>
+                <tr>
+                    <th width="16%" valign="top" colspan="2"></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Northern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Western Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Eastern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Southern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Central Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Northern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Western Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Eastern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Southern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Central Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Northern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Western Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Eastern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Southern Region</font></b></th>
+                    <th width="7%" valign="top" align="right"><b><font size="1" face="Verdana">Central Region</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstRBWSectorList != null && Model.lstRBWSectorList.Count > 0)
+                {
+                    int rly_NR_Fee = 0, rly_NR_Bill_Amt = 0, rly_NR_Bills = 0, rly_ER_Fee = 0, rly_ER_Bill_Amt = 0, rly_ER_Bills = 0,
+                    rly_WR_Fee = 0, rly_WR_Bill_Amt = 0, rly_WR_Bills = 0, rly_SR_Fee = 0, rly_SR_Bill_Amt = 0,
+                    rly_SR_Bills = 0, rly_CR_Fee = 0, rly_CR_Bill_Amt = 0, rly_CR_Bills = 0;
+
+                    rly_NR_Fee = Model.lstRBWSectorList.Where(x => x.SECTOR == "N").Select(x => (int)x.INSP_FEE).FirstOrDefault();
+                    rly_NR_Bill_Amt = Model.lstRBWSectorList.Where(x => x.SECTOR == "N").Select(x => (int)x.BILL_AMOUNT).FirstOrDefault();
+                    rly_NR_Bills = Model.lstRBWSectorList.Where(x => x.SECTOR == "N").Select(x => (int)x.NO_OF_BILLLS).FirstOrDefault();
+
+                    rly_ER_Fee = Model.lstRBWSectorList.Where(x => x.SECTOR == "E").Select(x => (int)x.INSP_FEE).FirstOrDefault();
+                    rly_ER_Bill_Amt = Model.lstRBWSectorList.Where(x => x.SECTOR == "E").Select(x => (int)x.BILL_AMOUNT).FirstOrDefault();
+                    rly_ER_Bills = Model.lstRBWSectorList.Where(x => x.SECTOR == "E").Select(x => (int)x.NO_OF_BILLLS).FirstOrDefault();
+
+                    rly_WR_Fee = Model.lstRBWSectorList.Where(x => x.SECTOR == "W").Select(x => (int)x.INSP_FEE).FirstOrDefault();
+                    rly_WR_Bill_Amt = Model.lstRBWSectorList.Where(x => x.SECTOR == "W").Select(x => (int)x.BILL_AMOUNT).FirstOrDefault();
+                    rly_WR_Bills = Model.lstRBWSectorList.Where(x => x.SECTOR == "W").Select(x => (int)x.NO_OF_BILLLS).FirstOrDefault();
+
+                    rly_SR_Fee = Model.lstRBWSectorList.Where(x => x.SECTOR == "S").Select(x => (int)x.INSP_FEE).FirstOrDefault();
+                    rly_SR_Bill_Amt = Model.lstRBWSectorList.Where(x => x.SECTOR == "S").Select(x => (int)x.BILL_AMOUNT).FirstOrDefault();
+                    rly_SR_Bills = Model.lstRBWSectorList.Where(x => x.SECTOR == "S").Select(x => (int)x.NO_OF_BILLLS).FirstOrDefault();
+
+                    rly_CR_Fee = Model.lstRBWSectorList.Where(x => x.SECTOR == "C").Select(x => (int)x.INSP_FEE).FirstOrDefault();
+                    rly_CR_Bill_Amt = Model.lstRBWSectorList.Where(x => x.SECTOR == "C").Select(x => (int)x.BILL_AMOUNT).FirstOrDefault();
+                    rly_CR_Bills = Model.lstRBWSectorList.Where(x => x.SECTOR == "C").Select(x => (int)x.NO_OF_BILLLS).FirstOrDefault();
+
+                    <tr>
+                        <td width="4%" valign="top" align="center"></td>
+                        <td width="12%" valign="top" align="left"> <font size="1" face="Verdana">Railway</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_NR_Fee</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_WR_Fee</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_ER_Fee</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_SR_Fee</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_CR_Fee</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_NR_Bill_Amt</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_WR_Bill_Amt</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_ER_Bill_Amt</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_SR_Bill_Amt</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_CR_Bill_Amt</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_NR_Bills</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_WR_Bills</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_ER_Bills</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_SR_Bills</font></td>
+                        <td width="7%" valign="top" align="right"> <font size="1" face="Verdana">@rly_CR_Bills</font></td>
+                    </tr>
+                    <tr class="reportTotal">
+                        <td width="16%" valign="top" align="center" colspan="2"> <font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="28%" valign="top" align="center" colspan="5"> <font size="1" face="Verdana"><b>@(rly_NR_Fee + rly_WR_Fee + rly_ER_Fee + rly_SR_Fee + rly_CR_Fee)</b></font></td>
+                        <td width="7%" valign="top" align="center" colspan="5"> <font size="1" face="Verdana"><b>@(rly_NR_Bill_Amt + rly_WR_Bill_Amt + rly_ER_Bill_Amt + rly_SR_Bill_Amt + rly_CR_Bill_Amt)</b></font></td>
+                        <td width="7%" valign="top" align="center" colspan="5"> <font size="1" face="Verdana"><b>@(rly_NR_Bills + rly_WR_Bills + rly_ER_Bills + rly_SR_Bills + rly_CR_Bills)</b></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="17" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

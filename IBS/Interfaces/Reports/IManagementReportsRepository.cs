@@ -7,5 +7,7 @@ namespace IBS.Interfaces.Reports
         public IEPerformanceModel GetIEPerformanceData(DateTime FromDate, DateTime ToDate, string Region);
 
         public ClusterPerformanceModel GetClusterPerformanceData(DateTime FromDate, DateTime ToDate, string Region);
+
+        public RWBSummaryModel GetRWBSummaryData(string FromYearMonth, string ToYearMonth);
     }
 }
