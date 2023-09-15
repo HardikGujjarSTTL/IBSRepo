@@ -56,6 +56,7 @@ namespace IBS.Repositories
                     where l.RlyCd == r.RlyCd && l.RlyCd == "NR"
                     && l.CallMarkDt >= CallMarkDtMax && l.CallMarkDt <= CallMarkDtMin && l.IeCd == GetIeCd
                     //where (l.Isdeleted == 0 || l.Isdeleted == null)
+                    orderby l.Vendor, l.CallMarkDt, l.DtInspDesire
                     select new CallsMarkedToIEModel
                     {
                         Vendor = l.Vendor,

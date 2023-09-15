@@ -331,5 +331,17 @@ SP_GET_BILLING_RAILWAY_DETAILS
 SP_GET_BILLSNOTCRIS
 
 SP_GET_BILLSCRISSUBMITTED
+
+22) New Requirenment Changes
+
+Create Hisory Table : 
+1) T09_IE_HISTORY
+2) T61_ITEM_MASTER_HISTORY
+3) T72_IE_MESSAGES_HISTORY
+
+Trigger Created List
+1) TRG_T09_IE
+2) TRG_T61_ITEM_MASTER
+3) TRG_T72_IE_MESSAGES
 =============================================================================================================================================
 
