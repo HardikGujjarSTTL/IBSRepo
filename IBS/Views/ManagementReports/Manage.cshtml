@@ -10,96 +10,6 @@
 <html>
 <head>
     <title>@ReportTitle</title>
-    <style>
-        body {
-            background-color: transparent;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size:13px;
-        }
-        .commonBtn {
-            background: #F66A2F;
-            border: 1px solid #F66A2F;
-            padding: 8px 15px;
-            border-radius: 6px;
-            color: #fff;
-            cursor: pointer;
-        }
-        .commonBtn:hover {
-            background: #008B29;
-            border: 1px solid #008B29;
-        }
-
-        .borderTable {
-            border-left: 1px solid #d1d1d1;
-            border-top: 1px solid #d1d1d1;
-            white-space:nowrap;
-        }
-        .borderTable th, .borderTable td {
-            border-right: 1px solid #d1d1d1;
-            border-bottom: 1px solid #d1d1d1;
-            padding:5px;
-        }
-        .borderTable th{
-            background: #008B29;
-            color:#fff;
-            font-weight:bold;
-            font-size:14px;
-        }
-
-        .borderTable tr:nth-child(odd) td{
-            background:#f1f1f1;
-        }
-        .reportLabelList{
-            margin:0 0 20px 0;
-            padding:0;
-            list-style:none;
-        }
-
-        .reportLabelList li{
-            display:inline-block;
-            font-weight:bold;
-            margin-right:30px;
-                color: #FC5518;
-        }
-        .reportLabelList li .labelName{
-            font-weight:normal;
-            color:#000;
-        }
-
-        .tableOuter{
-            width:100%;
-            overflow:auto;
-            max-height:450px;
-            margin-bottom:20px;
-        }
-
-        .heading3 {
-            font-size: 20px;
-            font-weight: 600;
-            position: relative;
-            color: #118133;
-            margin:0;
-            padding:0;
-            margin-bottom:40px;
-        }
-        .heading3:before {
-            background: #FC5518;
-            content: "";
-            width: 5%;
-            height: 2px;
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-        }
-        .orangeText{
-            color: #F66A2F;
-        }
-
-        .borderTable tr.reportTotal td {
-            background: #ff0;
-            font-size:14px;
-        }
-    </style>
 </head>
 <body>
     <p align="right">
@@ -115,6 +25,7 @@
     </div>
 </body>
 </html>
+
 <link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/js/html2pdf.bundle.min.js"></script>
@@ -133,6 +44,10 @@
             loadClusterPerformance();
             fileName = 'Cluster_Performance';
         }
+        else if ('@ReportType' == 'RWB') {
+            loadRWBSummary();
+            fileName = 'Region_Wise_Billing_Summary';
+        }
     });
 
     function loadIEPerformance() {
@@ -149,6 +64,13 @@
         });
     }
 
+    function loadRWBSummary() {
+        $("#dvReportViewer").load("@Url.Action("RegionWiseBillingSummary")", { FromYearMonth: '@Model.FromYearMonth', ToYearMonth: '@Model.ToYearMonth' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
     $("#btnPrint").click(function () {
         generatePdf(true);
     });
@@ -158,7 +80,10 @@
     });
 
     $("#btnExportToExcel").click(function () {
-        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
@@ -189,11 +114,13 @@
                 window.open(pdfObj.output('bloburl'), '_blank');
             });
         }
-        else{
+        else {
             html2pdf().set(options).from(element).save();
         }
 
-        element.style.width = "100%";
+        setTimeout(function () {
+            element.style.width = "100%";
+        }, 1000);
     }
 
     $(document).ajaxSend(function () {
