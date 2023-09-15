@@ -135,6 +135,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<InspectionTstPlndimension1> InspectionTstPlndimensions1 { get; set; }
 
+    public virtual DbSet<LogRegionalhrdataofie> LogRegionalhrdataofies { get; set; }
+
     public virtual DbSet<Mastertablestatus> Mastertablestatuses { get; set; }
 
     public virtual DbSet<MenuMaster> MenuMasters { get; set; }
@@ -5661,6 +5663,81 @@ public partial class ModelContext : DbContext
                 .HasColumnName("SPECIFIED");
         });
 
+        modelBuilder.Entity<LogRegionalhrdataofie>(entity =>
+        {
+            entity.HasKey(e => e.Lid).HasName("LOG_REGIONALHRDATAOFIE_PK");
+
+            entity.ToTable("LOG_REGIONALHRDATAOFIE");
+
+            entity.Property(e => e.Lid)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"LOG_REGIONALHRDATAOFIE_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("LID");
+            entity.Property(e => e.Actiondate)
+                .HasPrecision(6)
+                .HasColumnName("ACTIONDATE");
+            entity.Property(e => e.Actiontype)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONTYPE");
+            entity.Property(e => e.Actionuserid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Deputationfromdate)
+                .HasColumnType("DATE")
+                .HasColumnName("DEPUTATIONFROMDATE");
+            entity.Property(e => e.Deputationtodate)
+                .HasColumnType("DATE")
+                .HasColumnName("DEPUTATIONTODATE");
+            entity.Property(e => e.Disclipline)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("DISCLIPLINE");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.IeCd)
+                .HasPrecision(6)
+                .HasColumnName("IE_CD");
+            entity.Property(e => e.Ietenurefromdate)
+                .HasColumnType("DATE")
+                .HasColumnName("IETENUREFROMDATE");
+            entity.Property(e => e.Ietenuretodate)
+                .HasColumnType("DATE")
+                .HasColumnName("IETENURETODATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Joiningdate)
+                .HasColumnType("DATE")
+                .HasColumnName("JOININGDATE");
+            entity.Property(e => e.Postingdate)
+                .HasColumnType("DATE")
+                .HasColumnName("POSTINGDATE");
+            entity.Property(e => e.Repetriationdate)
+                .HasColumnType("DATE")
+                .HasColumnName("REPETRIATIONDATE");
+            entity.Property(e => e.Retirementdate)
+                .HasColumnType("DATE")
+                .HasColumnName("RETIREMENTDATE");
+            entity.Property(e => e.Transferdate)
+                .HasColumnType("DATE")
+                .HasColumnName("TRANSFERDATE");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDDATE");
+        });
+
         modelBuilder.Entity<Mastertablestatus>(entity =>
         {
             entity
@@ -9129,11 +9206,20 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("SET_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.IcStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("IC_STATUS");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.IssueToIecd)
                 .HasPrecision(6)
                 .HasColumnName("ISSUE_TO_IECD");
@@ -9141,9 +9227,18 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("REMARKS");
+            entity.Property(e => e.Status)
+                .HasPrecision(2)
+                .HasColumnName("STATUS");
             entity.Property(e => e.StatusDt)
                 .HasColumnType("DATE")
                 .HasColumnName("STATUS_DT");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
 
             entity.HasOne(d => d.IssueToIecdNavigation).WithMany(p => p.T16IcCancels)
                 .HasForeignKey(d => d.IssueToIecd)
@@ -11159,6 +11254,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JiStatusCd)
                 .HasPrecision(2)
                 .HasColumnName("JI_STATUS_CD");
+            entity.Property(e => e.NoJiOther)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("NO_JI_OTHER");
             entity.Property(e => e.NoJiReason)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -12002,7 +12101,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("TEST");
             entity.Property(e => e.TestCategoryCd)
-                .HasMaxLength(1)
+                .HasMaxLength(2)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("TEST_CATEGORY_CD");
@@ -12785,7 +12884,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T64_TEST_CATEGORY");
 
             entity.Property(e => e.TestCategoryCd)
-                .HasMaxLength(1)
+                .HasMaxLength(2)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("TEST_CATEGORY_CD");
@@ -16317,6 +16416,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(5)
                 .IsUnicode(false)
                 .HasColumnName("L5NO_PO");
+            entity.Property(e => e.NoJiOther)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("NO_JI_OTHER");
             entity.Property(e => e.NoJiReason)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -18640,6 +18743,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
+        modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
         modelBuilder.HasSequence("REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("RITESPOSEQ");

@@ -1305,13 +1305,14 @@ BEGIN
                WHEN 'C' THEN 'Central'
            END AS REGION,
            IC.REGION AS REGIONV,
-           IC.REMARKS
+           IC.REMARKS,
+           IC.Status
     FROM T16_IC_CANCEL IC
     INNER JOIN T09_IE IE ON IC.ISSUE_TO_IECD = IE.IE_CD
     WHERE (IC.BK_NO = UPPER(TRIM(p_BKNo)) OR p_BKNo IS NULL)
       AND (IC.SET_NO = UPPER(TRIM(p_SetNo)) OR p_SetNo IS NULL)
       AND (IC.ISSUE_TO_IECD = p_ISSUE_TO_IECD OR p_ISSUE_TO_IECD = 0)
-      AND IC.REGION = p_Region
+      AND IC.REGION = p_Region AND (IC.ISDELETED = 0 or IC.ISDELETED is null)    
     ORDER BY IC.BK_NO, IC.SET_NO;
 END;
 
@@ -1455,6 +1456,7 @@ ALTER TABLE RegionalHRDataOfIE
 
 ==================================
 CREATE TABLE Log_RegionalHRDataOfIE (
+    LID  NUMBER(6,0) NOT NULL,
     ID NUMBER(6, 0) NOT NULL,
     IE_CD NUMBER(6, 0),
     Disclipline VARCHAR2(50 BYTE),
@@ -1476,6 +1478,22 @@ CREATE TABLE Log_RegionalHRDataOfIE (
     ActionDate TIMESTAMP(6),
     ActionUserID VARCHAR2(50 BYTE)
 );
+
+ALTER TABLE Log_RegionalHRDataOfIE ADD (
+  CONSTRAINT Log_RegionalHRDataOfIE_pk PRIMARY KEY (LID));
+
+CREATE SEQUENCE Log_RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+   UPDATE Log_RegionalHRDataOfIE
+   SET LID = Log_RegionalHRDataOfIE_seq.nextval;
+   
+ALTER TABLE Log_RegionalHRDataOfIE
+    MODIFY LID NUMBER(6,0) DEFAULT Log_RegionalHRDataOfIE_seq.nextval;
 
   ======================
 
@@ -1797,7 +1815,17 @@ END SP_Get_ClientWiseInspections;
 
 ==========================
 
+ALTER TABLE T16_Ic_Cancel ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T16_Ic_Cancel ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T16_Ic_Cancel ADD ISDELETED NUMBER(2,0)  
+ALTER TABLE T16_Ic_Cancel ADD Status NUMBER(2,0)
 
+
+--update T16_Ic_Cancel set status=1
+
+=====================
 
 
 
