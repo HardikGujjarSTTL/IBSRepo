@@ -63,6 +63,11 @@ h3{ font-size:20px;}
 .tableOuter {
     width: 100%;
     margin-bottom: 20px;
+    padding:10px;
+    -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2); 
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+    box-sizing:border-box;
 }
 
 .heading3 {
@@ -72,7 +77,7 @@ h3{ font-size:20px;}
     color: #323232;
     margin: 0;
     padding: 0;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .heading3:before {
@@ -129,6 +134,7 @@ overlayLoader {
     animation: loaderAnimate 1.2s linear infinite;
 }
 .center{ text-align:center;}
+.wd50per{ width:50%;}
 
 @keyframes loaderAnimate {
     0% {
