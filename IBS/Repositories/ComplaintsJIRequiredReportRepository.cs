@@ -81,7 +81,7 @@ namespace IBS.Repositories
         {
             JIRequiredReport model = new();
             List<JIRequiredList> lstJIRequiredList = new();
-            List<ConsigneeComplaints> lstConsigneeComplaints = new();
+            List<ConsigneeComplaintsReportModel> lstConsigneeComplaints = new();
             DataSet ds = null;
             DataTable dt = new DataTable();
 
@@ -117,82 +117,95 @@ namespace IBS.Repositories
             else
             {
                 ds = ji_compliants_statement(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, Compact, AwaitingJI, JIConclusion, JIConclusionfollowup, All, Detailed, FinancialYears, consignee, ddlsupercm, ddliename, vendor, Clientwiseddl, Item,CMWise,ClientWise,VendorWise,ConsigneeWise,IEWise);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    dt = ds.Tables[0];
+                    List<ConsigneeComplaintsReportModel> listcong = dt.AsEnumerable().Select(row => new ConsigneeComplaintsReportModel
+                    {
+                        IN_REGION = Convert.ToString(row["IN_REGION"]),
+                        COMPLAINT_ID = Convert.ToString(row["COMPLAINT_ID"]),
+                        JI_SNO = Convert.ToString(row["JI_SNO"]),
+                        VENDOR = Convert.ToString(row["VENDOR"]),
+                        PO_NO = Convert.ToString(row["PO_NO"]),
+                        PO_DATE = Convert.ToString(row["PO_DATE"]),
+                        BK_SET = Convert.ToString(row["BK_SET"]),
+                        IC_DATE = Convert.ToString(row["IC_DATE"]),
+                        ITEM_DESC = Convert.ToString(row["ITEM_DESC"]),
+                        CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        QTY_OFF = Convert.ToString(row["QTY_OFF"]),
+                        QTY_REJECTED = Convert.ToString(row["QTY_REJECTED"]),
+                        REJECTION_VALUE = Convert.ToString(row["REJECTION_VALUE"]),
+                        DEPT = Convert.ToString(row["DEPT"]),
+                        COMPLAINT_DATE = Convert.ToString(row["COMPLAINT_DATE"]),
+                        REJECTIONMEMOPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),// "/REJECTION_MEMO/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                        REJECTION_REASON = Convert.ToString(row["REJECTION_REASON"]),
+                        NO_JI_RES = Convert.ToString(row["NO_JI_RES"]),
+                        JI_DATE = Convert.ToString(row["JI_DATE"]),
+                        COMPLAINTSCASESPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),//"/COMPLAINTS_CASES/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                        STATUS = Convert.ToString(row["STATUS"]),
+                        COMPLAINTSREPORTPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),//"/COMPLAINTS_REPORT/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                        DEFECT_DESC = Convert.ToString(row["DEFECT_DESC"]),
+                        JI_STATUS_DESC = Convert.ToString(row["JI_STATUS_DESC"]),
+                        CONCLUSION_DATE = Convert.ToString(row["CONCLUSION_DATE"]),
+                        CO_NAME = Convert.ToString(row["CO_NAME"]),
+                        JI_IE_NAME = Convert.ToString(row["JI_IE_NAME"]),
+                        ROOT_CAUSE_ANALYSIS = Convert.ToString(row["ROOT_CAUSE_ANALYSIS"]),
+                        CHK_STATUS = Convert.ToString(row["CHK_STATUS"]),
+
+                        TECH_REF = Convert.ToString(row["TECH_REF"]),
+                        ACTION_PROPOSED = Convert.ToString(row["ACTION_PROPOSED"]),
+                        ANY_OTHER = Convert.ToString(row["ANY_OTHER"]),
+                        CAPA_STATUS = Convert.ToString(row["CAPA_STATUS"]),
+                        DANDAR_STATUS = Convert.ToString(row["DANDAR_STATUS"]),
+
+                        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        BK_NO = Convert.ToString(row["BK_NO"]),
+                        SET_NO = Convert.ToString(row["SET_NO"]),
+
+
+                    }).ToList();
+                    model.lstConsigneeComplaints = listcong;
+
+                }
+                return model;
+            }
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
+                List<JIRequiredList> list = dt.AsEnumerable().Select(row => new JIRequiredList
+                {
+                    IE = row.Field<string>("Name"),
+                    NO_OF_INSPECTION = Convert.ToInt32(row.Field<decimal>("NO_OF_INSPECTION")),
+                    MATERIAL_VALUE = row.Field<decimal>("MATERIAL_VALUE"),
+                    RECD = Convert.ToInt32(row.Field<decimal>("RECD")),
+                    FINALISED = Convert.ToInt32(row.Field<decimal>("FINALISED")),
+                    PENDING = Convert.ToInt32(row.Field<decimal>("PENDING")),
+                    ACCEPTED = Convert.ToInt32(row.Field<decimal>("ACCEPTED")),
+
+                    UPHELD = Convert.ToInt32(row.Field<decimal>("UPHELD")),
+                    SORTING = Convert.ToInt32(row.Field<decimal>("SORTING")),
+                    RECTIFICATION = Convert.ToInt32(row.Field<decimal>("RECTIFICATION")),
+                    PRICE_REDUCTION = Convert.ToInt32(row.Field<decimal>("PRICE_REDUCTION")),
+                    LIFTED_BEFORE_JI = Convert.ToInt32(row.Field<decimal>("LIFTED_BEFORE_JI")),
+
+                    TRANSIT_DEMAGE = Convert.ToInt32(row.Field<decimal>("TRANSIT_DEMAGE")),
+                    UNSTAMPED = Convert.ToInt32(row.Field<decimal>("UNSTAMPED")),
+                    NOT_ON_RITES_AC = Convert.ToInt32(row.Field<decimal>("NOT_ON_RITES_AC")),
+                    Region = Region,
+                    FromDate = Convert.ToDateTime(FromDate),
+                    ToDate = Convert.ToDateTime(ToDate),
+
+                }).ToList();
+                foreach (var item in list)
+                {
+                    item.Total = item.UPHELD + item.SORTING + item.RECTIFICATION + item.PRICE_REDUCTION + item.LIFTED_BEFORE_JI;
+                }
+                model.lstJIRequiredList = list;
             }
 
-            dt = ds.Tables[0];
-            List<JIRequiredList> list = dt.AsEnumerable().Select(row => new JIRequiredList
-            {
-                IE = row.Field<string>("Name"),
-                NO_OF_INSPECTION = Convert.ToInt32(row.Field<decimal>("NO_OF_INSPECTION")),
-                MATERIAL_VALUE = row.Field<decimal>("MATERIAL_VALUE"),
-                RECD = Convert.ToInt32(row.Field<decimal>("RECD")),
-                FINALISED = Convert.ToInt32(row.Field<decimal>("FINALISED")),
-                PENDING = Convert.ToInt32(row.Field<decimal>("PENDING")),
-                ACCEPTED = Convert.ToInt32(row.Field<decimal>("ACCEPTED")),
-
-                UPHELD = Convert.ToInt32(row.Field<decimal>("UPHELD")),
-                SORTING = Convert.ToInt32(row.Field<decimal>("SORTING")),
-                RECTIFICATION = Convert.ToInt32(row.Field<decimal>("RECTIFICATION")),
-                PRICE_REDUCTION = Convert.ToInt32(row.Field<decimal>("PRICE_REDUCTION")),
-                LIFTED_BEFORE_JI = Convert.ToInt32(row.Field<decimal>("LIFTED_BEFORE_JI")),
-
-                TRANSIT_DEMAGE = Convert.ToInt32(row.Field<decimal>("TRANSIT_DEMAGE")),
-                UNSTAMPED = Convert.ToInt32(row.Field<decimal>("UNSTAMPED")),
-                NOT_ON_RITES_AC = Convert.ToInt32(row.Field<decimal>("NOT_ON_RITES_AC")),
-                Region =Region,
-                FromDate = Convert.ToDateTime(FromDate),
-                ToDate = Convert.ToDateTime(ToDate),
-
-            }).ToList();
-
-            foreach (var item in list)
-            {
-                item.Total = item.UPHELD + item.SORTING + item.RECTIFICATION + item.PRICE_REDUCTION + item.LIFTED_BEFORE_JI;
-            }
-
-            List<ConsigneeComplaints> listcong = dt.AsEnumerable().Select(row => new ConsigneeComplaints
-            {
-                InspRegion = row.Field<string>("IN_REGION"),
-                ComplaintId = row.Field<string>("COMPLAINT_ID"),
-                ComplaintDate = row.Field<DateTime>("COMPLAINT_DATE"),
-                RejMemoNo = row.Field<string>("REJ_MEMO"),
-                CASE_NO = row.Field<string>("CASE_NO"),
-                BK_NO = row.Field<string>("BK_SET"),
-                ie_name = row.Field<string>("IENAME"),
-                CoName = row.Field<string>("IE_CO_NAME"),
-                COMP_RECV_REGION = row.Field<string>("COMP_RECV_REGION"),
-                Consignee = row.Field<string>("CONSIGNEE"),
-                VEND_NAME = row.Field<string>("VENDOR"),
-                ItemDesc = row.Field<string>("ITEM_DESC"),
-
-                QtyOffered = Convert.ToInt32(row.Field<decimal>("QTY_OFF")),
-                QtyRejected = Convert.ToInt32(row.Field<decimal>("QTY_REJECTED")),
-                rejectionValue = Convert.ToInt32(row.Field<decimal>("REJECTION_VALUE")),
-
-                RejectionReason = row.Field<string>("REJECTION_REASON"),
-                Status = row.Field<string>("STATUS"),
-                JiRequired = row.Field<string>("JI_REQUIRED"),
-                JiSno = row.Field<string>("JI_SNO"),
-                JIDate = row.Field<DateTime>("JI_DATE"),
-                DefectDesc = row.Field<string>("DEFECT_DESC"),
-                JiStatusDesc = row.Field<string>("JI_STATUS_DESC"),
-                 Action = row.Field<string>("ACTION"),
-                PO_NO = row.Field<string>("PO_NO"),
-                FormattedPO_DT = row.Field<string>("PO_DATE"),
-                IC_DATE = row.Field<DateTime?>("IC_DATE"),
-                JiCdName = row.Field<string>("JI_IE_NAME"),
-                ACTIONPROPOSED = row.Field<string>("ACTION_PROPOSED"),
-                ACTIONPROPOSEDDate = row.Field<DateTime>("ACTION_PROPOSED_DATE"),
-                DEPT = row.Field<string>("DEPT"),
-
-            }).ToList();
-
-
-            model.lstJIRequiredList = list;
-            model.lstConsigneeComplaints = listcong;
             return model;
         }
-
        
 
         public DataSet compliants_statement_IEWise(string FromDateFor,string ToDateFor, string Region,string FinancialYear, string JIDecidedDT, string ParticularIEs, string AllIEs, string ddliename,string FinancialYears)
@@ -437,26 +450,26 @@ namespace IBS.Repositories
         {
             DataSet ds = null;
             OracleParameter[] par = new OracleParameter[21];
-            par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_co", OracleDbType.Varchar2, ddlsupercm, ParameterDirection.Input);
-            par[3] = new OracleParameter("p_ie", OracleDbType.Varchar2, ddliename, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, vendor, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
-            par[6] = new OracleParameter("p_today_dt", OracleDbType.Varchar2, DateTime.Now, ParameterDirection.Input);
-            par[7] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
-            par[8] = new OracleParameter("p_bpo_rly", OracleDbType.Varchar2, Item, ParameterDirection.Input);
-            par[9] = new OracleParameter("p_clienttype", OracleDbType.Varchar2, Clientwiseddl, ParameterDirection.Input);
-            par[10] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[11] = new OracleParameter("p_awaitingji", OracleDbType.Varchar2, AwaitingJI, ParameterDirection.Input);
-            par[12] = new OracleParameter("p_awaitingconclusion", OracleDbType.Varchar2, JIConclusion, ParameterDirection.Input);
-            par[13] = new OracleParameter("p_awaitingaction", OracleDbType.Varchar2, JIConclusionfollowup, ParameterDirection.Input);
-            par[14] = new OracleParameter("p_awaitingfinalaction", OracleDbType.Varchar2, All, ParameterDirection.Input);
-            par[15] = new OracleParameter("p_cmwise", OracleDbType.Varchar2, CMWise, ParameterDirection.Input);
-            par[16] = new OracleParameter("p_iewise", OracleDbType.Varchar2, IEWise, ParameterDirection.Input);
-            par[17] = new OracleParameter("p_vendorwise", OracleDbType.Varchar2, VendorWise, ParameterDirection.Input);
-            par[18] = new OracleParameter("p_clientwise", OracleDbType.Varchar2, ClientWise, ParameterDirection.Input);
-            par[19] = new OracleParameter("p_consigneewise", OracleDbType.Varchar2, ConsigneeWise, ParameterDirection.Input);
+            par[0] = new OracleParameter("p_Frm_dt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_To_dt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Co", OracleDbType.Varchar2, ddlsupercm, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_Ie", OracleDbType.Varchar2, ddliename, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Vend_cd", OracleDbType.Varchar2, vendor, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_Consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_Today_dt", OracleDbType.Varchar2, DateTime.Now.ToString("dd/MM/yyyy"), ParameterDirection.Input);
+            par[7] = new OracleParameter("p_Fin_year", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_Bpo_rly", OracleDbType.Varchar2, Item, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_Client_type", OracleDbType.Varchar2, Clientwiseddl, ParameterDirection.Input);
+            par[10] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[11] = new OracleParameter("p_Awaiting_ji", OracleDbType.Varchar2, AwaitingJI, ParameterDirection.Input);
+            par[12] = new OracleParameter("p_Awaiting_conclusion", OracleDbType.Varchar2, JIConclusion, ParameterDirection.Input);
+            par[13] = new OracleParameter("p_Awaiting_action", OracleDbType.Varchar2, JIConclusionfollowup, ParameterDirection.Input);
+            par[14] = new OracleParameter("p_Awaiting_finalaction", OracleDbType.Varchar2, All, ParameterDirection.Input);
+            par[15] = new OracleParameter("p_Cm_wise", OracleDbType.Varchar2, CMWise, ParameterDirection.Input);
+            par[16] = new OracleParameter("p_Ie_wise", OracleDbType.Varchar2, IEWise, ParameterDirection.Input);
+            par[17] = new OracleParameter("p_Vendor_wise", OracleDbType.Varchar2, VendorWise, ParameterDirection.Input);
+            par[18] = new OracleParameter("p_Client_wise", OracleDbType.Varchar2, ClientWise, ParameterDirection.Input);
+            par[19] = new OracleParameter("p_Consignee_wise", OracleDbType.Varchar2, ConsigneeWise, ParameterDirection.Input);
             par[20] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_reporttypes_Report", par, 1);
             return ds;

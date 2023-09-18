@@ -91,6 +91,7 @@ namespace IBS.Controllers
             ViewBag.ToDT = ToDate;
             ViewBag.Financialperiod = FinancialYears;
             ViewBag.Regions = wRegion;
+            ViewBag.Detailedchk = Detailed;
             return PartialView(model);
         }
         

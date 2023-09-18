@@ -1,7 +1,8 @@
-﻿@model IBS.Models.JIRequiredReport
+﻿@model IBS.Models.ConsigneeCompPeriodReport
 
 @{
     Layout = null;
+    string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
 }
@@ -32,33 +33,21 @@
 
 <script type="text/javascript">
 
-     var fileName = '';
+    var fileName = '';
 
     $(document).ready(function () {
-        loadIEPerformance();
-        fileName = 'RegionWise_Consignee_JIComplaint';
+        if ('@ReportType' == 'U') {
+            loadComplaints();
+            fileName = 'Consignee_Complaint';
+        }
     });
 
-    function loadIEPerformance() {
-        $("#dvReportViewer").load("@Url.Action("ComplaintRecieved")", {
-            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', AllIEs: '@Model.AllIEs', AllVendors: '@Model.AllVendors', AllClient: '@Model.AllClient', AllConsignee: '@Model.AllConsignee', Compact: '@Model.Compact', AwaitingJI: '@Model.AwaitingJI', JIConclusion: '@Model.JIConclusion',
-            JIConclusionfollowup: '@Model.JIConclusionfollowup', JIconclusionreport: '@Model.JIconclusionreport', JIDecidedDT: '@Model.JIDecidedDT', All: '@Model.All', ParticularIEs: '@Model.ParticularIEs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise',
-            VendorWise: '@Model.VendorWise',
-            ClientWise: '@Model.ClientWise',
-            ConsigneeWise: '@Model.ConsigneeWise',
-            FinancialYear: '@Model.FinancialYear',
-            ParticularCMs: '@Model.ParticularCMs',
-            ParticularClients: '@Model.ParticularClients',
-            ParticularConsignee: '@Model.ParticularConsignee',
-            ParticularVendor : '@Model.ParticularVendor',
-            Detailed: '@Model.Detailed',
-            FinancialYears: '@Model.FinancialYears',
-            ddlsupercm: '@Model.ddlsupercm',
-            ddliename: '@Model.ddliename',
-            Clientwiseddl: '@Model.Clientwiseddl',
-            vendor: '@Model.vendor',
-            Item: '@Model.Item',
-            consignee: '@Model.consignee'
+    function loadComplaints() {
+        $("#dvReportViewer").load("@Url.Action("ComplaintsByPeriod")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', Allregion: '@Model.Allregion', regionorth: '@Model.regionorth'
+            , regionsouth: '@Model.regionsouth', regioneast: '@Model.regioneast', regionwest: '@Model.regionwest', jiallregion: '@Model.jiallregion', jinorth: '@Model.jinorth', jisourth: '@Model.jisourth'
+            , jieast: '@Model.jieast', jiwest: '@Model.jiwest', compallregion: '@Model.compallregion', compyes: '@Model.compyes', compno: '@Model.compno', cancelled: '@Model.cancelled'
+            , underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp'
+            
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

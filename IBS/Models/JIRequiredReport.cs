@@ -42,7 +42,7 @@ namespace IBS.Models
 
         public List<JIRequiredList> lstJIRequiredList { get; set; }
 
-        public List<ConsigneeComplaints> lstConsigneeComplaints { get; set; }
+        public List<ConsigneeComplaintsReportModel> lstConsigneeComplaints { get; set; }
 
     }
 }
