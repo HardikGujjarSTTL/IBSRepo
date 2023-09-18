@@ -225,7 +225,7 @@ namespace IBS.Repositories
             {
                 OracleParameter[] par = new OracleParameter[4];
                 par[0] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, CaseNo, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_CallRecvDt", OracleDbType.NVarchar2, CallRdt, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_CallRecvDt", OracleDbType.Date, CallRdt, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_LabRegNo", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
                 par[3] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
@@ -292,7 +292,10 @@ namespace IBS.Repositories
             using (var conn1 = context.Database.GetDbConnection())
             {
                 conn1.Open();
-
+                if (LABREGISTERModel.TestToBe == "D")
+                {
+                    LABREGISTERModel.Test = LABREGISTERModel.TestTobeCon;
+                }
                 string ss;
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                 using (OracleCommand cmd2 = new OracleCommand(sqlQuery, (OracleConnection)conn1))
@@ -427,6 +430,14 @@ namespace IBS.Repositories
                 {
                     LABREGISTERModel.TestingType = "R";
                 }
+                else if(LABREGISTERModel.TestingType == "Private_Case")
+                {
+                    LABREGISTERModel.TestingType = "P";
+                }
+                else if (LABREGISTERModel.TestingType == "IREPS_Case")
+                {
+                    LABREGISTERModel.TestingType = "I";
+                }
                 else
                 {
                     LABREGISTERModel.TestingType = "";
@@ -476,6 +487,11 @@ namespace IBS.Repositories
         {
             try
             {
+                if(LABREGISTERModel.TestToBe == "D")
+                {
+                    LABREGISTERModel.Test = LABREGISTERModel.TestTobeCon;
+                }
+                
                 string ss;
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                 ss = GetDateString(sqlQuery);

@@ -21,6 +21,18 @@ namespace IBS.Models
 
         public string? Remarks { get; set; }
         public int IsEdit { get; set; }
+        public int? Createdby { get; set; }
+
+        public DateTimeOffset? Createddate { get; set; }
+
+        public int? Updatedby { get; set; }
+
+        public DateTimeOffset? Updateddate { get; set; }
+
+        public byte? Isdeleted { get; set; }
+
+        public bool Status { get; set; }
+        public bool IsAdmin { get; set; }
     }
 
     public class ICCancellationListModel
@@ -34,6 +46,8 @@ namespace IBS.Models
         public string REGION { get; set; }
         public string REGIONV { get;}
         public string REMARKS { get; set; }
+        public string IStatus { get; set; }
+
     }
 
 }

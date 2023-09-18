@@ -36,6 +36,7 @@ namespace IBS.Repositories.Inspection_Billing
                 model.StatusDt = t16IcCancel.StatusDt;
                 model.Region = t16IcCancel.Region;
                 model.Remarks = t16IcCancel.Remarks;
+                model.Status = Convert.ToBoolean(t16IcCancel.Status);
                 return model;
             }
         }
@@ -111,11 +112,13 @@ namespace IBS.Repositories.Inspection_Billing
 
             return dTResult;
         }
-        public bool Remove(string REGION, string BK_NO, string SET_NO)
+        public bool Remove(string REGION, string BK_NO, string SET_NO, int UserID)
         {
             T16IcCancel t16IcCancel = context.T16IcCancels.Where(x => x.Region == REGION && x.BkNo == BK_NO && x.SetNo == SET_NO).FirstOrDefault();
             if (t16IcCancel == null) { return false; }
-            context.T16IcCancels.Remove(t16IcCancel);
+            t16IcCancel.Isdeleted = Convert.ToByte(true);
+            t16IcCancel.Updatedby = UserID;
+            t16IcCancel.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -134,6 +137,10 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.StatusDt = model.StatusDt;
                 obj.Region = model.Region;
                 obj.Remarks = model.Remarks;
+                obj.Isdeleted = Convert.ToByte(false);
+                obj.Createdby = model.Createdby;
+                obj.Createddate = DateTime.Now;
+                obj.Status = Convert.ToByte(model.Status);
                 context.T16IcCancels.Add(obj);
                 context.SaveChanges();
                 BkNo = obj.BkNo;
@@ -143,6 +150,11 @@ namespace IBS.Repositories.Inspection_Billing
                 t16IcCancel.IcStatus = model.IcStatus;
                 t16IcCancel.StatusDt = model.StatusDt;
                 t16IcCancel.Remarks = model.Remarks;
+                t16IcCancel.Updatedby = model.Updatedby;
+                t16IcCancel.Updateddate = DateTime.Now;
+                if (model.IsAdmin == true) {
+                    t16IcCancel.Status = Convert.ToByte(model.Status);
+                }
                 context.SaveChanges();
                 BkNo = t16IcCancel.BkNo;
             }

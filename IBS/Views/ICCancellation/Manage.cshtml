@@ -1,4 +1,5 @@
-﻿@model IBS.Models.ICCancellationModel
+﻿@using IBS.Helper;
+@model IBS.Models.ICCancellationModel
 
 @{
     ViewData["Title"] = "Manage IC Cancellation";
@@ -57,6 +58,20 @@
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
                 </div>
+                @if (SessionHelper.UserModelDTO.RoleName != "Inspection Engineer (IE)" && Model.IsEdit == 1)
+                {
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="checkbox" class="input" asp-for="Status" /> <lable for="IsArchived">Status </lable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>

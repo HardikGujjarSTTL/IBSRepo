@@ -13,9 +13,9 @@
 </head>
 <body>
     <p align="right">
-        <input type="button" value="Print" id="btnPrint" />
-        <input type="button" value="Export To PDF" id="btnExportToPdf" />
-        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
     <div id="dvReportViewer"></div>
     <div class="overlayLoader" style="display: none">
@@ -28,28 +28,44 @@
 
 <link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
-<script src="~/js/jspdf.debug.js"></script>
-<script src="~/js/html2canvas.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 
 <script type="text/javascript">
 
-    $(document).ajaxSend(function () {
-        $(".overlayLoader").show();
-    });
-
-    $(document).ajaxComplete(function () {
-        $(".overlayLoader").hide();
-    });
+    var fileName = '';
 
     $(document).ready(function () {
         if ('@ReportType' == 'IE_X') {
             loadIEPerformance();
+            fileName = 'IE_Performance';
+        }
+        else if ('@ReportType' == 'CLUSTER_X') {
+            loadClusterPerformance();
+            fileName = 'Cluster_Performance';
+        }
+        else if ('@ReportType' == 'RWB') {
+            loadRWBSummary();
+            fileName = 'Region_Wise_Billing_Summary';
         }
     });
 
     function loadIEPerformance() {
         $("#dvReportViewer").load("@Url.Action("IEPerformance")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadClusterPerformance() {
+        $("#dvReportViewer").load("@Url.Action("ClusterPerformance")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadRWBSummary() {
+        $("#dvReportViewer").load("@Url.Action("RegionWiseBillingSummary")", { FromYearMonth: '@Model.FromYearMonth', ToYearMonth: '@Model.ToYearMonth' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -64,67 +80,55 @@
     });
 
     $("#btnExportToExcel").click(function () {
-        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
-            download: getExportFileName("Complaint_Recieved") + ".xls"
+            download: getExportFileName(fileName) + ".xls"
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
 
     function generatePdf(isPrint) {
-        var quotes = document.getElementById('dvReportViewer');
+        var element = document.getElementById('dvReportViewer');
 
-        quotes.style.width = "920px";
+        element.style.width = "1100px";
 
-        html2canvas(quotes, {
-            onrendered: function (canvas) {
-                var pdf = new jsPDF('p', 'pt', 'letter');
-                for (var i = 0; i <= quotes.clientHeight / 980; i++) {
-                    var srcImg = canvas;
-                    var sX = 0;
-                    var sY = 980 * i; // start 980 pixels down for every new page
-                    var sWidth = 920;
-                    var sHeight = 980;
-                    var dX = 0;
-                    var dY = 0;
-                    var dWidth = 920;
-                    var dHeight = 980;
+        const options = {
+            margin: 0,
+            filename: getExportFileName(fileName) + '.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
 
-                    window.onePageCanvas = document.createElement("canvas");
-                    onePageCanvas.setAttribute('width', 920);
-                    onePageCanvas.setAttribute('height', 980);
-                    var ctx = onePageCanvas.getContext('2d');
-                    ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
-                    var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+        if (isPrint) {
+            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+                pdfObj.autoPrint();
+                window.open(pdfObj.output('bloburl'), '_blank');
+            });
+        }
+        else {
+            html2pdf().set(options).from(element).save();
+        }
 
-                    var width = onePageCanvas.width;
-                    var height = onePageCanvas.clientHeight;
-
-                    //! If we're on anything other than the first page,
-                    // add another page
-                    if (i > 0) {
-                        pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
-                    }
-                    //! now we declare that we're working on that page
-                    pdf.setPage(i + 1);
-                    //! now we add content to that page!
-                    pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
-
-                }
-
-                quotes.style.width = "100%";
-
-                if (isPrint) {
-                    pdf.autoPrint();
-                    window.open(pdf.output('bloburl'), '_blank');
-                }
-                else {
-                    pdf.save(getExportFileName('Complaint_Recieved') + '.pdf');
-                }
-            }
-        });
+        setTimeout(function () {
+            element.style.width = "100%";
+        }, 1000);
     }
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
 
 </script>
