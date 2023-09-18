@@ -1403,7 +1403,7 @@ animation: show-bar-one 1.2s 0.1s forwards;}
 
 .graph-section .datefrom .from-celender, .table-section .datefrom .from-celender{ margin-right:15px!important;}
 .userDetail .dropPopup.messagePopup li:before, .userDetail .dropPopup.messagePopup li:first-child:before{ display:none;}
-.navbar-static-side ul li .nav-second-level { margin: 0; display:none; }
+.navbar-static-side ul li .nav-second-level, .navbar-static-side ul li .nav-third-level {margin: 0; display: none;}
 .navbar-static-side ul li .nav-second-level.show{ display:block;}
 .dataTables_scrollHeadInner, .table-responsive{ width:100%!important;}
 .dataTable th, .dataTable td{ border-bottom:1px solid #f1f1f1;} 
