@@ -47,7 +47,7 @@
             </div>
             </div>
             <div class="row">
-            <div class="col-md-4" id="particularCM">
+            <div class="col-md-6" id="particularCM">
                 @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
             </div>
             </div>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4" id="particularIE">
+            <div class="col-md-6" id="particularIE">
                 @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
             </div>
         </div>
@@ -89,7 +89,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-4" id="vendor">
+            <div class="col-md-6" id="vendor">
                 <label for="Reference">Vendor</label>
                 <input type="text" id="vendor" class="input" maxlength="3" />
             </div>
@@ -129,7 +129,7 @@
                     </li>
                </ul>
             </div>
-            <div class="col-md-4" id="consignee">
+            <div class="col-md-6" id="consignee">
                 <label for="Reference">Consignee</label>
                 <input type="text" id="consignee" class="input" maxlength="3" />
             </div>
