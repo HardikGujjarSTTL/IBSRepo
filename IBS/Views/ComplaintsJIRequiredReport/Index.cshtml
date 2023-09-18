@@ -4,14 +4,11 @@
         <h2>JI CONSIGNEE COMPLAINTS</h2>
     </div>
 </div>
+<style type="text/css">
+    #particularclient{ display:flex; justify-content:space-between;}
 
-<style>
-    .Datefieldcls {
-        margin-left: -110px;
-        margin-top: 10px;
-    }
+    #particularclient select{ margin-right:10px;}
 </style>
-
 <div class="accordion-body">
     <div class="row my-0">
         <div class="col-md-3 mb-3">
@@ -19,56 +16,80 @@
             <label for="FinancialYear">For The Financial Year</label>
             @Html.DropDownList("FinancialYears", new SelectList(IBS.Models.Common.FinancialYear(), "Value", "Text"), "--Select--", new { id = "FinancialYears" })
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-9 mb-4">
             <input type="radio" id="JIDecidedDT" name="FinancialYear" value="JIDecidedDT">
             <label for="JIDecidedDT">JI Decided on For The Period(From Date - To Date)</label>
-            <div class="col-md-10 mb-6">
+            <div class="row">
+            <div class="col-md-3">
                 <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
             </div>
+            <div class="col-md-3">
+                <label for="JIDecidedDT" class="d-none"></label>
+                <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
+            </div>
+            </div>
         </div>
-        <div class="col-md-3 mb-3 Datefieldcls">
-            <label for="JIDecidedDT"></label><br />
-            <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
-        </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4">
             <input type="radio" id="CMWise" name="CMWises" value="CMWise">
             <label for="CMWise">CM Wise</label>
-            <div class="col-md-4 mb-4" id="AllCMWise">
-                <input type="radio" id="AllCM" name="CMWise" value="AllCM">
-                <label for="AllCM">All CM </label>
-
-                <input type="radio" id="ParticularCMs" name="CMWise" value="ParticularCMs">
-                <label for="ParticularCMs">Particular CM</label>
+            <div class="row my-0">
+            <div class="col-md-12" id="AllCMWise">
+                <ul class="radioListForm">
+                        <li>
+                            <input type="radio" id="AllCM" name="CMWise" value="AllCM">
+                            <label for="AllCM">All CM </label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ParticularCMs" name="CMWise" value="ParticularCMs">
+                            <label for="ParticularCMs">Particular CM</label>
+                        </li>
+                </ul>
             </div>
-            <div class="col-md-6 mb-6" id="particularCM">
+            </div>
+            <div class="row">
+            <div class="col-md-4" id="particularCM">
                 @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
             </div>
+            </div>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4">
             <input type="radio" id="IEWise" name="CMWises" value="IEWise">
             <label for="IEWise">IE Wise</label>
-            <div class="col-md-4 mb-4" id="AllIE">
-                <input type="radio" id="AllIEs" name="IEWise" value="AllIE">
+            <div class="row my-0">
+            <div class="col-md-12" id="AllIE">
+                    <ul class="radioListForm">
+               <li> <input type="radio" id="AllIEs" name="IEWise" value="AllIE">
                 <label for="AllIEs">All IE</label>
-
+                </li>
+                        <li>
                 <input type="radio" id="ParticularIEs" name="IEWise" value="ParticularIEs">
                 <label for="ParticularIEs">Particular IE</label>
+                </li>
+                </ul>
             </div>
-            <div class="col-md-6 mb-6" id="particularIE">
+        </div>
+        <div class="row">
+            <div class="col-md-4" id="particularIE">
                 @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
             </div>
         </div>
-        <div class="col-md-4 mb-4">
+        </div>
+        <div class="col-md-4">
             <input type="radio" id="VendorWise" name="CMWises" value="VendorWise">
             <label for="VendorWise">Vendor Wise</label>
-            <div class="col-md-5 mb-5" id="vendorrdo">
-                <input type="radio" id="AllVendors" name="VendorWise" value="AllVendors">
-                <label for="AllVendors">All Vendors</label>
-
-                <input type="radio" id="ParticularVendor" name="VendorWise" value="ParticularVendor">
-                <label for="ParticularVendor">Particular Vendor</label>
+            <div class="col-md-12" id="vendorrdo">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="AllVendors" name="VendorWise" value="AllVendors">
+                        <label for="AllVendors">All Vendors</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="ParticularVendor" name="VendorWise" value="ParticularVendor">
+                        <label for="ParticularVendor">Particular Vendor</label>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-8 mb-8" id="vendor">
+            <div class="col-md-4" id="vendor">
                 <label for="Reference">Vendor</label>
                 <input type="text" id="vendor" class="input" maxlength="3" />
             </div>
@@ -76,57 +97,80 @@
         <div class="col-md-4 mb-4">
             <input type="radio" id="ClientWise" name="CMWises" value="ClientWise">
             <label for="ClientWise">Client Wise</label>
-            <div class="col-md-4 mb-4" id="clientwises">
-                <input type="radio" id="AllClient" name="ClientWise" value="AllClient">
-                <label for="AllClient">All Client</label>
-
-                <input type="radio" id="ParticularClients" name="ClientWise" value="ParticularClients">
-                <label for="ParticularClients">Particular Client</label>
+            <div class="col-md-12" id="clientwises">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="AllClient" name="ClientWise" value="AllClient">
+                        <label for="AllClient">All Client</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="ParticularClients" name="ClientWise" value="ParticularClients">
+                        <label for="ParticularClients">Particular Client</label>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-6 mb-6" id="particularclient">
+            <div class="col-md-6" id="particularclient">
                 @Html.DropDownList("Clientwise", new SelectList(IBS.Models.Common.ClientWise(), "Value", "Text"), "--Select--", new { id = "Clientwiseddl" })
                 <select id="Item" class="form-control" required></select>
             </div>
         </div>
-        <div class="col-md-5 mb-5">
+        <div class="col-md-4 mb-4">
             <input type="radio" id="ConsigneeWise" name="CMWises" value="ConsigneeWise">
             <label for="ConsigneeWise">Consignee Wise</label>
-            <div class="col-md-5 mb-5" id="consignees">
-                <input type="radio" id="AllConsignee" name="ConsigneeWise" value="AllConsignee">
-                <label for="AllConsignee">All Consignee</label>
-
-                <input type="radio" id="ParticularConsignee" name="ConsigneeWise" value="ParticularConsignee">
-                <label for="ParticularConsignee">Particular Consignee</label>
+            <div class="col-md-12" id="consignees">
+               <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="AllConsignee" name="ConsigneeWise" value="AllConsignee">
+                        <label for="AllConsignee">All Consignee</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="ParticularConsignee" name="ConsigneeWise" value="ParticularConsignee">
+                        <label for="ParticularConsignee">Particular Consignee</label>
+                    </li>
+               </ul>
             </div>
-            <div class="col-md-5 mb-5" id="consignee">
+            <div class="col-md-4" id="consignee">
                 <label for="Reference">Consignee</label>
                 <input type="text" id="consignee" class="input" maxlength="3" />
             </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <label>Report Type</label>
-            <div class="col-md-4 mb-4" id="reporttypes">
-                <input type="radio" id="Compact" name="Compact" value="Compact">
-                <label for="Compact">Compact </label>
-
-                <input type="radio" id="Detailed" name="Compact" value="Detailed">
-                <label for="Detailed">Detailed</label>
+        <div class="col-md-12">
+            <h3 class="heading3 mb-4">Report Type</h3>
+            <div class="col-md-12" id="reporttypes">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="Compact" name="Compact" value="Compact">
+                        <label for="Compact">Compact </label>
+                    </li>
+                    <li>
+                        <input type="radio" id="Detailed" name="Compact" value="Detailed">
+                        <label for="Detailed">Detailed</label>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-7 mb-7" id="detaileds">
-                <input type="radio" id="AwaitingJI" name="Detaileds" value="AwaitingJI">
-                <label for="AwaitingJI">Awaiting JI </label><br />
-
+            <div class="col-md-12" id="detaileds">
+               <ul class="radioListForm">
+                <li>
+                   <input type="radio" id="AwaitingJI" name="Detaileds" value="AwaitingJI">
+                <label for="AwaitingJI">Awaiting JI </label>
+                </li>
+                <li>
                 <input type="radio" id="JIConclusion" name="Detaileds" value="JIConclusion">
-                <label for="JIConclusion">Awaiting JI Conclusion</label><br />
-
+                <label for="JIConclusion">Awaiting JI Conclusion</label>
+                </li>
+                <li>
                 <input type="radio" id="JIConclusionfollowup" name="Detaileds" value="JIConclusionfollowup">
-                <label for="JIConclusionfollowup">Awaiting Action on JI Conclusion follow up</label><br />
-
+                <label for="JIConclusionfollowup">Awaiting Action on JI Conclusion follow up</label>
+                </li>
+                <li>
                 <input type="radio" id="JIconclusionreport" name="Detaileds" value="JIconclusionreport">
-                <label for="JIconclusionreport">Awaiting Final disposal of JI conclusion report</label><br />
-
+                <label for="JIconclusionreport">Awaiting Final disposal of JI conclusion report</label>
+                </li>
+                <li>
                 <input type="radio" id="All" name="Detaileds" value="All">
                 <label for="All">All </label>
+                    </li>
+                </ul>
             </div>
         </div>
 
