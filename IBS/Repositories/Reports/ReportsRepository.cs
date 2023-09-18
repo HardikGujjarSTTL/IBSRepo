@@ -1,6 +1,8 @@
-﻿using IBS.Helper;
+﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Drawing;
@@ -9,6 +11,14 @@ namespace IBS.Repositories.Reports
 {
     public class ReportsRepository : IReportsRepository
     {
+        private readonly ModelContext context;
+        private readonly IConfiguration configuration;
+
+        public ReportsRepository(ModelContext context, IConfiguration configuration)
+        {
+            this.context = context;
+            this.configuration = configuration;
+        }
         public DTResult<PendingJICasesReportModel> Get_Pending_JI_Cases(DTParameters dtParameters, string iecd)
         {
             DTResult<PendingJICasesReportModel> dTResult = new() { draw = 0 };
@@ -113,7 +123,7 @@ namespace IBS.Repositories.Reports
         {
             DTResult<IEDairyModel> dTResult = new() { draw = 0 };
             IQueryable<IEDairyModel>? query = null;
-            
+
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
@@ -151,7 +161,7 @@ namespace IBS.Repositories.Reports
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DpIE"]))
             {
-                IECD = Convert.ToString(dtParameters.AdditionalValues["DpIE"]);                
+                IECD = Convert.ToString(dtParameters.AdditionalValues["DpIE"]);
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["OrderByVisit"]))
             {
@@ -168,11 +178,11 @@ namespace IBS.Repositories.Reports
                 IECD = Convert.ToString(userModel.IeCd);
             }
             else
-            {                
-                if(IsAll == true)
+            {
+                if (IsAll == true)
                 {
                     IECD = null;
-                }                
+                }
             }
 
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
@@ -208,7 +218,7 @@ namespace IBS.Repositories.Reports
                 SUBMIT_DT = Convert.ToString(row["SUBMIT_DT"]),
                 INSP_FEE = Convert.ToString(row["INSP_FEE"])
             }).ToList();
-           
+
             query = list.AsQueryable();
 
             dTResult.recordsTotal = ds.Tables[0].Rows.Count;
@@ -216,6 +226,79 @@ namespace IBS.Repositories.Reports
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public DTResult<IE7thCopyListModel> Get_IE_7thCopyList(DTParameters dtParameters, UserSessionModel model)
+        {
+            DTResult<IE7thCopyListModel> dTResult = new() { draw = 0 };
+            IQueryable<IE7thCopyListModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "Bk_No";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "Bk_No";
+                orderAscendingDirection = true;
+            }
+            string Bk_No = "", Set_No_Fr = "";
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Bk_No"]))
+            {
+                Bk_No = dtParameters.AdditionalValues["Bk_No"];
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Set_No_Fr"]))
+            {
+                Set_No_Fr = dtParameters.AdditionalValues["Set_No_Fr"];
+            }
+            query = from b in context.T10IcBooksets
+                    join i in context.T09Ies on b.IssueToIecd equals i.IeCd                    
+                    orderby b.BkNo,b.SetNoFr
+                    where i.IeCd == Convert.ToInt32(model.IeCd) 
+                    && (Bk_No == "" || (Bk_No != "" && b.BkNo.ToUpper().Trim().Contains(Bk_No)))
+                    && (Set_No_Fr == "" || (Set_No_Fr != "" && b.SetNoFr == Set_No_Fr))
+                    select new IE7thCopyListModel
+                    {
+                        Bk_No = b.BkNo,
+                        Set_No_Fr = b.SetNoFr,
+                        Set_No_To = b.SetNoTo,
+                        Issue_Dt = b.IssueDt,
+                        Issue_To_Iecd = i.IeName,
+                        Bk_Issue_To_Region = i.IeRegion == "N" ? "Northern" :
+                                             i.IeRegion == "W" ? "Western" :
+                                             i.IeRegion == "E" ? "Eastern" :
+                                             i.IeRegion == "S" ? "South" :
+                                             i.IeRegion == "C" ? "Central" : "",
+                        Bk_Submited = b.BkSubmitted,
+                        Bk_Submit_Dt = b.BkSubmitDt
+                    };
+
+            dTResult.recordsTotal = query.Count();
+            dTResult.recordsFiltered = query.Count();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+            dTResult.data = query.ToList();//DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+        public IE7thCopyListModel GetIE7thCopyReport(string Bk_No, string Set_No, UserSessionModel obj)
+        {
+            IE7thCopyListModel model = new IE7thCopyListModel();
+
+            return model;
+
         }
     }
 }

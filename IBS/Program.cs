@@ -184,6 +184,7 @@ builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRe
 builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
 builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterRepository>();
 builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
+builder.Services.AddScoped<IConsigneeComplaintsReportRepository, ConsigneeComplaintsReportRepository>();
 
 builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
 builder.Services.AddScoped<ILabRegisterReportRepository, LabRegisterReportRRepository>();

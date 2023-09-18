@@ -1,5 +1,7 @@
 ﻿@model IBS.Models.CallMarkedOnlineModel
-
+@{    
+    ViewData["Title"] = "Call Marked Manage";    
+}
 <div class="list-inner">
     <div class="tast-list">
         <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
@@ -49,7 +51,7 @@
             <div class="col-md-9 mb-3">
                 <label for="Reference" style="padding-right:71px;">Vendor :</label>
                 <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
-                <input type="text" id="txtCALLLETTERDT" style="width:102px;" />
+                <input type="text" id="txtCALLLETTERDT" style="width:102px;display:none;" />
                 <input type="hidden" asp-for="VEND_NAME" />
             </div>
         </div>
@@ -57,7 +59,7 @@
             <div class="col-md-12 mb-3">
                 <label for="Reference" style="padding-right: 20px;">Manufacturer/Place of Inspection : </label>
                 <label id="lblMFG" style="text-transform: uppercase; color:red;"></label>
-                <label id="lblManuf" style="text-transform: uppercase;"></label>
+                <label id="lblManuf" style="text-transform: uppercase;display:none;"></label>
                 <input type="hidden" asp-for="MFG" />
                 <input type="hidden" asp-for="MFG_CD" />
             </div>
@@ -129,8 +131,8 @@
                 <div class="reference">
                     <label for="Reference">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
                     @Html.DropDownListFor(Model => Model.DEPT_DROPDOWN, new SelectList(@ViewBag.InspectedList , "Value", "Text"),"--Select--")
-                    <label id="lblDept_CD"></label> <input type="hidden" asp-for="DEPARTMENT_CODE" />
-                    <label id="lblDepartment"></label> <input type="hidden" asp-for="DEPARTMENT" />
+                    <label id="lblDept_CD" style="display:none;"></label> <input type="hidden" asp-for="DEPARTMENT_CODE" />
+                    <label id="lblDepartment" style="display:none;"></label> <input type="hidden" asp-for="DEPARTMENT" />
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -189,7 +191,7 @@
             SaveCallMarkedDetail();
         });
 
-        $("#DEPT_DROPDOWN").change(function(){
+        $("#DEPT_DROPDOWN").change(function () {
             FillClusterIE();
         });
 
@@ -198,7 +200,8 @@
         });
 
         $("#btnCaseHistory").click(function () {
-            window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();
+            //window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();
+            window.open("@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html(), "_blank");
         });
 
         //$("#btnCancel").click(function () {
@@ -289,9 +292,9 @@
                 debugger
                 if (response) {
                     ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
-                    setTimeout(function(){
+                    setTimeout(function () {
                         window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
-                    },1000);
+                    }, 1000);
                 } else {
                     ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
                 }
@@ -312,9 +315,9 @@
                 debugger
                 if (response == 1) {
                     ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
-                    setTimeout(function(){
+                    setTimeout(function () {
                         window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
-                    },1000);
+                    }, 1000);
                 }
                 else if (response == 2) {
                     ShowHideMsgNew(false, "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!");

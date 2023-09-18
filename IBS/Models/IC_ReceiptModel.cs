@@ -85,4 +85,14 @@ namespace IBS.Models
         public bool IsTIF { get; set; }
         public bool IsPDF{ get; set; }
     }
+
+    public class ICIssuedNotReceivedReportModel
+    {
+        public string ReportType { get; set; }
+        public string ReportTitle { get; set; }
+        public string Region { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public List<ICIssueNotReceiveModel> ICIssuedNotReceivedList{ get; set; }
+    }
 }

@@ -2,6 +2,62 @@
 {
     public class ReportsModel
     {
+        public string ReportType { get; set; }
+
+        public string ReportTitle { get; set; }
+
+        public DateTime FromDate { get; set; }
+
+        public DateTime ToDate { get; set; }        
+    }
+
+    public class ICUnbilledModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public List<IC_Unbilled_List_Model> lstICUnBilledList { get; set; }
+    }
+    public class IC_Unbilled_List_Model
+    {
+        public string SUBMIT_DATE { get; set; }
+        public string IC_SUBMIT_DATE { get; set; }
+        public string IE_NAME { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
+        public string CLIENT_TYPE { get; set; }
+        public string REMARKS { get; set; }
+        public string REMARKS_DATE { get; set; }
+        public string IC_DATE { get; set; }
+    }
+
+    public class IE7thCopyListModel
+    {
+        public string Bk_No { get; set; }
+        public string Set_No_Fr { get; set; }
+        public string Set_No_To { get; set; }
+        public DateTime? Issue_Dt { get; set; }
+        public string Issue_To_Iecd { get; set; }
+        public string Bk_Submited { get; set; }
+        public DateTime? Bk_Submit_Dt { get; set; }
+        public string Bk_Issue_To_Region { get; set; }
+
+        public string UserName { get; set; }
+        public string UserID { get; set; }
+        List<IE7thCopyReportModel> IE7thCopyReportList { get; set; }
+    }
+
+    public class IE7thCopyReportModel
+    {
+        public string Case_No { get; set; }
+        public string Book_No { get; set; }
+        public string Set_No { get; set; }
     }
 
     public class PendingJICasesReportModel
@@ -37,7 +93,7 @@
         public string ACTION_PROPOSED_DATE { get; set; }
         public string CO_NAME { get; set; }
 
-        public bool IsCaseTIF { get; set;}
+        public bool IsCaseTIF { get; set; }
         public bool IsCasePDF { get; set; }
         public bool IsReportTIF { get; set; }
         public bool IsReportPDF { get; set; }

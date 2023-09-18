@@ -188,30 +188,30 @@ namespace IBS.Controllers.InspectionBilling
             return Json(dtList);
         }
 
-        public IActionResult Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters)
-        {
-            DTResult<ICIssueNotReceiveModel> dtList = new();
-            try
-            {
-                var region = GetUserInfo.Region;
-                var username = GetUserInfo.UserName;
-                var iccd = Convert.ToString(GetUserInfo.IeCd);
-                dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
-                
-                foreach(var row in dtList.data)
-                {                    
-                    var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO+ ".TIF");
-                    var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
-                    row.IsTIF =  System.IO.File.Exists(tifpath) == true ? true : false;
-                    row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
-            }
-            return Json(dtList);
-        }
+        //public IActionResult Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters)
+        //{
+        //    DTResult<ICIssueNotReceiveModel> dtList = new();
+        //    try
+        //    {
+        //        var region = GetUserInfo.Region;
+        //        var username = GetUserInfo.UserName;
+        //        var iccd = Convert.ToString(GetUserInfo.IeCd);
+        //        //dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
+        //        dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, GetUserInfo);
+        //        foreach (var row in dtList.data)
+        //        {                    
+        //            var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO+ ".TIF");
+        //            var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
+        //            row.IsTIF =  System.IO.File.Exists(tifpath) == true ? true : false;
+        //            row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
+        //    }
+        //    return Json(dtList);
+        //}
 
 
         public IActionResult ICStatus()

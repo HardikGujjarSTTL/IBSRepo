@@ -311,52 +311,54 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
+        public List<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive(string FromDate, string ToDate, UserSessionModel model)
+        //public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
         {
-            DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
-            IQueryable<ICIssueNotReceiveModel>? query = null;
+            //DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
+            //IQueryable<ICIssueNotReceiveModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = false;//true;
+            //var searchBy = dtParameters.Search?.Value;
+            //var orderCriteria = string.Empty;
+            //var orderAscendingDirection = false;//true;
 
 
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            //if (dtParameters.Order != null)
+            //{
+            //    // in this example we just default sort on the 1st column
+            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
-                }
-                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            }
-            else
-            {
-                orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
-                orderAscendingDirection = true;
-            }
+            //    if (orderCriteria == "")
+            //    {
+            //        orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
+            //    }
+            //    //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            //}
+            //else
+            //{
+            //    orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
+            //    orderAscendingDirection = true;
+            //}
 
-            string FromDate = "", ToDate = "", REGION = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            //string FromDate = "", ToDate = "", REGION = "";
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            //{
+            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            //}
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            //{
+            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            //}
+            string REGION = "";
+            if (!string.IsNullOrEmpty(model.Region))
             {
-                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            {
-                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            }
-            if (!string.IsNullOrEmpty(Region))
-            {
-                REGION = Region;
+                REGION = model.Region;
             }
 
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
             ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
             REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
 
-            var IE_CD = (UserName != "" && UserName != null) ? null : Ic_Cd;
+            var IE_CD = (model.RoleName != "Inspection Engineer (IE)") ? null : Convert.ToString(model.IeCd);
 
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
@@ -386,13 +388,15 @@ namespace IBS.Repositories
                 RLY_NONRLY = Convert.ToString(row["RLY_NONRLY"])
             }).ToList();
 
-            query = list.AsQueryable();
+            return list;
+            //query = list.AsQueryable();
 
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            //if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
         public DTResult<IC_ReceiptModel> Get_IC_Status([FromBody] DTParameters dtParameters, string Region)
