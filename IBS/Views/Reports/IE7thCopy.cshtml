@@ -143,7 +143,7 @@
 
     function loadIE7thCopy() {
         debugger
-        $("#dvReportViewer").load("@Url.Action("IEPerformance")", { Bk_No: '@Bk_No', Set_No_Fr: '@Set_No_Fr' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("IE7thCopyReport")", { Bk_No: '@Bk_No', Set_No: '@Set_No_Fr' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

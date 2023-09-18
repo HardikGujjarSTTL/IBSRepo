@@ -33,6 +33,27 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
+        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
+        {
+            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
+            if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
+            return View(model);
+        }
+
+        public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
+        {
+            ReportsModel model = new() { ReportType = ReportType, Bk_No = Bk_No, Set_No= Set_No_Fr };
+            if (ReportType == "IE7thCopy") model.ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
+            return View("Manage", model);
+        }
+        public IActionResult IE7thCopyReport(string Bk_No, string Set_No)
+        {
+            var model = reportsRepository.GetIE7thCopyReport(Bk_No, Set_No, GetUserInfo);
+            model.UserName = GetUserInfo.UserName;
+            model.UserID = Convert.ToString(GetUserInfo.UserID);
+            return PartialView(model);
+        }
+
         public IActionResult IECopy()
         {
             return View();
@@ -44,18 +65,15 @@ namespace IBS.Controllers.Reports
             return Json(data);
         }
 
-        public IActionResult IE7thCopy(string Bk_No, string Set_No_Fr)        
+        public IActionResult IE7thCopy(string ReportType, string Bk_No, string Set_No_Fr)        
         {
-            ReportsModel model = new() { ReportType = "IE7thCopy_X", ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT" };
+            ReportsModel model = new() { ReportType = ReportType, ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT" };
             return View(model);
         }
 
-        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
-        {
-            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
-            if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
-            return View(model);
-        }
+        
+
+        
 
         public IActionResult FromToDate()
         {

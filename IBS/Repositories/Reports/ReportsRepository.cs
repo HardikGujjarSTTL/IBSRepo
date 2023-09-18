@@ -297,8 +297,23 @@ namespace IBS.Repositories.Reports
         {
             IE7thCopyListModel model = new IE7thCopyListModel();
 
-            return model;
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, Bk_No, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, Set_No, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, obj.IeCd, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, obj.Region, ParameterDirection.Input);            
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
+            var ds = DataAccessDB.GetDataSet("SP_GET_IE_7TH_COPY", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            model.lstIE7thCopyList = dt.AsEnumerable().Select(row => new IE7thCopyReportModel
+            {
+                Case_No = Convert.ToString(row["CASE_NO"]),
+                Bk_No = Convert.ToString(row["BK_NO"]),
+                Set_No = Convert.ToString(row["SET_NO"])                
+            }).ToList();
+            return model;
         }
     }
 }

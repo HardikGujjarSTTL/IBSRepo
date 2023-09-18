@@ -4,7 +4,7 @@
     string ReportTitle = string.Empty;
 
     if (ReportType == "UNBILLEDIC") ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
-    //else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
+    else if (ReportType == "IE7thCopy") ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -15,7 +15,7 @@
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
-        <div class="task-inner row">
+        <div class="task-inner row report1" style="display: none">
             <div class="col-md-3">
                 <div class="input-search">
                     <label for="FromDate">For The Period From</label>
@@ -37,7 +37,50 @@
                 </div>
             </div>
         </div>
+        <div class="task-inner row report2" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="txtBookNo">Book No.</label>
+                    <input type="text" id="txtBookNo" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="txtSetNo">Set No. From</label>
+                    <input type="text" id="txtSetNo" readonly />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <section class="table-section report2" id="tblIE7thCopy" style="display: none">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Book No.</th>
+                            <th>Set No. From</th>
+                            <th>Set No. To</th>
+                            <th>Issue Date to IE</th>
+                            <th>IE to Whom Issued</th>
+                            <th>Book Submitted</th>
+                            <th>Book Submit Date</th>
+                            <th>Book Issued To Region</th>
+                            <th>View Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </div>
 
 @section scripts{
@@ -46,6 +89,16 @@
 
     <script type="text/javascript">
 
+        $(document).ready(function () {
+            if ('@ReportType' == "IE7thCopy") {
+                $(".report1").css("display", "none");
+                $(".report2").css("display", "");
+            }
+            else if ('@ReportType' == "UNBILLEDIC") {
+                $(".report1").css("display", "");
+                $(".report2").css("display", "none");
+            }
+        });
         function ClearControls() {
             $("#FromDate").val("");
             $("#ToDate").val("");
@@ -86,6 +139,65 @@
             let myObject = { ReportType, FromDate, ToDate };
 
             var url = '@Url.Action("Manage", "Reports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function InitializeDatatable() {
+            debugger
+            var Bk_No = $("#txtBookNo").val() == "" ? null : $("#txtBookNo").val();
+            var Set_No_Fr = $("#txtSetNo").val() == "" ? null : $("#txtSetNo").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("Get_Book_Set_Copy", "Reports")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            Bk_No, Set_No_Fr
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [
+                    { data: "Bk_No" },
+                    { data: "Set_No_Fr" },
+                    { data: "Set_No_To", },
+                    { data: "Issue_Dt" },
+                    { data: "Issue_To_Iecd" },
+                    { data: "Bk_Submited" },
+                    { data: "Bk_Submit_Dt" },
+                    { data: "Bk_Issue_To_Region" },
+                    {
+                        data: "", render: function (data, type, row, meta) {
+                            var Bk_No = row.Bk_No;
+                            var Set_No_Fr = row.Set_No_Fr;
+                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\"> <a onclick="ViewReportIE7thCopy(\'' + Bk_No + '\',\'' + Set_No_Fr + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Report"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function ViewReportIE7thCopy(Bk_No, Set_No_Fr) {
+            var ReportType = '@ReportType';            
+            
+            let myObject = { ReportType, Bk_No, Set_No_Fr };
+            var url = '@Url.Action("Manage7thCopy", "Reports")?' + $.param(myObject);
             window.open(url, '_blank');
         }
 

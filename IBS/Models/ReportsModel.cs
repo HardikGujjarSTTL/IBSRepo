@@ -9,6 +9,9 @@
         public DateTime FromDate { get; set; }
 
         public DateTime ToDate { get; set; }        
+
+        public string Bk_No { get; set; }
+        public string Set_No { get; set; }
     }
 
     public class ICUnbilledModel
@@ -50,13 +53,13 @@
 
         public string UserName { get; set; }
         public string UserID { get; set; }
-        List<IE7thCopyReportModel> IE7thCopyReportList { get; set; }
+        public List<IE7thCopyReportModel> lstIE7thCopyList { get; set; }
     }
 
     public class IE7thCopyReportModel
     {
         public string Case_No { get; set; }
-        public string Book_No { get; set; }
+        public string Bk_No { get; set; }
         public string Set_No { get; set; }
     }
 
