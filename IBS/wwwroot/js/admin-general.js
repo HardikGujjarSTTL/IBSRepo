@@ -463,6 +463,17 @@
 
 	$(".select2").select2();
 
+	//$(".nav-third-level").length) {
+		//if ($(".nav-third-level").is(":visible")) {
+	$(".nav-third-level").prev().addClass("thirdLabelTrigger");
+	$(".thirdLabelTrigger").click(function () {
+		$(this).next().slideToggle();
+	});
+		//}
+	//}
+	
+
+
 })(jQuery);
 
 // added for left links selected
