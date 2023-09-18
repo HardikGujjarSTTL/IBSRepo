@@ -195,6 +195,7 @@ builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRReposit
 
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
+builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
 
 var app = builder.Build();
 
