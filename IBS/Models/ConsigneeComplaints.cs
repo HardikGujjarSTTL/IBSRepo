@@ -69,8 +69,13 @@ namespace IBS.Models
         public string DARPurpose { get; set; }
         public string FinalRemarks { get; set; }
         public string Penaltytype { get; set; }
+        public string Action { get; set; }
+        public string JiCdName { get; set; }
+        public string ACTIONPROPOSED { get; set; }
+        public string DEPT { get; set; }
         public DateTime? DARDate { get; set; }
         public DateTime? PenaltyDate { get; set; }
+        public DateTime? ACTIONPROPOSEDDate { get; set; }
         public byte? JiIeCd { get; set; }
         [NotMapped]
         public decimal? Updatedby { get; set; }
