@@ -285,6 +285,10 @@ namespace IBS.Repositories.Reports
                         Bk_Submited = b.BkSubmitted,
                         Bk_Submit_Dt = b.BkSubmitDt
                     };
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Bk_No).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Set_No_Fr).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.Set_No_To).ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();

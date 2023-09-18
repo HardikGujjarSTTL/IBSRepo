@@ -35,26 +35,38 @@
     var fileName = '';
 
     $(document).ready(function () {
+        debugger
         if ('@ReportType' == 'UNBILLEDIC') {
-            //loadIEPerformance();
+            loadUnBilledIC();
             fileName = 'UnBilled_IC';
         }
         else if ('@ReportType' == 'IE7thCopy') {
             loadIE7thCopy();
             fileName = 'IC_Book_Set_7th_Copy';
-        }        
+        }
+        else if ('@ReportType' == "ICISSUEDNSUB"){
+            loadICIssued();
+            fileName = 'IC_Issued_Not_Received';
+        }
     });
 
-    //function loadIEPerformance() {
-    //    $("#dvReportViewer").load("@Url.Action("IEPerformance")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
-    //        $("#dvReportViewer").empty();
-    //        $("#dvReportViewer").html(response);
-    //    });
-    //}    
-
+    function loadUnBilledIC() {
+        $("#dvReportViewer").load("@Url.Action("UnBilledIC")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+   
     function loadIE7thCopy() {
         debugger
         $("#dvReportViewer").load("@Url.Action("IE7thCopyReport")", { Bk_No: '@Model.Bk_No', Set_No: '@Model.Set_No' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadICIssued(){        
+        $("#dvReportViewer").load("@Url.Action("ICIssuedNotReceived")", { ReportType: '@Model.ReportType', Type: '@Model.Type', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

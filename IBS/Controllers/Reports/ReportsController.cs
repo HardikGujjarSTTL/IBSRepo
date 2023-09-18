@@ -40,23 +40,36 @@ namespace IBS.Controllers.Reports
             return View(model);
         }
 
+        #region UnBilled IC //UnBilled IC
+        public IActionResult UnBilledIC(DateTime FromDate, DateTime ToDate)
+        {
+            var wRegion = "";
+            var Region = SessionHelper.UserModelDTO.Region;
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            ICUnbilledModel model = new() { FromDate = FromDate, ToDate = ToDate };
+            model.Region = wRegion;
+            model.lstICUnBilledList = iC_ReceiptRepository.Get_UnBilled_IC(model.Display_FromDate, model.Display_ToDate, Region);
+            return PartialView(model);
+        }
+        #endregion
+
+        #region IC 7th Copy Report //IC7thCopyReport
         public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
         {
-            ReportsModel model = new() { ReportType = ReportType, Bk_No = Bk_No, Set_No= Set_No_Fr };
+            ReportsModel model = new() { ReportType = ReportType, Bk_No = Bk_No, Set_No = Set_No_Fr };
             if (ReportType == "IE7thCopy") model.ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
             return View("Manage", model);
         }
         public IActionResult IE7thCopyReport(string Bk_No, string Set_No)
         {
             var model = reportsRepository.GetIE7thCopyReport(Bk_No, Set_No, GetUserInfo);
-            model.UserName = GetUserInfo.UserName;
-            model.UserID = Convert.ToString(GetUserInfo.UserID);
+            model.UserName = GetUserInfo.Name;
+            model.UserID = Convert.ToString(GetUserInfo.UserName);
             return PartialView(model);
-        }
-
-        public IActionResult IECopy()
-        {
-            return View();
         }
 
         public IActionResult Get_Book_Set_Copy([FromBody] DTParameters dTParameters)
@@ -64,27 +77,18 @@ namespace IBS.Controllers.Reports
             var data = reportsRepository.Get_IE_7thCopyList(dTParameters, GetUserInfo);
             return Json(data);
         }
-
-        public IActionResult IE7thCopy(string ReportType, string Bk_No, string Set_No_Fr)        
-        {
-            ReportsModel model = new() { ReportType = ReportType, ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT" };
-            return View(model);
-        }
-
-        
-
-        
+        #endregion
 
         public IActionResult FromToDate()
         {
             var action = Request.Query["actiontype"];
             ViewBag.Action = action;
             var partialView = "../IC_Receipt/IC_Unbilled_Partial";
-            if (action == "UNBILLEDIC")
-            {
-                partialView = "../IC_Receipt/IC_Unbilled_Partial";
-            }
-            else if (action == "ICISSUEDNSUB")
+            //if (action == "UNBILLEDIC")
+            //{
+            //    partialView = "../IC_Receipt/IC_Unbilled_Partial"; //Remove View
+            //}
+            if (action == "ICISSUEDNSUB")
             {
                 partialView = ""; //"../IC_Receipt/IC_Issued_Partial";
             }
@@ -97,22 +101,47 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        #region Un Billed IC
-        public IActionResult ICReceivedNotBilled(DateTime FromDate, DateTime ToDate)
-        {
-            return PartialView();
-        }
-        #endregion
-
         #region IC Issued But Not Received in Office
-        public IActionResult ICIssuedNotReceived(string Type, string FromDate, string ToDate)
+        public IActionResult ManageICIssued(string ReportType, string Type, DateTime FromDate, DateTime ToDate)
         {
-            ICIssuedNotReceivedReportModel model = new() { ReportType = Type, FromDate = FromDate, ToDate = ToDate };
+            ReportsModel model = new() { ReportType = ReportType, Type = Type, FromDate = FromDate, ToDate = ToDate };
             model.ReportTitle = "IC Issued But Not Received in Office";
-            return View(model);
+            return View("Manage", model);
+        }
+        public IActionResult ICIssuedNotReceived(string ReportType, string Type, DateTime FromDate, DateTime ToDate)
+        {
+            ////ICIssuedNotReceivedReportModel model = new() { ReportType = ReportType,Type = Type, FromDate = FromDate, ToDate = ToDate };
+            //ReportsModel model = new() { ReportType = ReportType, Type = Type, FromDate = FromDate, ToDate = ToDate };
+            //model.ReportTitle = "IC Issued But Not Received in Office";
+            //return View("Manage",model);
+
+            var wRegion = "";
+            var Region = SessionHelper.UserModelDTO.Region;
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            ICIssuedNotReceivedReportModel model = new()
+            {
+                ReportType = ReportType,
+                Type = Type,                
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
+            model.Region = wRegion;
+            model.ICIssuedNotReceivedList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(model.Display_FromDate, model.Display_ToDate, GetUserInfo);
+            foreach (var row in model.ICIssuedNotReceivedList)
+            {
+                var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".TIF");
+                var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
+                row.IsTIF = System.IO.File.Exists(tifpath) == true ? true : false;
+                row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
+            }
+            return PartialView(model);
         }
 
-        public IActionResult IC_Issue(string Type, string FromDate, string ToDate, string ReportTitle)
+        public IActionResult IC_Issue(string Type, DateTime FromDate, DateTime ToDate, string ReportTitle)
         {
             var wRegion = "";
             var Region = SessionHelper.UserModelDTO.Region;
@@ -129,7 +158,7 @@ namespace IBS.Controllers.Reports
                 ToDate = ToDate
             };
             model.Region = wRegion;
-            model.ICIssuedNotReceivedList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(FromDate, ToDate, GetUserInfo);
+            model.ICIssuedNotReceivedList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(model.Display_FromDate, model.Display_ToDate, GetUserInfo);
             foreach (var row in model.ICIssuedNotReceivedList)
             {
                 var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".TIF");

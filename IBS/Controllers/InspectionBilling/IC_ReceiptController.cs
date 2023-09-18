@@ -173,20 +173,20 @@ namespace IBS.Controllers.InspectionBilling
             return PartialView("IC_Issued_Partial");
         }
 
-        public IActionResult Get_UnBilled_IC([FromBody] DTParameters dtParameters)
-        {
-            DTResult<ICReportModel> dtList = new();
-            try
-            {
-                var region = GetUserInfo.Region;
-                dtList = iC_ReceiptRepository.Get_UnBilled_IC(dtParameters, region);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
-            }
-            return Json(dtList);
-        }
+        //public IActionResult Get_UnBilled_IC([FromBody] DTParameters dtParameters)
+        //{
+        //    DTResult<ICReportModel> dtList = new();
+        //    try
+        //    {
+        //        var region = GetUserInfo.Region;
+        //        dtList = iC_ReceiptRepository.Get_UnBilled_IC(dtParameters, region);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
+        //    }
+        //    return Json(dtList);
+        //}
 
         //public IActionResult Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters)
         //{
