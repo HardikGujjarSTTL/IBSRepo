@@ -320,5 +320,16 @@ View : VIEW_GET_BPODETAILS
 20) Inspection Certificate
 View : VIEW_GET_INSPECTION_CERT_DETAILS
 
+
+21) Reports 
+Client Wies Bill Summary
+
+SP_GET_BILLRAISED_SUMMARY
+
+SP_GET_BILLING_RAILWAY_DETAILS
+
+SP_GET_BILLSNOTCRIS
+
+SP_GET_BILLSCRISSUBMITTED
 =============================================================================================================================================
 

@@ -491,6 +491,18 @@ namespace IBS.Helper
             [Description("Date of Reciept of PO in RITES")]
             R,
         }
+
+        public enum RailTypes
+        {
+            [Description("Railway")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            U,
+            [Description("State Government")]
+            S,
+        }
     }
 
     public class EnumUtility<T>
