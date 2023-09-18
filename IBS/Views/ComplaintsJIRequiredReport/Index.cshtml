@@ -15,6 +15,7 @@
             <input type="radio" id="FinancialYear" name="FinancialYear" value="FinancialYear">
             <label for="FinancialYear">For The Financial Year</label>
             @Html.DropDownList("FinancialYears", new SelectList(IBS.Models.Common.FinancialYear(), "Value", "Text"), "--Select--", new { id = "FinancialYears" })
+            <span class="text-danger field-validation-error" id="spnErrorFinyear"></span>
         </div>
         <div class="col-md-9 mb-4">
             <input type="radio" id="JIDecidedDT" name="FinancialYear" value="JIDecidedDT">
@@ -22,10 +23,12 @@
             <div class="row">
             <div class="col-md-3">
                 <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+                 <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
             </div>
             <div class="col-md-3">
                 <label for="JIDecidedDT" class="d-none"></label>
                 <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
+                 <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
             </div>
         </div>
@@ -206,6 +209,8 @@
             $("#detaileds").hide();
             $("#Compact").prop("checked", true);
             $("#FinancialYear").prop("checked", true);
+            $("#CMWise").prop("checked", true);
+            $("#AllCM").prop("checked", true);
 
             $("#vendor").autocomplete({
                 source: function (request, response) {
@@ -262,6 +267,16 @@
                 });
             });
 
+
+            $('#FinancialYear').change(function () {
+                $("#FromDate").val('');
+                $("#ToDate").val('');
+            });
+
+            $('#JIDecidedDT').change(function () {
+                $("#FinancialYears").val('');
+            });
+
             $('#CMWise').change(function () {
                 $("#AllCMWise").show();
                 $("#AllIE").hide();
@@ -297,6 +312,7 @@
                 $("#consignee").hide();
                 $("#detailed").hide();
                 $("#AllCMWise").hide();
+                $("#ddlsupercm").hide();
             });
             $('#ParticularIEs').change(function () {
                 $("#particularIE").show();
@@ -424,22 +440,46 @@
                 $("#detaileds").hide();
             });
 
-          
-            $("#imgExcel").on("click", function () {
-                $('#dtJISNO').DataTable().buttons(0, 0).trigger();
-            });
-
-            $("#imgPdf").on("click", function () {
-                $('#dtJISNO').DataTable().buttons(0, 1).trigger();
-            });
-
-            $("#imgPrint").on("click", function () {
-                $('#dtJISNO').DataTable().buttons(0, 2).trigger();
-            });
-
         });
 
         function ViewReport() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            $("#spnErrorFinyear").html("");
+            var IsValid = true;
+            debugger
+            if ($('#JIDecidedDT').is(':checked')) {
+                $('#FinancialYears').val('');
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorFromDate").html("The From Date field is required.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrorToDate").html("The To Date field is required.");
+                    IsValid = false;
+                }
+
+                if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                    $("#spnErrorFromDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                    $("#spnErrorToDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+            }
+
+            if ($('#FinancialYear').is(':checked')) {
+                $('#FromDate').val('');
+                $('#JIDecidedDT').val('');
+                if ($("#FinancialYears").val() == "") {
+                    $("#spnErrorFinyear").html("Select Financial Year");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
 
             var IsValid = true;
 

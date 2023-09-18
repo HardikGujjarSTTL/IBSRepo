@@ -1,4 +1,4 @@
-﻿@model IBS.Models.ConsigneeCompPeriodReport
+﻿@model IBS.Models.ConsigneeComplaints
 
 @{
     Layout = null;
@@ -35,17 +35,14 @@
     var fileName = '';
 
     $(document).ready(function () {
-         loadComplaints();
-         fileName = 'Consignee_Complaint';
+        loadJI();
+        fileName = 'JI_Complaint_Report';
     });
 
-    function loadComplaints() {
-        $("#dvReportViewer").load("@Url.Action("ComplaintsByPeriod")", {
-            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', Allregion: '@Model.Allregion', regionorth: '@Model.regionorth'
-            , regionsouth: '@Model.regionsouth', regioneast: '@Model.regioneast', regionwest: '@Model.regionwest', jiallregion: '@Model.jiallregion', jinorth: '@Model.jinorth', jisourth: '@Model.jisourth'
-            , jieast: '@Model.jieast', jiwest: '@Model.jiwest', compallregion: '@Model.compallregion', compyes: '@Model.compyes', compno: '@Model.compno', cancelled: '@Model.cancelled'
-            , underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp'
-            
+    function loadJI() {
+        $("#dvReportViewer").load("@Url.Action("JIComplaintsReport")", {
+            JISNO: '@Model.JiSno'
+
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

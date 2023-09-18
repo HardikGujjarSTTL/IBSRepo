@@ -21,7 +21,7 @@ namespace IBS.Controllers
             return View();
         }
 
-        public IActionResult Manage(string ReportType,string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
+        public IActionResult Manage(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
             string jinorth, string jisourth, string jieast,string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp)
         {
             ConsigneeCompPeriodReport model = new()
@@ -47,23 +47,33 @@ namespace IBS.Controllers
                 particilaraction = particilaraction,
                 actiondrp = actiondrp
             };
-            if (ReportType == "U") model.ReportTitle = "Consignee Complaints";
+           model.ReportTitle = "Consignee Complaints";
             return View(model);
         }
 
         public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
             string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp)
         {
-            string Region = SessionHelper.UserModelDTO.Region;
-            string wRegion = "";
-            if (Region == "N") { wRegion = "Northern Region"; }
-            else if (Region == "S") { wRegion = "Southern Region"; }
-            else if (Region == "E") { wRegion = "Eastern Region"; }
-            else if (Region == "W") { wRegion = "Western Region"; }
-            else if (Region == "C") { wRegion = "Central Region"; }
+            string region = "", jirequired = "";
             ConsigneeCompPeriodReport model = consigneeCompPeriodRepository.GetCompPeriodData(FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion,
              jinorth, jisourth, jieast, jiwest, compallregion, compyes, compno, cancelled, underconsider, allaction, particilaraction, actiondrp);
-            ViewBag.Regions = wRegion;
+
+            region = (Allregion == "true") ? "AllRegion" :
+                     (regionorth == "true") ? "Northern Region" :
+                     (regionsouth == "true") ? "Southern Region" :
+                     (regioneast == "true") ? "Eastern Region" :
+                     (regionwest == "true") ? "Western Region" :
+                     "";
+
+           jirequired = (compallregion == "true") ? "" :
+                     (compyes == "true") ? "& JI Required" :
+                     (compno == "true") ? "& JI Not Required" :
+                     (cancelled == "true") ? " & JI Cancelled" :
+                     (underconsider == "true") ? "& JI Under Consideration" :
+                     "";
+           
+            ViewBag.Regions = region;
+            ViewBag.JiRequiredStatus = jirequired;
             return PartialView(model);
         }
     }

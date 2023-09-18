@@ -1,16 +1,8 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
-@{
-    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = string.Empty;
-
-    if (ReportType == "U") ReportTitle = "Conignee Complaint";
-
-    ViewData["Title"] = ReportTitle;
-}
+﻿
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>@ReportTitle</h2>
+        <h2>CONSIGNEE COMPLAINTS</h2>
     </div>
 </div>
 
@@ -199,7 +191,6 @@
 
             if (!IsValid) return;
 
-            var ReportType = '@ReportType';
             var FromDate = $('#compfromdt').val();;
             var ToDate = $('#comptodt').val();;
             var Allregion = $("#allRegions").is(":checked") == true ? "true" : "false";
@@ -222,7 +213,7 @@
             var actiondrp = $('#ParticularActiondrp').val();
 
             let myObject = {
-                ReportType, FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion, jinorth, jisourth, jieast, jiwest,
+                FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion, jinorth, jisourth, jieast, jiwest,
                 compallregion, compyes, compno, cancelled, underconsider, allaction, particilaraction, actiondrp
             };
 

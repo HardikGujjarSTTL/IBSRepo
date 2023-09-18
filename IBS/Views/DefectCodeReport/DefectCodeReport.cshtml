@@ -1,0 +1,35 @@
+﻿@model IBS.Models.DefectCodeReport
+
+<div>
+    <h3 class="heading3">Cluster Performance For The Period : <span class="orangeText"> @Model.FromDate </span> To <span class="orangeText">@Model.ToDate </span> (@ViewBag.Regions)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Code</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Upheld</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Sorting</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Rectification</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Price Reduction</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Total</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstDefectCodeList != null && Model.lstDefectCodeList.Count > 0)
+                {
+                    @foreach (var item in Model.lstDefectCodeList)
+                    {
+                        <tr>
+                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Code</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.Upheld</font></td>
+                            <td width="7%" valign="top" align="right"><font size="1" face="Verdana">@item.Sorting</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.Rectification</font></td>
+                            <td width="6%" valign="top" align="right"><font size="1" face="Verdana">@item.PriceReduction</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.Total</font></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -4,6 +4,6 @@ namespace IBS.Interfaces
 {
     public interface IJITopsheetReportRepository
     {
-        DTResult<ConsigneeComplaints> GetComplaintReportDetails(DTParameters dtParameters, string Region);
+        public ConsigneeComplaints GetComplaintReportDetails(string JISNO, string Region);
     }
 }
