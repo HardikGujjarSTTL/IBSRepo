@@ -1,12 +1,10 @@
-﻿@model IBS.Models.ICFromToModel
-
-@{
+﻿@{
     ViewData["Title"] = "From To Date";
     string partialView = ViewBag.PartialView;
 }
 
 @*<div class="list-inner">
-    <div class="tast-list">        
+    <div class="tast-list">
         <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;"> </label>IC RECEIVED IN OFFICE BUT NOT BILLED</h2>
     </div>
 </div>*@
@@ -21,15 +19,15 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">From Date</label>
-                    <input type="text" class="datepicker" asp-for="FromDt" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="FromDt" class="text-danger"></span>
+                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">To Date</label>
-                    <input type="text" class="datepicker" asp-for="ToDt" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="ToDt" class="text-danger"></span>
+                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                 </div>
             </div>
         </div>
@@ -54,9 +52,12 @@
         </div>
 
     </div>
-    <section class="table-section" id="tblsection">
-        @Html.Partial(@partialView)
-    </section>
+    @if (partialView != "")
+    {
+        <section class="table-section" id="tblsection">
+            @Html.Partial(@partialView)
+        </section>
+    }
 </form>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -76,54 +77,64 @@
     $(document).ready(function () {
         if ("@ViewBag.Action" == "ICISSUEDNSUB") {
             $('input[type=radio][id=rdbType]').change(function () {
-                var dataTable = $("#dtList").dataTable();
-                dataTable.fnClearTable();
-                dataTable.fnDraw();
-                dataTable.fnDestroy();
+                //var dataTable = $("#dtList").dataTable();
+                //dataTable.fnClearTable();
+                //dataTable.fnDraw();
+                //dataTable.fnDestroy();
 
-                var rdbType = $('input[name="rdbType"]:checked').val();
-                var obj = new Object();
-                obj.Type = rdbType;
+                //var rdbType = $('input[name="rdbType"]:checked').val();
+                //var obj = new Object();
+                //obj.Type = rdbType;
 
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("IC_Issued_Partial","IC_Receipt")',//'@Url.Content("~/IC_Receipt/IC_Issued_Partial")',
-                    data: obj,
-                    success: function (data) {
-                        $('#tblsection').html(data)
-                    }
-                });
+                //$.ajax({
+                //    type: 'POST',
+                //    url: '@Url.Action("IC_Issued_Partial","IC_Receipt")',//'@Url.Content("~/IC_Receipt/IC_Issued_Partial")',
+                //    data: obj,
+                //    success: function (data) {
+                //        $('#tblsection').html(data)
+                //    }
+                //});
 
             });
         }
-        setDefaultDate();
+        //setDefaultDate();
         $("#btnSearch").click(function () {
-            InitializeDatatable();
+            if ("@ViewBag.Action" == "ICISSUEDNSUB") {
+                var FromDate = $('#FromDate').val(); //moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+                var ToDate = $('#ToDate').val(); //moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+                var Type = $('input[name="rdbType"]:checked').val();
+                let myObject = { Type, FromDate, ToDate };
+
+                var url = '@Url.Action("ICIssuedNotReceived", "Reports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            } else {
+                InitializeDatatable();
+            }
         });
         setTitle(action);
-        if("@ViewBag.RoleName" == "Inspection Engineer (IE)"){
-            $("#rdbIECM").css("display","none");
+        if ("@ViewBag.RoleName" == "Inspection Engineer (IE)") {
+            $("#rdbIECM").css("display", "none");
         }
     });
 
-    function setDefaultDate() {
-        $('#FromDt').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-        });
-        $('#ToDt').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-        });
-    }
+    //function setDefaultDate() {
+    //    $('#FromDt').datepicker({
+    //        changeMonth: true,
+    //        changeYear: true,
+    //        dateFormat: 'dd/mm/yy',
+    //    });
+    //    $('#ToDt').datepicker({
+    //        changeMonth: true,
+    //        changeYear: true,
+    //        dateFormat: 'dd/mm/yy',
+    //    });
+    //}
 
-    function setTitle(action){
+    function setTitle(action) {
         if (action == "ICISSUEDNSUB") {
             $("#lblTitle").html("IC ISSUED BY IE BUT NOT RECEIVED IN OFFICE");
         } else if (action == "UNBILLEDIC") {
-
+            $("#lblTitle").html("IC RECEIVED IN OFFICE BUT NOT BILLED");
         } else if (action == "PJI") {
             $("#lblTitle").html("PENDING JI CASES");
         }

@@ -1,8 +1,12 @@
-﻿@model IBS.Models.InspectionBillingDelayReportModel
+﻿@model IBS.Models.ICIssuedNotReceivedReportModel
 
 @{
     Layout = null;
-    //string ReportType = (Model != null ? Model.ReportType : "");
+}
+
+@{
+    Layout = null;
+    string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
 }
@@ -34,7 +38,7 @@
         .borderTable {
             border-left: 1px solid #d1d1d1;
             border-top: 1px solid #d1d1d1;
-            white-space: nowrap;            
+            white-space: nowrap;
         }
 
             .borderTable th, .borderTable td {
@@ -52,13 +56,31 @@
 
             .borderTable tr:nth-child(odd) td {
                 background: #f1f1f1;
-            }        
+            }
+
+        .reportLabelList {
+            margin: 0 0 20px 0;
+            padding: 0;
+            list-style: none;
+        }
+
+            .reportLabelList li {
+                display: inline-block;
+                font-weight: bold;
+                margin-right: 30px;
+                color: #FC5518;
+            }
+
+                .reportLabelList li .labelName {
+                    font-weight: normal;
+                    color: #000;
+                }
+
         .tableOuter {
             width: 100%;
             /*overflow: auto;*/
             /*max-height: 450px;*/
             margin-bottom: 20px;
-            margin-right: 20px;
         }
 
         .heading3 {
@@ -105,48 +127,19 @@
     </div>
 </body>
 </html>
-
 <link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 
 <script type="text/javascript">
-
-    $(document).ajaxSend(function () {
-        $(".overlayLoader").show();
-    });
-
-    $(document).ajaxComplete(function () {
-        $(".overlayLoader").hide();
-    });
-
     $(document).ready(function () {
-        //if ('ReportType' == 'IE_X') {
-        fileName = 'Inspection_Billing_Delay';
-        loadIEPerformance();
-        //}
+        loadICIssuedNotReceived();
+        fileName = 'IC_Issued_Not_Received';
     });
 
-    function loadIEPerformance() {
-        $("#dvReportViewer").load("@Url.Action("InspectionBillingDelay")", 
-            { 
-                MonthWise: '@Model.MonthWise', 
-                DateWise: '@Model.DateWise', 
-                Month: '@Model.Month', 
-                Year: '@Model.Year', 
-                FromDate: '@Model.FromDate', 
-                ToDate: '@Model.ToDate', 
-                BillDate: '@Model.IsBillDate',
-                IEName: '@Model.IsIEName',
-                IcDt: '@Model.IsIcDt',
-                FInspDt: '@Model.IsFInspDt', 
-                LFnspDt: '@Model.IsLFnspDt', 
-                AllIE: '@Model.IsAllIE',
-                PartiIE: '@Model.IsPartiIE',
-                IECD: '@Model.IECD',
-                ReportTitle: '@Model.ReportTitle'
-            }, function (response) {
+    function loadICIssuedNotReceived() {
+        $("#dvReportViewer").load("@Url.Action("IC_Issue")", { Type: '@Model.ReportType', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -199,76 +192,11 @@
         element.style.width = "100%";
     }
 
-    //$("#btnPrint").click(function () {
-    //    generatePdf(true);
-    //});
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
 
-    //$("#btnExportToPdf").click(function () {
-    //    generatePdf(false);
-    //});
-
-    //$("#btnExportToExcel").click(function () {
-    //    let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
-    //    let url = URL.createObjectURL(file);
-    //    let a = $("<a />", {
-    //        href: url,
-    //        download: getExportFileName("Inspection_Billing_Delay") + ".xls"
-    //    }).appendTo("body").get(0).click();
-    //    e.preventDefault();
-    //});
-
-    //function generatePdf(isPrint) {
-    //    var quotes = document.getElementById('dvReportViewer');
-
-    //    quotes.style.width = "920px";
-
-    //    html2canvas(quotes, {
-    //        onrendered: function (canvas) {
-    //            var pdf = new jsPDF('p', 'pt', 'letter');
-    //            for (var i = 0; i <= quotes.clientHeight / 980; i++) {
-    //                var srcImg = canvas;
-    //                var sX = 0;
-    //                var sY = 980 * i; // start 980 pixels down for every new page
-    //                var sWidth = 920;
-    //                var sHeight = 980;
-    //                var dX = 0;
-    //                var dY = 0;
-    //                var dWidth = 920;
-    //                var dHeight = 980;
-
-    //                window.onePageCanvas = document.createElement("canvas");
-    //                onePageCanvas.setAttribute('width', 920);
-    //                onePageCanvas.setAttribute('height', 980);
-    //                var ctx = onePageCanvas.getContext('2d');
-    //                ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
-    //                var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
-
-    //                var width = onePageCanvas.width;
-    //                var height = onePageCanvas.clientHeight;
-
-    //                //! If we're on anything other than the first page,
-    //                // add another page
-    //                if (i > 0) {
-    //                    pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
-    //                }
-    //                //! now we declare that we're working on that page
-    //                pdf.setPage(i + 1);
-    //                //! now we add content to that page!
-    //                pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
-
-    //            }
-
-    //            quotes.style.width = "100%";
-
-    //            if (isPrint) {
-    //                pdf.autoPrint();
-    //                window.open(pdf.output('bloburl'), '_blank');
-    //            }
-    //            else {
-    //                pdf.save(getExportFileName('Inspection_Billing_Delay') + '.pdf');
-    //            }
-    //        }
-    //    });
-    //}
-
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
 </script>
