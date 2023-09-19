@@ -4,6 +4,7 @@
     string ReportTitle = string.Empty;
 
     if (ReportType == "UNBILLEDIC") ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
+    else if (ReportType == "ICISSUEDNSUB") ReportTitle = "IC Issued But Not Received in Office";
     else if (ReportType == "IE7thCopy") ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
     else if (ReportType == "CaseHistory") ReportTitle = "Case History";
     ViewData["Title"] = ReportTitle;
@@ -12,6 +13,9 @@
 <div class="list-inner">
     <div class="tast-list">
         <h2>@ReportTitle</h2>
+    </div>
+    <div class="list-btn" id="btnBack" style="display:none;">
+        <a asp-area="" asp-controller="IC_Receipt" asp-action="Index" class="formBtn">Back</a>
     </div>
 </div>
 <div class="task-listinput">
@@ -147,6 +151,7 @@
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "none");
+                $("#btnBack").css("display", "");
             }
             else if ('@ReportType' == "CaseHistory") {
                 $(".report1").css("display", "none");
@@ -159,6 +164,7 @@
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "");
+                $("#btnBack").css("display", "");
             }
         });
 

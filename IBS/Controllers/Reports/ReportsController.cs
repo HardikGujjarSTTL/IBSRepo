@@ -83,16 +83,8 @@ namespace IBS.Controllers.Reports
         {
             var action = Request.Query["actiontype"];
             ViewBag.Action = action;
-            var partialView = "../IC_Receipt/IC_Unbilled_Partial";
-            //if (action == "UNBILLEDIC")
-            //{
-            //    partialView = "../IC_Receipt/IC_Unbilled_Partial"; //Remove View
-            //}
-            if (action == "ICISSUEDNSUB")
-            {
-                partialView = ""; //"../IC_Receipt/IC_Issued_Partial";
-            }
-            else if (action == "PJI")
+            var partialView = "../IC_Receipt/IC_Unbilled_Partial";            
+            if (action == "PJI")
             {
                 partialView = "../Reports/Pending_JI_Cases_Partial";
             }
@@ -108,13 +100,8 @@ namespace IBS.Controllers.Reports
             model.ReportTitle = "IC Issued But Not Received in Office";
             return View("Manage", model);
         }
-        public IActionResult ICIssuedNotReceived(string ReportType, string Type, DateTime FromDate, DateTime ToDate)
+        public IActionResult ICIssuedNotReceived(string Type, DateTime FromDate, DateTime ToDate)
         {
-            ////ICIssuedNotReceivedReportModel model = new() { ReportType = ReportType,Type = Type, FromDate = FromDate, ToDate = ToDate };
-            //ReportsModel model = new() { ReportType = ReportType, Type = Type, FromDate = FromDate, ToDate = ToDate };
-            //model.ReportTitle = "IC Issued But Not Received in Office";
-            //return View("Manage",model);
-
             var wRegion = "";
             var Region = SessionHelper.UserModelDTO.Region;
             if (Region == "N") { wRegion = "Northern Region"; }
@@ -122,52 +109,17 @@ namespace IBS.Controllers.Reports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            ICIssuedNotReceivedReportModel model = new()
-            {
-                ReportType = ReportType,
-                Type = Type,                
-                FromDate = FromDate,
-                ToDate = ToDate
-            };
-            model.Region = wRegion;
+            ICIssuedNotReceivedReportModel model = new() { Type = Type, FromDate = FromDate, ToDate = ToDate, Region = wRegion };
             model.ICIssuedNotReceivedList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(model.Display_FromDate, model.Display_ToDate, GetUserInfo);
             foreach (var row in model.ICIssuedNotReceivedList)
             {
-                var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".TIF");
-                var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
+                var tifpath = Path.Combine("/IBS/CASE_NO/" + row.CASE_NO + ".TIF");
+                var pdfpath = Path.Combine("/IBS/CASE_NO/" + row.CASE_NO + ".PDF");
                 row.IsTIF = System.IO.File.Exists(tifpath) == true ? true : false;
                 row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
             }
             return PartialView(model);
-        }
-
-        public IActionResult IC_Issue(string Type, DateTime FromDate, DateTime ToDate, string ReportTitle)
-        {
-            var wRegion = "";
-            var Region = SessionHelper.UserModelDTO.Region;
-            if (Region == "N") { wRegion = "Northern Region"; }
-            else if (Region == "S") { wRegion = "Southern Region"; }
-            else if (Region == "E") { wRegion = "Eastern Region"; }
-            else if (Region == "W") { wRegion = "Western Region"; }
-            else if (Region == "C") { wRegion = "Central Region"; }
-            ICIssuedNotReceivedReportModel model = new()
-            {
-                ReportType = Type,
-                ReportTitle = ReportTitle,
-                FromDate = FromDate,
-                ToDate = ToDate
-            };
-            model.Region = wRegion;
-            model.ICIssuedNotReceivedList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(model.Display_FromDate, model.Display_ToDate, GetUserInfo);
-            foreach (var row in model.ICIssuedNotReceivedList)
-            {
-                var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".TIF");
-                var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
-                row.IsTIF = System.IO.File.Exists(tifpath) == true ? true : false;
-                row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
-            }
-            return PartialView("../IC_Receipt/IC_Issued_Partial", model);
-        }
+        }        
         #endregion
 
         public IActionResult Get_Pending_JI_Cases([FromBody] DTParameters dtParameters)

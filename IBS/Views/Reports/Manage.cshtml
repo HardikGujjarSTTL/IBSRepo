@@ -66,7 +66,7 @@
     }
 
     function loadICIssued(){        
-        $("#dvReportViewer").load("@Url.Action("ICIssuedNotReceived")", { ReportType: '@Model.ReportType', Type: '@Model.Type', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("ICIssuedNotReceived")", { Type: '@Model.Type', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

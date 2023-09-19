@@ -131,15 +131,11 @@
                 }
             });
 
-            $("#btnReport").click(function () {
-                //window.location.href = "/IC_Receipt/ICFromToDate?Action=UNBILLEDIC";
-                //window.location.href = "/Reports/FromToDate?actiontype=UNBILLEDIC";
+            $("#btnReport").click(function () {                
                 window.location.href = "@Url.Action("Index","Reports")?ReportType=UNBILLEDIC";
             })
 
-            $("#btnIssuedNRec").click(function () {
-                //window.location.href = "/IC_Receipt/ICFromToDate?Action=ICISSUEDNSUB";
-                //window.location.href = "/Reports/FromToDate?actiontype=ICISSUEDNSUB";
+            $("#btnIssuedNRec").click(function () {                
                 window.location.href = "@Url.Action("Index","Reports")?ReportType=ICISSUEDNSUB";
             })
 

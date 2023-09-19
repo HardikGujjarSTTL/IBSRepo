@@ -4,35 +4,31 @@
         <thead>
             <tr>
                 <th colspan="18" style="background: none;color:black">
-                    <font size="3" face="Verdana"><b>@Model.Region</b></font>
+                    <font size="3" face="Verdana"><b>@Model.Region</b><br /><b>@Model.ReportTitle</b></font>
                     <br />
                 </th>
-            </tr>
-            <tr>
-                <th colspan="18" style="background: none;color:black"><font size="3" face="Verdana"><b>@Model.ReportTitle</b></font></th>
-            </tr>
-
+            </tr>            
         </thead>
         <tbody>
             <tr>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IC NO.</font></b></th>
-                <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IC DATE</font></b></th>
-                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">IC SUBMIT DATE</font></b></th>
-                <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
-                <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO</font></b></th>
-                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">CALL/MATERIAL READINESS DATE</font></b></th>
-                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">FIRST INS. DATE</font></b></th>
-                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">LAST INS. DATE</font></b></th>
-                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY INS.</font></b></th>
-                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY IC</font></b></th>
-                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY SUBM</font></b></th>
-                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY BILL</font></b></th>
-                <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO</font></b></th>
-                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DATE</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE NAME</font></b></th>
-                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR</font></b></th>
-                <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR CITY</font></b></th>
-                <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC NO.</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC DATE</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC SUBMIT DATE</font></b></th>
+                <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CALL/MATERIAL READINESS DATE</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">FIRST INS. DATE</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">LAST INS. DATE</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY INS.</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY IC</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY SUBM</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">DELAY BILL</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DATE</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE NAME</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR CITY</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT</font></b></th>
             </tr>
             @{
                 double DelayInsp = 0, DelayIc = 0, DelaySubm = 0, DelayBill = 0, BillAmt = 0;
@@ -44,29 +40,29 @@
                     DelayBill = DelayBill + item.Delay_Bill;
                     BillAmt = BillAmt + Convert.ToDouble(item.Bill_Amount);
                     <tr>
-                        <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Ic_No</font></td>
-                        <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.Ic_Dt</font></td>
-                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_SUBMIT_DATE</font></td>
-                        <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.Bk_No</font></td>
-                        <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.Set_No</font></td>
-                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_Call_Dt</font></td>
-                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_FInsp</font></td>
-                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_LInsp</font></td>
-                        <td width="3%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Insp</font></td>
-                        <td width="3%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Ic</font></td>
-                        <td width="3%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Subm</font></td>
-                        <td width="3%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Bill</font></td>
-                        <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.Bill_No</font></td>
-                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_BillDt</font></td>
-                        <td width="15%" valign="top" align="left"><font size="1" face="Verdana">@item.Ie_Name</font></td>
-                        <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.Vendor</font></td>
-                        <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.Vendor_City</font></td>
-                        <td width="20%" valign="top" align="right"><font size="1" face="Verdana">@item.Bill_Amount</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.Ic_No</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Ic_Dt</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_SUBMIT_DATE</font></td>
+                        <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.Bk_No</font></td>
+                        <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.Set_No</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_Call_Dt</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_FInsp</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_LInsp</font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Insp</font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Ic</font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Subm</font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.Delay_Bill</font></td>
+                        <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.Bill_No</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_BillDt</font></td>
+                        <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.Ie_Name</font></td>
+                        <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.Vendor</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.Vendor_City</font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.Bill_Amount</font></td>
                     </tr>
                 }
                 <tr>
-                    <td valign="top" align="center" colspan="7"><font size="1" face="Verdana"><b>No. Of IC's: @Model.InspBillDelayList.Count() </b></font></td>
-                    <td valign="top" align="right"><font size="1" face="Verdana"><b>Average Delay:</b></font></td>
+                    <td valign="top" align="center" colspan="6"><font size="1" face="Verdana"><b>No. Of IC's: @Model.InspBillDelayList.Count() </b></font></td>
+                    <td valign="top" align="right" colspan="2"><font size="1" face="Verdana"><b>Average Delay:</b></font></td>
                     <td valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(DelayInsp / Model.InspBillDelayList.Count(),2)</b></font></td>
                     <td valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(DelayIc / Model.InspBillDelayList.Count(),2)</b></font></td>
                     <td valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(DelaySubm / Model.InspBillDelayList.Count(),2)</b></font></td>
