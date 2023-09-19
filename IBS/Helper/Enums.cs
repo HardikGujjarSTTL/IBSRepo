@@ -484,6 +484,25 @@ namespace IBS.Helper
             [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
             Z,
         }
+        public enum Criteria
+        {
+            [Description("PO Date")]
+            P,
+            [Description("Date of Reciept of PO in RITES")]
+            R,
+        }
+
+        public enum RailTypes
+        {
+            [Description("Railway")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            U,
+            [Description("State Government")]
+            S,
+        }
     }
 
     public class EnumUtility<T>

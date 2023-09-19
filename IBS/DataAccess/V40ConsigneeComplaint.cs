@@ -140,4 +140,6 @@ public partial class V40ConsigneeComplaint
     public string? CapaStatus { get; set; }
 
     public string? DandarStatus { get; set; }
+
+    public string? NoJiOther { get; set; }
 }

@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Client Wise Inspections";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Client Wise Inspections</h2>
+        </div>
+    </div>
+    <div class="accordion-body" style="margin-bottom: 11px !important;">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="reference">	Item 1</label>
+                <input type="text" class="input" id="txtItem1">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="reference">	Item 2</label>
+                <input type="text" class="input" id="txtItem2">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="reference">	Item 3</label>
+                <input type="text" class="input" id="txtItem3">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="reference">	Item 4</label>
+                <input type="text" class="input" id="txtItem4">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="reference">	Item 5</label>
+                <input type="text" class="input" id="txtItem5">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">For The Period From</label>
+                <input id="txtFromDate" name="txtFromDate" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">	For The Period To</label>
+                <input id="txtToDate" name="txtToDate" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">	Select Client</label>
+                @Html.DropDownList("ddlClient", new SelectList(IBS.Models.Common.GetSector() , "Value", "Text"),"--Select--",new{@onchange="FillRailwayCode()"})
+            </div>
+            <div class="col-md-3 mb-3" style="margin-top: 30px;">
+                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="col-md-12 mb-12 center" style="margin-top: 30px;">
+                    <b>Data to be Collected From </b>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3" style="margin-top: 30px;">
+                <input type="radio" class="billInvoiceClass" id="rdbNorthernRegion" name="Region" checked="checked" value="Bill_No">
+                <label for="Reference" class="billInvoiceClass">Northern Region</label><br>
+            </div>
+            <div class="col-md-4 mb-3" style="margin-top: 30px;">
+                <input type="radio" class="billInvoiceClass" id="rdbAllRegions" name="Region" value="Invoice_No">
+                <label for="Reference" class="billInvoiceClass">All Regions (except Central Region)</label><br>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 18px;">
+                    <button type="button" class="save-btn active" onclick="Search();">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+    <script type="text/javascript">
+
+        function FillRailwayCode() {
+            var type = $("#ddlClient").val();
+
+            $.ajax({
+                url: '@Url.Action("GetRailwayCode", "AdministratorPurchaseOrder")?type=' + type,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.list != null) {
+                    $("#dllRCode").html("");
+                    $("#dllRCode").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#dllRCode").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+                else {
+                    ShowHideMsgNew(response.status, "No R Code Found!!!");
+                }
+            });
+        }
+
+        function Search() {
+            GetData();
+        }
+        function GetData() {
+            var OneRegion = 'false';
+            if ($("#rdbNorthernRegion").is(":checked")) {
+                OneRegion = 'true';
+            }
+            var ItemDesc1 = $("#txtItem1").val();
+            var ItemDesc2 = $("#txtItem2").val();
+            var ItemDesc3 = $("#txtItem3").val();
+            var ItemDesc4 = $("#txtItem4").val();
+            var ItemDesc5 = $("#txtItem5").val();
+            var frmDt = moment($("#txtFromDate").datepicker('getDate')).format("YYYY-MM-DD");
+            var toDt = moment($("#txtToDate").datepicker('getDate')).format("YYYY-MM-DD");
+            var Client = $("#ddlClient").val();
+            var RCode = $("#dllRCode").val();
+
+            if (ItemDesc1 == "" && ItemDesc2 == "" && ItemDesc3 == "" && ItemDesc4 == "" && ItemDesc5 == "") {
+                ShowHideMsgNew(false, "Please enter Item.");
+                return;
+            }
+            if ($("#txtFromDate").val() == "" || $("#txtToDate").val() == "") {
+                ShowHideMsgNew(false, "Please select date range.");
+                return;
+            }
+
+            let myObject = { ItemDesc1, ItemDesc2, ItemDesc3, ItemDesc4, ItemDesc5, frmDt, toDt, OneRegion, Client, RCode };
+            var url = '@Url.Action("TableItemWiseInspectionsForTenderQueries", "PurchaseOrdersofSpecificValues")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

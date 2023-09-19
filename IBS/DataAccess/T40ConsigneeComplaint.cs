@@ -109,6 +109,8 @@ public partial class T40ConsigneeComplaint
 
     public string? DandarStatus { get; set; }
 
+    public string? NoJiOther { get; set; }
+
     public virtual T13PoMaster? CaseNoNavigation { get; set; }
 
     public virtual T06Consignee? ConsigneeCdNavigation { get; set; }

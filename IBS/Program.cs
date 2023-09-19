@@ -194,6 +194,7 @@ builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRReposit
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
+builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
 builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
 

@@ -28,13 +28,16 @@
 
             <div class="accordion-body">
                 <div class="row my-0">
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">
                             Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
                         </label>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <div class="gridSearch"><input type="text" class="input" id="txtCaseNo"> <button type="button" class="btn btn-primary" onclick="LOASubmit();">Submit</button></div>
+                        <input type="text" class="input" id="txtCaseNo" />
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <button type="button" class="btn btn-primary formSubBtn" onclick="LOASubmit();" style="margin-top: 0px;">Submit</button>
                     </div>
                    
                 </div>
@@ -114,9 +117,7 @@
                         <input type="text" class="input" id="txtSPur">
                     </div>
                     <div class="col-md-4 mb-3">
-
                         <button type="button" class="btn btn-primary formSubBtn" onclick="SearchPurchaser();">Search Purchaser</button>
-                        
                     </div>
 
                     <div class="col-md-12 mb-3">

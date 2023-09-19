@@ -1305,13 +1305,14 @@ BEGIN
                WHEN 'C' THEN 'Central'
            END AS REGION,
            IC.REGION AS REGIONV,
-           IC.REMARKS
+           IC.REMARKS,
+           IC.Status
     FROM T16_IC_CANCEL IC
     INNER JOIN T09_IE IE ON IC.ISSUE_TO_IECD = IE.IE_CD
     WHERE (IC.BK_NO = UPPER(TRIM(p_BKNo)) OR p_BKNo IS NULL)
       AND (IC.SET_NO = UPPER(TRIM(p_SetNo)) OR p_SetNo IS NULL)
       AND (IC.ISSUE_TO_IECD = p_ISSUE_TO_IECD OR p_ISSUE_TO_IECD = 0)
-      AND IC.REGION = p_Region
+      AND IC.REGION = p_Region AND (IC.ISDELETED = 0 or IC.ISDELETED is null)    
     ORDER BY IC.BK_NO, IC.SET_NO;
 END;
 
@@ -1455,6 +1456,7 @@ ALTER TABLE RegionalHRDataOfIE
 
 ==================================
 CREATE TABLE Log_RegionalHRDataOfIE (
+    LID  NUMBER(6,0) NOT NULL,
     ID NUMBER(6, 0) NOT NULL,
     IE_CD NUMBER(6, 0),
     Disclipline VARCHAR2(50 BYTE),
@@ -1476,6 +1478,22 @@ CREATE TABLE Log_RegionalHRDataOfIE (
     ActionDate TIMESTAMP(6),
     ActionUserID VARCHAR2(50 BYTE)
 );
+
+ALTER TABLE Log_RegionalHRDataOfIE ADD (
+  CONSTRAINT Log_RegionalHRDataOfIE_pk PRIMARY KEY (LID));
+
+CREATE SEQUENCE Log_RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+   UPDATE Log_RegionalHRDataOfIE
+   SET LID = Log_RegionalHRDataOfIE_seq.nextval;
+   
+ALTER TABLE Log_RegionalHRDataOfIE
+    MODIFY LID NUMBER(6,0) DEFAULT Log_RegionalHRDataOfIE_seq.nextval;
 
   ======================
 
@@ -1534,6 +1552,283 @@ END;
 ========================
 
 
+create or replace PROCEDURE SP_DetailedReport_POofSpecificValues(
+    p_SelCriteria IN VARCHAR2,   
+    p_Region IN VARCHAR2,
+    p_frmDt IN VARCHAR2,
+    p_toDt IN VARCHAR2,
+    p_wAgency IN VARCHAR2,
+    p_wClient IN VARCHAR2,
+    p_wFrmAmt IN NUMBER,
+    p_wToAmt IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        P.CLIENT CLIENT,
+        P.CASE_NO,
+        P.PO_NO PO_NO,
+        TO_CHAR(P.PO_DT, 'dd/mm/yyyy') PO_DT,
+        P.PO_VALUE PO_VALUE,
+        P.VENDOR VENDOR,
+        P.CONSIGNEE CONSIGNEE,
+        TRIM(T15.ITEM_DESC) ITEM_DESC
+    FROM
+    (
+        SELECT
+            T13.CASE_NO CASE_NO,
+            T13.PO_NO PO_NO,
+            T13.PO_DT PO_DT,
+            SUM(NVL(T15.VALUE, 0)) PO_VALUE,
+            V05.VENDOR VENDOR,
+            V06.CONSIGNEE CONSIGNEE,
+            T13.RLY_CD CLIENT
+        FROM
+            T13_PO_MASTER T13,
+            T15_PO_DETAIL T15,
+            V05_VENDOR V05,
+            V06_CONSIGNEE V06
+        WHERE
+            T13.CASE_NO = T15.CASE_NO
+            AND T13.VEND_CD = V05.VEND_CD
+            AND T13.PURCHASER_CD = V06.CONSIGNEE_CD(+)
+            AND T13.REGION_CODE = p_Region
+            AND (CASE
+                    WHEN p_SelCriteria = 'P' THEN T13.PO_DT
+                    ELSE T13.RECV_DT
+                END
+                 BETWEEN p_frmDt AND p_toDt)
+            AND T13.RLY_NONRLY = p_wAgency
+            AND (RLY_CD = p_wClient or RLY_CD IS NULL)
+        GROUP BY
+            T13.CASE_NO,
+            T13.PO_NO,
+            T13.PO_DT,
+            V05.VENDOR,
+            V06.CONSIGNEE,
+            T13.RLY_CD
+    ) P,
+    T15_PO_DETAIL T15
+    WHERE
+        P.CASE_NO = T15.CASE_NO
+        AND (P.PO_VALUE BETWEEN p_wFrmAmt AND p_wToAmt)
+    GROUP BY
+        P.CLIENT,
+        P.CASE_NO,
+        P.PO_NO,
+        TO_CHAR(P.PO_DT, 'dd/mm/yyyy'),
+        P.PO_VALUE,
+        P.VENDOR,
+        P.CONSIGNEE,
+        TRIM(T15.ITEM_DESC);
+END SP_DetailedReport_POofSpecificValues;
+
+=========================
+
+create or replace PROCEDURE SP_SummarizedReport_POofSpecificValues(
+    p_SelCriteria IN VARCHAR2,  
+    p_wRegion IN VARCHAR2,
+    p_frmDt IN DATE,
+    p_toDt IN DATE,
+    p_wAgency IN VARCHAR2,  
+    p_wFrmAmt IN NUMBER,
+    p_wToAmt IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        P.CLIENT CLIENT,
+        COUNT(*) No_OF_PO,
+        SUM(P.PO_VALUE) PO_VALUE
+    FROM
+    (
+        SELECT
+            T13.CASE_NO,
+            T13.RLY_CD CLIENT,
+            SUM(NVL(T15.VALUE, 0)) PO_VALUE
+        FROM
+            T13_PO_MASTER T13,
+            T15_PO_DETAIL T15
+        WHERE
+            T13.CASE_NO = T15.CASE_NO
+            AND (CASE
+                    WHEN p_SelCriteria = 'P' THEN T13.PO_DT
+                    ELSE T13.RECV_DT
+                END
+                 BETWEEN p_frmDt AND p_toDt)
+            AND T13.RLY_NONRLY = p_wAgency
+            AND T13.REGION_CODE = p_wRegion
+        GROUP BY
+            T13.CASE_NO,
+            T13.RLY_CD
+    ) P
+    WHERE
+        P.PO_VALUE BETWEEN p_wFrmAmt AND p_wToAmt
+    GROUP BY
+        P.CLIENT
+    ORDER BY
+        P.CLIENT;
+END SP_SummarizedReport_POofSpecificValues;
+
+=========================================
+create or replace PROCEDURE SP_Get_ItemWiseInspections (    
+    p_RegionCode IN VARCHAR2,
+    p_ItemDesc1 IN VARCHAR2,
+    p_ItemDesc2 IN VARCHAR2,
+    p_ItemDesc3 IN VARCHAR2,
+    p_ItemDesc4 IN VARCHAR2,
+    p_ItemDesc5 IN VARCHAR2,
+    p_FrmDt IN DATE,
+    p_ToDt IN DATE,
+    p_OneRegion IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        T13.REGION_CODE,
+        T23.ITEM_DESC,
+        T13.CASE_NO,
+        T13.PO_NO,
+        TO_CHAR(T13.PO_DT, 'DD/MM/YYYY') AS PO_DATE,
+        T13.RLY_CD AS BPO_RLY,
+        T18.QTY_PASSED,
+        T18.QTY_REJECTED,
+        T20.BK_NO,
+        T20.SET_NO,
+        T20.IC_TYPE_ID,
+        T20.BILL_NO,
+        TO_CHAR(T22.BILL_DT, 'DD/MM/YYYY') AS BILL_DATE,
+        T22.BILL_AMOUNT,
+        V05.VEND_CD || '-' || V05.VENDOR AS VENDOR,
+        M05.VEND_CD || '-' || M05.VENDOR AS MANUFACTURER,
+        V06.CONSIGNEE_CD || '-' || V06.CONSIGNEE AS CONSIGNEE,
+        T23.VALUE,
+        T09.IE_SNAME,
+        T20.IC_NO,
+        TO_CHAR(T20.IC_DT, 'DD/MM/YYYY') AS IC_DATE,
+        TO_CHAR(T20.CALL_RECV_DT, 'DD/MM/YYYY') AS CALL_DATE,
+        T20.CALL_SNO,
+        TO_CHAR(T20.FIRST_INSP_DT, 'DD/MM/YYYY') AS FIRST_INSP_DATE,
+        TO_CHAR(T20.LAST_INSP_DT, 'DD/MM/YYYY') AS LAST_INSP_DATE,
+        NVL((T20.FIRST_INSP_DT - T20.CALL_RECV_DT), 0) AS TIME_TO_START,
+        NVL((T20.LAST_INSP_DT - T20.CALL_RECV_DT), 0) AS TIME_TO_END,
+        T20.NO_OF_INSP
+    FROM
+        T13_PO_MASTER T13
+    JOIN
+        T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
+    JOIN
+        T18_CALL_DETAILS T18 ON T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO
+    JOIN
+        T20_IC T20 ON T17.CASE_NO = T20.CASE_NO AND T17.CALL_RECV_DT = T20.CALL_RECV_DT AND T17.CALL_SNO = T20.CALL_SNO
+    JOIN
+        T22_BILL T22 ON T20.BILL_NO = T22.BILL_NO
+    JOIN
+        V05_VENDOR V05 ON T13.VEND_CD = V05.VEND_CD
+    JOIN
+        V05_VENDOR M05 ON T17.MFG_CD = M05.VEND_CD
+    JOIN
+        V06_CONSIGNEE V06 ON T20.CONSIGNEE_CD = V06.CONSIGNEE_CD
+    JOIN
+        T23_BILL_ITEMS T23 ON T20.BILL_NO = T23.BILL_NO AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO
+    JOIN
+        T09_IE T09 ON T17.IE_CD = T09.IE_CD
+    WHERE
+       --T13.REGION_CODE = p_RegionCode
+        ((p_OneRegion = 'true' AND T13.REGION_CODE = p_RegionCode)
+        OR (p_OneRegion <> 'true' AND T13.REGION_CODE = T13.REGION_CODE))
+
+        AND (
+            INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc1)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc2)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc3)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc4)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc5)) > 0
+        )
+        --AND (T20.IC_DT BETWEEN '05/10/18' AND '05/10/18')
+        AND (T20.IC_DT BETWEEN p_FrmDt AND p_ToDt)
+    ORDER BY
+        T13.REGION_CODE,
+        T23.ITEM_DESC,
+        T20.IC_DT,
+        T22.BILL_NO;
+END SP_Get_ItemWiseInspections;
+============================
+
+CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
+    p_RegionCode IN VARCHAR2,
+    p_ItemDesc1 IN VARCHAR2,
+    p_ItemDesc2 IN VARCHAR2,
+    p_ItemDesc3 IN VARCHAR2,
+    p_ItemDesc4 IN VARCHAR2,
+    p_ItemDesc5 IN VARCHAR2,
+    p_FrmDt IN DATE,
+    p_ToDt IN DATE,
+    p_OneRegion IN VARCHAR2,
+    p_ClientType IN VARCHAR2, 
+    p_RlyCd IN VARCHAR2, 
+    p_Result OUT SYS_REFCURSOR
+) AS
+    sql_stmt VARCHAR2(10000);
+
+BEGIN
+    sql_stmt := 'SELECT TRIM(T23.ITEM_DESC) ITEM_DESC, T13.RLY_CD BPO_RLY, SUM(T18.QTY_PASSED) QTY_PASS, SUM(T18.QTY_REJECTED) QTY_REJ, T04.UOM_S_DESC UOM_S_DESC, SUM(T23.VALUE) VALUE, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END) IC_PERIOD, COUNT(*) NO_OF_INSP FROM T13_PO_MASTER T13, T17_CALL_REGISTER T17, T18_CALL_DETAILS T18, T20_IC T20, T22_BILL T22, T23_BILL_ITEMS T23, T04_UOM T04 WHERE T13.CASE_NO = T17.CASE_NO AND T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO AND T17.CASE_NO = T20.CASE_NO AND T17.CALL_RECV_DT = T20.CALL_RECV_DT AND T17.CALL_SNO = T20.CALL_SNO AND T20.BILL_NO = T22.BILL_NO AND T22.BILL_NO = T23.BILL_NO AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO AND T23.UOM_CD = T04.UOM_CD';
+
+    IF p_OneRegion = 'true' THEN
+        sql_stmt := sql_stmt || ' AND T13.REGION_CODE = ''' || p_RegionCode || '''';
+    END IF;
+
+    IF p_ItemDesc1 IS NOT NULL AND p_ItemDesc1 != '' THEN
+        sql_stmt := sql_stmt || ' AND (INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc1 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc2 IS NOT NULL AND p_ItemDesc2 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc2 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc3 IS NOT NULL AND p_ItemDesc3 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc3 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc4 IS NOT NULL AND p_ItemDesc4 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc4 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc5 IS NOT NULL AND p_ItemDesc5 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc5 || ''')) > 0';
+    END IF;
+
+    IF p_ClientType IS NOT NULL AND p_ClientType != '' AND p_ClientType != 'A' THEN
+        sql_stmt := sql_stmt || ' AND T13.RLY_NONRLY = ''' || p_ClientType || ''' AND T13.RLY_CD = ''' || p_RlyCd || '''';
+    END IF;
+
+    sql_stmt := sql_stmt || ' AND (T20.IC_DT BETWEEN ''' || p_FrmDt || ''' AND ''' || p_ToDt || ''') GROUP BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC ORDER BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC';
+
+    OPEN p_Result FOR sql_stmt;
+END SP_Get_ClientWiseInspections;
+
+
+==========================
+
+ALTER TABLE T16_Ic_Cancel ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T16_Ic_Cancel ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T16_Ic_Cancel ADD ISDELETED NUMBER(2,0)  
+ALTER TABLE T16_Ic_Cancel ADD Status NUMBER(2,0)
+
+
+--update T16_Ic_Cancel set status=1
+
+=====================
+ALTER TABLE T13_Po_Master ADD IsPriceVariation NUMBER(2,0)
+ALTER TABLE T13_Po_Master ADD IsStageInspection NUMBER(2,0)
+======================
 
 
 
