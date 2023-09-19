@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Models.Reports;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,8 +46,36 @@ namespace IBS.Controllers
             return Json(json);
         }
 
-        [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        public IActionResult Manage(string FromDate, string ToDate,string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
+            string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
+            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee)
+        {
+            JIRequiredReport model = new() { FromDate = FromDate, ToDate = ToDate, AllCM = AllCM, AllIEs = AllIEs, AllVendors = AllVendors, AllClient = AllClient, AllConsignee = AllConsignee, Compact = Compact, AwaitingJI = AwaitingJI, JIConclusion = JIConclusion,
+                JIConclusionfollowup = JIConclusionfollowup,JIconclusionreport = JIconclusionreport,JIDecidedDT = JIDecidedDT,All = All,ParticularIEs = ParticularIEs,IEWise = IEWise,CMWise = CMWise,
+                VendorWise = VendorWise,
+                ClientWise = ClientWise,
+                ConsigneeWise = ConsigneeWise,
+                FinancialYear = FinancialYear,
+                ParticularCMs = ParticularCMs,
+                ParticularClients = ParticularClients,
+                ParticularConsignee = ParticularConsignee,
+                ParticularVendor = ParticularVendor,
+                Detailed = Detailed,
+                FinancialYears = FinancialYears,
+                ddlsupercm = ddlsupercm,
+                ddliename = ddliename,
+                Clientwiseddl = Clientwiseddl,
+                vendor = vendor,
+                Item = Item,
+                consignee = consignee
+            };
+            model.ReportTitle = "Complaint Recieved";
+            return View(model);
+        }
+
+        public IActionResult ComplaintRecieved(string FromDate, string ToDate, string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
+            string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
+            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -55,8 +84,15 @@ namespace IBS.Controllers
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            DTResult<JIRequiredReport> dTResult = complaintsJIRequiredReportRepository.GetJIRequiredList(dtParameters, Region);
-            return Json(dTResult);
+            JIRequiredReport model = complaintsJIRequiredReportRepository.GetJIRequiredList( FromDate,  ToDate, AllCM, AllIEs, AllVendors, AllClient, AllConsignee, Compact, AwaitingJI, JIConclusion, JIConclusionfollowup,
+            JIconclusionreport, JIDecidedDT, All, ParticularIEs, IEWise,  CMWise, VendorWise, ClientWise, ConsigneeWise, FinancialYear, ParticularCMs, ParticularClients, ParticularConsignee,
+            ParticularVendor, Detailed, FinancialYears, ddlsupercm, ddliename, Clientwiseddl, vendor, Item, consignee, Region);
+            ViewBag.FromDT = FromDate;
+            ViewBag.ToDT = ToDate;
+            ViewBag.Financialperiod = FinancialYears;
+            ViewBag.Regions = wRegion;
+            return PartialView(model);
         }
+        
     }
 }

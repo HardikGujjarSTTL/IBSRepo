@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<IBS.Models.InspectionDataModel>
+@{
     Layout = "";
 }
 <html>
@@ -7,12 +8,90 @@
 </head>
 <body>
     <p align="right">
-        <input type="button" value="Print" id="btnPrint" />
-        <input type="button" value="Export To PDF" id="btnExportToPdf" />
-        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
     <div id="dvReportViewer">
-        @Html.Raw(ViewBag.html)
+        <h3 class="heading3">@ViewBag.Region</h3>
+        <ul class="reportLabelList">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+            <br />
+            <br />
+            <li><span class="labelName">@ViewBag.Searched</span></li>
+        </ul>
+        <table class="borderTable">
+            <thead>
+                <tr>
+                    <th width="2%">S.No.</th>
+                    <th width="2%">REGION</th>
+                    <th width="2%">ITEM</th>
+                    <th width="2%">CASE No.</th>
+                    <th width="2%">PO No.</th>
+                    <th width="2%">PO DT</th>
+                    <th width="2%">BILL No.</th>
+                    <th width="2%">BILL DT</th>
+                    <th width="2%">BK No.</th>
+                    <th width="2%">SET No.</th>
+                    <th width="2%">VENDOR</th>
+                    <th width="2%">MANUFACTURER</th>
+                    <th width="2%">CONSIGNEE</th>
+                    <th width="2%">CLIENT</th>
+                    <th width="2%">QTY PASS</th>
+                    <th width="2%">QTY REJ</th>
+                    <th width="2%">MATERIAL VALUE</th>
+                    <th width="2%">IC NO</th>
+                    <th width="2%">IC DT</th>
+                    <th width="2%">CALL DATE</th>
+                    <th width="2%">CALL SNO</th>
+                    <th width="2%">FIRST INSP DT</th>
+                    <th width="2%">LAST INSP DT</th>
+                    <th width="2%">VISITS</th>
+                    <th width="2%">TIME TAKEN TO START THE INSP</th>
+                    <th width="2%">TIME TAKEN TO END THE INSP</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                }
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.REGION_CODE</td>
+                            <td>@item.ITEM_DESC</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@item.PO_NO</td>
+                            <td>@item.PO_DATE</td>
+                            <td>@item.BILL_NO</td>
+                            <td>@item.BILL_DATE</td>
+                            <td>@item.BK_NO</td>
+                            <td>@item.SET_NO</td>
+                            <td>@item.VENDOR</td>
+                            <td>@item.MANUFACTURER</td>
+                            <td>@item.CONSIGNEE</td>
+                            <td>@item.BPO_RLY</td>
+                            <td>@item.QTY_PASSED</td>
+                            <td>@item.QTY_REJECTED</td>
+                            <td>@item.VALUE</td>
+                            <td>@item.IC_NO</td>
+                            <td>@item.IC_DATE</td>
+                            <td>@item.CALL_DATE</td>
+                            <td>@item.CALL_SNO</td>
+                            <td>@item.FIRST_INSP_DATE</td>
+                            <td>@item.LAST_INSP_DATE</td>
+                            <td>@item.NO_OF_INSP</td>
+                            <td>@item.TIME_TO_START</td>
+                            <td>@item.TIME_TO_END</td>
+                        </tr>
+                        i = i + 1;
+                    }
+                }
+            </tbody>
+        </table>
     </div>
     <div class="overlayLoader" style="display: none">
         <div class="loaderHolder">

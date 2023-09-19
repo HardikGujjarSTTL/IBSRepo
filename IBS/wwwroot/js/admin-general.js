@@ -463,6 +463,18 @@
 
 	$(".select2").select2();
 
+	if ($(".nav-third-level").length) {
+		//if ($(".nav-third-level").is(":visible")) {
+	$(".nav-third-level").prev().addClass("thirdLabelTrigger");
+	$(".thirdLabelTrigger").click(function () {
+		$(this).next().slideToggle();
+		$(this).toggleClass("active3Label");
+	});
+		//}
+	}
+	
+
+
 })(jQuery);
 
 // added for left links selected

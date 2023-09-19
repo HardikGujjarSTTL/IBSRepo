@@ -68,7 +68,7 @@ namespace IBS.Repositories.Reports
             return list;
         }
 
-        public DataTable GetItemWiseInspectionsList(ItemWiseInspectionsParamModel model)
+        public List<InspectionDataModel> GetItemWiseInspectionsList(ItemWiseInspectionsParamModel model)
         {
             OracleParameter[] par = new OracleParameter[10];
             par[0] = new OracleParameter("p_RegionCode", OracleDbType.Varchar2, model.Region, ParameterDirection.Input);
@@ -83,7 +83,14 @@ namespace IBS.Repositories.Reports
             par[9] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("SP_Get_ItemWiseInspections", par, 1);
             DataTable dt = ds.Tables[0];
-            return dt;
+            List<InspectionDataModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<InspectionDataModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
+            return list;
         }
 
         public DataTable GetItemWiseInspectionsForTenderQueriesList(ItemWiseInspectionsParamModel model)
