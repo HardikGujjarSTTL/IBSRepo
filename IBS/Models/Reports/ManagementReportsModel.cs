@@ -13,6 +13,12 @@
         public string FromYearMonth { get; set; }
 
         public string ToYearMonth { get; set; }
+
+        public string Outstanding { get; set; }
+
+        public string ParticularCM { get; set; }
+
+        public string ParticularSector { get; set; }
     }
 
     public class IEPerformanceModel
@@ -198,6 +204,8 @@
 
         public string Display_FromDate { get { return Common.ConvertDateFormat(this.FromDate); } }
 
+        public string Outstanding { get; set; }
+
         public List<RWCOListModel> lsttRWCOList { get; set; }
     }
 
@@ -231,6 +239,91 @@
 
         public decimal TOT_SUSPENSE_CR { get; set; }
 
+        public decimal TOT_ALL_OUTSTANDING { get; set; }
+
+        public decimal TOT_ALL_SUSPENSE { get; set; }
+
+    }
+
+    public class ICSubmissionModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<ICSubmissionListModel> lstICSubmission { get; set; }
+
+    }
+
+    public class ICSubmissionListModel
+    {
+        public int ID { get; set; }
+
+        public DateTime? IC_SUBMIT_DATE { get; set; }
+
+        public string Display_IC_SUBMIT_DATE { get { return this.IC_SUBMIT_DATE != null ? Common.ConvertDateFormat(this.IC_SUBMIT_DATE.Value) : ""; } }
+
+        public string IE_NAME { get; set; }
+
+        public string BK_NO { get; set; }
+
+        public string SET_NO { get; set; }
+
+    }
+
+    public class PendingICAgainstCallsModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<PendingICAgainstCallsListModel> lstPendingICAgainstCalls { get; set; }
+
+    }
+
+    public class PendingICAgainstCallsListModel
+    {
+        public int ID { get; set; }
+
+        public string CASE_NO { get; set; }
+
+        public DateTime? CALL_RECV_DT { get; set; }
+
+        public string Display_CALL_RECV_DT { get { return this.CALL_RECV_DT != null ? Common.ConvertDateFormat(this.CALL_RECV_DT.Value) : ""; } }
+
+        public int CALL_SNO { get; set; }
+
+        public string STATUS { get; set; }
+
+        public string IE_NAME { get; set; }
+
+        public string IE_STATUS { get; set; }
+
+    }
+
+    public class SuperSurpriseDetailsModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
     }
 
 }

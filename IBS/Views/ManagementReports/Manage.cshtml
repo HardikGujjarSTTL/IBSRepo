@@ -28,7 +28,6 @@
 
 <link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
-<script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 
 <script type="text/javascript">
@@ -51,6 +50,14 @@
         else if ('@ReportType' == 'R') {
             loadRWCO();
             fileName = 'Region_Wise_Comparison_Outstanding';
+        }
+        else if ('@ReportType' == 'ICSUBMIT') {
+            loadICSubmission();
+            fileName = 'IC_Submission';
+        }
+        else if ('@ReportType' == 'CALLSWITHOUTIC') {
+            loadPendingICAgainstCalls();
+            fileName = 'Pending_IC_Against_Calls';
         }
     });
 
@@ -76,7 +83,21 @@
     }
 
     function loadRWCO() {
-        $("#dvReportViewer").load("@Url.Action("RegionWiseComparisonOutstanding")", { FromDate: '@Model.FromDate' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("RegionWiseComparisonOutstanding")", { FromDate: '@Model.FromDate', Outstanding: '@Model.Outstanding' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadICSubmission() {
+        $("#dvReportViewer").load("@Url.Action("ICSubmission")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadPendingICAgainstCalls() {
+        $("#dvReportViewer").load("@Url.Action("PendingICAgainstCalls", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -103,35 +124,52 @@
         e.preventDefault();
     });
 
+    $("#btnTest").click(function () {
+        var HTML = $('#dvReportViewer').html();
+
+
+    });
+
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
+        var HTML = $('#dvReportViewer').html();
 
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "ManagementReports")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
     $(document).ajaxSend(function () {

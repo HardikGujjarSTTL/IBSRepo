@@ -6,6 +6,12 @@
 
 <div>
     <h3 class="heading3">Region & Client Wise Comparison of Outstanding (for the Billing Period <span class="orangeText"> 01/04/2008 to @Model.Display_FromDate </span> and Cleared Till Date) & Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
+
+    @if (Model.Outstanding == "2")
+    {
+        <h3 class="heading3">(For the Client where Total Outstanding is greater then zero or Total Suspense is greater then zero) Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
+    }
+
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
@@ -271,6 +277,8 @@
                         <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
                         <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
+
+                    @* Grand Totals ==>  *@
 
                     <tr class="reportTotal">
                         <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Grand Totals :</font></b></td>

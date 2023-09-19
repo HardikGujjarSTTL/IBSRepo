@@ -11,7 +11,7 @@ public partial class IeCallLocationEntryexit
 
     public DateTime? CallRecvDt { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public DateTime? EntryDatetime { get; set; }
 

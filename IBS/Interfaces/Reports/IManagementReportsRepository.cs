@@ -10,6 +10,10 @@ namespace IBS.Interfaces.Reports
 
         public RWBSummaryModel GetRWBSummaryData(string FromYearMonth, string ToYearMonth);
 
-        public RWCOModel GetRWCOData(DateTime FromDate);
+        public RWCOModel GetRWCOData(DateTime FromDate, string Outstanding);
+
+        public ICSubmissionModel GetICSubmissionData(DateTime FromDate, DateTime ToDate, string Region);
+
+        public PendingICAgainstCallsModel GetPendingICAgainstCallsData(DateTime FromDate, DateTime ToDate, string Region);
     }
 }
