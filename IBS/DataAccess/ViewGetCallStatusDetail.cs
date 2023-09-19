@@ -39,5 +39,5 @@ public partial class ViewGetCallStatusDetail
 
     public decimal? Count { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 }

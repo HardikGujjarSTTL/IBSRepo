@@ -417,7 +417,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-        
+
         public static List<SelectListItem> FinancialYear()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -983,7 +983,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-        
+
         public static List<SelectListItem> ClientWise()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1336,13 +1336,13 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> lstRly = (from a in ModelContext.AuCris
-                                          where a.RlyCd == RlyCd
-                                          select
-                                     new SelectListItem
-                                     {
-                                         Text = a.Au + "-" + a.Audesc + "/" + a.Address,
-                                         Value = Convert.ToString(a.Au)
-                                     }).ToList();
+                                           where a.RlyCd == RlyCd
+                                           select
+                                      new SelectListItem
+                                      {
+                                          Text = a.Au + "-" + a.Audesc + "/" + a.Address,
+                                          Value = Convert.ToString(a.Au)
+                                      }).ToList();
             return lstRly;
 
         }
@@ -1502,7 +1502,7 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Default";
             single.Value = "D";
-            textValueDropDownDTO.Add(single);           
+            textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
         public static List<SelectListItem> TestToBeConducted()
@@ -1936,6 +1936,38 @@ namespace IBS.Models
             return dropDownDTOs.DistinctBy(x => x.Text).ToList();
         }
 
+        public static List<SelectListItem> GetBPORlyCd(string ClientType)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+            if (ClientType == "R")
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T91Railways
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.RlyCd),
+                           Value = Convert.ToString(a.RlyCd)
+                       }).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            else if (ClientType != "" && ClientType != null)
+            {
+                List<SelectListItem> dropList = new List<SelectListItem>();
+                dropList = (from a in ModelContext.T12BillPayingOfficers
+                            where a.BpoType == Convert.ToString(ClientType)
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(a.BpoRly),
+                           Value = Convert.ToString(a.BpoRly)
+                       }).OrderBy(x => x.Text).ToList();
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+        }
+
         public static List<SelectListItem> Getfill_consignee_purcher(string RlyNonrlyValue, string RlyNonrlyText, string RlyCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2234,13 +2266,35 @@ namespace IBS.Models
             return Sealing;
         }
 
+        public static List<SelectListItem> GetlstBPOType(string ClientType, string ClientName)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> Sealing = new();
+
+            Sealing = (from t12 in ModelContext.T12BillPayingOfficers
+                       join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                       where t12.BpoType == ClientType && t12.BpoRly == ClientName
+                       select new SelectListItem
+                       {
+                           Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                           Value = Convert.ToString(t12.BpoCd)
+
+                       }).ToList();
+
+
+
+            return Sealing;
+        }
+
         public static List<SelectListItem> GetBPORLY(string BpoType)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
 
             List<SelectListItem> BpoRly = new();
 
-            BpoRly = (from t12 in ModelContext.T12BillPayingOfficers where t12.BpoType == BpoType
+            BpoRly = (from t12 in ModelContext.T12BillPayingOfficers
+                      where t12.BpoType == BpoType
                       orderby t12.BpoRly
                       select new SelectListItem
                       {
@@ -2458,6 +2512,21 @@ namespace IBS.Models
                                     new SelectListItem
                                     {
                                         Text = Convert.ToString(a.AccDesc),
+                                        Value = Convert.ToString(a.AccCd)
+                                    }).ToList();
+            return AccountLst;
+        }
+
+        public static List<SelectListItem> GetAccountCodeLst()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> AccountLst = (from a in context.T95AccountCodes
+                                               where a.AccCd < 3000
+                                               orderby a.AccDesc
+                                               select
+                                    new SelectListItem
+                                    {
+                                        Text = Convert.ToString(a.AccDesc) + ":" + Convert.ToString(a.AccCd),
                                         Value = Convert.ToString(a.AccCd)
                                     }).ToList();
             return AccountLst;

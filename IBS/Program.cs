@@ -91,6 +91,8 @@ builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.Inspectio
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
 
+builder.Services.AddScoped<IRemitanceReportsRepository, IBS.Repositories.Reports.RemitanceReportsRepository>();
+
 builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
 builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
 builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsheetReportRepository>();
