@@ -30,9 +30,40 @@
                     }
                     @foreach (var cp in menuList.Where(p => p.ParentId == mp.MenuId))
                     {
-
+                        
                         string url = Url.Action(cp.ActionName,cp.ControllerName );
-                        @:<li><a href="@Html.Raw(@HttpUtility.UrlDecode(url))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a></li>
+                        @:<li>
+                        @if (menuList.Count(p => p.ParentId == cp.MenuId) > 0)
+                        {
+                            <a href="@Html.Raw(@HttpUtility.UrlDecode(urlMain))"><span class="fa arrow"></span><i class="fa  fa-fw"><img src="@Url.Content("~/"+ cp.IconPath)" alt="tenant" /></i><span class="menu-title"> @cp.Title </span></a>
+                            @if (menuList.Count(p => p.ParentId == cp.MenuId) > 0)
+                            {
+                               @:<ul class="nav nav-third-level">
+                            }
+                            @foreach (var cp1 in menuList.Where(p => p.ParentId == cp.MenuId))
+                            {
+                                string url1 = Url.Action(cp1.ActionName,cp1.ControllerName );
+                                @:<li><a href="@Html.Raw(@HttpUtility.UrlDecode(url1))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp1.Title</span></a>
+                            
+                            }
+                            @if (menuList.Count(p => p.ParentId == cp.MenuId) > 0)
+                            {
+                                @:</ul>
+                            }
+                        }
+                        else
+                        {
+                            <a href="@Html.Raw(@HttpUtility.UrlDecode(url))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a>
+                        }
+                            
+                            
+                        @*@:<ul class="nav nav-second-level">
+                            @:<li><a href="#" title="Sub Menu">Sub Menu</a></li>
+                          @:</ul>*@
+                        
+                        
+
+                        @:</li>
                     }
 
                     @if (menuList.Count(p => p.ParentId == mp.MenuId) > 0)

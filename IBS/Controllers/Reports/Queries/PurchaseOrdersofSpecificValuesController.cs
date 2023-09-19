@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using Humanizer;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
@@ -6,6 +7,7 @@ using IBS.Repositories;
 using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using System.Data;
 
 namespace IBS.Controllers.Reports.Queries
@@ -152,7 +154,7 @@ namespace IBS.Controllers.Reports.Queries
                 model.Region = Region;
                 model.frmDt = frmDt;
                 model.toDt = toDt;
-                DataTable dt = purchaseOrdersofSpecificValuesRepository.GetItemWiseInspectionsList(model);
+                List<InspectionDataModel> model1 = purchaseOrdersofSpecificValuesRepository.GetItemWiseInspectionsList(model);
 
                 string html = "";
                 string wRegion = "";
@@ -182,88 +184,13 @@ namespace IBS.Controllers.Reports.Queries
                     items_searched = items_searched + ", " + ItemDesc5.Trim().ToUpper();
 
                 items_searched = items_searched + ".";
-                int wSno = 0;
-                if (OneRegion == "true") { wRegion = "Northern,Western,Eastern & Southern Region"; }
-                html +="<br><table border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse;' bordercolor='#111111' width='100%'>";
-                html+="<tr><td width='100%' colspan='26'>";
-                html+="<H5 align='center'><font face='Verdana'>" + wRegion + "</font><br></p>";
-                html+="<H5 align='center'><font face='Verdana'>Item Wise Inspection Details For the Period : " + model.frmDt.ToString("dd/MM/yyy") + " to " + model.toDt.ToString("dd/MM/yyy") + "</font><br></p>";
-                html+="</td>";
-                html+="</tr>";
-                html+="<tr><td width='100%' colspan='26'>";
-                html+="<H5 align='center'><font face='Verdana'>Items Searched: " + items_searched + " </font><br></p>";
-                html+="</td>";
-                html+="</tr>";
-                html+="<tr>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>S.No.</font></b></th>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>REGION</font></b></th>";
-                html+="<th width='15%' valign='top'><b><font size='1' face='Verdana'>ITEM</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>CASE No.</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>PO No.</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>PO DT</font></b></th>";
-                html+="<th width='8%' valign='top'><b><font size='1' face='Verdana'>BILL No.</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>BILL DT</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>BK No.</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>SET No.</font></b></th>";
-                html+="<th width='12%' valign='top'><b><font size='1' face='Verdana'>VENDOR</font></b></th>";
-                html+="<th width='12%' valign='top'><b><font size='1' face='Verdana'>MANUFACTURER</font></b></th>";
-                html+="<th width='10%' valign='top'><b><font size='1' face='Verdana'>CONSIGNEE</font></b></th>";
-                html+="<th width='10%' valign='top'><b><font size='1' face='Verdana'>CLIENT</font></b></th>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>QTY PASS</font></b></th>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>QTY REJ</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>MATERIAL VALUE</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>IC NO</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>IC DT</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>CALL DATE</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>CALL SNO</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>FIRST INSP DT</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>LAST INSP DT</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>VISITS</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>TIME TAKEN TO START THE INSP</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>TIME TAKEN TO END THE INSP</font></b></th>";
-                html+="</tr></font>";
-                //ctr = 6;
-                var reader = dt.CreateDataReader();
-                while (reader.Read())
-                {
-                    wSno = wSno + 1;
-                    html+="<tr>";
-                    html+="<td width='5%' valign='top' align='center'> <font size='1' face='Verdana'>" + wSno + "</td>";
-                    html+="<td width='15%' valign='top' align='left'> <font size='1' face='Verdana'>"; html+=reader["REGION_CODE"]; html+="</td>";
-                    html+="<td width='15%' valign='top' align='left'> <font size='1' face='Verdana'>"; html+=reader["ITEM_DESC"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["CASE_NO"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["PO_NO"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["PO_DATE"]; html+="</td>";
-                    html+="<td width='8%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["BILL_NO"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["BILL_DATE"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["BK_NO"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["SET_NO"]; html+="</td>";
-                    html+="<td width='12%' valign='top' align='left'> <font size='1' face='Verdana'>"; html+=reader["VENDOR"]; html+="</td>";
-                    html+="<td width='12%' valign='top' align='left'> <font size='1' face='Verdana'>"; html+=reader["MANUFACTURER"]; html+="</td>";
-                    html+="<td width='10%' valign='top' align='left'> <font size='1' face='Verdana'>"; html+=reader["CONSIGNEE"]; html+="</td>";
-                    html+="<td width='10%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["BPO_RLY"]; html+="</td>";
-                    html+="<td width='5%' valign='top' align='right'> <font size='1' face='Verdana'>"; html+=reader["QTY_PASSED"]; html+="</td>";
-                    html+="<td width='5%' valign='top' align='right'> <font size='1' face='Verdana'>"; html+=reader["QTY_REJECTED"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>"; html+=reader["VALUE"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["IC_NO"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["IC_DATE"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["CALL_DATE"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["CALL_SNO"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["FIRST_INSP_DATE"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["LAST_INSP_DATE"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["NO_OF_INSP"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["TIME_TO_START"]; html+="</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html+=reader["TIME_TO_END"]; html+="</td>";
-                    html+="</tr>";
-                    //ctr = ctr + 1;
 
-                };
-                
-                html+="</table>";
+                if (OneRegion != "true") { wRegion = "Northern,Western,Eastern & Southern Region"; }
 
-                ViewBag.html = html;
-
-                return View();
+                ViewBag.Region = wRegion;
+                ViewBag.Title = "Item Wise Inspection Details For the Period : " + model.frmDt.ToString("dd / MM / yyy") + " to " + model.toDt.ToString("dd / MM / yyy");
+                ViewBag.Searched = "Items Searched: " + items_searched;
+                return View(model1);
             }
             catch (Exception ex)
             {

@@ -33,21 +33,17 @@
 </head>
 <body>
     <p align="right">
-        <input type="button" value="Print" id="btnPrint" />
-        <input type="button" value="Export To PDF" id="btnExportToPdf" />
-        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
     <div id="dvReportViewer">
-        <table>
+        <h3 class="heading3">@ViewBag.Region</h3>
+        <ul class="reportLabelList">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+        </ul>
+        <table class="borderTable">
             <thead>
-                <tr>
-                    <td width="100%" colspan="9">
-                        <H5 align="center">
-                            <font face="Verdana">@ViewBag.Region</font><br></p>
-                            <H5 align="center"><font face="Verdana">@ViewBag.Title</font><br></p>
-                    </td>
-                </tr>
-
                 <tr>
                     <th width="8.5%">SNO.</th>
                     <th width="8.5%">CASE NO.</th>

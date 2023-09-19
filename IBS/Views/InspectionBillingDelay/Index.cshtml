@@ -6,16 +6,17 @@
     <div class="list-inner">
         <div class="tast-list">
             <h2>STATEMENT OF INSPECTION BILLING & DELAY'S</h2>
-        </div>
+        </div>       
     </div>
     <div class="accordion-body">
+
         <div class="row my-0">
             <ul class="radioListForm">
                 <li>
-                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month --></label>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month </label>
                 </li>
                 <li>
-                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) --></label>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) </label>
                 </li>
             </ul>
             <div class="col-md-3">
@@ -26,21 +27,10 @@
                 <label for="reference" id="lblHeader2">To</label>
                 @Html.DropDownList("lstYears", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})
             </div>
-            @*<div class="col-md-2 mb-3">
-            <div class="savenext-btn" style="margin-top: 31px;">
-            <button type="button" class="save-btn active" onclick="Search();">search</button>
-            </div>
-            </div>*@
-            @*<div class="col-md-4 mb-3">
-            <div class="list-btn" style="margin-top: 31px;">
-            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-            <a asp-area="" asp-controller="CentralRegionBillingInformation" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Bill</a>
-            </div>
-            </div>*@
         </div>
-        <div class="row my-0">          
+        <div class="row my-0">
+        </div>
+        <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <input type="text" class="input datepicker clsDate" id="txtBillFromDate">
             </div>
@@ -48,15 +38,40 @@
                 <input type="text" class="input datepicker clsDate" id="txtBillToDate">
             </div>
         </div>
+        @if (@ViewBag.Action == "U")
+        {
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                        <label for="Name">Status of IE</label>
+                        @Html.RadioButton("rdType", "AllIES", new {@id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt" }) All IE'S
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdType", "ParticularIE", new { @id="rdPartiIE",@class = "text-darkblue font-bold font-size-8pt" }) For Particular IE
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3" id="IEStatus" style="display:none;">
+                    <div class="reference">
+                        <label for="Name" id="lblIECM"></label>
+                        @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.RegionCode) , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+            </div>
+        }
         <div class="row">
-        <div class="col-md-12">
-            <h3 class="heading3">Report to be sorted on</h3>
-        </div>
+            <div class="col-md-12">
+                <h3 class="heading3">Report to be sorted on</h3>
+            </div>
         </div>
         <ul class="radioListForm">
             <li>
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Bill Date", new {  @id="rdbBillDate", @checked = true }) Bill Date</label>
             </li>
+            @if (@ViewBag.Action == "U")
+            {
+                <li>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IE Name", new {  @id="rdbIEName", }) IE Name</label>
+                </li>
+            }
             <li>
                 <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IC Date", new {  @id="rdbICDate" }) IC Date</label>
             </li>
@@ -72,64 +87,16 @@
                 <button type="button" class="save-btn active" id="btnSearch">Submit</button>
             </div>
         </div>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtInspBillDelay" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>IC NO.</th>
-                            <th>IC DATE</th>
-                            <th>IC SUBMIT DATE</th>
-                            <th>BK NO.</th>
-                            <th>SET NO</th>
-                            <th>CALL/MATERIAL READINESS DATE</th>
-                            <th>FIRST INS. DATE</th>
-                            <th>LAST INS. DATE</th>
-                            <th>INS.</th>
-                            <th>IC</th>
-                            <th>SUBM</th>
-                            <th>BILL</th>
-                            <th>BILL NO</th>
-                            <th>BILL DATE</th>
-                            <th>IE NAME</th>
-                            <th>VENDOR</th>
-                            <th>VENDOR CITY</th>
-                            <th>AMOUNT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                   @* <tfoot>
-                        <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        </tr>
-                    </tfoot>*@
-                   @* <tbody>
-                    </tbody>*@
-                </table>
-            </div>
-        </div>
-    </section>
+    </div>   
 </div>
-<div id="EditPODateModal" class="modal" tabindex="-1" role="dialog">
-</div>
+
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        var Region = "@ViewBag.Region";
+        var Action = "@ViewBag.Action";
         $(document).ready(function () {
             Manage();
             $('input[type=radio][name=rdbInspBill]').change(function () {
@@ -138,6 +105,29 @@
 
             $("#btnSearch").click(function () {
                 InitializeDatatable();
+            });
+
+            $("#imgExcel").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 0).trigger();
+            });
+
+            $("#imgPdf").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 1).trigger();
+            });
+
+            $("#imgPrint").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 2).trigger();
+            });
+
+            $('input[type=radio][name=rdType]').change(function () {
+                debugger
+                var value = $(this).val();
+
+                if (value == "AllIES") {
+                    $("#IEStatus").css("display", "none");
+                } else {
+                    $("#IEStatus").css("display", "block");
+                }
             });
         });
 
@@ -159,199 +149,45 @@
         }
 
         function InitializeDatatable() {
-            //var Region = '@ViewBag.Region';
-            //var BillNo = $("#txtBillNo").val();
-            //var BillFromDate = $("#txtBillFromDate").val();
-            //var BillToDate = $("#txtBillToDate").val();
-            //var _title = Region + '\n Bill Details For the Period : All';
-            //if (BillFromDate != "" || BillToDate != "") {
-            //    _title = Region + '\n Bill Details For the Period :' + BillFromDate + ' To ' + BillToDate
-            //}
-            debugger
-            var _title = "Inspection Billing and Delay";
-            var MonthWise = $("#rdbMonth").is(":checked") == true ? "true":"false";
+            var SortOn = "";
+            var ReportTitle = "";
+            var totalRec = 0;
+            var w_DELAY_INSP = 0, w_DELAY_IC = 0, w_DELAY_SUBM = 0, w_DELAY_BILL = 0;
+            //var _title = "Inspection Billing and Delay";
+            var MonthWise = $("#rdbMonth").is(":checked") == true ? "true" : "false";
             var DateWise = $("#rdbDate").is(":checked") == true ? "true" : "false";
             var Month = $("#lstMonths").val();
             var Year = $("#lstYears").val();
             var FromDate = $("#txtBillFromDate").val();
             var ToDate = $("#txtBillToDate").val();
             var BillDate = $("#rdbBillDate").is(":checked") == true ? "true" : "false";
+            var IEName = $("#rdbIEName").is(":checked") == true ? "true" : "false";
             var IcDt = $("#rdbICDate").is(":checked") == true ? "true" : "false";
             var FInspDt = $("#rdbFisrtInspDate").is(":checked") == true ? "true" : "false";
-            var LFnspDt = $("#rdbLastInspDate").is(":checked") == true ? "true":"false";
-            var IECD = "0";
-            dt = $("#dtInspBillDelay").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                //dom: 'rtip',
-                //buttons: [
-                //    {
-                //        extend: 'excel',
-                //        text: 'Export to Excel',
-                //        filename: function () { return getExportFileName('Central_Region_Billing_Information'); },
-                //        download: 'open',
-                //        orientation: 'landscape',
-                //        title: _title,
-                //        footer: true,
-                //        exportOptions: {
-                //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                //            modifier: {
-                //                page: 'all',
-                //                search: 'none'
-                //            }
-                //        },
-                //    },
-                //    {
-                //        extend: 'pdfHtml5',
-                //        filename: function () { return getExportFileName('Central_Region_Billing_Information '); },
-                //        text: 'Export to PDF',
-                //        orientation: 'landscape',
-                //        title: _title,
-                //        footer: true,
-                //        exportOptions: {
-                //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                //            modifier: {
-                //                page: 'all',
-                //                pageSize: 'LEGAL',
-                //                search: 'none',
-                //            }
-                //        },
-                //        customize: function (doc) {
-                //            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                //            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                //            doc.pageMargins = [5, 100, 5, 5];
+            var LFnspDt = $("#rdbLastInspDate").is(":checked") == true ? "true" : "false";
+            var AllIE = $("#rdAllIE").is(":checked") == true ? "true" : "false";
+            var PartiIE = $("#rdPartiIE").is(":checked") == true ? "true" : "false";
+            var IECD = $("#lstIE").val() == undefined ? null : $("#lstIE").val();
 
-                //        }
-                //    },
-                //    {
-                //        extend: 'print',
-                //        text: 'Print',
-                //        title: _title,
-                //        footer: true,
-                //        exportOptions: {
-                //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-                //        },
-                //    },
-                //],
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            MonthWise: MonthWise,
-                            DateWise: DateWise,
-                            Month: Month,
-                            Year: Year,
-                            FromDate: FromDate,
-                            ToDate: ToDate,
-                            BillDate: BillDate,
-                            IcDt: IcDt,
-                            FInspDt: FInspDt,
-                            LFnspDt: LFnspDt,
-                            IECD: IECD
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-                columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "Ic_No" },
-                    { data: "Ic_Dt" },
-                    { data: "IC_SUBMIT_DATE" },
-                    { data: "Bk_No" },
-                    { data: "Set_No" },
-                    { data: "Call_Dt" },
-                    { data: "First_Insp_Dt" },
-                    { data: "Last_Insp_Dt" },
-                    { data: "Delay_Insp" },
-                    { data: "Delay_Ic" },
-                    { data: "Delay_Subm" },
-                    { data: "Delay_Bill" },
-                    { data: "Bill_No" },
-                    { data: "Bill_Dt" },
-                    { data: "Ie_Name" },
-                    { data: "Vendor" },
-                    { data: "Bill_Amount" },
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var id = data.BILL_NO;
-                    //        var editUrl = '@Url.Action("Manage", "CentralRegionBillingInformation")?id=' + id;
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                    //        html += '<a onclick="CentralRegionDelete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
-                    //        html += '</div>';
-                    //        return html;
-                    //    }
-                    //},
-                ],
-                "order": [[0, "asc"]],
-                //footerCallback: function (row, data, start, end, display) {
-                //    var api = this.api(), data;
+            if (IcDt == "true") { SortOn = "Report Sorted on IC Date" }
+            else if (FInspDt == "true") { SortOn = "Report Sorted on First Inspection Date" }
+            else if (LFnspDt == "true") { SortOn = "Report Sorted on Last Inspection Date" }
+            else { SortOn = "Report Sorted on Bill Date" }
 
-                //    // converting to interger to find total
-                //    var intVal = function (i) {
-                //        return typeof i === 'string' ?
-                //            i.replace(/[\$,]/g, '') * 1 :
-                //            typeof i === 'number' ?
-                //                i : 0;
-                //    };
+            if (MonthWise == "true") {
+                _wHdr = $("#lstMonths option:selected").text() + ", " + $("#lstYears").val()//$("#lstMonths").val();
+                ReportTitle = "STATEMENT OF INSPECTION BILLING GENERATED AS ON " + _wHdr + " (" + SortOn + ")";
+            } else {
+                _wHdr = $("#txtBillFromDate").val() + " - " + $("#txtBillToDate").val();
+                ReportTitle = "STATEMENT OF INSPECTION BILLING GENERATED FOR THE PERIOD " + _wHdr + " (" + SortOn + ")";
+            }
 
+            var ToDate = $("#txtBillToDate").val();
+            var ToDate = $("#txtBillToDate").val();
+            let myObject = { MonthWise, DateWise, Month, Year, FromDate, ToDate, BillDate, IEName, IcDt, FInspDt, LFnspDt, AllIE, PartiIE, IECD, ReportTitle };
 
-                //    var InspFee = api
-                //        .column(4)
-                //        .data()
-                //        .reduce(function (a, b) {
-                //            return intVal(a) + intVal(b);
-                //        }, 0);
-
-                //    var Tax = api
-                //        .column(5)
-                //        .data()
-                //        .reduce(function (a, b) {
-                //            return intVal(a) + intVal(b);
-                //        }, 0);
-                //    var BillAmount = api
-                //        .column(6)
-                //        .data()
-                //        .reduce(function (a, b) {
-                //            return intVal(a) + intVal(b);
-                //        }, 0);
-
-                //    InspFee = $.fn.dataTable.render.number(',', '.', 2).display(InspFee);
-                //    Tax = $.fn.dataTable.render.number(',', '.', 2).display(Tax);
-                //    BillAmount = $.fn.dataTable.render.number(',', '.', 2).display(BillAmount);
-
-                //    // Update footer by showing the total with the reference of the column index
-                //    //$(api.column(0).footer()).html('&nbsp;');
-                //    //$(api.column(1).footer()).html('&nbsp;');
-                //    //$(api.column(2).footer()).html('&nbsp;');
-                //    //$(api.column(2).footer()).html('Total');
-                //    //$(api.column(4).footer()).html(InspFee);
-                //    //$(api.column(5).footer()).html(Tax);
-                //    //$(api.column(6).footer()).html(BillAmount);
-                //    //$(api.column(7).footer()).html('&nbsp;');
-                //    //$(api.column(8).footer()).html('&nbsp;');
-                //    //$(api.column(3).footer()).html('&nbsp;');
-                //},
-            });
-            //dt.column(3).visible(false);
-            //dt.column(4).visible(false);
-            //dt.column(5).visible(false);
+            var url = '@Url.Action("Report", "InspectionBillingDelay")?' + $.param(myObject);
+            window.open(url, '_blank');            
         }
     </script>
 }

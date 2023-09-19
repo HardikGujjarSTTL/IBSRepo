@@ -1,0 +1,55 @@
+﻿@model IBS.Models.ICStatusModel
+<div>
+    @if (Model.Type == "AllIES")
+    {
+        <h3 class="center">IC's Status Report For the Period<br /> <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> <br /> (@Model.Region)</h3>
+    }
+    else
+    {
+        <h3 class="center">IC's Status Report For the IE: @Model.IE_Name, For the Period<br /> <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> <br /> (@Model.Region)</h3>
+    }
+    @*<ul class="reportLabelList">
+    <li><span class="labelName">Rejections Issued by I.E During The Period:</span> @Model.RejectionsIssued</li>
+    <li><span class="labelName">No. Of IC's:</span> @Model.TotalICs</li>
+    <li><span class="labelName">Calls Attended within 7 Days:</span> @Model.CallsAttendedWithin7Days</li>
+    <li><span class="labelName">Calls Attended Beyond 7 Days:</span> @Model.CallsAttendedBeyond7Days</li>
+    </ul>*@
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IC Submit Date</font></b></th>
+                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstICStatus != null && Model.lstICStatus.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstICStatus)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_SUBMIT_DT</font></td>
+                            <td width="12%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.BK_NO</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.SET_NO</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
