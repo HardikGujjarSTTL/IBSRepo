@@ -1515,3 +1515,7 @@ input[type="datetime-local"]{ height:43px;}
 .active3Label > .fa.arrow:before{content:"\f106"!important;}
 .navbar-static-side ul li .nav-third-level li a { padding: 15px 15px 15px 55px; color: #efefef; position:relative; }
 .navbar-static-side ul li .nav-third-level li a .fa-angle-double-right{ position: absolute; left: 40px; top: 18px;}
+.navbar-static-side ul li a.selectLink{ background:#008B29;}
+.navbar-static-side ul li .nav-second-level li a.selectLink{ color:#f2b604;}
+.navbar-static-side ul li .nav-second-level li a.thirdLabelTrigger{padding:15px 15px 15px 60px;}
+.navbar-static-side ul li .nav-second-level li a.thirdLabelTrigger i.fa{ left:30px;}
