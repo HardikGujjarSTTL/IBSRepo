@@ -202,6 +202,7 @@ builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsReposi
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
 builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
+builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
 
