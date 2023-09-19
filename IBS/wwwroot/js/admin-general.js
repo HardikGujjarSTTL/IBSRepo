@@ -320,6 +320,7 @@
 						if ($(this).hasClass('active')) {
 							$(this).removeClass('active');
 							$(this).children("ul").slideUp();
+							
 						} else {
 							$(this).children("ul").slideDown();
 							$(this).addClass('active');	
@@ -460,6 +461,11 @@
 		});
 		//}
 	}
+	/*if ($("ul#side-menu > li a").length) {
+		$('ul#side-menu > li a').click(function () {
+			$(this).parent().addClass('mySelected').siblings().removeClass('mySelected');
+		});
+	}*/
 
 
 
@@ -475,6 +481,7 @@ $(function () {
 		// and test its normalized href against the url pathname regexp
 		if (urlRegExp.test(this.href.replace(/\/$/, ''))) {
 			$(this).addClass('selectLink');
+			//$(this).parent().parent().slideDown();
 		}
 	});
 });
