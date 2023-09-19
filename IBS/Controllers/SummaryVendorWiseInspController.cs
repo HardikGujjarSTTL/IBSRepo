@@ -12,14 +12,14 @@ using System.Text.Json;
 
 namespace IBS.Controllers
 {
-    public class SummaryConsigneeWiseInspController : BaseController
+    public class SummaryVendorWiseInspController : BaseController
     {
         #region Variables
-        private readonly ISummaryConsigneeWiseInspRepository SummaryConsigneeWiseInspRepository;
+        private readonly ISummaryVendorWiseInspRepository SummaryVendorWiseInspRepository;
         #endregion
-        public SummaryConsigneeWiseInspController(ISummaryConsigneeWiseInspRepository _SummaryConsigneeWiseInspRepository)
+        public SummaryVendorWiseInspController(ISummaryVendorWiseInspRepository _SummaryVendorWiseInspRepository)
         {
-            SummaryConsigneeWiseInspRepository = _SummaryConsigneeWiseInspRepository;
+            SummaryVendorWiseInspRepository = _SummaryVendorWiseInspRepository;
         }
 
         public IActionResult Index()
@@ -29,11 +29,11 @@ namespace IBS.Controllers
         }
         public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string MaterialValue,string FromDate,string ToDate,string ForParticular,string lstParticular)
         {
-            SummaryConsigneeWiseInspModel model = new() { ReportType = ReportType, Month = Month, Year = Year, FromDt = FromDate, ToDt = ToDate,ForGiven = ForGiven,ReportBasedon = ReportBasedon,MaterialValue = MaterialValue,ForParticular = ForParticular,lstParticular = lstParticular };
-            if (ReportType != "") model.ReportTitle = "Summary of Consignee Wise Inspections";
+            SummaryVendorWiseInspModel model = new() { ReportType = ReportType, Month = Month, Year = Year, FromDt = FromDate, ToDt = ToDate,ForGiven = ForGiven,ReportBasedon = ReportBasedon,MaterialValue = MaterialValue,ForParticular = ForParticular,lstParticular = lstParticular };
+            if (ReportType != "") model.ReportTitle = "Summary of Vendor Wise Inspections";
             return View(model);
         }
-        public IActionResult SummaryConsigneeWiseInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular)
+        public IActionResult SummaryVendorWiseInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular)
         {
             ViewBag.From = FromDate;
             ViewBag.To = ToDate;
@@ -41,11 +41,11 @@ namespace IBS.Controllers
             ViewBag.year = Year;
             if(Convert.ToBoolean(ReportBasedon) == true)
             {
-                ViewBag.ReportBase = "Report Based on IC Date & Sorted on Consignee";
+                ViewBag.ReportBase = "Report Based on IC Date & Sorted on Vendor";
             }
             else
             {
-                ViewBag.ReportBase = "Report Based on BILL Date & Sorted on Consignee";
+                ViewBag.ReportBase = "Report Based on BILL Date & Sorted on Vendor";
             }
             if (Convert.ToBoolean(MaterialValue) == true)
             {
@@ -86,7 +86,7 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            SummaryConsigneeWiseInspModel model = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp( ReportType,  Month,  Year,  ForGiven,  ReportBasedon,MaterialValue,  FromDate,  ToDate,  ForParticular,  lstParticular ,Region);
+            SummaryVendorWiseInspModel model = SummaryVendorWiseInspRepository.SummaryVendorWiseInsp( ReportType,  Month,  Year,  ForGiven,  ReportBasedon,MaterialValue,  FromDate,  ToDate,  ForParticular,  lstParticular ,Region);
             return PartialView(model);
         }
         

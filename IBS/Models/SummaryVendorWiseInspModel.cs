@@ -3,7 +3,7 @@ using IBS.Models.Reports;
 
 namespace IBS.Models
 {
-    public class SummaryConsigneeWiseInspModel
+    public class SummaryVendorWiseInspModel
     {
         public int SrNo { get; set; }
         public string CONSIGNEE { get; set; }
@@ -26,6 +26,6 @@ namespace IBS.Models
         public string MaterialValue { get; set; }
         public string ForParticular { get; set; }
         public string lstParticular { get; set; }
-        public List<SummaryConsigneeWiseInspModel> lstSummaryConreport { get; set; }
+        public List<SummaryVendorWiseInspModel> lstSummaryConreport { get; set; }
     }
 }

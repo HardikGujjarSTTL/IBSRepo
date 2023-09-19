@@ -1,0 +1,67 @@
+﻿@model IBS.Models.Reports.RemitanceModel
+<div>
+    <h3 class="heading3">Bill Wise Remittances for the Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DATE</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">BPO</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">VCHR NO.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">VCHR DATE</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">ACC CD</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BANK</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ NO.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ DATE</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ AMOUNT</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BILL AMOUNT</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT POSTED</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">POSTING DATE</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">EXCESS/SHORT</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstRemitanceBillWisePeriod != null && Model.lstRemitanceBillWisePeriod.Count > 0)
+                {
+                    int SrNo = 1;
+                    decimal _Amount = 0;
+                    @foreach (var item in Model.lstRemitanceBillWisePeriod)
+                    {
+                        <tr>
+                            <td align="center" colspan="1"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                            <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.BILL_DT).ToString("dd/MM/yyyy")</font></td>
+                            <td align="left"><font size="1" face="Verdana">@item.BPO</font></td>
+                            <td align="center"><font size="1" face="Verdana">@item.VCHR_NO</font></td>
+                            <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(item.VCHR_DT).ToString("dd/MM/yyyy")</font></td>
+                            <td align="center"><font size="1" face="Verdana">@item.ACC_CD</font></td>
+                            <td align="left"><font size="1" face="Verdana">@item.BANK_NAME</font></td>
+                            <td align="center"><font size="1" face="Verdana">@item.CHQ_NO</font></td>
+                            <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy")</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.CHQ_AMT</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.BILL_AMT</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.AMT_CLEARED</font></td>
+                            <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy")</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.EXCESSORSHORT</font></td>
+                        </tr>
+                        SrNo++;
+                        _Amount += @item.AMT_CLEARED;
+                    }
+                    <tr style="background:#d4d0c8;">
+                        <td width='5%' valign='top' align='right' colspan='11'> <font size='1' face='Verdana'><b>Total Amount Posted During The Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></b></font></td>
+                        <td width='7%' valign='top' align='right'><font size='1' face='Verdana'>@_Amount</font></td>
+                        <td width='5%' valign='top' align='center' colspan='3'><font size='1' face='Verdana'></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
