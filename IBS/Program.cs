@@ -195,6 +195,7 @@ builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRReposit
 
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
+builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 var app = builder.Build();
 

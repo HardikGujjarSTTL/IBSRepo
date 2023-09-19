@@ -1,0 +1,114 @@
+﻿@model List<IBS.Models.Reports.HighlightReportsModel>
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Highlights</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="heading3">HIGHLIGHTS</h3>
+        <ul class="reportLabelList">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+        </ul>
+        <table class="borderTable">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Region</th>
+                    <th>Highlights</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.sn</td>
+                            <td>@item.Region_Code</td>
+                            <td>@item.Hight_text</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    var fileName = 'Highlight';
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var element = document.getElementById('dvReportViewer');
+
+        element.style.width = "1100px";
+
+        const options = {
+            margin: 0,
+            filename: getExportFileName(fileName) + '.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        if (isPrint) {
+            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+                pdfObj.autoPrint();
+                window.open(pdfObj.output('bloburl'), '_blank');
+            });
+        }
+        else {
+            html2pdf().set(options).from(element).save();
+        }
+
+        element.style.width = "100%";
+    }
+</script>
