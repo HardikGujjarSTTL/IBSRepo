@@ -3379,6 +3379,11 @@ namespace IBS.Models
             int daysDifference = (int)difference.TotalDays;
             return daysDifference;
         }
+
+        public static List<TextValueDropDownDTO> GetScopeOfsector()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ScopeOfsector)).ToList();
+        }
     }
 
     public static class DbContextHelper

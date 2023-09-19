@@ -186,6 +186,201 @@ namespace IBS.Repositories.Reports
             return model;
         }
 
+        public RWCOModel GetRWCOData(DateTime FromDate, string Outstanding)
+        {
+            RWCOModel model = new();
+
+            model.FromDate = FromDate;
+            model.Outstanding = Outstanding;
+
+            List<RWCOListModel> lstRWCOList = new();
+
+            OracleParameter[] parameter = new OracleParameter[2];
+            parameter[0] = new OracleParameter("p_FROM_DT", OracleDbType.Date, FromDate, ParameterDirection.Input);
+            parameter[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("SP_GET_REGION_WISE_COMPARISON_OUTSTANDING_RPT", parameter);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lstRWCOList = JsonConvert.DeserializeObject<List<RWCOListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
+            if (model.Outstanding == "2") lstRWCOList = lstRWCOList.Where(x => x.TOT_ALL_OUTSTANDING > 0 || x.TOT_ALL_SUSPENSE > 0).ToList();
+
+            model.lsttRWCOList = lstRWCOList;
+
+            return model;
+        }
+
+        public ICSubmissionModel GetICSubmissionData(DateTime FromDate, DateTime ToDate, string Region)
+        {
+            ICSubmissionModel model = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            var query = from t20 in context.T20Ics
+                        join t09 in context.T09Ies on t20.IeCd equals t09.IeCd
+                        where t20.IcSubmitDt >= FromDate && t20.IcSubmitDt <= ToDate &&
+                              t20.CaseNo.Substring(0, 1) == Region
+                        orderby t20.IcSubmitDt, t09.IeCd, t20.BkNo, t20.SetNo
+                        select new
+                        {
+                            ID = 0,
+                            t20.IcSubmitDt,
+                            t09.IeName,
+                            t20.BkNo,
+                            t20.SetNo
+                        };
+
+            model.lstICSubmission = query.AsEnumerable().Select((item, index) => new ICSubmissionListModel
+            {
+                ID = index + 1,
+                IC_SUBMIT_DATE = item.IcSubmitDt,
+                IE_NAME = item.IeName,
+                BK_NO = item.BkNo,
+                SET_NO = item.SetNo
+            }).ToList();
+
+
+            return model;
+        }
+
+        public PendingICAgainstCallsModel GetPendingICAgainstCallsData(DateTime FromDate, DateTime ToDate, string Region)
+        {
+            PendingICAgainstCallsModel model = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            var validCallStatus = new List<string> { "A", "R", "M" };
+
+            var query = from t17 in context.T17CallRegisters
+                        join t09 in context.T09Ies on t17.IeCd equals t09.IeCd
+                        join t20 in context.T20Ics on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t20.CaseNo, t20.CallRecvDt, t20.CallSno } into t20Group
+                        from t20 in t20Group.DefaultIfEmpty()
+                        where t20 == null &&
+                              t17.CallStatus != null && validCallStatus.Contains(t17.CallStatus) &&
+                              t17.CallRecvDt >= FromDate && t17.CallRecvDt <= ToDate &&
+                              t17.CaseNo.Substring(0, 1) == Region
+                        orderby t09.IeName, t17.CallStatus, t17.CallRecvDt, t17.CaseNo
+                        select new
+                        {
+                            t17.CaseNo,
+                            t17.CallRecvDt,
+                            t17.CallSno,
+                            STATUS = t17.CallStatus == "A" ? "Accepted" :
+                                     t17.CallStatus == "R" ? "Rejected" :
+                                     t17.CallStatus == "M" ? "Pending" :
+                                     t17.CallStatus == "B" ? "Accepted and Billed" : "",
+                            t09.IeName,
+                            IE_STATUS = t09.IeStatus == "R" ? "Retired" :
+                                        t09.IeStatus == "T" ? "Transferred" :
+                                        t09.IeStatus == "L" ? "Left/Repatriated" :
+                                        "Working"
+                        };
+
+            var result = query.ToList();
+
+            model.lstPendingICAgainstCalls = query.AsEnumerable().Select((item, index) => new PendingICAgainstCallsListModel
+            {
+                ID = index + 1,
+                CASE_NO = item.CaseNo,
+                CALL_RECV_DT = item.CallRecvDt,
+                CALL_SNO = (int)item.CallSno,
+                STATUS = item.STATUS,
+                IE_NAME = item.IeName,
+                IE_STATUS = item.IE_STATUS
+            }).ToList();
+
+
+            return model;
+        }
+
+        public SuperSurpriseDetailsModel GetSuperSurpriseDetailsData(DateTime FromDate, DateTime ToDate, string Region)
+        {
+            SuperSurpriseDetailsModel model = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            var startDate = new DateTime(2022, 01, 01);
+            var endDate = new DateTime(2024, 01, 01);
+
+            //var query = from t44 in context.T44SuperSurprises
+            //            join t13 in context.T13PoMasters on t44.CaseNo equals t13.CaseNo
+            //            join v05 in context.V05Vendors on t13.VendCd equals v05.VendCd
+            //            join t08 in context.T08IeControllOfficers on (int?)t44.CoCd equals t08.CoCd
+            //            join t09 in context.T09Ies on t44.IeCd equals t09.IeCd
+            //            where t44.SUPER_SURPRISE_DT >= startDate && t44.SUPER_SURPRISE_DT <= endDate &&
+            //                  t44.SUPER_SURPRISE_NO.StartsWith("N")
+            //            orderby t08.CO_NAME, t44.SUPER_SURPRISE_DT, t44.SUPER_SURPRISE_NO
+            //            select new
+            //            {
+            //                t44.SUPER_SURPRISE_NO,
+            //                SUP_SUR_DATE = t44.SUPER_SURPRISE_DT.ToString("dd/MM/yyyy"),
+            //                t08.CO_NAME,
+            //                t09.IE_NAME,
+            //                VENDOR = v05.VENDOR,
+            //                t44.ITEM_DESC,
+            //                t44.PRE_INT_REJ,
+            //                t44.DISCREPANCY,
+            //                t44.OUTCOME,
+            //                t44.SBU_HEAD_REMARKS
+            //            };
+
+            //var result = query.ToList();
+
+
+            //var validCallStatus = new List<string> { "A", "R", "M" };
+
+            //var query = from t17 in context.T17CallRegisters
+            //            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd
+            //            join t20 in context.T20Ics on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t20.CaseNo, t20.CallRecvDt, t20.CallSno } into t20Group
+            //            from t20 in t20Group.DefaultIfEmpty()
+            //            where t20 == null &&
+            //                  t17.CallStatus != null && validCallStatus.Contains(t17.CallStatus) &&
+            //                  t17.CallRecvDt >= FromDate && t17.CallRecvDt <= ToDate &&
+            //                  t17.CaseNo.Substring(0, 1) == Region
+            //            orderby t09.IeName, t17.CallStatus, t17.CallRecvDt, t17.CaseNo
+            //            select new
+            //            {
+            //                t17.CaseNo,
+            //                t17.CallRecvDt,
+            //                t17.CallSno,
+            //                STATUS = t17.CallStatus == "A" ? "Accepted" :
+            //                         t17.CallStatus == "R" ? "Rejected" :
+            //                         t17.CallStatus == "M" ? "Pending" :
+            //                         t17.CallStatus == "B" ? "Accepted and Billed" : "",
+            //                t09.IeName,
+            //                IE_STATUS = t09.IeStatus == "R" ? "Retired" :
+            //                            t09.IeStatus == "T" ? "Transferred" :
+            //                            t09.IeStatus == "L" ? "Left/Repatriated" :
+            //                            "Working"
+            //            };
+
+            //var result = query.ToList();
+
+            //model.lstPendingICAgainstCalls = query.AsEnumerable().Select((item, index) => new PendingICAgainstCallsListModel
+            //{
+            //    ID = index + 1,
+            //    CASE_NO = item.CaseNo,
+            //    CALL_RECV_DT = item.CallRecvDt,
+            //    CALL_SNO = (int)item.CallSno,
+            //    STATUS = item.STATUS,
+            //    IE_NAME = item.IeName,
+            //    IE_STATUS = item.IE_STATUS
+            //}).ToList();
+
+
+            return model;
+        }
+
         public string GetFilterTitle(string YearMonth)
         {
             string filterTitle = string.Empty;

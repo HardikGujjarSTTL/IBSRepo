@@ -50,6 +50,8 @@ SessionHelper.SetHttpContextAccessor(accessor);
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(60); });
 
+builder.Services.AddDataProtection();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
