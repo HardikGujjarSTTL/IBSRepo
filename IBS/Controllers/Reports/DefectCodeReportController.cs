@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
 using IBS.Models.Reports;
@@ -30,8 +31,15 @@ namespace IBS.Controllers.Reports
 
         public IActionResult DefectCodeReport(DateTime FromDate, DateTime ToDate)
         {
+            string Region = SessionHelper.UserModelDTO.Region;
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
             DefectCodeReport model = defectCodeReportRepository.GetDefectCodeWiseData(FromDate, ToDate, Region);
-            ViewBag.Regions = Region;
+            ViewBag.Regions = wRegion;
             return PartialView(model);
         }
     }

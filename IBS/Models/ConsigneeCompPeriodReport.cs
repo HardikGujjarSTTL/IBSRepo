@@ -24,6 +24,10 @@
         public string actiondrp { get; set; }
         public string ReportTitle { get; set; }
         public string ReportType { get; set; }
+        public string particilarcode { get; set; }
+        public string particilarjicode { get; set; }
+        public string actioncodedrp { get; set; }
+        public string actionjidrp { get; set; }
 
         public List<ConsigneeComplaintsReportModel> lstConsigneeComplaints { get; set; }
     }

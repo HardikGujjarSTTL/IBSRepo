@@ -112,24 +112,68 @@
     </ul>
     <div class="row my-0">
         <div class="col-md-12">
+            <h3 class="heading3">Defect Code</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="radioListForm">
+                <li>
+                    <input type="radio" id="allcode" name="actionincode" value="allcode">
+                    <label for="allcode">All</label>
+                    <br>
+                </li>
+                <li>
+                    <input type="radio" id="DefectCode" name="actionincode" value="DefectCode">
+                    <label for="DefectCode">Particular Defect Code</label>
+                    <br>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-3"> @Html.DropDownList("ParticularDefectCode", new SelectList(IBS.Models.Common.GetDefectDesc(), "Value", "Text"), "--Select--", new { id = "ParticularDefectCode" }) </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12">
+            <h3 class="heading3">JI Status Code/Classification</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="radioListForm">
+                <li>
+                    <input type="radio" id="alljicode" name="actionjicode" value="alljicode">
+                    <label for="alljicode">All</label>
+                    <br>
+                </li>
+                <li>
+                    <input type="radio" id="Particularjicode" name="actionjicode" value="Particularjicode">
+                    <label for="Particularjicode">Particular JI Status Code</label>
+                    <br>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-3"> @Html.DropDownList("ParticularJI", new SelectList(IBS.Models.Common.GetClassification(), "Value", "Text"), "--Select--", new { id = "ParticularJI" }) </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12">
             <h3 class="heading3">Action Proposed</h3>
         </div>
     </div>
     <div class="row">
         <div class="col-md-3">
-    <ul class="radioListForm">
-        <li>
-            <input type="radio" id="allaction" name="actioninspectionRegion" value="allaction">
-            <label for="allaction">All</label>
-            <br>
-        </li>
-        <li>
-            <input type="radio" id="ParticularAction" name="actioninspectionRegion" value="ParticularAction">
-            <label for="ParticularAction">Particular Action</label>
-            <br>
-        </li>
-    </ul>
-    </div>
+            <ul class="radioListForm">
+                <li>
+                    <input type="radio" id="allaction" name="actionall" value="allaction">
+                    <label for="allaction">All</label>
+                    <br>
+                </li>
+                <li>
+                    <input type="radio" id="ParticularAction" name="actionall" value="ParticularAction">
+                    <label for="ParticularAction">Particular Action</label>
+                    <br>
+                </li>
+            </ul>
+        </div>
         <div class="col-md-3"> @Html.DropDownList("ParticularAction", new SelectList(IBS.Models.Common.ParticularAction(), "Value", "Text"), "--Select--", new { id = "ParticularActiondrp" }) </div>
     </div>
     <div class="row">
@@ -152,9 +196,14 @@
 
         $(document).ready(function () {
             $("#ParticularActiondrp").hide();
+            $("#ParticularJI").hide();
+            $("#ParticularDefectCode").hide();
             $("#allRegions").prop("checked", true);
             $("#alljiRegions").prop("checked", true);
             $("#compallRegions").prop("checked", true);
+            $("#allaction").prop("checked", true);
+            $("#allcode").prop("checked", true);
+            $("#alljicode").prop("checked", true);
             $("#allaction").prop("checked", true);
 
             $('#ParticularAction').change(function () {
@@ -165,41 +214,84 @@
                 $("#ParticularActiondrp").hide();
             });
 
+            $('#DefectCode').change(function () {
+                $("#ParticularDefectCode").show();
+            });
+
+            $('#allcode').change(function () {
+                $("#ParticularDefectCode").hide();
+                $("#ParticularDefectCode").val('');
+            });
+
+            $('#Particularjicode').change(function () {
+                $("#ParticularJI").show();
+                $("#ParticularJI").val('');
+            });
+
+            $('#alljicode').change(function () {
+                $("#ParticularJI").hide();
+                $("#ParticularJI").val('');
+            });
+
             $('#northern').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#southern').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#eastern').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#western').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#northernji').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#southernji').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#easternji').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#westernji').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#Yes').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#No').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#Cancelled').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
             $('#UnderConsideration').change(function () {
                 $("#ParticularActiondrp").hide();
+                $("#ParticularJI").hide();
+                $("#ParticularDefectCode").hide();
             });
         });
 
@@ -247,14 +339,18 @@
             var underconsider = $("#UnderConsideration").is(":checked") == true ? "true" : "false";
             var allaction = $("#allaction").is(":checked") == true ? "true" : "false";
             var particilaraction = $("#ParticularAction").is(":checked") == true ? "true" : "false";
+            var particilarcode = $("#DefectCode").is(":checked") == true ? "true" : "false";
+            var particilarjicode = $("#Particularjicode").is(":checked") == true ? "true" : "false";
             var actiondrp = $('#ParticularActiondrp').val();
+            var actioncodedrp = $('#ParticularDefectCode').val();
+            var actionjidrp = $('#ParticularJI').val();
 
             let myObject = {
                 FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion, jinorth, jisourth, jieast, jiwest,
-                compallregion, compyes, compno, cancelled, underconsider, allaction, particilaraction, actiondrp
+                compallregion, compyes, compno, cancelled, underconsider, allaction, particilaraction, actiondrp, particilarcode, particilarjicode, actioncodedrp, actionjidrp
             };
 
-            var url = '@Url.Action("Manage", "ConsigneeCompPeriod")?' + $.param(myObject);
+            var url = '@Url.Action("Manage", "ConCompForCorporateReport")?' + $.param(myObject);
             window.open(url, '_blank');
         }
     </script>

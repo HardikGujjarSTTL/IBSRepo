@@ -16,10 +16,12 @@
     public class DefectCodeList
     {
         public string Code { get; set; }
-        public string Upheld { get; set; }
-        public string Sorting { get; set; }
-        public string Rectification { get; set; }
-        public string PriceReduction { get; set; }
-        public string Total { get; set; }
+        public decimal Upheld { get; set; }
+        public decimal Sorting { get; set; }
+        public decimal Rectification { get; set; }
+        public decimal PriceReduction { get; set; }
+        public decimal Total { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
     }
 }

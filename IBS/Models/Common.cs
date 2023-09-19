@@ -274,8 +274,8 @@ namespace IBS.Models
                                                select
                                           new SelectListItem
                                           {
-                                              Text = Convert.ToString(a.DefectCd),
-                                              Value = Convert.ToString(a.DefectDesc)
+                                              Value = Convert.ToString(a.DefectCd),
+                                              Text = Convert.ToString(a.DefectDesc)
                                           }).ToList();
 
             return DefectDesc;
@@ -289,8 +289,8 @@ namespace IBS.Models
                                                    select
                                           new SelectListItem
                                           {
-                                              Text = Convert.ToString(a.JiStatusCd),
-                                              Value = Convert.ToString(a.JiStatusDesc)
+                                              Value = Convert.ToString(a.JiStatusCd),
+                                              Text = Convert.ToString(a.JiStatusDesc)
                                           }).ToList();
 
             return classification;

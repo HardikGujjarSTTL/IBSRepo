@@ -1,28 +1,26 @@
 ﻿using IBS.Filters;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IBS.Controllers
+namespace IBS.Controllers.Reports
 {
-    public class ConsigneeCompPeriodController : BaseController
+    public class ConCompForCorporateReportController : BaseController
     {
         private readonly IConsigneeCompPeriodRepository consigneeCompPeriodRepository;
-        public ConsigneeCompPeriodController(IConsigneeCompPeriodRepository _consigneeCompPeriodRepository)
+        public ConCompForCorporateReportController(IConsigneeCompPeriodRepository _consigneeCompPeriodRepository)
         {
             consigneeCompPeriodRepository = _consigneeCompPeriodRepository;
         }
-        [Authorization("ConsigneeCompPeriod", "Index", "view")]
+        [Authorization("ConCompForCorporateReport", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
         public IActionResult Manage(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
-            string jinorth, string jisourth, string jieast,string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp)
+           string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp
+            ,string particilarcode,string particilarjicode,string actioncodedrp,string actionjidrp)
         {
             ConsigneeCompPeriodReport model = new()
             {
@@ -45,15 +43,19 @@ namespace IBS.Controllers
                 underconsider = underconsider,
                 allaction = allaction,
                 particilaraction = particilaraction,
-                actiondrp = actiondrp
+                actiondrp = actiondrp,
+                particilarcode= particilarcode,
+                particilarjicode= particilarcode,
+                actioncodedrp= actioncodedrp,
+                actionjidrp= actionjidrp
             };
-           model.ReportTitle = "Consignee Complaints";
+            model.ReportTitle = "Consignee Complaints";
             return View(model);
         }
 
         public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
-            string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp,
-            string particilarcode, string particilarjicode, string actioncodedrp, string actionjidrp)
+             string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp,
+             string particilarcode,string particilarjicode, string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
             ConsigneeCompPeriodReport model = consigneeCompPeriodRepository.GetCompPeriodData(FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion,
@@ -75,7 +77,7 @@ namespace IBS.Controllers
 
             ViewBag.Regions = region;
             ViewBag.JiRequiredStatus = jirequired;
-            return PartialView(model);
+            return PartialView("~/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
         }
     }
 }

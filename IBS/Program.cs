@@ -195,6 +195,7 @@ builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRReposit
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
+builder.Services.AddScoped<IDefectCodeReportRepository, DefectCodeReportRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 
 var app = builder.Build();

@@ -21,7 +21,8 @@ namespace IBS.Repositories
         }
 
         public ConsigneeCompPeriodReport GetCompPeriodData(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
-            string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp)
+            string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp,
+            string actioncodedrp, string actionjidrp)
         {
             ConsigneeCompPeriodReport model = new();
             List<ConsigneeComplaintsReportModel> lstConsigneeComplaints = new();
@@ -32,13 +33,15 @@ namespace IBS.Repositories
             model.FromDate = FromDate; model.ToDate = ToDate; model.Allregion = Allregion; model.regionorth = regionorth; model.regionsouth = regionsouth; model.regioneast = regioneast; model.regionwest = regionwest;
             model.jiallregion = jiallregion; model.jinorth = jinorth; model.jisourth = jisourth; model.jieast = jieast; model.jiwest = jiwest; model.compallregion = compallregion;
             model.compyes = compyes; model.compno = compno; model.cancelled = cancelled; model.underconsider = underconsider; model.allaction = allaction; model.particilaraction = particilaraction; model.actiondrp = actiondrp;
+            model.actioncodedrp = actioncodedrp; model.actionjidrp = actionjidrp;
 
-
-            OracleParameter[] parameter = new OracleParameter[4];
+            OracleParameter[] parameter = new OracleParameter[6];
             parameter[0] = new OracleParameter("p_Fromdate", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             parameter[1] = new OracleParameter("p_Todate", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             parameter[2] = new OracleParameter("p_lstAction", OracleDbType.Varchar2, actiondrp, ParameterDirection.Input);
-            parameter[3] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            parameter[3] = new OracleParameter("p_lstClassification", OracleDbType.Varchar2, actionjidrp, ParameterDirection.Input);
+            parameter[4] = new OracleParameter("p_lstDefectCd", OracleDbType.Varchar2, actioncodedrp, ParameterDirection.Input);
+            parameter[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_Period_Report", parameter, 1);
 
             if (ds != null && ds.Tables.Count > 0)

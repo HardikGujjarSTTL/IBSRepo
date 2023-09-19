@@ -1,4 +1,4 @@
-﻿@model IBS.Models.DefectCodeReport
+﻿@model IBS.Models.ConsigneeCompPeriodReport
 
 @{
     Layout = null;
@@ -35,18 +35,23 @@
     var fileName = '';
 
     $(document).ready(function () {
-        loadDefectCodeReport();
-        fileName = 'Defect_Code';
+        loadComplaints();
+        fileName = 'Consignee_Complaint';
     });
 
-    function loadDefectCodeReport() {
-        debugger
-        $("#dvReportViewer").load("@Url.Action("DefectCodeReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+    function loadComplaints() {
+        $("#dvReportViewer").load("@Url.Action("ComplaintsByPeriod")", {
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', Allregion: '@Model.Allregion', regionorth: '@Model.regionorth'
+            , regionsouth: '@Model.regionsouth', regioneast: '@Model.regioneast', regionwest: '@Model.regionwest', jiallregion: '@Model.jiallregion', jinorth: '@Model.jinorth', jisourth: '@Model.jisourth'
+            , jieast: '@Model.jieast', jiwest: '@Model.jiwest', compallregion: '@Model.compallregion', compyes: '@Model.compyes', compno: '@Model.compno', cancelled: '@Model.cancelled'
+            , underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp',
+            particilarcode: '@Model.particilarcode', particilarjicode: '@Model.particilarjicode', actioncodedrp: '@Model.actioncodedrp', actionjidrp: '@Model.actionjidrp'
+
+        }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
-
 
     $("#btnPrint").click(function () {
         generatePdf(true);

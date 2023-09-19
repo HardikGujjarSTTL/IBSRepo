@@ -1,11 +1,13 @@
 ﻿@model IBS.Models.DefectCodeReport
 
 <div>
-    <h3 class="heading3">Cluster Performance For The Period : <span class="orangeText"> @Model.FromDate </span> To <span class="orangeText">@Model.ToDate </span> (@ViewBag.Regions)</h3>
+    <h3 class="heading3"> @ViewBag.Regions</h3>
+    <h3 class="heading3">Defect Code Wise Analysis of Complaints for the Period : <span class="orangeText"> @Model.FromDate.ToString("dd/MM/yyyy") </span> To <span class="orangeText">@Model.ToDate.ToString("dd/MM/yyyy") </span></h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Code</font></b></th>
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Upheld</font></b></th>
                     <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Sorting</font></b></th>
@@ -15,17 +17,34 @@
                 </tr>
                 @if (Model != null && Model.lstDefectCodeList != null && Model.lstDefectCodeList.Count > 0)
                 {
+                    decimal Upheldto = 0, Sortingto = 0, toRectification = 0, toPriceReduction = 0, toTotal = 0;
+                    var SrNo = 0;
                     @foreach (var item in Model.lstDefectCodeList)
                     {
+                        SrNo = SrNo + 1;
+                        Upheldto = Upheldto + item.Upheld;
+                        Sortingto = Sortingto + item.Sorting;
+                        toRectification = toRectification + item.Rectification;
+                        toPriceReduction = toPriceReduction + item.PriceReduction;
+                        toTotal = toTotal + item.Total;
                         <tr>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
                             <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Code</font></td>
                             <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.Upheld</font></td>
-                            <td width="7%" valign="top" align="right"><font size="1" face="Verdana">@item.Sorting</font></td>
-                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.Rectification</font></td>
-                            <td width="6%" valign="top" align="right"><font size="1" face="Verdana">@item.PriceReduction</font></td>
-                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.Total</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.Sorting</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Rectification</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.PriceReduction</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Total</font></td>
                         </tr>
                     }
+                    <tr>
+                        <td width="15%" valign="top" align="Left" colspan="2"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@Upheldto</b></font></td>
+                        <td width="6%" valign="top" align="center"><font size="1" face="Verdana"><b>@Sortingto</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toRectification</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toPriceReduction</b></font></td>
+                        <td width="6%" valign="top" align="center"><font size="1" face="Verdana"><b>@toTotal</b></font></td>
+                    </tr>
                 }
             </tbody>
         </table>

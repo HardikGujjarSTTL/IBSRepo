@@ -7,9 +7,11 @@ using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Linq;
 using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Reports
@@ -31,8 +33,8 @@ namespace IBS.Repositories.Reports
             DataTable dt = new DataTable();
 
             OracleParameter[] parameter = new OracleParameter[4];
-            parameter[0] = new OracleParameter("p_From_date", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
-            parameter[1] = new OracleParameter("p_To_date", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            parameter[0] = new OracleParameter("p_From_date", OracleDbType.Varchar2, FromDate.ToString("dd/MM/yyyy"), ParameterDirection.Input);
+            parameter[1] = new OracleParameter("p_To_date", OracleDbType.Varchar2, ToDate.ToString("dd/MM/yyyy"), ParameterDirection.Input);
             parameter[2] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             parameter[3] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
 
@@ -44,13 +46,20 @@ namespace IBS.Repositories.Reports
                 List<DefectCodeList> listcong = dt.AsEnumerable().Select(row => new DefectCodeList
                 {
                     Code = Convert.ToString(row["DEFECT_DESC"]),
-                    Upheld = Convert.ToString(row["UPHELD"]),
-                    Sorting = Convert.ToString(row["SORTING"]),
-                    Rectification = Convert.ToString(row["RECTIFICATION"]),
-                    PriceReduction = Convert.ToString(row["PRICE_REDUCTION"]),
+                    Upheld = Convert.ToDecimal(row["UPHELD"]),
+                    Sorting = Convert.ToDecimal(row["SORTING"]),
+                    Rectification = Convert.ToDecimal(row["RECTIFICATION"]),
+                    PriceReduction = Convert.ToDecimal(row["PRICE_REDUCTION"]),
                 }).ToList();
+                foreach (var item in listcong)
+                {
+                    item.Total = (decimal)item.Upheld + (decimal)item.Sorting + (decimal)item.Rectification + (decimal)item.PriceReduction;
+                }
                 model.lstDefectCodeList = listcong;
             }
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
 
             return model;
         }

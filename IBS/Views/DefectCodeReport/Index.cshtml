@@ -6,7 +6,7 @@
 
 <div class="task-listinput">
     <div class="accordion-body">
-        <div class="task-inner row report1" style="display: none">
+        <div class="task-inner row report1">
             <div class="col-md-3">
                 <div class="input-search">
                     <label for="FromDate">For The Period From</label>
@@ -38,7 +38,7 @@
     <script type="text/javascript">
 
         function ViewReport1() {
-
+            debugger
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
 
@@ -66,7 +66,7 @@
 
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
-            let myObject = { ReportType, FromDate, ToDate };
+            let myObject = { FromDate, ToDate };
 
             var url = '@Url.Action("Manage", "DefectCodeReport")?' + $.param(myObject);
             window.open(url, '_blank');

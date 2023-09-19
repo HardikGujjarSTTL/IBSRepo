@@ -48,9 +48,12 @@
                     </tr>
                     @if (Model != null && Model.lstConsigneeComplaints.Count > 0)
                     {
+                        var SrNo = 0;
                         @foreach (var item in Model.lstConsigneeComplaints)
                         {
+                        SrNo = SrNo + 1;
                             <tr>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IN_REGION</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINT_ID</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_SNO</font></td>
