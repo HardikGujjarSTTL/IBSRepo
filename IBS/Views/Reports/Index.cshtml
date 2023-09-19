@@ -1,0 +1,364 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "UNBILLEDIC") ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
+    else if (ReportType == "ICISSUEDNSUB") ReportTitle = "IC Issued But Not Received in Office";
+    else if (ReportType == "IE7thCopy") ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
+    else if (ReportType == "CaseHistory") ReportTitle = "Case History";
+    ViewData["Title"] = ReportTitle;
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+    <div class="list-btn" id="btnBack" style="display:none;">
+        <a asp-area="" asp-controller="IC_Receipt" asp-action="Index" class="formBtn">Back</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row report1" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report2" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="txtBookNo">Book No.</label>
+                    <input type="text" id="txtBookNo" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="txtSetNo">Set No. From</label>
+                    <input type="text" id="txtSetNo" readonly />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearReport2();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report3" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="txtCaseNo">Case No</label>
+                    <input type="text" id="txtCaseNo" />
+                    <span class="text-danger field-validation-error" id="spnErrorCaseNo"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportCaseHistory();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearReport3();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report4" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">For The Period From</label>
+                    <input type="text" class="datepicker" id="txtFromDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnTxtErrorFromDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="txtToDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnTxtErrorToDate"></span>
+                </div>
+            </div>
+            <div class="row my-0" style="text-align:center;">
+                <b><font face="Verdana" color="darkblue" size="2">IC ISSUED BY IE BUT NOT RECEIVED IN OFFICE</font></b>
+                <div class="col-md-12" style="font-weight: bold;margin:2px;" id="rdbIECM">
+                    @Html.RadioButton("rdbType", "IEWise", new { @id="rdIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) IE Wise
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdbType", "CMWise", new { @id="rdCM", @class = "text-darkblue font-bold font-size-8pt" }) CM Wise
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport4();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearReport4();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section report2" id="tblIE7thCopy" style="display: none">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Book No.</th>
+                            <th>Set No. From</th>
+                            <th>Set No. To</th>
+                            <th>Issue Date to IE</th>
+                            <th>IE to Whom Issued</th>
+                            <th>Book Submitted</th>
+                            <th>Book Submit Date</th>
+                            <th>Book Issued To Region</th>
+                            <th>View Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            if ('@ReportType' == "IE7thCopy") {
+                $(".report1").css("display", "none");
+                $(".report2").css("display", "");
+                $(".report3").css("display", "none");
+                $(".report4").css("display", "none");
+            }
+            else if ('@ReportType' == "UNBILLEDIC") {
+                $(".report1").css("display", "");
+                $(".report2").css("display", "none");
+                $(".report3").css("display", "none");
+                $(".report4").css("display", "none");
+                $("#btnBack").css("display", "");
+            }
+            else if ('@ReportType' == "CaseHistory") {
+                $(".report1").css("display", "none");
+                $(".report2").css("display", "none");
+                $(".report3").css("display", "");
+                $(".report4").css("display", "none");
+            }
+            else if ('@ReportType' == "ICISSUEDNSUB") {
+                $(".report1").css("display", "none");
+                $(".report2").css("display", "none");
+                $(".report3").css("display", "none");
+                $(".report4").css("display", "");
+                $("#btnBack").css("display", "");
+            }
+        });
+
+        // Clear Functions Start
+        function ClearControls() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+        }
+        function ClearReport2() {
+            window.location.href = '@Url.Action("Index","Reports")?ReportType=IE7thCopy';
+        }
+
+        function ClearReport3() {
+            $("#txtCaseNo").val("");
+            $("#spnErrorCaseNo").html("");
+        }
+
+        function ClearReport4() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnTxtErrorFromDate").html("");
+            $("#spnTxtErrorToDate").html("");
+            $("#rdIE").prop("checked", true);
+        }
+        // Clear Functions End
+
+        function ViewReport() {
+            debugger
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDate").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = { ReportType, FromDate, ToDate };
+
+            //if (ReportType == "ICISSUEDNSUB") {
+            //    var Type = $('input[name="rdbType"]:checked').val();
+            //    myObject = { ReportType, Type, FromDate, ToDate };
+            //    var url = '@Url.Action("ManageICIssued", "Reports")?' + $.param(myObject);
+            //    window.open(url, '_blank');
+            //}
+            //else {
+            var url = '@Url.Action("Manage", "Reports")?' + $.param(myObject);
+            window.open(url, '_blank');
+            //}
+        }
+
+        function ViewReport4() {
+            debugger
+            $("#spnTxtErrorFromDate").html("");
+            $("#spnTxtErrorToDate").html("");
+
+            var IsValid = true;
+
+            if ($("#txtFromDate").val() == "") {
+                $("#spnTxtErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#txtToDate").val() == "") {
+                $("#spnTxtErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#txtFromDate").val() != "" && IsValidDate($("#txtFromDate").val()) == false) {
+                $("#spnTxtErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#txtToDate").val() != "" && IsValidDate($("#txtToDate").val()) == false) {
+                $("#spnTxtErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#txtFromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#txtToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = { ReportType, FromDate, ToDate };
+
+            var Type = $('input[name="rdbType"]:checked').val();
+            myObject = { ReportType, Type, FromDate, ToDate };
+            var url = '@Url.Action("ManageICIssued", "Reports")?' + $.param(myObject);
+            window.open(url, '_blank');
+
+        }
+
+        function InitializeDatatable() {
+            var Bk_No = $("#txtBookNo").val() == "" ? null : $("#txtBookNo").val();
+            var Set_No_Fr = $("#txtSetNo").val() == "" ? null : $("#txtSetNo").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("Get_Book_Set_Copy", "Reports")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            Bk_No, Set_No_Fr
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [
+                    { data: "Bk_No" },
+                    { data: "Set_No_Fr" },
+                    { data: "Set_No_To", },
+                    {
+                        data: "Issue_Dt", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Issue_To_Iecd" },
+                    { data: "Bk_Submited" },
+                    {
+                        data: "Bk_Submit_Dt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Bk_Issue_To_Region" },
+                    {
+                        data: "", render: function (data, type, row, meta) {
+                            var Bk_No = row.Bk_No;
+                            var Set_No_Fr = row.Set_No_Fr;
+                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\"> <a onclick="ViewReportIE7thCopy(\'' + Bk_No + '\',\'' + Set_No_Fr + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-eye\" title="Report"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function ViewReportIE7thCopy(Bk_No, Set_No_Fr) {
+            var ReportType = '@ReportType';
+
+            let myObject = { ReportType, Bk_No, Set_No_Fr };
+            var url = '@Url.Action("Manage7thCopy", "Reports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ViewReportCaseHistory() {
+            var IsValid = true;
+            if ($("#txtCaseNo").val() == "") {
+                $("#spnErrorCaseNo").html("The Case No field is required.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            $("#spnErrorCaseNo").html("");
+            window.open("@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#txtCaseNo").val(), "_blank");
+        }
+
+    </script>
+}

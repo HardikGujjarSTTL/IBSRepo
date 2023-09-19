@@ -91,6 +91,8 @@ builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.Inspectio
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
 
+builder.Services.AddScoped<IRemitanceReportsRepository, IBS.Repositories.Reports.RemitanceReportsRepository>();
+
 builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
 builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
 builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsheetReportRepository>();
@@ -184,6 +186,7 @@ builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRe
 builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
 builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterRepository>();
 builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
+builder.Services.AddScoped<IConsigneeComplaintsReportRepository, ConsigneeComplaintsReportRepository>();
 
 builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
 builder.Services.AddScoped<ILabRegisterReportRepository, LabRegisterReportRRepository>();
@@ -195,6 +198,8 @@ builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRReposit
 
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
+builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
+builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
 builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 var app = builder.Build();

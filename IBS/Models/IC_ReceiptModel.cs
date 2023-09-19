@@ -84,5 +84,5 @@ namespace IBS.Models
 
         public bool IsTIF { get; set; }
         public bool IsPDF{ get; set; }
-    }
+    }    
 }

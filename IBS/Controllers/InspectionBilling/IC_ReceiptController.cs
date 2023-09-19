@@ -165,54 +165,7 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptDelete", 1, GetIPAddress());
             }
             return Json(result);
-        }        
-
-        public IActionResult IC_Issued_Partial(string Type)
-        {
-            ViewBag.Type = Type;            
-            return PartialView("IC_Issued_Partial");
-        }
-
-        public IActionResult Get_UnBilled_IC([FromBody] DTParameters dtParameters)
-        {
-            DTResult<ICReportModel> dtList = new();
-            try
-            {
-                var region = GetUserInfo.Region;
-                dtList = iC_ReceiptRepository.Get_UnBilled_IC(dtParameters, region);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
-            }
-            return Json(dtList);
-        }
-
-        public IActionResult Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters)
-        {
-            DTResult<ICIssueNotReceiveModel> dtList = new();
-            try
-            {
-                var region = GetUserInfo.Region;
-                var username = GetUserInfo.UserName;
-                var iccd = Convert.ToString(GetUserInfo.IeCd);
-                dtList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(dtParameters, region, username, iccd);
-                
-                foreach(var row in dtList.data)
-                {                    
-                    var tifpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO+ ".TIF");
-                    var pdfpath = Path.Combine(env.WebRootPath, "/RBS/CASE_NO/" + row.CASE_NO + ".PDF");
-                    row.IsTIF =  System.IO.File.Exists(tifpath) == true ? true : false;
-                    row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
-            }
-            return Json(dtList);
-        }
-
+        }                               
 
         public IActionResult ICStatus()
         {
@@ -231,7 +184,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_UnBilled_IC", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_IC_Status", 1, GetIPAddress());
             }
             return Json(dtList);
         }
