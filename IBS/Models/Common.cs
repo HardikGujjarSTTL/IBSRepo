@@ -2653,6 +2653,20 @@ namespace IBS.Models
             }
             return objdata;
         }
+        public static List<SelectListItem> GetSummaryConsignee()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> objdata = (from a in context.V06Consignees
+                                            orderby a.Consignee
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.ConsigneeCd + "-" + a.Consignee,
+                                           Value = Convert.ToString(a.ConsigneeCd)
+                                       }).ToList();
+            return objdata;
+        }
 
         public static List<SelectListItem> GetUnitOfMeasurment()
         {
