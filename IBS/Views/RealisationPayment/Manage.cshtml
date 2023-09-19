@@ -1,4 +1,4 @@
-﻿@model IBS.Models.ReportsModel
+﻿@model IBS.Models.RealisationPaymentReportsModel
 
 @{
     Layout = null;
@@ -25,6 +25,7 @@
     </div>
 </body>
 </html>
+
 <link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/js/html2pdf.bundle.min.js"></script>
@@ -35,54 +36,18 @@
     var fileName = '';
 
     $(document).ready(function () {
-        debugger
-        if ('@ReportType' == 'UNBILLEDIC') {
-            loadUnBilledIC();
-            fileName = 'UnBilled_IC';
-        }
-        else if ('@ReportType' == 'IE7thCopy') {
-            loadIE7thCopy();
-            fileName = 'IC_Book_Set_7th_Copy';
-        }
-        else if ('@ReportType' == "ICISSUEDNSUB"){
-            loadICIssued();
-            fileName = 'IC_Issued_Not_Received';
-        }
-        else if('@ReportType' == 'ICStatus'){
-            loadICStatus();
-            fileName = 'IC_Status';
-        }
+        if ('@ReportType' == '') {
+            loadOnlinePayment();
+            fileName = 'IE_Performance';
+        }        
     });
 
-    function loadUnBilledIC() {
-        $("#dvReportViewer").load("@Url.Action("UnBilledIC")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+    function loadOnlinePayment() {
+        $("#dvReportViewer").load("@Url.Action("SummaryOnlinePayment")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
-    }
-
-    function loadIE7thCopy() {
-        debugger
-        $("#dvReportViewer").load("@Url.Action("IE7thCopyReport")", { Bk_No: '@Model.Bk_No', Set_No: '@Model.Set_No' }, function (response) {
-            $("#dvReportViewer").empty();
-            $("#dvReportViewer").html(response);
-        });
-    }
-
-    function loadICIssued(){        
-        $("#dvReportViewer").load("@Url.Action("ICIssuedNotReceived")", { Type: '@Model.Type', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
-            $("#dvReportViewer").empty();
-            $("#dvReportViewer").html(response);
-        });
-    }
-
-    function loadICStatus(){
-        $("#dvReportViewer").load("@Url.Action("ICStatus")", { Type:'@Model.Type', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', IE_CD: '@Model.Ie_Cd', IE_Name: '@Model.IE_Name' }, function (response) {
-            $("#dvReportViewer").empty();
-            $("#dvReportViewer").html(response);
-        });
-    }
-
+    }    
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -145,4 +110,3 @@
     });
 
 </script>
-

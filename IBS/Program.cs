@@ -8,6 +8,7 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.Billing;
+using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
@@ -16,6 +17,7 @@ using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
+using IBS.Repositories.Reports.RealisationPayment;
 using IBS.Repositories.Transaction;
 using IBS.Repositories.Vendor;
 using IBS.Repositories.WebsitePages;
@@ -200,6 +202,8 @@ builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsReposi
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
 builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
+
+builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
 
 var app = builder.Build();
 

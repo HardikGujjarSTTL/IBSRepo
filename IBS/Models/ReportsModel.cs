@@ -11,6 +11,9 @@
         public DateTime? ToDate { get; set; }
         public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
 
+        public string Region { get; set; }
+        public string Ie_Cd { get; set; }
+        public string IE_Name { get; set; }
         public string Type { get; set; }
         public string Bk_No { get; set; }
         public string Set_No { get; set; }
@@ -138,4 +141,29 @@
         public string INSP_FEE { get; set; }
         //public string MyProperty { get; set; }
     }
+
+    #region Status of IC Report
+    public class ICStatusModel
+    {
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public string Region { get; set; }
+        public string Type { get; set; }
+        public string IE_Name { get; set; }
+        public List<ICStatusListModel> lstICStatus { get; set; }
+
+    }
+    public class ICStatusListModel
+    {
+        public string IC_SUBMIT_DT { get; set; }
+        public string IE_NAME { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
+        public string BILL_NO { get; set; }
+
+    }
+    #endregion
 }

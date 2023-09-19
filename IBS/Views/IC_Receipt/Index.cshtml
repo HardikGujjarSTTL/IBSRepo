@@ -140,7 +140,8 @@
             })
 
             $("#btnStatusIC").click(function () {
-                window.location.href = "/IC_Receipt/ICStatus";
+                //window.location.href = "/IC_Receipt/ICStatus";
+                window.location.href = "@Url.Action("Index","Reports")?ReportType=ICStatus";
             })
         });
 

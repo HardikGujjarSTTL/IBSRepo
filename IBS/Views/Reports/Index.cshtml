@@ -7,6 +7,7 @@
     else if (ReportType == "ICISSUEDNSUB") ReportTitle = "IC Issued But Not Received in Office";
     else if (ReportType == "IE7thCopy") ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
     else if (ReportType == "CaseHistory") ReportTitle = "Case History";
+    else if (ReportType == "ICStatus") ReportTitle = "IC Status";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -107,6 +108,43 @@
                 </div>
             </div>
         </div>
+        <div class="task-inner row report5" style="display: none">
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" id="txtFDt" maxlength="100" placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorFDt"></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" id="txtTDt" maxlength="100" placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorTDt"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="Name">Status of IE</label>
+                    @Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE'S
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" id="IEStatus" style="display:none;">
+                <div class="reference">
+                    <label for="Name">IE</label>
+                    @Html.DropDownList("IE", new SelectList(IBS.Models.Common.GetIEName(ViewBag.Region) , "Value", "Text"),"--Select--")
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReport5()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <section class="table-section report2" id="tblIE7thCopy" style="display: none">
         <div class="task-listinput">
@@ -145,25 +183,47 @@
                 $(".report2").css("display", "");
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "none");
+                $(".report5").css("display", "none");
             }
             else if ('@ReportType' == "UNBILLEDIC") {
                 $(".report1").css("display", "");
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "none");
-                $("#btnBack").css("display", "");
+                $(".report5").css("display", "none");
             }
             else if ('@ReportType' == "CaseHistory") {
                 $(".report1").css("display", "none");
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "");
                 $(".report4").css("display", "none");
+                $(".report5").css("display", "none");
             }
             else if ('@ReportType' == "ICISSUEDNSUB") {
                 $(".report1").css("display", "none");
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "");
+                $(".report5").css("display", "none");
+            }
+            else if ('@ReportType' == "ICStatus") {
+                $(".report1").css("display", "none");
+                $(".report2").css("display", "none");
+                $(".report3").css("display", "none");
+                $(".report4").css("display", "none");
+                $(".report5").css("display", "");
+
+                $('input[type=radio][id=rdType]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllIES") {
+                        $("#IEStatus").css("display", "none");
+                    } else {
+                        $("#IEStatus").css("display", "block");
+                    }
+                });
+            }
+
+            if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "ICISSUEDNSUB" || '@ReportType' == "ICStatus") {
                 $("#btnBack").css("display", "");
             }
         });
@@ -274,6 +334,72 @@
             var url = '@Url.Action("ManageICIssued", "Reports")?' + $.param(myObject);
             window.open(url, '_blank');
 
+        }
+
+        function ViewReport5() {
+            $("#spnErrorFDt").html("");
+            $("#spnErrorTDt").html("");
+
+            var IsValid = true;
+
+            //if ($("#txtFromDate").val() == "") {
+            //    $("#spnTxtErrorFromDate").html("The From Date field is required.");
+            //    IsValid = false;
+            //}
+            //if ($("#txtToDate").val() == "") {
+            //    $("#spnTxtErrorToDate").html("The To Date field is required.");
+            //    IsValid = false;
+            //}
+
+            //if ($("#txtFromDate").val() != "" && IsValidDate($("#txtFromDate").val()) == false) {
+            //    $("#spnTxtErrorFromDate").html("Invalid date format.");
+            //    IsValid = false;
+            //}
+            //if ($("#txtToDate").val() != "" && IsValidDate($("#txtToDate").val()) == false) {
+            //    $("#spnTxtErrorToDate").html("Invalid date format.");
+            //    IsValid = false;
+            //}
+            IsValid = FromToDateValidate(IsValid, "txtFDt", "txtTDt", "spnErrorFDt", "spnErrorTDt");
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#txtFDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#txtTDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var Type = $('input[name="rdType"]:checked').val();
+            var IE_CD = $("#IE").val();
+            var IE_Name = $("#IE option:selected").text();
+            if (Type == "AllIES") {
+                IE_CD = null;
+            }
+            let myObject = { ReportType, Type, IE_CD, IE_Name, FromDate, ToDate };
+            var url = '@Url.Action("ManageStausIC", "Reports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function FromToDateValidate(IsValid, FDateID, TDateID, EFDateID, ETDateID) {
+            FDateID = "#" + FDateID;
+            TDateID = "#" + TDateID;
+            EFDateID = "#" + EFDateID;
+            ETDateID = "#" + ETDateID;
+            if ($(FDateID).val() == "") {
+                $(EFDateID).html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($(TDateID).val() == "") {
+                $(ETDateID).html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($(FDateID).val() != "" && IsValidDate($(FDateID).val()) == false) {
+                $(EFDateID).html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($(TDateID).val() != "" && IsValidDate($(TDateID).val()) == false) {
+                $(ETDateID).html("Invalid date format.");
+                IsValid = false;
+            }
+            return IsValid;
         }
 
         function InitializeDatatable() {

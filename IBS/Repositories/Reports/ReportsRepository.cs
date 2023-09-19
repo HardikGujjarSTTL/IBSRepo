@@ -319,5 +319,32 @@ namespace IBS.Repositories.Reports
             }).ToList();
             return model;
         }
+
+        public ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate,string IE_CD, string Region)
+        {
+            ICStatusModel model = new() { FromDate = FromDate, ToDate = ToDate };
+            List<ICStatusListModel> list = new();
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_IE_CD", OracleDbType.Varchar2, IE_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IC_STATUS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            list = dt.AsEnumerable().Select(row => new ICStatusListModel
+            {
+                IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                BILL_NO = Convert.ToString(row["BILL_NO"])
+            }).ToList();
+
+            model.lstICStatus = list;
+            return model;
+        }
     }
 }

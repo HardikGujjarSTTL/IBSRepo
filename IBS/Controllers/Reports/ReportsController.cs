@@ -30,6 +30,7 @@ namespace IBS.Controllers.Reports
 
         public IActionResult Index()
         {
+            ViewBag.Region = GetUserInfo.Region;
             return View();
         }
 
@@ -83,7 +84,7 @@ namespace IBS.Controllers.Reports
         {
             var action = Request.Query["actiontype"];
             ViewBag.Action = action;
-            var partialView = "../IC_Receipt/IC_Unbilled_Partial";            
+            var partialView = "";
             if (action == "PJI")
             {
                 partialView = "../Reports/Pending_JI_Cases_Partial";
@@ -119,7 +120,33 @@ namespace IBS.Controllers.Reports
                 row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
             }
             return PartialView(model);
-        }        
+        }
+        #endregion
+
+        #region Status of IC //IC Status
+        public IActionResult ManageStausIC(string ReportType, string Type, string IE_CD, string IE_Name, DateTime FromDate, DateTime ToDate)
+        {
+            var Region = GetUserInfo.Region;
+            ReportsModel model = new() { ReportType = ReportType, Type = Type, Ie_Cd = IE_CD, IE_Name = IE_Name, FromDate = FromDate, ToDate = ToDate };
+            if (ReportType == "ICStatus") model.ReportTitle = "IC Status";
+            return View("Manage", model);
+        }
+
+        public IActionResult ICStatus(string Type, DateTime FromDate, DateTime ToDate, string IE_CD, string IE_Name)
+        {
+            var wRegion = "";
+            var Region = SessionHelper.UserModelDTO.Region;
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            ICStatusModel model = reportsRepository.Get_IC_Status(FromDate, ToDate, IE_CD, Region);
+            model.Region = wRegion;
+            model.Type = Type;
+            model.IE_Name = IE_Name;
+            return PartialView(model);
+        }
         #endregion
 
         public IActionResult Get_Pending_JI_Cases([FromBody] DTParameters dtParameters)

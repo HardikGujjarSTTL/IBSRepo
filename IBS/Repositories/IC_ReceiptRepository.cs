@@ -400,53 +400,54 @@ namespace IBS.Repositories
             //return dTResult;
         }
 
-        public DTResult<IC_ReceiptModel> Get_IC_Status([FromBody] DTParameters dtParameters, string Region)
+        public List<ICStatusListModel> Get_IC_Status(string FromDate, string ToDate, string IECD, string Region)
         {
-            DTResult<IC_ReceiptModel> dTResult = new() { draw = 0 };
-            IQueryable<IC_ReceiptModel>? query = null;
+            //DTResult<ICStatusModel> dTResult = new() { draw = 0 };
+            //IQueryable<ICStatusModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = false;//true;
+            //var searchBy = dtParameters.Search?.Value;
+            //var orderCriteria = string.Empty;
+            //var orderAscendingDirection = false;//true;
 
 
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            //if (dtParameters.Order != null)
+            //{
+            //    // in this example we just default sort on the 1st column
+            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
-                }
-                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            }
-            else
-            {
-                orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
-                orderAscendingDirection = true;
-            }
+            //    if (orderCriteria == "")
+            //    {
+            //        orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
+            //    }
+            //    //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            //}
+            //else
+            //{
+            //    orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
+            //    orderAscendingDirection = true;
+            //}
 
-            string FromDate = "", ToDate = "", REGION = "", IE_CD = null;
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            {
-                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            {
-                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IECD"]))
-            {
-                IE_CD = Convert.ToString(dtParameters.AdditionalValues["IECD"]);
-            }
-            if (!string.IsNullOrEmpty(Region))
-            {
-                REGION = Region;
-            }
+            string REGION = "", IE_CD = null;
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            //{
+            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            //}
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            //{
+            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            //}
+            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IECD"]))
+            //{
+            //    IE_CD = Convert.ToString(dtParameters.AdditionalValues["IECD"]);
+            //}
+            //if (!string.IsNullOrEmpty(Region))
+            //{
+            //    REGION = Region;
+            //}
 
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
             ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
+            IE_CD = IE_CD == "" ? null : IE_CD;
             REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
 
 
@@ -461,7 +462,7 @@ namespace IBS.Repositories
             DataTable dt = ds.Tables[0];
 
 
-            List<IC_ReceiptModel> list = dt.AsEnumerable().Select(row => new IC_ReceiptModel
+            List<ICStatusListModel> list = dt.AsEnumerable().Select(row => new ICStatusListModel
             {
                 IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
                 IE_NAME = Convert.ToString(row["IE_NAME"]),
@@ -470,13 +471,14 @@ namespace IBS.Repositories
                 BILL_NO = Convert.ToString(row["BILL_NO"])
             }).ToList();
 
-            query = list.AsQueryable();
+            return list;
+            //query = list.AsQueryable();
 
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
     }
 }

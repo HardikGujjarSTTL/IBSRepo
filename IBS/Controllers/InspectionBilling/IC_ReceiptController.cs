@@ -174,19 +174,19 @@ namespace IBS.Controllers.InspectionBilling
             return View();
         }
 
-        public IActionResult Get_IC_Status([FromBody] DTParameters dTParameters)
-        {
-            DTResult<IC_ReceiptModel> dtList = new();
-            try
-            {
-                var region = GetUserInfo.Region;
-                dtList = iC_ReceiptRepository.Get_IC_Status(dTParameters, region);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_IC_Status", 1, GetIPAddress());
-            }
-            return Json(dtList);
-        }
+        //public IActionResult Get_IC_Status([FromBody] DTParameters dTParameters)
+        //{
+        //    DTResult<ICStatusModel> dtList = new();
+        //    try
+        //    {
+        //        var region = GetUserInfo.Region;
+        //        dtList = iC_ReceiptRepository.Get_IC_Status(dTParameters, region);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "Get_IC_Status", 1, GetIPAddress());
+        //    }
+        //    return Json(dtList);
+        //}
     }
 }
