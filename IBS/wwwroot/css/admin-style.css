@@ -1251,7 +1251,7 @@ font-weight: 600;}
 	left: 100%;	top: 50%;	border: solid transparent;	content: "";	height: 0;	width: 0;	position: absolute;	pointer-events: none;	border-color: rgba(0, 139, 41, 0);
 	border-left-color: #008B29;	border-width: 10px;	margin-top: -10px;}*/
 .navbar-static-side ul li .nav-second-level li a:after{ display:none;}
-.navbar-static-side ul li .nav-second-level li.active a, .navbar-static-side ul li .nav-second-level li:hover a, .navbar-static-side ul li .nav-second-level li:focus a, .navbar-static-side ul li .nav-second-level li a.activeLink { color: #f2b604; }
+.navbar-static-side ul li .nav-second-level li.active a, /*.navbar-static-side ul li .nav-second-level li:hover a, .navbar-static-side ul li .nav-second-level li:focus a,*/ .navbar-static-side ul li .nav-second-level li a:hover, .navbar-static-side ul li .nav-second-level li a.activeLink { color: #f2b604; }
 .navbar-static-side ul li .nav-second-level li a, .navbar-static-side ul li .nav-second-level { background: #194928;}
 .navbar-static-side ul li .nav-second-level{ margin:0;}
 .navbar-static-side ul li.sidebar-heading h4 { color: #018da8;}
@@ -1511,6 +1511,7 @@ input[type="datetime-local"]{ height:43px;}
 .radioListForm{ display:flex; list-style:none; margin:0; padding:0; margin-bottom:20px;}
 .radioListForm li{ margin-right:30px;}
 .commonBtn{ padding:8px 15px; border-radius:6px;}
+.navbar-static-side ul li .nav-second-level li a.active3Label{ background:#0a6c29;}
 .active3Label > .fa.arrow:before{content:"\f106"!important;}
 .navbar-static-side ul li .nav-third-level li a { padding: 15px 15px 15px 55px; color: #efefef; position:relative; }
 .navbar-static-side ul li .nav-third-level li a .fa-angle-double-right{ position: absolute; left: 40px; top: 18px;}
