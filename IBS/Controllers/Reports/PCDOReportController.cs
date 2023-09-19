@@ -115,5 +115,21 @@ namespace IBS.Controllers.Reports
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         #endregion
+
+        #region Annexure-I Financial(Expenditure & Realization)
+        public IActionResult FinancialExpenditureRealization()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region Annexure-I Financial(Outstanding)
+        public IActionResult FinancialOutstanding()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }
