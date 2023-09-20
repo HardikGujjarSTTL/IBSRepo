@@ -217,6 +217,7 @@ namespace IBS.Helper
             [Description("Percentage Basis")]
             P,
         }
+
         public enum BPOTaxType
         {
             [Description("Fee Inclusive Service Tax")]
@@ -224,6 +225,7 @@ namespace IBS.Helper
             [Description("Tax/VAT Charged separately")]
             X,
         }
+
         public enum BPOFlag
         {
             [Description("FA & CAO")]
@@ -237,6 +239,7 @@ namespace IBS.Helper
             [Description("Workshop")]
             S,
         }
+
         public enum BPOAdvFlag
         {
             [Description("Advance bill to be raised")]
@@ -484,6 +487,7 @@ namespace IBS.Helper
             [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
             Z,
         }
+
         public enum Criteria
         {
             [Description("PO Date")]
@@ -506,7 +510,7 @@ namespace IBS.Helper
 
         public enum ScopeOfsector
         {
-            [Description("IAF 12) Chemical/Paints")]
+            [Description("(IAF 12) Chemical/Paints")]
             A,
             [Description("(IAF 14b) Plastics Pipes & Fittings")]
             B,
