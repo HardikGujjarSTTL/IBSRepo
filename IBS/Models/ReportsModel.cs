@@ -79,8 +79,15 @@
         public string Bk_No { get; set; }
         public string Set_No { get; set; }
     }
-
     public class PendingJICasesReportModel
+    {
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public List<PendingJICasesReportListModel> lstPendingJI { get; set; }
+    }
+    public class PendingJICasesReportListModel
     {
         public string COMPLAINT_ID { get; set; }
         public string COMPLAINT_DATE { get; set; }

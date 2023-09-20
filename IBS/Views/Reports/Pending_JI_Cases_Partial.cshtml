@@ -1,154 +1,103 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
-@*<section class="table-section">*@
-<div class="task-listinput">
-    <div class="dash-table">
-        <table id="dtList" class="table-responsive">
-            <thead>
-                <tr>
-                    <th>S.No.</th>
-                    <th>Complaint ID</th>
-                    <th>Firm</th>
-                    <th>PO NO.</th>
-                    <th>Date</th>
-                    <th>Item</th>
-                    <th>Consignee</th>
-                    <th>IE</th>
-                    <th>Qty Offered</th>
-                    <th>Qty Rejected</th>
-                    <th>Value of Rejected Stores</th>
-                    <th>Date of 1st Reference</th>
-                    <th>Reason of Rejection</th>
-                    <th>Status(Decision taken by JI Committe)</th>
-                    <th>Date of JI</th>
-                    <th>Date of IC</th>
-                    <th>JI CASE</th>
-                    <th>JI REPORT</th>
-                </tr>
-            </thead>
+﻿@using IBS.Helper;
+@model IBS.Models.PendingJICasesReportModel
+<div>
+    <h3 class="center">Pending JI Cases</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Firm</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">PO NO.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Offered</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rejected</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Value of Rejected Stores</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of 1st Reference</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of Rejection</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Status(Decision taken by JI Committe)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of IC</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI CASE</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI REPORT</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstPendingJI != null && Model.lstPendingJI.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstPendingJI)
+                    {
+                        SrNo = SrNo + 1;
+                        var pdfCasePath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var tifCasePath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                        var pdfReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var tifReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                        <tr>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.COMPLAINT_ID</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_DATE</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_OFF</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_REJECTED</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_VALUE</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.COMPLAINT_DATE</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.STATUS</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.JI_DATE</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                            <td width="1%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @if (item.IsCaseTIF == false && item.IsCasePDF == false)
+                                    {
+                                        <div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>
+                                    }
+                                    else if (item.IsCaseTIF == false && item.IsCasePDF == true)
+                                    {
+
+                                        <div width='10%' valign='top' align='center'><a href='@pdfCasePath' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+                                    }
+                                    else
+                                    {
+
+                                        <div width='10%' valign='top' align='center'><a href='@tifCasePath' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+
+                                    }
+                                </font>
+                            </td>
+                            <td width="1%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+
+                                    @if (item.IsReportTIF == false && item.IsReportPDF == false)
+                                    {
+                                        <div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>
+                                    }
+                                    else if (item.IsReportTIF == false && item.IsReportPDF == true)
+                                    {
+                                        <div width='10%' valign='top' align='center'><a href='@pdfReportPath' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>
+                                    }
+                                    else
+                                    {
+                                        <div width='10%' valign='top' align='center'><a href='@tifReportPath' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>
+                                    }
+                                </font>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </div>
-@*</section>*@
-
-@*<style>
-    th, td {
-        white-space: nowrap;
-    }
-</style>*@
-
-<script type="text/javascript">
-    function InitializeDatatable() {
-        debugger
-        var FromDate = $("#FromDt").val();
-        var ToDate = $("#ToDt").val();
-        $("#dtList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            dom: 'Bfrtip',
-            buttons: [
-                'csv', 'excel', //'print'
-                {
-                    extend: 'print',
-                    //text: 'ButtonLabelHere',
-                    title: 'Pending JI Cases',// + FromDate + ' To ' + ToDate,
-                    exportOptions: {
-                        modifier: {
-                            selected: null
-                        }
-                    },
-                    customize: function (win) {
-                        $(win.document.body).find('h1').css('text-align', 'center');
-                    },
-                                        
-                }
-            ],
-            ajax: {// Ajax Filter
-                url: "@Url.Action("Get_Pending_JI_Cases", "Reports")",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "FromDate": FromDate,
-                        "ToDate": ToDate
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-            columns: [
-                {
-                    data: '', orderable: false, width: '5%',
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: "COMPLAINT_ID" }, //{ data: "IC_SUBMIT_DATE" },
-                { data: "VENDOR" },
-                { data: "PO_NO" },
-                { data: "PO_DATE" },
-                { data: "ITEM_DESC" },
-                { data: "CONSIGNEE" },
-                { data: "IE_NAME" },
-                { data: "QTY_OFF" },
-                { data: "QTY_REJECTED" },
-                { data: "REJECTION_VALUE" },
-                { data: "COMPLAINT_DATE" },
-                { data: "REJECTION_REASON" },
-                { data: "STATUS" },
-                { data: "JI_DATE" },
-                { data: "IC_DATE" },
-                {
-                    data: "",
-                    render: function (data, type, row, meta) {
-                        var html = "";
-                        if (row.IsCaseTIF == false && row.IsCasePDF == false) {
-                            html = "<div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>";
-                        }
-                        else if (row.IsCaseTIF == false && row.IsCasePDF == true) {
-                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>";
-                        }
-                        else {
-
-                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>";
-
-                        }
-                        return html;
-                    }
-                },
-                {
-                    data: "",
-                    render: function (data, type, row, meta) {
-                        var html = "";
-                        if (row.IsReportTIF == false && row.IsReportPDF == false) {
-                            html = "<div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>";
-                        }
-                        else if (row.IsReportTIF == false && row.IsReportPDF == true) {
-                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_REPORT/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>";
-                        }
-                        else {
-
-                            html = "<div width='10%' valign='top' align='center'><a href='/RBS/COMPLAINTS_REPORT/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>";
-
-                        }
-                        return html;
-                    }
-                },
-
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-</script>

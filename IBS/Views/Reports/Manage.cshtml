@@ -52,6 +52,10 @@
             loadICStatus();
             fileName = 'IC_Status';
         }
+        else if ('@ReportType' == "PendingJICases"){
+            loadPendingJICases();
+            fileName = 'Pending_JI_Cases';
+        }
     });
 
     function loadUnBilledIC() {
@@ -78,6 +82,13 @@
 
     function loadICStatus(){
         $("#dvReportViewer").load("@Url.Action("ICStatus")", { Type:'@Model.Type', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', IE_CD: '@Model.Ie_Cd', IE_Name: '@Model.IE_Name' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadPendingJICases(){
+        $("#dvReportViewer").load("@Url.Action("Pending_JI_Cases_Partial")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate'}, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

@@ -1,6 +1,7 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string Action = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["Action"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["Action"]) : "";
     string ReportTitle = string.Empty;
 
     if (ReportType == "UNBILLEDIC") ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
@@ -8,6 +9,7 @@
     else if (ReportType == "IE7thCopy") ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
     else if (ReportType == "CaseHistory") ReportTitle = "Case History";
     else if (ReportType == "ICStatus") ReportTitle = "IC Status";
+    else if (ReportType == "PendingJICases") ReportTitle = "PENDING JI CASES ";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -95,7 +97,7 @@
             </div>
             <div class="row my-0" style="text-align:center;">
                 <b><font face="Verdana" color="darkblue" size="2">IC ISSUED BY IE BUT NOT RECEIVED IN OFFICE</font></b>
-                <div class="col-md-12" style="font-weight: bold;margin:2px;" id="rdbIECM">
+                <div class="col-md-12" style="font-weight: bold;margin:2px;" id="rdbIECM" >
                     @Html.RadioButton("rdbType", "IEWise", new { @id="rdIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) IE Wise
                     &nbsp;&nbsp;
                     @Html.RadioButton("rdbType", "CMWise", new { @id="rdCM", @class = "text-darkblue font-bold font-size-8pt" }) CM Wise
@@ -178,14 +180,15 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            if ('@ReportType' == "IE7thCopy") {
+            debugger
+            if ('@ReportType' == "IE7thCopy" ) {
                 $(".report1").css("display", "none");
                 $(".report2").css("display", "");
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "none");
                 $(".report5").css("display", "none");
             }
-            else if ('@ReportType' == "UNBILLEDIC") {
+            else if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "PendingJICases") {
                 $(".report1").css("display", "");
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "none");
@@ -205,6 +208,9 @@
                 $(".report3").css("display", "none");
                 $(".report4").css("display", "");
                 $(".report5").css("display", "none");
+                if ('@Action' == "I") {
+                    $("#rdbIECM").css("display", "none");
+                }
             }
             else if ('@ReportType' == "ICStatus") {
                 $(".report1").css("display", "none");
