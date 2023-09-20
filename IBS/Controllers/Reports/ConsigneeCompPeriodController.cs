@@ -55,13 +55,11 @@ namespace IBS.Controllers
             return View(model);
         }
 
-        public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest, string jiallregion,
-            string jinorth, string jisourth, string jieast, string jiwest, string compallregion, string compyes, string compno, string cancelled, string underconsider, string allaction, string particilaraction, string actiondrp,
-            string particilarcode, string particilarjicode, string actioncodedrp, string actionjidrp)
+        public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest,
+             string compallregion, string compyes, string compno, string cancelled, string underconsider, string actiondrp,string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
-            ConsigneeCompPeriodReport model = consigneeCompPeriodRepository.GetCompPeriodData(FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion,
-             jinorth, jisourth, jieast, jiwest, compallregion, compyes, compno, cancelled, underconsider, allaction, particilaraction, actiondrp, actioncodedrp, actionjidrp);
+            ConsigneeCompPeriodReport model = consigneeCompPeriodRepository.GetCompPeriodData(FromDate, ToDate, actiondrp, actioncodedrp, actionjidrp);
 
             region = (Allregion == "true") ? "AllRegion" :
                      (regionorth == "true") ? "Northern Region" :
@@ -85,7 +83,7 @@ namespace IBS.Controllers
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string htmlContent)
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
+            //ConsigneeCompPeriodReport _model = consigneeCompPeriodRepository.GetCompPeriodData(FromDate, ToDate, actiondrp, actioncodedrp, actionjidrp);
             //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
 
             await new BrowserFetcher().DownloadAsync();

@@ -1,0 +1,103 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>HIGH VALUE INSPECTIONS</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <table id="Table2" border="1" cellSpacing="1" borderColor="#b0c4de" cellPadding="1" width="80%" bgColor="#f0f8ff">
+               
+                    <tr>
+                        <td colSpan="3">
+                            <div class="custom-readio">
+                                @*<label for="Reference">Summary of Report</label>*@
+                                <div class="company-checkbox">
+                                    <div class="remember">
+                                        <div class="remecheckbox">
+                                        <input type="radio" value="formonth" id="formonth" name="formonth" checked="checked" />
+                                            <label for="formonth">For the Month</label>
+                                            &nbsp;&nbsp;
+                                        <input type="radio" value="forperiod" id="forperiod" name="formonth" />
+                                            <label for="forperiod">For Given Period</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="fromothyear">
+                        <td style="HEIGHT: 22px">
+                        <label for="month">Month</label>
+                        @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                        </td>
+                        <td style="HEIGHT: 22px">
+                        <label for="year">Year</label>
+                        @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                        </td>
+                    </tr>
+                    <tr id="forperioddt">
+                        <td style="HEIGHT: 22px">
+                            <label for="month">Date From</label>
+                            <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+
+                        </td>
+                        <td style="HEIGHT: 22px">
+                            <label for="year">Date To</label>
+                            <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+                        </td>
+                    </tr>
+                <tr>
+                    <td colSpan="3">
+                        <div class="custom-readio">
+                            @*<label for="Reference">Summary of Report</label>*@
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <label for="year">Report based on</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                    <div class="remecheckbox">
+                                        <input type="radio" value="ICDate" id="ICDate" name="ICDate" checked="checked" />
+                                        <label for="ICDate">IC Date</label>
+                                        &nbsp;&nbsp;
+                                        <input type="radio" value="BillDate" id="BillDate" name="ICDate" />
+                                        <label for="BillDate">Bill Date</label>
+                                    </div>
+                                </div>
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <label for="ICDate">IC Date</label>
+                                        <input type="text" value="ICDate" id="ICDate" name="ICDate" checked="checked" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                <button type="button" class="save-btn active" onclick="GetViewReport();">Generate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+         $(document).ready(function () {
+            $("#forperioddt").hide();
+         });
+
+         $('#forperiod').change(function () {
+            $("#forperioddt").show();
+            $("#fromothyear").hide();
+         });
+
+        $('#formonth').change(function () {
+            $("#forperioddt").hide();
+            $("#fromothyear").show();
+         });
+    </script>
+}
