@@ -39,13 +39,13 @@
                     </tr>
                     <tr id="forperioddt">
                         <td style="HEIGHT: 22px">
-                            <label for="month">Date From</label>
+                        <label for="FromDate">Date From</label>
                             <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
 
                         </td>
                         <td style="HEIGHT: 22px">
-                            <label for="year">Date To</label>
-                            <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+                        <label for="ToDate">Date To</label>
+                            <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
                         </td>
                     </tr>
                 <tr>
@@ -63,11 +63,12 @@
                                         <label for="BillDate">Bill Date</label>
                                     </div>
                                 </div>
-                                <div class="remember">
-                                    <div class="remecheckbox">
-                                        <label for="ICDate">IC Date</label>
-                                        <input type="text" value="ICDate" id="ICDate" name="ICDate" checked="checked" />
-                                    </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <div>
+                                    
+                                    <label for="valinsp">No. of High Value Inspections</label>
+                                    <input type="text"  id="valinsp" />
+                                   
                                 </div>
                             </div>
                         </div>
@@ -99,5 +100,34 @@
             $("#forperioddt").hide();
             $("#fromothyear").show();
          });
+
+        function GetViewReport() {
+
+            $("#spnErrorJISno").html("");
+            var IsValid = true;
+
+            if ($("#JISNO").val() == "") {
+                $("#spnErrorJISno").html("Enter JISno");
+                IsValid = false;
+            }
+
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+
+            var month = $('#month').val();;
+            var year = $('#year').val();;
+            var valinsp = $('#valinsp').val();;
+            var BillDate = $('#BillDate').val();;
+            var ICDate = $('#ICDate').val();;
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
+
+            let myObject = { JISNO };
+
+            var url = '@Url.Action("Manage", "JITopsheetReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
     </script>
 }
