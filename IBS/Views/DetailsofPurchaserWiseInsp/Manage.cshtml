@@ -1,4 +1,4 @@
-﻿@model IBS.Models.SummaryConsigneeWiseInspModel
+﻿@model IBS.Models.DetailsofPurchaserWiseInspModel
 
 @{
     Layout = null;
@@ -49,7 +49,7 @@
     });
 
     function loadSummartReport() {
-        $("#dvReportViewer").load("@Url.Action("SummaryConsigneeWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("DetailsofPurchaserWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -68,7 +68,7 @@
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
-            download: getExportFileName("Summary_Consignee_Wise_Inspections") + ".xls"
+            download: getExportFileName("Summary_of_Inspections_RTI") + ".xls"
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
@@ -121,7 +121,7 @@
                     window.open(pdf.output('bloburl'), '_blank');
                 }
                 else {
-                    pdf.save(getExportFileName('Summary_Consignee_Wise_Inspections') + '.pdf');
+                    pdf.save(getExportFileName('Summary_of_Inspections_RTI') + '.pdf');
                 }
             }
         });

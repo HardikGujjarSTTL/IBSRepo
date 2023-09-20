@@ -24,8 +24,12 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Reference">Holograms No. From</label>
-                            <span style="color: orangered;font-weight: bold;">@Model.Region</span>
-                            <input type="text" class="input" asp-for="HgNoFr" maxlength="7" style="text-transform: uppercase;width:96%;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="color: orangered;font-weight: bold;">@Model.Region</span>
+                            </div>
+                                <input type="text" class="input form-control" asp-for="HgNoFr" maxlength="7" style="text-transform: uppercase;">
+                            </div>
                             <span asp-validation-for="HgNoFr" class="text-danger"></span>
                             <input type="hidden" asp-for="lblHgNoFr" />
                         </div>
@@ -33,8 +37,12 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Reference">Holograms No. TO</label>
-                            <span style="color: orangered;font-weight: bold;">@Model.Region</span>
-                            <input type="text" class="input" asp-for="HgNoTo" maxlength="7" style="text-transform: uppercase;width:96%;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="color: orangered;font-weight: bold;">@Model.Region</span>
+                            </div>
+                                <input type="text" class="input form-control" asp-for="HgNoTo" maxlength="7" style="text-transform: uppercase;">
+                            </div>
                             <span asp-validation-for="HgNoTo" class="text-danger"></span>
                             <input type="hidden" asp-for="lblHgNoTo" />
                         </div>
