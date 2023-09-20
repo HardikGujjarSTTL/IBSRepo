@@ -40,7 +40,7 @@ namespace IBS.Models
 
         public DateTime? CallRecvDt { get; set; }
 
-        public short? CallSno { get; set; }
+        public int? CallSno { get; set; }
 
         public string? ToIeName { get; set; }
 
@@ -99,7 +99,7 @@ namespace IBS.Models
 
         public DateTime? CallRecvDt { get; set; }
 
-        public short? CallSno { get; set; }
+        public int? CallSno { get; set; }
 
         public string? CallStatus { get; set; }
 

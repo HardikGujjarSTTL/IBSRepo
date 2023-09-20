@@ -4,6 +4,8 @@ namespace IBS.Interfaces.Reports
 {
     public interface IInspectionBillingDelayRepository
     {
-        DTResult<InspectionBillingDelayModel> Get_Inspection_Billing_Delay(DTParameters dTParameters, UserSessionModel model);
+        List<InspectionBillingDelayModel> Get_Inspection_Billing_Delay(InspectionBillingDelayReportModel obj, UserSessionModel model);
+        //DTResult<InspectionBillingDelayModel> Get_Inspection_Billing_Delay(DTParameters dTParameters, UserSessionModel model);
+
     }
 }

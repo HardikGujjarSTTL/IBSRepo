@@ -1,6 +1,8 @@
-﻿using IBS.Helper;
+﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Drawing;
@@ -9,6 +11,14 @@ namespace IBS.Repositories.Reports
 {
     public class ReportsRepository : IReportsRepository
     {
+        private readonly ModelContext context;
+        private readonly IConfiguration configuration;
+
+        public ReportsRepository(ModelContext context, IConfiguration configuration)
+        {
+            this.context = context;
+            this.configuration = configuration;
+        }
         public DTResult<PendingJICasesReportModel> Get_Pending_JI_Cases(DTParameters dtParameters, string iecd)
         {
             DTResult<PendingJICasesReportModel> dTResult = new() { draw = 0 };
@@ -113,7 +123,7 @@ namespace IBS.Repositories.Reports
         {
             DTResult<IEDairyModel> dTResult = new() { draw = 0 };
             IQueryable<IEDairyModel>? query = null;
-            
+
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
@@ -151,7 +161,7 @@ namespace IBS.Repositories.Reports
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DpIE"]))
             {
-                IECD = Convert.ToString(dtParameters.AdditionalValues["DpIE"]);                
+                IECD = Convert.ToString(dtParameters.AdditionalValues["DpIE"]);
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["OrderByVisit"]))
             {
@@ -168,11 +178,11 @@ namespace IBS.Repositories.Reports
                 IECD = Convert.ToString(userModel.IeCd);
             }
             else
-            {                
-                if(IsAll == true)
+            {
+                if (IsAll == true)
                 {
                     IECD = null;
-                }                
+                }
             }
 
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
@@ -208,7 +218,7 @@ namespace IBS.Repositories.Reports
                 SUBMIT_DT = Convert.ToString(row["SUBMIT_DT"]),
                 INSP_FEE = Convert.ToString(row["INSP_FEE"])
             }).ToList();
-           
+
             query = list.AsQueryable();
 
             dTResult.recordsTotal = ds.Tables[0].Rows.Count;
@@ -216,6 +226,125 @@ namespace IBS.Repositories.Reports
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public DTResult<IE7thCopyListModel> Get_IE_7thCopyList(DTParameters dtParameters, UserSessionModel model)
+        {
+            DTResult<IE7thCopyListModel> dTResult = new() { draw = 0 };
+            IQueryable<IE7thCopyListModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "Bk_No";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "Bk_No";
+                orderAscendingDirection = true;
+            }
+            string Bk_No = "", Set_No_Fr = "";
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Bk_No"]))
+            {
+                Bk_No = dtParameters.AdditionalValues["Bk_No"];
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Set_No_Fr"]))
+            {
+                Set_No_Fr = dtParameters.AdditionalValues["Set_No_Fr"];
+            }
+            query = from b in context.T10IcBooksets
+                    join i in context.T09Ies on b.IssueToIecd equals i.IeCd                    
+                    orderby b.BkNo,b.SetNoFr
+                    where i.IeCd == Convert.ToInt32(model.IeCd) 
+                    && (Bk_No == "" || (Bk_No != "" && b.BkNo.ToUpper().Trim().Contains(Bk_No)))
+                    && (Set_No_Fr == "" || (Set_No_Fr != "" && b.SetNoFr == Set_No_Fr))
+                    select new IE7thCopyListModel
+                    {
+                        Bk_No = b.BkNo,
+                        Set_No_Fr = b.SetNoFr,
+                        Set_No_To = b.SetNoTo,
+                        Issue_Dt = b.IssueDt,
+                        Issue_To_Iecd = i.IeName,
+                        Bk_Issue_To_Region = i.IeRegion == "N" ? "Northern" :
+                                             i.IeRegion == "W" ? "Western" :
+                                             i.IeRegion == "E" ? "Eastern" :
+                                             i.IeRegion == "S" ? "South" :
+                                             i.IeRegion == "C" ? "Central" : "",
+                        Bk_Submited = b.BkSubmitted,
+                        Bk_Submit_Dt = b.BkSubmitDt
+                    };
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Bk_No).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Set_No_Fr).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.Set_No_To).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsTotal = query.Count();
+            dTResult.recordsFiltered = query.Count();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+            dTResult.data = query.ToList();//DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+        public IE7thCopyListModel GetIE7thCopyReport(string Bk_No, string Set_No, UserSessionModel obj)
+        {
+            IE7thCopyListModel model = new IE7thCopyListModel();
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, Bk_No, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, Set_No, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, obj.IeCd, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, obj.Region, ParameterDirection.Input);            
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IE_7TH_COPY", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            model.lstIE7thCopyList = dt.AsEnumerable().Select(row => new IE7thCopyReportModel
+            {
+                Case_No = Convert.ToString(row["CASE_NO"]),
+                Bk_No = Convert.ToString(row["BK_NO"]),
+                Set_No = Convert.ToString(row["SET_NO"])                
+            }).ToList();
+            return model;
+        }
+
+        public ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate,string IE_CD, string Region)
+        {
+            ICStatusModel model = new() { FromDate = FromDate, ToDate = ToDate };
+            List<ICStatusListModel> list = new();
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_IE_CD", OracleDbType.Varchar2, IE_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IC_STATUS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            list = dt.AsEnumerable().Select(row => new ICStatusListModel
+            {
+                IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                BILL_NO = Convert.ToString(row["BILL_NO"])
+            }).ToList();
+
+            model.lstICStatus = list;
+            return model;
         }
     }
 }

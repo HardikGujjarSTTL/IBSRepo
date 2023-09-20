@@ -15,7 +15,7 @@ public partial class T47IeWorkPlan
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public int? MfgCd { get; set; }
 

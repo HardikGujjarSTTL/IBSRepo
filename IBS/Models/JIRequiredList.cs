@@ -4,6 +4,7 @@
     {
         public string IE { get; set; }
         public string Region { get; set; }
+        public string DEFECT_DESC { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public decimal NO_OF_INSPECTION { get; set; }

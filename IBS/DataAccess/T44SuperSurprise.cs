@@ -13,11 +13,11 @@ public partial class T44SuperSurprise
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
-    public byte? CoCd { get; set; }
+    public int? CoCd { get; set; }
 
     public string? ItemDesc { get; set; }
 

@@ -69,11 +69,43 @@ namespace IBS.Models
         public string DARPurpose { get; set; }
         public string FinalRemarks { get; set; }
         public string Penaltytype { get; set; }
+        public string Action { get; set; }
+        public string JiCdName { get; set; }
+        public string ACTIONPROPOSED { get; set; }
+        public string DEPT { get; set; }
+        public string ReportTitle { get; set; }
         public DateTime? DARDate { get; set; }
         public DateTime? PenaltyDate { get; set; }
+        public DateTime? ACTIONPROPOSEDDate { get; set; }
         public byte? JiIeCd { get; set; }
         [NotMapped]
         public decimal? Updatedby { get; set; }
         public decimal? Createdby { get; set; }
+
+        public List<ConsigneeReport> lstconsignee { get; set; }
+    }
+
+    public class ConsigneeReport
+    {
+        public string JiSno { get; set; }
+        public string PO_NO { get; set; }
+        public DateTime? ComplaintDate { get; set; }
+        public decimal? QtyOffered { get; set; }
+        public decimal? QtyRejected { get; set; }
+        public decimal? rejectionValue { get; set; }
+        public string? RejectionReason { get; set; }
+        public string NoJIReason { get; set; }
+        public string Remarks { get; set; }
+        public string? InspRegion { get; set; }
+        public string Consignee { get; set; }
+        public string ie_name { get; set; }
+        public string VEND_NAME { get; set; }
+        public string BK_NO { get; set; }
+        public string IC_NO { get; set; }
+        public string? ItemDesc { get; set; }
+        public string NoJiOther { get; set; }
+        public DateTime? JIDate { get; set; }
+        public string JiStatusDesc { get; set; }
+        public string CoName { get; set; }
     }
 }
