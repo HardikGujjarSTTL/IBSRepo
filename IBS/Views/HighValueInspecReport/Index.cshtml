@@ -116,17 +116,19 @@
 
             var IsValid = true;
 
-            var month = $('#month').val();;
-            var year = $('#year').val();;
-            var valinsp = $('#valinsp').val();;
-            var BillDate = $('#BillDate').val();;
-            var ICDate = $('#ICDate').val();;
-            var FromDate = $('#FromDate').val();;
-            var ToDate = $('#ToDate').val();;
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var valinsp = $('#valinsp').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var ICDate = $("#ICDate").is(":checked") == true ? "true" : "false";
+            var BillDate = $("#BillDate").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
 
-            let myObject = { JISNO };
+            let myObject = { month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod };
 
-            var url = '@Url.Action("Manage", "JITopsheetReport")?' + $.param(myObject);
+            var url = '@Url.Action("Manage", "HighValueInspecReport")?' + $.param(myObject);
             window.open(url, '_blank');
         }
     </script>
