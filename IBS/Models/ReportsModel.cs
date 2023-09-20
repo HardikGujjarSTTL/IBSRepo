@@ -17,6 +17,7 @@
         public string Type { get; set; }
         public string Bk_No { get; set; }
         public string Set_No { get; set; }
+        public string OrderByVisit { get; set; }
     }
 
     public class ICUnbilledModel
@@ -131,6 +132,20 @@
 
     public class IEDairyModel
     {
+        public string ReportType { get; set; }
+        public string ReportTitle { get; set; }
+        public  DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public string DpIE { get; set; }
+        public string OrderByVisit { get; set; }
+        public string IsAllIE { get; set; }
+        public string Region { get; set; }
+        public List<IEDairyListModel> lstIEDairy { get; set; }
+    }
+    public class IEDairyListModel
+    {
         public string IE_NAME { get; set; }
         public string PO { get; set; }
         public string CASE_NO { get; set; }
@@ -141,6 +156,7 @@
         public string QTY_TO_INSP { get; set; }
         public string CALL_INSTALL_NO { get; set; }
         public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
         public string IC_ISSUE_DT { get; set; }
         public string CONSIGNEE { get; set; }
         public string MATERIAL_VALUE { get; set; }

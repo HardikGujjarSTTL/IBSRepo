@@ -7,23 +7,23 @@
             <tbody>
                 <tr>
                     <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Firm</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">PO NO.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Offered</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rejected</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Value of Rejected Stores</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of 1st Reference</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of Rejection</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Status(Decision taken by JI Committe)</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of IC</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI CASE</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI REPORT</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Firm</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">PO NO.</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Offered</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rejected</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Value of Rejected Stores</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Date of 1st Reference</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of Rejection</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Status(Decision taken by JI Committe)</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Date of IC</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">JI CASE</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">JI REPORT</font></b></th>
                 </tr>
                 @if (Model != null && Model.lstPendingJI != null && Model.lstPendingJI.Count > 0)
                 {
@@ -36,27 +36,27 @@
                         var pdfReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
                         var tifReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
                         <tr>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.COMPLAINT_ID</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_OFF</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_REJECTED</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_VALUE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.COMPLAINT_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.STATUS</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.JI_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
-                            <td width="1%" valign="top" align="center">
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.COMPLAINT_ID</font></td>
+                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_DATE</font></td>
+                            <td width="15%" valign="top" align="left"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
+                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_OFF</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_REJECTED</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_VALUE</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.COMPLAINT_DATE</font></td>
+                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.STATUS</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.JI_DATE</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                            <td width="8%" valign="top" align="center">
                                 <font size="1" face="Verdana">
                                     @if (item.IsCaseTIF == false && item.IsCasePDF == false)
                                     {
-                                        <div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>
+                                        <div width='10%' valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
                                     }
                                     else if (item.IsCaseTIF == false && item.IsCasePDF == true)
                                     {
@@ -71,12 +71,12 @@
                                     }
                                 </font>
                             </td>
-                            <td width="1%" valign="top" align="center">
+                            <td width="8%" valign="top" align="center">
                                 <font size="1" face="Verdana">
 
                                     @if (item.IsReportTIF == false && item.IsReportPDF == false)
                                     {
-                                        <div width='10%' valign='top' align='center'><font size='1' face='Verdana'></font></div>
+                                        <div width='10%' valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
                                     }
                                     else if (item.IsReportTIF == false && item.IsReportPDF == true)
                                     {
