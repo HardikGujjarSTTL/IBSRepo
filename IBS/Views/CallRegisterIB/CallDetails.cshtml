@@ -16,45 +16,66 @@
         <input type="hidden" asp-for="PoDt" />
         <input type="hidden" asp-for="IESName" />
     </div>
-    <div class="accordion-body">
-        <table>
-            <tr>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Case No:</td>
-                <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
-                </td>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Call Date - SNo:</td>
-                <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblCallRecvDt" style="text-transform: uppercase; color:red;"></label>
-                    <span> - </span>
-                    <label id="lblCallSNo" style="text-transform: uppercase; color:red;"></label>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">PO No & Date:</td>
-                <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblPoNo" style="text-transform: uppercase; color:red;"></label>
-                    <span> & </span>
-                    <label id="lblPoDt" style="text-transform: uppercase; color:red;"></label>
-                </td>
-                <td style="width: 15%; height: 16px" bgcolor="#ffffcc">IE:</td>
-                <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
-                    <label id="lblIE_SName" style="text-transform: uppercase; color:red;"></label>
-                </td>
-            </tr>
-        </table>
-    </div>
+        <div class="alert alert-warning center">
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Case No : @Model.CaseNo</b></label>
+                    <b><span id="lblCaseNo" style="text-transform: uppercase; color:red;"></span></b>
+                    <label style="text-transform: uppercase; color:red;"><b>@Model.CaseNo</b></label>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Call Date - SNo : </label>
+                    <label style="text-transform: uppercase; color:red;"><b>@Convert.ToDateTime(@Model.CallRecvDt).ToString("dd/MM/yyyy") - @Model.CallSno </b></label>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">PO No & Date : </label>
+                    <label style="text-transform: uppercase; color:red;"><b> @Model.PoNo - @Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy")  </b></label>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IE : </label>
+                    <label style="text-transform: uppercase; color:red;"><b>@Model.IESName</b></label>
+                </div>
+            </div>
+        </div>
+
+    @*<div class="accordion-body">
+    <table>
+    <tr>
+    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Case No:</td>
+    <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
+    <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
+    </td>
+    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Call Date - SNo:</td>
+    <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
+    <label id="lblCallRecvDt" style="text-transform: uppercase; color:red;"></label>
+    <span> - </span>
+    <label id="lblCallSNo" style="text-transform: uppercase; color:red;"></label>
+    </td>
+    </tr>
+    <tr>
+    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">PO No & Date:</td>
+    <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
+    <label id="lblPoNo" style="text-transform: uppercase; color:red;"></label>
+    <span> & </span>
+    <label id="lblPoDt" style="text-transform: uppercase; color:red;"></label>
+    </td>
+    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">IE:</td>
+    <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
+    <label id="lblIE_SName" style="text-transform: uppercase; color:red;"></label>
+    </td>
+    </tr>
+    </table>
+    </div>*@
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Item SNo.</label>
-                    <input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;">
+                    @*<input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;">*@
+                    <label style="text-transform: uppercase; color:red;"><b>@Model.ItemSrNoPo</b></label>
                     <span asp-validation-for="ItemSrNoPo" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Ordered</label>
@@ -62,6 +83,8 @@
                     <span asp-validation-for="QtyOrdered" class="text-danger"></span>
                 </div>
             </div>
+        </div>
+        <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Cumm. Qty off Prev</label>
@@ -69,8 +92,6 @@
                     <span asp-validation-for="CumQtyPrevOffered" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Prev Passed</label>
@@ -168,14 +189,12 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             var cstatus = urlParams.get('cstatus');
-            if(cstatus == "N")
-            {
+            if (cstatus == "N") {
                 $("#btnSave").hide();
                 $("#btnDelete").hide();
-                
+
             }
-            else
-            {
+            else {
                 $("#btnSave").show();
                 $("#btnDelete").show();
             }
@@ -193,7 +212,7 @@
             var getDt = moment('@Model.CallRecvDt', "DD/MM/YYYY");
             var setDt = getDt.toDate();
             var CallRecvDt = moment(setDt).format("DD/MM/YYYY");
-            
+
             const urlParams = new URLSearchParams(window.location.search);
             var cstatus = urlParams.get('cstatus');
 

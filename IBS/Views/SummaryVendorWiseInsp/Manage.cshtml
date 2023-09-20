@@ -68,7 +68,7 @@
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
-            download: getExportFileName("SummaryVendorWiseInsp") + ".xls"
+            download: getExportFileName("Summary_Vendor_Wise_Inspections") + ".xls"
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
@@ -121,7 +121,7 @@
                     window.open(pdf.output('bloburl'), '_blank');
                 }
                 else {
-                    pdf.save(getExportFileName('SummaryVendorWiseInsp') + '.pdf');
+                    pdf.save(getExportFileName('Summary_Vendor_Wise_Inspections') + '.pdf');
                 }
             }
         });

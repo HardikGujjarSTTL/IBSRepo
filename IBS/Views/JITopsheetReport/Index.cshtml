@@ -2,11 +2,6 @@
     <div class="tast-list">
         <h2>JI TOPSHEET</h2>
     </div>
-    <div class="list-btn">
-        <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-        <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-        <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-    </div>
 </div>
 
 <div class="accordion-body">
@@ -14,224 +9,43 @@
         <div class="col-md-2 mb-3">
             <label for="reference">JI SNO</label>
             <input type="text" class="input" id="JISNO">
+            <span class="text-danger field-validation-error" id="spnErrorJISno"></span>
         </div>
         <div class="col-md-3 mb-3">
             <div class="savenext-btn">
-                <button type="button" class="save-btn active" id="btnSearch">search</button>
+                <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
             </div>
         </div>
     </div>
 </div>
 
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtJISNO" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>JI SNO</th>
-                        <th>Date of Receipt of Complaint</th>
-                        <th>Particulars of Consignee</th>
-                        <th>PONo.& DT</th>
-                        <th>Name of Inspecting Region</th>
-                        <th>Inspecting Engineer</th>
-                        <th>Controlling Manager</th>
-                        <th>IC No & Date</th>
-                        <th>BKNO/SetNo.</th>
-                        <th>Vendor</th>
-                        <th>Description of Material</th>
-                        <th>Quantity Inspected</th>
-                        <th>Quantity Rejected</th>
-                        <th>Reason Of Complaint</th>
-                        <th>IE Remarks (If Any)</th>
-                        <th>Date of JI</th>
-                        <th>Conclusion of JI</th>
-                        <th>JI Outcome/Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        $("#btnSearch").click(function () {
-            var JISNO = $("#JISNO").val();
-            if (JISNO == "") {
-                ShowHideMsgNew(false, "Please Enter JI Sno.");
-                return;
+        function ViewReport() {
+
+            $("#spnErrorJISno").html("");
+            var IsValid = true;
+
+            if ($("#JISNO").val() == "") {
+                $("#spnErrorJISno").html("Enter JISno");
+                IsValid = false;
             }
-            InitializeDatatable();
-        });
+         
 
-        function InitializeDatatable() {
-            var JISNO = $("#JISNO").val();
-            var Region = '@ViewBag.Region';
-            var _title = Region ;
-           
-            dt = $("#dtJISNO").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: false,// Paging Setups
-                searching: true,// Searching Setups
-                dom: 'rtip',
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: 'Export to Excel',
-                        filename: function () { return getExportFileName('Consignee_Complaints_Information'); },
-                        download: 'open',
-                        orientation: 'landscape',
-                        title: _title,
-                        footer: true,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17],
-                            modifier: {
-                                page: 'all',
-                                search: 'none'
-                            }
-                        },
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        filename: function () { return getExportFileName('Consignee_Complaints_Information '); },
-                        text: 'Export to PDF',
-                        orientation: 'landscape',
-                        title: _title,
-                        footer: true,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
-                            modifier: {
-                                page: 'all',
-                                pageSize: 'LEGAL',
-                                search: 'none',
-                            }
-                        },
-                        customize: function (doc) {
-                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                            doc.pageMargins = [5, 100, 5, 5];
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        title: _title,
-                        footer: true,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
-                        },
-                    },
-                ],
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            JISNO: JISNO
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-                columns: [
-                    { data: "JiSno" },
-                    {
-                        data: "ComplaintDate",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "Consignee" },
-                    { data: "PO_NO" },
-                    { data: "InspRegion" },
-                    { data: "ie_name" },
-                    { data: "CoName" },
-                    { data: "IC_NO" },
-                    { data: "BK_NO" },
-                    { data: "VEND_NAME" },
-                    { data: "ItemDesc" },
-                    { data: "QtyOffered" },
-                    { data: "QtyRejected" },
-                    { data: "RejectionReason" },
-                    { data: "Remarks" },
-                    {
-                        data: "JIDate",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "NoJiOther" },
-                    { data: "JiStatusDesc" },
-                ],
-                "order": [[0, "asc"]],
-                footerCallback: function (row, data, start, end, display) {
-                    var api = this.api(), data;
+            if (!IsValid) return;
 
-                    var intVal = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
+            var IsValid = true;
 
-                },
-            });
+            var JISNO = $('#JISNO').val();;
+
+            let myObject = {JISNO};
+
+            var url = '@Url.Action("Manage", "JITopsheetReport")?' + $.param(myObject);
+            window.open(url, '_blank');
         }
-
-        $("#imgExcel").on("click", function () {
-            $('#dtJISNO').DataTable().buttons(0, 0).trigger();
-        });
-
-        $("#imgPdf").on("click", function () {
-            $('#dtJISNO').DataTable().buttons(0, 1).trigger();
-        });
-
-        $("#imgPrint").on("click", function () {
-            $('#dtJISNO').DataTable().buttons(0, 2).trigger();
-        });
 
     </script>
 }

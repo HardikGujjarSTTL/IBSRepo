@@ -6,7 +6,7 @@ namespace IBS.Models
     public class SummaryVendorWiseInspModel
     {
         public int SrNo { get; set; }
-        public string CONSIGNEE { get; set; }
+        public string VENDOR { get; set; }
 
         public string NO_OF_INSP { get; set; }
 

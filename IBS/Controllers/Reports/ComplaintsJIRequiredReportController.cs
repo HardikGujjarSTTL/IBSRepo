@@ -48,7 +48,7 @@ namespace IBS.Controllers
 
         public IActionResult Manage(string FromDate, string ToDate,string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
             string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
-            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee)
+            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee,string FinancialYearsvalue)
         {
             JIRequiredReport model = new() { FromDate = FromDate, ToDate = ToDate, AllCM = AllCM, AllIEs = AllIEs, AllVendors = AllVendors, AllClient = AllClient, AllConsignee = AllConsignee, Compact = Compact, AwaitingJI = AwaitingJI, JIConclusion = JIConclusion,
                 JIConclusionfollowup = JIConclusionfollowup,JIconclusionreport = JIconclusionreport,JIDecidedDT = JIDecidedDT,All = All,ParticularIEs = ParticularIEs,IEWise = IEWise,CMWise = CMWise,
@@ -67,7 +67,8 @@ namespace IBS.Controllers
                 Clientwiseddl = Clientwiseddl,
                 vendor = vendor,
                 Item = Item,
-                consignee = consignee
+                consignee = consignee,
+                FinancialYearsValue = FinancialYearsvalue
             };
             model.ReportTitle = "Complaint Recieved";
             return View(model);
@@ -75,7 +76,7 @@ namespace IBS.Controllers
 
         public IActionResult ComplaintRecieved(string FromDate, string ToDate, string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
             string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
-            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee)
+            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee,string FinancialYearsvalue)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -86,11 +87,12 @@ namespace IBS.Controllers
             else if (Region == "C") { wRegion = "Central Region"; }
             JIRequiredReport model = complaintsJIRequiredReportRepository.GetJIRequiredList( FromDate,  ToDate, AllCM, AllIEs, AllVendors, AllClient, AllConsignee, Compact, AwaitingJI, JIConclusion, JIConclusionfollowup,
             JIconclusionreport, JIDecidedDT, All, ParticularIEs, IEWise,  CMWise, VendorWise, ClientWise, ConsigneeWise, FinancialYear, ParticularCMs, ParticularClients, ParticularConsignee,
-            ParticularVendor, Detailed, FinancialYears, ddlsupercm, ddliename, Clientwiseddl, vendor, Item, consignee, Region);
+            ParticularVendor, Detailed, FinancialYears, ddlsupercm, ddliename, Clientwiseddl, vendor, Item, consignee, Region, FinancialYearsvalue);
             ViewBag.FromDT = FromDate;
             ViewBag.ToDT = ToDate;
             ViewBag.Financialperiod = FinancialYears;
             ViewBag.Regions = wRegion;
+            ViewBag.Detailedchk = Detailed;
             return PartialView(model);
         }
         

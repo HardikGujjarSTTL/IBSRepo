@@ -36,7 +36,8 @@ namespace IBS.Repositories
                 model.BpoRegion = BPO.BpoRegion;
                 model.BpoType = BPO.BpoType;
                 model.BpoName = BPO.BpoName;
-                model.BpoRly = BPO.BpoRly;
+                model.BpoRlylst = BPO.BpoType == "R" ? BPO.BpoRly : BPO.BpoRly;
+                model.BpoRly = BPO.BpoType != "R" ? BPO.BpoRly : BPO.BpoRly;
                 model.BpoAdd = BPO.BpoAdd;
                 model.BpoCityCd = Convert.ToInt32(BPO.BpoCityCd);
                 model.BpoCity = Convert.ToString(BPO.BpoCityCd);
