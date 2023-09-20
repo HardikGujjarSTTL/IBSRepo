@@ -1447,8 +1447,8 @@ input[type="datetime-local"]{ height:43px;}
 .commonBtn{ padding:8px 15px; border-radius:6px;}
 .navbar-static-side ul li .nav-second-level li a.active3Label{ background:#0a6c29;}
 .active3Label > .fa.arrow:before{content:"\f106"!important;}
-.navbar-static-side ul li .nav-third-level li a { padding: 15px 15px 15px 55px; color: #efefef; position:relative; }
-.navbar-static-side ul li .nav-third-level li a .fa-angle-double-right{ position: absolute; left: 40px; top: 18px;}
+.navbar-static-side ul li .nav-third-level li a { padding: 10px 20px 10px 55px; color: #efefef; position:relative; }
+.navbar-static-side ul li .nav-third-level li a .fa-angle-double-right{ position: absolute; left: 40px; top: 11px;}
 .navbar-static-side ul li a.selectLink{ background:#008B29;}
 .navbar-static-side ul li .nav-second-level li a.selectLink{ color:#f2b604;}
 .navbar-static-side ul li .nav-second-level li a.thirdLabelTrigger{padding:10px 20px 10px 60px;}
