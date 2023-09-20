@@ -307,12 +307,20 @@ namespace IBS.Repositories
             par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_Get_Menu_Hierarchy_By_Using_RoleID", par, 1);
+            //List<MenuListModel> model1 = new List<MenuListModel>();
             List<MenuListModel> model = new List<MenuListModel>();
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model = JsonConvert.DeserializeObject<List<MenuListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
             }
+            //var menuListModels = (from m in model1
+            //                      select new { m.ParentID, m.ChildID, m.ParentTitle, m.ChildTitle, m.ID }).Distinct().ToList();
+
+            //model = (from m in model1
+            //         join c in menuListModels on new { m.ParentID, m.ChildID, m.ParentTitle, m.ChildTitle, m.ID } equals new { c.ParentID, c.ChildID, c.ParentTitle, c.ChildTitle, c.ID }
+            //         select m).ToList();
+
             query = model.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
