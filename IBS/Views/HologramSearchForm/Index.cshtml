@@ -9,7 +9,7 @@
             <h2>Issue of Hologram to IE</h2>
         </div>
         <div class="list-btn" id="addNewForm">
-            <a asp-area="" asp-controller="HologramSearchForm" asp-action="Manage" class="formBtn Permission_Add"> <span class="fa fa-plus"></span> Add New</a>
+            <a asp-area="" asp-controller="HologramSearchForm" asp-action="Manage" class="formBtn Permission_Add"> <span class="fa fa-plus Permission_Add"></span> Add New</a>
         </div>
     </div>
     <div class="accordion-body">
@@ -73,14 +73,14 @@
         $(document).ready(function () {
             $("#btnSearch").click(function () {
                 InitializeDatatable();
-                if (Role != "Admin") {
-                    var table = $("#dtSOF").DataTable();
-                    table.column(5).visible(false);
-                }
+                //if (Role != "Admin") {
+                //    var table = $("#dtSOF").DataTable();
+                //    table.column(5).visible(false);
+                //}
             });
-            if (Role != "Admin") {
-                $("#addNewForm").css("display", "none");
-            }
+            //if (Role != "Admin") {
+            //    $("#addNewForm").css("display", "none");
+            //}
         });
         function InitializeDatatable() {
             var FromNo = $("#txtFromNo").val();
@@ -146,10 +146,10 @@
                             var HgNoFr = data.HgRegion.substring(0, 1) + data.HgNoFr;
                             var HgNoTo = data.HgRegion.substring(0, 1) + data.HgNoTo;
                             var editUrl = '@Url.Action("Manage", "HologramSearchForm")?Hg_No_Fr=' + HgNoFr + '&Hg_No_To=' + HgNoTo;
-                            var html = '<div align=\"center\" class=\"reportIcon\">';
+                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\">';
                             //html += '<a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="Edit(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="SOFDelete(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" id=\"' + HgNoFr + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="Edit(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="SOFDelete(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" id=\"' + HgNoFr + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

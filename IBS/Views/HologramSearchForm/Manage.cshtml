@@ -55,7 +55,7 @@
                 @if (Model.IEStatus == "" || Model.IEStatus == null)
                 {
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active" onclick="SubmitHologramToIE();" id="btnSave">Save</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="SubmitHologramToIE();" id="btnSave">Save</button>
                     </div>
                 }
             </div>
@@ -82,12 +82,12 @@
                 }, 1000)
             }
         };
-        if (@Model == null) {
-            ShowHideMsgNew(false, "Hologram Record Not found");
-        }
+        //if (@Model == null) {
+        //    ShowHideMsgNew(false, "Hologram Record Not found");
+        //}
 
-        if (Role != "Admin") {
-            $("#btnSave").css("display", "none");
-        }
+        //if (Role != "Admin") {
+        //    $("#btnSave").css("display", "none");
+        //}
     </script>
 }
