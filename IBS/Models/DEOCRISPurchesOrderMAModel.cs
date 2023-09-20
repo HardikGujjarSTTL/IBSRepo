@@ -82,6 +82,8 @@ namespace IBS.Models
 
         public string? PoDoc { get; set; }
 
+        public string POI { get; set; }
+
         public string? MaNo { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormate)]

@@ -301,7 +301,7 @@ namespace IBS.Repositories.Reports
             return model;
         }
 
-        public SuperSurpriseDetailsModel GetSuperSurpriseDetailsData(DateTime FromDate, DateTime ToDate, string Region)
+        public SuperSurpriseDetailsModel GetSuperSurpriseDetailsData(DateTime FromDate, DateTime ToDate, string Region, string ParticularCM, string ParticularSector)
         {
             SuperSurpriseDetailsModel model = new();
 
@@ -309,74 +309,48 @@ namespace IBS.Repositories.Reports
             model.ToDate = ToDate;
             model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
 
-            var startDate = new DateTime(2022, 01, 01);
-            var endDate = new DateTime(2024, 01, 01);
+            var query = from t44 in context.T44SuperSurprises
+                        join t13 in context.T13PoMasters on t44.CaseNo equals t13.CaseNo
+                        join v05 in context.V05Vendors on t13.VendCd equals v05.VendCd
+                        join t08 in context.T08IeControllOfficers on t44.CoCd equals t08.CoCd
+                        join t09 in context.T09Ies on t44.IeCd equals t09.IeCd
+                        where t44.SuperSurpriseDt >= FromDate && t44.SuperSurpriseDt <= ToDate && t44.SuperSurpriseNo.Substring(0, 1) == Region
+                        && (!string.IsNullOrEmpty(ParticularCM) ? t44.CoCd == Convert.ToInt32(ParticularCM) : true)
+                        && (!string.IsNullOrEmpty(ParticularSector) ? t44.NameScopeItem == ParticularSector : true)
+                        orderby t08.CoName, t44.SuperSurpriseDt, t44.SuperSurpriseNo
+                        select new
+                        {
+                            t44.SuperSurpriseNo,
+                            t44.SuperSurpriseDt,
+                            t08.CoName,
+                            t09.IeName,
+                            v05.Vendor,
+                            t44.ItemDesc,
+                            NameScopeItem = EnumUtility<Enums.ScopeOfsector>.GetDescriptionByKey(t44.NameScopeItem),
+                            t44.PreIntRej,
+                            t44.Discrepancy,
+                            t44.Outcome,
+                            t44.SbuHeadRemarks
+                        };
 
-            //var query = from t44 in context.T44SuperSurprises
-            //            join t13 in context.T13PoMasters on t44.CaseNo equals t13.CaseNo
-            //            join v05 in context.V05Vendors on t13.VendCd equals v05.VendCd
-            //            join t08 in context.T08IeControllOfficers on (int?)t44.CoCd equals t08.CoCd
-            //            join t09 in context.T09Ies on t44.IeCd equals t09.IeCd
-            //            where t44.SUPER_SURPRISE_DT >= startDate && t44.SUPER_SURPRISE_DT <= endDate &&
-            //                  t44.SUPER_SURPRISE_NO.StartsWith("N")
-            //            orderby t08.CO_NAME, t44.SUPER_SURPRISE_DT, t44.SUPER_SURPRISE_NO
-            //            select new
-            //            {
-            //                t44.SUPER_SURPRISE_NO,
-            //                SUP_SUR_DATE = t44.SUPER_SURPRISE_DT.ToString("dd/MM/yyyy"),
-            //                t08.CO_NAME,
-            //                t09.IE_NAME,
-            //                VENDOR = v05.VENDOR,
-            //                t44.ITEM_DESC,
-            //                t44.PRE_INT_REJ,
-            //                t44.DISCREPANCY,
-            //                t44.OUTCOME,
-            //                t44.SBU_HEAD_REMARKS
-            //            };
-
-            //var result = query.ToList();
+            var result = query.ToList();
 
 
-            //var validCallStatus = new List<string> { "A", "R", "M" };
-
-            //var query = from t17 in context.T17CallRegisters
-            //            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd
-            //            join t20 in context.T20Ics on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t20.CaseNo, t20.CallRecvDt, t20.CallSno } into t20Group
-            //            from t20 in t20Group.DefaultIfEmpty()
-            //            where t20 == null &&
-            //                  t17.CallStatus != null && validCallStatus.Contains(t17.CallStatus) &&
-            //                  t17.CallRecvDt >= FromDate && t17.CallRecvDt <= ToDate &&
-            //                  t17.CaseNo.Substring(0, 1) == Region
-            //            orderby t09.IeName, t17.CallStatus, t17.CallRecvDt, t17.CaseNo
-            //            select new
-            //            {
-            //                t17.CaseNo,
-            //                t17.CallRecvDt,
-            //                t17.CallSno,
-            //                STATUS = t17.CallStatus == "A" ? "Accepted" :
-            //                         t17.CallStatus == "R" ? "Rejected" :
-            //                         t17.CallStatus == "M" ? "Pending" :
-            //                         t17.CallStatus == "B" ? "Accepted and Billed" : "",
-            //                t09.IeName,
-            //                IE_STATUS = t09.IeStatus == "R" ? "Retired" :
-            //                            t09.IeStatus == "T" ? "Transferred" :
-            //                            t09.IeStatus == "L" ? "Left/Repatriated" :
-            //                            "Working"
-            //            };
-
-            //var result = query.ToList();
-
-            //model.lstPendingICAgainstCalls = query.AsEnumerable().Select((item, index) => new PendingICAgainstCallsListModel
-            //{
-            //    ID = index + 1,
-            //    CASE_NO = item.CaseNo,
-            //    CALL_RECV_DT = item.CallRecvDt,
-            //    CALL_SNO = (int)item.CallSno,
-            //    STATUS = item.STATUS,
-            //    IE_NAME = item.IeName,
-            //    IE_STATUS = item.IE_STATUS
-            //}).ToList();
-
+            model.lstSuperSurprise = query.AsEnumerable().Select((item, index) => new SuperSurpriseListModel
+            {
+                ID = index + 1,
+                SuperSurpriseNo = item.SuperSurpriseNo,
+                SuperSurpriseDt = item.SuperSurpriseDt,
+                CoName = item.CoName,
+                IeName = item.IeName,
+                Vendor = item.Vendor,
+                ItemDesc = item.ItemDesc,
+                NameScopeItem = item.NameScopeItem,
+                PreIntRej = item.PreIntRej,
+                Discrepancy = item.Discrepancy,
+                Outcome = item.Outcome,
+                SbuHeadRemarks = item.SbuHeadRemarks,
+            }).ToList();
 
             return model;
         }

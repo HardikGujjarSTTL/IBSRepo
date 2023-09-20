@@ -40,17 +40,37 @@
         if ('@ReportType' == 'R') {
             if ('@RReport' == 'Report1') {
                 loadRemitance();
-                fileName = 'Remitance';
+                fileName = 'ChequeWiseRemittanceReport';
             }
             else if ('@RReport' == 'Report2') {
                 loadBillWiseRemittancesPeriod();
-                fileName = 'BillWiseRemittancesPeriod';
+                fileName = 'BillWiseRemittancesPeriodReport';
+            }
+            else if ('@RReport' == 'Report3') {
+                loadBillWiseRemittancesCreatedBill();
+                fileName = 'BillWiseRemittancesCreatedBillReport';
+            }
+            else if ('@RReport' == 'Report4') {
+                loadChequeWiseBillRemittance();
+                fileName = 'ChequeWiseBillRemittanceReport';
+            }
+            else if ('@RReport' == 'Report5') {
+                loadAccountCodeWiseRemittance();
+                fileName = 'AccountCodeWiseRemittanceReport';
+            }
+            else if ('@RReport' == 'Report6') {
+                loadClientBPOWiseRemittance();
+                fileName = 'ClientBPOWiseRemittanceReport';
+            }
+            else if ('@RReport' == 'Report7') {
+                loadStatementExcessRemittance();
+                fileName = 'StatementExcessRemittanceReport';
             }
         }
     });
 
     function loadRemitance() {
-        $("#dvReportViewer").load("@Url.Action("RemitanceReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("RemitanceReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -58,6 +78,41 @@
 
     function loadBillWiseRemittancesPeriod() {
         $("#dvReportViewer").load("@Url.Action("BillWiseRemittancesPeriodReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadBillWiseRemittancesCreatedBill() {
+        $("#dvReportViewer").load("@Url.Action("BillWiseRemittancesCreatedBillReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadChequeWiseBillRemittance() {
+        $("#dvReportViewer").load("@Url.Action("ChequeWiseBillRemittanceReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadAccountCodeWiseRemittance() {
+        $("#dvReportViewer").load("@Url.Action("AccountCodeWiseRemittanceReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadClientBPOWiseRemittance() {
+        $("#dvReportViewer").load("@Url.Action("ClientBPOWiseRemittanceReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport', BPOName: '@Model.BPOName', ClientType: '@Model.ClientType', ClientName: '@Model.ClientName' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadStatementExcessRemittance() {
+        $("#dvReportViewer").load("@Url.Action("StatementExcessRemittanceReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AccCode: '@Model.AccCode', RReport: '@Model.RReport' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

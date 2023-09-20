@@ -457,5 +457,9 @@ BEGIN
         :OLD.CREATEDDATE, :OLD.UPDATEDDATE, :OLD.ISDELETED, 'U', SYSDATE, :OLD.UPDATEDBY
     );
 END;
+
+23) Remittance Report
+
+SP : SP_GET_REMITANCE_CHECKWISE
 =============================================================================================================================================
 

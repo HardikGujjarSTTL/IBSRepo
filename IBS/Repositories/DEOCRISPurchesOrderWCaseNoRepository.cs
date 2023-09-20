@@ -64,7 +64,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<DEOCRISPurchesOrderMAModel> GetDataList(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<DEOCRISPurchesOrderMAModel> GetDataList(DTParameters dtParameters, string Region)
         {
 
             DTResult<DEOCRISPurchesOrderMAModel> dTResult = new() { draw = 0 };
@@ -94,14 +94,21 @@ namespace IBS.Repositories
 
             string MaDt1 = Convert.ToDateTime("31-03-2020").ToString("dd-MM-yyyy");
 
+            //query = from h in context.ImmsRitesPoHdrs
+            //        join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd
+            //        join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
+            //        join d in context.MmpPomaDtls on m.Makey equals d.Makey
+            //        where h.ImmsPokey == m.Pokey && h.ImmsRlyCd == m.Rly && m.Makey == d.Makey && m.Rly == d.Rly && h.ImmsRlyCd == r.ImmsRlyCd
+            //        && h.RegionCode == null
+            //        && m.MaDate > Convert.ToDateTime(MaDt1)
+            //        && h.RitesCaseNo == null && d.MaStatus == null
             query = from h in context.ImmsRitesPoHdrs
-                    join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd
-                    join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
-                    join d in context.MmpPomaDtls on m.Makey equals d.Makey
-                    where h.ImmsPokey == m.Pokey && h.ImmsRlyCd == m.Rly && m.Makey == d.Makey && m.Rly == d.Rly && h.ImmsRlyCd == r.ImmsRlyCd
-                    && h.RegionCode == null
-                    && m.MaDate > Convert.ToDateTime(MaDt1)
-                    && h.RitesCaseNo == null && d.MaStatus == null
+                    join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd into rGroup
+                    from r in rGroup.DefaultIfEmpty()
+                    where (h.RegionCode == Region || h.RegionCode == null)
+                       && h.PoDt > DateTime.Parse("2021-03-31")
+                       && h.RitesCaseNo == null
+                    orderby h.RegionCode descending, h.PoDt descending
 
                     select new DEOCRISPurchesOrderMAModel
                     {
@@ -112,22 +119,16 @@ namespace IBS.Repositories
                         RecvDate = h.RecvDate,
                         ImmsRlyCd = h.ImmsRlyCd,
                         ImmsRlyShortname = h.ImmsRlyShortname,
-                        RlyCd = r.RlyCd,
+                        RlyCd = r != null ? r.RlyCd : h.ImmsRlyShortname,
                         VendorName = h.ImmsVendorName + "," + h.ImmsVendorDetail,
                         Remarks = h.Remarks,
                         PoDoc = "Vendor/PO/" + h.PoNo + ".pdf",
-                        MaNo = m.MaNo,
-                        MaDate = m.MaDate,
-                        Subject = m.Subject,
-                        MaFldDescr = d.MaFldDescr,
-                        NewValue = d.NewValue,
-                        Rly = d.Rly,
-                        Makey = d.Makey,
-                        Slno = d.Slno,
-                        OldValue = d.OldValue,
-                        MaStatus = d.MaStatus,
-                        RegionCode = h.RegionCode
-
+                        POI = h.ImmsPoiName + "/" + h.ImmsPoiDetail,
+                        RegionCode = h.RegionCode == "N" ? "NORTHERN" :
+                         h.RegionCode == "S" ? "SOUTHERN" :
+                         h.RegionCode == "E" ? "EASTERN" :
+                         h.RegionCode == "W" ? "WESTERN" :
+                         h.RegionCode == "C" ? "CENTRAL" : "NA",
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -135,6 +136,7 @@ namespace IBS.Repositories
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.PoNo).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.MaNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ImmsRlyShortname).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.ImmsPokey).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
