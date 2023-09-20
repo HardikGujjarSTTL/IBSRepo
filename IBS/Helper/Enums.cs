@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace IBS.Helper
 {
@@ -46,7 +47,6 @@ namespace IBS.Helper
             OnlineComplaints = 11,
             [Description("/ReadWriteData/Files/Complaint_Case")]
             ComplaintCase = 12,
-
             [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
             IEFullSignature = 13,
             [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
@@ -503,6 +503,33 @@ namespace IBS.Helper
             [Description("State Government")]
             S,
         }
+
+        public enum ScopeOfsector
+        {
+            [Description("IAF 12) Chemical/Paints")]
+            A,
+            [Description("(IAF 14b) Plastics Pipes & Fittings")]
+            B,
+            [Description("(IAF 16) Cement Pipes, AC Pressue Pipes & PCC Poles")]
+            C,
+            [Description("(IAF 17b)  Rails, CI/DI Pipes, Steel Tubes and Fittings, Seamless Blocl/Galvanised, Valves")]
+            D,
+            [Description("(IAF 19a) Conductor, Cables, Power Transformers, CT/PT Fans, Relay, Panel, DG set, Alternator, Energy Meter")]
+            E,
+            [Description("(IAF 22) Railway Rolling Stock")]
+            F,
+            [Description("(IAF 28) Water Supply")]
+            G,
+            [Description("(IAF 28) Construction")]
+            H,
+            [Description("IAF 07) Paper for Printing")]
+            I,
+            [Description("(IAF 09) Printed Tickes & Ruled Papers")]
+            J,
+            [Description("Others")]
+            O,
+        }
+
     }
 
     public class EnumUtility<T>

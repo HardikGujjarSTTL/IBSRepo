@@ -9,7 +9,7 @@ public partial class T17CallRegister
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public string? CallLetterNo { get; set; }
 

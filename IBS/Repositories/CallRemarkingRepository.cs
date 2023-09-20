@@ -33,7 +33,7 @@ namespace IBS.Repositories
                     join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
                     join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
                     join t108 in context.T108RemarkedCalls on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
-                           equals new { CaseNo = Convert.ToString(t108.CaseNo), CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (short)t108.CallSno } into t108Group
+                           equals new { CaseNo = Convert.ToString(t108.CaseNo), CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (int)t108.CallSno } into t108Group
                     from t108 in t108Group.Where(x => x.RemarkingStatus == "P").DefaultIfEmpty()
                     where t108.CaseNo == null && t108.CallRecvDt == null && t108.CallSno == null
                     && t17.CaseNo.Substring(0, 1) == Region
@@ -123,7 +123,7 @@ namespace IBS.Repositories
                     {
                         CaseNo = data[0],
                         CallRecvDt = Convert.ToDateTime(data[1]),
-                        CallSno = short.Parse(data[2]),
+                        CallSno = int.Parse(data[2]),
                         RemarkReason = model.RemarkingStatus,
                         FrIeCd = model.FrIeCd,
                         ToIeCd = model.ToIeCd,
@@ -170,7 +170,7 @@ namespace IBS.Repositories
                         join t09From in context.T09Ies on t108.FrIeCd equals t09From.IeCd
                         join t10To in context.T09Ies on t108.ToIeCd equals t10To.IeCd
                         join t02 in context.T02Users on t108.RemInitBy equals t02.UserId
-                        join t17 in context.T17CallRegisters on new { t108.CaseNo, CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (short)t108.CallSno }
+                        join t17 in context.T17CallRegisters on new { t108.CaseNo, CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (int)t108.CallSno }
                             equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
                         where t108.RemarkingStatus == "P" && t108.CaseNo.Substring(0, 1) == Region
                         select new PendingCallsListModel
@@ -195,7 +195,7 @@ namespace IBS.Repositories
                         join t09From in context.T09Ies on t108.FrIeCd equals t09From.IeCd
                         join t10To in context.T09Ies on t108.ToIeCd equals t10To.IeCd
                         join t02 in context.T02Users on t108.RemInitBy equals t02.UserId
-                        join t17 in context.T17CallRegisters on new { t108.CaseNo, CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (short)t108.CallSno }
+                        join t17 in context.T17CallRegisters on new { t108.CaseNo, CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (int)t108.CallSno }
                             equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
                         where t108.RemarkingStatus == "P" && t108.CaseNo.Substring(0, 1) == Region
                          && (t17.CallRemarkStatus == null || t17.CallRemarkStatus == "0")
@@ -239,7 +239,7 @@ namespace IBS.Repositories
                      join t10To in context.T09Ies on t108.ToIeCd equals t10To.IeCd
                      join t02 in context.T02Users on t108.RemInitBy equals t02.UserId
                      join t08 in context.T08IeControllOfficers on t10To.IeCoCd equals t08.CoCd
-                     join t17 in context.T17CallRegisters on new { t108.CaseNo, CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (short)t108.CallSno }
+                     join t17 in context.T17CallRegisters on new { t108.CaseNo, CallRecvDt = (DateTime)t108.CallRecvDt, CallSno = (int)t108.CallSno }
                          equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
                      join v05 in context.V05Vendors on t17.MfgCd equals v05.VendCd
                      join t18 in context.T18CallDetails on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }

@@ -6,9 +6,17 @@
 
         public string ReportTitle { get; set; }
 
-        public DateTime FromDate { get; set; }
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
 
-        public DateTime ToDate { get; set; }        
+        public string Region { get; set; }
+        public string Ie_Cd { get; set; }
+        public string IE_Name { get; set; }
+        public string Type { get; set; }
+        public string Bk_No { get; set; }
+        public string Set_No { get; set; }
     }
 
     public class ICUnbilledModel
@@ -36,6 +44,18 @@
         public string REMARKS_DATE { get; set; }
         public string IC_DATE { get; set; }
     }
+    public class ICIssuedNotReceivedReportModel
+    {
+        public string ReportType { get; set; }
+        public string ReportTitle { get; set; }
+        public string Region { get; set; }
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public string Type { get; set; }
+        public List<ICIssueNotReceiveModel> ICIssuedNotReceivedList { get; set; }
+    }
 
     public class IE7thCopyListModel
     {
@@ -50,13 +70,13 @@
 
         public string UserName { get; set; }
         public string UserID { get; set; }
-        List<IE7thCopyReportModel> IE7thCopyReportList { get; set; }
+        public List<IE7thCopyReportModel> lstIE7thCopyList { get; set; }
     }
 
     public class IE7thCopyReportModel
     {
         public string Case_No { get; set; }
-        public string Book_No { get; set; }
+        public string Bk_No { get; set; }
         public string Set_No { get; set; }
     }
 
@@ -121,4 +141,29 @@
         public string INSP_FEE { get; set; }
         //public string MyProperty { get; set; }
     }
+
+    #region Status of IC Report
+    public class ICStatusModel
+    {
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public string Region { get; set; }
+        public string Type { get; set; }
+        public string IE_Name { get; set; }
+        public List<ICStatusListModel> lstICStatus { get; set; }
+
+    }
+    public class ICStatusListModel
+    {
+        public string IC_SUBMIT_DT { get; set; }
+        public string IE_NAME { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
+        public string BILL_NO { get; set; }
+
+    }
+    #endregion
 }

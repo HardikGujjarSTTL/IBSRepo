@@ -310,7 +310,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallLetterNo = CallDetails.CallLetterNo;
                     model.CallLetterDt = CallDetails.CallLetterDt;
                     model.CallMarkDt = CallDetails.CallMarkDt;
-                    model.CallSno = CallDetails.CallSno;
+                    model.CallSno = (short)CallDetails.CallSno;
                     model.IeCd = CallDetails.IeCd;
                     model.DtInspDesire = CallDetails.DtInspDesire;
                     model.CallStatus = CallDetails.CallStatus;
@@ -519,7 +519,7 @@ namespace IBS.Repositories.InspectionBilling
                         T17CallRegister obj = new T17CallRegister();
                         obj.CaseNo = model.CaseNo;
                         obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = (short)CD;
+                        obj.CallSno = (int)CD;
                         obj.CallLetterNo = model.CallLetterNo;
                         obj.CallLetterDt = model.CallLetterDt;
                         obj.CallMarkDt = model.CallMarkDt;
@@ -560,7 +560,7 @@ namespace IBS.Repositories.InspectionBilling
                         T17CallRegister obj = new T17CallRegister();
                         obj.CaseNo = model.CaseNo;
                         obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = (short)CD;
+                        obj.CallSno = (int)CD;
                         obj.CallLetterNo = model.CallLetterNo;
                         obj.CallLetterDt = model.CallLetterDt;
                         obj.CallMarkDt = model.CallMarkDt;
@@ -625,7 +625,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -650,7 +650,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -680,7 +680,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -704,7 +704,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -1081,7 +1081,7 @@ namespace IBS.Repositories.InspectionBilling
                     T18CallDetail obj = new T18CallDetail();
                     obj.CaseNo = model.CaseNo;
                     obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                    obj.CallSno = (short)model.CallSno;
+                    obj.CallSno = (int)model.CallSno;
                     obj.ItemSrnoPo = (byte)srno;
                     obj.ItemDescPo = dataItem.ItemDescPo;
                     obj.ConsigneeCd = Convert.ToInt32(ccd);
@@ -1204,7 +1204,7 @@ namespace IBS.Repositories.InspectionBilling
                                join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
                                where t18.CaseNo == CNO &&
                                      t18.CallRecvDt == DateTime.ParseExact(DT, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                                     t18.CallSno == (short)model.CallSno
+                                     t18.CallSno == (int)model.CallSno
                                select new VenderCallRegisterModel
                                {
                                    Status = "Marked",
@@ -1232,7 +1232,7 @@ namespace IBS.Repositories.InspectionBilling
                                      !(from t18 in context.T18CallDetails
                                        where t18.CaseNo == CNO &&
                              t18.CallRecvDt == DateTime.ParseExact(DT, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                             t18.CallSno == (short)model.CallSno
+                             t18.CallSno == (int)model.CallSno
                                        select t18.ItemSrnoPo).Contains(t15.ItemSrno)
                                select new VenderCallRegisterModel
                                {
@@ -1884,12 +1884,10 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.CaseNo = GetData.CaseNo;
                     model.CallRecvDt = GetData.CallRecvDt;
-                    model.CallSno = GetData.CallSno;
+                    model.CallSno = (short)GetData.CallSno;
                     model.IeSname = GetData.IeSname;
                 }
             }
-
-
 
             return model;
         }
@@ -1906,7 +1904,7 @@ namespace IBS.Repositories.InspectionBilling
                               {
                                   CaseNo = l.CaseNo,
                                   CallRecvDt = l.CallRecvDt,
-                                  CallSno = l.CallSno,
+                                  CallSno = (short)l.CallSno,
                                   Cdesc = l.CancelDesc,
                                   CancelDt = l.CancelDate,
                                   DocRec = l.DocsSubmitted,
@@ -2025,7 +2023,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.CaseNo = GetData.CaseNo;
                     model.CallRecvDt = GetData.CallRecvDt;
-                    model.CallSno = GetData.CallSno;
+                    model.CallSno = (short)GetData.CallSno;
                     model.IeSname = GetData.IeSname;
                 }
             }
@@ -2120,7 +2118,7 @@ namespace IBS.Repositories.InspectionBilling
                     T19CallCancel obj = new T19CallCancel();
                     obj.CaseNo = model.CaseNo;
                     obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                    obj.CallSno = (short)model.CallSno;
+                    obj.CallSno = (int)model.CallSno;
                     obj.CancelDesc = model.Cdesc;
                     obj.CancelDate = model.CancelDt;
                     obj.UserId = model.Createdby;
@@ -2537,7 +2535,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 model.IESName = GetValue.v.IeSname;
                 model.CallRecvDt = GetValue.d.CallRecvDt;
-                model.CallSno = GetValue.d.CallSno;
+                model.CallSno = (short)GetValue.d.CallSno;
 
                 if (PODetails != null)
                 {

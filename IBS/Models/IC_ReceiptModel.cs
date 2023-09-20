@@ -53,20 +53,7 @@ namespace IBS.Models
         public DateTime? ToDt { get; set; }
 
         public string ICType { get; set; }
-    }
-
-    public class ICReportModel
-    {
-        public string SUBMIT_DATE { get; set; }
-        public string IC_SUBMIT_DATE { get; set; }
-        public string IE_NAME { get; set; }
-        public string BK_NO { get; set; }
-        public string SET_NO { get; set; }
-        public string CLIENT_TYPE { get; set; }
-        public string REMARKS { get; set; }
-        public string REMARKS_DATE { get; set; }
-        public string IC_DATE { get; set; }
-    }
+    }    
 
     public class ICIssueNotReceiveModel
     {
@@ -84,15 +71,5 @@ namespace IBS.Models
 
         public bool IsTIF { get; set; }
         public bool IsPDF{ get; set; }
-    }
-
-    public class ICIssuedNotReceivedReportModel
-    {
-        public string ReportType { get; set; }
-        public string ReportTitle { get; set; }
-        public string Region { get; set; }
-        public string FromDate { get; set; }
-        public string ToDate { get; set; }
-        public List<ICIssueNotReceiveModel> ICIssuedNotReceivedList{ get; set; }
-    }
+    }    
 }

@@ -285,6 +285,10 @@ namespace IBS.Repositories.Reports
                         Bk_Submited = b.BkSubmitted,
                         Bk_Submit_Dt = b.BkSubmitDt
                     };
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Bk_No).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Set_No_Fr).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.Set_No_To).ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();
@@ -297,8 +301,50 @@ namespace IBS.Repositories.Reports
         {
             IE7thCopyListModel model = new IE7thCopyListModel();
 
-            return model;
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, Bk_No, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, Set_No, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, obj.IeCd, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, obj.Region, ParameterDirection.Input);            
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
+            var ds = DataAccessDB.GetDataSet("SP_GET_IE_7TH_COPY", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            model.lstIE7thCopyList = dt.AsEnumerable().Select(row => new IE7thCopyReportModel
+            {
+                Case_No = Convert.ToString(row["CASE_NO"]),
+                Bk_No = Convert.ToString(row["BK_NO"]),
+                Set_No = Convert.ToString(row["SET_NO"])                
+            }).ToList();
+            return model;
+        }
+
+        public ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate,string IE_CD, string Region)
+        {
+            ICStatusModel model = new() { FromDate = FromDate, ToDate = ToDate };
+            List<ICStatusListModel> list = new();
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_IE_CD", OracleDbType.Varchar2, IE_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IC_STATUS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            list = dt.AsEnumerable().Select(row => new ICStatusListModel
+            {
+                IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+                BILL_NO = Convert.ToString(row["BILL_NO"])
+            }).ToList();
+
+            model.lstICStatus = list;
+            return model;
         }
     }
 }

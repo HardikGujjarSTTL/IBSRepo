@@ -1,202 +1,148 @@
 ﻿@model IBS.Models.ICIssuedNotReceivedReportModel
+<div>
+    @*<h3 class="heading3">@Model.Region</h3>
+    <h3 class="heading3">IC Issued but not Received in Office For The Period <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></h3>*@
+    <h3 class="center">IC Issued but not Received in Office For The Period<br /> <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span><br />(@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0" width="75%">
+            <tbody>
+                <tr>
 
-@{
-    Layout = null;
-}
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE S.No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IC Issue Date</font></b></th>
+                    @{
+                        if (Model.Type == "" || Model.Type == "IEWise")
+                        {
+                            <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                            <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM</font></b></th>
+                        }
+                        else
+                        {
+                            <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM</font></b></th>
+                            <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                        }
+                    }
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Digital IC</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">PO</font></b></th>
 
-@{
-    Layout = null;
-    string ReportType = (Model != null ? Model.ReportType : "");
-    string ReportTitle = (Model != null ? Model.ReportTitle : "");
-    ViewData["Title"] = ReportTitle;
-}
+                </tr>
+                @{
+                    int SrNo = 0, PartSrNo = 0;
+                    var IE_Name = "";
+                    foreach (var item in Model.ICIssuedNotReceivedList)
+                    {
+                        SrNo = SrNo + 1;
+                        if (Model.Type == "IEWise")
+                        {
+                            if (IE_Name == item.IE_NAME)
+                            {
+                                PartSrNo = PartSrNo + 1;
+                            }
+                            else
+                            {
+                                IE_Name = item.IE_NAME;
+                                PartSrNo = 0;
+                                PartSrNo = PartSrNo + 1;
+                            }
+                        }
+                        else
+                        {
+                            if (IE_Name == item.CO_NAME)
+                            {
+                                PartSrNo = PartSrNo + 1;
+                            }
+                            else
+                            {
+                                IE_Name = item.CO_NAME;
+                                PartSrNo = 0;
+                                PartSrNo = PartSrNo + 1;
+                            }
+                        }
+                        var ICPath = "/RBS/BILL_IC/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        <tr>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
 
-<html>
-<head>
-    <title>@ReportTitle</title>
-    <style>
-        body {
-            background-color: transparent;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 13px;
-        }
-
-        .commonBtn {
-            background: #F66A2F;
-            border: 1px solid #F66A2F;
-            padding: 8px 15px;
-            border-radius: 6px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-            .commonBtn:hover {
-                background: #008B29;
-                border: 1px solid #008B29;
-            }
-
-        .borderTable {
-            border-left: 1px solid #d1d1d1;
-            border-top: 1px solid #d1d1d1;
-            white-space: nowrap;
-        }
-
-            .borderTable th, .borderTable td {
-                border-right: 1px solid #d1d1d1;
-                border-bottom: 1px solid #d1d1d1;
-                padding: 5px;
-            }
-
-            .borderTable th {
-                background: #008B29;
-                color: #fff;
-                font-weight: bold;
-                font-size: 14px;
-            }
-
-            .borderTable tr:nth-child(odd) td {
-                background: #f1f1f1;
-            }
-
-        .reportLabelList {
-            margin: 0 0 20px 0;
-            padding: 0;
-            list-style: none;
-        }
-
-            .reportLabelList li {
-                display: inline-block;
-                font-weight: bold;
-                margin-right: 30px;
-                color: #FC5518;
-            }
-
-                .reportLabelList li .labelName {
-                    font-weight: normal;
-                    color: #000;
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@PartSrNo</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_ISSUED_DT</font></td>
+                            @if (Model.Type == "IEWise")
+                            {
+                                <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                                <td width="6%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            }
+                            else
+                            {
+                                <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                                <td width="6%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            }
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.BK_NO</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.SET_NO</font></td>
+                            <td width="3%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;"><a href="@ICPath" target="_blank">IC</a></div>
+                                </font>
+                            </td>
+                            <td width="5%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @if (Model.Type == "IEWise")
+                                    {
+                                        if (item.RLY_NONRLY == "R" && item.PO_SOURCE == "C")
+                                        {
+                                            var url = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + item.PO_YR + "/" + item.IMMS_RLY_CD + "/" + item.PO_NO + ".pdf";
+                                            <div width='10%' valign='top' align='center'><a href='@url' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>@item.CASE_NO  </font></a></div>
+                                        }
+                                        else
+                                        {
+                                            var urlTif = "/RBS/CASE_NO/" + @item.CASE_NO + ".TIF";
+                                            var urlPdf = "/RBS/CASE_NO/" + @item.CASE_NO + ".PDF";
+                                            if (item.IsTIF == true)
+                                            {
+                                                <div width='10%' valign='top' align='center'><a href='@urlTif' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'> @item.CASE_NO </font></a></div>
+                                            }
+                                            else if (item.IsPDF == true)
+                                            {
+                                                <div width='10%' valign='top' align='center'><a href='@urlPdf' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'> @item.CASE_NO</font></a></div>
+                                            }
+                                            else
+                                            {
+                                                <div width='10%' valign='top' align='center'> <font size='1' face='Verdana'> @item.CASE_NO </font></div>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (item.RLY_NONRLY == "R" && item.PO_SOURCE == "C")
+                                        {
+                                            var url = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + item.PO_YR + "/" + item.IMMS_RLY_CD + "/" + item.PO_NO + ".pdf";
+                                            <div width='10%' valign='top' align='center'><a href='@url' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'> @item.CASE_NO </font></a></div>
+                                        }
+                                        else
+                                        {
+                                            var urlTif = "/RBS/CASE_NO/" + @item.CASE_NO + ".TIF";
+                                            var urlPdf = "/RBS/CASE_NO/" + @item.CASE_NO + ".PDF";
+                                            if (item.IsTIF == true)
+                                            {
+                                                <div width='10%' valign='top' align='center'><a href='@urlTif' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'> @item.CASE_NO </font></a></div>
+                                            }
+                                            else if (item.IsPDF == true)
+                                            {
+                                                <div width='10%' valign='top' align='center'><a href='@urlPdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'> @item.CASE_NO </font></a></div>
+                                            }
+                                            else
+                                            {
+                                                <div width='10%' valign='top' align='center'> <font size='1' face='Verdana'> @item.CASE_NO </font></div>
+                                            }
+                                        }
+                                    }
+                                </font>
+                            </td>
+                        </tr>
+                    }
                 }
-
-        .tableOuter {
-            width: 100%;
-            /*overflow: auto;*/
-            /*max-height: 450px;*/
-            margin-bottom: 20px;
-        }
-
-        .heading3 {
-            font-size: 20px;
-            font-weight: 600;
-            position: relative;
-            color: #118133;
-            margin: 0;
-            padding: 0;
-            margin-bottom: 40px;
-        }
-
-            .heading3:before {
-                background: #FC5518;
-                content: "";
-                width: 5%;
-                height: 2px;
-                position: absolute;
-                bottom: -10px;
-                left: 0;
-            }
-
-        .orangeText {
-            color: #F66A2F;
-        }
-
-        .borderTable tr.reportTotal td {
-            background: #ff0;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-    <p align="right">
-        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
-        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
-        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
-    </p>
-    <div id="dvReportViewer"></div>
-    <div class="overlayLoader" style="display: none">
-        <div class="loaderHolder">
-            <div class="lds-dual-ring"></div>
-        </div>
+            </tbody>
+        </table>
     </div>
-</body>
-</html>
-<link href="~/css/report.css" rel="stylesheet" />
-<script src="~/lib/jquery/jquery.min.js"></script>
-<script src="~/js/html2pdf.bundle.min.js"></script>
-<script src="~/js/site.js"></script>
+</div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        loadICIssuedNotReceived();
-        fileName = 'IC_Issued_Not_Received';
-    });
-
-    function loadICIssuedNotReceived() {
-        $("#dvReportViewer").load("@Url.Action("IC_Issue")", { Type: '@Model.ReportType', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
-            $("#dvReportViewer").empty();
-            $("#dvReportViewer").html(response);
-        });
-    }
-
-    $("#btnPrint").click(function () {
-        generatePdf(true);
-    });
-
-    $("#btnExportToPdf").click(function () {
-        generatePdf(false);
-    });
-
-    $("#btnExportToExcel").click(function () {
-        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
-        let url = URL.createObjectURL(file);
-        let a = $("<a />", {
-            href: url,
-            download: getExportFileName(fileName) + ".xls"
-        }).appendTo("body").get(0).click();
-        e.preventDefault();
-    });
-
-    function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
-
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
-            },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
-
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        element.style.width = "100%";
-    }
-
-    $(document).ajaxSend(function () {
-        $(".overlayLoader").show();
-    });
-
-    $(document).ajaxComplete(function () {
-        $(".overlayLoader").hide();
-    });
-</script>

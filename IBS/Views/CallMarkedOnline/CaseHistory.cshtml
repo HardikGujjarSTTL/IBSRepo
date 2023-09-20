@@ -10,47 +10,22 @@
 </head>
 <body>
     <p align="right">
-        <input type="button" value="Print" id="btnPrint" />
-        <input type="button" value="Export To PDF" id="btnExportToPdf" />
-        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
     <div id="dvReportViewer">
-        <p align="center"><font size="3" face="Verdana"><b><u>History for Case No. - @Model.CASE_NO (@ViewBag.RegionName)</u></b></font></p>
-        <br>
-        <p align="center"><font size="3" face="Verdana"><u>PO DETAILS</u></font></p>
-        <br>
-        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="25%">
-            <tbody>
-                <tr style="color:red;">
-                    <td><font size="1" face="Verdana">Case No</font></td>
-                    <td><font size="1" face="Verdana">:</font></td>
-                    <td><font size="1" face="Verdana">&nbsp;@Model.CASE_NO</font></td>
-                </tr>
-                <tr style="color:red;">
-                    <td><font size="1" face="Verdana">Vendor</font></td>
-                    <td><font size="1" face="Verdana">:</font></td>
-                    <td><font size="1" face="Verdana">&nbsp;@Model.VENDOR</font></td>
-                </tr>
-                <tr style="color:red;">
-                    <td><font size="1" face="Verdana">Po No</font></td>
-                    <td><font size="1" face="Verdana">:</font></td>
-                    <td><font size="1" face="Verdana">&nbsp;@Model.PO_NO</font></td>
-                </tr>
-                <tr style="color:red;">
-                    <td><font size="1" face="Verdana">Dated</font></td>
-                    <td><font size="1" face="Verdana">:</font></td>
-                    <td><font size="1" face="Verdana">&nbsp;@Model.PO_DT</font></td>
-                </tr>
-                <tr style="color:red;">
-                    <td><font size="1" face="Verdana">Client</font></td>
-                    <td><font size="1" face="Verdana">:</font></td>
-                    <td><font size="1" face="Verdana">&nbsp;@Model.RLY_CD</font></td>
-                </tr>
-            </tbody>
-        </table>
-        <br>
+        <h3 class="center"><b><u>History for Case No. - <span class="orangeText">@Model.CASE_NO</span> (@ViewBag.RegionName)</u></b></h3>
+        <h3 class="heading3">PO DETAILS</h3>
+        <ul class="reportLabelList">
+            <li><span class="labelName">Case No:</span> @Model.CASE_NO</li>
+            <li><span class="labelName">Vendor:</span> @Model.VENDOR</li>
+            <li><span class="labelName">Po No:</span> @Model.PO_NO</li>
+            <li><span class="labelName">Dated:</span> @Model.PO_DT</li>
+            <li><span class="labelName">Client:</span> @Model.RLY_CD</li>
+        </ul>
         @*Item List*@
-        <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <table class="borderTable" cellpadding="0" cellspacing="0" width="100%">
             <tbody>
                 <tr>
                     <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Item SrNo</font></b></th>
@@ -100,145 +75,154 @@
         @*PO AMMENDMENTS IREPS*@
         @if (@Model.poIrepsList.Count() > 0 && @Model.poIrepsList != null)
         {
-            <p align="center"><font size="3" face="Verdana"><u>PO AMMENDMENTS IREPS</u></font></p>
-            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
-                <tbody>
-                    <tr>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">MA No.</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">MA Date</font></b></th>
-                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">MA Field</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">OLD Value</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">New Value</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">PDF</font></b></th>
-                    </tr>
-                    @{
-                        foreach (var item in Model.poIrepsList)
-                        {
-                            var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.RLY_CD + "/" + Model.PO_NO + "_" + item.MA_NO + ".pdf";
-                            <tr>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.SLNO</font></td>
-                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_NO</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_DT</font></td>
-                                <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.MA_FLD_DESCR</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.OLD_VALUE</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.NEW_VALUE</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_STATUS</font></td>
-                                <td width="3%" valign="top" align="center">
-                                    <font size="1" face="Verdana">
-                                        <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;">
-                                            <a href=@urlireps>View</a>
-                                        </div>
-                                    </font>
-                                </td>
-                            </tr>
+            <h3 class="heading3">PO AMMENDMENTS IREPS</h3>
+            <div class="tableOuter">
+                <table class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
+                            <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">MA No.</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">MA Date</font></b></th>
+                            <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">MA Field</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">OLD Value</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">New Value</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">PDF</font></b></th>
+                        </tr>
+                        @{
+                            foreach (var item in Model.poIrepsList)
+                            {
+                                var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.RLY_CD + "/" + Model.PO_NO + "_" + item.MA_NO + ".pdf";
+                                <tr>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.SLNO</font></td>
+                                    <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_NO</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_DT</font></td>
+                                    <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.MA_FLD_DESCR</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.OLD_VALUE</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.NEW_VALUE</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_STATUS</font></td>
+                                    <td width="3%" valign="top" align="center">
+                                        <font size="1" face="Verdana">
+                                            <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;">
+                                                <a href=@urlireps>View</a>
+                                            </div>
+                                        </font>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <br />
         }
 
         @*PO AMMENDMENTS VENDOR*@
         @if (@Model.poVendorList.Count() > 0 && @Model.poVendorList != null)
         {
-            <p align="center"><font size="3" face="Verdana"><u>PO AMMENDMENTS VENDOR</u></font></p>
-            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
-                <tbody>
-                    <tr>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">MA No.</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">MA Date</font></b></th>
-                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">MA Field</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">OLD Value</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">New Value</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">PDF</font></b></th>
-                    </tr>
-                    @{
-                        foreach (var item in Model.poVendorList)
-                        {
-                            var MADT = Common.DateConcate(item.MA_DT);
-                            var urlvendor = "/RBS/Vendor/MA/" + @item.CASE_NO + "_" + @item.MA_NO + "_" + MADT + ".pdf";
-                            <tr>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_SNO</font></td>
-                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_NO</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_DT</font></td>
-                                <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.MA_DESC</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.OLD_PO_VALUE</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.NEW_PO_VALUE</font></td>
-                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_STATUS</font></td>
-                                <td width="3%" valign="top" align="center">
-                                    <font size="1" face="Verdana">
-                                        <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;">
-                                            <a href="@urlvendor" target="_blank">View MA</a>
-                                        </div>
-                                    </font>
-                                </td>
-                            </tr>
+            <h3 class="heading3">PO AMMENDMENTS VENDOR</h3>
+            <div class="tableOuter">
+                <table class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
+                            <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">MA No.</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">MA Date</font></b></th>
+                            <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">MA Field</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">OLD Value</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">New Value</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">PDF</font></b></th>
+                        </tr>
+                        @{
+                            foreach (var item in Model.poVendorList)
+                            {
+                                var MADT = Common.DateConcate(item.MA_DT);
+                                var urlvendor = "/RBS/Vendor/MA/" + @item.CASE_NO + "_" + @item.MA_NO + "_" + MADT + ".pdf";
+                                <tr>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_SNO</font></td>
+                                    <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_NO</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_DT</font></td>
+                                    <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.MA_DESC</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.OLD_PO_VALUE</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.NEW_PO_VALUE</font></td>
+                                    <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_STATUS</font></td>
+                                    <td width="3%" valign="top" align="center">
+                                        <font size="1" face="Verdana">
+                                            <div align="center" class="reportIcon" style="text-align: center;cursor: pointer;">
+                                                <a href="@urlvendor" target="_blank">View MA</a>
+                                            </div>
+                                        </font>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <br />
         }
 
         @*PREVIOUS CALL DETAILS*@
         @if (@Model.PrevCallList.Count() > 0 && @Model.PrevCallList != null)
         {
-            <p align="center"><font size="3" face="Verdana"><u>PO AMMENDMENTS VENDOR</u></font></p>
-            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
-                <tbody>
-                    <tr>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Letter Date</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Recieving Date</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Sno</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Install No.</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
-                        <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Cancel Reason</font></b></th>
-                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Rejection Reason</font></b></th>
-                    </tr>
-                    @{
-                        var SrNo = 0;
-                        foreach (var item in Model.PrevCallList)
-                        {
-                            SrNo = SrNo + 1;
-                            <tr>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_DATE</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.LETTER_DATE</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_INSTALL_NO</font></td>
-                                <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                                <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
-                                @if (item.REASON_REJECT == "")
-                                {
-                                    <td width="4%" valign="top" align="center"><font size="1" face="Verdana">-</font></td>
-                                }
-                                else
-                                {
-                                    <td width="4%" valign="top" align="left"><font size="1" face="Verdana">@item.REASON_REJECT</font></td>
-                                }
+            <h3 class="heading3">PREVIOUS CALL DETAILS</h3>
+            <div class="tableOuter">
+                <table class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Letter Date</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Recieving Date</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Sno</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Call Install No.</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                            <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
+                            <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Cancel Reason</font></b></th>
+                            <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Rejection Reason</font></b></th>
+                        </tr>
+                        @{
+                            var SrNo = 0;
+                            foreach (var item in Model.PrevCallList)
+                            {
+                                SrNo = SrNo + 1;
+                                <tr>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_DATE</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.LETTER_DATE</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_INSTALL_NO</font></td>
+                                    <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                                    <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                                    @if (item.REASON_REJECT == "")
+                                    {
+                                        <td width="4%" valign="top" align="center"><font size="1" face="Verdana">-</font></td>
+                                    }
+                                    else
+                                    {
+                                        <td width="4%" valign="top" align="left"><font size="1" face="Verdana">@item.REASON_REJECT</font></td>
+                                    }
 
-                                @if (item.REASON == "**")
-                                {
-                                    <td width="4%" valign="top" align="center"><font size="1" face="Verdana">-</font></td>
-                                }
-                                else
-                                {
-                                    <td width="4%" valign="top" align="left"><font size="1" face="Verdana">@item.REASON</font></td>
-                                }
-                            </tr>
+                                    @if (item.REASON == "**")
+                                    {
+                                        <td width="4%" valign="top" align="center"><font size="1" face="Verdana">-</font></td>
+                                    }
+                                    else
+                                    {
+                                        <td width="4%" valign="top" align="left"><font size="1" face="Verdana">@item.REASON</font></td>
+                                    }
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <br />
         }
 
         @*SPECIAL REMARKS*@
         <div id="SpecialRemark">
-            <p align="left"><font size="2" face="Verdana"><b><u>SPECIAL REMARKS :</u></b></font></p>
+            <h3 class="heading3">SPECIAL REMARKS</h3>
             <section class="table-section">
                 <div class="row my-0">
                     <div class="col-md-12">
@@ -254,73 +238,80 @@
                 </div>
             </section>
         </div>
+        <br />
 
         @*CONSIGNEE COMPLAINTS*@
         @if (@Model.ConsingCompList.Count() > 0 && @Model.ConsingCompList != null)
         {
-            <p align="center"><font size="3" face="Verdana"><u>CONSIGNEE COMPLAINTS</u></font></p>
-            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
-                <tbody>
-                    <tr>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
-                        <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                        <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Memo Date</font></b></th>
-                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rejection Reason</font></b></th>
-                        <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">BK No & Set No.</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI Outcome</font></b></th>
-                    </tr>
-                    @{
-                        var SrNo = 0;
-                        foreach (var item in Model.ConsingCompList)
-                        {
-                            SrNo = SrNo + 1;
-                            <tr>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
-                                <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.REJ_MEMO_DATE</font></td>
-                                <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
-                                <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@(item.BK_NO + " & " + item.SET_NO)</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.JI_STATUS_DESC</font></td>
-                            </tr>
+            <h3 class="heading3">CONSIGNEE COMPLAINTS</h3>
+            <div class="tableOuter">
+                <table class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
+                            <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                            <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Memo Date</font></b></th>
+                            <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rejection Reason</font></b></th>
+                            <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">BK No & Set No.</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI Outcome</font></b></th>
+                        </tr>
+                        @{
+                            var SrNo = 0;
+                            foreach (var item in Model.ConsingCompList)
+                            {
+                                SrNo = SrNo + 1;
+                                <tr>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                                    <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
+                                    <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.REJ_MEMO_DATE</font></td>
+                                    <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
+                                    <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@(item.BK_NO + " & " + item.SET_NO)</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.JI_STATUS_DESC</font></td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <br />
         }
 
         @*REJECTION AT VENDOR PLACE*@
         @if (@Model.RejectVendorList.Count() > 0 && @Model.RejectVendorList != null)
         {
-            <p align="center"><font size="3" face="Verdana"><u>REJECTION AT VENDOR PLACE</u></font></p>
-            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
-                <tbody>
-                    <tr>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
-                        <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC Date</font></b></th>
-                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rejection Reason</font></b></th>
-                        <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">BK No & Set No.</font></b></th>
-                        <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
-                    </tr>
-                    @{
-                        var SrNo = 0;
-                        foreach (var item in Model.RejectVendorList)
-                        {
-                            SrNo = SrNo + 1;
-                            <tr>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
-                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
-                                <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.REASON_REJECT</font></td>
-                                <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@(item.BK_NO + " & " + item.SET_NO)</font></td>
-                                <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                            </tr>
+            <h3 class="heading3">REJECTION AT VENDOR PLACE</h3>
+            <div class="tableOuter">
+                <table class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SrNo</font></b></th>
+                            <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                            <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC Date</font></b></th>
+                            <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rejection Reason</font></b></th>
+                            <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">BK No & Set No.</font></b></th>
+                            <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                        </tr>
+                        @{
+                            var SrNo = 0;
+                            foreach (var item in Model.RejectVendorList)
+                            {
+                                SrNo = SrNo + 1;
+                                <tr>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                                    <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
+                                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                                    <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.REASON_REJECT</font></td>
+                                    <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@(item.BK_NO + " & " + item.SET_NO)</font></td>
+                                    <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <br />
         }
     </div>
     <div class="overlayLoader" style="display: none">
@@ -332,14 +323,22 @@
 </html>
 
 
-<link href="~/css/report.css" rel="stylesheet" />
+@*<link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/js/jspdf.debug.js"></script>
 <script src="~/js/html2canvas.min.js"></script>
+<script src="~/js/site.js"></script>*@
+
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 
 <script type="text/javascript">
-
+    var fileName = '';
+    $(document).ready(function () {
+        fileName = "Case_History_@Model.CASE_NO";
+    });
     $(document).ajaxSend(function () {
         $(".overlayLoader").show();
     });
@@ -357,447 +356,47 @@
     });
 
     $("#btnExportToExcel").click(function () {
-        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
-            download: getExportFileName("Case_History_@Model.CASE_NO") + ".xls"
+            download: getExportFileName(fileName) + ".xls"
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
 
     function generatePdf(isPrint) {
-        var quotes = document.getElementById('dvReportViewer');
+        var element = document.getElementById('dvReportViewer');
 
-        quotes.style.width = "920px";
+        element.style.width = "1100px";
 
-        html2canvas(quotes, {
-            onrendered: function (canvas) {
-                var pdf = new jsPDF('p', 'pt', 'letter');
-                for (var i = 0; i <= quotes.clientHeight / 980; i++) {
-                    var srcImg = canvas;
-                    var sX = 0;
-                    var sY = 980 * i; // start 980 pixels down for every new page
-                    var sWidth = 920;
-                    var sHeight = 980;
-                    var dX = 0;
-                    var dY = 0;
-                    var dWidth = 920;
-                    var dHeight = 980;
+        const options = {
+            margin: 0,
+            filename: getExportFileName(fileName) + '.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
 
-                    window.onePageCanvas = document.createElement("canvas");
-                    onePageCanvas.setAttribute('width', 920);
-                    onePageCanvas.setAttribute('height', 980);
-                    var ctx = onePageCanvas.getContext('2d');
-                    ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
-                    var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+        if (isPrint) {
+            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+                pdfObj.autoPrint();
+                window.open(pdfObj.output('bloburl'), '_blank');
+            });
+        }
+        else {
+            html2pdf().set(options).from(element).save();
+        }
 
-                    var width = onePageCanvas.width;
-                    var height = onePageCanvas.clientHeight;
-
-                    //! If we're on anything other than the first page,
-                    // add another page
-                    if (i > 0) {
-                        pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
-                    }
-                    //! now we declare that we're working on that page
-                    pdf.setPage(i + 1);
-                    //! now we add content to that page!
-                    pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
-
-                }
-
-                quotes.style.width = "100%";
-
-                if (isPrint) {
-                    pdf.autoPrint();
-                    window.open(pdf.output('bloburl'), '_blank');
-                }
-                else {
-                    pdf.save(getExportFileName('Case_History_@Model.CASE_NO') + '.pdf');
-                }
-            }
-        });
+        setTimeout(function () {
+            element.style.width = "100%";
+        }, 1000);
     }
 
 </script>
-
-@section scripts{
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
-
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
-
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.10/jspdf.plugin.autotable.min.js"></script>*@
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.13/jspdf.plugin.autotable.min.js"></script>
-}
-@*<script type="text/javascript">
-    var RegionName = "@ViewBag.RegionName";
-    var CaseNo = "@ViewBag.Case_NO";
-
-    $(document).ready(function () {
-        //window.jsPDF = window.jspdf.jsPDF;
-
-        //$("#btnBack").click(function(){
-        //    window.location.href = "@Url.Action("Manage","CallMarkedOnline")" + "?CASE_NO=" + case_no + "&CALL_RECV_DT=" + call_recv_dt + "&CALL_SNO=" + call_sno + "&CHECK_SELECTED=" + check_select + "&RUN_DT=" + run_dt;
-        //});
-        var pdf = new jsPDF('landscape');
-
-        $("#lblCaseNo").html($("#CASE_NO").val());
-        $("#lblVendor").html($("#VENDOR").val());
-        $("#lblPoNo").html($("#PO_NO").val());
-        $("#lblDate").html($("#PO_DT").val());
-        $("#lblClient").html($("#RLY_CD").val());
-        $("#btnPrint").click(function () {
-            debugger
-            //demo();
-            PrintAll();
-            //Print();
-        });
-        BindItemDataTable();
-        BindPOIREPSDataTable();
-        BindPOVendorDataTable();
-        BindPreviousCallDataTable();
-        BindConsigneeComplaintDataTable();
-        BindRejectionVendorPlaceDataTable();
-
-        function PrintAll() {
-            var table1 = $('#dtVendorList').DataTable();
-            var table2 = $('#dtPreviousCallList').DataTable();
-            pdf.setFontSize(14);
-
-            pdf.text('PO DETAILS', 10, 10);
-            pdf.autoTable({
-                html: '#dtItemList',
-                columnStyles: {
-                    0: { cellWidth: 20 },
-                    1: { cellWidth: 120 },
-                    2: { cellWidth: 24 },
-                    3: { cellWidth: 22 },
-                    4: { cellWidth: 24 },
-                    5: { cellWidth: 30 },
-                    6: { cellWidth: 30 },
-                }
-            });
-
-            //let finalY = pdf.lastAutoTable.finalY;
-            pdf.addPage();
-            pdf.text('PO AMMENDMENTS VENDOR', 10, 10)///finalY);
-            pdf.autoTable({ html: '#dtVendorList' });
-
-            pdf.addPage();
-            pdf.text('PREVIOUS CALL DETAILS', 10, 10);
-            pdf.autoTable({ html: '#dtPreviousCallList' });
-
-
-            // Save or print the PDF
-            pdf.save("Case_History_'" + CaseNo + "'.pdf");
-        }
-    });
-    function BindItemDataTable() {
-        var CASE_NO = $("#CASE_NO").val()
-        $("#dtItemList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            ajax: {// Ajax Filter
-                url: "@Url.Action("GetCaseHistoryItem", "CallMarkedOnline")",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "CASE_NO": CASE_NO
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-
-            columns: [// Columns Setups
-                { data: "ITEM_SRNO" },
-                { data: "ITEM_DESC" },
-                { data: "QTY" },
-                { data: "PASSED" },
-                { data: "REJECTED" },
-                { data: "BALANCE_QTY" },
-                { data: "DELV_DATE" }
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-
-    function BindPOIREPSDataTable() {
-        var PO_NO = $("#PO_NO").val();
-        var PO_DT = $("#PO_DT").val();
-        $("#dtList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            ajax: {
-                url: "@Url.Action("GetPoIREPSList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "PO_NO": PO_NO,
-                        "PO_DT": PO_DT
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-            columns: [// Columns Setups
-                { data: "SLNO" },
-                { data: "MA_NO" },
-                { data: "MA_DT" },
-                { data: "MA_FLD_DESCR" },
-                { data: "OLD_VALUE" },
-                { data: "NEW_VALUE" },
-                { data: "MA_STATUS" },
-                {
-                    data: "",
-                    render: function (data, type, row) {
-                        //var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/@Model.PO_YR/@Model.RLY_CD/@Model.PO_NO" + "_" + row.MA_NO + ".pdf";
-                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
-                        //html += '<a href="' + urlireps + '">View</a>';
-                        html += '</div>';
-                        return html;
-                    }
-                }
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-
-    function BindPOVendorDataTable() {
-        var CASE_NO = $("#CASE_NO").val();
-        $("#dtVendorList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            //dom: 'Bfrtip',
-            //buttons: [
-            //    'print'
-            //],
-            ajax: {
-                url: "@Url.Action("GetPoVendorList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "CASE_NO": CASE_NO
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-            columns: [// Columns Setups
-                { data: "MA_SNO" },
-                { data: "MA_NO" },
-                { data: "MA_DT" },
-                { data: "MA_DESC" },
-                { data: "OLD_PO_VALUE" },
-                { data: "NEW_PO_VALUE" },
-                { data: "MA_STATUS" },
-                {
-                    data: "",
-                    render: function (data, type, row) {
-                        var urlvendor = "/RBS/Vendor/MA/" + row.CASE_NO + "_" + row.MA_NO + "_" + row.MA_DT + ".pdf";
-                        var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> ';
-                        html += '<a href="' + urlvendor + '">View MA</a>';
-                        html += '</div>';
-                        return html;
-                    }
-                }
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-
-    function BindPreviousCallDataTable() {
-        var CASE_NO = $("#CASE_NO").val();
-        $("#dtPreviousCallList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            //dom: 'Bfrtip',
-            //buttons: [
-            //    'print'
-            //],
-            ajax: {
-                url: "@Url.Action("GetPreviousCallList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "CASE_NO": CASE_NO
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-            columns: [// Columns Setups
-                {
-                    data: '', orderable: false, width: '5%',
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: "CALL_DATE" },
-                { data: "LETTER_DATE" },
-                { data: "CALL_SNO" },
-                { data: "CALL_INSTALL_NO" },
-                { data: "IE_NAME" },
-                { data: "CALL_STATUS" },
-                { data: "REASON_REJECT" },
-                { data: "REASON" }
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-
-    function BindConsigneeComplaintDataTable() {
-        var VEND_CD = $("#VEND_CD").val();
-        $("#dtConsigneeComplaintsList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            //dom: 'Bfrtip',
-            //buttons: [
-            //    'print'
-            //],
-            ajax: {
-                url: "@Url.Action("GetConsigneeComplaintsList", "CallMarkedOnline")",//?PO_NO=" + $("#PO_NO").val() + "&PO_DT=" + $("#PO_DT").val(),
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "VEND_CD": VEND_CD
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-            columns: [// Columns Setups
-                {
-                    data: '', orderable: false, width: '5%',
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: "ITEM_DESC" },
-                { data: "REJ_MEMO_DATE" },
-                { data: "REJECTION_REASON" },
-                {
-                    data: "",
-                    render: function (data, type, row, meta) {
-                        return row.BK_NO + " & " + row.SET_NO;
-                    }
-                },
-                { data: "CONSIGNEE" },
-                { data: "JI_STATUS_DESC" }
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-
-    function BindRejectionVendorPlaceDataTable() {
-        var CASE_NO = $("#CASE_NO").val();
-        var VEND_CD = $("#VEND_CD").val();
-        $("#dtRejectionVendorPlaceList").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: false,// Searching Setups
-            //dom: 'Bfrtip',
-            //buttons: [
-            //    'print'
-            //],
-            ajax: {
-                url: "@Url.Action("GetCaseHistoryRejectionVendorPlaceList", "CallMarkedOnline")",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        "CASE_NO": CASE_NO,
-                        "VEND_CD": VEND_CD
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-            columns: [// Columns Setups
-                {
-                    data: '', orderable: false, width: '5%',
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: "ITEM_DESC_PO" },
-                { data: "IC_DATE" },
-                { data: "REASON_REJECT" },
-                {
-                    data: "",
-                    render: function (data, type, row, meta) {
-                        return row.BK_NO + " & " + row.SET_NO;
-                    }
-                },
-                { data: "IE_NAME" },
-            ],
-            "order": [[0, "asc"]]
-        });
-    }
-
-</script>*@
-

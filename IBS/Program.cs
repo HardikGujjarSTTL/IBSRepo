@@ -8,6 +8,7 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.Billing;
+using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
@@ -16,6 +17,7 @@ using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
+using IBS.Repositories.Reports.RealisationPayment;
 using IBS.Repositories.Transaction;
 using IBS.Repositories.Vendor;
 using IBS.Repositories.WebsitePages;
@@ -47,6 +49,8 @@ var accessor = builder.Services.BuildServiceProvider().GetService<IHttpContextAc
 SessionHelper.SetHttpContextAccessor(accessor);
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(60); });
+
+builder.Services.AddDataProtection();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -90,6 +94,8 @@ builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.Inspectio
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
+
+builder.Services.AddScoped<IRemitanceReportsRepository, IBS.Repositories.Reports.RemitanceReportsRepository>();
 
 builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
 builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
@@ -198,6 +204,11 @@ builder.Services.AddScoped<ICoComplaintJIRequiredRepository, CoComplaintJIRequir
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IDefectCodeReportRepository, DefectCodeReportRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
+builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
+builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
+builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
+
+builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
 
 var app = builder.Build();
 
