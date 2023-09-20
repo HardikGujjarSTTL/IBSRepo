@@ -25,6 +25,10 @@ namespace IBS.Repositories.Reports.RealisationPayment
             var startDate = Common.DateConcate(Convert.ToString(FromDate));
             var endDate = Common.DateConcate(Convert.ToString(ToDate));
 
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, startDate, ParameterDirection.Input);
             par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, endDate, ParameterDirection.Input);
@@ -36,7 +40,7 @@ namespace IBS.Repositories.Reports.RealisationPayment
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 lstOnlinePayment = JsonConvert.DeserializeObject<List<SummaryOnlinePaymentListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });                
             }
-            model.lstOnlinePayment = lstOnlinePayment;           
+            model.lstOnlinePayment = lstOnlinePayment;
             return model;
         }
     }
