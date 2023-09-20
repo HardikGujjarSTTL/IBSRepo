@@ -32,38 +32,20 @@
 
 <script type="text/javascript">
 
-     var fileName = '';
+    var fileName = '';
 
     $(document).ready(function () {
-        loadIEPerformance();
-        fileName = 'RegionWise_Consignee_JIComplaint';
+        loadJICOMPReport();
+        fileName = 'JI Complaints';
     });
 
-    function loadIEPerformance() {
-        $("#dvReportViewer").load("@Url.Action("ComplaintRecieved")", {
-            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', AllIEs: '@Model.AllIEs', AllVendors: '@Model.AllVendors', AllClient: '@Model.AllClient', AllConsignee: '@Model.AllConsignee', Compact: '@Model.Compact', AwaitingJI: '@Model.AwaitingJI', JIConclusion: '@Model.JIConclusion',
-            JIConclusionfollowup: '@Model.JIConclusionfollowup', JIconclusionreport: '@Model.JIconclusionreport', JIDecidedDT: '@Model.JIDecidedDT', All: '@Model.All', ParticularIEs: '@Model.ParticularIEs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise',
-            VendorWise: '@Model.VendorWise',
-            ClientWise: '@Model.ClientWise',
-            ConsigneeWise: '@Model.ConsigneeWise',
-            FinancialYear: '@Model.FinancialYear',
-            ParticularCMs: '@Model.ParticularCMs',
-            ParticularClients: '@Model.ParticularClients',
-            ParticularConsignee: '@Model.ParticularConsignee',
-            ParticularVendor : '@Model.ParticularVendor',
-            Detailed: '@Model.Detailed',
-            FinancialYears: '@Model.FinancialYears',
-            ddlsupercm: '@Model.ddlsupercm',
-            ddliename: '@Model.ddliename',
-            Clientwiseddl: '@Model.Clientwiseddl',
-            vendor: '@Model.vendor',
-            Item: '@Model.Item',
-            consignee: '@Model.consignee', FinancialYearsvalue: '@Model.FinancialYearsValue'
-        }, function (response) {
+    function loadJICOMPReport() {
+        $("#dvReportViewer").load("@Url.Action("JICompReport")", { FinancialYearsText: '@Model.FinancialYearsText', FinancialYearsValue: '@Model.FinancialYearsValue' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
+
 
     $("#btnPrint").click(function () {
         generatePdf(true);

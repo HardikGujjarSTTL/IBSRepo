@@ -1,0 +1,60 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>JI CONSIGNEE COMPLAINTS</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="FinancialYear">For The Financial Year</label>
+            @Html.DropDownList("FinancialYears", new SelectList(IBS.Models.Common.FinancialYear(), "Value", "Text"), "--Select--", new { id = "FinancialYears" })
+            <span class="text-danger field-validation-error" id="spnErrorFinyear"></span>
+        </div>
+        <div class="col-md-3" style="margin-top: 30px;">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function ViewReport1() {
+            debugger
+            $("#spnErrorFinyear").html("");
+
+            var IsValid = true;
+
+            if ($("#FinancialYears").val() == "") {
+                $("#spnErrorFinyear").html("Select Financial Year");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var FinancialYearsText = $("#FinancialYears option:selected").text();
+            var FinancialYearsValue = $("#FinancialYears").val();
+
+            var myObject = { FinancialYearsText: FinancialYearsText, FinancialYearsValue: FinancialYearsValue };
+
+            var url = '@Url.Action("Manage", "CoComplaintJIRequired")?' + $.param(myObject);
+
+            window.open(url, '_blank');
+        }
+
+
+        function ClearControls1() {
+            $("#FinancialYears").val("");
+            $("#spnErrorFinyear").html("");
+        }
+
+    </script>
+}
+

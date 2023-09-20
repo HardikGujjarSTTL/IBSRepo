@@ -39,10 +39,36 @@ namespace IBS.Models
         public string ReportTitle { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public string FinancialYearsText { get; set; }
+        public string FinancialYearsValue { get; set; }
 
         public List<JIRequiredList> lstJIRequiredList { get; set; }
+        public List<JIRequiredList> lstCompList { get; set; }
+        public List<ComplaintJIIE> lstComplaintJIIE { get; set; }
 
         public List<ConsigneeComplaintsReportModel> lstConsigneeComplaints { get; set; }
 
+    }
+
+    public class ComplaintJIIE
+    {
+        public string Region { get; set; }
+        public string S_Code { get; set; }
+        public string IE { get; set; }
+        public int NO_OF_INSPECTION { get; set; }
+        public int MATERIAL_VALUE { get; set; }
+        public int RECD { get; set; }
+        public int FINALISED { get; set; }
+        public int PENDING { get; set; }
+        public int ACCEPTED { get; set; }
+        public int UPHELD { get; set; }
+        public int SORTING { get; set; }
+        public int RECTIFICATION { get; set; }
+        public int PRICE_REDUCTION { get; set; }
+        public int LIFTED_BEFORE_JI { get; set; }
+        public int TRANSIT_DEMAGE { get; set; }
+        public int UNSTAMPED { get; set; }
+        public int NOT_ON_RITES_AC { get; set; }
+        public int Total { get; set; }
     }
 }

@@ -187,7 +187,12 @@
     
         <div class="savenext-btn">
             <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+             <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
         </div>
+        <br/>
+    <div class="alert alert-secondary center mb-3">
+        <span id="Label8">After Apply Next Filter Old Data Should Be Clear</span>
+    </div>
     
 </div>
 
@@ -515,6 +520,7 @@
             var ParticularConsignee = $("#ParticularConsignee").is(":checked") == true ? "true" : "false";
             var ParticularVendor = $("#ParticularVendor").is(":checked") == true ? "true" : "false";
             var Detailed = $("#Detailed").is(":checked") == true ? "true" : "false";
+            var FinancialYearsvalue = $("#FinancialYears").val();
             var FinancialYears = $('#FinancialYears option:selected').text();
             var ddlsupercm = $('#ddlsupercm').val();
             var ddliename = $('#ddliename').val();
@@ -524,11 +530,23 @@
             var consignee = $('#consignee').val();
             let myObject = { FromDate, ToDate, AllCM, AllIEs, AllVendors, AllClient, AllConsignee, Compact, AwaitingJI, JIConclusion, JIConclusionfollowup, JIconclusionreport,
                 JIDecidedDT, All, ParticularIEs, IEWise, CMWise, VendorWise, ClientWise, ConsigneeWise, FinancialYear, ParticularCMs, ParticularClients, ParticularConsignee, ParticularVendor,
-                Detailed, FinancialYears, ddlsupercm, ddliename, Clientwiseddl, vendor, Item, consignee
+                Detailed, FinancialYears, ddlsupercm, ddliename, Clientwiseddl, vendor, Item, consignee, FinancialYearsvalue
             };
 
             var url = '@Url.Action("Manage", "ComplaintsJIRequiredReport")?' + $.param(myObject);
             window.open(url, '_blank');
+        }
+
+        function ClearControls1() {
+            $("#FinancialYears").val("");
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#ddliename").val("");
+            $("#vendor").val("");
+            $("#Clientwiseddl").val("");
+            $("#Item").val("");
+            $("#consignee").val("");
+           
         }
     </script>
 }

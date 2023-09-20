@@ -77,7 +77,7 @@ namespace IBS.Repositories
 
         public JIRequiredReport GetJIRequiredList(string FromDate, string ToDate, string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
             string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
-            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee,string Region)
+            string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee,string Region,string FinancialYearsvalue)
         {
             JIRequiredReport model = new();
             List<JIRequiredList> lstJIRequiredList = new();
@@ -89,29 +89,30 @@ namespace IBS.Repositories
             model.Compact = Compact;model.AwaitingJI = AwaitingJI;model.JIConclusion = JIConclusion;model.JIConclusionfollowup = JIConclusionfollowup;model.JIconclusionreport = JIconclusionreport;model.JIDecidedDT = JIDecidedDT;
             model.All = All;model.ParticularIEs = ParticularIEs;model.IEWise = IEWise;model.CMWise = CMWise;model.VendorWise = VendorWise;model.ClientWise = ClientWise;model.ConsigneeWise = ConsigneeWise;
             model.FinancialYear = FinancialYear;model.ParticularCMs = ParticularCMs;model.ParticularClients = ParticularClients;model.ParticularConsignee = ParticularConsignee;model.ParticularVendor = ParticularVendor;model.Detailed = Detailed;
-            model.FinancialYears = FinancialYears;model.ddlsupercm = ddlsupercm;model.ddliename = ddliename;model.Clientwiseddl = Clientwiseddl;model.vendor = vendor;model.Item = Item;model.consignee = consignee;
+            model.FinancialYears = FinancialYears;model.ddlsupercm = ddlsupercm;model.ddliename = ddliename;model.Clientwiseddl = Clientwiseddl;model.vendor = vendor;model.Item = Item;model.consignee = consignee;model.FinancialYearsValue = FinancialYearsvalue;
+
 
             if (Convert.ToBoolean(Compact) == true)
             {
                 if (Convert.ToBoolean(IEWise) == true)
                 {
-                    ds = compliants_statement_IEWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, ParticularIEs, AllIEs, ddliename, FinancialYears);
+                    ds = compliants_statement_IEWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, ParticularIEs, AllIEs, ddliename, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(VendorWise) == true)
                 {
-                    ds = compliants_statement_VendorWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllVendors, ParticularVendor, vendor, FinancialYears);
+                    ds = compliants_statement_VendorWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllVendors, ParticularVendor, vendor, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(CMWise) == true)
                 {
-                    ds = compliants_statement_CMWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllCM, ParticularCMs, ddlsupercm, FinancialYears);
+                    ds = compliants_statement_CMWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllCM, ParticularCMs, ddlsupercm, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ClientWise) == true)
                 {
-                    ds = compliants_statement_ClientWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllClient, ParticularClients, Clientwiseddl, FinancialYears);
+                    ds = compliants_statement_ClientWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllClient, ParticularClients, Clientwiseddl, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ConsigneeWise) == true)
                 {
-                    ds = compliants_statement_ConsigneeWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllConsignee, ParticularConsignee, consignee, FinancialYears);
+                    ds = compliants_statement_ConsigneeWise(FromDate, ToDate, Region, FinancialYear, JIDecidedDT, AllConsignee, ParticularConsignee, consignee, FinancialYears, FinancialYearsvalue);
                 }
             }
             else
@@ -208,141 +209,141 @@ namespace IBS.Repositories
         }
        
 
-        public DataSet compliants_statement_IEWise(string FromDateFor,string ToDateFor, string Region,string FinancialYear, string JIDecidedDT, string ParticularIEs, string AllIEs, string ddliename,string FinancialYears)
+        public DataSet compliants_statement_IEWise(string FromDateFor,string ToDateFor, string Region,string FinancialYear, string JIDecidedDT, string ParticularIEs, string AllIEs, string ddliename,string FinancialYears,string FinancialYearsvalue)
         {
             DataSet ds = null;
             if (Convert.ToBoolean(JIDecidedDT) == true)
             {
                 if (Convert.ToBoolean(AllIEs) == true)
                 {
-                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears);
+                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears, FinancialYearsvalue);
                 }
                 else if(Convert.ToBoolean(ParticularIEs) == true)
                 {
-                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears);
+                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears, FinancialYearsvalue);
                 }
             }
             else if (Convert.ToBoolean(FinancialYear) == true)
             {
                 if (Convert.ToBoolean(AllIEs) == true)
                 {
-                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears);
+                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularIEs) == true)
                 {
-                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears);
+                    ds = AllIE(FromDateFor, ToDateFor, Region, ddliename, FinancialYears, FinancialYearsvalue);
                 }
             }
             return ds;
         }
 
-        public DataSet compliants_statement_VendorWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllVendors,string ParticularVendor,string vendor,string FinancialYears)
+        public DataSet compliants_statement_VendorWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllVendors,string ParticularVendor,string vendor,string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
             if (Convert.ToBoolean(JIDecidedDT) == true)
             {
                 if (Convert.ToBoolean(AllVendors) == true)
                 {
-                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears);
+                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularVendor) == true)
                 {
-                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears);
+                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears, FinancialYearsvalue);
                 }
             }
             else if (Convert.ToBoolean(FinancialYear) == true)
             {
                 if (Convert.ToBoolean(AllVendors) == true)
                 {
-                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears);
+                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularVendor) == true)
                 {
-                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears);
+                    ds = AllVendor(FromDate, ToDate, Region, vendor, FinancialYears, FinancialYearsvalue);
                 }
             }
             return ds;
         }
 
-        public DataSet compliants_statement_CMWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllCM,string ParticularCMs,string ddlsupercm, string FinancialYears)
+        public DataSet compliants_statement_CMWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllCM,string ParticularCMs,string ddlsupercm, string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
             if (Convert.ToBoolean(JIDecidedDT) == true)
             {
                 if (Convert.ToBoolean(AllCM) == true)
                 {
-                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears);
+                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularCMs) == true)
                 {
-                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears);
+                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears, FinancialYearsvalue);
                 }
             }
             else if (Convert.ToBoolean(FinancialYear) == true)
             {
                 if (Convert.ToBoolean(AllCM) == true)
                 {
-                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears);
+                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularCMs) == true)
                 {
-                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears);
+                    ds = ALLCM(FromDate, ToDate, Region, ddlsupercm, FinancialYears, FinancialYearsvalue);
                 }
             }
             return ds;
         }
 
-        public DataSet compliants_statement_ClientWise(string FromDate, string ToDate, string Region, string FinancialYear, string JIDecidedDT, string AllClient, string ParticularClients, string Clientwiseddl, string FinancialYears)
+        public DataSet compliants_statement_ClientWise(string FromDate, string ToDate, string Region, string FinancialYear, string JIDecidedDT, string AllClient, string ParticularClients, string Clientwiseddl, string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
             if (Convert.ToBoolean(JIDecidedDT) == true)
             {
                 if (Convert.ToBoolean(AllClient) == true)
                 {
-                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears);
+                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularClients) == true)
                 {
-                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears);
+                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears, FinancialYearsvalue);
                 }
             }
             else if (Convert.ToBoolean(FinancialYear) == true)
             {
                 if (Convert.ToBoolean(AllClient) == true)
                 {
-                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears);
+                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularClients) == true)
                 {
-                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears);
+                    ds = ALLClient(FromDate, ToDate, Region, Clientwiseddl, FinancialYears, FinancialYearsvalue);
                 }
             }
             return ds;
         }
 
-        public DataSet compliants_statement_ConsigneeWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllConsignee,string ParticularConsignee,string consignee,string FinancialYears)
+        public DataSet compliants_statement_ConsigneeWise(string FromDate,string ToDate,string Region,string FinancialYear,string JIDecidedDT,string AllConsignee,string ParticularConsignee,string consignee,string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
             if (Convert.ToBoolean(JIDecidedDT) == true)
             {
                 if (Convert.ToBoolean(AllConsignee) == true)
                 {
-                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularConsignee) == true)
                 {
-                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears, FinancialYearsvalue);
                 }
             }
             else if (Convert.ToBoolean(FinancialYear) == true)
             {
                 if (Convert.ToBoolean(AllConsignee) == true)
                 {
-                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears, FinancialYearsvalue);
                 }
                 else if (Convert.ToBoolean(ParticularConsignee) == true)
                 {
-                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears);
+                    ds = ALLConsignee(FromDate, ToDate, Region, consignee, FinancialYears, FinancialYearsvalue);
                 }
             }
             return ds;
@@ -376,72 +377,77 @@ namespace IBS.Repositories
             return ds;
         }
 
-        public DataSet AllIE(string FromDateFor, string ToDateFor, string Region, string ddliename, string FinancialYears)
+        public DataSet AllIE(string FromDateFor, string ToDateFor, string Region, string ddliename, string FinancialYears,string FinancialYearsvalue)
         {
             DataSet ds = null;
-            OracleParameter[] par = new OracleParameter[6];
-            par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDateFor, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDateFor, ParameterDirection.Input);
+            OracleParameter[] par = new OracleParameter[7];
+            par[0] = new OracleParameter("p_frm_dt", OracleDbType.Varchar2, FromDateFor, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_to_dt", OracleDbType.Varchar2, ToDateFor, ParameterDirection.Input);
             par[2] = new OracleParameter("p_ie_cd", OracleDbType.Varchar2, ddliename, ParameterDirection.Input);
-            par[3] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_fin_year", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_finyear_value", OracleDbType.Varchar2, FinancialYearsvalue, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_AllIE_Date", par, 1);
             return ds;
         }
 
-        public DataSet AllVendor(string FromDate, string ToDate, string Region, string vendor,string FinancialYears)
+        public DataSet AllVendor(string FromDate, string ToDate, string Region, string vendor,string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, vendor, ParameterDirection.Input);
             par[3] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_finyear_value", OracleDbType.Varchar2, FinancialYearsvalue, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_AllVendor_Report", par, 1);
             return ds;
         }
         
-        public DataSet ALLCM(string FromDate,string ToDate,string Region,string ddlsupercm,string FinancialYears)
+        public DataSet ALLCM(string FromDate,string ToDate,string Region,string ddlsupercm,string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_CO", OracleDbType.Varchar2, ddlsupercm, ParameterDirection.Input);
             par[3] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_finyear_value", OracleDbType.Varchar2, FinancialYearsvalue, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_AllCM_Report", par, 1);
             return ds;
         }
         
-        public DataSet ALLClient(string FromDate,string ToDate,string Region,string Clientwiseddl,string FinancialYears)
+        public DataSet ALLClient(string FromDate,string ToDate,string Region,string Clientwiseddl,string FinancialYears, string FinancialYearsvalue)
         {
             DataSet ds = null;
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_bpo_rly", OracleDbType.Varchar2, Clientwiseddl, ParameterDirection.Input);
             par[3] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_finyear_value", OracleDbType.Varchar2, FinancialYearsvalue, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_AllClient_Report", par, 1);
             return ds;
         }
         
-        public DataSet ALLConsignee(string FromDate,string ToDate,string Region,string consignee,string FinancialYears)
+        public DataSet ALLConsignee(string FromDate,string ToDate,string Region,string consignee,string FinancialYears,string FinancialYearsvalue)
         {
             DataSet ds = null;
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_consignee_cd", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
             par[3] = new OracleParameter("p_finyear", OracleDbType.Varchar2, FinancialYears, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_finyear_value", OracleDbType.Varchar2, FinancialYearsvalue, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_statement_AllConsignee_Report", par, 1);
             return ds;
         }
