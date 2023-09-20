@@ -209,6 +209,8 @@ builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseIn
 builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
+builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
+builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 
 var app = builder.Build();
 
