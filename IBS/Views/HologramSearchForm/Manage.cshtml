@@ -24,7 +24,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Reference">Holograms No. From</label>
-                            <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                            <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                             <input type="text" class="input" asp-for="HgNoFr" maxlength="7" style="text-transform: uppercase;width:96%;">
                             <span asp-validation-for="HgNoFr" class="text-danger"></span>
                             <input type="hidden" asp-for="lblHgNoFr" />
@@ -33,7 +33,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Reference">Holograms No. TO</label>
-                            <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                            <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                             <input type="text" class="input" asp-for="HgNoTo" maxlength="7" style="text-transform: uppercase;width:96%;">
                             <span asp-validation-for="HgNoTo" class="text-danger"></span>
                             <input type="hidden" asp-for="lblHgNoTo" />
@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">IE to whom issued</label>
-                        @Html.DropDownListFor(Model => Model.HgIecd, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(Model => Model.HgIecd, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.Region) , "Value", "Text"),"--Select--")
                         <span asp-validation-for="HgIecd" class="text-danger"></span>
                     </div>
                 </div>
