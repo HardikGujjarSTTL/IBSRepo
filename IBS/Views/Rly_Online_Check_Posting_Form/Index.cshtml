@@ -1,0 +1,378 @@
+﻿@model IBS.Models.Rly_Online_Check_Posting_Form_Model
+
+@{
+    ViewData["Title"] = "RAILWAYS ONLINE PAYMENT POSTING FORM";
+    string clsView = "";
+    //if (Model.CHQ_NO != "0")
+    //{
+    //    clsView = "Permission_View";
+    //}
+}
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>RAILWAYS ONLINE PAYMENT POSTING FORM</h2>
+    </div>
+    @*  <div class="list-btn">
+    <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn Permission_Add">Add New Voucher</a>
+    </div>*@
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            
+                <div class="accordion-body">
+                    <div class="row my-0">
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Bank</label>
+                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { @id = "BankNameDropdown" })
+                            <span asp-validation-for="BANK_NAME" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Cheque No.</label>
+                            <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
+
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Cheque Date</label>
+                            <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT" maxlength="300" />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Voucher No.</label>
+                            <input type="text" id="vchr_no" class="input" readonly />
+
+                        </div>
+
+
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Dated</label>
+                            <input type="text" id="vchr_dt" class="input" maxlength="300" readonly />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Cheque Amount </label>
+                            <input type="text" id="chqAmt" class="input" maxlength="300" readonly />
+
+                        </div>
+
+                   
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Paying Authority </label>
+                            <input type="text" id="payAuth" class="input" maxlength="300" readonly />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Posted Amount </label>
+                            <input type="text" id="pstAmt" class="input" maxlength="300" readonly />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference">Amount Transferred to other Region </label>
+                            <input type="text" id="Amttrnsfered" class="input" maxlength="300" readonly />
+
+                        </div>
+
+                        <div class="hide1 col-md-4 mb-4">
+                            <label for="Reference" id="lblsuspense">Suspense Amount</label>
+                            <input type="text" id="AmtSuspense" class="input" maxlength="300" readonly />
+                        <input type="text" id="bpoRly" class="input" maxlength="300" hidden readonly />
+
+                        </div>
+
+                     
+
+                        <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save" onclick="search();">Search</button>
+                        </div>
+
+                        <br></br>
+
+                       <div class="hide1 col-md-4 mb-4">
+
+                        <label for="Reference">Online Bills Cleared for the Period:</label>
+                          @*  <input type="text" id="AmtSuspense" class="input" maxlength="300" readonly />*@
+                        <label for="Reference">From</label>
+                        <input type="text" id="From" class="input" maxlength="300" />
+                        <label for="Reference">To</label>
+                        <input type="text" id="To" class="input" maxlength="300" />
+                        <button type="button" class="save-btn active Permission_Save" onclick="showbill();">Show Bills Cleared </button>
+                       </div>
+
+
+                     
+
+                        @*<div class="hide1 col-md-4 mb-4">
+
+                       
+                        </div>*@
+
+
+                        <table id="dtrlychkpost" class="table-responsive">
+                            <thead>
+                                <tr>
+
+                                    @*<th>S NO</th>*@
+
+                                    <th>#</th>
+                                    <th>Bill No.</th>
+                                    <th>Invoice No</th>
+                                    <th>Bill Amount</th>
+                                    <th>CO7 No.</th>
+                                    <th>CO7 Date</th>
+                                    <th>Payment Date</th>
+                                    <th>Passed Amount</th>
+                                    <th>Bill Amount Cleared</th>
+                                    <th>BPO_CD</th>
+                                    <th>Action</th>
+
+
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+
+
+
+                    <div class="savenext-btn">
+                        <button type="submit" class="save-btn active Permission_Save" onclick="submit();">Submit</button>
+                    </div>
+
+                    </div>
+
+
+
+
+                </div>
+        </div>
+        
+    </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            $("#dtrlychkpost").css("display", "none");
+
+        });
+
+     
+
+        function showbill(){
+            debugger;
+            fromDate = $("#From").val();
+            toDate = $("#To").val();
+            bpoRly = $("#bpoRly").val();
+            $("#dtrlychkpost").css("display", "block");
+
+            InitializeDatatable(fromDate, toDate, bpoRly);
+        }
+
+
+
+        function search() {
+            if ($("#CHQ_DT").val() == null || $("#CHQ_DT").val() == "") {
+                alert('all fields are mandatory');
+
+            }
+            else {
+                var BankNameDropdown = $("#BankNameDropdown").val();
+                var CHQ_NO = $("#CHQ_NO").val();
+                var CHQ_DT = $("#CHQ_DT").val();
+                $(".hide1").css("display", "block");
+                $(".billInvoiceClass").css("display", "block");
+                //InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
+                GetValue(BankNameDropdown, CHQ_NO, CHQ_DT);
+            }
+        }
+
+        function GetValue(BankNameDropdown, CHQ_NO, CHQ_DT) {
+          
+
+            $.ajax({
+                url: '/Rly_Online_Check_Posting_Form/GetValue',
+                type: "POST",
+                dataType: "JSON",
+                data: { BankNameDropdown: BankNameDropdown, CHQ_NO: CHQ_NO, CHQ_DT: CHQ_DT },
+
+                success: function (success) {
+                    debugger;
+
+                    $("#vchr_no").val(success.VCHR_NO)
+                    $("#vchr_dt").val(success.VCHR_DT)
+                    $("#chqAmt").val(success.CHQ_AMOUNT)
+                    $("#payAuth").val(success.BPO_CD)
+                    $("#pstAmt").val(success.AMOUNT_ADJUSTED)
+                    $("#Amttrnsfered").val(success.AMOUNT_TRANSFERRED)
+                    $("#AmtSuspense").val(success.SUSPENSE_AMOUNT)
+                    $("#bpoRly").val(success.BPO_RLY)
+                    //sessionStorage.setItem("IEcode", success.IE);
+                    if (success.ACC_CD == "2709")
+                    {
+                        $("#lblsuspense").text("Un-Adjusted Advance");
+                    }
+                    else
+                    {
+                        $("#lblsuspense").text("Suspense Amount");
+                    }
+
+                }
+
+            });
+        }
+
+
+
+        function InitializeDatatable(fromDate, toDate, bpoRly) {
+            $("#dtrlychkpost").css("display", "block");
+            $("#dtrlychkpost").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("ChequePost")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            fromDate: fromDate,
+                            toDate: toDate,
+                            bpoRly: bpoRly
+
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+
+                        }
+                    },
+                    //{ data: "SNO" },
+                    { data: "Bill_NO" },
+                    { data: "INVOICE_NO" },
+                    { data: "BILL_AMOUNT" },
+                    { data: "C_07_NO" },
+                    { data: "C_07_DT" },
+                    { data: "PAYMENT_DATE" },
+                    { data: "AMOUNT_PASSED" },
+                    { data: "BILL_AMOUNT_CLEARED" },
+                    { data: "BPO_CD" },
+                    {
+                        data: null,
+                        defaultContent: '<input type="checkbox" class="row-checkbox" />',
+                        orderable: false
+                    },
+                 
+                ],
+                "order": [[0, "asc"]]
+            });
+
+
+        }
+
+
+
+
+
+        function submit(){
+            debugger;
+            sendSelectedDataToController();
+
+        }
+
+
+        function sendSelectedDataToController() {
+
+            debugger;
+            var BANK_CD = $("#BankNameDropdown").val();
+            var CHQ_NO = $("#CHQ_NO").val();
+            var CHQ_DATE = $("#CHQ_DT").val();
+            var SUSPENSE_AMT = $("#AmtSuspense").val();
+
+
+            var selectedData = [];
+            $("#dtrlychkpost tbody input[type='checkbox']:checked").each(function () {
+                var rowData = $("#dtrlychkpost").DataTable().row($(this).closest("tr")).data();
+                if (rowData) {
+                    selectedData.push(rowData);
+
+                }
+            });
+
+
+            var additionalData = {
+                BANK_CD: BANK_CD,
+                CHQ_NO: CHQ_NO,
+                CHQ_DATE: CHQ_DATE,
+                SUSPENSE_AMT: SUSPENSE_AMT,
+            };
+
+            var requestData = {
+                selectedData: selectedData,
+                additionalData: additionalData
+            };
+
+
+            $.ajax({
+                url: '/Rly_Online_Check_Posting_Form/Submit', // Replace with the actual URL of your controller action
+                type: 'POST',
+                data: JSON.stringify(requestData), // Send the array directly
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                   if(response == "True")
+                   {
+                        alert("Your Postings are Updated!!!")
+                   }
+                   else{
+                        alert("Sorry, Posting Cannot be Save as Posted Amount is greater then the Suspense Amount !!!")
+
+                   }
+                },
+                error: function (error) {
+                    // Handle any errors that occur during the AJAX request
+                    console.error('Error:', error);
+                }
+            });
+
+
+
+
+        }
+
+     
+
+    </script>
+}

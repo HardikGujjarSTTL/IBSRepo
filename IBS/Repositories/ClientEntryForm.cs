@@ -62,22 +62,22 @@ namespace IBS.Repositories
                 orderCriteria = "Mobile";
                 orderAscendingDirection = true;
             }
-            query = from l in context.T91Railways
-                  //  where l.Isdeleted == 0 || l.Isdeleted == null
-                    select new RailwaysDirectoryModel
-                    {
-                        Railway = l.Railway,
-                        HeadQuarter = l.HeadQuarter,
-                        RlyCd = l.RlyCd,
-                        UserId = l.UserId,
-                        Datetime = l.Datetime,
-                        ImmsRlyCd = l.ImmsRlyCd,
-                       // Isdeleted = l.Isdeleted,
-                        Createddate = l.Createddate,
-                        Createdby = l.Createdby,
-                        Updateddate = l.Updateddate,
-                        Updatedby = l.Updatedby
-                    };
+            //query = from l in context.T91Railways
+            //        where l.Isdeleted == 0 || l.Isdeleted == null
+            //        select new RailwaysDirectoryModel
+            //        {
+            //            Railway = l.Railway,
+            //            HeadQuarter = l.HeadQuarter,
+            //            RlyCd = l.RlyCd,
+            //            UserId = l.UserId,
+            //            Datetime = l.Datetime,
+            //            ImmsRlyCd = l.ImmsRlyCd,
+            //            // Isdeleted = l.Isdeleted,
+            //            Createddate = l.Createddate,
+            //            Createdby = l.Createdby,
+            //            Updateddate = l.Updateddate,
+            //            Updatedby = l.Updatedby
+            //        };
 
             dTResult.recordsTotal = query.Count();
 

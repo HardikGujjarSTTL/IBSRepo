@@ -1,15 +1,23 @@
 ﻿@model IBS.Models.InterUnitRecieptModel
 
 @{
-    ViewData["Title"] = "Generate Voucher";
+    ViewData["Title"] = "Inter Unit Reciept";
+    string clsView = "";
+    if (Model.SNO > 0)
+    {
+        clsView = "Permission_View";
+    }
 }
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>Generate Voucher</h2>
     </div>
+  @*  <div class="list-btn">
+        <a asp-area="" asp-controller="InterUnitReciept" asp-action="InterUnitReciept" class="formBtn Permission_Add">Add New Voucher</a>
+    </div>*@
 </div>
-<section class="table-section">
+<section class="@clsView">
     <div class="task-listinput">
         <div class="accordion-body">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnitReciept" asp-action="InterUnitRecieptSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInterUnitReciept">
@@ -98,8 +106,8 @@
                     </div>
 
                     <div class="savenext-btn">
-                        <a asp-controller="InterUnitReciept" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
+@*                        <a asp-controller="InterUnitReciept" asp-action="Index" class="reset-btn">Cancel</a>
+*@                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                      @*   <button type="button" class="active" onclick="InitializeDatatable();">test</button>
                         <button type="button" class="active" onclick="search();">Search Voucher</button>*@
 

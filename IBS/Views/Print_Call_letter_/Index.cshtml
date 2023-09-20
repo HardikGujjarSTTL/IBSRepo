@@ -1,0 +1,592 @@
+﻿@model IBS.Models.Print_Call_letter_Model
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Call Letter</title>
+</head>
+<body>
+    <table width="100%" align="center" style="Z-INDEX: 101; LEFT: 8px; WIDTH: 90%; POSITION: absolute; TOP: 8px;" height="100" border="0">
+        <tr>
+            <td colspan="2" align="center">
+                <button onclick="window.print()">Print</button>
+                <font face="Verdana" size="2">
+                    <span style="font-size: 14">
+                        <b>
+                            @if (Model.ONLINE_CALL == "Y")
+                            {
+                                <text>ONLINE INSPECTION CALL</text>
+                            }
+                            else
+                            {
+                                <text>INSPECTION CALL</text>
+                            }
+                        </b>
+                    </span>
+                </font>
+            </td>
+        </tr>
+        @if (Model.FINAL_OR_STAGE == "S")
+        {
+            <tr>
+                <td colspan="2" align="center">
+                    <font face="Verdana" size="2">
+                        <span style="font-size: 14"><b>STAGE CALL</b></span>
+                    </font>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="2">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">
+                        <b>From.</b><br />
+                        @Model.VEND_NAME<br />
+                        @Model.VEND_ADDRESS
+                    </span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12"><b>Ref No.</b>@Model.CALL_LETTER_NO</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" width="50%">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12"><b>Date:</b>@Model.CALL_LETTER_DT</span>
+                </font>
+            </td>
+            @if (!string.IsNullOrEmpty(Model.IE_NAME))
+            {
+                <td align="right" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><b>Call Marked to:</b>@Model.IE_NAME</span>
+                    </font>
+                </td>
+            }
+        </tr>
+        <tr><td colspan="2"></td></tr>
+        <tr>
+            <td align="left" width="50%">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12"><br />Dear Sir,<br /></span>
+                </font>
+            </td>
+        </tr>
+        <tr><td colspan="2"></td></tr>
+        <tr>
+            @if (Model.CASE_NO.ToString().Substring(0, 1) == "N")
+            {
+                <td align="left" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Northern Region <br> 12th Floor, Core-II, <br> Scope Minar, Laxmi Nagar, <br> Delhi-110092</span>
+                    </font>
+                </td>
+            }
+            else if (Model.CASE_NO.ToString().Substring(0, 1) == "E")
+            {
+                <td align="left" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Eastern Region <br> CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE, 3rd FLOOR, <br> KOLKATA-700 012</span>
+                    </font>
+                </td>
+            }
+            else if (Model.CASE_NO.ToString().Substring(0, 1) == "W")
+            {
+                <td align="left" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Western Region <br> 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT, NARIMAN POINT, MUMBAI-400021</span>
+                    </font>
+                </td>
+            }
+            else if (Model.CASE_NO.ToString().Substring(0, 1) == "S")
+            {
+                <td align="left" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Southern Region <br> CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD, <br> CHENNAI - 600 006</span>
+                    </font>
+                </td>
+            }
+            else if (Model.CASE_NO.ToString().Substring(0, 1) == "C")
+            {
+                <td align="left" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Central Region <br> 50, EXPANSION BUIDING, BHILAI STEEL PLANT AREA <br> BHILAI -490001</span>
+                    </font>
+                </td>
+            }
+            else if (Model.CASE_NO.ToString().Substring(0, 1) == "Q")
+            {
+                <td align="left" width="50%">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> CO QA Division <br> RITES BHAWAN, 1, SECTOR-29, GURGAON <br> HARYANA -122001</span>
+                    </font>
+                </td>
+            }
+            <td align="right" width="50%">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12"><b> CALL DATED:</b>@Model.CALL_RECV_DATE.ToString() <b> CALL SNO. </b>@Model.CALL_RECV_DATE.ToString()<br><b>CASE NO. </b>@Model.CASE_NO.ToString() (PO SOURCE:@Model.SOURCE.ToString())</span>
+                </font>
+            </td>
+        </tr>
+        <tr><td colspan="2"></td></tr>
+        <tr>
+            <td colspan="2" align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12"><br>Dear Sir,<br></span>
+                </font>
+            </td>
+        </tr>
+        <tr><td colspan="2"></td></tr>
+        <tr>
+            <td colspan="2" align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">Please arrange to inspect the following goods lying ready with us. It is certified that the stores offered have been inspected by us and found to conform to the governing specifications.<br></span>
+                </font>
+            </td>
+        </tr>
+        <tr><td colspan="2"></td></tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">1. Purchase Order No. and Date</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.PO_NO.ToString() Dated:@Model.PO_NO.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">2. Purchaser</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.PURCHASER.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">3. Consignee</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">4. Manufacturer's Name</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.MFG_NAME.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">5. Place of Inspection with address</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.MFG_ADD.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">6. Person to be contacted, Phone No. with E-mail id</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.VEND_CONTACT_PER_1.ToString(), @Model.VEND_CONTACT_TEL_1.ToString(), @Model.VEND_EMAIL.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">7. Description of Stores</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">8. State whether the items are on RDSO Vendor Directory</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.ITEM_RDSO.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">9. If Yes, whether the vendor is RDSO Approved. Indicate validity of approval</span>
+                </font>
+            </td>
+          
+        </tr>
+        @if (Model.VEND_RDSO.ToString() == "Yes" || Model.VEND_RDSO.ToString() == "")
+        {
+            <tr>
+                <td align="left">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12">@Model.VEND_RDSO.ToString(), From: @Model.VEND_APP_FR.ToString() TO: @Model.VEND_APP_TO.ToString()</span>
+                    </font>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td align="left">
+                    <font face="Verdana" size="1">
+                        <span style="font-size: 12">@Model.VEND_RDSO.ToString()</span>
+                    </font>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">10. Quantity on Order</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">11. Quantity Now Offered</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">12. Installmant Number</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.CALL_INSTALL_NO.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">13. Quantity already inspected and passed</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">14. Delivery period as per P.O./Amendment</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a. Does PO specify staggered DP: </span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.STAG_DP.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b. If yes, details of lot size and staggered DP</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">1. Lot Size & DP: @Model.LOT_DP_1.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12"></span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">2. Lot Size & DP2: @Model.LOT_DP_2.ToString()</span>
+                </font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">15. Bill Paying authority</span>
+                </font>
+            </td>
+            <td align="left">
+                <font face="Verdana" size="1">
+                    <span style="font-size: 12">As Per Annexure-1</span>
+                </font>
+            </td>
+        </tr>
+        @{
+            string w_irfc = Model.IRFC_FUNDED.ToString() == "Y" ? "Yes" : "No";
+        }
+
+        <td align="left">
+            <Font Face="Verdana" size="1">
+                <span style="font-size: 12">@w_irfc</span>
+            </Font>
+        </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">17. Inspection Fee Payment details for cases</span>
+                </Font>
+            </td>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12"></span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Where advance inspection fee is to be paid</span>
+                </Font>
+            </td>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12"></span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">
+                        I hereby accept all the
+                        <a href="javascript: void(0)"
+                           onclick="javascript:window.open('TermsandConditions.aspx','CustomPopUp','fullscreen=no,scrollbars=yes','width=700,height=800,menubar=no,resizable=no,alwaysRaised=true');return false;"
+                           Font-Names="Verdana" Font-Size="8pt">
+                            Terms and Conditions
+                        </a>
+                    </span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Thanking you,<br></span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Yours Faithfully,</span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Name<br></span>
+                </Font>
+            </td>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.VEND_CONTACT_PER_1.ToString()</span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Mobile<br></span>
+                </Font>
+            </td>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.VEND_CONTACT_TEL_1.ToString()</span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Vend Email<br></span>
+                </Font>
+            </td>
+            <td align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">@Model.VEND_EMAIL.ToString()</span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Designation</span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <Font Face="Verdana" size="1">
+                    <span style="font-size: 12">Authorised Signatory</span>
+                </Font>
+            </td>
+        </tr>
+        <tr>
+            <td width="100%" colspan="2">
+                @{
+                    int wsno = 0;
+                }
+                <table width="100%" align="center" border="1" bordercolor="#111111">
+                    <tr>
+                        <td colspan="9" align="center">
+                            <Font Face="Verdana" size="2">
+                                <span style="font-size: 14">
+                                    <B>Annexure-1 (INSPECTION CALL ITEM DETAILS)</B>
+                                </span>
+                            </Font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%" valign="top" align="center"><font size="1" face="Verdana">Sno.</font></th>
+                        <th width="15%" valign="top" align="center"><font size="1" face="Verdana">Consignee</font></th>
+                        <th width="35%" valign="top" align="center"><font size="1" face="Verdana">Description of Stores</font></th>
+                        <th width="5%" valign="top" align="center"><font size="1" face="Verdana">Quantity on Order</font></th>
+                        <th width="5%" valign="top" align="center"><font size="1" face="Verdana">Quantity Now Offered</font></th>
+                        <th width="5%" valign="top" align="center"><font size="1" face="Verdana">Quantity already inspected and passed</font></th>
+                        <th width="5%" valign="top" align="center"><font size="1" face="Verdana">Delivery period as per P.O./Amendment</font></th>
+                        <th width="15%" valign="top" align="center"><font size="1" face="Verdana">Bill Paying authority</font></th>
+                        <th width="5%" valign="top" align="center"><font size="1" face="Verdana">Master Item Checksheet</font></th>
+                    </tr>
+                 
+                </table>
+            </td>
+        </tr>
+      @*  @if (Model != null)
+        {
+            for (int i = 0; i < Model.subreport.Count; i++)
+            {
+                var subItem = Model.subreport[i];
+                <tr>
+                    <td valign='top' align='Center'><font size='1' face='Verdana'>@(i + 1)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.CONSIGNEE != null ? subItem.CONSIGNEE : string.Empty)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.ITEM_DESC_PO != null ? subItem.ITEM_DESC_PO : string.Empty)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.QTY_ORDERED != null ? subItem.QTY_ORDERED.ToString() : string.Empty)</font></td>
+                    <td valign='top' align='left'><font size='1' face='Verdana'>@(subItem.QTY_TO_INSP != null ? subItem.QTY_TO_INSP.ToString() : string.Empty)</font></td>
+                    <td valign='top' align='left'>
+                        <font size='1' face='Verdana'>
+                            @((subItem.CUM_QTY_PREV_OFFERED != null ? subItem.CUM_QTY_PREV_OFFERED.ToString() : string.Empty) +
+                                " & " +
+                                (subItem.CUM_QTY_PREV_PASSED != null ? subItem.CUM_QTY_PREV_PASSED.ToString() : string.Empty))
+                        </font>
+                    </td>
+                    <td valign='top' align='left'><font size='1' face='Verdana'>@(subItem.DELV_DT != null ? subItem.DELV_DT : string.Empty)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.BPO != null ? subItem.BPO : string.Empty)</font></td>
+                    <td valign='top' align='Left'>
+                        <font size='1' face='Verdana'>
+                            <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/@(subItem.ITEM_CD != null ? subItem.ITEM_CD : string.Empty).RAR'>
+                                @(subItem.ITEM_CD != null ? subItem.ITEM_CD : string.Empty)
+                            </a>
+                        </font>
+                    </td>
+                </tr>
+            }
+        }*@
+        </table>
+        @if ( Model.REMARKS != null && !string.IsNullOrEmpty(Model.REMARKS.ToString()))
+        {
+            <table>
+                <tr>
+                    <td colspan=2 align=left>
+                        <font Face='Verdana' size='1'>
+                            <span style='font-size: 12'>
+                                <b>REMARKS: @Model.REMARKS.ToString()</b>
+                            </span>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        }
+    </table>
+</body>
+</html>

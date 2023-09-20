@@ -125,6 +125,19 @@ builder.Services.AddScoped<IEFTEntryRepository,EFTEntryRepository>();
 builder.Services.AddScoped<IInterUnit_TransferRepository,InterUnit_TransferRepository>();
 builder.Services.AddScoped<IUnregisteredCallsRepository, UnregisteredCallsRepository>();
 builder.Services.AddScoped<IInspectionFeeBillRepository, InspectionFeeBillRepository>();
+builder.Services.AddScoped<ITDSEntryRepository, TDSEntryRepository>();
+builder.Services.AddScoped<IIEClaimFormRepository, IEClaimFormRepository>();
+builder.Services.AddScoped<IRly_Online_Check_Posting_Form_Repository, Rly_Online_Check_Posting_Form_Rpository>();
+builder.Services.AddScoped<ICMIEWiseCancellationAcceptance_FormRepository, CMIEWiseCancellationAcceptance_FormRepository>();
+builder.Services.AddScoped<IPrint_Call_letter_Repository, Print_Call_letter_Repository>();
+builder.Services.AddScoped<ICallMarkedRepository, CallMarkedRepository>();
+builder.Services.AddScoped<ICalls_Marked_ReportRepository, Calls_Marked_ReportRepository>();
+builder.Services.AddScoped<ICall_Cancellation_FormRepository, Call_Cancellation_FormRepository>();
+builder.Services.AddScoped<ICalls_Marked_For_Specific_PORepository, Calls_Marked_For_Specific_PORepository>();
+
+
+
+
 
 #region IE Report
 builder.Services.AddScoped<IIE_PerfomanceRepository, IE_PerformanceRepository>();

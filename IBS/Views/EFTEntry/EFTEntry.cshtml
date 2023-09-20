@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Voucher List";
+   
 }
 
 <div>
@@ -7,8 +8,11 @@
         <div class="tast-list">
             <h2>EFT Voucher List</h2>
         </div>
-        <div class="list-btn">
+       @* <div class="list-btn">
             <a asp-area="" asp-controller="EFTEntry" asp-action="AddEFTVoucher" class="formBtn">Add EFT Voucher</a>
+        </div>*@
+        <div class="list-btn">
+            <a asp-area="" asp-controller="EFTEntry" asp-action="AddEFTVoucher" class="formBtn Permission_Add">Add EFT Voucher</a>
         </div>
     </div>
     <section class="table-section">
@@ -98,7 +102,7 @@
                             var CHQ_DT = data.CHQ_DT;
 
                             var editUrl = '@Url.Action("AddEFTVoucher", "EFTEntry")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;

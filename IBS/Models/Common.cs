@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Globalization;
 using IBS.Controllers;
 using Humanizer.Localisation;
+using static IBS.Helper.Enums;
 
 namespace IBS.Models
 {
@@ -415,6 +416,34 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> GetClaimHead()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "--Select--";
+            single.Value = "0";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "308-Conveyance/Fare Charges";
+            single.Value = "308";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "309-Traveling Allowance";
+            single.Value = "309";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "310-Hotel Charges";
+            single.Value = "310";
+            single = new SelectListItem();
+            single.Text = "608-Telephone/Mobile/Internet Charges";
+            single.Value = "608";
+            single = new SelectListItem();
+            single.Text = "629-Others";
+            single.Value = "629";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> GetAccountCode()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -808,25 +837,36 @@ namespace IBS.Models
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
+
+            single = new SelectListItem();
+            single.Text = "-xx-";
+            single.Value = " ";     
+
+            textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "Railways";
             single.Value = "R";
+
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "Private";
             single.Value = "P";
+
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "PSU";
             single.Value = "U";
+
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "State Govt.";
             single.Value = "S";
+
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "Foreign Railways";
             single.Value = "F";
+
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -1632,6 +1672,39 @@ namespace IBS.Models
             return BankCD;
         }
 
+        public static List<SelectListItem> GetControllingOfficer()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> ControllingOfficers = (from a in context.T08IeControllOfficers
+                                                        where a.CoStatus == null &&  a.CoRegion == "N"
+                                                        orderby a.CoName
+                                                        select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.CoName),
+                                     Value = Convert.ToString(a.CoCd)
+                                 }).ToList();
+            return ControllingOfficers;
+        }
+
+        public static List<SelectListItem> GetIEname()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> IE_NAME = new List<SelectListItem>();
+            IE_NAME.Add(new SelectListItem { Value = "-1", Text = "ALL" });
+            IE_NAME = (from a in context.T09Ies
+                                            where a.IeStatus == null && a.IeRegion == "N"
+                                            orderby a.IeName
+                                           select
+                                 new SelectListItem
+                                 {
+                                     Text = Convert.ToString(a.IeName),
+                                     Value = Convert.ToString(a.IeCd)
+                                 }).ToList();
+            return IE_NAME;
+        }
+
         public static List<SelectListItem> GetListBPO()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -2067,7 +2140,7 @@ namespace IBS.Models
                         Text = c.StateName
                     }).OrderBy(c => c.Text).ToList();
         }
-
+            
         public static IEnumerable<SelectListItem> GetCountries()
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
