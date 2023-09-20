@@ -1,0 +1,186 @@
+﻿@model IBS.Models.SuperSurpirseFormModel
+
+@*@{
+    ViewData["Title"] = "Manage Laboratory";
+}*@
+@{
+    ViewData["Title"] = "SUPER SURPRISE CHECK FORM";
+    string clsView = "";
+    //if (Model.LabId > 0)
+    //{        
+    //    clsView = "Permission_View";
+    //}
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>SUPER SURPRISE CHECK FORM</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="SuperSurpirseForm" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="SuperSurpirseForm" asp-action="Save" data-ajax-method="post" data-ajax-complete="completed" id="frmtrainingDetails">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Case No.</label>
+                        <input type="text" class="input" asp-for="Case_No" readonly="true">
+                        @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="PropertyId">Call Date - SNo.</label>
+                        <input type="text" class="input" asp-for="CallDtAndSrno" readonly="true">
+                        <input type="hidden" class="input" asp-for="CallDt" readonly="true">
+                        <input type="hidden" class="input" asp-for="CallSNo" readonly="true">
+                        @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
+                    </div>
+                   
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Contract No</label>
+                        <input type="text" class="input" asp-for="ContractNo" readonly="true">
+                        @*<span asp-validation-for="DOB" class="text-danger"></span>*@
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Date</label>
+                        <input type="text" class="input" asp-for="Date" readonly="true">
+                        @*<span asp-validation-for="DOJ" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Vendor</label>
+                        <input type="text" class="input" asp-for="VenderNm" readonly="true">
+                        <input type="hidden" class="input" asp-for="Vcode" readonly="true">
+                        @*<span asp-validation-for="DOJ" class="text-danger"></span>*@
+                    </div>
+                   
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Inspecting Er.</label>
+                        <input type="text" class="input" asp-for="IE_NAME" readonly="true">
+                        <input type="hidden" class="input" asp-for="IE_CD" readonly="true">
+                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Manufacturer</label>
+                        <input type="text" class="input" asp-for="MFG" readonly="true">
+                        <input type="hidden" class="input" asp-for="MFGCD" readonly="true">
+                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                    </div>
+                   
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Super Surprise CM</label>
+                        @Html.DropDownListFor(model => model.SuperSurpriseCM, Common.GetCODataSuperForm(Model.Regin),"", new { @id="ddlsupercm"})
+                        @*<span asp-validation-for="Qualification" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Super Surprise Date</label>
+                        <input type="text" class="input datepicker" asp-for="SuperSurpriseDt" style="font-size:inherit;">
+                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Name of scope of sector where Item is covered.</label>
+                        @Html.DropDownListFor(model => model.NameofScope, Common.ItemScope(),"", new { @id="ddlscope"})
+                        @*<span asp-validation-for="TrainingType" class="text-danger"></span>*@
+                    </div>
+                   
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Item</label>
+                        @Html.DropDownListFor(model => model.Item, Common.GetItemSuperForm(Model.Case_No,Model.CallDt,Model.CallSNo),"", new { @id="ddlitem"})
+                        @*<span asp-validation-for="course_name" class="text-danger"></span>*@
+                        <input type="hidden" class="input" asp-for="ItemDesc" readonly="true" id="txtitemdesc">
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Previous Internal/Consignee Rejection</label>
+                        <textarea id="textAreaInput" asp-for="PreviousInternal"></textarea>
+                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Discrepancy (If any)</label>
+                        <textarea id="textAreaInput" asp-for="Discrepancy"></textarea>
+                        @*<span asp-validation-for="Institue" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Overall outcome of the visit</label>
+                        <textarea id="textAreaInput" asp-for="Overall"></textarea>
+                        @*<span asp-validation-for="From" class="text-danger"></span>*@
+                    </div>
+
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">SBU HEAD REMARKS/RECOMMENDATION</label>
+                        <textarea id="textAreaInput" asp-for="SBUHead"></textarea>
+                        @*<span asp-validation-for="To" class="text-danger"></span>*@
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            
+            
+            $(".datepicker").datepicker({
+                dateFormat: "dd-mm-yy" // Set the date format to "dd/mm/yy"
+            });
+        });
+        $("#ddlitem").change(function(){
+            $("#txtitemdesc").val($("#ddlitem option:selected").text());
+        })
+        function Save() {
+            if ($("#frmtrainingDetails").valid()) {
+                $("#frmtrainingDetails").submit();
+            }
+            
+            completed = function (response) {
+                debugger;
+                var res = response.responseJSON;
+                ShowHideMsgNew(res.status, res.responseText);
+                //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
+                window.location.href = '@Url.Action("Index", "SuperSurpirseForm")';
+            };
+        }
+
+
+        //function LoadSuperData() {
+        //    var Name = $("#ddlname").val();
+        //    $.ajax({
+        //        url: '/IETrainingDetails/IEFetchData',
+        //        type: "POST",
+        //        dataType: "JSON",
+        //        data: { Name: Name },
+
+        //        success: function (success) {
+        //            if (success.EmpNo == null){
+        //                $("#txtempno").val(" ");
+        //            }
+        //            else{
+        //                $("#txtempno").val(success.EmpNo);
+        //                $("#ddldis").val(success.Discipline);
+        //                $("#txtdob").val(success.DOB);
+        //                $("#txtdoj").val(success.DOJ);
+        //                $("#ddlcat").val(success.Category);
+        //                $("#txtcato").val(success.CategoryOther);
+        //                $("#ddlqual").val(success.Qualification);
+        //                $("#txtqualo").val(success.QualificationOther);
+        //                $("#textAreaInput").val(success.Institute);
+        //            }
+                    
+        //        }
+
+        //    });
+        //}
+
+        
+    </script>
+}

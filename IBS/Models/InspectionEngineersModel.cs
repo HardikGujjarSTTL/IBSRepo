@@ -1,4 +1,4 @@
-﻿using IBS.DataAccess;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -6,32 +6,54 @@ namespace IBS.Models
     {
         public int IeCd { get; set; }
 
+        [Display(Name = "IE Name")]
+        [Required]
         public string? IeName { get; set; }
 
+        [Display(Name = "IE Short Name")]
+        [Required]
         public string? IeSname { get; set; }
 
+        [Display(Name = "Employee No")]
+        [Required]
         public string? IeEmpNo { get; set; }
 
         public int? IeDesig { get; set; }
 
         public int? IeSealNo { get; set; }
 
+        [Display(Name = "Department")]
+        [Required]
         public string? IeDepartment { get; set; }
 
-        public int? IeCityCd { get; set; }
+        public string IeCityCd { get; set; }
 
+        [Display(Name = "IE City")]
+        [Required]
+        public int IeCityId { get; set; }
+
+        [Display(Name = "IE Phone No")]
+        [Required]
         public string? IePhoneNo { get; set; }
 
         public byte? IeCoCd { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? IeJoinDt { get; set; }
 
         public string? IeStatus { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? IeStatusDt { get; set; }
 
+        [Display(Name = "IE Posting")]
+        [Required]
         public string? IeType { get; set; }
 
+        [Display(Name = "IE Region")]
+        [Required]
         public string? IeRegion { get; set; }
 
         public string? IePwd { get; set; }
@@ -40,8 +62,11 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [EmailAddress]
         public string? IeEmail { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? IeDob { get; set; }
 
         public int? AltIe { get; set; }
@@ -52,9 +77,14 @@ namespace IBS.Models
 
         public int? AltIeThree { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? CallMarkingStoppingDt { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? DscExpiryDt { get; set; }
+
         public byte? Isdeleted { get; set; }
 
         public int? Createdby { get; set; }
@@ -65,26 +95,22 @@ namespace IBS.Models
 
         public DateTime? Updateddate { get; set; }
 
-        public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
+        [Display(Name = "Cluster Name")]
+        [Required]
+        public int Cluster { get; set; }
 
-        public virtual T07RitesDesig? IeDesigNavigation { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallMarkingStartDt { get; set; }
 
-        public virtual T01Region? IeRegionNavigation { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? InspectionStartDt { get; set; }
 
-        public virtual ICollection<NoIeWorkPlan> NoIeWorkPlans { get; set; } = new List<NoIeWorkPlan>();
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? RepatriationDt { get; set; }
 
-        public virtual ICollection<T16IcCancel> T16IcCancels { get; set; } = new List<T16IcCancel>();
-
-        public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();
-
-        public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
-
-        public virtual ICollection<T45ClaimMaster> T45ClaimMasters { get; set; } = new List<T45ClaimMaster>();
-
-        public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();
-
-        public virtual ICollection<T48NiIeWorkPlan> T48NiIeWorkPlans { get; set; } = new List<T48NiIeWorkPlan>();
-
-        public virtual T70UnregisteredCall? T70UnregisteredCall { get; set; }
+        public string? IeJobType { get; set; }
     }
 }

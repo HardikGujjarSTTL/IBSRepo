@@ -1,0 +1,284 @@
+﻿@model IBS.Models.VenderCallCancellationModel
+@{
+    ViewData["Title"] = "Call Cancellation";
+}
+
+<form data-ajax="true" asp-antiforgery="true" asp-controller="CallRegisterIB" asp-action="CallCancellation" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Call Cancellation</h2>
+        </div>
+    </div>
+    <input type="hidden" asp-for="CaseNo" />
+    <input type="hidden" asp-for="CallRecvDt" />
+    <input type="hidden" asp-for="PoNo" />
+    <input type="hidden" asp-for="PoDt" />
+    <input type="hidden" asp-for="CallSno" />
+    <input type="hidden" asp-for="IeSname" />
+    <input type="hidden" asp-for="Vendor" />
+    <input type="hidden" asp-for="ActionType" />
+
+    <div class="alert alert-warning center">
+        <table id="Table1" cellSpacing="1" cellPadding="1" width="100%" border="0">
+            <tr>
+                <TD align="center" width="100%" colSpan="4"></TD>
+            </tr>
+            <tr>
+                <td style="WIDTH: 12.63%; HEIGHT: 25px" bgColor="#ffffcc">
+                    <label for="Reference">Case No.</label>
+                </td>
+                <td style="WIDTH: 35%; HEIGHT: 25px" bgColor="#ffffcc">
+                    <label id="lblCaseNo" style="color:red"></label>
+                </td>
+                <td style="WIDTH: 35%; HEIGHT: 25px" align="right" bgColor="#ffffcc">
+                    <label for="Reference">CallRecvDt - Call SNo.</label>
+                </td>
+                <td style="WIDTH: 15%; HEIGHT: 25px" align="left" bgColor="#ffffcc">
+                    <label id="lblCallRecvDt" style="color:red"></label> -
+                    <label id="lblCallSno" style="color:red"></label>
+                </td>
+            </tr>
+            <tr>
+                <td style="WIDTH: 12.63%; HEIGHT: 25px" bgColor="#ffffcc">
+                    <label for="Reference">Purchase Order No.</label>
+                </td>
+                <td style="WIDTH: 35%; HEIGHT: 25px" bgColor="#ffffcc">
+                    <label id="lblPoNo" style="color:red"></label>
+                </td>
+                <td style="WIDTH: 35%; HEIGHT: 25px" align="right" bgColor="#ffffcc">
+                    <label for="Reference">Purchase Order Date :</label>
+                </td>
+                <td style="WIDTH: 15%; HEIGHT: 25px" align="left" bgColor="#ffffcc">
+                    <label id="lblPoDt" style="color:red"></label>
+                </td>
+            </tr>
+            <tr>
+                <td style="WIDTH: 12.63%; HEIGHT: 25px" bgColor="#ffffcc">
+                    <label for="Reference">Vendor :</label>
+                </td>
+                <td style="WIDTH: 35%; HEIGHT: 25px" bgColor="#ffffcc">
+                    <label id="lblVendor" style="color:red"></label>
+                </td>
+                <td style="WIDTH: 35%; HEIGHT: 25px" align="right" bgColor="#ffffcc">
+                    <label for="Reference">Inspection Engineer :</label>
+                </td>
+                <td style="WIDTH: 15%; HEIGHT: 25px" align="left" bgColor="#ffffcc">
+                    <label id="lblIeSname" style="color:red"></label>
+                </td>
+            </tr>
+            @*<tr>
+            <td>
+            <table>
+            <tr>
+            <td>
+            <label for="Reference">Cancellation Date:</label>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>*@
+        </table>
+    </div>
+
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Reference">Cancellation Date:</label>
+                    <input type="text" class="datepicker" asp-for="CancelDt" maxlength="100" style="text-transform: uppercase;">
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Call is :</label>
+                    @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"),"--Select--")
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <label for="Reference">Reasons For Cancellation:-</label>
+            <table>
+                <tr>
+                    <td>
+                        @*@if (Common.CallCancelCheck(Model, 1))
+                        {
+                        <input type="checkbox" asp-for="chk_1" value="@Model.chk_1" class="custom" />
+                        }
+                        else
+                        {
+                        <input type="checkbox" id="chk_1" class="custom" />
+                        }*@
+
+                        <input type="checkbox" asp-for="chkItems[0]" class="custom" />
+
+                        <label for="chk_1">01 - Material Not Found</label>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        @* @if (Common.CallCancelCheck(Model, 2))
+                        {
+                        <input type="checkbox" asp-for="chk_2" value="@Model.chk_2" class="custom" />
+                        }
+                        else
+                        {
+                        <input type="checkbox" id="chk_2" value="@Model.chk_2" class="custom" />
+                        }*@
+
+                        <input type="checkbox" asp-for="chkItems[1]" class="custom" />
+
+                        <label for="chk_2">02 - Call letter recieved after expiry of delivery period</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[2]" class="custom" />
+                        <label for="chk_3">03 - your call letter was not in prescribed format</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[3]" class="custom" />
+                        <label for="chk_4">04 - Your refusal to undertake test on samples in approved independent test houses or RITES Lab at your cost (Whichever applicable)</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[4]" class="custom" />
+                        <label for="chk_5">05 - Material offered at premises where adequate room or lighting etc. not available for proper sampling or inspection.</label>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[5]" class="custom" />
+                        <label for="chk_6">06 - Internal inspection and test records incomplete / not as per contractual requirement.</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[6]" class="custom" />
+                        <label for="chk_7">07 - Packing list showing quantities offered item wise and consignee wise not read (Whichever applicable)</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[7]" class="custom" />
+                        <label for="chk_8">08 - Lot mixed not segregated. Please re-offer after proper segregation.</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[8]" class="custom" />
+                        <label for="chk_9">09 - You could not arrange for inspection in spite of personal contact / phone with your Shri.</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[9]" class="custom" />
+                        <label for="chk_10">10 - You could not produce following documents drg, / spec. / P.O.: at the time of inspection in absence of which inspection could not be done.</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[10]" class="custom" />
+
+                        <label for="chk_11">11 - Call Withdrawn By Vendor</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" asp-for="chkItems[11]" class="custom" />
+                        <label for="chk_12">12 - Others (Specify)</label>
+                    </td>
+                </tr>
+            </table>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Call Cancellation Document Received or Not (Y/N)</label>
+                    @Html.DropDownListFor(model => model.DocRec, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
+                </div>
+            </div>
+            <div class="col-md-8 mb-3">
+                <div class="reference">
+                    <label for="Reference">Cancellation Description:-</label>
+                    <textarea rows="4" asp-for="Cdesc"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn center">
+            <button type="button" class="save-btn active" id="btnSave">Save</button>
+            <button type="button" class="save-btn " id="btnDelete">Delete</button>
+            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(function () {
+
+            var _PoDt = moment($("#PoDt").val()).format("DD/MM/YYYY");
+            var _CallRecvDt = moment($("#CallRecvDt").val(), "DD/MM/YYYY").format("DD/MM/YYYY");
+
+            var CaseNo = $("#CaseNo").val();
+            var PoNo = $("#PoNo").val();
+            var PoDt = $("#PoDt").val();
+            var Vendor = $("#Vendor").val();
+            var CallRecvDt = _CallRecvDt;
+            var CallSno = $("#CallSno").val();
+            var IeSname = $("#IeSname").val();
+
+            $("#lblCaseNo").html(CaseNo);
+            $("#lblPoNo").html(PoNo);
+            $("#lblPoDt").html(PoDt);
+            $("#lblVendor").html(Vendor);
+            $("#lblCallRecvDt").html(CallRecvDt);
+            $("#lblCallSno").html(CallSno);
+            $("#lblIeSname").html(IeSname);
+            $("#CallCancelStatus").val("N");
+
+        });
+
+        $("#btnSave").click(function () {
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const _actionType = urlParams.get('ActionType');
+            $("#ActionType").val(_actionType);
+
+            if ($("#frmDetails").valid()) {
+                var formData = new FormData($("#frmDetails")[0]);
+                $.ajax({
+                    url: '@Url.Action("CallCancellationSave", "CallRegisterIB")',
+                    type: "POST",
+                    dataType: "JSON",
+                    data: formData,
+                    processData: false, // Prevent jQuery from converting the data to a string
+                    contentType: false,
+                    success: function (response) {
+                        ShowHideMsgNew(response.status, response.responseText);
+                        if (response.status) {
+                        }
+                    }
+                });
+            }
+
+        });
+
+        $("#btnDelete").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+
+
+            $.get("@Url.Action("CallCancelDelete", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,130 @@
+﻿@model IBS.Models.SummaryVendorWiseInspModel
+
+@{
+    Layout = null;
+    string ReportType = (Model != null ? Model.ReportType : "");
+    string ReportTitle = (Model != null ? Model.ReportTitle : "");
+    ViewData["Title"] = ReportTitle;
+}
+
+<html>
+<head>
+    <title>@ReportTitle</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" value="Print" id="btnPrint" />
+        <input type="button" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer"></div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/jspdf.debug.js"></script>
+<script src="~/js/html2canvas.min.js"></script>
+<script src="~/js/site.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $(document).ready(function () {
+        
+            loadSummartReport();
+        
+    });
+
+    function loadSummartReport() {
+        $("#dvReportViewer").load("@Url.Action("SummaryVendorWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName("Summary_Vendor_Wise_Inspections") + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var quotes = document.getElementById('dvReportViewer');
+
+        quotes.style.width = "920px";
+
+        html2canvas(quotes, {
+            onrendered: function (canvas) {
+                var pdf = new jsPDF('p', 'pt', 'letter');
+                for (var i = 0; i <= quotes.clientHeight / 980; i++) {
+                    var srcImg = canvas;
+                    var sX = 0;
+                    var sY = 980 * i; // start 980 pixels down for every new page
+                    var sWidth = 920;
+                    var sHeight = 980;
+                    var dX = 0;
+                    var dY = 0;
+                    var dWidth = 920;
+                    var dHeight = 980;
+
+                    window.onePageCanvas = document.createElement("canvas");
+                    onePageCanvas.setAttribute('width', 920);
+                    onePageCanvas.setAttribute('height', 980);
+                    var ctx = onePageCanvas.getContext('2d');
+                    ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+                    var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+
+                    var width = onePageCanvas.width;
+                    var height = onePageCanvas.clientHeight;
+
+                    //! If we're on anything other than the first page,
+                    // add another page
+                    if (i > 0) {
+                        pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
+                    }
+                    //! now we declare that we're working on that page
+                    pdf.setPage(i + 1);
+                    //! now we add content to that page!
+                    pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
+
+                }
+
+                quotes.style.width = "100%";
+
+                if (isPrint) {
+                    pdf.autoPrint();
+                    window.open(pdf.output('bloburl'), '_blank');
+                }
+                else {
+                    pdf.save(getExportFileName('Summary_Vendor_Wise_Inspections') + '.pdf');
+                }
+            }
+        });
+    }
+
+</script>

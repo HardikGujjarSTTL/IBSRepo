@@ -65,7 +65,7 @@ public partial class V22Bill
 
     public int? IeCd { get; set; }
 
-    public byte? IeCoCd { get; set; }
+    public int? IeCoCd { get; set; }
 
     public string? IcNo { get; set; }
 
@@ -81,7 +81,7 @@ public partial class V22Bill
 
     public string? FeeType { get; set; }
 
-    public byte? Visits { get; set; }
+    public int? Visits { get; set; }
 
     public decimal? FeeRate { get; set; }
 

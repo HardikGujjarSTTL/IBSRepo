@@ -9,9 +9,9 @@ public partial class T20Ic
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
-    public bool? IcTypeId { get; set; }
+    public int? IcTypeId { get; set; }
 
     public int ConsigneeCd { get; set; }
 
@@ -29,11 +29,11 @@ public partial class T20Ic
 
     public DateTime? CallDt { get; set; }
 
-    public byte? CallInstallNo { get; set; }
+    public int? CallInstallNo { get; set; }
 
     public string? FullPart { get; set; }
 
-    public byte? NoOfInsp { get; set; }
+    public int? NoOfInsp { get; set; }
 
     public DateTime? FirstInspDt { get; set; }
 
@@ -55,7 +55,7 @@ public partial class T20Ic
 
     public string? Photo { get; set; }
 
-    public byte? CoCd { get; set; }
+    public int? CoCd { get; set; }
 
     public string? StampPatternCd { get; set; }
 

@@ -9,7 +9,7 @@ public partial class T19CallCancel
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public byte? CancelCd1 { get; set; }
 
@@ -42,6 +42,18 @@ public partial class T19CallCancel
     public DateTime? Datetime { get; set; }
 
     public string? DocsSubmitted { get; set; }
+
+    public string? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
+    public byte? CancelCd12 { get; set; }
 
     public virtual T17CallRegister Ca { get; set; } = null!;
 }

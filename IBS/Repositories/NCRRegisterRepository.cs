@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Net;
 using System.Numerics;
+using Microsoft.AspNetCore.Http;
 
 namespace IBS.Repositories
 {
@@ -55,7 +56,7 @@ namespace IBS.Repositories
                     orderAscendingDirection = true;
                 }
 
-                string NCNO = "", CASENO = "", ToDate = null, FromDate = null, IENAME = "";
+                string NCNO = "", CASENO = "", ToDate = null, FromDate = null, IENAME = null;
 
                 //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["NCNO"]))
                 //{
@@ -81,18 +82,23 @@ namespace IBS.Repositories
                 NCRRegister model = new NCRRegister();
                 DataTable dt = new DataTable();
                 List<NCRRegister> modelList = new List<NCRRegister>();
+
                 DataSet ds;
-
-                OracleParameter[] par = new OracleParameter[4];
-                par[0] = new OracleParameter("p_lstIE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_frmDt", OracleDbType.Date, FromDate, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_toDt", OracleDbType.Date, ToDate, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-
-                // Assuming DataAccessDB.GetDataSet handles adding parameters to the command internally
-                ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
-
-
+                DateTime parsedDate = DateTime.ParseExact(FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime parsedDat1e = DateTime.ParseExact(ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                try
+                {
+                    OracleParameter[] par = new OracleParameter[4];
+                    par[0] = new OracleParameter("lstIE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
+                    par[1] = new OracleParameter("frmDt", OracleDbType.Date, parsedDate, ParameterDirection.Input);
+                    par[2] = new OracleParameter("toDt", OracleDbType.Date, parsedDat1e, ParameterDirection.Input);
+                    par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                    ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -419,7 +425,7 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    msg = "already Exist";
+                    msg = "Already Exist";
                 }
                
             }      

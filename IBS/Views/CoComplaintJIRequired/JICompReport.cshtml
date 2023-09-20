@@ -1,0 +1,208 @@
+﻿@model IBS.Models.JIRequiredReport
+
+<div>
+    <h3 class="heading3">Complaint Recieved for the Financial Year : <span class="orangeText"> '@ViewBag.Financialperiod' </span> <span class="orangeText"> (Region Wise) </span></h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Inspections</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total Value of Inspections (In Lakh)</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Recd</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Finalised</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Pending</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Accepted</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Upheld (1)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Sorting (2)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Rectification (3)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Price Reduction (4)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Lifted Before JI (5)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Not On Rites A/c</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Transit Damage</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Unstamped</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Total (1+2+3+4+5)</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstJIRequiredList != null && Model.lstJIRequiredList.Count > 0)
+                {
+                    decimal toNO_OF_INSPECTION = 0, toMATERIAL_VALUE = 0, toRECD = 0, toFINALISED = 0, toPENDING = 0, toACCEPTED = 0, toUPHELD = 0, toSORTING = 0, toRECTIFICATION = 0, toPRICE_REDUCTION = 0,
+                    toLIFTED_BEFORE_JI = 0, toNOT_ON_RITES_AC = 0, toTRANSIT_DEMAGE = 0, toUNSTAMPED = 0, toTotal = 0;
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstJIRequiredList)
+                    {
+                        SrNo = SrNo + 1;
+                        toNO_OF_INSPECTION = toNO_OF_INSPECTION + item.NO_OF_INSPECTION;
+                        toMATERIAL_VALUE = toMATERIAL_VALUE + item.MATERIAL_VALUE;
+                        toRECD = toRECD + item.RECD;
+                        toFINALISED = toFINALISED + item.FINALISED;
+                        toPENDING = toPENDING + item.PENDING;
+                        toACCEPTED = toACCEPTED + item.ACCEPTED;
+                        toUPHELD = toUPHELD + item.UPHELD;
+                        toSORTING = toSORTING + item.SORTING;
+                        toRECTIFICATION = toRECTIFICATION + item.RECTIFICATION;
+                        toPRICE_REDUCTION = toPRICE_REDUCTION + item.PRICE_REDUCTION;
+                        toLIFTED_BEFORE_JI = toLIFTED_BEFORE_JI + item.LIFTED_BEFORE_JI;
+                        toNOT_ON_RITES_AC = toNOT_ON_RITES_AC + item.NOT_ON_RITES_AC;
+                        toTRANSIT_DEMAGE = toTRANSIT_DEMAGE + item.TRANSIT_DEMAGE;
+                        toUNSTAMPED = toUNSTAMPED + item.UNSTAMPED;
+                        toTotal = toTotal + item.Total;
+                        <tr>
+                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Region</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.NO_OF_INSPECTION</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.RECD</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FINALISED</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.PENDING</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.ACCEPTED</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.UPHELD</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.SORTING</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.RECTIFICATION</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.PRICE_REDUCTION</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.LIFTED_BEFORE_JI</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.NOT_ON_RITES_AC</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.TRANSIT_DEMAGE</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.UNSTAMPED</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Total</font></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td width="8%" valign="top" align="Left"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toNO_OF_INSPECTION</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toMATERIAL_VALUE</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toRECD</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toFINALISED</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toPENDING</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toACCEPTED</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toUPHELD</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toSORTING</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toRECTIFICATION</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toPRICE_REDUCTION</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toLIFTED_BEFORE_JI</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toNOT_ON_RITES_AC</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toTRANSIT_DEMAGE</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toUNSTAMPED</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toTotal</b></font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="heading3">Defect Code Wise Analysis for the Financial Year : <span class="orangeText"> '@ViewBag.Financialperiod' </span></h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Code</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Upheld</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Sorting</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Rectification</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Price Reduction</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Total</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstJIRequiredList != null && Model.lstJIRequiredList.Count > 0)
+                {
+                   
+                    var region = Model.lstCompList.Select(x => x.Region).Distinct().ToList();
+                    decimal toUPHELD = 0, toSORTING = 0, toRECTIFICATION = 0, toPRICE_REDUCTION = 0, toTotal = 0;
+
+                    @foreach (var item in region)
+                    {
+                        var list = Model.lstCompList.Where(x => x.Region == item).Select(x => x);
+                        <tr>
+                            <td colspan="6" align="center">@item</td>
+                        </tr>
+                        @foreach (var item2 in list)
+                        {
+                            toUPHELD = toUPHELD + item2.UPHELD;
+                            toSORTING = toSORTING + item2.SORTING;
+                            toRECTIFICATION = toRECTIFICATION + item2.RECTIFICATION;
+                            toPRICE_REDUCTION = toPRICE_REDUCTION + item2.PRICE_REDUCTION;
+                            toTotal = toTotal + item2.Total;
+
+                            <tr>
+                                <td valign="top" align="left"><font size="1" face="Verdana">@item2.DEFECT_DESC</font></td>
+                                <td valign="top" align="center"><font size="1" face="Verdana">@item2.UPHELD</font></td>
+                                <td valign="top" align="center"><font size="1" face="Verdana">@item2.SORTING</font></td>
+                                <td valign="top" align="center"><font size="1" face="Verdana">@item2.RECTIFICATION</font></td>
+                                <td valign="top" align="center"><font size="1" face="Verdana">@item2.PRICE_REDUCTION</font></td>
+                                <td valign="top" align="center"><font size="1" face="Verdana">@item2.Total</font></td>
+                            </tr>
+                        }
+                    }
+
+                     <tr>
+                        <td width="8%" valign="top" align="Left"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toUPHELD</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toSORTING</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toRECTIFICATION</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toPRICE_REDUCTION</b></font></td>
+                        <td width="8%" valign="top" align="center"><font size="1" face="Verdana"><b>@toTotal</b></font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="heading3">IEs with maximum no. of Rejections on Rites Account for the financial year : <span class="orangeText"> '@ViewBag.Financialperiod' </span> (IE WISE)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Inspections</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total Value of Inspections (In Lakh)</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Recd</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Finalised</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Pending</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Accepted</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Upheld (1)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Sorting (2)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Rectification (3)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Price Reduction (4)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Lifted Before JI (5)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Not On Rites A/c</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Transit Damage</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Unstamped</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Total (1+2+3+4+5)</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstComplaintJIIE != null && Model.lstComplaintJIIE.Count > 0)
+                {
+                   
+                    var region = Model.lstComplaintJIIE.Select(x => x.Region).Distinct().ToList();
+
+                    @foreach (var item in region)
+                    {
+                        var list = Model.lstComplaintJIIE.Where(x => x.Region == item).Select(x => x);
+                        <tr>
+                            <td colspan="6" align="center">@item</td>
+                        </tr>
+                        @foreach (var item2 in list)
+                        {
+                            <tr>
+                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item2.IE</font></td>
+                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item2.NO_OF_INSPECTION</font></td>
+                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item2.MATERIAL_VALUE</font></td>
+                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item2.RECD</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.FINALISED</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.PENDING</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.ACCEPTED</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.UPHELD</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.SORTING</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.RECTIFICATION</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.PRICE_REDUCTION</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.LIFTED_BEFORE_JI</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.NOT_ON_RITES_AC</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.TRANSIT_DEMAGE</font></td>
+                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item2.UNSTAMPED</font></td>
+                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item2.Total</font></td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Detailed Report - P O of Specific Values";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Detailed Report - P O of Specific Values</h2>
+        </div>
+    </div>
+    <div class="accordion-body" style="margin-bottom: 11px !important;">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <div class="col-md-12 mb-12 center">
+                    <b>For The Agency </b>
+                </div>
+            </div>
+            <div class="col-md-1 mb-3">
+                <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">Railway</label><br>
+            </div>
+            <div class="col-md-1 mb-3">
+                <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">Private</label><br>
+            </div>
+            <div class="col-md-2 mb-3">
+                <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">Foreign Railway</label><br>
+            </div>
+            <div class="col-md-1 mb-3">
+                <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">PSU</label><br>
+            </div>
+            <div class="col-md-2 mb-3">
+                <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">State Government</label><br>
+            </div>
+            <div class="col-md-3 mb-3">
+                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <div class="col-md-12 mb-12 center" style="margin-top: 30px;">
+                    <b>For The PO Value</b><br />(In Rs. Only)
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">between</label>
+                <input type="text" class="input" id="txtFrmAmt" value="0">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">and</label>
+                <input type="text" class="input" id="txtToAmt" value="100000">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="col-md-12 mb-12 center" style="margin-top: 30px;">
+                    <b>For The Period</b>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">From</label>
+                <input id="txtFromDate" name="txtFromDate" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">To</label>
+                <input id="txtToDate" name="txtToDate" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+               
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="reference">Report Should be based on</label>
+                @Html.DropDownList("ddlSelCriteria", new SelectList(IBS.Models.Common.GetCriteria() , "Value", "Text"),"--Select--")
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="Search();">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        
+        function FillRailwayCode() {
+            var type = '';
+            if ($("#rdbRailway").is(":checked")) {
+                type = 'R';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'P';
+            }
+            else if ($("#rdbFRailway").is(":checked")) {
+                type = 'F';
+            }
+            else if ($("#rdbPSU").is(":checked")) {
+                type = 'U';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'S';
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetRailwayCode", "AdministratorPurchaseOrder")?type=' + type,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.list != null) {
+                    $("#dllRCode").html("");
+                    $("#dllRCode").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#dllRCode").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+                else {
+                    ShowHideMsgNew(response.status, "No R Code Found!!!");
+                }
+            });
+        }
+
+        function Search()
+        {
+            GetData();
+        }
+        function GetData()
+        {
+            var type = '';
+            if ($("#rdbRailway").is(":checked")) {
+                type = 'R';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'P';
+            }
+            else if ($("#rdbFRailway").is(":checked")) {
+                type = 'F';
+            }
+            else if ($("#rdbPSU").is(":checked")) {
+                type = 'U';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'S';
+            }
+            var p_wAgency = type;
+            //var p_frmDt = $("#txtFromDate").val();
+            //var p_toDt = $("#txtToDate").val();
+            var p_frmDt = moment($('#txtFromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var p_toDt = moment($('#txtToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var p_SelCriteria = $("#ddlSelCriteria").val();
+            var p_wClient = $("#dllRCode").val();
+            var p_wFrmAmt = $("#txtFrmAmt").val();
+            var p_wToAmt = $("#txtToAmt").val();
+
+            let myObject = { p_wAgency, p_frmDt, p_toDt, p_SelCriteria, p_wClient, p_wFrmAmt, p_wToAmt };
+            var url = '@Url.Action("TableDetailed", "PurchaseOrdersofSpecificValues")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

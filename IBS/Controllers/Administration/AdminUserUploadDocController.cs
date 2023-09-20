@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers.Administration
 {
+    [Authorization]
     public class AdminUserUploadDocController : BaseController
     {
         #region Variables
@@ -26,7 +28,7 @@ namespace IBS.Controllers.Administration
             _config = configuration;
         }
 
-
+        [Authorization("AdminUserUploadDoc", "UploadDoc", "view")]
         public IActionResult UploadDoc(string id)
         {
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.AdminUserUploadDoc, id);
@@ -43,6 +45,7 @@ namespace IBS.Controllers.Administration
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("AdminUserUploadDoc", "UploadDoc", "edit")]
         public IActionResult DetailsSave(UploadDocModel model, IFormCollection FrmCollection)
         {
             try

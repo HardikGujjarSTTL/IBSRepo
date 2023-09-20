@@ -1,29 +1,32 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers
 {
     public class Bill_Paying_Officer_FormController : BaseController
     {
         #region Variables
-        private readonly IBill_Paying_Officer_Form bill_Paying_Officer_Form;
+        private readonly IBill_Paying_Officer_Form billrepository;
         #endregion
-        public Bill_Paying_Officer_FormController(IBill_Paying_Officer_Form _bill_Paying_Officer_Form)
+        public Bill_Paying_Officer_FormController(IBill_Paying_Officer_Form _billrepository)
         {
-           bill_Paying_Officer_Form  = _bill_Paying_Officer_Form;
+            billrepository = _billrepository;
         }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string BpoCd)
         {
             Bill_Paying_Officer_FormModel model = new();
-            if (id > 0)
+            if (BpoCd != null)
             {
-                model = bill_Paying_Officer_Form.FindByID(id);
+                model = billrepository.FindByID(BpoCd);
             }
             return View(model);
         }
@@ -31,14 +34,44 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<Bill_Paying_Officer_FormModel> dTResult = bill_Paying_Officer_Form.GetBPOList(dtParameters);
+            DTResult<Bill_Paying_Officer_FormModel> dTResult = billrepository.GetBPOList(dtParameters);
             return Json(dTResult);
         }
+
+        [HttpPost]
+        public IActionResult Manage(Bill_Paying_Officer_FormModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.BpoCd))
+                {
+                    model.Createdby = UserId;
+                    model.UserId = UserName.Substring(0, 8);
+                    billrepository.BPOSave(model);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = UserName.Substring(0, 8);
+                    billrepository.BPOSave(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Bill_Paying_Officer_Form", "Manage", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                if (bill_Paying_Officer_Form.Remove(id, UserId))
+                if (billrepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -51,32 +84,20 @@ namespace IBS.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Bill_Paying_Officer_FormDetailsSave(Bill_Paying_Officer_FormModel model)
+        public IActionResult GetState(int BpoCityCd)
         {
             try
             {
-                string msg = "Bill Paying Officer Inserted Successfully.";
-
-              //  if (model.BpoCd > 0)
-                {
-                    msg = "Bill Paying Officer Updated Successfully.";
-                    model.Updatedby = UserId;
-                }
-                model.Createdby = UserId;
-                int i = bill_Paying_Officer_Form.BPODetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
+                string state = billrepository.GetState(BpoCityCd);
+                return Json(state); // Return the state directly
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Bill_Paying_Officer_Form", "Bill_Paying_Officer_FormDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "GetIeCity", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return Json("Oops Somthing Went Wrong !!"); // Return an error message
         }
+
 
     }
 }

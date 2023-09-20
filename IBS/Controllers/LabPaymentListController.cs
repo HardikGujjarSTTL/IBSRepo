@@ -49,7 +49,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        [Authorization("LabPaymentList", "LabPaymentList", "add")]
+        [Authorization("LabPaymentList", "LabPaymentList", "edit")]
         public JsonResult SaveData()
         {
             LabPaymentListModel LabPaymentListModel = new LabPaymentListModel();

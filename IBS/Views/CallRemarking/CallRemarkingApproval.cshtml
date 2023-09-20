@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Call Remark Submitted by Controlling Manager's Awaiting for Approval";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Call Remark Submitted by Controlling Manager's Awaiting for Approval</h2>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtCallRemarkingListForApproval" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Case No.</th>
+                        <th>Call Date</th>
+                        <th>Call SNo.</th>
+                        <th>Call Status</th>
+                        <th>From IE</th>
+                        <th>To IE</th>
+                        <th>From IE Pending Calls</th>
+                        <th>To IE Pending Calls</th>
+                        <th>Initiated By</th>
+                        <th>Initiated DateTime</th>
+                        <th style="text-align:center">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            $("#dtCallRemarkingListForApproval").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: '500px',
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("CallRemarkingListForApproval")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "CallRemarkStatus" },
+                    { data: "FrIeName" },
+                    { data: "ToIeName" },
+                    { data: "FrIePendingCalls" },
+                    { data: "ToIePendingCalls" },
+                    { data: "UserName" },
+                    {
+                        data: "RemInitDatetime",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "CallRemarking")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+            });
+        }
+
+    </script>
+}

@@ -67,6 +67,14 @@ public partial class T09Ie
 
     public DateTime? Updateddate { get; set; }
 
+    public DateTime? CallMarkingStartDt { get; set; }
+
+    public DateTime? InspectionStartDt { get; set; }
+
+    public DateTime? RepatriationDt { get; set; }
+
+    public string? IeJobType { get; set; }
+
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 
     public virtual T07RitesDesig? IeDesigNavigation { get; set; }
@@ -75,17 +83,25 @@ public partial class T09Ie
 
     public virtual ICollection<NoIeWorkPlan> NoIeWorkPlans { get; set; } = new List<NoIeWorkPlan>();
 
+    public virtual ICollection<Regionalhrdataofie> Regionalhrdataofies { get; set; } = new List<Regionalhrdataofie>();
+
+    public virtual ICollection<T10IcBookset> T10IcBooksets { get; set; } = new List<T10IcBookset>();
+
     public virtual ICollection<T16IcCancel> T16IcCancels { get; set; } = new List<T16IcCancel>();
 
     public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();
 
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
 
+    public virtual ICollection<T31HologramIssued> T31HologramIssueds { get; set; } = new List<T31HologramIssued>();
+
     public virtual ICollection<T45ClaimMaster> T45ClaimMasters { get; set; } = new List<T45ClaimMaster>();
 
     public virtual ICollection<T47IeWorkPlan> T47IeWorkPlans { get; set; } = new List<T47IeWorkPlan>();
 
     public virtual ICollection<T48NiIeWorkPlan> T48NiIeWorkPlans { get; set; } = new List<T48NiIeWorkPlan>();
+
+    public virtual ICollection<T60IePoiMapping> T60IePoiMappings { get; set; } = new List<T60IePoiMapping>();
 
     public virtual T70UnregisteredCall? T70UnregisteredCall { get; set; }
 }

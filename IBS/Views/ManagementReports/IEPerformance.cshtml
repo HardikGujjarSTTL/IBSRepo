@@ -1,0 +1,103 @@
+﻿@model IBS.Models.Reports.IEPerformanceModel
+<div>
+    <h3 class="center">IE Performance For The Period <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (@Model.Region)</h3>
+    <ul class="reportLabelList">
+        <li><span class="labelName">Rejections Issued by I.E During The Period:</span> @Model.RejectionsIssued</li>
+        <li><span class="labelName">No. Of IC's:</span> @Model.TotalICs</li>
+        <li><span class="labelName">Calls Attended within 7 Days:</span> @Model.CallsAttendedWithin7Days</li>
+        <li><span class="labelName">Calls Attended Beyond 7 Days:</span> @Model.CallsAttendedBeyond7Days</li>
+    </ul>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Dept</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total Calls</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Calls Cancelled</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">No. of IC</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Calls Attended Within 7 Days.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Calls Attended Beyond 7 Days.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Rejections</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Insp. Fee</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Material Value</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Average Fee</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of IC Issued after 1 days of Last Inspection date.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">IC's Submitted beyond 7 Days after Issue of IC.</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstPerformance != null && Model.lstPerformance.Count > 0)
+                {
+                    @foreach (var item in Model.lstPerformance)
+                    {
+                        <tr>
+                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.DEPT</font></td>
+                            <td width="7%" valign="top" align="right"><font size="1" face="Verdana">@item.CALLS</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.CALL_CANCEL</font></td>
+                            <td width="6%" valign="top" align="right"><font size="1" face="Verdana">@item.C0</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.C7</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.CM7</font></td>
+                            <td width="6%" valign="top" align="right"><font size="1" face="Verdana">@item.REJECTIONS</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.AVERAGE_FEE</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.C3</font></td>
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.C10</font></td>
+                        </tr>
+                    }
+                    <tr class="reportTotal">
+                        <td width="15%" valign="top" align="Left" colspan="2"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.CALLS)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.CALL_CANCEL)</b></font></td>
+                        <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.C0)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.C7)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.CM7)</b></font></td>
+                        <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.REJECTIONS)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.INSP_FEE)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.MATERIAL_VALUE)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana">&nbsp;</font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.C3)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstPerformance.Sum(x => x.C10)</b></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h3 class="heading3">Performance Summary</h3>
+    <div class="tableOuter wd50per">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="45%" valign="top" align="center"><b><font size="1" face="Verdana">&nbsp;</font></b></th>
+                    <th width="20%" valign="top" align="right"><b><font size="1" face="Verdana">No. of IC</font></b></th>
+                    <th width="35%" valign="top" align="right"><b><font size="1" face="Verdana">Material Value</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstPerformanceSummaryList != null && Model.lstPerformanceSummaryList.Count > 0)
+                {
+                    @foreach (var item in Model.lstPerformanceSummaryList)
+                    {
+                        <tr>
+                            <td width="45%" valign="top" align="Left"><font size="1" face="Verdana">@item.RLY_NONRLY</font></td>
+                            <td width="20%" valign="top" align="right"><font size="1" face="Verdana">@item.IC_COUNT</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -9,25 +9,27 @@ public partial class VendorFeedback
 
     public string? RegionCode { get; set; }
 
-    public bool? Field1 { get; set; }
+    public int? Field1 { get; set; }
 
-    public bool? Field2 { get; set; }
+    public int? Field2 { get; set; }
 
-    public bool? Field3 { get; set; }
+    public int? Field3 { get; set; }
 
-    public bool? Field4 { get; set; }
+    public int? Field4 { get; set; }
 
-    public bool? Field5 { get; set; }
+    public int? Field5 { get; set; }
 
-    public bool? Field6 { get; set; }
+    public int? Field6 { get; set; }
 
-    public bool? Field7 { get; set; }
+    public int? Field7 { get; set; }
 
-    public bool? Field8 { get; set; }
+    public int? Field8 { get; set; }
 
     public string? Field9 { get; set; }
 
     public string? Field10 { get; set; }
 
     public string? MthyrPeriod { get; set; }
+
+    public int Id { get; set; }
 }

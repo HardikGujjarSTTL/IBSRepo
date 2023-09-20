@@ -2,15 +2,14 @@
 @{
     ViewData["Title"] = "City Details";
 }
-
 <div class="list-inner">
     <div class="tast-list">
         <h2>City Details</h2>
     </div>
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form asp-controller="CityMaster" asp-action="Manage" id="frmCityMaster">
                 <input type="hidden" asp-for="CityCd" />
                 <div class="accordion-body">
@@ -47,7 +46,7 @@
                     </div>
                 </div>
             </form>
-        </div>
+        
     </div>
 </section>
 

@@ -7,10 +7,47 @@
         <div class="tast-list">
             <h2>Purchase Order List</h2>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="AdministratorPurchaseOrder" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New PO</a>
-        </div>
     </div>
+    <div class="accordion-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="heading3">In Case Of New PO</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">Railway</label><br>
+            </li>
+            <li>
+                <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">Private</label><br>
+            </li>
+            <li>
+                <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">Foreign Railway</label><br>
+            </li>
+            <li>
+                <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">PSU</label><br>
+            </li>
+            <li>
+                <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                <label for="Reference" class="billInvoiceClass">State Government</label><br>
+            </li>
+           
+        </ul>
+        <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="list-btn">
+                <a class="formBtn Permission_Add" onclick="Add()"><span class="fa fa-plus"></span> Add New PO</a>
+            </div>
+        </div>
+        </div>
+        </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-2 mb-3">
@@ -34,7 +71,6 @@
                     <button type="button" class="save-btn active" onclick="Search();">search</button>
                 </div>
             </div>
-            
         </div>
     </div>
     <section class="table-section">
@@ -54,6 +90,8 @@
                             <th>Inspection By/PO Cancelled</th>
                             <th>View PO</th>
                             <th>View PO</th>
+                            <th>Edit PO Date</th>
+                            <th>View PO Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -64,7 +102,8 @@
         </div>
     </section>
 </div>
-
+<div id="EditPODateModal" class="modal" tabindex="-1" role="dialog">
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -126,6 +165,25 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
+                            var CaseNo = data.CASE_NO;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="OpenEditPODateModal(\'' + CaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CASE_NO;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "AdministratorPurchaseOrder")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
                             var id = data.CASE_NO;
                             var editUrl = '@Url.Action("Manage", "AdministratorPurchaseOrder")?CaseNo=' + id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
@@ -135,6 +193,134 @@
                     },
                 ],
                 "order": [[0, "asc"]]
+            });
+        }
+
+        
+        function FillRailwayCode() {
+            var type='';
+            if ($("#rdbRailway").is(":checked")) {
+                type = 'R';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'P';
+            }
+            else if ($("#rdbFRailway").is(":checked")) {
+                type = 'F';
+            }
+            else if ($("#rdbPSU").is(":checked")) {
+                type = 'U';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'S';
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetRailwayCode", "AdministratorPurchaseOrder")?type=' + type,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.list != null) {
+                    $("#dllRCode").html("");
+                    $("#dllRCode").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#dllRCode").append("<option value=" + value.Value +" >" + value.Text + "</option>");
+                    });
+                }
+                else {
+                    ShowHideMsgNew(response.status, "No R Code Found!!!");
+                }
+            });
+        }
+
+        function Validation() {
+            var type = false;
+            if ($("#rdbRailway").is(":checked") ||
+                $("#rdbPrivate").is(":checked") ||
+                $("#rdbFRailway").is(":checked") ||
+                $("#rdbPSU").is(":checked") ||
+                $("#rdbSGovt").is(":checked")) {
+                type = true;
+            }
+            return type;
+        }
+
+        function Add()
+        {
+            if (!Validation())
+            {
+                ShowHideMsgNew(false, "Please select PO Type.");
+                return;
+            }
+            if ($("#dllRCode").val() == "")
+            {
+                ShowHideMsgNew(false, "Please select Railway Code.");
+                return;
+            }
+
+            var type='';
+            if ($("#rdbRailway").is(":checked")) {
+                type = 'R';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'P';
+            }
+            else if ($("#rdbFRailway").is(":checked")) {
+                type = 'F';
+            }
+            else if ($("#rdbPSU").is(":checked")) {
+                type = 'U';
+            }
+            else if ($("#rdbPrivate").is(":checked")) {
+                type = 'S';
+            }
+            var RLY_CD=$("#dllRCode").val();
+            window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?PO_TYPE=' + type + "&RLY_CD=" + RLY_CD;
+        }
+
+        function OpenEditPODateModal(CaseNo) {
+            $.ajax({
+                url: '@Url.Action("EditPODate", "AdministratorPurchaseOrder")?CaseNo=' + CaseNo,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#EditPODateModal").html("");
+                    $("#EditPODateModal").html(response);
+                    $("#EditPODateModal").modal('show');
+                }
+            });
+        }
+
+        function UpdatePODate() {
+            var CaseNo = $("#CaseNo").val();
+            var PoDtNew = $("#PoDtNew").val();
+            if (PoDtNew == "") {
+                ShowHideMsgNew(false, "Please add new PO Date.");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("UpdatePODate", "AdministratorPurchaseOrder")?CaseNo=' + CaseNo + '&PoDtNew=' + PoDtNew,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    if (response.status) {
+                        $("#EditPODateModal").modal('hide');
+                        ShowHideMsgNew(res.status, response.responseText);
+                        InitializePOMasterDatatable();
+                    }
+                    else {
+                        ShowHideMsgNew(res.status, response.responseText);
+                    }
+                }
             });
         }
     </script>

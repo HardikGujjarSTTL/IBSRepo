@@ -52,6 +52,7 @@ namespace IBS.Repositories
             {
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
                 if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "CoCd";
+                if (orderCriteria == "CoTypeName") orderCriteria = "CoType";
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
@@ -60,18 +61,28 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
+            string ControllingOfficerName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ControllingOfficerName"]) ? Convert.ToString(dtParameters.AdditionalValues["ControllingOfficerName"]) : "";
+            int? Designation = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Designation"]) ? Convert.ToInt32(dtParameters.AdditionalValues["Designation"]) : null;
+            string Email = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Email"]) ? Convert.ToString(dtParameters.AdditionalValues["Email"]) : "";
+            string Type = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Type"]) ? Convert.ToString(dtParameters.AdditionalValues["Type"]) : "";
+
             query = from co in context.T08IeControllOfficers
                     join tmp1 in context.T07RitesDesigs on co.CoDesig equals tmp1.RDesigCd into _tmp1
                     from d in _tmp1.DefaultIfEmpty()
                     where co.Isdeleted != 1
+                    && (!string.IsNullOrEmpty(ControllingOfficerName) ? co.CoName.ToLower().Contains(ControllingOfficerName.ToLower()) : true)
+                    && ((Designation != null) ? co.CoDesig == Designation : true)
+                    && (!string.IsNullOrEmpty(Email) ? co.CoEmail.ToLower().Contains(Email.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(Type) ? co.CoType == Type : true)
                     select new IE_CO_FormModel
                     {
                         CoCd = co.CoCd,
                         CoName = co.CoName,
+                        CoDesig = co.CoDesig,   
                         CoDesigName = d.RDesignation,
                         CoPhoneNo = co.CoPhoneNo,
                         CoEmail = co.CoEmail,
-                        //CoTypeName = co.CoType == "C" ? "CM" : (co.CoType == "D" ? "DFO" : ""),
+                        CoType = co.CoType,
                         CoTypeName = EnumUtility<Enums.COType>.GetDescriptionByKey(co.CoType),
                     };
 

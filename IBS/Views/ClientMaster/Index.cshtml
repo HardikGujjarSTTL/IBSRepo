@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Client Master";
+}
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Client Master</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="ClientMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Client</a>
+    </div>
+</div>
+<div class="accordion-body">
+    <div class="row my-0 d-flex align-items-end">
+        <div class="col-md-2 mb-4">
+            <label for="Reference">Client Name</label>
+            <input type="text" id="clientname" class="input"  maxlength="200" />
+        </div>
+        <div class="col-md-6 mb-4 alignBtn">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+        
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtclient" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Client Name</th>
+                        <th>ORGANISATION</th>
+                        <th>DESIGNATION</th>
+                        <th>MOBILE</th>
+                        <th>EMAIL</th>
+                        <th>UNIT</th>
+                        <th style="text-align:center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+
+        $(function () {
+            InitializeDatatable();
+        });
+        
+        function InitializeDatatable() {
+            var clientname = $("#clientname").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            $("#dtclient").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "clientname": clientname
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "USER_NAME"},
+                    { data: "ORGANISATION"},
+                    { data: "DESIGNATION"},
+                    { data: "MOBILE"},
+                    { data: "EMAIL"},
+                    { data: "UNIT"},
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "ClientMaster")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function Delete(id) {
+            var url = '@Url.Action("Delete", "ClientMaster")?ID=' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

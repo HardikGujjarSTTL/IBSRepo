@@ -1,8 +1,14 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NuGet.Protocol.Plugins;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Dynamic;
 using System.Globalization;
 using System.Net;
@@ -81,9 +87,9 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
             PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
-            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
+            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd/MM/yyyy", null);
             Vendor = Vendor.ToString() == "" ? string.Empty : Vendor.ToString();
             CallLetterNo = CallLetterNo.ToString() == "" ? string.Empty : CallLetterNo.ToString();
             CallSno = CallSno.ToString() == "" ? string.Empty : CallSno.ToString();
@@ -138,15 +144,15 @@ namespace IBS.Repositories.InspectionBilling
             return dTResult;
         }
 
-        public VenderCallRegisterModel FindByID(string CaseNo, string CallRecvDt, string CallSno, string GetRegionCode)
+        public VenderCallRegisterModel FindByID(string CaseNo, DateTime? CallRecvDt, string CallSno, string GetRegionCode)
         {
             VenderCallRegisterModel model = new();
 
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            //DateTime? _CallRecvDt = CallRecvDt == null ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
             CallSno = CallSno.ToString() == "" ? string.Empty : CallSno.ToString();
 
-            var CallData = context.ViewGetCallRegCancellations.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == _CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
+            var CallData = context.ViewGetCallRegCancellations.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
 
             if (CallData == null)
                 throw new Exception("Record Not found");
@@ -220,16 +226,20 @@ namespace IBS.Repositories.InspectionBilling
             return SetRegion;
         }
 
-        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string ActionType, string UserName)
+        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string ActionType, string GetRegionCode)
         {
             VenderCallRegisterModel model = new();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
 
             VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
 
             if (ActionType == "A")
             {
                 DateTime dt = DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null); // Replace "yourDate" with your actual date string
+                model.CallRecvDt = dt;
+                model.CallStatusDt = dt;
+                model.DtInspDesire = dt;
+                model.RegionCode = GetRegionCode;
 
                 var result = from c in context.T17CallRegisters
                              join i in context.T09Ies on c.IeCd equals i.IeCd into iGroup
@@ -255,7 +265,7 @@ namespace IBS.Repositories.InspectionBilling
             }
             else if (ActionType == "M" || ActionType == "D")
             {
-                
+
 
                 var CallDetails = (from t17 in context.T17CallRegisters
                                    join t21 in context.T21CallStatusCodes on t17.CallStatus equals t21.CallStatusCd
@@ -289,7 +299,7 @@ namespace IBS.Repositories.InspectionBilling
                                    }).FirstOrDefault();
 
 
-                
+
 
                 if (CallDetails == null)
                     throw new Exception("Record Not found");
@@ -300,7 +310,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallLetterNo = CallDetails.CallLetterNo;
                     model.CallLetterDt = CallDetails.CallLetterDt;
                     model.CallMarkDt = CallDetails.CallMarkDt;
-                    model.CallSno = CallDetails.CallSno;
+                    model.CallSno = (short)CallDetails.CallSno;
                     model.IeCd = CallDetails.IeCd;
                     model.DtInspDesire = CallDetails.DtInspDesire;
                     model.CallStatus = CallDetails.CallStatus;
@@ -509,7 +519,7 @@ namespace IBS.Repositories.InspectionBilling
                         T17CallRegister obj = new T17CallRegister();
                         obj.CaseNo = model.CaseNo;
                         obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = (short)CD;
+                        obj.CallSno = (int)CD;
                         obj.CallLetterNo = model.CallLetterNo;
                         obj.CallLetterDt = model.CallLetterDt;
                         obj.CallMarkDt = model.CallMarkDt;
@@ -550,7 +560,7 @@ namespace IBS.Repositories.InspectionBilling
                         T17CallRegister obj = new T17CallRegister();
                         obj.CaseNo = model.CaseNo;
                         obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = (short)CD;
+                        obj.CallSno = (int)CD;
                         obj.CallLetterNo = model.CallLetterNo;
                         obj.CallLetterDt = model.CallLetterDt;
                         obj.CallMarkDt = model.CallMarkDt;
@@ -615,7 +625,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -640,7 +650,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -670,7 +680,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -694,7 +704,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (short)model.CallSno;
+                            GetCall.CallSno = (int)model.CallSno;
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -1071,7 +1081,7 @@ namespace IBS.Repositories.InspectionBilling
                     T18CallDetail obj = new T18CallDetail();
                     obj.CaseNo = model.CaseNo;
                     obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                    obj.CallSno = (short)model.CallSno;
+                    obj.CallSno = (int)model.CallSno;
                     obj.ItemSrnoPo = (byte)srno;
                     obj.ItemDescPo = dataItem.ItemDescPo;
                     obj.ConsigneeCd = Convert.ToInt32(ccd);
@@ -1194,7 +1204,7 @@ namespace IBS.Repositories.InspectionBilling
                                join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
                                where t18.CaseNo == CNO &&
                                      t18.CallRecvDt == DateTime.ParseExact(DT, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                                     t18.CallSno == (short)model.CallSno
+                                     t18.CallSno == (int)model.CallSno
                                select new VenderCallRegisterModel
                                {
                                    Status = "Marked",
@@ -1222,7 +1232,7 @@ namespace IBS.Repositories.InspectionBilling
                                      !(from t18 in context.T18CallDetails
                                        where t18.CaseNo == CNO &&
                              t18.CallRecvDt == DateTime.ParseExact(DT, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                             t18.CallSno == (short)model.CallSno
+                             t18.CallSno == (int)model.CallSno
                                        select t18.ItemSrnoPo).Contains(t15.ItemSrno)
                                select new VenderCallRegisterModel
                                {
@@ -1774,26 +1784,49 @@ namespace IBS.Repositories.InspectionBilling
             return val;
         }
 
+        public string GetCaseNoFind(string CaseNo, string CallRecvDt, int CallSno)
+        {
+            var val = "";
+            DateTime _CallRecvDt = DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            var Data = (from l in context.T19CallCancels
+                        where l.CaseNo == CaseNo && l.CallRecvDt == _CallRecvDt && l.CallSno == CallSno
+                        select new
+                        {
+                            CaseNo = l.CaseNo
+                        }).FirstOrDefault();
+
+            if (Data == null)
+            {
+                val = "";
+            }
+            else
+            {
+                val = Data.CaseNo;
+            }
+            return val;
+        }
+
+
         public int show2(string CaseNo, string CallRecvDt, int CallSno)
         {
             int val = 0;
             string ext_delv_dt = "";
-            var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo)
+            var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo).ToList() // Retrieve data from the database into memory
                         .Select(l => new
                         {
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
             var query = (from t17 in context.T17CallRegisters
-                         where t17.CaseNo == CaseNo && t17.CallRecvDt == _CallRecvDt && t17.CallSno == CallSno
+                         where t17.CaseNo == CaseNo && t17.CallRecvDt == Convert.ToDateTime(CallRecvDt) && t17.CallSno == CallSno
                          select new
                          {
                              INSP_DATE = Convert.ToDateTime(t17.DtInspDesire)
                          }).FirstOrDefault();
 
-
-            if (ext_delv_dt == "01-JAN-01")
+            ext_delv_dt = result.ExtDelvDt;
+            if (ext_delv_dt == "01/01/2001")
             {
                 val = 2;
             }
@@ -1813,6 +1846,902 @@ namespace IBS.Repositories.InspectionBilling
                 }
             }
             return val;
+        }
+
+        public VenderCallCancellationModel CancelCallFindByID(string CaseNo, string CallRecvDt, int CallSno, string ActionType)
+        {
+            VenderCallCancellationModel model = new();
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            var CallData = (from p in context.T13PoMasters
+                            join v in context.T05Vendors on p.VendCd equals v.VendCd
+                            where p.CaseNo == CaseNo
+                            select new
+                            {
+                                PoNo = p.PoNo,
+                                PoDt = p.PoDt,
+                                Vendor = v.VendName
+                            }).FirstOrDefault();
+
+            var GetData = (from p in context.T17CallRegisters
+                           join v in context.T09Ies on p.IeCd equals v.IeCd
+                           where p.CaseNo == CaseNo && p.CallRecvDt == _CallRecvDt && p.CallSno == CallSno
+                           select new
+                           {
+                               CaseNo = p.CaseNo,
+                               CallRecvDt = p.CallRecvDt,
+                               CallSno = p.CallSno,
+                               IeSname = v.IeSname
+                           }).FirstOrDefault();
+
+            if (CallData == null)
+                throw new Exception("Record Not found");
+            else
+            {
+                model.PoNo = CallData.PoNo;
+                model.PoDt = CallData.PoDt;
+                model.Vendor = CallData.Vendor;
+                if (GetData != null)
+                {
+                    model.CaseNo = GetData.CaseNo;
+                    model.CallRecvDt = GetData.CallRecvDt;
+                    model.CallSno = (short)GetData.CallSno;
+                    model.IeSname = GetData.IeSname;
+                }
+            }
+
+            return model;
+        }
+
+        public VenderCallCancellationModel CancelCallFindByIDM(string CaseNo, string CallRecvDt, int CallSno, string ActionType)
+        {
+            VenderCallCancellationModel model = new();
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+
+            var CancelData = (from l in context.T19CallCancels
+                              join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }
+                              where l.CaseNo == CaseNo && l.CallRecvDt == _CallRecvDt && l.CallSno == CallSno
+                              select new VenderCallCancellationModel
+                              {
+                                  CaseNo = l.CaseNo,
+                                  CallRecvDt = l.CallRecvDt,
+                                  CallSno = (short)l.CallSno,
+                                  Cdesc = l.CancelDesc,
+                                  CancelDt = l.CancelDate,
+                                  DocRec = l.DocsSubmitted,
+                                  CallCancelStatus = c.CallCancelStatus,
+                                  chk1 = Convert.ToInt32(l.CancelCd1),
+                                  chk2 = Convert.ToInt32(l.CancelCd2),
+                                  chk3 = Convert.ToInt32(l.CancelCd3),
+                                  chk4 = Convert.ToInt32(l.CancelCd4),
+                                  chk5 = Convert.ToInt32(l.CancelCd5),
+                                  chk6 = Convert.ToInt32(l.CancelCd6),
+                                  chk7 = Convert.ToInt32(l.CancelCd7),
+                                  chk8 = Convert.ToInt32(l.CancelCd8),
+                                  chk9 = Convert.ToInt32(l.CancelCd9),
+                                  chk10 = Convert.ToInt32(l.CancelCd10),
+                                  chk11 = Convert.ToInt32(l.CancelCd11),
+                                  chk12 = Convert.ToInt32(l.CancelCd12),
+                              }).FirstOrDefault();
+
+            var CallData = (from p in context.T13PoMasters
+                            join v in context.T05Vendors on p.VendCd equals v.VendCd
+                            where p.CaseNo == CaseNo
+                            select new
+                            {
+                                PoNo = p.PoNo,
+                                PoDt = p.PoDt,
+                                Vendor = v.VendName
+                            }).FirstOrDefault();
+
+            var GetData = (from p in context.T17CallRegisters
+                           join v in context.T09Ies on p.IeCd equals v.IeCd
+                           where p.CaseNo == CaseNo && p.CallRecvDt == _CallRecvDt && p.CallSno == CallSno
+                           select new
+                           {
+                               CaseNo = p.CaseNo,
+                               CallRecvDt = p.CallRecvDt,
+                               CallSno = p.CallSno,
+                               IeSname = v.IeSname
+                           }).FirstOrDefault();
+
+            if (CancelData == null)
+                throw new Exception("Record Not found");
+            else
+            {
+                model.CaseNo = CancelData.CaseNo;
+                model.CallRecvDt = CancelData.CallRecvDt;
+                model.CallSno = CancelData.CallSno;
+                model.Cdesc = CancelData.Cdesc;
+                model.CancelDt = CancelData.CancelDt;
+                model.DocRec = CancelData.DocRec;
+                model.CallCancelStatus = CancelData.CallCancelStatus;
+
+                bool[] chk = new bool[12];
+
+                for (int i = 1; i <= 12; i++)
+                {
+                    if (CancelData.chk1 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk2 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk3 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk4 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk5 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk6 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk7 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk8 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk9 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk10 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk11 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk12 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+
+                }
+
+                model.chkItems = chk;
+
+                if (CallData != null)
+                {
+                    model.PoNo = CallData.PoNo;
+                    model.PoDt = CallData.PoDt;
+                    model.Vendor = CallData.Vendor;
+                }
+                if (GetData != null)
+                {
+                    model.CaseNo = GetData.CaseNo;
+                    model.CallRecvDt = GetData.CallRecvDt;
+                    model.CallSno = (short)GetData.CallSno;
+                    model.IeSname = GetData.IeSname;
+                }
+            }
+
+            return model;
+        }
+
+
+        int[] reasons(VenderCallCancellationModel model)
+        {
+            int[] chk = new int[11];
+            int j = 0;
+
+            for (int i = 0; i < 1; i++)
+            {
+                if (model.chk_1 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk1);
+                    j++;
+                }
+                if (model.chk_2 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk2);
+                    j++;
+                }
+                if (model.chk_3 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk3);
+                    j++;
+                }
+                if (model.chk_4 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk4);
+                    j++;
+                }
+                if (model.chk_5 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk5);
+                    j++;
+                }
+                if (model.chk_6 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk6);
+                    j++;
+                }
+                if (model.chk_7 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk7);
+                    j++;
+                }
+                if (model.chk_8 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk8);
+                    j++;
+                }
+                if (model.chk_9 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk9);
+                    j++;
+                }
+                if (model.chk_10 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk10);
+                    j++;
+                }
+                if (model.chk_11 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk11);
+                    j++;
+                }
+                if (model.chk_12 == true)
+                {
+                    chk[j] = Convert.ToInt32(model.chk12);
+                    j++;
+                }
+            }
+            return (chk);
+        }
+
+        public string CallCancellationSave(VenderCallCancellationModel model, string UserName)
+        {
+            string ID = "";
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            var CallCancalltion = context.T19CallCancels.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
+
+            //int[] chk1 = reasons(model);
+
+            if (model.ActionType == "A")
+            {
+                if (CallCancalltion == null)
+                {
+                    T19CallCancel obj = new T19CallCancel();
+                    obj.CaseNo = model.CaseNo;
+                    obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                    obj.CallSno = (int)model.CallSno;
+                    obj.CancelDesc = model.Cdesc;
+                    obj.CancelDate = model.CancelDt;
+                    obj.UserId = model.Createdby;
+                    obj.Datetime = DateTime.Now.Date;
+                    obj.DocsSubmitted = model.DocRec;
+
+                    obj.Createdby = UserName;
+                    obj.Createddate = DateTime.Now.Date;
+
+
+                    obj.CancelCd1 = 0;
+                    obj.CancelCd2 = 0;
+                    obj.CancelCd3 = 0;
+                    obj.CancelCd4 = 0;
+                    obj.CancelCd5 = 0;
+                    obj.CancelCd6 = 0;
+                    obj.CancelCd7 = 0;
+                    obj.CancelCd8 = 0;
+                    obj.CancelCd9 = 0;
+                    obj.CancelCd10 = 0;
+                    obj.CancelCd11 = 0;
+                    obj.CancelCd12 = 0;
+
+                    var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                    int count = indexes.Count();
+
+                    if (count == 1)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                    }
+                    else if (count == 2)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                    }
+                    else if (count == 3)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                    }
+                    else if (count == 4)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                    }
+                    else if (count == 5)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                    }
+                    else if (count == 6)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                    }
+                    else if (count == 7)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                    }
+                    else if (count == 8)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                    }
+                    else if (count == 9)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                    }
+                    else if (count == 10)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                    }
+                    else if (count == 11)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                        obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                    }
+                    else if (count == 12)
+                    {
+                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                        obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                        obj.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                    }
+
+                    context.T19CallCancels.Add(obj);
+                    context.SaveChanges();
+                    ID = obj.CaseNo;
+                }
+            }
+            else if (model.ActionType == "M")
+            {
+                if (CallCancalltion != null)
+                {
+                    CallCancalltion.CancelCd1 = 0;
+                    CallCancalltion.CancelCd2 = 0;
+                    CallCancalltion.CancelCd3 = 0;
+                    CallCancalltion.CancelCd4 = 0;
+                    CallCancalltion.CancelCd5 = 0;
+                    CallCancalltion.CancelCd6 = 0;
+                    CallCancalltion.CancelCd7 = 0;
+                    CallCancalltion.CancelCd8 = 0;
+                    CallCancalltion.CancelCd9 = 0;
+                    CallCancalltion.CancelCd10 = 0;
+                    CallCancalltion.CancelCd11 = 0;
+                    CallCancalltion.CancelCd12 = 0;
+
+                    var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                    int count = indexes.Count();
+
+                    if (count == 1)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                    }
+                    else if (count == 2)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                    }
+                    else if (count == 3)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                    }
+                    else if (count == 4)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                    }
+                    else if (count == 5)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                    }
+                    else if (count == 6)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                    }
+                    else if (count == 7)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                    }
+                    else if (count == 8)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                    }
+                    else if (count == 9)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                    }
+                    else if (count == 10)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        CallCancalltion.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                    }
+                    else if (count == 11)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        CallCancalltion.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                        CallCancalltion.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                    }
+                    else if (count == 12)
+                    {
+                        CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        CallCancalltion.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                        CallCancalltion.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                        CallCancalltion.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                    }
+                    CallCancalltion.CancelDesc = model.Cdesc;
+                    CallCancalltion.UserId = model.Createdby;
+                    CallCancalltion.Datetime = DateTime.Now.Date;
+                    CallCancalltion.DocsSubmitted = model.DocRec;
+                    CallCancalltion.Updatedby = UserName;
+                    CallCancalltion.Updateddate = DateTime.Now.Date;
+
+                    context.SaveChanges();
+                    ID = model.CaseNo;
+                }
+            }
+
+            var CallReg = context.T17CallRegisters.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
+            if (CallReg != null)
+            {
+                CallReg.CallStatus = "C";
+                CallReg.CallCancelStatus = model.CallCancelStatus;
+
+                context.SaveChanges();
+            }
+
+            return ID;
+        }
+
+        public string CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno)
+        {
+            string msg = "";
+
+            var CallCancalltion = context.T19CallCancels.FirstOrDefault(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt) && x.CallSno == CallSno);
+            var CallReg = context.T17CallRegisters.FirstOrDefault(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt) && x.CallSno == CallSno);
+
+
+            if (CallCancalltion != null)
+            {
+                context.T19CallCancels.Remove(CallCancalltion);
+                context.SaveChanges();
+
+                msg = CallCancalltion.CaseNo;
+            }
+            if (CallReg != null)
+            {
+                CallReg.CallStatus = "M";
+                context.SaveChanges();
+            }
+
+            return msg;
+        }
+
+        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno)
+        {
+            VenderCallStatusModel model = new();
+            //DateTime? _CallRecvDt = CallRecvDt == null ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+
+            var Status = context.ViewGetCallStatusDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
+
+            if (Status == null)
+                return model;
+            else
+            {
+                model.VendName = Status.VendName;
+                model.Consignee = Status.Consignee;
+                model.ItemDescPo = Status.ItemDescPo;
+                model.CallRecvDt = Status.CallRecvDt;
+                model.IeName = Status.IeName;
+                model.IePhoneNo = Status.IePhoneNo;
+                model.PoNo = Status.PoNo;
+                model.PoDt = Status.PoDt;
+                model.CaseNo = Status.CaseNo;
+                model.MfgPers = Status.MfgPers;
+                model.MfgPhone = Status.MfgPhone;
+                model.CallSno = Status.CallSno;
+                model.CallStatus1 = Status.CallStatus1;
+                model.CallStatus = Status.CallStatus;
+                model.UpdateAllowed = Status.UpdateAllowed;
+            }
+            return model;
+        }
+
+        public string Save(VenderCallStatusModel model)
+        {
+            string str = "";
+            if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
+            {
+                T17CallRegister t17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+                if (t17 != null)
+                {
+                    t17.CallStatus = model.CallStatus;
+                    t17.UpdateAllowed = model.UpdateAllowed == "Y" ? "" : model.UpdateAllowed;
+                    t17.Updatedby = model.Updatedby;
+                    t17.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+
+                    if (model.CallStatus == "M" || model.CallStatus == "A")
+                    {
+                        IcIntermediate ic = context.IcIntermediates.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+                        if (ic != null)
+                        {
+                            ic.ConsgnCallStatus = model.CallStatus;
+                            ic.UserId = model.UserId;
+                            ic.Datetime = DateTime.Now.Date;
+
+                            context.SaveChanges();
+                        }
+                    }
+                    str = model.CaseNo;
+                }
+            }
+
+            return str;
+
+        }
+
+        public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo)
+        {
+            VendrorCallDetailsModel model = new();
+            string dt = Convert.ToDateTime(CallRecvDt).ToString("dd-MM-yyyy");
+            DateTime parsedDate = DateTime.ParseExact(dt, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+            var GetValue = (from v in context.T09Ies
+                            join d in context.T17CallRegisters on v.IeCd equals d.IeCd
+                            where d.CaseNo == CaseNo && d.CallRecvDt == parsedDate && d.CallSno == CallSno
+                            select new
+                            {
+                                v,
+                                d
+                            }
+                  ).FirstOrDefault();
+
+            var PODetails = context.T13PoMasters.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
+            var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == parsedDate && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrNoPo).FirstOrDefault();
+            if (GetValue == null)
+                throw new Exception("Record Not found");
+            else
+            {
+                model.IESName = GetValue.v.IeSname;
+                model.CallRecvDt = GetValue.d.CallRecvDt;
+                model.CallSno = (short)GetValue.d.CallSno;
+
+                if (PODetails != null)
+                {
+                    model.PoNo = PODetails.PoNo;
+                    model.PoDt = PODetails.PoDt;
+                }
+            }
+            if (CallDetails != null)
+            {
+                model.ItemSrNoPo = CallDetails.ItemSrnoPo;
+                model.ItemDescPo = CallDetails.ItemDescPo;
+                model.QtyOrdered = CallDetails.QtyOrdered;
+                model.CumQtyPrevOffered = CallDetails.CumQtyPrevOffered;
+                model.CumQtyPrevPassed = CallDetails.CumQtyPrevPassed;
+                model.QtyToInsp = CallDetails.QtyToInsp;
+            }
+            return model;
+        }
+
+        public DTResult<VendrorCallDetailsModel> GetCallDetailsList(DTParameters dtParameters)
+        {
+
+            DTResult<VendrorCallDetailsModel> dTResult = new() { draw = 0 };
+            IQueryable<VendrorCallDetailsModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = false;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "Status";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "Status";
+                orderAscendingDirection = true;
+            }
+
+            string CaseNo = "", CallRecvDt = "", CallSNo = "";
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+            {
+                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecvDt"]))
+            {
+                CallRecvDt = Convert.ToString(dtParameters.AdditionalValues["CallRecvDt"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSNo"]))
+            {
+                CallSNo = Convert.ToString(dtParameters.AdditionalValues["CallSNo"]);
+            }
+
+            CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            CallSNo = CallSNo.ToString() == "" ? string.Empty : CallSNo.ToString();
+
+
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSNo, ParameterDirection.Input);
+
+            par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            //VendrorCallDetailsModel model = new();
+            //List<VendrorCallDetailsModel> list = new List<VendrorCallDetailsModel>();
+
+            //if (ds != null && ds.Tables.Count > 0)
+            //{
+            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+
+            //    JArray jsonArray = JArray.Parse(serializeddt);
+            //    list = jsonArray.Select(item =>
+            //    {
+            //        var lst = item.ToObject<VendrorCallDetailsModel>();
+
+            //        if (lst.QTYPASSED is int doubleValue)
+            //        {
+            //            lst.QTYPASSED = (int)doubleValue;
+            //        }
+
+            //        return lst;
+            //    }).ToList();
+            //}
+
+            VendrorCallDetailsModel model = new();
+            List<VendrorCallDetailsModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<VendrorCallDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public int CallDetailsSave(VendrorCallDetailsModel model, string UserName)
+        {
+            int Id = 0;
+            int status = 0;
+            decimal reader = 0;
+            decimal qty = 0;
+
+            var CallDetails = (from c in context.T17CallRegisters
+                               join d in context.T18CallDetails on c.CaseNo equals d.CaseNo
+                               where c.CaseNo.Equals(d.CaseNo) && c.CallRecvDt.Equals(d.CallRecvDt) && c.CallSno.Equals(d.CallSno)
+                               && c.CaseNo == model.CaseNo && d.ItemSrnoPo == model.ItemSrNoPo && !new[] { "R", "C" }.Contains(c.CallStatus)
+                               select new
+                               {
+                                   d.QtyToInsp
+                               }
+                  ).FirstOrDefault();
+            reader = Convert.ToDecimal(CallDetails.QtyToInsp);
+            if (reader > 0)
+            {
+                qty = (reader + Convert.ToDecimal(model.QtyToInsp)) - Convert.ToDecimal(model.QtyToInsp);
+                if (reader > Convert.ToDecimal(model.QtyOrdered))
+                {
+                    status = 2;
+                }
+                else
+                {
+                    if (qty > Convert.ToDecimal(model.QtyOrdered))
+                    {
+                        status = 1;
+                    }
+                }
+            }
+            if (status != 2)
+            {
+                if (status == 1)
+                {
+                    return 1;
+                }
+                else
+                {
+                    var CallDetailsUpdate = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno && x.ItemSrnoPo == model.ItemSrNoPo).FirstOrDefault();
+
+                    #region CallDetailsUpdate
+                    if (CallDetailsUpdate != null)
+                    {
+                        CallDetailsUpdate.ItemDescPo = model.ItemDescPo;
+                        CallDetailsUpdate.QtyOrdered = model.QtyOrdered;
+                        CallDetailsUpdate.CumQtyPrevOffered = model.CumQtyPrevOffered;
+                        CallDetailsUpdate.CumQtyPrevPassed = model.CumQtyPrevPassed;
+                        CallDetailsUpdate.QtyToInsp = model.QtyToInsp;
+                        CallDetailsUpdate.UserId = UserName;
+                        CallDetailsUpdate.Datetime = DateTime.Now;
+                        CallDetailsUpdate.Updatedby = model.Updatedby;
+                        CallDetailsUpdate.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                        Id = Convert.ToInt32(3);
+                    }
+                    #endregion
+
+                    var PODetailsUpdate = context.T15PoDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrno == model.ItemSrNoPo).FirstOrDefault();
+
+                    #region PODetailsUpdate 
+                    if (PODetailsUpdate != null)
+                    {
+                        PODetailsUpdate.ItemDesc = model.ItemDescPo;
+                        context.SaveChanges();
+                        Id = Convert.ToInt32(3);
+                    }
+                    #endregion
+                }
+            }
+            else if (status == 2)
+            {
+                return 2;
+            }
+
+            return Id;
+        }
+
+        public bool CallDetailsRemove(VendrorCallDetailsModel model)
+        {
+            var itemDelete = context.T18CallDetails.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
+
+            context.T18CallDetails.Remove(itemDelete);
+            context.SaveChanges();
+            return true;
         }
     }
 }

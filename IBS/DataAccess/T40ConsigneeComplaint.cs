@@ -21,9 +21,9 @@ public partial class T40ConsigneeComplaint
 
     public string? InspRegion { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
-    public byte? IeCoCd { get; set; }
+    public int? IeCoCd { get; set; }
 
     public string? CompRecvRegion { get; set; }
 
@@ -31,7 +31,7 @@ public partial class T40ConsigneeComplaint
 
     public int? VendCd { get; set; }
 
-    public byte? ItemSrnoPo { get; set; }
+    public int? ItemSrnoPo { get; set; }
 
     public string? ItemDesc { get; set; }
 
@@ -39,7 +39,7 @@ public partial class T40ConsigneeComplaint
 
     public decimal? QtyRejected { get; set; }
 
-    public byte? UomCd { get; set; }
+    public int? UomCd { get; set; }
 
     public decimal? Rate { get; set; }
 
@@ -75,7 +75,7 @@ public partial class T40ConsigneeComplaint
 
     public DateTime? Datetime { get; set; }
 
-    public byte? JiIeCd { get; set; }
+    public int? JiIeCd { get; set; }
 
     public string? ActionProposed { get; set; }
 
@@ -108,6 +108,8 @@ public partial class T40ConsigneeComplaint
     public string? CapaStatus { get; set; }
 
     public string? DandarStatus { get; set; }
+
+    public string? NoJiOther { get; set; }
 
     public virtual T13PoMaster? CaseNoNavigation { get; set; }
 

@@ -65,7 +65,7 @@
                 <button type="button" class="reset-btn active" id="btnNewCall" style="background-color:#F66A2F">New Call</button>
                 <button type="button" class="reset-btn" id="btnModify" style="background: none;color:#646464">Modify</button>
                 <button type="button" class="reset-btn" id="btnDelete" style="background: none;color:#646464">Delete</button>
-                <a asp-controller="CallRegister" asp-action="Index" class="reset-btn">Call Cancellation</a>
+                <button type="button" class="reset-btn" id="btnCCancellation" style="background: none;color:#646464">Call Cancellation</button>
                 <button type="button" class="reset-btn" id="btnEditStatus" style="background-color:#646464">Edit Call Status</button>
                 <button type="button" class="reset-btn" id="btnSearch" style="background-color:#646464">Search</button>
             </div>
@@ -108,6 +108,8 @@
         $(function () {
             setDefaultDate();
             //InitializeDatatable();
+
+            //$("#CallRecvDt").val(moment($("#CallRecvDt").val()).format("DD/MM/YYYY"));
         });
 
         $("#btnSearch").click(function () {
@@ -122,13 +124,13 @@
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd-mm-yy',
+                dateFormat: 'dd/mm/yy',
             });
-            $('#CallRecvDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
+            //$('#CallRecvDt').datepicker({
+            //    changeMonth: true,
+            //    changeYear: true,
+            //    dateFormat: 'dd/mm/yy',
+            //});
         }
 
         function InitializeDatatable() {
@@ -183,7 +185,7 @@
                         data: "PoDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -192,7 +194,7 @@
                         data: "CallRecvDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -208,9 +210,12 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
+                            //var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
+                            var CallRecvDt = moment(data.CallRecvDt).format("YYYY-MM-DD");
+                            //var CallRecvDt = data.CallRecvDt;
                             var CallSno = data.CallSno;
-                            var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+
+                            var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
@@ -227,12 +232,18 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
-            var CaseNo = $("#CaseNo").val();
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
             }
-
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
             var w_itemBlocked = "";
             var w_remarksVend = "";
             $.ajax({
@@ -301,6 +312,72 @@
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
+            if (CaseNo == null || CaseNo == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
+            }
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
+            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+                $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                    debugger
+                    if (response.status) {
+                        if (response.w_itemBlocked == "Y") {
+                            var msg = response.responseText;
+                            var d = confirm(msg);
+                            if (d === false) {
+                                window.location.href = '@Url.Action("Index", "CallRegisterIB")';
+                            } else {
+                                window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                            }
+                        }
+                        else {
+                            window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#btnDelete").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+
+            if (CaseNo == null || CaseNo == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
+            }
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
+            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+                $.get("@Url.Action("DeleteDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                    if (response.status) {
+                        if (response.ActionType == "D") {
+                            window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.CaseNo + "&CallRecvDt=" + response.CallRecvDt + "&CallSno=" + response.CallSno + "&ActionType=" + response.ActionType;
+                        }
+
+                    }
+                });
+            }
+        });
+
+        $("#btnCCancellation").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
 
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
@@ -315,28 +392,37 @@
                 return;
             }
 
-            $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
-                //success: function (response) {
-                if (response.status) {
-                    if (response.w_itemBlocked == "Y") {
-                        var msg = response.responseText;
-                        var d = confirm(msg);
-                        if (d === false) {
-                            window.location.href = '@Url.Action("Index", "CallRegisterIB")';
-                        } else {
-                            window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
-                        }
+            if ((CaseNo != null || CaseNo != "") && (CallRecvDt != null || CallRecvDt != "") && (CallSno != null || CallSno != null)) {
+                $.get("@Url.Action("GetCCancellationDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
+                    if (response.status) {
+                        window.location.href = '@Url.Action("CallCancellation", "CallRegisterIB")' + '?CaseNo=' + response.CaseNo + "&_CallRecvDt=" + response.CallRecvDt + "&CallSno=" + response.CallSno + "&ActionType=" + response.ActionType;
+
                     }
-                    else
-                    {
-                        window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
-                    }
-                }
-                //},
-                //error: function () {
-                //    // Handle error if needed
-                //}
-            });
+                });
+            }
+        });
+
+        $("#btnEditStatus").click(function () {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var CallSno = $("#CallSno").val();
+
+            if (CaseNo == null || CaseNo == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
+            }
+            if (CallRecvDt == null || CallRecvDt == "") {
+                ShowHideMsgNew(false, "Please select Call Date");
+                return;
+            }
+            if (CallSno == null || CallSno == "") {
+                ShowHideMsgNew(false, "Please select Call Sno.");
+                return;
+            }
+            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+                window.location.href = '@Url.Action("CallStatus", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+            }
+
         });
 
         completed = function (response) {

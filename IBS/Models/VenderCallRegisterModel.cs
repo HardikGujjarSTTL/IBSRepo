@@ -159,9 +159,9 @@ namespace IBS.Models
 
         //T05_VENDOR
         public string? VendAdd1 { get; set; }
-        
+
         public string? VendContactPer1 { get; set; }
-        
+
         public string? VendContactTel1 { get; set; }
 
         public string? VendStatus { get; set; }
@@ -179,7 +179,7 @@ namespace IBS.Models
         //VENDER_CALL_REGISTER_ITEM_VIEW
         public string? Status { get; set; }
 
-        public byte? ItemSrnoPo { get; set; }
+        public int ItemSrnoPo { get; set; }
 
         public string? ItemDescPo { get; set; }
 
@@ -209,7 +209,7 @@ namespace IBS.Models
 
         public string FOS { get; set; }
 
-        public string IsNewVender { get; set;}
+        public string IsNewVender { get; set; }
 
         public string? Createdby { get; set; }
 
@@ -217,10 +217,10 @@ namespace IBS.Models
 
         public decimal wMat_value { get; set; }
 
-        public int desire_dt { get; set; }  
+        public int desire_dt { get; set; }
 
-        public string CaseNoNoFound { get; set; } 
-        
+        public string CaseNoNoFound { get; set; }
+
         public int e_status { get; set; }
 
         public string IE_name { get; set; }
@@ -330,5 +330,227 @@ namespace IBS.Models
         public string? VendPOEmail { get; set; }
 
 
+    }
+
+    public class VenderCallCancellationModel
+    {
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short? CallSno { get; set; }
+
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public string? IeSname { get; set; }
+
+        public string? Vendor { get; set; }
+
+        public string CallCancelStatus { get; set; }
+
+        public int chk1 { get; set; }
+
+        public int chk2 { get; set; }
+
+        public int chk3 { get; set; }
+
+        public int chk4 { get; set; }
+
+        public int chk5 { get; set; }
+
+        public int chk6 { get; set; }
+
+        public int chk7 { get; set; }
+
+        public int chk8 { get; set; }
+
+        public int chk9 { get; set; }
+
+        public int chk10 { get; set; }
+
+        public int chk11 { get; set; }
+
+        public int chk12 { get; set; }
+
+        public bool chk_1 { get; set; }
+
+        public bool chk_2 { get; set; }
+
+        public bool chk_3 { get; set; }
+
+        public bool chk_4 { get; set; }
+
+        public bool chk_5 { get; set; }
+
+        public bool chk_6 { get; set; }
+
+        public bool chk_7 { get; set; }
+
+        public bool chk_8 { get; set; }
+
+        public bool chk_9 { get; set; }
+
+        public bool chk_10 { get; set; }
+
+        public bool chk_11 { get; set; }
+
+        public bool chk_12 { get; set; }
+
+        public string DocRec { get; set; }
+
+        public string Cdesc { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CancelDt { get; set; }
+
+        public string Createdby { get; set; }
+
+        public string CreatedDate { get; set; }
+
+        public string Updatedby { get; set; }
+
+        public string UpdatedDate { get; set; }
+
+        public string ActionType { get; set; }
+
+        public bool[] chkItems { get; set; }
+
+    }
+
+    public class VenderCallStatusModel
+    {
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short? CallSno { get; set; }
+
+        public string? VendName { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? ItemDescPo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallMarkDt { get; set; }
+
+        public string? IeName { get; set; }
+        [Phone]
+        public string? IePhoneNo { get; set; }
+
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public string? CallStatus1 { get; set; }
+
+        public string? CallStatus { get; set; }
+
+        public string? UpdateAllowed { get; set; }
+
+        public string? MfgPers { get; set; }
+
+        public string? MfgPhone { get; set; }
+
+        public decimal? Count { get; set; }
+
+        public byte ItemSrnoPo { get; set; }
+
+        public string Createdby { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+
+        public string Updatedby { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
+        public string ActionType { get; set; }
+
+        public string UserId { get; set; }
+
+    }
+
+    public class VendrorCallDetailsModel
+    {
+        public string CaseNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public short? CallSno { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallMarkDt { get; set; }
+
+        public string? IeName { get; set; }
+        [Phone]
+        public string? IePhoneNo { get; set; }
+
+        public string? PoNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? PoDt { get; set; }
+
+        public int ItemSrNoPo { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Item Desc")]
+        public string? ItemDescPo { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Qty Ordered")]
+        public decimal? QtyOrdered { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Cum Qty Prev Offered")]
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Cum Qty Prev Passed")]
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        [Required(ErrorMessage = "Please enter a Qty To Insp")]
+        public decimal? QtyToInsp { get; set; }
+
+        public decimal? QtyPassed { get; set; }
+
+        public decimal? QtyRejected { get; set; }
+
+        public decimal? QtyDue { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? Status { get; set; }
+
+        public int? CallInstallNo { get; set; }
+
+        public string VendCd { get; set; }
+
+        public string CallLetterNo { get; set; }
+
+        public string? CallStatus { get; set; }
+
+        public string? Remarks { get; set; }
+
+        public string? IESName { get; set; }
+
+        public string Createdby { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+
+        public string Updatedby { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
     }
 }

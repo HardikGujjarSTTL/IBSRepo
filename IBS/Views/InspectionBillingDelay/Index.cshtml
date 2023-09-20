@@ -1,0 +1,194 @@
+﻿@{
+    ViewData["Title"] = "Inspection Billing & Delay";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>STATEMENT OF INSPECTION BILLING & DELAY'S</h2>
+        </div>       
+    </div>
+    <div class="accordion-body">
+
+        <div class="row my-0">
+            <ul class="radioListForm">
+                <li>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month </label>
+                </li>
+                <li>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) </label>
+                </li>
+            </ul>
+            <div class="col-md-3">
+                <label for="reference" id="lblHeader1">From</label>
+                @Html.DropDownList("lstMonths", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})
+            </div>
+            <div class="col-md-3">
+                <label for="reference" id="lblHeader2">To</label>
+                @Html.DropDownList("lstYears", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})
+            </div>
+        </div>
+        <div class="row my-0">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <input type="text" class="input datepicker clsDate" id="txtBillFromDate">
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="text" class="input datepicker clsDate" id="txtBillToDate">
+            </div>
+        </div>
+        @if (@ViewBag.Action == "U")
+        {
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                        <label for="Name">Status of IE</label>
+                        @Html.RadioButton("rdType", "AllIES", new {@id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt" }) All IE'S
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdType", "ParticularIE", new { @id="rdPartiIE",@class = "text-darkblue font-bold font-size-8pt" }) For Particular IE
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3" id="IEStatus" style="display:none;">
+                    <div class="reference">
+                        <label for="Name" id="lblIECM"></label>
+                        @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.RegionCode) , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="heading3">Report to be sorted on</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Bill Date", new {  @id="rdbBillDate", @checked = true }) Bill Date</label>
+            </li>
+            @if (@ViewBag.Action == "U")
+            {
+                <li>
+                    <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IE Name", new {  @id="rdbIEName", }) IE Name</label>
+                </li>
+            }
+            <li>
+                <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "IC Date", new {  @id="rdbICDate" }) IC Date</label>
+            </li>
+            <li>
+                <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "First Insp Date", new {  @id="rdbFisrtInspDate" }) First Insp Date</label>
+            </li>
+            <li>
+                <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbSort", "Last Insp Date", new {  @id="rdbLastInspDate" }) Last Insp Date</label>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="savenext-btn" style="margin-top: 0px;">
+                <button type="button" class="save-btn active" id="btnSearch">Submit</button>
+            </div>
+        </div>
+    </div>   
+</div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        var Region = "@ViewBag.Region";
+        var Action = "@ViewBag.Action";
+        $(document).ready(function () {
+            Manage();
+            $('input[type=radio][name=rdbInspBill]').change(function () {
+                Manage();
+            });
+
+            $("#btnSearch").click(function () {
+                InitializeDatatable();
+            });
+
+            $("#imgExcel").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 0).trigger();
+            });
+
+            $("#imgPdf").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 1).trigger();
+            });
+
+            $("#imgPrint").on("click", function () {
+                $('#dtInspBillDelay').DataTable().buttons(0, 2).trigger();
+            });
+
+            $('input[type=radio][name=rdType]').change(function () {
+                debugger
+                var value = $(this).val();
+
+                if (value == "AllIES") {
+                    $("#IEStatus").css("display", "none");
+                } else {
+                    $("#IEStatus").css("display", "block");
+                }
+            });
+        });
+
+        function Manage() {
+            if ($("#rdbMonth").is(":checked")) {
+                $("#lblHeader1").html("Month");
+                $("#lblHeader2").html("Year");
+
+                $(".clsMonthYear").css("display", "block");
+                $(".clsDate").css("display", "none");
+            }
+            else if ($("#rdbDate").is(":checked")) {
+                $("#lblHeader1").html("From");
+                $("#lblHeader2").html("To");
+
+                $(".clsMonthYear").css("display", "none");
+                $(".clsDate").css("display", "block");
+            }
+        }
+
+        function InitializeDatatable() {
+            var SortOn = "";
+            var ReportTitle = "";
+            var totalRec = 0;
+            var w_DELAY_INSP = 0, w_DELAY_IC = 0, w_DELAY_SUBM = 0, w_DELAY_BILL = 0;
+            //var _title = "Inspection Billing and Delay";
+            var MonthWise = $("#rdbMonth").is(":checked") == true ? "true" : "false";
+            var DateWise = $("#rdbDate").is(":checked") == true ? "true" : "false";
+            var Month = $("#lstMonths").val();
+            var Year = $("#lstYears").val();
+            var FromDate = $("#txtBillFromDate").val();
+            var ToDate = $("#txtBillToDate").val();
+            var BillDate = $("#rdbBillDate").is(":checked") == true ? "true" : "false";
+            var IEName = $("#rdbIEName").is(":checked") == true ? "true" : "false";
+            var IcDt = $("#rdbICDate").is(":checked") == true ? "true" : "false";
+            var FInspDt = $("#rdbFisrtInspDate").is(":checked") == true ? "true" : "false";
+            var LFnspDt = $("#rdbLastInspDate").is(":checked") == true ? "true" : "false";
+            var AllIE = $("#rdAllIE").is(":checked") == true ? "true" : "false";
+            var PartiIE = $("#rdPartiIE").is(":checked") == true ? "true" : "false";
+            var IECD = $("#lstIE").val() == undefined ? null : $("#lstIE").val();
+
+            if (IcDt == "true") { SortOn = "Report Sorted on IC Date" }
+            else if (FInspDt == "true") { SortOn = "Report Sorted on First Inspection Date" }
+            else if (LFnspDt == "true") { SortOn = "Report Sorted on Last Inspection Date" }
+            else { SortOn = "Report Sorted on Bill Date" }
+
+            if (MonthWise == "true") {
+                _wHdr = $("#lstMonths option:selected").text() + ", " + $("#lstYears").val()//$("#lstMonths").val();
+                ReportTitle = "STATEMENT OF INSPECTION BILLING GENERATED AS ON " + _wHdr + " (" + SortOn + ")";
+            } else {
+                _wHdr = $("#txtBillFromDate").val() + " - " + $("#txtBillToDate").val();
+                ReportTitle = "STATEMENT OF INSPECTION BILLING GENERATED FOR THE PERIOD " + _wHdr + " (" + SortOn + ")";
+            }
+
+            var ToDate = $("#txtBillToDate").val();
+            var ToDate = $("#txtBillToDate").val();
+            let myObject = { MonthWise, DateWise, Month, Year, FromDate, ToDate, BillDate, IEName, IcDt, FInspDt, LFnspDt, AllIE, PartiIE, IECD, ReportTitle };
+
+            var url = '@Url.Action("Report", "InspectionBillingDelay")?' + $.param(myObject);
+            window.open(url, '_blank');            
+        }
+    </script>
+}
+

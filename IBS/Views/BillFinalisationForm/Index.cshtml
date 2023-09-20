@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Bills Finalisation for the Period";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Bills Finalisation for the Period</h2>
+    </div>
+    <div class="list-btn">
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="VendorCode">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+                    <span class="text-danger" id="spnErrorFromDate"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="VendorCode">To</label>
+                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY">
+                    <span class="text-danger" id="spnErrorToDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ddlSector">Sector</label>
+                    @Html.DropDownList("ddlSector", new SelectList(Common.GetSector() , "Value", "Text"))
+                </div>
+            </div>
+            <div class="col-md-5" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="save-btn active" id="btnUpdateBillsFinalisationStatus">Update Bills Finalisation Status & Date</button>
+                </div>
+            </div>
+        </div>
+        <div class="dash-table">
+            <table id="dtBillFinalisationList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Bill No</th>
+                        <th>Bill Dt</th>
+                        <th>Insp Fee</th>
+                        <th>SGST</th>
+                        <th>CGST</th>
+                        <th>IGST</th>
+                        <th>Bill Amount</th>
+                        <th>BPO</th>
+                        <th>CONSIGNEE</th>
+                        <th>GSTIN No</th>
+                        <th>Finalisation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        var checkedBillNos = [];
+
+        $(function () {
+            $('#dtBillFinalisationList').DataTable({ searching: false, paging: false, ordering: false });
+        });
+
+        function InitializeDatatable() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+
+            if (IsValidDate($("#FromDate").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format");
+                IsValid = false;
+            }
+            if (IsValidDate($("#ToDate").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var Sector = $("#ddlSector").val();
+
+            $("#dtBillFinalisationList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: "500px",
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "Sector": Sector,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BillNo" },
+                    {
+                        data: "BillDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "InspFee" },
+                    { data: "Sgst" },
+                    { data: "Cgst" },
+                    { data: "Igst" },
+                    { data: "BillAmount" },
+                    { data: "BPO" },
+                    { data: "Consignee" },
+                    { data: "RecipientGstinNo" },
+                    {
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" name="Finalisation" id="' + data.BillNo + '"><label for="' + data.BillNo + '"></label>';
+                        }
+                    },
+                ]
+            });
+        }
+
+        $("#btnUpdateBillsFinalisationStatus").click(function () {
+            checkedBillNos = [];
+
+            var dt = $('#dtBillFinalisationList').DataTable();
+            $(dt.$('input[name="Finalisation"]:checked').each(function () {
+                checkedBillNos.push($(this).attr('id'));
+            }));
+
+            if (checkedBillNos.length == 0) {
+                alert('Please select atleast record for Finalisation Bills!!!')
+                return false;
+            }
+
+            $.post("@Url.Action("UpdateBillsFinalisation", "BillFinalisationForm")", { BillNos: checkedBillNos }, function (response) {
+                if (response.status) {
+                    ShowHideMsg("success", response.responseText);
+                    InitializeDatatable();
+                }
+            });
+        });
+
+    </script>
+}

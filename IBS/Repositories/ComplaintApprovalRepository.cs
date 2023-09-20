@@ -173,7 +173,7 @@ namespace IBS.Repositories
                        existingComplaint.UserId = model.UserId;
                        existingComplaint.Datetime = DateTime.Now;
                    }
-
+                    msg = "Data Saved.";
                    context.SaveChanges();
                }
 
@@ -189,8 +189,8 @@ namespace IBS.Repositories
                     existingComplaint.NoJiReason = model.NoJIReason;
                     existingComplaint.UserId = model.UserId;
                     existingComplaint.Datetime = DateTime.Now;
-
                     context.SaveChanges();
+                    msg = "Data Saved.";
                 }
             }
 
@@ -263,6 +263,7 @@ namespace IBS.Repositories
                     tempOnlineComplaint.ComplaintId = ComplaintID;
                     context.SaveChanges();
                 }
+                msg = "Data Saved";
             }
             else
             {
@@ -291,58 +292,60 @@ namespace IBS.Repositories
                 throw new Exception("complaint Record Not found");
             else
             {
-                model.TEMP_COMPLAINT_ID = dt.Rows[0]["TEMP_COMPLAINT_ID"].ToString();
-
-                if (DateTime.TryParse(dt.Rows[0]["TEMP_COMPLAINT_DATE"].ToString(), out DateTime tempComplaintDt))
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    model.TempComplaintDt = tempComplaintDt;
+                    model.TEMP_COMPLAINT_ID = dt.Rows[0]["TEMP_COMPLAINT_ID"].ToString();
+
+                    if (DateTime.TryParse(dt.Rows[0]["TEMP_COMPLAINT_DATE"].ToString(), out DateTime tempComplaintDt))
+                    {
+                        model.TempComplaintDt = tempComplaintDt;
+                    }
+
+                    if (DateTime.TryParse(dt.Rows[0]["PO_DT"].ToString(), out DateTime poDt))
+                    {
+                        model.Date = poDt;
+                    }
+
+                    model.BKNo = dt.Rows[0]["BK_NO"].ToString();
+                    model.SetNo = dt.Rows[0]["SET_NO"].ToString();
+                    model.Regioncode = dt.Rows[0]["region_code"].ToString();
+                    model.Contract = dt.Rows[0]["PO_NO"].ToString();
+
+                    if (DateTime.TryParse(dt.Rows[0]["IC_DATE"].ToString(), out DateTime icDt))
+                    {
+                        model.IC_DT = icDt;
+                    }
+
+                    model.IC_NO = dt.Rows[0]["IC_NO"].ToString();
+                    model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
+                    model.Vendor = dt.Rows[0]["VENDOR"].ToString();
+                    model.InspER = dt.Rows[0]["IE_NAME"].ToString();
+                    model.Item = dt.Rows[0]["ITEM_DESC"].ToString();
+
+                    if (int.TryParse(dt.Rows[0]["QTY_OFFERED"].ToString(), out int qtyperIC))
+                    {
+                        model.QtyperIC = qtyperIC;
+                    }
+
+                    if (int.TryParse(dt.Rows[0]["QTY_REJECTED"].ToString(), out int qtyRejected))
+                    {
+                        model.QtyRejected = qtyRejected;
+                    }
+
+                    if (decimal.TryParse(dt.Rows[0]["REJECTION_VALUE"].ToString(), out decimal rejectionValue))
+                    {
+                        model.RejectionValue = rejectionValue;
+                    }
+
+                    model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
+
+                    if (DateTime.TryParse(dt.Rows[0]["rej_memo_dt"].ToString(), out DateTime memodt))
+                    {
+                        model.RejMemodate = memodt;
+                    }
+                    model.RejMemono = dt.Rows[0]["rej_memo_no"].ToString();
+
                 }
-
-                if (DateTime.TryParse(dt.Rows[0]["PO_DT"].ToString(), out DateTime poDt))
-                {
-                    model.Date = poDt;
-                }
-
-                model.BKNo = dt.Rows[0]["BK_NO"].ToString();
-                model.SetNo = dt.Rows[0]["SET_NO"].ToString();
-                model.Regioncode = dt.Rows[0]["region_code"].ToString();
-                model.Contract = dt.Rows[0]["PO_NO"].ToString();
-
-                if (DateTime.TryParse(dt.Rows[0]["IC_DATE"].ToString(), out DateTime icDt))
-                {
-                    model.IC_DT = icDt;
-                }
-
-                model.IC_NO = dt.Rows[0]["IC_NO"].ToString();
-                model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
-                model.Vendor = dt.Rows[0]["VENDOR"].ToString();
-                model.InspER = dt.Rows[0]["IE_NAME"].ToString();
-                model.Item = dt.Rows[0]["ITEM_DESC"].ToString();
-
-                if (int.TryParse(dt.Rows[0]["QTY_OFFERED"].ToString(), out int qtyperIC))
-                {
-                    model.QtyperIC = qtyperIC;
-                }
-
-                if (int.TryParse(dt.Rows[0]["QTY_REJECTED"].ToString(), out int qtyRejected))
-                {
-                    model.QtyRejected = qtyRejected;
-                }
-
-                if (decimal.TryParse(dt.Rows[0]["REJECTION_VALUE"].ToString(), out decimal rejectionValue))
-                {
-                    model.RejectionValue = rejectionValue;
-                }
-
-                model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
-
-                if (DateTime.TryParse(dt.Rows[0]["rej_memo_dt"].ToString(), out DateTime memodt))
-                {
-                    model.RejMemodate = memodt;
-                }
-                model.RejMemono = dt.Rows[0]["rej_memo_no"].ToString();
-
-
                 return model;
             }
         }

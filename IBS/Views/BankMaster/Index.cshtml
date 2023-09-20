@@ -1,16 +1,37 @@
 ﻿@{
-    ViewData["Title"] = "Bank Master";
+    ViewData["Title"] = "Banks Directory";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Bank Master</h2>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Banks Directory</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="BankMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="BankName">Bank Name</label>
+                    <input type="text" class="input" id="BankName" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="FMISBankCD">FMIS Bank CD</label>
+                    <input type="text" class="input" id="FMISBankCD" onkeypress="return isNumber(event)" />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="BankMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Bank Master</a>
-        </div>
-
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -18,11 +39,10 @@
                 <table id="dtBM" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Bank Code</th>
                             <th>Bank Name</th>
                             <th>FMIS Bank Code</th>
-                            <th>Action</th>
+                            <th style="text-align:center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +56,7 @@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -43,6 +64,10 @@
         });
 
         function InitializeDatatable() {
+
+            var BankName = $("#BankName").val();
+            var FMISBankCD = $("#FMISBankCD").val();
+
             $("#dtBM").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -60,29 +85,23 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            BankName, FMISBankCD
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
                     }
                 },
                 columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
                     { data: "BankCd" },
                     { data: "BankName" },
                     { data: "FmisBankCd" },
-                    
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.BankCd;
                             var editUrl = '@Url.Action("Manage", "BankMaster")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="BMDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -92,7 +111,14 @@
             });
         }
 
-        function BMDelete(id) {
+        function CLearControls() {
+            $("#BankName").val("");
+            $("#FMISBankCD").val("");
+
+            InitializeDatatable();
+        }
+
+        function Delete(id) {
             var url = '@Url.Action("Delete", "BankMaster")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");

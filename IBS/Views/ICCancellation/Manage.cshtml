@@ -1,0 +1,91 @@
+﻿@using IBS.Helper;
+@model IBS.Models.ICCancellationModel
+
+@{
+    ViewData["Title"] = "Manage IC Cancellation";
+    string clsView = "";
+    if (Model.IsEdit > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Manage IC</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ICCancellation" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form role="form" asp-controller="ICCancellation" asp-action="ICCancellationSave" id="frmICCancellationDetails">
+            <input type="hidden" asp-for="IsEdit" />
+            <input type="hidden" asp-for="Region" />
+
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Book No.</label>
+                        <input type="text" class="input" asp-for="BkNo">
+                        <span asp-validation-for="BkNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Set No.</label>
+                        <input type="text" class="input" asp-for="SetNo">
+                        <span asp-validation-for="SetNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">IE To Whom Issued</label>
+                        @Html.DropDownListFor(model => model.IssueToIecd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(ViewBag.Region) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="IssueToIecd" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Status</label>
+                        @Html.DropDownListFor(model => model.IcStatus, new SelectList(IBS.Models.Common.GetIcStatus() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="IcStatus" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Status Date</label>
+                        <input id="PoDt" asp-for="StatusDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="StatusDt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Remarks</label>
+                        <textarea class="input" asp-for="Remarks"> </textarea>
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                </div>
+                @if (SessionHelper.UserModelDTO.RoleName != "Inspection Engineer (IE)" && Model.IsEdit == 1)
+                {
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="checkbox" class="input" asp-for="Status" /> <lable for="IsArchived">Status </lable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmICCancellationDetails").valid()) {
+                $("#frmICCancellationDetails").submit();
+            }
+        }
+    </script>
+}

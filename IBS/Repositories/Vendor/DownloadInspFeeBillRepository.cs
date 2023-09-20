@@ -72,9 +72,9 @@ namespace IBS.Repositories.Vendor
             }
 
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
             PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
-            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
+            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd/MM/yyyy", null);
             BkNo = BkNo.ToString() == "" ? string.Empty : BkNo.ToString();
             SetNo = SetNo.ToString() == "" ? string.Empty : SetNo.ToString();
 

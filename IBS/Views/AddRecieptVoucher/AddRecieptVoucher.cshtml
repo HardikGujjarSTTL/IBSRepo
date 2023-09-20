@@ -27,6 +27,20 @@
                                 <label for="Reference">Voucher No</label>
                                 <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" data-date-format="dd-mm-yyyy" />
                             </div>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Generate Voucher</h2>
+    </div>
+</div>
+<section>
+    <div class="task-listinput">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Voucher No</label>
+                            <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" data-date-format="dd-mm-yyyy" />
+                        </div>
 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Voucher Date</label>
@@ -76,20 +90,20 @@
                                 @Html.DropDownListFor(model => model.ACC_CD, Common.GetAccountCode(), new { id="AccCD" })
                             </div>
 
-                            <div id="txtCSNO" class="col-md-4 mb-3">
-                                <label  for="Reference">Case No</label>
-                                <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
-                                <br ></br>
-                                <button type="button" class="save-btn active" onclick="ButtonClick();">Select BPO</button>
-                                <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                        <div id="txtCSNO" class="col-md-4 mb-3">
+                            <label  for="Reference">Case No</label>
+                            <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
+                            <br ></br>
+                        <button type="button" class="commonBtn" onclick="ButtonClick();">Select BPO</button>
+                            <span asp-validation-for="CASE_NO" class="text-danger"></span>
                             
-                            </div>
-                            <div id="txtBPO" class="col-md-4 mb-3">
-                                <label  for="Reference">BPO</label>
-                                <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
-                                <br></br>
-                                <button type="button" class="save-btn active" onclick="ButtonClick()">Select BPO</button>
-                                <span asp-validation-for="BPO_CD" class="text-danger"></span>
+                        </div>
+                        <div id="txtBPO" class="col-md-4 mb-3">
+                            <label  for="Reference">BPO</label>
+                            <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
+                            <br></br>
+                            <button type="button" class="commonBtn" onclick="ButtonClick()">Select BPO</button>
+                            <span asp-validation-for="BPO_CD" class="text-danger"></span>
 
                             </div>
 
@@ -109,15 +123,14 @@
                             </div>*@
                         </div>
 
-                        <div class="savenext-btn">
-                           
-                            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                        </div>
+                    <div class="savenext-btn">
+                        <a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
-                </form>
-            </div>
-        </div>
-    </section>
+                </div>
+            </form>
+    </div>
+</section>
 
     @section scripts{
         <partial name="_DataTablesScriptsPartial" />

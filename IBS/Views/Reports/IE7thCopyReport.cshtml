@@ -1,0 +1,38 @@
+﻿@model IBS.Models.IE7thCopyListModel
+
+<div>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th colspan="2" style="text-align:left;border-right:none;"><b>IE NAME: @Model.UserName</b></th>
+                    <th colspan="2" style="text-align:right;"><b>EMP NO:: @Model.UserID</b></th>
+                </tr>
+                <tr>
+                    <th colspan="4">
+                        <b>INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT</b>
+                    </th>
+                </tr>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Sr.No</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO.</font></b></th>
+                </tr>
+                @{
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstIE7thCopyList)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Case_No</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Bk_No</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.Set_No</font></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

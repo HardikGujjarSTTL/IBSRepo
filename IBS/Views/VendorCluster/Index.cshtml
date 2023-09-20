@@ -2,27 +2,61 @@
     ViewData["Title"] = "Vendor Cluster";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Vendor Cluster</h2>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Vendor Cluster</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="VendorCluster" asp-action="Manage" class="formBtn"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="VendorName">Vendor Name</label>
+                    <input type="text" class="input" id="VendorName" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="DepartmentName">Department Name</label>
+                    @Html.DropDownList("DepartmentName", new SelectList(Common.GetDepartment() , "Value", "Text"), "--Select--",  new { @class = "" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="ClusterName">Cluster Name</label>
+                    <input type="text" class="input" id="ClusterName" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="GeographicalPartition">Geographical Partition</label>
+                    <input type="text" class="input" id="GeographicalPartition" />
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="VendorCluster" asp-action="Manage" class="formBtn">Add New Vendor Cluster</a>
-        </div>
-
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtCM" class="table-responsive">
+                <table id="dtVendorClusterList" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name of Vendor/Manufacture Code</th>
+                            <th>Vendor Name</th>
                             <th>Department Name</th>
                             <th>Cluster Name</th>
-                            <th>Action</th>
+                            <th>Geographical Partition</th>
+                            <th style="text-align:center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +70,7 @@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -43,7 +78,13 @@
         });
 
         function InitializeDatatable() {
-            $("#dtCM").DataTable({
+
+            var VendorName = $("#VendorName").val();
+            var DepartmentName = $("#DepartmentName").val();
+            var ClusterName = $("#ClusterName").val();
+            var GeographicalPartition = $("#GeographicalPartition").val();
+
+            $("#dtVendorClusterList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -60,6 +101,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            VendorName, DepartmentName, ClusterName, GeographicalPartition
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -72,30 +114,43 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "VendorCode" },
+                    { data: "VendorName" },
                     { data: "DepartmentName" },
-                    { data: "ClusterCode" },
-                   
+                    { data: "ClusterName" },
+                    { data: "GeographicalPartition" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.VendorCode;
-                            var editUrl = '@Url.Action("Manage", "VendorCluster")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="CMDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var VendorCode = data.VendorCode;
+                            var DepartmentCode = data.DepartmentCode;
+                            let myObject = { VendorCode, DepartmentCode };
+                            var editUrl = '@Url.Action("ManageVendorCluster", "VendorCluster")?' + $.param(myObject);
+                            var id = VendorCode + "-" + DepartmentCode;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         }
 
-        function CMDelete(id) {
+        function CLearControls() {
+            $("#VendorName").val("");
+            $("#DepartmentName").val("");
+            $("#ClusterName").val("");
+            $("#GeographicalPartition").val("");
+
+            InitializeDatatable();
+        }
+
+        function Delete(id) {
             var url = '@Url.Action("Delete", "VendorCluster")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
+
     </script>
 }

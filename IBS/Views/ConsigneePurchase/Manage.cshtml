@@ -1,0 +1,144 @@
+﻿@model IBS.Models.ConsigneePurchaseModel
+
+@{
+    ViewData["Title"] = "Manage Consignee/Purchase Master";
+    string clsView = "";
+    if (Model.ConsigneeCd > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Consignee/Purchase Master</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ConsigneePurchase" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form role="form" asp-antiforgery="true" asp-controller="ConsigneePurchase" asp-action="Manage" id="frmConsigneePurchaseDetails">
+            <input type="hidden" asp-for="ConsigneeCd" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee Type</label>
+                        @Html.DropDownListFor(Model => Model.ConsigneeType, new SelectList(Common.GetConsigneeType(), "Value", "Text"))
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Railway/Purchase </label>
+                        <input type="text" class="input" asp-for="FName" maxlength="30" style="display: none;" />
+                        @Html.DropDownListFor(Model => Model.ConsigneeRailwayCD, new SelectList(Common.GetRailway() , "Value", "Text"))
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee Designation </label>
+                        <input type="text" class="input" asp-for="CSName" maxlength="30" style="display: none;" />
+                        @Html.DropDownListFor(Model => Model.ConsigneeDesig, new SelectList(Common.GetConsigneeDesignation() , "Value", "Text"))
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Department</label>
+                        <input type="text" class="input" asp-for="ConsigneeDept" maxlength="30">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">City <i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(Model => Model.ConsigneeCity, new SelectList(Common.GetConsigneeCity() , "Value", "Text"),"--Select--", new { @class = "select2" })
+                        <span asp-validation-for="ConsigneeCity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">State</label>
+                        <input type="text" asp-for="ConsigneeState" readonly />
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Address 1</label>
+                        <textarea type="text" class="input" asp-for="ConsigneeAdd1" maxlength="100"></textarea>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Address 2</label>
+                        <textarea type="text" asp-for="ConsigneeAdd2" maxlength="100"></textarea>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PIN Code <i class="text-danger">*</i></label>
+                        <input type="text" class="input" asp-for="PinCode" maxlength="6">
+                        <span class="text-danger" asp-validation-for="PinCode"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">GSTIN No. <i class="text-danger">*</i></label>
+                        <input type="text" asp-for="GstinNo" maxlength="15">
+                        <span class="text-danger" asp-validation-for="GstinNo"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <a asp-controller="ConsigneePurchase" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" class="save-btn active Permission_Save" onclick="SubmitConsigneePurchase();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            if ('@Model.ConsigneeCd' > 0) {
+                $("#ConsigneeType").change();
+            }
+        });
+
+        $("#ConsigneeType").change(function () {
+            if (this.value == "R") {
+                $("#ConsigneeRailwayCD").css("display", "");
+                $("#ConsigneeDesig").css("display", "");
+                $("#FName").css("display", "none");
+                $("#CSName").css("display", "none");
+            }
+            else {
+                $("#ConsigneeRailwayCD").css("display", "none");
+                $("#ConsigneeDesig").css("display", "none");
+                $("#FName").css("display", "");
+                $("#CSName").css("display", "");
+            }
+        });
+
+        $("#ConsigneeCity").change(function () {
+            $.ajax({
+                url: "@Url.Action("GetState")",
+                type: 'POST',
+                data: { City_CD: $("#ConsigneeCity").val() },
+                success: function (response) {
+                    $("#ConsigneeState").val(response);
+                }
+            });
+        })
+
+        function SubmitConsigneePurchase() {
+            var gststate = $("#GstinNo").val().substring(0, 2);
+            var statecd = $("#ConsigneeState").val().substring(0, 2);
+            var flag = true;
+
+            if (gststate != statecd) {
+                ShowHideMsgNew(false, "Kindly enter the GST No according to the State Entered!!!");
+                flag = false;
+            }
+
+            if (flag) {
+                if ($("#frmConsigneePurchaseDetails").valid()) {
+                    $("#frmConsigneePurchaseDetails").submit();
+                }
+            }
+        }
+
+    </script>
+
+}

@@ -45,14 +45,13 @@
         border-left: 1px solid #cfd8dc;
     }
 
-    
+
 
     .fileUploadWrap {
         padding: unset !important;
     }
 </style>
 
-@* File uploader Start *@
 <div id="FileUploadValidation" style="color:red"></div>
 
 @{
@@ -76,55 +75,60 @@
             <label id="lblDocumentName_@uniqueId">@(Model.IBS_DocumentList[i].DocumentName)</label>
             @if (Convert.ToBoolean(Model.IBS_DocumentList[i].IsDownloadTemplate) == true)
             {
-                <text><br />Download from
-                    <a href="javascript:void(0);" id="TemplateDocumentDocument_@i" onclick="thisGetTemplateDocument(@Model.IBS_DocumentList[i].DocumentCategory, @Model.IBS_DocumentList[i].DocumentID);">here</a></text>
+                <text>
+                    <br />Download from
+                    <a href="javascript:void(0);" id="TemplateDocumentDocument_@i" onclick="thisGetTemplateDocument(@Model.IBS_DocumentList[i].DocumentCategory, @Model.IBS_DocumentList[i].DocumentID);">here</a>
+                </text>
             }
             <span class="astric">
                 @(Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "*" : "")
             </span>
             <div class="fieldOuter">
-                <div @if (isEditMode) { <text> class="divSingleDocument" </text> } id="@uniqueId">
+                <div @if (isEditMode)
+                {
+                    <text> class="divSingleDocument" </text>
+                } id="@uniqueId">
 
-                    <input type="hidden" id="@("hdnSingleDocumentCategory_" + uniqueId)" value="@(Model.IBS_DocumentList[i].DocumentCategory)" />
-                    <input type="hidden" id="@("hdnSingleDocName_" + uniqueId)" value="@(Model.IBS_DocumentList[i].DocumentName)" />
-                    <input type="hidden" id="@("hdnSingleAPPDocumentID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].APPDocumentID)" />
-                    <input type="hidden" id="@("hdnSingleDocumentID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].ID)" />
-                    <input type="hidden" id="@("hdnSingleVerifyDSC_" + uniqueId)" value="@(Model.IBS_DocumentList[i].VerifyDSC.ToString())" />
-                    <input type="hidden" id="@("hdnSingleRelativePath_" + uniqueId)" value="@(Model.IBS_DocumentList[i].RelativePath)" />
-                    <input type="hidden" id="@("hdnSingleIsMandatory_" + uniqueId)" value="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "true" : "false")" />
-                    <input type="hidden" id="@("hdnSingleFYID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].FYID)" />
+                                            <input type="hidden" id="@("hdnSingleDocumentCategory_" + uniqueId)" value="@(Model.IBS_DocumentList[i].DocumentCategory)" />
+                                            <input type="hidden" id="@("hdnSingleDocName_" + uniqueId)" value="@(Model.IBS_DocumentList[i].DocumentName)" />
+                                            <input type="hidden" id="@("hdnSingleAPPDocumentID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].APPDocumentID)" />
+                                            <input type="hidden" id="@("hdnSingleDocumentID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].ID)" />
+                                            <input type="hidden" id="@("hdnSingleVerifyDSC_" + uniqueId)" value="@(Model.IBS_DocumentList[i].VerifyDSC.ToString())" />
+                                            <input type="hidden" id="@("hdnSingleRelativePath_" + uniqueId)" value="@(Model.IBS_DocumentList[i].RelativePath)" />
+                                            <input type="hidden" id="@("hdnSingleIsMandatory_" + uniqueId)" value="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "true" : "false")" />
+                                            <input type="hidden" id="@("hdnSingleFYID_" + uniqueId)" value="@(Model.IBS_DocumentList[i].FYID)" />
 
-                    <span class="rightAction" id="@("File_" + uniqueId)" style="width:100% !important">
+                                            <span class="rightAction" id="@("File_" + uniqueId)" style="width:100% !important">
                         @if (!string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName))
                         {
-                            <a class="aTag" target="_blank" href="@(Url.Content("~"+ Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
+                                                                <a class="aTag" target="_blank" href="@(Url.Content("~"+ Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))" id="DocUpload_@(uniqueId)">@Model.IBS_DocumentList[i].FileDisplayName</a>
 
                             if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                             {
-                                <input type="button" id="@Model.IBS_DocumentList[i].FileID" onclick="DeleteFile('@Model.IBS_DocumentList[i].FileID','@uniqueId')" class="delete button clsDelete" value="Delete">
+                                                                                <input type="button" id="@Model.IBS_DocumentList[i].FileID" onclick="DeleteFile('@Model.IBS_DocumentList[i].FileID','@uniqueId')" class="delete button clsDelete" value="Delete">
                             }
                         }
-                    </span>
-                    <div style="display: @(string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName) ? "block" : "none");" id="@("Div_" + uniqueId)" class="fileUploadWrap">
+                                            </span>
+                                            <div style="display: @(string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName) ? "block" : "none");" id="@("Div_" + uniqueId)" class="fileUploadWrap">
                         @if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                         {
-                            <input name="UploadFile" type="file" id="@("Brw_" + uniqueId)" onchange="OnFileUpload('@uniqueId', @Model.IBS_DocumentList[i].ID, this, true)"
-                                   data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))" 
-                                        style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
+                                                                <input name="UploadFile" type="file" id="@("Brw_" + uniqueId)" onchange="OnFileUpload('@uniqueId', @Model.IBS_DocumentList[i].ID, this, true)"
+                                                                       data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))"
+                                                                            style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
 
-                            <label for="@("Brw_" + uniqueId)">
+                                                                <label for="@("Brw_" + uniqueId)">
                                 @*@(Model.IBS_DocumentList[i].DocumentName)
                                     <span >
                                         @(Model.IBS_DocumentList[i].IsMandatory ? "*" : "")
                                     </span>*@
-                                Upload File
-                            </label>
-                            <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
+                                                                    Upload File
+                                                                </label>
+                                                                <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
                         }
-                    </div>
-                    <div style='color: red; font-size: 14px;' id="@("ValidationMSG_" + uniqueId)"></div>
-                    <div id="@("Loader_" + uniqueId)" class="loader" style="display:none; position:relative"></div>
-                </div>
+                                            </div>
+                                            <div style='color: red; font-size: 14px;' id="@("ValidationMSG_" + uniqueId)"></div>
+                                            <div id="@("Loader_" + uniqueId)" class="loader" style="display:none; position:relative"></div>
+                                        </div>
             </div>
         </div>
     }
@@ -134,96 +138,11 @@ else
     <div class="fileUploadTable" style="width:50%;">
         <h2>@(!string.IsNullOrEmpty(Model.MainTitle) ? Model.MainTitle : "Mandatory Documents")</h2>
 
-        <table @if (isEditMode) { <text> id="tblMainDocuments" </text> }
-               class="tableData">
-            <thead>
-                <tr class="evenRow lastTr" role="row">
-                    <th style="width:45%;">
-                        Document Name
-                    </th>
-                    <th>
-                        Uploaded Doc
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.IBS_DocumentList != null)
-                {
-                    for (int i = 0; i < Model.IBS_DocumentList.Count; i++)
-                    {
-                        <tr id="tr_@Model.IBS_DocumentList[i].ID" name="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "ValidateRow" : "")"
-                                        role="row" class="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "ValidateRow" : "")">
-                            <td>
-                                <label>@Model.IBS_DocumentList[i].DocumentName</label>
-                                <span>
-                                    @(Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "*" : "")
-                                </span>
-                                @*@if (Model.isDSC && isEditMode)*@
-                                @if (Convert.ToBoolean(Model.IBS_DocumentList[i].VerifyDSC) && isEditMode)
-                                {
-                                    // function GetDSCDocument(DocumentCategory,DocumentID) must be defined by rendering View
-                                    <text><br />Download from
-                                        <a href="javascript:void(0);" id="DSCDocument_@i" onclick="thisGetDSCDocument(@Model.IBS_DocumentList[i].DocumentCategory, @Model.IBS_DocumentList[i].DocumentID);">here</a> to sign</text>
-                                }
-                            </td>
-                            <td style="text-align: right !important;">
-                                <input type="hidden" id="@("hdnAppDocumentID_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].APPDocumentID)" />
-                                <input type="hidden" id="@("hdnDocumentID_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].ID)" />
-                                <input type="hidden" id="@("hdnVerifyDSC_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].VerifyDSC.ToString())" />
-                                <input type="hidden" id="@("hdnRelativePath_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].RelativePath)" />
-                                <span id="@("File_" + Model.IBS_DocumentList[i].UploaderIDName)" style="float: right;">
-                                    @if (!string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName))
-                                    {
-                                        if (Convert.ToBoolean(Model.IBS_DocumentList[i].VerifyDSC))
-                                        {
-                                            <a onclick="GetSignedDoc('@(Url.Content("~" + Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))','@Model.IBS_DocumentList[i].FileDisplayName')">@Model.IBS_DocumentList[i].FileDisplayName</a>
-                                        }
-                                        else
-                                        {
-                                            <a target="_blank" href="@(Url.Content("~" + Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))">@Model.IBS_DocumentList[i].FileDisplayName</a>
-                                        }
-                                        if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
-                                        {
-                                            <a id="@Model.IBS_DocumentList[i].FileID" style="cursor:pointer;"
-                                               onclick="DeleteFile('@Model.IBS_DocumentList[i].FileID','@Model.IBS_DocumentList[i].UploaderIDName')" class="delete"><i class="fa fa-times" aria-hidden="true" title="Delete"></i></a>
-                                        }
-                                    }
-                                </span>
-                                <div style="text-align: right !important;display: @(string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName) ? "block" : "none");" id="@("Div_" + Model.IBS_DocumentList[i].UploaderIDName)">
-                                    @if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
-                                    {
-                                        <input type="file" name="UploadFile" id="@("Brw_" + Model.IBS_DocumentList[i].UploaderIDName)"
-                                               onchange="OnFileUpload('@Model.IBS_DocumentList[i].UploaderIDName', @Model.IBS_DocumentList[i].ID, this, false)" data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))" 
-                                                               style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;position: relative;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;"/>
-                                        <br />
-                                        <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
-                                    }
-                                </div>
-                                <div class="cf" style='color: red; font-size: 12px;text-align: right !important;' id="@("ValidationMSG_" + Model.IBS_DocumentList[i].UploaderIDName)"></div>
-                                <div id="@("Loader_" + Model.IBS_DocumentList[i].UploaderIDName)" class="loader" style="float: right;display:none; position:relative"></div>
-                            </td>
-                        </tr>
-                        //}
-                        //}
-                    }
-                }
-
-            </tbody>
-        </table>
-    </div>
-    <div class="cf">
-        <div class="fileUploadTable">
-            @* Other Document List Start*@
-            @if (Model.OthersSection == true
-                        && ((Model.Mode == (int)Enums.FileUploaderMode.Add_Edit && Model.MaxUploaderinOthers > 0) || (Model.Mode == (int)Enums.FileUploaderMode.View && Model.OtherDocumentList.Count > 0)))
-            {
-                <div class="createCommittee">
-                    <h2>Other Documents</h2>
-                </div>
-
-                <div class="dasboardTable">
-                    <table @if (isEditMode) { <text> id="tblOtherDocuments" </text> }
-                           class="">
+        <table @if (isEditMode)
+        {
+            <text> id="tblMainDocuments" </text>
+        }
+            class="tableData">
                         <thead>
                             <tr class="evenRow lastTr" role="row">
                                 <th style="width:45%;">
@@ -235,6 +154,97 @@ else
                             </tr>
                         </thead>
                         <tbody>
+                @if (Model != null && Model.IBS_DocumentList != null)
+                {
+                    for (int i = 0; i < Model.IBS_DocumentList.Count; i++)
+                    {
+                                                            <tr id="tr_@Model.IBS_DocumentList[i].ID" name="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "ValidateRow" : "")"
+                                                                            role="row" class="@(isEditMode && Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "ValidateRow" : "")">
+                                                                <td>
+                                                                    <label>@Model.IBS_DocumentList[i].DocumentName</label>
+                                                                    <span>
+                                    @(Convert.ToBoolean(Model.IBS_DocumentList[i].Ismandatory) ? "*" : "")
+                                                                    </span>
+                                @*@if (Model.isDSC && isEditMode)*@
+                                @if (Convert.ToBoolean(Model.IBS_DocumentList[i].VerifyDSC) && isEditMode)
+                                {
+                                // function GetDSCDocument(DocumentCategory,DocumentID) must be defined by rendering View
+                                    <text><br />Download from
+                                                                                        <a href="javascript:void(0);" id="DSCDocument_@i" onclick="thisGetDSCDocument(@Model.IBS_DocumentList[i].DocumentCategory, @Model.IBS_DocumentList[i].DocumentID);">here</a> to sign</text>
+                                }
+                                                                </td>
+                                                                <td style="text-align: right !important;">
+                                                                    <input type="hidden" id="@("hdnAppDocumentID_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].APPDocumentID)" />
+                                                                    <input type="hidden" id="@("hdnDocumentID_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].ID)" />
+                                                                    <input type="hidden" id="@("hdnVerifyDSC_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].VerifyDSC.ToString())" />
+                                                                    <input type="hidden" id="@("hdnRelativePath_" + Model.IBS_DocumentList[i].UploaderIDName)" value="@(Model.IBS_DocumentList[i].RelativePath)" />
+                                                                    <span id="@("File_" + Model.IBS_DocumentList[i].UploaderIDName)" style="float: right;">
+                                    @if (!string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName))
+                                    {
+                                        if (Convert.ToBoolean(Model.IBS_DocumentList[i].VerifyDSC))
+                                        {
+                                                                                                        <a onclick="GetSignedDoc('@(Url.Content("~" + Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))','@Model.IBS_DocumentList[i].FileDisplayName')">@Model.IBS_DocumentList[i].FileDisplayName</a>
+                                        }
+                                        else
+                                        {
+                                                                                                        <a target="_blank" href="@(Url.Content("~" + Model.IBS_DocumentList[i].RelativePath + "/" + Model.IBS_DocumentList[i].FileID))">@Model.IBS_DocumentList[i].FileDisplayName</a>
+                                        }
+                                        if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
+                                        {
+                                                                                                        <a id="@Model.IBS_DocumentList[i].FileID" style="cursor:pointer;"
+                                                                                                           onclick="DeleteFile('@Model.IBS_DocumentList[i].FileID','@Model.IBS_DocumentList[i].UploaderIDName')" class="delete"><i class="fa fa-times" aria-hidden="true" title="Delete"></i></a>
+                                        }
+                                    }
+                                                                    </span>
+                                                                    <div style="text-align: right !important;display: @(string.IsNullOrEmpty(Model.IBS_DocumentList[i].FileDisplayName) ? "block" : "none");" id="@("Div_" + Model.IBS_DocumentList[i].UploaderIDName)">
+                                    @if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
+                                    {
+                                                                                        <input type="file" name="UploadFile" id="@("Brw_" + Model.IBS_DocumentList[i].UploaderIDName)"
+                                                                                               onchange="OnFileUpload('@Model.IBS_DocumentList[i].UploaderIDName', @Model.IBS_DocumentList[i].ID, this, false)" data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))"
+                                                                                                               style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;position: relative;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;"/>
+                                                                                        <br />
+                                                                                        <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
+                                    }
+                                                                    </div>
+                                                                    <div class="cf" style='color: red; font-size: 12px;text-align: right !important;' id="@("ValidationMSG_" + Model.IBS_DocumentList[i].UploaderIDName)"></div>
+                                                                    <div id="@("Loader_" + Model.IBS_DocumentList[i].UploaderIDName)" class="loader" style="float: right;display:none; position:relative"></div>
+                                                                </td>
+                                                            </tr>
+                        //}
+                        //}
+                    }
+                }
+
+                        </tbody>
+                    </table>
+    </div>
+    <div class="cf">
+        <div class="fileUploadTable">
+            @* Other Document List Start*@
+            @if (Model.OthersSection == true
+           && ((Model.Mode == (int)Enums.FileUploaderMode.Add_Edit && Model.MaxUploaderinOthers > 0) || (Model.Mode == (int)Enums.FileUploaderMode.View && Model.OtherDocumentList.Count > 0)))
+            {
+                <div class="createCommittee">
+                    <h2>Other Documents</h2>
+                </div>
+
+                <div class="dasboardTable">
+                    <table @if (isEditMode)
+                    {
+                        <text> id="tblOtherDocuments" </text>
+                    }
+                                                   class="">
+                                                <thead>
+                                                    <tr class="evenRow lastTr" role="row">
+                                                        <th style="width:45%;">
+                                                            Document Name
+                                                        </th>
+                                                        <th>
+                                                            Uploaded Doc
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                             @{
                                 int rowcount = Model.MaxUploaderinOthers;
                                 if (Model.Mode == (int)Enums.FileUploaderMode.View)
@@ -244,44 +254,44 @@ else
                             }
                             @for (int i = 0; i < rowcount; i++)
                             {
-                                <tr role="row">
-                                    <td>
-                                        <input type="text" id="@("DocName_"+i)"
-                                               value="@(i < Model.OtherDocumentList.Count && !string.IsNullOrEmpty(Model.OtherDocumentList[i].OtherDocumentName) ? Model.OtherDocumentList[i].OtherDocumentName : "")"
-                                               @(Model.Mode ==(int)Enums.FileUploaderMode.View ? "readonly" : "") />
+                                                                    <tr role="row">
+                                                                        <td>
+                                                                            <input type="text" id="@("DocName_"+i)"
+                                                                                   value="@(i < Model.OtherDocumentList.Count && !string.IsNullOrEmpty(Model.OtherDocumentList[i].OtherDocumentName) ? Model.OtherDocumentList[i].OtherDocumentName : "")"
+                                        @(Model.Mode == (int)Enums.FileUploaderMode.View ? "readonly" : "") />
 
-                                    </td>
-                                    <td>
-                                        <input type="hidden" value="@(i < Model.OtherDocumentList.Count ? Convert.ToString(Model.OtherDocumentList[i].APPDocumentID) : "")" />
-                                        <span id="@("File_"+i)" style="float: right;">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="hidden" value="@(i < Model.OtherDocumentList.Count ? Convert.ToString(Model.OtherDocumentList[i].APPDocumentID) : "")" />
+                                                                            <span id="@("File_"+i)" style="float: right;">
                                             @if (i < Model.OtherDocumentList.Count && !string.IsNullOrEmpty(Model.OtherDocumentList[i].FileDisplayName))
                                             {
-                                                <a target="_blank" href="@(Url.Content("~" + Model.OtherDocumentList[i].RelativePath + "/" + Model.OtherDocumentList[i].FileID))">
+                                                                                                <a target="_blank" href="@(Url.Content("~" + Model.OtherDocumentList[i].RelativePath + "/" + Model.OtherDocumentList[i].FileID))">
                                                     @Model.OtherDocumentList[i].FileDisplayName
-                                                </a>
+                                                                                                </a>
                                                 if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                                                 {
-                                                    <a id="@Model.OtherDocumentList[i].FileID" style="cursor:pointer;"
-                                                       onclick="DeleteFile('@Model.OtherDocumentList[i].FileID','@i')" class="delete"><i class="fa fa-times" aria-hidden="true" title="Delete"></i></a>
+                                                                                                                <a id="@Model.OtherDocumentList[i].FileID" style="cursor:pointer;"
+                                                                                                                   onclick="DeleteFile('@Model.OtherDocumentList[i].FileID','@i')" class="delete"><i class="fa fa-times" aria-hidden="true" title="Delete"></i></a>
                                                 }
                                             }
-                                        </span>
-                                        <div id="@("Div_"+i)" style="float: right; display: @( (i < Model.OtherDocumentList.Count && !string.IsNullOrEmpty(Model.OtherDocumentList[i].FileDisplayName)) ? "none" : "block");">
+                                                                            </span>
+                                                                            <div id="@("Div_"+i)" style="float: right; display: @( (i < Model.OtherDocumentList.Count && !string.IsNullOrEmpty(Model.OtherDocumentList[i].FileDisplayName)) ? "none" : "block");">
                                             @if (Model.Mode == (int)Enums.FileUploaderMode.Add_Edit)
                                             {
-                                                <input type="file" name="UploadFile" id="@("Brw_"+i)"
-                                                       onchange="OnFileUpload('@i', 0, this, false)" data-filesize="@(ConfigurationManager.AppSettings["AllowedFileExtensions"])" />
-                                                <br />
-                                                <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
+                                                                                                <input type="file" name="UploadFile" id="@("Brw_"+i)"
+                                                                                                       onchange="OnFileUpload('@i', 0, this, false)" data-filesize="@(ConfigurationManager.AppSettings["AllowedFileExtensions"])" />
+                                                                                                <br />
+                                                                                                <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
                                             }
-                                        </div>
-                                        <div class="uploadValerror" id="@("ValidationMSG_"+i)"></div>
-                                        <div id="@("Loader_" + i)" class="loader" style="float: right; display: none; position:relative"></div>
-                                    </td>
-                                </tr>
+                                                                            </div>
+                                                                            <div class="uploadValerror" id="@("ValidationMSG_"+i)"></div>
+                                                                            <div id="@("Loader_" + i)" class="loader" style="float: right; display: none; position:relative"></div>
+                                                                        </td>
+                                                                    </tr>
                             }
-                        </tbody>
-                    </table>
+                                                </tbody>
+                                            </table>
                 </div>
             }
         </div>
@@ -297,11 +307,11 @@ else
     @if (Model.isDSC)
     {
         <text>
-    setTimeout(function () {
-        //if (!$.isFunction(window.GetDSCDocument))
-        //    alert('Please define GetDSCDocument()');
-    }, 500);
-    </text>
+            setTimeout(function () {
+                //if (!$.isFunction(window.GetDSCDocument))
+                //    alert('Please define GetDSCDocument()');
+            }, 500);
+        </text>
     }
 
     function thisGetDSCDocument(DocumentCategory, DocumentID) {
@@ -312,7 +322,6 @@ else
     }
 
     $(document).ready(function () {
-        ////   SetDocumentVisibilityAndValitity();
 
     });
 
@@ -395,7 +404,7 @@ else
                 DocumentList.push(Document);
             }
         });
-        
+
         return DocumentList;
     }
 
@@ -443,9 +452,6 @@ else
                 }
             }
         });
-        //if (html != "") html += '</ul>';
-
-        //$('#FileUploadValidation').html(html);
 
         if (html != "") {
             return false;
@@ -462,12 +468,12 @@ else
         if (files.length > 0) {
 
             for (var i = 0; i < files.length; i++) {
-                @*if (files[i].size == 0 || ((files[i].size / 1024) > parseInt(@ConfigurationManager.AppSettings["MaxContentLengthInKB"]))) {
+    @*if (files[i].size == 0 || ((files[i].size / 1024) > parseInt(@ConfigurationManager.AppSettings["MaxContentLengthInKB"]))) {
                     //AlertDanger("File size should be between 1kb and " + parseInt(@ConfigurationManager.AppSettings["MaxContentLengthInKB"]) / 1024 + "MB");
                     $('#ValidationMSG_' + ControlID).html("File size should be between 1kb and " + parseInt(@ConfigurationManager.AppSettings["MaxContentLengthInKB"]) / 1024 + "MB");
                     return false;
-                }*@
-                if (files[i].size == 0 || ((files[i].size / 1024) > parseInt(filesize))) {
+                    }*@
+                            if (files[i].size == 0 || ((files[i].size / 1024) > parseInt(filesize))) {
                     //AlertDanger("File size should be between 1kb and " + parseInt(@ConfigurationManager.AppSettings["MaxContentLengthInKB"]) / 1024 + "MB");
                     $('#ValidationMSG_' + ControlID).html("File size should be between 1kb and " + parseInt(filesize) / 1024 + "MB");
                     return false;
@@ -505,7 +511,7 @@ else
                                 var Value = "<a target='_blank' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.TempFilePath))/" + strData[i].UniqueFileID + "' > " + strData[i].FileName + "</a> ";
                                 if (IsSignleFile) {
                                     html += "<a target='_blank' class='aTag' href='../@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.TempFilePath))/" + strData[i].UniqueFileID + "' Id='DocUpload_" + ControlID + "'>" + strData[i].FileName + "</a> "
-                                        + ' <input type="button" id=' + strData[i].UniqueFileID +' onclick="DeleteFile(\'' + strData[i].UniqueFileID + '\',\'' + ControlID + '\')" class="delete button clsDelete" value="Delete">';
+                                        + ' <input type="button" id=' + strData[i].UniqueFileID + ' onclick="DeleteFile(\'' + strData[i].UniqueFileID + '\',\'' + ControlID + '\')" class="delete button clsDelete" value="Delete">';
                                 }
                                 else {
                                     html += "<a target='_blank' href='../@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.TempFilePath))/" + strData[i].UniqueFileID + "' > " + strData[i].FileName + "</a> "
@@ -566,12 +572,11 @@ else
                     if (xhr.responseText && xhr.responseText[0] == "{")
                         err = JSON.parse(xhr.responseText).Message;
                     console.log(err);
-                    //AlertDanger("Error while deleting file");
                     $('#ValidationMSG_' + ControlID).html("Error while deleting file");
                 }
             });
         }
-        
+
     }
 
     var hiddedidString = '@Model.HideDocumentIds';
@@ -730,7 +735,7 @@ else
     }
 
     function SaveSingleDocuments(TabId) {
-        
+
         var DocList = GetDocumentListForSingleControl(TabId);
 
         if (DocList != false) {
@@ -806,4 +811,3 @@ else
             GetTemplateDocument(DocumentCategory, DocumentID);
     }
 </script>
-@* File uploader End *@

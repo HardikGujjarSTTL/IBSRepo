@@ -1,7 +1,7 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace IBS.Helper
 {
@@ -21,26 +21,44 @@ namespace IBS.Helper
 
         public enum FolderPath
         {
-            [Description("/Files/TempUploadedFiles")]
+            [Description("/ReadWriteData/Files/TempUploadedFiles")]
             TempFilePath = 1,
-            [Description("/Files/UserRegistration")]
+            [Description("/ReadWriteData/Files/UserRegistration")]
             UserRegistration = 2,
-            [Description("/Files/AdminUserUploadDoc")]
+            [Description("/ReadWriteData/Files/AdminUserUploadDoc")]
             AdminUserUploadDoc = 3,
-            [Description("/Files/Vendor")]
+            [Description("/ReadWriteData/Files/Vendor")]
             Vendor = 4,
-            [Description("/Files/VendorDocument")]
+            [Description("/ReadWriteData/Files/VendorDocument")]
             VendorDocument = 5,
-            [Description("/MA")]
+            [Description("/ReadWriteData/MA")]
             VendorMADocument = 6,
-            [Description("/Files/ContractDocument")]
+            [Description("/ReadWriteData/Files/ContractDocument")]
             ContractDocument = 7,
-            [Description("/Files/TechnicalReferences")]
+            [Description("/ReadWriteData/Files/TechnicalReferences")]
             TechnicalReferencesDoc = 8,
-            [Description("/MASTER_ITEMS_CHECKSHEETS")]
+            [Description("/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")]
             MasterItemDoc = 9,
-            [Description("/CALLS_DOCUMENTS")]
+            [Description("/ReadWriteData/CALLS_DOCUMENTS")]
             CallRegistrationDoc = 10,
+            [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
+            AdministratorPurchaseOrder = 13,
+            [Description("/ReadWriteData/Files/Online_Comp_Document")]
+            OnlineComplaints = 11,
+            [Description("/ReadWriteData/Files/Complaint_Case")]
+            ComplaintCase = 12,
+            [Description("/ReadWriteData/IE/SIGNATURE/FULL")]
+            IEFullSignature = 13,
+            [Description("/ReadWriteData/IE/SIGNATURE/INITIALS")]
+            IEInitials = 14,
+            [Description("/ReadWriteData/Files/ContractEntry")]
+            ContractEntry = 15,
+            [Description("/ReadWriteData/Files/Rejection_Memo")]
+            RejectionMemo = 16,
+            [Description("/ReadWriteData/Files/Complaints_Report")]
+            COMPLAINTSREPORT = 17,
+            [Description("/ReadWriteData/Files/Complaints_Tech_Ref")]
+            ComplaintTechRef = 17,
         }
 
         public enum DocumentCategory : int
@@ -54,8 +72,13 @@ namespace IBS.Helper
             TechnicalReferences = 8,
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
+            AdministratorPurchaseOrder =13,
+            OnlineComplaints=11,
+            ConsigneeComplaints = 12,
+            IEFullSignature = 14,
+            IEInitials = 15,
+            ContractEntryDoc=16,
         }
-
 
         public enum DocumentCategory_CANRegisrtation : int
         {
@@ -69,14 +92,23 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
-            
+            Upload_a_scanned_copy_of_Purchase_Order = 54,
+            Upload_Rejection_Memo=50,
+            Upload_JI_Case=51,
+            Upload_JI_Report=52,
+            Upload_Tech_Ref1 = 53,
+            Upload_Contract_Doc=16,
+
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
         {
             Browse_the_Document_to_Upload = 7,
             CallRegistrationDoc = 13,
+            IEFullSignature = 14,
+            IEInitials = 15
         }
+
         public enum DocumentCategory_VendorMADoc : int
         {
             VendorMADoc = 8,
@@ -101,7 +133,6 @@ namespace IBS.Helper
 
             return defDesc;
         }
-
 
         public enum RegionType
         {
@@ -142,6 +173,367 @@ namespace IBS.Helper
             [Description("Left/Repatriated")]
             L,
         }
+
+        public enum IEPosting
+        {
+            [Description("Local")]
+            LC,
+            [Description("Outstation")]
+            OU,
+            [Description("Liaison Officer")]
+            LO,
+        }
+
+        public enum IEStatus
+        {
+            [Description("Working")]
+            W,
+            [Description("Retired")]
+            R,
+            [Description("Transferred")]
+            T,
+            [Description("Left/Repatriated")]
+            L,
+        }
+
+        public enum IEJobType
+        {
+            [Description("Regular")]
+            R,
+            [Description("Deputation")]
+            D,
+            [Description("Contract")]
+            C,
+        }
+
+        public enum BPOFeeType
+        {
+            [Description("Man days Basis")]
+            D,
+            [Description("Hourly Basis")]
+            H,
+            [Description("Lump sum")]
+            L,
+            [Description("Percentage Basis")]
+            P,
+        }
+
+        public enum BPOTaxType
+        {
+            [Description("Fee Inclusive Service Tax")]
+            I,
+            [Description("Tax/VAT Charged separately")]
+            X,
+        }
+
+        public enum BPOFlag
+        {
+            [Description("FA & CAO")]
+            F,
+            [Description("AO�s")]
+            A,
+            [Description("DFM�s")]
+            D,
+            [Description("DEE/DCEE etc.")]
+            M,
+            [Description("Workshop")]
+            S,
+        }
+
+        public enum BPOAdvFlag
+        {
+            [Description("Advance bill to be raised")]
+            A,
+            [Description("Otherwise")]
+            N,
+        }
+
+        public enum ActiveInActive
+        {
+            [Description("Active")]
+            A,
+            [Description("InActive")]
+            I,
+        }
+
+        public enum UserType
+        {
+            [Description("User")]
+            U,
+            [Description("CM")]
+            C,
+            [Description("GM")]
+            G,
+            [Description("SBU HEAD")]
+            S,
+        }
+
+        public enum PoOrLetter
+        {
+            [Description("Purchase Order")]
+            P,
+            [Description("Letter of Offer")]
+            L,
+        }
+
+        public enum StockNonstock
+        {
+            [Description("Stock")]
+            S,
+            [Description("Non-Stock")]
+            N,
+        }
+
+        public enum ServTax
+        {
+            [Description("Service Tax to be Charged on Fee")]
+            Y,
+            [Description("Fee is Inclusive of Service Tax")]
+            N,
+        }
+
+        public enum ClientType
+        {
+            [Description("Railways")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            PSU,
+            [Description("State Govt")]
+            S,
+            [Description("Foreign Railways")]
+            F,
+        }
+
+        public enum RegionCode
+        {
+            [Description("NORTHERN REGION")]
+            N,
+            [Description("EASTERN REGION")]
+            E,
+            [Description("WESTERN REGION")]
+            W,
+            [Description("SOUTHERN REGION")]
+            S,
+            [Description("CENTRAL REGION")]
+            C,
+            [Description("CO QA DIVISION")]
+            Q,
+        }
+
+        public enum DiscountType
+        {
+            [Description("Percentage")]
+            P,
+            [Description("Lumpsum")]
+            L,
+            [Description("Per No.")]
+            N,
+        }
+
+        public enum ExciseType
+        {
+            [Description("Percentage")]
+            P,
+            [Description("Lumpsum")]
+            L,
+        }
+
+        public enum VendorStatus
+        {
+            [Description("Active")]
+            A,
+            [Description("Banned/BlackListed")]
+            B,
+            [Description("Re-Instated")]
+            R,
+        }
+
+        public enum OnlineCallStatus
+        {
+            [Description("No")]
+            N,
+            [Description("Yes")]
+            Y,
+        }
+
+        public enum Department
+        {
+            [Description("Mechanical")]
+            M,
+            [Description("Electrical")]
+            E,
+            [Description("Civil")]
+            C,
+            [Description("Textiles")]
+            T,
+            [Description("M & P")]
+            Z,
+        }
+
+        public enum Region
+        {
+            [Description("Northern Region")]
+            N,
+            [Description("Southern Region")]
+            S,
+            [Description("Eastern Region")]
+            E,
+            [Description("Westrern Region")]
+            W,
+            [Description("Central Region")]
+            C,
+            [Description("QA Corporate")]
+            Q,
+        }
+
+        public enum BookSubmitted
+        {
+            [Description("Submitted & Completed")]
+            Y,
+            [Description("Submitted but not Completed")]
+            S,
+            [Description("Not Submitted but Completed")]
+            C,
+            [Description("NO")]
+            N,
+        }
+
+        public enum Sector
+        {
+            [Description("All")]
+            A,
+            [Description("Railways")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            U,
+            [Description("State Govt.")]
+            S,
+            [Description("Foreign Railways")]
+            F,
+        }
+
+        public enum IcStatus
+        {
+            [Description("Cancelled")]
+            C,
+            [Description("Missing")]
+            M,
+            [Description("Lost / Theft")]
+            L,
+        }
+
+        public enum ActionProposed
+        {
+            [Description("No Action Required")]
+            N,
+            [Description("Warning Letter")]
+            W,
+            [Description("Minor Penalty")]
+            I,
+            [Description("Major Penalty")]
+            J,
+            [Description("Others")]
+            O,
+        }
+
+        public enum ConsigneeType
+        {
+            [Description("Railway")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("Foreign Railway")]
+            F,
+            [Description("PSU")]
+            U,
+            [Description("State Government")]
+            S,
+        }
+
+        public enum FPart
+        {
+            [Description("Final")]
+            F,
+            [Description("Part")]
+            P,
+        }
+
+        public enum TAXType
+        {
+            [Description("Fee Inclusive Service Tax")]
+            I,
+            [Description("Service Tax Charged separately")]
+            X,
+            [Description("No Service Tax(RITES Billing)")]
+            N,
+            [Description("Fee Inclusive of Service Tax (Don't Print S.Tax in Bill)")]
+            D,
+        }
+
+        public enum TaxType_GST
+        {
+            [Description("IGST @ 18%")]
+            I,
+            [Description("CGST @ 9% & SGST @ 9%")]
+            C,
+            [Description("NO GST")]
+            X,
+            [Description("Fee Inclusive of IGST @ 18%")]
+            Y,
+            [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
+            Z,
+        }
+
+        public enum Criteria
+        {
+            [Description("PO Date")]
+            P,
+            [Description("Date of Reciept of PO in RITES")]
+            R,
+        }
+
+        public enum RailTypes
+        {
+            [Description("Railway")]
+            R,
+            [Description("Private")]
+            P,
+            [Description("PSU")]
+            U,
+            [Description("State Government")]
+            S,
+        }
+
+        public enum ScopeOfsector
+        {
+            [Description("(IAF 12) Chemical/Paints")]
+            A,
+            [Description("(IAF 14b) Plastics Pipes & Fittings")]
+            B,
+            [Description("(IAF 16) Cement Pipes, AC Pressue Pipes & PCC Poles")]
+            C,
+            [Description("(IAF 17b)  Rails, CI/DI Pipes, Steel Tubes and Fittings, Seamless Blocl/Galvanised, Valves")]
+            D,
+            [Description("(IAF 19a) Conductor, Cables, Power Transformers, CT/PT Fans, Relay, Panel, DG set, Alternator, Energy Meter")]
+            E,
+            [Description("(IAF 22) Railway Rolling Stock")]
+            F,
+            [Description("(IAF 28) Water Supply")]
+            G,
+            [Description("(IAF 28) Construction")]
+            H,
+            [Description("IAF 07) Paper for Printing")]
+            I,
+            [Description("(IAF 09) Printed Tickes & Ruled Papers")]
+            J,
+            [Description("Others")]
+            O,
+        }
+
     }
 
     public class EnumUtility<T>

@@ -1,0 +1,99 @@
+﻿@model IBS.Models.Reports.RemitanceModel
+<div>
+    <h3 class="heading3">Cheque Wise Remittances for the Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (Account Code : <span class="orangeText"> @Model.ACC_DESC : @Model.ACC_CD</span> (@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">VOUCHER NO.</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">BANK</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ NO.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ DATE</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">BPO</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">NARRATION</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">ACCOUNT CODE</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">RECEIVED DATE</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstRemitance != null && Model.lstRemitance.Count > 0)
+                {
+                    int SrNo = 1;
+                    string _VChar_No = "";
+                    decimal _Amount = 0;
+                    decimal wTotChqAmt = 0, wTotVchrAmt = 0;
+
+                    @foreach (var item in Model.lstRemitance)
+                    {
+                        @if (_VChar_No == @item.VCHR_NO)
+                        {
+                            <tr>
+                                <td align="center" colspan="2"><font size="1" face="Verdana"></font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.BANK_NAME</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CHQ_NO</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                <td align="left"><font size="1" face="Verdana">@item.BPO</font></td>
+                                <td align="left"><font size="1" face="Verdana">@item.NARRATION</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.ACC_CD</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.VCHR_DT).ToString("dd/MM/yyyy")</font></td>
+                            </tr>
+                            wTotChqAmt = wTotChqAmt + Convert.ToDecimal(@item.AMOUNT);
+                            wTotVchrAmt = wTotVchrAmt + Convert.ToDecimal(@item.AMOUNT);
+                        }
+                        else
+                        {
+                            @if (@SrNo != 1)
+                            {
+                                <tr>
+                                    <td width='5%' valign='top' align='center' colspan='5'><font size='1' face='Verdana'><b>Voucher Totals:</b></font></td>
+                                    <td width='7%' valign='top' align='right'><font size='1' face='Verdana'>@wTotVchrAmt</font></td>
+                                    <td width='5%' valign='top' align='center' colspan='5'> <font size='1' face='Verdana'></font></td>
+                                </tr>
+                            }
+                            <tr>
+                                <td align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.VCHR_NO</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.BANK_NAME</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CHQ_NO</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                <td align="left"><font size="1" face="Verdana">@item.BPO</font></td>
+                                <td align="left"><font size="1" face="Verdana">@item.NARRATION</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.ACC_CD</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.VCHR_DT).ToString("dd/MM/yyyy")</font></td>
+                            </tr>
+                            SrNo++;
+                            _VChar_No = @item.VCHR_NO;
+
+                            wTotChqAmt = wTotChqAmt + Convert.ToDecimal(@item.AMOUNT);
+                            wTotVchrAmt = Convert.ToDecimal(@item.AMOUNT);
+                        }
+                        _Amount += Convert.ToDecimal(@item.AMOUNT);
+                    }
+                    <tr>
+                        <td width='5%' valign='top' align='right' colspan='5'> <font size='1' face='Verdana'><b>Voucher Totals : </b></font></td>
+                        <td width='7%' valign='top' align='right'><font size='1' face='Verdana'>@wTotVchrAmt</font></td>
+                        <td width='5%' valign='top' align='center' colspan='5'><font size='1' face='Verdana'></font></td>
+                    </tr>
+                    <tr>
+                        <td width='47%' valign='top' align='right' colspan='5'> <font size='1' face='Verdana'><b>Grand Totals : </b></font></td>
+                        <td width='15%' valign='top' align='right'><font size='1' face='Verdana'>@_Amount</font></td>
+                        <td width='50%' valign='top' align='center' colspan='5'><font size='1' face='Verdana'></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

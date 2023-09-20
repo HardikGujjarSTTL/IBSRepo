@@ -2,15 +2,36 @@
     ViewData["Title"] = "Account Codes Directory";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Account Codes Directory</h2>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Account Codes Directory</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="AccountCodesDirectory" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="AccountCD">Account CD</label>
+                    <input type="text" class="input" id="AccountCD" onkeypress="return isNumber(event)" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-search">
+                    <label for="AccountDesc">Account Desc</label>
+                    <input type="text" class="input" id="AccountDesc" />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="AccountCodesDirectory" asp-action="Manage" class="formBtn"> Add New Account Codes Directory</a>
-        </div>
-
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -21,7 +42,7 @@
                             <th>#</th>
                             <th>Account Code</th>
                             <th>Account Description</th>
-                            <th>Action</th>
+                            <th style="text-align:center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +56,7 @@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -42,6 +64,10 @@
         });
 
         function InitializeDatatable() {
+
+            var AccountCD = $("#AccountCD").val();
+            var AccountDesc = $("#AccountDesc").val();
+
             $("#dtACD").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -59,6 +85,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            AccountCD, AccountDesc
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -71,26 +98,32 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "AccCd" },
+                    { data: "AccountCode" },
                     { data: "AccDesc" },
-                    
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.AccCd;
                             var editUrl = '@Url.Action("Manage", "AccountCodesDirectory")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="ACDDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         }
 
-        function ACDDelete(id) {
+        function CLearControls() {
+            $("#AccountCD").val("");
+            $("#AccountDesc").val("");
+
+            InitializeDatatable();
+        }
+
+        function Delete(id) {
             var url = '@Url.Action("Delete", "AccountCodesDirectory")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");

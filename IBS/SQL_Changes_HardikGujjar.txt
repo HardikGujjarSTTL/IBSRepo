@@ -622,7 +622,8 @@ CREATE TABLE Menu_Master (
     IconCssClass NVARCHAR2(50),
     IsActive NUMBER(1),
     SortOrder NUMBER(6),
-    IconPath VARCHAR2(50)
+    IconPath VARCHAR2(50),
+    IsDisplay NUMBER(1)
 );
 
 ALTER TABLE Menu_Master
@@ -1016,6 +1017,59 @@ END;
 
 ================
 
+//create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
+//(
+//    p_ROLEID IN NUMBER,
+//    p_cursor OUT SYS_REFCURSOR
+//)
+//AS
+//BEGIN
+//    OPEN p_cursor FOR
+//        SELECT
+//            CONNECT_BY_ROOT(m.ID) AS RootParentID,
+//            m.ID AS ParentID,
+//            NULL AS ChildID,
+//            m.TITLE AS ParentTitle,
+//            NULL AS ChildTitle,
+//            m.ID AS ID,
+//            CASE
+//                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
+//                ELSE 'False'
+//            END AS Selected,
+//            (SELECT IsAdd FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
+//            (SELECT IsEdit FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
+//            (SELECT PIsDelete FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
+//            (SELECT IsView FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
+//        FROM MENU_MASTER m
+//        WHERE m.PARENTID IS NULL
+//        AND m.IsDisplay = 1
+//        CONNECT BY PRIOR m.ID = m.PARENTID
+
+//        UNION ALL
+
+//        SELECT
+//            CONNECT_BY_ROOT(p.ID) AS RootParentID,
+//            p.PARENTID AS ParentID,
+//            c.ID AS ChildID,
+//            p.TITLE AS ParentTitle,
+//            c.TITLE AS ChildTitle,
+//            c.ID AS ID,
+//            CASE
+//                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
+//                ELSE 'False'
+//            END AS Selected,
+//            (SELECT IsAdd FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
+//            (SELECT IsEdit FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
+//            (SELECT PIsDelete FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
+//            (SELECT IsView FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
+//        FROM MENU_MASTER p
+//        JOIN MENU_MASTER c ON p.ID = c.PARENTID
+//        AND p.IsDisplay = 1
+//        CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
+
+//        ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
+//END;
+
 create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 (
     p_ROLEID IN NUMBER,
@@ -1023,47 +1077,1252 @@ create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 )
 AS
 BEGIN
-    OPEN p_cursor FOR
-        SELECT
-            CONNECT_BY_ROOT(m.ID) AS RootParentID,
-            m.ID AS ParentID,
-            NULL AS ChildID,
-            m.TITLE AS ParentTitle,
-            NULL AS ChildTitle,
-            m.ID AS ID,
-            CASE
-                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
-                ELSE 'False'
-            END AS Selected,
-            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
-            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
-            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
-            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
-        FROM MENU_MASTER m
-        WHERE m.PARENTID IS NULL
-        CONNECT BY PRIOR m.ID = m.PARENTID
+OPEN p_cursor FOR
+WITH RecursiveMenu (id, parentid, controllername, actionname, title, menudescription, role_id, iconcssclass, isactive, sortorder, iconpath, isdisplay,
+Selected,IsAdd,IsEdit,PIsDelete,IsView) AS (
+    SELECT
+        v.id,
+        v.parentid,
+        v.controllername,
+        v.actionname,
+        v.title,
+        v.menudescription,
+        v.role_id,
+        v.iconcssclass,
+        v.isactive,
+        v.sortorder,
+        v.iconpath,
+        v.isdisplay,
+        CASE
+            WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) > 0 THEN 'True'
+            ELSE 'False'
+        END AS Selected,
+        (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsAdd,
+        (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsEdit,
+        (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS PIsDelete,
+        (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsView
+    FROM
+        menu_master v
+    WHERE
+        parentid IS NULL
+    UNION ALL
+    SELECT
+        m.id,
+        m.parentid,
+        m.controllername,
+        m.actionname,
+        m.title,
+        m.menudescription,
+        m.role_id,
+        m.iconcssclass,
+        m.isactive,
+        m.sortorder,
+        m.iconpath,
+        m.isdisplay,
+        CASE
+            WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) > 0 THEN 'True'
+            ELSE 'False'
+        END AS Selected,
+        (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsAdd,
+        (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsEdit,
+        (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS PIsDelete,
+        (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsView
+    FROM
+        menu_master m
+    INNER JOIN
+        RecursiveMenu rm ON m.parentid = rm.id
+)
 
-        UNION ALL
 
-        SELECT
-            CONNECT_BY_ROOT(p.ID) AS RootParentID,
-            p.PARENTID AS ParentID,
-            c.ID AS ChildID,
-            p.TITLE AS ParentTitle,
-            c.TITLE AS ChildTitle,
-            c.ID AS ID,
-            CASE
-                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
-                ELSE 'False'
-            END AS Selected,
-            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
-            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
-            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
-            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
-        FROM MENU_MASTER p
-        JOIN MENU_MASTER c ON p.ID = c.PARENTID
-        CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
+SELECT
+    id,
+    parentid,
+    controllername,
+    actionname,
+    title,
+    menudescription,
+    role_id,
+    iconcssclass,
+    isactive,
+    sortorder,
+    iconpath,
+    isdisplay,
+    Selected,
+    IsAdd,
+    IsEdit,
+    PIsDelete,
+    IsView
+FROM
+    RecursiveMenu
+START WITH
+    parentid IS NULL
+CONNECT BY
+    PRIOR id = parentid
+ORDER SIBLINGS BY
+    parentid, id; 
 
-        ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
+
 END;
+
+========================
+
+SELECT
+    id,
+    parentid,
+    controllername,
+    actionname,
+    title,
+    menudescription,
+    role_id,
+    iconcssclass,
+    isactive,
+    sortorder,
+    iconpath,
+    isdisplay,
+    Selected,
+    IsAdd,
+    IsEdit,
+    PIsDelete,
+    IsView
+FROM
+    RecursiveMenu
+START WITH
+    parentid IS NULL
+CONNECT BY
+    PRIOR id = parentid
+ORDER SIBLINGS BY
+    parentid, id; 
+
+
+END;
+
 ====================
+create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
+    p_cs_no VARCHAR2,
+    p_po_no VARCHAR2,
+    p_po_date VARCHAR2,
+    p_vend_name VARCHAR2,
+    p_region_code VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+BEGIN
+    str1 := 'SELECT m.CASE_NO, m.PO_NO, TO_CHAR(m.PO_DT, ''dd/mm/yyyy'') AS PO_DT, ' ||
+            '(DECODE(m.RLY_NONRLY, ''R'', ''Railway'', ''P'', ''Private'', ''S'', ''State Government'', ''F'', ''Foreign Railways'', ''U'', ''PSU'') || ''('' || m.RLY_CD || '')'') AS RLY_CD, ' ||
+            '(v.VEND_NAME || ''('' || NVL2(t.LOCATION, t.LOCATION || '' : '' || t.CITY, t.CITY) || '')'') AS VEND_NAME, ' ||
+            '(NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || ''/'', '''') || NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || ''/'', '''') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME, ' ||
+            'DECODE(m.INSPECTING_AGENCY, ''C'', ''Consignee'', ''X'', ''PO Cancelled'', ''RITES'') AS INSPECTING_AGENCY, ' ||
+            'DECODE(PO_SOURCE, ''V'', ''VENDOR'', ''M'', ''MANUAL'', ''C'', ''IREPS'', ''OTHER'') AS SOURCE, ' ||
+            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, ''CASE_NO/'' || m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
+            '''CASE_NO/'' || m.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
+            'FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t ' ||
+            'WHERE m.VEND_CD = v.VEND_CD ' ||
+            'AND v.VEND_CITY_CD = t.CITY_CD ' ||
+            'AND m.PURCHASER_CD = c.CONSIGNEE_CD(+) ' ||
+            'AND m.REGION_CODE = ''' || p_region_code || '''';
+
+    IF p_cs_no IS NOT NULL THEN
+        str1 := str1 || 'AND TRIM(CASE_NO) = ''' || p_cs_no || ''' ';
+    END IF;
+
+    IF p_po_no IS NOT NULL THEN
+        str1 := str1 || 'AND UPPER(TRIM(PO_NO)) LIKE UPPER(''%' || p_po_no || '%'') ';
+    END IF;
+
+    IF p_po_date IS NOT NULL THEN
+        str1 := str1 || 'AND TO_CHAR(PO_DT, ''dd/mm/yyyy'') = ''' || p_po_date || ''' ';
+    END IF;
+
+    IF p_vend_name IS NOT NULL THEN
+        str1 := str1 || 'AND UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(''' || p_vend_name || '%'') ';
+    END IF;
+
+    str1 := str1 || 'ORDER BY CASE_NO ASC';
+
+    OPEN p_result_cursor FOR str1;
+END;
+
+
+===============================
+
+create or replace PROCEDURE SP_GET_RAILWAY_CODES (
+    p_bpo_type VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+BEGIN
+    IF p_bpo_type = 'R' THEN
+        str1 := 'SELECT RLY_CD FROM T91_RAILWAYS WHERE RLY_CD <> ''CORE'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'P' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''P'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'F' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''F'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'U' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''U'' ORDER BY RLY_CD';
+    ELSIF p_bpo_type = 'S' THEN
+        str1 := 'SELECT DISTINCT(UPPER(TRIM(BPO_RLY))) RLY_CD FROM T12_BILL_PAYING_OFFICER WHERE BPO_TYPE = ''S'' ORDER BY RLY_CD';
+    ELSE
+        -- Handle invalid input here, or provide a default query
+        str1 := 'SELECT RLY_CD FROM T91_RAILWAYS WHERE RLY_CD <> ''CORE'' ORDER BY RLY_CD';
+    END IF;
+
+    OPEN p_result_cursor FOR str1;
+END;
+
+
+==============
+CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
+    p_vend_cd IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT V.VEND_CD as Value,
+           (TRIM(V.VEND_NAME) || '/' || TRIM(V.VEND_ADD1) || '/' || NVL2(C.LOCATION, C.LOCATION || ' / ' || C.CITY, C.CITY)) AS Text
+    FROM T05_VENDOR V
+    JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
+    WHERE V.VEND_NAME IS NOT NULL
+    AND (TRIM(V.VEND_CD) = p_vend_cd OR p_vend_cd IS NULL)
+    ORDER BY VEND_NAME;
+END;
+/
+
+=======================
+
+create or replace PROCEDURE GENERATE_CASE_NO (
+    IN_REGION_CD IN VARCHAR2,
+    IN_PO_DT IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+) IS
+    w_ctr VARCHAR2(100) := NULL;
+    w_sno VARCHAR2(100) := NULL;
+    w_Case_No VARCHAR2(500) := NULL;
+BEGIN
+    ---
+    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    w_Case_No := w_ctr || w_sno;
+
+    OPEN p_result_cursor FOR
+        SELECT w_Case_No AS CaseNo, 0 AS ERR_CD FROM DUAL;
+
+END;
+
+
+===================
+
+
+CREATE OR REPLACE PROCEDURE GET_PO_BPO_DETAILS (
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT P.CASE_NO,
+           P.CONSIGNEE_CD,
+           P.BPO_CD,
+           (C.CONSIGNEE_CD || '-' || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '') || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '') || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '') || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '') || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))) AS CONSIGNEE_NAME,
+           (B.BPO_CD || ' - ' || B.BPO_NAME || '/' || B.BPO_RLY || '/' || NVL2(B.BPO_ADD, B.BPO_ADD || '/', '') || NVL2(E.LOCATION, E.CITY || '/' || E.LOCATION, E.CITY)) AS BPO_NAME
+    FROM T14_PO_BPO P
+    JOIN T06_CONSIGNEE C ON P.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T12_BILL_PAYING_OFFICER B ON P.BPO_CD = B.BPO_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    JOIN T03_CITY E ON B.BPO_CITY_CD = E.CITY_CD
+    WHERE P.CASE_NO = p_case_no;
+END;
+/
+
+=====================
+create or replace PROCEDURE SP_GET_PO_DETAILSForAdministrator(
+    p_case_no IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT p.CASE_NO, p.ITEM_SRNO, p.ITEM_DESC,
+           (C.CONSIGNEE_CD || '-' || nvl2(trim(C.CONSIGNEE_DESIG), trim(C.CONSIGNEE_DESIG) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_DEPT), trim(C.CONSIGNEE_DEPT) || '/', '') ||
+           nvl2(trim(C.CONSIGNEE_FIRM), trim(C.CONSIGNEE_FIRM) || '/', '') ||
+           NVL2(trim(C.CONSIGNEE_ADD1), trim(C.CONSIGNEE_ADD1) || '/', '') ||
+           NVL2(trim(D.LOCATION), trim(D.LOCATION) || ' : ' || trim(D.CITY), trim(D.CITY))) AS CONSIGNEE_NAME,
+           p.QTY, p.RATE, p.VALUE as DATAVALUE
+    FROM T15_PO_DETAIL p
+    JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE (p.IsDeleted is null or p.IsDeleted =0)  and p.CASE_NO = p_case_no
+    ORDER BY p.ITEM_SRNO;
+END;
+
+
+===================
+
+ALTER TABLE Vendor_Feedback 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE Vendor_Feedback_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE Vendor_Feedback
+   SET ID = Vendor_Feedback_seq.nextval;
+   
+ALTER TABLE Vendor_Feedback
+    MODIFY ID NUMBER(6,0) DEFAULT Vendor_Feedback_seq.nextval;
+    
+ALTER TABLE Vendor_Feedback
+ADD CONSTRAINT Vendor_Feedback_pk  PRIMARY KEY (ID);
+
+======================
+
+ALTER TABLE CLIENT_FEEDBACK 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE CLIENT_FEEDBACK_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+UPDATE CLIENT_FEEDBACK
+   SET ID = CLIENT_FEEDBACK_seq.nextval;
+   
+ALTER TABLE CLIENT_FEEDBACK
+    MODIFY ID NUMBER(6,0) DEFAULT CLIENT_FEEDBACK_seq.nextval;
+    
+ALTER TABLE CLIENT_FEEDBACK
+ADD CONSTRAINT CLIENT_FEEDBACK_pk  PRIMARY KEY (ID);
+
+======================
+create or replace PROCEDURE SP_Get_ICCancelData (
+    p_BKNo IN VARCHAR2,
+    p_SetNo IN VARCHAR2,
+    p_ISSUE_TO_IECD IN NUMBER,
+    p_Region IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+BEGIN
+    OPEN p_Result FOR
+    SELECT IC.BK_NO,
+           IC.SET_NO,
+           IE.IE_NAME,
+           CASE IC.IC_STATUS
+               WHEN 'C' THEN 'Cancelled'
+               WHEN 'M' THEN 'Missing'
+               WHEN 'L' THEN 'Lost'
+           END AS IC_STATUS,
+           IC.IC_STATUS as STATUS,
+           TO_CHAR(IC.STATUS_DT, 'dd/mm/yyyy') AS STATUS_DT,
+           CASE IC.REGION
+               WHEN 'N' THEN 'Northern'
+               WHEN 'W' THEN 'Western'
+               WHEN 'E' THEN 'Eastern'
+               WHEN 'S' THEN 'South'
+               WHEN 'C' THEN 'Central'
+           END AS REGION,
+           IC.REGION AS REGIONV,
+           IC.REMARKS,
+           IC.Status
+    FROM T16_IC_CANCEL IC
+    INNER JOIN T09_IE IE ON IC.ISSUE_TO_IECD = IE.IE_CD
+    WHERE (IC.BK_NO = UPPER(TRIM(p_BKNo)) OR p_BKNo IS NULL)
+      AND (IC.SET_NO = UPPER(TRIM(p_SetNo)) OR p_SetNo IS NULL)
+      AND (IC.ISSUE_TO_IECD = p_ISSUE_TO_IECD OR p_ISSUE_TO_IECD = 0)
+      AND IC.REGION = p_Region AND (IC.ISDELETED = 0 or IC.ISDELETED is null)    
+    ORDER BY IC.BK_NO, IC.SET_NO;
+END;
+
+===============
+ALTER TABLE T36_BILL ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T36_BILL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T36_BILL ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T36_BILL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0)  
+
+=============
+
+CREATE OR REPLACE PROCEDURE SP_GetBillData (
+    p_Region IN VARCHAR2,
+    p_BillNo IN VARCHAR2,
+    p_BillFromDate IN VARCHAR2,
+    p_BillToDate IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) IS
+    v_Query VARCHAR2(1000);
+BEGIN
+    v_Query := 'SELECT BILL_NO, TO_CHAR(BILL_DT, ''dd/mm/yyyy'') AS BILL_DT, IC_NO, TO_CHAR(IC_DT, ''dd/mm/yyyy'') AS IC_DT, BILL_AMOUNT , BPO ,INSP_FEE, NVL(SERVICE_TAX,0)+NVL(EDU_CESS,0)+NVL(SHE_CESS,0) TAX ' ||
+               'FROM T36_BILL ' ||
+               'WHERE REGION = ''' || p_Region || '''';
+
+    IF p_BillNo IS NOT NULL THEN
+        v_Query := v_Query || ' AND TRIM(BILL_NO) = ''' || p_BillNo || '''';
+    END IF;
+   
+    IF p_BillFromDate IS NOT NULL AND p_BillToDate IS NOT NULL THEN
+         v_Query := v_Query || ' AND TO_CHAR(BILL_DT, ''dd/mm/yyyy'') BETWEEN ''' || p_BillFromDate || ''' AND ''' || p_BillToDate || '''';
+    END IF;
+
+    v_Query := v_Query || ' AND (ISDELETED = 0 OR ISDELETED IS NULL)';
+    
+    OPEN p_Result FOR v_Query ;
+END SP_GetBillData;
+
+
+
+=======================
+
+
+CREATE TABLE T34_CENTRAL_ITEM_MASTER (
+    ID NUMBER(6, 0) NOT NULL,
+    RAIL_CD VARCHAR2(50 BYTE),
+    RAIL_DESC VARCHAR2(100 BYTE),
+    RAIL_LENGTH_METER VARCHAR2(20 BYTE),
+    USER_ID VARCHAR2(20 BYTE),
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE T34_CENTRAL_ITEM_MASTER ADD (
+  CONSTRAINT T34_CENTRAL_ITEM_MASTER_PK PRIMARY KEY (ID));
+
+CREATE SEQUENCE T34_CENTRAL_ITEM_MASTER_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+   
+ALTER TABLE T34_CENTRAL_ITEM_MASTER
+    MODIFY ID NUMBER(6,0) DEFAULT T34_CENTRAL_ITEM_MASTER_seq.nextval;
+    
+==============
+
+
+CREATE TABLE T35_Central_Item_Detail (
+    ID NUMBER(6, 0) NOT NULL,
+    RAIL_ID NUMBER(6, 0) NOT NULL,
+    RAIL_PRICE_PER_MT VARCHAR2(50 BYTE),
+    PACKING_CHARGE VARCHAR2(100 BYTE),
+    PRICE_DATE_FR Date ,
+    PRICE_DATE_TO Date,
+    ISACTIVE NUMBER(2,0),
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE T35_Central_Item_Detail ADD (
+  CONSTRAINT T35_Central_Item_Detail_PK PRIMARY KEY (ID));
+
+ALTER TABLE T35_Central_Item_Detail
+ADD CONSTRAINT FK_T35_Central_Item_Detail_RAIL_ID_T34_CENTRAL_ITEM_MASTER FOREIGN KEY (RAIL_ID)
+REFERENCES T34_CENTRAL_ITEM_MASTER (ID);
+
+CREATE SEQUENCE T35_Central_Item_Detail_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE T35_Central_Item_Detail
+    MODIFY ID NUMBER(6,0) DEFAULT T35_Central_Item_Detail_seq.nextval;
+    
+==================
+CREATE TABLE RegionalHRDataOfIE (
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0) NOT NULL,
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0)
+  );
+ALTER TABLE RegionalHRDataOfIE ADD (
+  CONSTRAINT RegionalHRDataOfIE_PK PRIMARY KEY (ID));
+
+ALTER TABLE RegionalHRDataOfIE
+ADD CONSTRAINT FK_RegionalHRDataOfIE_IE_CD_T09_IE FOREIGN KEY (IE_CD)
+REFERENCES T09_IE (IE_CD);
+
+CREATE SEQUENCE RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE RegionalHRDataOfIE
+    MODIFY ID NUMBER(6,0) DEFAULT RegionalHRDataOfIE_seq.nextval;
+
+
+==================================
+CREATE TABLE Log_RegionalHRDataOfIE (
+    LID  NUMBER(6,0) NOT NULL,
+    ID NUMBER(6, 0) NOT NULL,
+    IE_CD NUMBER(6, 0),
+    Disclipline VARCHAR2(50 BYTE),
+    JoiningDate Date ,
+    PostingDate Date,
+    RetirementDate Date,
+    TransferDate Date,
+    DeputationFromDate Date,
+    DeputationToDate Date,
+    RepetriationDate Date,
+    IETenureFromDate Date,
+    IETenureToDate Date,
+    CREATEDBY NUMBER(6, 0),
+    CREATEDDATE TIMESTAMP(6),
+    UPDATEDBY NUMBER(6, 0),
+    UPDATEDDATE TIMESTAMP(6),
+    ISDELETED NUMBER(2, 0),
+    ActionType VARCHAR2(50 BYTE),
+    ActionDate TIMESTAMP(6),
+    ActionUserID VARCHAR2(50 BYTE)
+);
+
+ALTER TABLE Log_RegionalHRDataOfIE ADD (
+  CONSTRAINT Log_RegionalHRDataOfIE_pk PRIMARY KEY (LID));
+
+CREATE SEQUENCE Log_RegionalHRDataOfIE_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+   UPDATE Log_RegionalHRDataOfIE
+   SET LID = Log_RegionalHRDataOfIE_seq.nextval;
+   
+ALTER TABLE Log_RegionalHRDataOfIE
+    MODIFY LID NUMBER(6,0) DEFAULT Log_RegionalHRDataOfIE_seq.nextval;
+
+  ======================
+
+
+CREATE OR REPLACE TRIGGER Update_RegionalHRDataOfIE_Trigger
+    BEFORE UPDATE ON RegionalHRDataOfIE
+    FOR EACH ROW
+BEGIN
+    
+    INSERT INTO Log_RegionalHRDataOfIE (
+        id,
+        ie_cd,
+        disclipline,
+        joiningdate,
+        postingdate,
+        retirementdate,
+        transferdate,
+        deputationfromdate,
+        deputationtodate,
+        repetriationdate,
+        ietenurefromdate,
+        ietenuretodate,
+        createdby,
+        createddate,
+        updatedby,
+        updateddate,
+        isdeleted,
+        ActionType,
+        ActionDate,
+        ActionUserID
+    ) VALUES (
+        :OLD.id,
+        :OLD.ie_cd,
+        :OLD.disclipline,
+        :OLD.joiningdate,
+        :OLD.postingdate,
+        :OLD.retirementdate,
+        :OLD.transferdate,
+        :OLD.deputationfromdate,
+        :OLD.deputationtodate,
+        :OLD.repetriationdate,
+        :OLD.ietenurefromdate,
+        :OLD.ietenuretodate,
+        :OLD.createdby,
+        :OLD.createddate,
+        :NEW.updatedby,
+        SYSTIMESTAMP,
+        :OLD.isdeleted,
+        'U',
+        SYSTIMESTAMP,
+        :NEW.updatedby
+    );
+END;
+/
+
+========================
+
+
+create or replace PROCEDURE SP_DetailedReport_POofSpecificValues(
+    p_SelCriteria IN VARCHAR2,   
+    p_Region IN VARCHAR2,
+    p_frmDt IN VARCHAR2,
+    p_toDt IN VARCHAR2,
+    p_wAgency IN VARCHAR2,
+    p_wClient IN VARCHAR2,
+    p_wFrmAmt IN NUMBER,
+    p_wToAmt IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        P.CLIENT CLIENT,
+        P.CASE_NO,
+        P.PO_NO PO_NO,
+        TO_CHAR(P.PO_DT, 'dd/mm/yyyy') PO_DT,
+        P.PO_VALUE PO_VALUE,
+        P.VENDOR VENDOR,
+        P.CONSIGNEE CONSIGNEE,
+        TRIM(T15.ITEM_DESC) ITEM_DESC
+    FROM
+    (
+        SELECT
+            T13.CASE_NO CASE_NO,
+            T13.PO_NO PO_NO,
+            T13.PO_DT PO_DT,
+            SUM(NVL(T15.VALUE, 0)) PO_VALUE,
+            V05.VENDOR VENDOR,
+            V06.CONSIGNEE CONSIGNEE,
+            T13.RLY_CD CLIENT
+        FROM
+            T13_PO_MASTER T13,
+            T15_PO_DETAIL T15,
+            V05_VENDOR V05,
+            V06_CONSIGNEE V06
+        WHERE
+            T13.CASE_NO = T15.CASE_NO
+            AND T13.VEND_CD = V05.VEND_CD
+            AND T13.PURCHASER_CD = V06.CONSIGNEE_CD(+)
+            AND T13.REGION_CODE = p_Region
+            AND (CASE
+                    WHEN p_SelCriteria = 'P' THEN T13.PO_DT
+                    ELSE T13.RECV_DT
+                END
+                 BETWEEN p_frmDt AND p_toDt)
+            AND T13.RLY_NONRLY = p_wAgency
+            AND (RLY_CD = p_wClient or RLY_CD IS NULL)
+        GROUP BY
+            T13.CASE_NO,
+            T13.PO_NO,
+            T13.PO_DT,
+            V05.VENDOR,
+            V06.CONSIGNEE,
+            T13.RLY_CD
+    ) P,
+    T15_PO_DETAIL T15
+    WHERE
+        P.CASE_NO = T15.CASE_NO
+        AND (P.PO_VALUE BETWEEN p_wFrmAmt AND p_wToAmt)
+    GROUP BY
+        P.CLIENT,
+        P.CASE_NO,
+        P.PO_NO,
+        TO_CHAR(P.PO_DT, 'dd/mm/yyyy'),
+        P.PO_VALUE,
+        P.VENDOR,
+        P.CONSIGNEE,
+        TRIM(T15.ITEM_DESC);
+END SP_DetailedReport_POofSpecificValues;
+
+=========================
+
+create or replace PROCEDURE SP_SummarizedReport_POofSpecificValues(
+    p_SelCriteria IN VARCHAR2,  
+    p_wRegion IN VARCHAR2,
+    p_frmDt IN DATE,
+    p_toDt IN DATE,
+    p_wAgency IN VARCHAR2,  
+    p_wFrmAmt IN NUMBER,
+    p_wToAmt IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        P.CLIENT CLIENT,
+        COUNT(*) No_OF_PO,
+        SUM(P.PO_VALUE) PO_VALUE
+    FROM
+    (
+        SELECT
+            T13.CASE_NO,
+            T13.RLY_CD CLIENT,
+            SUM(NVL(T15.VALUE, 0)) PO_VALUE
+        FROM
+            T13_PO_MASTER T13,
+            T15_PO_DETAIL T15
+        WHERE
+            T13.CASE_NO = T15.CASE_NO
+            AND (CASE
+                    WHEN p_SelCriteria = 'P' THEN T13.PO_DT
+                    ELSE T13.RECV_DT
+                END
+                 BETWEEN p_frmDt AND p_toDt)
+            AND T13.RLY_NONRLY = p_wAgency
+            AND T13.REGION_CODE = p_wRegion
+        GROUP BY
+            T13.CASE_NO,
+            T13.RLY_CD
+    ) P
+    WHERE
+        P.PO_VALUE BETWEEN p_wFrmAmt AND p_wToAmt
+    GROUP BY
+        P.CLIENT
+    ORDER BY
+        P.CLIENT;
+END SP_SummarizedReport_POofSpecificValues;
+
+=========================================
+create or replace PROCEDURE SP_Get_ItemWiseInspections (    
+    p_RegionCode IN VARCHAR2,
+    p_ItemDesc1 IN VARCHAR2,
+    p_ItemDesc2 IN VARCHAR2,
+    p_ItemDesc3 IN VARCHAR2,
+    p_ItemDesc4 IN VARCHAR2,
+    p_ItemDesc5 IN VARCHAR2,
+    p_FrmDt IN DATE,
+    p_ToDt IN DATE,
+    p_OneRegion IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        T13.REGION_CODE,
+        T23.ITEM_DESC,
+        T13.CASE_NO,
+        T13.PO_NO,
+        TO_CHAR(T13.PO_DT, 'DD/MM/YYYY') AS PO_DATE,
+        T13.RLY_CD AS BPO_RLY,
+        T18.QTY_PASSED,
+        T18.QTY_REJECTED,
+        T20.BK_NO,
+        T20.SET_NO,
+        T20.IC_TYPE_ID,
+        T20.BILL_NO,
+        TO_CHAR(T22.BILL_DT, 'DD/MM/YYYY') AS BILL_DATE,
+        T22.BILL_AMOUNT,
+        V05.VEND_CD || '-' || V05.VENDOR AS VENDOR,
+        M05.VEND_CD || '-' || M05.VENDOR AS MANUFACTURER,
+        V06.CONSIGNEE_CD || '-' || V06.CONSIGNEE AS CONSIGNEE,
+        T23.VALUE,
+        T09.IE_SNAME,
+        T20.IC_NO,
+        TO_CHAR(T20.IC_DT, 'DD/MM/YYYY') AS IC_DATE,
+        TO_CHAR(T20.CALL_RECV_DT, 'DD/MM/YYYY') AS CALL_DATE,
+        T20.CALL_SNO,
+        TO_CHAR(T20.FIRST_INSP_DT, 'DD/MM/YYYY') AS FIRST_INSP_DATE,
+        TO_CHAR(T20.LAST_INSP_DT, 'DD/MM/YYYY') AS LAST_INSP_DATE,
+        NVL((T20.FIRST_INSP_DT - T20.CALL_RECV_DT), 0) AS TIME_TO_START,
+        NVL((T20.LAST_INSP_DT - T20.CALL_RECV_DT), 0) AS TIME_TO_END,
+        T20.NO_OF_INSP
+    FROM
+        T13_PO_MASTER T13
+    JOIN
+        T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
+    JOIN
+        T18_CALL_DETAILS T18 ON T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO
+    JOIN
+        T20_IC T20 ON T17.CASE_NO = T20.CASE_NO AND T17.CALL_RECV_DT = T20.CALL_RECV_DT AND T17.CALL_SNO = T20.CALL_SNO
+    JOIN
+        T22_BILL T22 ON T20.BILL_NO = T22.BILL_NO
+    JOIN
+        V05_VENDOR V05 ON T13.VEND_CD = V05.VEND_CD
+    JOIN
+        V05_VENDOR M05 ON T17.MFG_CD = M05.VEND_CD
+    JOIN
+        V06_CONSIGNEE V06 ON T20.CONSIGNEE_CD = V06.CONSIGNEE_CD
+    JOIN
+        T23_BILL_ITEMS T23 ON T20.BILL_NO = T23.BILL_NO AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO
+    JOIN
+        T09_IE T09 ON T17.IE_CD = T09.IE_CD
+    WHERE
+       --T13.REGION_CODE = p_RegionCode
+        ((p_OneRegion = 'true' AND T13.REGION_CODE = p_RegionCode)
+        OR (p_OneRegion <> 'true' AND T13.REGION_CODE = T13.REGION_CODE))
+
+        AND (
+            INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc1)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc2)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc3)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc4)) > 0
+            OR INSTR(UPPER(T23.ITEM_DESC), UPPER(p_ItemDesc5)) > 0
+        )
+        --AND (T20.IC_DT BETWEEN '05/10/18' AND '05/10/18')
+        AND (T20.IC_DT BETWEEN p_FrmDt AND p_ToDt)
+    ORDER BY
+        T13.REGION_CODE,
+        T23.ITEM_DESC,
+        T20.IC_DT,
+        T22.BILL_NO;
+END SP_Get_ItemWiseInspections;
+============================
+
+CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
+    p_RegionCode IN VARCHAR2,
+    p_ItemDesc1 IN VARCHAR2,
+    p_ItemDesc2 IN VARCHAR2,
+    p_ItemDesc3 IN VARCHAR2,
+    p_ItemDesc4 IN VARCHAR2,
+    p_ItemDesc5 IN VARCHAR2,
+    p_FrmDt IN DATE,
+    p_ToDt IN DATE,
+    p_OneRegion IN VARCHAR2,
+    p_ClientType IN VARCHAR2, 
+    p_RlyCd IN VARCHAR2, 
+    p_Result OUT SYS_REFCURSOR
+) AS
+    sql_stmt VARCHAR2(10000);
+
+BEGIN
+    sql_stmt := 'SELECT TRIM(T23.ITEM_DESC) ITEM_DESC, T13.RLY_CD BPO_RLY, SUM(T18.QTY_PASSED) QTY_PASS, SUM(T18.QTY_REJECTED) QTY_REJ, T04.UOM_S_DESC UOM_S_DESC, SUM(T23.VALUE) VALUE, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END) IC_PERIOD, COUNT(*) NO_OF_INSP FROM T13_PO_MASTER T13, T17_CALL_REGISTER T17, T18_CALL_DETAILS T18, T20_IC T20, T22_BILL T22, T23_BILL_ITEMS T23, T04_UOM T04 WHERE T13.CASE_NO = T17.CASE_NO AND T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO AND T17.CASE_NO = T20.CASE_NO AND T17.CALL_RECV_DT = T20.CALL_RECV_DT AND T17.CALL_SNO = T20.CALL_SNO AND T20.BILL_NO = T22.BILL_NO AND T22.BILL_NO = T23.BILL_NO AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO AND T23.UOM_CD = T04.UOM_CD';
+
+    IF p_OneRegion = 'true' THEN
+        sql_stmt := sql_stmt || ' AND T13.REGION_CODE = ''' || p_RegionCode || '''';
+    END IF;
+
+    IF p_ItemDesc1 IS NOT NULL AND p_ItemDesc1 != '' THEN
+        sql_stmt := sql_stmt || ' AND (INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc1 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc2 IS NOT NULL AND p_ItemDesc2 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc2 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc3 IS NOT NULL AND p_ItemDesc3 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc3 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc4 IS NOT NULL AND p_ItemDesc4 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc4 || ''')) > 0';
+    END IF;
+
+    IF p_ItemDesc5 IS NOT NULL AND p_ItemDesc5 != '' THEN
+        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc5 || ''')) > 0';
+    END IF;
+
+    IF p_ClientType IS NOT NULL AND p_ClientType != '' AND p_ClientType != 'A' THEN
+        sql_stmt := sql_stmt || ' AND T13.RLY_NONRLY = ''' || p_ClientType || ''' AND T13.RLY_CD = ''' || p_RlyCd || '''';
+    END IF;
+
+    sql_stmt := sql_stmt || ' AND (T20.IC_DT BETWEEN ''' || p_FrmDt || ''' AND ''' || p_ToDt || ''') GROUP BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC ORDER BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC';
+
+    OPEN p_Result FOR sql_stmt;
+END SP_Get_ClientWiseInspections;
+
+
+==========================
+
+ALTER TABLE T16_Ic_Cancel ADD CREATEDBY  NUMBER(6,0)
+ALTER TABLE T16_Ic_Cancel ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDBY  NUMBER(6,0)
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
+ALTER TABLE T16_Ic_Cancel ADD ISDELETED NUMBER(2,0)  
+ALTER TABLE T16_Ic_Cancel ADD Status NUMBER(2,0)
+
+
+--update T16_Ic_Cancel set status=1
+
+=====================
+ALTER TABLE T13_Po_Master ADD IsPriceVariation NUMBER(2,0)
+ALTER TABLE T13_Po_Master ADD IsStageInspection NUMBER(2,0)
+======================
+
+
+
+
+create or replace PROCEDURE sp_PCDOReport_Highlights (
+    p_wYrMth IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT
+        ROW_NUMBER() OVER (ORDER BY High_dt) AS sn,
+        DECODE(Region_Code, 'N', 'Northern', 'E', 'Eastern', 'W', 'Western', 'S', 'Southern', 'C', 'Central', 'Q', 'Corporate QA Division') AS Region_Code,
+        Hight_text
+    FROM
+        T67_Highlights
+    WHERE
+        High_dt = p_wYrMth
+        AND Region_Code != 'Q';
+END sp_PCDOReport_Highlights;
+
+
+=========================
+
+create or replace PROCEDURE sp_PCDOReport_CO_Highlights (
+    p_CumYrMth IN VARCHAR2,
+    p_wYrMth IN VARCHAR2,
+    p_byear IN VARCHAR2,
+    p_dmonth IN NUMBER,
+    p_lstdate IN VARCHAR2,
+    p_CumYrPast IN VARCHAR2,
+    p_wYrMth_Past IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+  OPEN p_Result FOR
+  SELECT
+    decode(Region_Code,'N','Northern','E','Eastern','W','Western','S','Southern','C','Central') AS Region_Code,
+    decode(Region_Code,'N','A','E','B','W','C','S','D','C','E') AS Serial_Code,
+    CASE
+        WHEN sum(TY_Turn_T) = 0 THEN 0
+        ELSE Round((sum(TY_Turn_T))/100000, 2)
+    END AS TY_Turn_T,
+    
+    CASE
+        WHEN sum(TY_Turnl_T) = 0 THEN 0
+        ELSE Round((sum(TY_Turnl_T))/100000, 2)
+    END AS TY_Turnl_T,
+
+    sum(T_B_TARGET) AS T_B_TARGET,
+    
+    sum(TY_real_amt) AS TY_real_amt,
+    sum(TY_Out_amt) AS TY_Out_amt,
+    sum(TY_tot_sus) AS TY_tot_sus,
+    sum(TY_bill_amt) AS TY_bill_amt,
+    
+    CASE
+        WHEN sum(TY_EXP_FEE) = 0 THEN 0
+        ELSE Round((sum(TY_EXP_FEE))/100000, 2)
+    END AS TY_EXP_FEE,
+
+    CASE
+        WHEN (sum(TY_TOA1) + sum(TY_TOA2)) = 0 THEN 0
+        ELSE Round((sum(TY_TOA1))/100000, 2)
+    END AS TY_TOA1,
+
+    CASE
+        WHEN (sum(TY_TOA1) + sum(TY_TOA2)) = 0 THEN 0
+        ELSE Round((sum(TY_TOA2))/100000, 2)
+    END AS TY_TOA2,
+
+    CASE
+        WHEN (sum(TY_bill_amt)) = 0 THEN 0
+        ELSE Round((sum(TY_Out_amt) - sum(TY_tot_sus)) * 365 / (sum(TY_bill_amt)), 0)
+    END AS TY_Days,
+
+    CASE
+        WHEN (sum(TY_TOA1) + sum(TY_TOA2)) = 0 THEN 0
+        ELSE Round(((Round((sum(TY_EXP_FEE))/100000,2) / (sum(TY_TOA1)/100000 + sum(TY_TOA2)/100000)) * 100), 2)
+    END AS TY_OR_Actual,
+
+    CASE
+        WHEN (sum(T_B_TARGET)) = 0 THEN 0
+        ELSE Round(((sum(T_B_TARGET))/12) * p_dmonth, 2)
+    END AS TY_BRO_TARGET,
+
+    CASE
+        WHEN sum(LY_turn) = 0 THEN 0
+        ELSE Round((sum(LY_turn))/100000, 2)
+    END AS LY_turn,
+
+    CASE
+        WHEN sum(LY_turnl) = 0 THEN 0
+        ELSE Round((sum(LY_turnl))/100000, 2)
+    END AS LY_turnl,
+
+    CASE
+        WHEN sum(TOR) = 0 THEN 0
+        ELSE Round(sum(TOR), 2)
+    END AS TOR,
+
+    CASE
+        WHEN sum(TOR) = 0 THEN 0
+        ELSE Round(((sum(TOR))/12) * p_dmonth, 2)
+    END AS Exp_pro_target,
+
+    CASE
+        WHEN sum(LY_EXP_FEE) = 0 THEN 0
+        ELSE Round((sum(LY_EXP_FEE))/100000, 2)
+    END AS LY_EXP_FEE,
+
+    CASE
+        WHEN (sum(LY_TOA1) + sum(LY_TOA2)) = 0 THEN 0
+        ELSE Round((sum(LY_TOA1))/100000, 2)
+    END AS LY_TOA1,
+
+    CASE
+        WHEN (sum(LY_TOA1) + sum(LY_TOA2)) = 0 THEN 0
+        ELSE Round((sum(LY_TOA2))/100000, 2)
+    END AS LY_TOA2,
+    --Round((Round((sum(LY_EXP_FEE))/100000,2)/(Round((sum(LY_TOA1))/100000,2)+Round((sum(LY_TOA2))/100000,2)))*100,2) AS LY_OR_Actual
+    CASE
+    WHEN (Round((sum(LY_TOA1))/100000,2) + Round((sum(LY_TOA2))/100000,2)) = 0 THEN 0
+    ELSE Round((Round((sum(LY_EXP_FEE))/100000,2)/(Round((sum(LY_TOA1))/100000,2) + Round((sum(LY_TOA2))/100000,2)))*100,2)
+    END AS LY_OR_Actual
+
+  FROM
+  (
+    Select Region_Code,region_code Serial_Code,sum(NVL(INSP_FEE,0)) TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 from V22A_BILLING_SUMMARY where substr(sector,1,1) in ('1','2','3','5','6') and BILLING_YR_MTH between p_CumYrMth and p_wYrMth group by Region_Code 
+    
+    UNION ALL
+
+    Select Region_Code,region_code Serial_Code,0 TY_Turn_T,sum(NVL(LAB_EXP,0)) TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 from t59_lab_exp where lab_bill_per between p_CumYrMth and p_wYrMth group by Region_Code 
+
+    UNION ALL
+
+    Select Region_Code,region_code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,sum(NVL(B_TARGET,0)) T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 from T83_BE_TARGET where BE_PER=p_byear group by Region_Code 
+
+    UNION ALL
+
+    Select Region Region_Code,Region Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,sum(Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2))TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 from TEMP24_25_REALISATION Group by Region 
+
+    UNION ALL
+
+    Select region_code,region_code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,Round(sum(amount_outstanding)/100000,2) TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 From v22b_outstanding_bills where AMOUNT_OUTSTANDING >0 and TO_CHAR(bill_dt,'yyyymm')<=p_wYrMth and region_code!='Q' group by region_code 
+
+    UNION ALL
+
+    Select SUBSTR(T25.VCHR_NO,1,1) region_code,SUBSTR(T25.VCHR_NO,1,1) Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,Round(sum(T25.SUSPENSE_AMT)/100000,2)TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 From T25_RV_DETAILS T25,T12_BILL_PAYING_OFFICER T12 Where (T25.ACC_CD not in (2709,2210,2212)) and nvl(T25.BPO_CD,'00000')=T12.BPO_CD and nvl(T25.SUSPENSE_AMT,0) <> 0 and SUBSTR(T25.VCHR_NO,1,1)!='1' group by SUBSTR(T25.VCHR_NO,1,1) 
+
+    UNION ALL
+
+    Select region_code,region_code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,Round(sum(BILL_AMOUNT)/100000,2)TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 From V22B_OUTSTANDING_BILLS Where TO_CHAR(bill_dt,'yyyymm') between p_lstdate and p_wYrMth and region_code!='Q' group by region_code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,sum(NVL(exp_amt,0)) TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 FROM T63_EXP WHERE exp_per BETWEEN p_CumYrMth AND p_wYrMth group by region_code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,sum(NVL(INSP_FEE,0)) TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 FROM V22A_BILLING_SUMMARY where substr(sector,1,1) in ('1','2', '3','5','6') and BILLING_YR_MTH BETWEEN p_CumYrMth AND p_wYrMth GROUP BY region_code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,sum(NVL(LAB_EXP,0)) TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 FROM t59_lab_exp where lab_bill_per BETWEEN p_CumYrMth AND p_wYrMth GROUP BY region_code 
+
+    UNION ALL
+
+    Select Region_Code,region_code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,sum(NVL(INSP_FEE,0)) LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 from V22A_BILLING_SUMMARY where substr(sector,1,1) in ('1','2','3','5','6') and BILLING_YR_MTH between p_CumYrPast and p_wYrMth_Past group by Region_Code 
+
+    UNION ALL
+
+    Select Region_Code,region_code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,sum(NVL(LAB_EXP,0)) LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 from t59_lab_exp where lab_bill_per between p_CumYrPast and p_wYrMth_Past group by Region_Code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,sum(NVL(EX_TARGET,0)) TOR,0 LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 FROM T83_BE_TARGET where BE_PER=p_byear GROUP BY region_code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,sum(NVL(exp_amt,0)) LY_EXP_FEE,0 LY_TOA1,0 LY_TOA2 FROM T63_EXP WHERE exp_per BETWEEN p_CumYrPast AND p_wYrMth_Past group by region_code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TOA1,0 TY_TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,sum(NVL(INSP_FEE,0)) LY_TOA1,0 LY_TOA2 FROM V22A_BILLING_SUMMARY where substr(sector,1,1) in ('1','2', '3','5','6') and BILLING_YR_MTH BETWEEN p_CumYrPast AND p_wYrMth_Past GROUP BY region_code 
+
+    UNION ALL
+
+    SELECT Region_Code,Region_Code Serial_Code,0 TY_Turn_T,0 TY_Turnl_T,0 T_B_TARGET,0 TY_real_amt,0 TY_Out_amt,0 TY_tot_sus,0 TY_bill_amt,0 TY_EXP_FEE,0 TY_TOA1,0 TOA2,0 LY_turn,0 LY_turnl,0 TOR,0 LY_EXP_FEE,0 LY_TOA1,sum(NVL(LAB_EXP,0)) LY_TOA2 FROM t59_lab_exp where lab_bill_per BETWEEN p_CumYrPast AND p_wYrMth_Past GROUP BY region_code
+  
+  )
+  GROUP BY Region_Code
+  ORDER BY Serial_Code;
+END sp_PCDOReport_CO_Highlights;
+
+
+
+==============
+
+
+create or replace PROCEDURE sp_PCDOReport_FinancialBilling (
+    dmonth IN VARCHAR2,
+    wYrMth_Past IN VARCHAR2,
+    CumYrPast IN VARCHAR2,
+    wYrMth IN NUMBER,
+    CumYrMth IN VARCHAR2,
+    byear IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT
+            DECODE(Region_Code, 'N', 'Northern', 'E', 'Eastern', 'W', 'Western', 'S', 'Southern', 'C', 'Central', 'Q', 'QA Corporate') Region_Code,
+            DECODE(Region_Code, 'N', 'A', 'E', 'B', 'W', 'C', 'S', 'D', 'C', 'E', 'Q', 'F') Serial_Code,
+            ROUND(SUM(DR_INSP_FEE) / 100000, 2) DR_FEE,
+            ROUND(SUM(DNR_INSP_FEE) / 100000, 2) DNR_FEE,
+            ROUND(SUM(DRI_INSP_FEE) / 100000, 2) DRI_FEE,
+            ROUND(SUM(DCR_INSP_FEE) / 100000, 2) DCR_FEE,
+            ROUND(SUM(DCNR_INSP_FEE) / 100000, 2) DCNR_FEE,
+            ROUND(SUM(DCRI_INSP_FEE) / 100000, 2) DCRI_FEE,
+            ROUND(SUM(R_INSP_FEE) / 100000, 2) R_FEE,
+            ROUND(SUM(NR_INSP_FEE) / 100000, 2) NR_FEE,
+            ROUND(SUM(RI_INSP_FEE) / 100000, 2) RI_FEE,
+            ROUND(SUM(CR_INSP_FEE) / 100000, 2) CR_FEE,
+            ROUND(SUM(CNR_INSP_FEE) / 100000, 2) CNR_FEE,
+            ROUND(SUM(CRI_INSP_FEE) / 100000, 2) CRI_FEE,
+            ROUND(SUM(DTM_Lab_Fee) / 100000, 2) DTM_FEE,
+            ROUND(SUM(CTM_Lab_Fee) / 100000, 2) CTM_FEE,
+            ROUND(SUM(CDTM_Lab_Fee) / 100000, 2) CDTM_FEE,
+            ROUND(SUM(CCTM_Lab_Fee) / 100000, 2) CCTM_FEE,
+            ROUND(((SUM(B_TARGET)) / 12) * TO_NUMBER(dmonth), 2) B_TARGET,
+            ROUND(SUM(CCTM_adj_Fee) / 100000, 2) CCTM_adj_Fee,
+            ROUND(SUM(CUTM_adj_Fee) / 100000, 2) CUTM_adj_Fee,
+            ROUND(SUM(CCTM_adj_Fee_past) / 100000, 2) CCTM_adj_Fee_past,
+            ROUND(SUM(CUTM_adj_Fee_past) / 100000, 2) CUTM_adj_Fee_past
+        FROM
+            (SELECT
+                Region_Code,
+                region_code Serial_Code,
+                SUM(NVL(INSP_FEE, 0)) DR_INSP_FEE,
+                0 DNR_INSP_FEE,
+                0 DRI_INSP_FEE,
+                0 DCR_INSP_FEE,
+                0 DCNR_INSP_FEE,
+                0 DCRI_INSP_FEE,
+                0 R_INSP_FEE,
+                0 NR_INSP_FEE,
+                0 RI_INSP_FEE,
+                0 CR_INSP_FEE,
+                0 CNR_INSP_FEE,
+                0 CRI_INSP_FEE,
+                0 DTM_Lab_Fee,
+                0 CTM_Lab_Fee,
+                0 CDTM_Lab_Fee,
+                0 CCTM_Lab_Fee,
+                0 B_TARGET,
+                0 CCTM_adj_Fee,
+                0 CUTM_adj_Fee,
+                0 CCTM_adj_Fee_past,
+                0 CUTM_adj_Fee_past
+            FROM
+                V22A_BILLING_SUMMARY
+            WHERE
+                SUBSTR(sector, 1, 1) = 1
+                AND BILLING_YR_MTH = wYrMth_Past
+            GROUP BY
+                Region_Code
+            UNION ALL
+            SELECT
+                Region_Code,
+                region_code Serial_Code,
+                0 DR_INSP_FEE,
+                SUM(NVL(INSP_FEE, 0)) DNR_INSP_FEE,
+                0 DRI_INSP_FEE,
+                0 DCR_INSP_FEE,
+                0 DCNR_INSP_FEE,
+                0 DCRI_INSP_FEE,
+                0 R_INSP_FEE,
+                0 NR_INSP_FEE,
+                0 RI_INSP_FEE,
+                0 CR_INSP_FEE,
+                0 CNR_INSP_FEE,
+                0 CRI_INSP_FEE,
+                0 DTM_Lab_Fee,
+                0 CTM_Lab_Fee,
+                0 CDTM_Lab_Fee,
+                0 CCTM_Lab_Fee,
+                0 B_TARGET,
+                0 CCTM_adj_Fee,
+                0 CUTM_adj_Fee,
+                0 CCTM_adj_Fee_past,
+                0 CUTM_adj_Fee_past
+            FROM
+                V22A_BILLING_SUMMARY
+            WHERE
+                SUBSTR(sector, 1, 1) IN (2, 3, 5)
+                AND BILLING_YR_MTH = wYrMth_Past
+            GROUP BY
+                Region_Code
+            Union All 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,sum(NVL(INSP_FEE,0)) DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=6 and 
+				BILLING_YR_MTH=wYrMth_Past group by Region_Code 
+				Union All  		
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,sum(NVL(INSP_FEE,0)) DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=1 and 
+				BILLING_YR_MTH between CumYrPast and wYrMth_Past group by Region_Code 
+				Union All  		
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,sum(NVL(INSP_FEE,0)) DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1) in (2, 3, 5) and 
+				BILLING_YR_MTH between CumYrPast and wYrMth_Past group by Region_Code 
+				Union All  		
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,sum(NVL(INSP_FEE,0)) DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=6 and 
+				BILLING_YR_MTH between CumYrPast and wYrMth_Past group by Region_Code 
+				Union All  
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,sum(NVL(INSP_FEE,0))R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=1 and 
+				BILLING_YR_MTH=wYrMth group by Region_Code  
+				Union All  
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,sum(NVL(INSP_FEE,0)) NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1) in (2, 3, 5) and 
+				BILLING_YR_MTH=wYrMth group by Region_Code 
+				Union All  		
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,sum(NVL(INSP_FEE,0)) RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=6 and 
+				BILLING_YR_MTH=wYrMth group by Region_Code 
+				Union All 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,sum(NVL(INSP_FEE,0))CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=1 and 
+				BILLING_YR_MTH between CumYrMth and wYrMth group by Region_Code  
+				Union All  
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,sum(NVL(INSP_FEE,0))CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1) in (2, 3, 5) and 
+				BILLING_YR_MTH between CumYrMth and wYrMth group by Region_Code 
+				Union All  		
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,sum(NVL(INSP_FEE,0))CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from V22A_BILLING_SUMMARY where substr(sector,1,1)=6 and 
+				BILLING_YR_MTH between CumYrMth and wYrMth group by Region_Code 
+				Union All 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,sum(NVL(LAB_EXP,0)) DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from t59_lab_exp where  
+				lab_bill_per=wYrMth_Past group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,sum(NVL(LAB_EXP,0)) CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from t59_lab_exp where  
+				lab_bill_per between CumYrPast and wYrMth_Past group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,sum(NVL(LAB_EXP,0)) CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from t59_lab_exp where  
+				lab_bill_per=wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,sum(NVL(LAB_EXP,0)) CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from t59_lab_exp where  
+				lab_bill_per between CumYrMth and wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,sum(NVL(B_TARGET,0)) B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past from T83_BE_TARGET where  
+				BE_PER=byear group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET, sum(NVL(adjustment_amt,0)) CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past 
+				from t85_billing_adjustement_pcdo  
+				where adjusment_yr_mth=wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET, 0 CCTM_adj_Fee,sum(NVL(adjustment_amt,0)) CUTM_adj_Fee,0 CCTM_adj_Fee_past,0 CUTM_adj_Fee_past   
+				from t85_billing_adjustement_pcdo  
+				where adjusment_yr_mth between CumYrMth and wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET,0 CCTM_adj_Fee,0 CUTM_adj_Fee,sum(NVL(adjustment_amt,0)) CCTM_adj_Fee_past,0 CUTM_adj_Fee_past 
+				from t85_billing_adjustement_pcdo  
+				where adjusment_yr_mth=wYrMth_Past group by Region_Code 
+				UNION ALL 
+				Select Region_Code,region_code Serial_Code,0 DR_INSP_FEE,0 DNR_INSP_FEE,0 DRI_INSP_FEE,0 DCR_INSP_FEE,0 DCNR_INSP_FEE,0 DCRI_INSP_FEE,0 R_INSP_FEE,0 NR_INSP_FEE,0 RI_INSP_FEE,0 CR_INSP_FEE,0 CNR_INSP_FEE,0 CRI_INSP_FEE,0 DTM_Lab_Fee,0 CTM_Lab_Fee,0 CDTM_Lab_Fee,0 CCTM_Lab_Fee,0 B_TARGET, 0 CCTM_adj_Fee,0 CUTM_adj_Fee,0 CCTM_adj_Fee_past,sum(NVL(adjustment_amt,0)) CUTM_adj_Fee_past   
+				from t85_billing_adjustement_pcdo  
+				where adjusment_yr_mth between CumYrPast and wYrMth_Past group by Region_Code
+            )
+        GROUP BY
+            Region_Code
+        ORDER BY
+            Serial_Code;
+
+END sp_PCDOReport_FinancialBilling;
+
+
+================

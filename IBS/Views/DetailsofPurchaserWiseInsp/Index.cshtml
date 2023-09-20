@@ -1,0 +1,257 @@
+﻿@model IBS.Models.DetailsofPurchaserWiseInspModel
+@{
+    ViewData["Title"] = "SUMMARY OF INSPECTIONS FOR RTI";
+}
+<style>
+    a.btnicons {
+        transition: all 0.4s;
+        border: 1px solid #848484;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 50%;
+        margin: 0 6px;
+    }
+</style>
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>SUMMARY OF INSPECTIONS FOR RTI</h2>
+        </div>
+
+    </div>
+    <div class="accordion-body">
+        
+        <div class="row my-0">
+            <div class="col-md-8 mb-3">
+                <label for="Reference" style="width: 100%;">
+                    Select Purchaser
+               </label>
+                <input type="text" class="input" asp-for="SearchPurchaser" id="txtSPur" style="width: 46%;">
+                <button type="button" class="save-btn active" onclick="SearchPurchaser();">Search Purchaser</button>
+            </div>
+           
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3" style="display:none;" id="hdnPDropdown">
+                <label for="Reference"></label>
+                <select asp-for="PurchaserCD"></select>
+            </div>
+            </div>
+        <div class="row my-0">
+            <div class="col-md-5 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">All Purchasers</label>
+                <input type="radio" name="radioGroup" id="rb1" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-5 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For Particular Purchaser</label>
+                <input type="radio" name="radioGroup" id="rb2" />
+                <span class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row my-0">
+            <div class="col-md-2 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For the Month</label>
+                <input type="radio" name="radioGroup2" id="rb3" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" style="margin-top:auto;">
+                <label for="PropertyId">For Given Period</label>
+                <input type="radio" name="radioGroup2" id="rb4" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" style="display:none" id="dtf">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" style="display:none" id="dtt">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3" id="dd1">
+                 <label for="PropertyId">Month</label>
+                @Html.DropDownListFor(model => model.Month, Common.GetMonth(), new { @id="ddlmonth"})
+                <span asp-validation-for="Month" class="text-danger"></span>
+            </div>
+             <div class="col-md-2 mb-3"  id="dd2">
+                 <label for="PropertyId">Year</label>
+                @Html.DropDownListFor(model => model.Year, Common.GetYear(), new { @id="ddlyear"})
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <label>Report based on </label>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">IC Date</label>
+                <input type="radio" name="radioGroup3" id="rb5" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3" >
+                <label for="PropertyId">Bill Date</label>
+                <input type="radio" name="radioGroup3" id="rb6" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        
+
+    </div>
+    <div class="savenext-btn" style="margin-left:50%;">
+        <button type="button" class="save-btn active" onclick="ViewReport();">Search</button>
+        <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function FillPurchaserCd(ids) {
+            var txtSPur = $("#txtSPur").val();
+            $.ajax({
+                url: '@Url.Action("GetPurchaserCd", "DetailsofPurchaserWiseInsp")?Purchaser=' + txtSPur,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PurchaserCD").html("");
+                    $("#PurchaserCD").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#PurchaserCD").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#PurchaserCD").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#PurchaserCD").val(ids);
+                    }
+                    //$("#hdnRCD").val($("#RlyCd").val());
+                    //$("#hdnRailway").val($("#RlyCd option:selected").text());
+                }
+            });
+        }
+        function SearchPurchaser() {
+            FillPurchaserCd();
+            $("#hdnPDropdown").css("display","block");
+        }
+        function ClearControls() {
+            location.reload(true);
+        }
+        
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.removeItem("rbb2");
+                sessionStorage.setItem("rbb1", true);
+                
+            }
+            else 
+            {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.removeItem("rbb2");
+                sessionStorage.setItem("rbb2", true);
+                
+                
+            }            
+
+        });
+        $('input[name="radioGroup3"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb5") {
+                sessionStorage.removeItem("rbb5");
+                sessionStorage.removeItem("rbb6");
+                sessionStorage.setItem("rbb5", true);
+                //$("#dd1").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("rbb5");
+                sessionStorage.removeItem("rbb6");
+                sessionStorage.setItem("rbb6", true);
+                //$("#dd1").css("display", "block");
+            }
+        });
+
+        $('input[name="radioGroup2"]').change(function () {
+            
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb3") {
+                sessionStorage.removeItem("rbb3");
+                sessionStorage.removeItem("rbb4");
+                sessionStorage.setItem("rbb4", false);
+                $("#dtf").css("display", "none");
+                $("#dtt").css("display", "none");
+                $("#dd1").css("display", "block");
+                $("#dd2").css("display", "block");
+
+            }
+            else {
+                sessionStorage.removeItem("rbb3");
+                
+                sessionStorage.removeItem("rbb4");
+                sessionStorage.setItem("rbb4", true);
+                
+                $("#dtf").css("display", "block");
+                $("#dtt").css("display", "block");
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+            }
+        });
+        
+        $(function () {
+            $("#rb1").prop("checked", true);
+            $("#rb3").prop("checked", true);
+            $("#rb5").prop("checked", true);
+            sessionStorage.setItem("rbb5", true);
+            sessionStorage.setItem("rbb4", false);
+            
+        });
+        function ViewReport() {
+
+           // var ReportType = "Summary of Consignee Wise Inspections";
+           
+            var ForGiven = sessionStorage.getItem("rbb4");
+            var ReportBasedon = sessionStorage.getItem("rbb5");
+            var TextPurchaser = $("#txtSPur").val();
+            if (sessionStorage.getItem("rbb4") == "false"){
+                var Month = $("#ddlmonth").val();
+                var Year = $("#ddlyear").val();
+            }
+            else
+            {
+                var parts = $("#dtfrom").val().split('/');
+                var FromDate = parts[1]+'/'+ parts[0]+'/'+parts[2];
+                var parts2 = $("#dtto").val().split('/');
+                var ToDate = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+                
+            }
+            
+            var ForParticular = sessionStorage.getItem("rbb2");
+            var lstParticular = sessionStorage.getItem("con");
+            let myObject = { ForGiven, ReportBasedon, FromDate, ToDate, Month, Year, ForParticular, lstParticular, TextPurchaser };
+
+            var url = '@Url.Action("Manage", "DetailsofPurchaserWiseInsp")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+       
+    </script>
+}

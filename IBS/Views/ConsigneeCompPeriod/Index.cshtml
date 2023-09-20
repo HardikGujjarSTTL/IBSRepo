@@ -1,0 +1,261 @@
+﻿
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>CONSIGNEE COMPLAINTS</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="row">
+        <div class="col-md-3 mb-2">
+            <label for="reference">Complaints Recieved From Date</label>
+            <input type="text" class="input datepicker" placeholder="DD/MM/YYYY" id="compfromdt">
+            <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+        </div>
+        <div class="col-md-3 mb-2">
+            <label for="reference">To Date</label>
+            <input type="text" class="input datepicker" placeholder="DD/MM/YYYY" id="comptodt">
+            <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12">
+            <h3 class="heading3">Inspection Region</h3>
+        </div>
+    </div>
+    <ul class="radioListForm">
+        <li>
+            <input type="radio" id="allRegions" name="inspectionRegion" value="All Regions">
+            <label for="allRegions">All Regions</label>
+        </li>
+        <li>
+            <input type="radio" id="northern" name="inspectionRegion" value="Northern">
+            <label for="northern">Northern</label>
+        </li>
+        <li>
+            <input type="radio" id="southern" name="inspectionRegion" value="Southern">
+            <label for="southern">Southern</label>
+        </li>
+        <li>
+            <input type="radio" id="eastern" name="inspectionRegion" value="Eastern">
+            <label for="eastern">Eastern</label>
+        </li>
+        <li>
+            <input type="radio" id="western" name="inspectionRegion" value="Western">
+            <label for="western">Western</label>
+        </li>
+    </ul>
+    <div class="row my-0">
+        <div class="col-md-12">
+            <h3 class="heading3">Joint Inspection Region</h3>
+        </div>
+    </div>
+    <ul class="radioListForm">
+        <li>
+            <input type="radio" id="alljiRegions" name="jointinspectionRegion" value="All Regions">
+            <label for="alljiRegions">All Regions</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="northernji" name="jointinspectionRegion" value="Northern">
+            <label for="northernji">Northern</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="southernji" name="jointinspectionRegion" value="Southern">
+            <label for="southernji">Southern</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="easternji" name="jointinspectionRegion" value="Eastern">
+            <label for="easternji">Eastern</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="westernji" name="jointinspectionRegion" value="Western">
+            <label for="westernji">Western</label>
+            <br>
+        </li>
+    </ul>
+    <div class="row my-0">
+        <div class="col-md-12">
+            <h3 class="heading3">Include Complaints Where JI Required ?</h3>
+        </div>
+    </div>
+    <ul class="radioListForm">
+        <li>
+            <input type="radio" id="compallRegions" name="compinspectionRegion" value="All">
+            <label for="compallRegions">All</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="Yes" name="compinspectionRegion" value="Yes">
+            <label for="Yes">Yes</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="No" name="compinspectionRegion" value="No">
+            <label for="No">No</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="Cancelled" name="compinspectionRegion" value="Cancelled">
+            <label for="Cancelled">Cancelled</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="UnderConsideration" name="compinspectionRegion" value="Under Consideration">
+            <label for="UnderConsideration">Under Consideration</label>
+            <br>
+        </li>
+    </ul>
+    <div class="row my-0">
+        <div class="col-md-12">
+            <h3 class="heading3">Action Proposed</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+    <ul class="radioListForm">
+        <li>
+            <input type="radio" id="allaction" name="actioninspectionRegion" value="allaction">
+            <label for="allaction">All</label>
+            <br>
+        </li>
+        <li>
+            <input type="radio" id="ParticularAction" name="actioninspectionRegion" value="ParticularAction">
+            <label for="ParticularAction">Particular Action</label>
+            <br>
+        </li>
+    </ul>
+    </div>
+        <div class="col-md-3"> @Html.DropDownList("ParticularAction", new SelectList(IBS.Models.Common.ParticularAction(), "Value", "Text"), "--Select--", new { id = "ParticularActiondrp" }) </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#ParticularActiondrp").hide();
+            $("#allRegions").prop("checked", true);
+            $("#alljiRegions").prop("checked", true);
+            $("#compallRegions").prop("checked", true);
+            $("#allaction").prop("checked", true);
+
+            $('#ParticularAction').change(function () {
+                $("#ParticularActiondrp").show();
+            });
+
+            $('#allaction').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+
+            $('#northern').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#southern').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#eastern').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#western').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#northernji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#southernji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#easternji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#westernji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#Yes').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#No').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#Cancelled').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#UnderConsideration').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+        });
+
+        function ViewReport() {
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#compfromdt").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#comptodt").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#compfromdt").val() != "" && IsValidDate($("#compfromdt").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#comptodt").val() != "" && IsValidDate($("#comptodt").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var FromDate = $('#compfromdt').val();;
+            var ToDate = $('#comptodt').val();;
+            var Allregion = $("#allRegions").is(":checked") == true ? "true" : "false";
+            var regionorth = $("#northern").is(":checked") == true ? "true" : "false";
+            var regionsouth = $("#southern").is(":checked") == true ? "true" : "false";
+            var regioneast = $("#eastern").is(":checked") == true ? "true" : "false";
+            var regionwest = $("#western").is(":checked") == true ? "true" : "false";
+            var jiallregion = $("#alljiRegions").is(":checked") == true ? "true" : "false";
+            var jinorth = $("#northernji").is(":checked") == true ? "true" : "false";
+            var jisourth = $("#southernji").is(":checked") == true ? "true" : "false";
+            var jieast = $("#easternji").is(":checked") == true ? "true" : "false";
+            var jiwest = $("#westernji").is(":checked") == true ? "true" : "false";
+            var compallregion = $("#compallRegions").is(":checked") == true ? "true" : "false";
+            var compyes = $("#Yes").is(":checked") == true ? "true" : "false";
+            var compno = $("#No").is(":checked") == true ? "true" : "false";
+            var cancelled = $("#Cancelled").is(":checked") == true ? "true" : "false";
+            var underconsider = $("#UnderConsideration").is(":checked") == true ? "true" : "false";
+            var allaction = $("#allaction").is(":checked") == true ? "true" : "false";
+            var particilaraction = $("#ParticularAction").is(":checked") == true ? "true" : "false";
+            var actiondrp = $('#ParticularActiondrp').val();
+
+            let myObject = {
+                FromDate, ToDate, Allregion, regionorth, regionsouth, regioneast, regionwest, jiallregion, jinorth, jisourth, jieast, jiwest,
+                compallregion, compyes, compno, cancelled, underconsider, allaction, particilaraction, actiondrp
+            };
+
+            var url = '@Url.Action("Manage", "ConsigneeCompPeriod")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}

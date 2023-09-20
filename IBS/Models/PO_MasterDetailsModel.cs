@@ -7,7 +7,7 @@ namespace IBS.Models
     {
         public string CaseNo { get; set; } = null!;
 
-        public byte ItemSrno { get; set; }
+        public int ItemSrno { get; set; }
 
         public DateTime? PoDt { get; set; }
 

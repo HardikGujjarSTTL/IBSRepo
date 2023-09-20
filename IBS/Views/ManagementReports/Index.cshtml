@@ -1,0 +1,415 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "IE_X") ReportTitle = "IE Performance";
+    else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
+    else if (ReportType == "RWB") ReportTitle = "Region Wise Billing Summary";
+    else if (ReportType == "R") ReportTitle = "Region Wise Comparison of Outstanding";
+    else if (ReportType == "ICSUBMIT") ReportTitle = "IC Submission Report";
+    else if (ReportType == "CALLSWITHOUTIC") ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
+    else if (ReportType == "SUPSUR") ReportTitle = "Super Surprise Details";
+
+    ViewData["Title"] = ReportTitle;
+
+
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row report1" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row RWB" style="display: none">
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="SummaryReport1" name="RWBSummaryReport" value="SummaryReport1" checked>
+                                <label for="SummaryReport1">Summary Report For the Month</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="SummaryReport2" name="RWBSummaryReport" value="SummaryReport2">
+                                <label for="SummaryReport2">Summary Report For the Given Period</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="FromMonth" id="lblFromMonth">Month</label> <br />
+                @Html.DropDownList("FromMonth", Common.GetMonths())
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="FromYear" id="lblFromYear">Year</label> <br />
+                @Html.DropDownList("FromYear", Common.GetYears())
+            </div>
+            <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
+                <label for="ToMonth">To Month</label> <br />
+                @Html.DropDownList("ToMonth", Common.GetMonths())
+            </div>
+            <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
+                <label for="ToYear">To Year</label> <br />
+                @Html.DropDownList("ToYear", Common.GetYears())
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportRWB();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsRWB();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row RWCO" style="display: none">
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="FromDate_RWCO">Client wise Outstanding Statement as on</label>
+                    <input type="text" class="datepicker" id="FromDate_RWCO" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate_RWCO"></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="ClientWiseOutstanding1" name="ClientWiseOutstanding" value="1" checked>
+                                <label for="ClientWiseOutstanding1">Client Wise</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="ClientWiseOutstanding2" name="ClientWiseOutstanding" value="2">
+                                <label for="ClientWiseOutstanding2">Sorted on Outstanding(Outstanding amount is greater then zero OR Total Suspense is greater then zero)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportRWCO();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsRWCO();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row SuperSurprise" style="display: none">
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="FromDateSuperSurprise">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDateSuperSurprise" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDateSuperSurprise"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="ToDateSuperSurprise">To</label>
+                    <input type="text" class="datepicker" id="ToDateSuperSurprise" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDateSuperSurprise"></span>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="CM1" name="CM" value="CM1" checked>
+                                <label for="CM1">All CM</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="CM2" name="CM" value="CM2">
+                                <label for="CM2">Particular CM</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 CM" style="display: none;">
+                @Html.DropDownList("ParticularCM", Common.GetControllingOfficers(Region))
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="Sector1" name="Sector" value="Sector1" checked>
+                                <label for="Sector1">All scope of sector where Item is covered</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="Sector2" name="Sector" value="Sector2">
+                                <label for="Sector2">Particular scope of sector where Item is covered</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 Sector" style="display: none;">
+                @Html.DropDownList("ParticularSector",  new SelectList(Common.GetScopeOfsector() , "Value", "Text"))
+            </div>
+            <div class="col-md-12" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportSuperSurprise();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsSuperSurprise();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X' || '@ReportType' == 'ICSUBMIT' || '@ReportType' == 'CALLSWITHOUTIC') {
+                $(".report1").css("display", "");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+            }
+            else if ('@ReportType' == 'RWB') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+            }
+            else if ('@ReportType' == 'R') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "");
+                $(".SuperSurprise").css("display", "none")
+            }
+            else if ('@ReportType' == 'SUPSUR') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "")
+            }
+        });
+
+        function ViewReport1() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDate").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = { ReportType, FromDate, ToDate };
+
+            var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls1() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+        }
+
+        $('input[type=radio][name="RWBSummaryReport"]').change(function () {
+            if (this.value == "SummaryReport1") {
+                $("#lblFromMonth").text("Month");
+                $("#lblFromYear").text("Year");
+                $(".RWBSummaryReportTo").css("display", "none");
+            }
+            else {
+                $("#lblFromMonth").text("From Month");
+                $("#lblFromYear").text("From Year");
+                $(".RWBSummaryReportTo").css("display", "")
+            }
+        });
+
+        $('input[type=radio][name="CM"]').change(function () {
+            if (this.value == "CM1") {
+                $(".CM").css("display", "none");
+            }
+            else {
+                $(".CM").css("display", "")
+            }
+        });
+
+        $('input[type=radio][name="Sector"]').change(function () {
+            if (this.value == "Sector1") {
+                $(".Sector").css("display", "none");
+            }
+            else {
+                $(".Sector").css("display", "")
+            }
+        });
+
+        function ViewReportRWB() {
+
+            var ReportType = '@ReportType', FromYearMonth = '', ToYearMonth = '';
+
+            var _RWBSummaryReport = $('input[name="RWBSummaryReport"]:checked').val();
+
+            FromYearMonth = $("#FromYear").val() + ('0'.repeat(2) + $("#FromMonth").val()).slice(-2);
+
+            if (_RWBSummaryReport == "SummaryReport2") {
+                ToYearMonth = $("#ToYear").val() + ('0'.repeat(2) + $("#ToMonth").val()).slice(-2);
+            }
+
+            let myObject = { ReportType, FromYearMonth, ToYearMonth };
+
+            var url = '@Url.Action("ManageRWB", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsRWB() {
+
+            $("input[type=radio][name=RWBSummaryReport][value=SummaryReport1]").prop('checked', true);
+            $('input[type=radio][name="RWBSummaryReport"]').change();
+
+            $("#lblFromMonth").text("Month");
+            $("#lblFromYear").text("Year");
+            $(".RWBSummaryReportTo").css("display", "none");
+
+            $("#FromMonth").get(0).selectedIndex = 0;
+            $("#FromYear").get(0).selectedIndex = 0;
+            $("#ToMonth").get(0).selectedIndex = 0;
+            $("#ToYear").get(0).selectedIndex = 0;
+        }
+
+        function ViewReportRWCO() {
+
+            $("#spnErrorFromDate_RWCO").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDate_RWCO").val() == "") {
+                $("#spnErrorFromDate_RWCO").html("The Date field is required.");
+                IsValid = false;
+            }
+            if ($("#FromDate_RWCO").val() != "" && IsValidDate($("#FromDate_RWCO").val()) == false) {
+                $("#spnErrorFromDate_RWCO").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate_RWCO').datepicker('getDate')).format("YYYY-MM-DD");
+            var Outstanding = $('input[name="ClientWiseOutstanding"]:checked').val();
+            let myObject = { ReportType, FromDate, Outstanding };
+
+            var url = '@Url.Action("ManageRWCO", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsRWCO() {
+            $("#FromDate_RWCO").val("");
+            $("#spnErrorFromDate_RWCO").html("");
+        }
+
+        function ViewReportSuperSurprise() {
+
+            $("#spnErrorFromDateSuperSurprise").html("");
+            $("#spnErrorToDateSuperSurprise").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDateSuperSurprise").val() == "") {
+                $("#spnErrorFromDateSuperSurprise").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDateSuperSurprise").val() == "") {
+                $("#spnErrorToDateSuperSurprise").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDateSuperSurprise").val() != "" && IsValidDate($("#FromDateSuperSurprise").val()) == false) {
+                $("#spnErrorFromDateSuperSurprise").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateSuperSurprise").val() != "" && IsValidDate($("#ToDateSuperSurprise").val()) == false) {
+                $("#spnErrorToDateSuperSurprise").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDateSuperSurprise').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDateSuperSurprise').datepicker('getDate')).format("YYYY-MM-DD");
+
+            var ParticularCM = '', ParticularSector = '';
+
+            var _CM = $('input[name="CM"]:checked').val();
+            var _Sector = $('input[name="Sector"]:checked').val();
+
+            if (_CM == "CM2") ParticularCM = $("#ParticularCM").val();
+            if (_Sector == "Sector2") ParticularSector = $("#ParticularSector").val();
+
+            let myObject = { ReportType, FromDate, ToDate, ParticularCM, ParticularSector };
+
+            var url = '@Url.Action("ManageSuperSurprise", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsSuperSurprise() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+        }
+
+    </script>
+}

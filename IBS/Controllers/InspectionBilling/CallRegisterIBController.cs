@@ -9,6 +9,7 @@ using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using System.Dynamic;
 
@@ -31,12 +32,12 @@ namespace IBS.Controllers.InspectionBilling
             _config = configuration;
         }
 
-        public IActionResult Index(string CaseNo, string CallRecvDt, string CallSno)
+        public IActionResult Index(string CaseNo, DateTime? _CallRecvDt, string CallSno)
         {
             VenderCallRegisterModel model = new();
-            if (CaseNo != null && CallRecvDt != null && CallSno != null)
+            if (CaseNo != null && _CallRecvDt != null && CallSno != null)
             {
-                model = callregisterRepository.FindByID(CaseNo, CallRecvDt, CallSno, GetRegionCode);
+                model = callregisterRepository.FindByID(CaseNo, _CallRecvDt, CallSno, GetRegionCode);
             }
             return View(model);
         }
@@ -60,10 +61,11 @@ namespace IBS.Controllers.InspectionBilling
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string CaseNo, string CallRecvDt, int CallSno,string ActionType)
+        public IActionResult Manage(string CaseNo, string CallRecvDt, int CallSno, string ActionType)
         {
             VenderCallRegisterModel model = new();
             string myYear1 = "", myMonth1 = "", myDay1 = "";
+
             myYear1 = CallRecvDt.ToString().Substring(6, 4);
             myMonth1 = CallRecvDt.ToString().Substring(3, 2);
             myDay1 = CallRecvDt.ToString().Substring(0, 2);
@@ -71,6 +73,10 @@ namespace IBS.Controllers.InspectionBilling
             string calldt = myYear1 + myMonth1 + myDay1;
             string DocID = CaseNo + "-" + calldt + "-" + CallSno;
 
+            if (ActionType == "A")
+            {
+                DocID = "New Document";
+            }
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.CallRegistrationDoc, DocID);
             FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
             FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
@@ -80,9 +86,12 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.CallRegistrationDoc = FileUploaderCOI;
 
+
+
+
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
-                model = callregisterRepository.FindByManageID(CaseNo, CallRecvDt, CallSno, ActionType, UserName);
+                model = callregisterRepository.FindByManageID(CaseNo, CallRecvDt, CallSno, ActionType, GetRegionCode);
             }
             return View(model);
         }
@@ -151,16 +160,21 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 string i = "";
-                string msg = "Message Delete Successfully.";
+                string msg = "Delete Successfully.";
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
                 {
                     model.UserId = UserName;
                     model.Createdby = UserName;
                     i = callregisterRepository.RegiserCallDelete(model);
                 }
-                if (i != null)
+                if (i != "")
                 {
                     return Json(new { status = true, responseText = msg, Id = i });
+                }
+                else
+                {
+                    msg = "This Call cannot be deleted. because IC is present for this call!!!";
+                    return Json(new { status = false, responseText = msg, Id = i });
                 }
             }
             catch (Exception ex)
@@ -255,7 +269,7 @@ namespace IBS.Controllers.InspectionBilling
                                     else
                                     {
                                         //return RedirectToAction("Manage", "CallRegisterIB", new { ActionType = "A", Case_No = code, CallRecvDt = dt });
-                                        return Json(new { status = true, responseText = "", code, dt, CallSno, w_itemBlocked="N" });
+                                        return Json(new { status = true, responseText = "", code, dt, CallSno, w_itemBlocked = "N" });
                                     }
                                 }
                             }
@@ -310,7 +324,7 @@ namespace IBS.Controllers.InspectionBilling
                         }
                     }
                 }
-                return Json(new { status = true, responseText = "", code="" , dt="", w_itemBlocked="" });
+                return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, CallSno= CallSno, w_itemBlocked = "" });
             }
             catch (Exception ex)
             {
@@ -318,6 +332,225 @@ namespace IBS.Controllers.InspectionBilling
             }
 
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult DeleteDetails(string CaseNo, string CallRecvDt, int CallSno)
+        {
+            try
+            {
+                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+                {
+                    var check = callregisterRepository.GetMatch(CaseNo, GetRegionCode);
+                    if (check == "2")
+                    {
+                        return Json(new { status = true, responseText = "Delete Successfully!!!", CaseNo, CallRecvDt, CallSno, ActionType = "D" });
+                    }
+                }
+                return Json(new { status = true, responseText = "Delete", CaseNo, CallRecvDt, CallSno, ActionType = "D" });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "DeleteDetails", 1, GetIPAddress());
+            }
+
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult GetCCancellationDetails(string CaseNo, string CallRecvDt, int CallSno)
+        {
+            try
+            {
+                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+                {
+                    var check = callregisterRepository.GetMatch(CaseNo, GetRegionCode);
+                    var GetCaseNo = callregisterRepository.GetCaseNoFind(CaseNo, CallRecvDt, CallSno);
+                    if (check == "2")
+                    {
+                        if (GetCaseNo == null || GetCaseNo == "")
+                        {
+                            return Json(new { status = true, responseText = "Null", CaseNo, CallRecvDt, CallSno, ActionType = "A" });
+                        }
+                        else
+                        {
+                            return Json(new { status = true, responseText = "Not Null", CaseNo, CallRecvDt, CallSno, ActionType = "M" });
+                        }
+                    }
+                }
+                return Json(new { status = true, responseText = "Delete", CaseNo, CallRecvDt, CallSno, ActionType = "D" });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "GetCCancellationDetails", 1, GetIPAddress());
+            }
+
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult CallCancellation(string CaseNo, string _CallRecvDt, int CallSno, string ActionType)
+        {
+            VenderCallCancellationModel model = new();
+            if (ActionType == "A")
+            {
+                if (CaseNo != null && _CallRecvDt != null && CallSno > 0 && ActionType != null)
+                {
+                    model = callregisterRepository.CancelCallFindByID(CaseNo, _CallRecvDt, CallSno, ActionType);
+                }
+            }
+            if (ActionType == "M")
+            {
+                if (CaseNo != null && _CallRecvDt != null && CallSno > 0 && ActionType != null)
+                {
+                    model = callregisterRepository.CancelCallFindByIDM(CaseNo, _CallRecvDt, CallSno, ActionType);
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CallCancellationSave(VenderCallCancellationModel model)
+        {
+            try
+            {
+                string i = "";
+                string msg = "Insert Successfully.";
+                if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
+                {
+                    i = callregisterRepository.CallCancellationSave(model, UserName);
+                }
+                if (i != "")
+                {
+                    return Json(new { status = true, responseText = msg, Id = i });
+                }
+                else
+                {
+                    msg = "This Call cannot be deleted. because IC is present for this call!!!";
+                    return Json(new { status = false, responseText = msg, Id = i });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VenderCallRegisterModel", "DetailsDelete", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno)
+        {
+            try
+            {
+                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+                {
+                    var check = callregisterRepository.CallCancelDelete(CaseNo, CallRecvDt, CallSno);
+                    if (check != "")
+                    {
+                        return Json(new { status = true, responseText = "Delete Successfully!!!" });
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallCancelDelete", 1, GetIPAddress());
+            }
+
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno)
+        {
+            VenderCallStatusModel model = new();
+            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+            {
+                model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult CallStatus(VenderCallStatusModel model)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(model.CaseNo) && model.CallRecvDt != null && model.CallSno > 0)
+                {
+                    model.Updatedby = UserName.Substring(0, 8);
+                    model.UserId = Convert.ToString(UserId);
+                    callregisterRepository.Save(model);
+                    AlertAddSuccess("Call Status and Call Update Status has Been Modified!!!");
+                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallStatusSave", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+        public IActionResult CallDetails(string CaseNo, string _CallRecvDt, int CallSno, int ItemSrNoPo)
+        {
+            VendrorCallDetailsModel model = new();
+            if (CaseNo != null && _CallRecvDt != null && CallSno > 0)
+            {
+                model = callregisterRepository.CallDetailsFindByID(CaseNo, _CallRecvDt, CallSno, ItemSrNoPo);
+            }
+
+
+            return View(model);
+            //return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableCallDetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VendrorCallDetailsModel> dTResult = callregisterRepository.GetCallDetailsList(dtParameters);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CallDetailsSave(VendrorCallDetailsModel model)
+        {
+            try
+            {
+                string msg = "Inserted Successfully.";
+                if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0 && model.ItemSrNoPo > 0)
+                {
+                    msg = "Updated Successfully.";
+                    model.Updatedby = UserName;
+                }
+
+                int i = callregisterRepository.CallDetailsSave(model, UserName);
+                if (i > 0)
+                {
+                    return Json(new { success = true, responseText = msg, Status = i });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallDetailsSave", 1, GetIPAddress());
+            }
+            return Json(new { success = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+
+        public IActionResult CallDetailsDelete(VendrorCallDetailsModel model)
+        {
+            try
+            {
+                if (callregisterRepository.CallDetailsRemove(model))
+                    AlertDeletedSuccess();
+                else
+                    AlertDanger();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallDelete", 1, GetIPAddress());
+                AlertDanger();
+            }
+            return RedirectToAction("Index");
         }
     }
 }

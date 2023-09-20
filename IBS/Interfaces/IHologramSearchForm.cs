@@ -5,9 +5,15 @@ namespace IBS.Interfaces
 {
     public interface IHologramSearchForm
     {
-        public HologramSearchFormModel FindByID(int HgNoFr);
-        DTResult<HologramSearchFormModel>GetHologramSearchFormList(DTParameters dtParameters);
-        bool Remove(string HgNoFr, int UserID);
-        int HologramSearchFormDetailsInsertUpdate(HologramSearchFormModel model);
+        HologramSearchFormModel FindByID(string HgNoFr, string HgNoTo, string Region);
+        DTResult<HologramSearchFormModel>GetHologramSearchFormList(DTParameters dtParameters, string region);
+        bool Remove(HologramSearchFormModel model);
+        int SaveDetails(HologramSearchFormModel model);
+        int CheckDate(string IEDate);
+        int CheckHologramNo(HologramSearchFormModel model);
+        string IEIssueOrNot(string IE);
+        int CheckHologramCancel(HologramSearchFormModel model);
+        int MatchHologram(string HgNoFr, string HgNoTo, string Region);
+
     }
 }

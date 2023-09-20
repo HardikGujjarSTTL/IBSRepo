@@ -120,7 +120,7 @@
             }
             <div class="col-md-2 mb-3">
                 <div class="reference">
-                    <label for="Reference">	NCR Date</label>
+                    <label for="Reference">NCR Date</label>
                     <input type="text" asp-for="NCRDate" id="NCRDate" maxlength="100" class="input" readonly="true" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
                 </div>
             </div>
@@ -206,7 +206,6 @@
 <partial name="_ValidationScriptsPartial" />
  <script>
     $(document).ready(function () {
-        debugger
 
         var msg = '@Html.Raw(ViewBag.JsonData1)';
         if(msg != ''){
@@ -216,7 +215,6 @@
     });
 
     $('#NCcode').change(function () {
-        debugger
         var selectedText = $("#NCcode").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");
         var extractedText = selectedText.substr(indexOfHyphen + 1).trim();
@@ -228,7 +226,6 @@
     });
 
     function Save() {
-        debugger
         var formData = new FormData($("#frmNCRDetails")[0]);
         var url = '@Url.Action("SaveUpdateNCR", "NCRRegister")';
         var isRadioChecked = $("#rdononc").is(":checked");
@@ -278,7 +275,6 @@
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        debugger
                         alert(data.alertMessage); 
                         window.location.href = '/NCRRegister/Index'; 
                     }
@@ -291,7 +287,6 @@
     }
    
     function BtnSaveRemarks(){
-        debugger
         var inputValues1 = []; 
         var inputValues2 = [];
 
@@ -365,7 +360,6 @@
             processData: false,
             contentType: false,
             success: function (result) {
-                debugger
                 if (result.redirectToIndex === true) {
                     alert(result.alertMessage);
                     window.location.href = '/NCRRegister/Index'; 
@@ -460,7 +454,6 @@
 
    
     completed = function (response) {
-        debugger
         var res = response.responseJSON;
         ShowHideMsgNew(res.status, res.responseText);
         window.location.href = "/NCRRegister/Index";

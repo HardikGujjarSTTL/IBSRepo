@@ -4,7 +4,7 @@ Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=
 =============================================================================================================================================
 By Neha Gehlot
 =============================================================================================================================================
-create or replace PROCEDURE GetConsigneeComplaintDetails (
+create or replace PROCEDURE GetConsigneeDetails (
     p_case_no IN VARCHAR2,
     p_bk_no IN VARCHAR2,
     p_set_no IN VARCHAR2,
@@ -85,11 +85,11 @@ END;
 ===============================================================================================================================================
 
 create or replace PROCEDURE GetFilterNCR(
-    p_case_no IN VARCHAR2,
-    p_nc_no IN VARCHAR2,
-    p_lstIE IN VARCHAR2,
-    p_frmDt IN DATE DEFAULT NULL,
-    p_toDt IN DATE DEFAULT NULL,
+    ---p_case_no IN VARCHAR2,
+    --p_nc_no IN VARCHAR2,
+    p_lstIE_no IN VARCHAR2,
+    p_frmDt_dt IN DATE DEFAULT NULL,
+    p_toDt_dt IN DATE DEFAULT NULL,
     p_result_cursor OUT SYS_REFCURSOR
 )
 IS
@@ -112,10 +112,10 @@ BEGIN
         JOIN T03_CITY T03 ON T06.CONSIGNEE_CITY = T03.CITY_CD
         JOIN T41_NC_MASTER T41 ON T20.BK_NO = T41.BK_NO AND T20.SET_NO = T41.SET_NO AND T20.CONSIGNEE_CD = T41.CONSIGNEE_CD
     WHERE
-        (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
-        AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
-        AND (p_lstIE IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE))
-        AND (p_frmDt IS NULL OR p_toDt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt AND p_toDt))
+       -- (p_case_no IS NULL OR UPPER(T17.CASE_NO) = UPPER(p_case_no))
+        --AND (p_nc_no IS NULL OR UPPER(T41.NC_NO) = UPPER(p_nc_no))
+         (p_lstIE_no IS NULL OR UPPER(T17.IE_CD) = UPPER(p_lstIE_no))
+        AND (p_frmDt_dt IS NULL OR p_toDt_dt IS NULL OR (T17.CALL_RECV_DT BETWEEN p_frmDt_dt AND p_toDt_dt))
     ORDER BY CALL_RECV_DATE, CASE_NO, BK_NO, SET_NO;
 
     COMMIT;
@@ -124,7 +124,6 @@ EXCEPTION
         ROLLBACK;
         RAISE;
 END GetFilterNCR;
-
 ===============================================================================================================================================
 
 create or replace PROCEDURE GetForAction_M_NCR (
@@ -335,6 +334,47 @@ ALTER TABLE temp_online_complaints
 ALTER TABLE temp_online_complaints 
     MODIFY CO_CD  NUMBER(6,0);
 
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY IE_CO_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY UOM_CD  NUMBER(6,0);
+    
+    ALTER TABLE T40_Consignee_Complaints 
+    MODIFY JI_IE_CD  NUMBER(6,0);
+
+    ALTER TABLE t32_client_login
+    ADD ID NUMBER(6,0);
+
+    Alter table T100_CONTRACT
+Add LETTER_NO NVARCHAR2(50 CHAR)
+
+    MERGE INTO T32_CLIENT_LOGIN t
+    USING (
+      SELECT ROW_NUMBER() OVER (ORDER BY user_name) AS RowNo, mobile
+      FROM T32_CLIENT_LOGIN
+    ) subquery
+    ON (t.mobile = subquery.mobile)
+    WHEN MATCHED THEN
+      UPDATE SET t.id = subquery.RowNo;
+
+      ALTER TABLE T100_Contract
+ADD IsDeleted INT
+
+ALTER TABLE T100_Contract
+ADD CreatedBy INT
+
+ALTER TABLE T100_Contract
+ADD UpdatedBy INT
+
+ALTER TABLE T100_Contract
+ADD CreatedDate DATE
+
+ALTER TABLE T100_Contract
+ADD updatedDate DATE
 
 
 ========================================================================================================================================
@@ -520,3 +560,696 @@ BEGIN
         AND TO_CHAR(m.PO_DT, 'dd-mm-yyyy') = p_PODate
     ORDER BY c.CASE_NO, c.COMPLAINT_ID ASC;
 END GetConsigneeComplaint;
+
+====================================================================================================================================
+create or replace PROCEDURE GetConsigneeComplaintDetails (
+    p_complaint_id IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_result FOR
+         SELECT
+      to_char(c.COMPLAINT_DT, 'dd/mm/yyyy') AS COMPLAINT_DATE,c.REJ_MEMO_NO,c.REJ_MEMO_DT,c.CASE_NO,c.BK_NO,c.SET_NO,trim(m.PO_NO) || ' dated - ' || to_char(m.PO_DT, 'dd/mm/yyyy') AS PO,
+      m.RLY_CD,to_char(d.IC_DT, 'dd/mm/yyyy') AS IC_DT,m.region_code,c.IE_CO_CD,c.COMP_RECV_REGION,f.VEND_NAME,f.vend_cd,c.ITEM_SRNO_PO,c.ITEM_DESC,c.QTY_OFFERED,c.QTY_REJECTED,c.UOM_CD,m.USER_ID,
+      c.RATE,c.REJECTION_VALUE,c.ROOT_CAUSE_ANALYSIS,c.TECH_REF,c.CHKSHEET_STATUS,c.ANY_OTHER,c.CAPA_STATUS,c.DANDAR_STATUS,c.REJECTION_REASON,c.STATUS,c.JI_REQUIRED,
+      c.JI_REGION,c.NO_JI_REASON,c.JI_IE_CD,c.IE_CD,c.CONSIGNEE_CD,c.REMARKS,c.JI_SNO, to_char(c.JI_FIX_DT, 'dd/mm/yyyy') AS JI_FIX_DT,to_char(c.JI_DT, 'dd/mm/yyyy') AS JI_DT,e.consignee,um.UOM_CD,um.UOM_S_DESC,
+      c.DEFECT_CD,c.JI_STATUS_CD,to_char(c.CONCLUSION_DT, 'dd/mm/yyyy') AS CONCLUSION_DT,c.ACTION_PROPOSED,to_char(c.ACTION_PROPOSED_DT, 'dd/mm/yyyy') AS ACTION_PROPOSED_DT,
+      c.PENALTY_TYPE,to_char(c.PENALTY_DT, 'dd/mm/yyyy') AS PENALTY_DT,c.ACTION
+    FROM T13_PO_MASTER m
+    JOIN T20_IC d ON m.CASE_NO = d.CASE_NO
+    JOIN T40_CONSIGNEE_COMPLAINTS c ON d.CASE_NO = c.CASE_NO
+    JOIN V06_CONSIGNEE e ON c.CONSIGNEE_CD = e.CONSIGNEE_CD  
+    JOIN T05_VENDOR f ON c.VEND_CD = f.VEND_CD  
+    JOIN T04_UOM um ON c.uom_cd = um.uom_cd
+        WHERE
+            COMPLAINT_ID = p_complaint_id;
+END GetConsigneeComplaintDetails;
+
+==============================================================================================================================================
+
+create or replace PROCEDURE CMWiseICDetail(
+   p_region VARCHAR2,
+   p_start_date VARCHAR2,
+   p_end_date VARCHAR2,
+   p_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+ OPEN p_result FOR
+      SELECT TO_CHAR(T17.CALL_STATUS_DT, 'dd/mm/yyyy') AS IC_ISSUED_DT,
+                     T17.CASE_NO,
+                      T17.BK_NO,
+                      T17.SET_NO,
+                      T09.IE_NAME,
+                      T08.CO_NAME
+                 FROM T17_CALL_REGISTER T17
+                      LEFT JOIN T30_IC_RECEIVED T30 ON (T17.BK_NO = T30.BK_NO AND T17.SET_NO = T30.SET_NO AND T17.REGION_CODE = T30.REGION),
+                      T09_IE T09,
+                      T08_IE_CONTROLL_OFFICER T08
+                WHERE (T30.BK_NO IS NULL AND T30.SET_NO IS NULL AND T30.REGION IS NULL)
+                  AND T17.IE_CD = T09.IE_CD
+                  AND T09.IE_CO_CD = T08.CO_CD
+                  AND T17.CALL_STATUS IN ('A', 'R')
+                 AND SUBSTR(T17.CASE_NO, 1, 1) = SUBSTR(p_region, 1, 1)
+                  AND (T17.CALL_STATUS_DT BETWEEN TO_DATE(p_start_date, 'dd/mm/yyyy') AND TO_DATE(p_end_date, 'dd/mm/yyyy'));
+                 
+END;
+
+=============================================================================================================================================
+
+create or replace PROCEDURE GetClientInfo(
+    p_clientname IN VARCHAR2,
+     p_ResultSet  OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+        select 
+        ID as ClientId,USER_NAME,ORGANISATION,DESIGNATION,MOBILE,EMAIL,UNIT,ORGN_TYPE
+        from t32_client_login
+        WHERE  isdeleted = 0 OR isdeleted IS NULL
+          AND UPPER(TRIM(USER_NAME)) LIKE UPPER(TRIM(p_clientname)) || '%';
+END GetClientInfo;
+
+
+
+===================================================================================================================================
+
+CREATE TABLE T100_Contract (
+    ID NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    Letter_No NUMBER(6),
+    Letter_date DATE,
+    TPFrom DATE,
+    TPTO DATE,
+    ClientType NVARCHAR2(50),
+    ClientName VARCHAR2(50),
+    Inspfee NUMBER,
+    MandayBasis NUMBER,
+    LotOfInsp NUMBER,
+    MaterialValue NUMBER,
+    MinPOVal NUMBER,
+    MaxPOVal NUMBER,
+    CallCancelation NUMBER,
+    MaterialDescription NVARCHAR2(250)
+);
+
+CREATE TABLE Non_Rly_Client (
+    ID NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    ClientName VARCHAR2(50),
+    ShortCode VARCHAR2(50),
+    ContactName VARCHAR2(50),
+    ContactDesignation VARCHAR2(50),
+    MobileNo NUMBER,
+    EmailID VARCHAR2(50),
+    Updateate DATE,
+    Createdate DATE,
+    UpdatedBy NUMBER(6,0),
+    CreatedBy NUMBER(6,0),
+    IsDeleted NUMBER(6,0),
+    ORGANIZATIONTYPEID NUMBER(6,0)
+);
+
+CREATE TABLE Organization_Type(
+    OrganizationTypeID  NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    OrganizationType VARCHAR2(50)
+);
+
+
+CREATE TABLE FeedbackSuggestion (
+    ID NUMBER(6) GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    Email NVARCHAR2(50),
+    Region VARCHAR2(50),
+    Name VARCHAR2(50),
+    MobileNo VARCHAR2(50),
+    Subject VARCHAR2(50),
+    Description NVARCHAR2(250)
+);
+
+========================================================================================================================================
+
+create or replace PROCEDURE GetContractInfo(
+    p_clientname IN VARCHAR2,
+    p_clienttype IN VARCHAR2,
+    p_ResultSet OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+    SELECT 
+        ID,
+        LETTER_NO,
+        TO_CHAR(LETTER_DATE, 'dd/mm/yyyy') AS LETTER_DATE,
+        TO_CHAR(TPFROM, 'dd/mm/yyyy') AS TPFROM,
+        TO_CHAR(TPTO,'dd/mm/yyyy') AS TPTO,
+        CLIENTTYPE,
+        CLIENTNAME,
+        INSPFEE,
+        MANDAYBASIS,
+        LOTOFINSP,
+        MATERIALVALUE,
+        MINPOVAL,
+        MAXPOVAL,
+        CALLCANCELATION,
+        MATERIALDESCRIPTION
+    FROM T100_CONTRACT
+    WHERE (p_clientname IS NULL OR CLIENTNAME = p_clientname)
+    AND (p_clienttype IS NULL OR CLIENTTYPE = p_clienttype)
+    AND isdeleted = 0 OR isdeleted IS NULL;
+END GetContractInfo;
+
+
+==========================================================================================================================================================
+
+create or replace PROCEDURE GetSearchAllData (
+    p_case_no      IN VARCHAR2,
+    p_region      IN VARCHAR2,
+    p_po_no        IN VARCHAR2,
+    p_po_dt        IN VARCHAR2,
+    p_consignee_cd IN VARCHAR2,
+    p_bpo_cd       IN VARCHAR2,
+    p_vend_cd      IN VARCHAR2,
+    p_call_dt      DATE,
+    p_call_sno     IN VARCHAR2,
+    p_ie_cd        IN VARCHAR2,
+    p_bk_no        IN VARCHAR2,
+    p_set_no       IN VARCHAR2,
+    p_bill_no      IN VARCHAR2,
+    p_bill_dt      DATE,
+    p_bill_amt     IN NUMBER,
+    p_ResultSet OUT SYS_REFCURSOR
+) 
+AS
+BEGIN
+    OPEN p_ResultSet FOR
+
+   SELECT
+        T13.CASE_NO,
+        T13.PO_NO,
+        TO_CHAR(T13.PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        T14.CONSIGNEE_CD,
+        T14.BPO_CD,
+        TO_CHAR(T17.CALL_RECV_DT, 'dd/mm/yyyy') AS CALL_RECV_DT,
+        T17.CALL_SNO,
+        T17.IE_CD,
+        T20.BK_NO,
+        T20.SET_NO,
+        T22.BILL_NO,
+        TO_CHAR(T22.BILL_DT, 'dd/mm/yyyy') AS BILL_DT,
+        T09.IE_SNAME,
+        T09.IE_CD,
+        V06.CONSIGNEE_CD || '-' || V06.CONSIGNEE AS CONSIGNEE,
+        T22.INSP_FEE,
+        T22.BILL_AMOUNT
+    FROM
+        T13_PO_MASTER T13
+        JOIN T14_PO_BPO T14 ON T13.CASE_NO = T14.CASE_NO
+        JOIN T17_CALL_REGISTER T17 ON T13.CASE_NO = T17.CASE_NO
+        JOIN T20_IC T20 ON T17.CASE_NO = T20.CASE_NO
+        JOIN T22_BILL T22 ON T20.BILL_NO = T22.BILL_NO
+        JOIN T09_IE T09 ON T20.IE_CD = T09.IE_CD
+        JOIN V06_CONSIGNEE V06 ON T20.CONSIGNEE_CD = V06.CONSIGNEE_CD
+        where T13.CASE_NO=T14.CASE_NO and T13.CASE_NO=T17.CASE_NO and T17.CASE_NO = T20.CASE_NO and T17.CALL_RECV_DT=T20.CALL_RECV_DT and T17.CALL_SNO=T20.CALL_SNO and T14.CONSIGNEE_CD = T20.CONSIGNEE_CD and T20.BILL_NO=T22.BILL_NO and T20.IE_CD=T09.IE_CD and T20.CONSIGNEE_CD=V06.CONSIGNEE_CD 
+        And T13.REGION_CODE = p_region
+        And (p_case_no IS NULL OR T13.CASE_NO = p_case_no)
+        AND (p_po_no IS NULL OR UPPER(T13.PO_NO) LIKE UPPER('%' || p_po_no || '%'))
+        AND (p_po_dt IS NULL OR TO_CHAR(T13.PO_DT, 'dd/mm/yyyy') = p_po_dt)
+        AND (p_consignee_cd IS NULL OR T14.CONSIGNEE_CD = p_consignee_cd)
+        AND (p_bpo_cd IS NULL OR T14.BPO_CD = p_bpo_cd)
+        AND (p_vend_cd IS NULL OR T13.VEND_CD = p_vend_cd)
+        AND (p_call_dt IS NULL OR T17.CALL_RECV_DT = p_call_dt)
+        AND (p_call_sno IS NULL OR T17.CALL_SNO = p_call_sno)
+        AND (p_ie_cd IS NULL OR T17.IE_CD = p_ie_cd)
+        AND (p_bk_no IS NULL OR T20.BK_NO = p_bk_no)
+        AND (p_set_no IS NULL OR T20.SET_NO = p_set_no)
+        AND (p_bill_no IS NULL OR T22.BILL_NO = p_bill_no)
+        AND (p_bill_dt IS NULL OR T22.BILL_DT = p_bill_dt)
+        AND (p_bill_amt IS NULL OR T22.BILL_AMOUNT = p_bill_amt)
+    ORDER BY
+        T13.CASE_NO,
+        T17.CALL_RECV_DT;
+END GetSearchAllData;
+
+
+====================================================================================================================================================
+
+create or replace PROCEDURE GetComplaintDetailsReport (
+    p_JI_SNO IN VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT
+        JI_SNO,
+        TO_CHAR(COMPLAINT_DT, 'dd/mm/yyyy') AS COMPLAINT_DATE,
+        V40.CONSIGNEE_NAME || ',' || CONSIGNEE_ADDR AS CONSIGNEE,
+        PO_NO || ' Dated: ' || TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO,
+        IE_NAME,
+        INSP_REGION_NAME,
+        IC_NO || ' Dated: ' || TO_CHAR(IC_DT, 'dd/mm/yyyy') AS IC,
+        BK_NO,
+        SET_NO,
+        VENDOR,
+        ITEM_DESC,
+        QTY_OFFERED,
+        QTY_REJECTED,
+        REJECTION_VALUE,
+        REJECTION_REASON,
+        IE_JI_REMARKS,
+        TO_CHAR(JI_DT, 'dd/mm/yyyy') AS JI_DATE,
+        ACTION,
+        T39.JI_STATUS_DESC AS JI_STATUS,
+        T08.CO_NAME
+    FROM
+        V40_CONSIGNEE_COMPLAINTS V40
+    LEFT JOIN
+        T39_JI_STATUS_CODES T39
+    ON
+        V40.JI_STATUS_CD = T39.JI_STATUS_CD
+    LEFT JOIN
+        T08_IE_CONTROLL_OFFICER T08
+    ON
+        V40.IE_CO_CD = T08.CO_CD
+    WHERE
+        V40.JI_SNO = p_JI_SNO;
+END GetComplaintDetailsReport;
+
+==========================================================================================================================================
+
+create or replace PROCEDURE compliants_statement_AllIE_Date (
+    p_frmdt IN VARCHAR2,
+    p_todt IN VARCHAR2,
+    p_ie_cd IN VARCHAR2,
+    p_finyear IN VARCHAR2,
+    p_region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    IF p_ie_cd IS NOT NULL AND p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+        OPEN p_result FOR
+        Select  IE,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+            ( Select B.IE_NAME IE,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T09_IE B, T22_BILL C  WHERE A.IE_CD=B.IE_CD AND C.BILL_NO=A.BILL_NO and B.IE_CD=p_ie_cd AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)='N' GROUP BY IE_NAME  
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'   group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)='N'  group by T09.IE_NAME
+            ) group by IE order by IE;
+    ELSIF p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+         OPEN p_result FOR
+          Select  IE,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.IE_NAME IE,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T09_IE B, T22_BILL C  WHERE A.IE_CD=B.IE_CD AND C.BILL_NO=A.BILL_NO  AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY IE_NAME 
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T09.IE_NAME 
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME 
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        ) group by IE order by IE;
+    END IF ;
+    
+    IF p_finyear IS NOT NULL AND p_ie_cd IS NULL THEN
+     OPEN p_result FOR
+        Select  IE,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.IE_NAME IE,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T09_IE B, T22_BILL C  WHERE A.IE_CD=B.IE_CD AND C.BILL_NO=A.BILL_NO  AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY IE_NAME  
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        ) group by IE order by IE;
+        
+    ELSIF p_ie_cd IS NOT NULL AND p_finyear IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  IE,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.IE_NAME IE,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T09_IE B, T22_BILL C  WHERE A.IE_CD=B.IE_CD AND C.BILL_NO=A.BILL_NO and B.IE_CD=p_ie_cd AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY IE_NAME  
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+         union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region   group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        union all Select T09.IE_NAME IE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T09_IE T09 where V40.IE_CD=T09.IE_CD and V40.IE_CD=p_ie_cd and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T09.IE_NAME
+        ) group by IE order by IE;
+    END IF;
+    
+END compliants_statement_AllIE_Date;
+
+========================================================================================================================================================
+create or replace PROCEDURE compliants_statement_AllVendor_Report (
+    p_frmdt IN VARCHAR2,
+    p_todt IN VARCHAR2,
+    p_vend_cd IN VARCHAR2,
+    p_finyear IN VARCHAR2,
+    p_region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+  
+    IF p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+        OPEN p_result FOR
+        Select  VENDOR,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.VENDOR,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V05_VENDOR B, T22_BILL C, T13_PO_MASTER D  WHERE A.CASE_NO=D.CASE_NO and D.VEND_CD=B.VEND_CD AND C.BILL_NO=A.BILL_NO  AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.VENDOR  
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        ) group by VENDOR order by VENDOR;
+        
+    ELSIF  p_vend_cd IS NOT NULL AND p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+    OPEN p_result FOR
+        Select  VENDOR,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.VENDOR,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V05_VENDOR B, T22_BILL C, T13_PO_MASTER D  WHERE A.CASE_NO=D.CASE_NO and D.VEND_CD=B.VEND_CD AND C.BILL_NO=A.BILL_NO and B.VEND_CD=p_vend_cd AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.VENDOR  
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         ) group by VENDOR order by VENDOR;
+           
+    ELSIF p_finyear IS NOT NULL THEN
+    OPEN p_result FOR
+        Select  VENDOR,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.VENDOR,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V05_VENDOR B, T22_BILL C, T13_PO_MASTER D  WHERE A.CASE_NO=D.CASE_NO and D.VEND_CD=B.VEND_CD AND C.BILL_NO=A.BILL_NO  AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.VENDOR  
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         ) group by VENDOR order by VENDOR;
+         
+     ELSIF p_vend_cd IS NOT NULL AND p_finyear IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  VENDOR,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.VENDOR,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V05_VENDOR B, T22_BILL C, T13_PO_MASTER D  WHERE A.CASE_NO=D.CASE_NO and D.VEND_CD=B.VEND_CD AND C.BILL_NO=A.BILL_NO and B.VEND_CD=p_vend_cd  AND (substr(C.BILL_NO,2,2)='"+lstFinYear.SelectedValue+"') AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.VENDOR  
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+         union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        union all Select V05.VENDOR,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V05_VENDOR  V05 where V40.VEND_CD=V05.VEND_CD and V40.VEND_CD=p_vend_cd and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by V05.VENDOR
+        ) group by VENDOR order by VENDOR;
+    END IF;
+
+
+END compliants_statement_AllVendor_Report;
+
+===============================================================================================================================================
+create or replace PROCEDURE compliants_statement_AllCM_Report (
+    p_frmdt IN VARCHAR2,
+    p_todt IN VARCHAR2,
+    p_CO IN VARCHAR2,
+    p_finyear IN VARCHAR2,
+    p_region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+     IF p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+     OPEN p_result FOR
+             Select  CM,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+            ( Select B.CO_NAME CM,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T08_IE_CONTROLL_OFFICER B, T22_BILL C  WHERE A.CO_CD=B.CO_CD AND C.BILL_NO=A.BILL_NO  AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CO_NAME 
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+             union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+            ) group by CM order by CM;
+     ELSIF p_CO IS NOT NULL AND p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+     OPEN p_result FOR
+        Select CM,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.CO_NAME CM,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T08_IE_CONTROLL_OFFICER B, T22_BILL C  WHERE A.CO_CD=B.CO_CD AND C.BILL_NO=A.BILL_NO and A.CO_CD=p_CO AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CO_NAME 
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+         union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        ) group by CM order by CM;
+     ELSIF p_finyear IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  CM,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.CO_NAME CM,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T08_IE_CONTROLL_OFFICER B, T22_BILL C  WHERE A.CO_CD=B.CO_CD AND C.BILL_NO=A.BILL_NO  AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CO_NAME  
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+         union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+         union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        ) group by CM order by CM;
+     ELSIF p_finyear IS NOT NULL AND p_CO IS NOT NULL THEN
+     OPEN p_result FOR
+        Select CM,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select B.CO_NAME CM,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T08_IE_CONTROLL_OFFICER B, T22_BILL C  WHERE A.CO_CD=B.CO_CD AND C.BILL_NO=A.BILL_NO and A.CO_CD=p_CO AND (substr(C.BILL_NO,2,2)='"+lstFinYear.SelectedValue+"') AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CO_NAME  
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+         union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+         union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region	 group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region	 group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        union all Select T08.CO_NAME CM,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, T08_IE_CONTROLL_OFFICER T08 where V40.IE_CO_CD=T08.CO_CD and V40.IE_CO_CD=p_CO and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region  group by T08.CO_NAME
+        ) group by CM order by CM;
+     END IF;
+END compliants_statement_AllCM_Report;
+
+==============================================================================================================================================================
+
+create or replace PROCEDURE compliants_statement_AllClient_Report (
+    p_frmdt IN VARCHAR2,
+    p_todt IN VARCHAR2,
+    p_bpo_rly IN VARCHAR2,
+    p_finyear IN VARCHAR2,
+    p_region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+
+  IF p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+     OPEN p_result FOR
+            Select  BPO_RLY,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+            ( Select BPO_RLY,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T12_BILL_PAYING_OFFICER B, T22_BILL C  WHERE A.BPO_CD=B.BPO_CD AND C.BILL_NO=A.BILL_NO AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.BPO_RLY  
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+             union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+             union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+             union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region  group by RLY_CD
+            ) group by BPO_RLY order by BPO_RLY;
+     ELSIF p_bpo_rly IS NOT NULL AND p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  BPO_RLY,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select BPO_RLY ,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T12_BILL_PAYING_OFFICER B, T22_BILL C  WHERE A.BPO_CD=B.BPO_CD AND C.BILL_NO=A.BILL_NO and B.BPO_RLY=p_bpo_rly  AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.BPO_RLY  
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by RLY_CD
+        ) group by BPO_RLY order by BPO_RLY;
+     ELSIF p_finyear IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  BPO_RLY,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select BPO_RLY,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T12_BILL_PAYING_OFFICER B, T22_BILL C  WHERE A.BPO_CD=B.BPO_CD AND C.BILL_NO=A.BILL_NO AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.BPO_RLY 
+         union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10  group by RLY_CD
+         union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+         union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where  JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+         ) group by BPO_RLY order by BPO_RLY;
+     ELSIF p_finyear IS NOT NULL AND p_bpo_rly IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  BPO_RLY,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+        ( Select BPO_RLY ,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, T12_BILL_PAYING_OFFICER B, T22_BILL C  WHERE A.BPO_CD=B.BPO_CD AND C.BILL_NO=A.BILL_NO and B.BPO_RLY=p_bpo_rly  AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.BPO_RLY  
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+         union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10  group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+         union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+         union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        union all Select RLY_CD BPO_RLY,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40 where V40.RLY_CD=p_bpo_rly and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region and V40.JI_STATUS_CD<>10 group by RLY_CD
+        ) group by BPO_RLY order by BPO_RLY;
+     END IF;
+END compliants_statement_AllClient_Report;
+
+
+=======================================================================================================================================
+create or replace PROCEDURE compliants_statement_AllConsignee_Report (
+    p_frmdt IN VARCHAR2,
+    p_todt IN VARCHAR2,
+    p_consignee_cd IN VARCHAR2,
+    p_finyear IN VARCHAR2,
+    p_region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+
+  IF p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+     OPEN p_result FOR
+            Select  CONSIGNEE,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+            ( Select B.CONSIGNEE ,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V06_CONSIGNEE B, T22_BILL C  WHERE A.CONSIGNEE_CD=B.CONSIGNEE_CD AND C.BILL_NO=A.BILL_NO  AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CONSIGNEE 
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+             union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+             union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+             union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            ) group by CONSIGNEE order by CONSIGNEE;
+     ELSIF p_consignee_cd IS NOT NULL AND p_frmdt IS NOT NULL AND p_todt IS NOT NULL THEN
+     OPEN p_result FOR
+           Select  CONSIGNEE ,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From 
+            ( Select B.CONSIGNEE ,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V06_CONSIGNEE B, T22_BILL C  WHERE A.CONSIGNEE_CD=B.CONSIGNEE_CD AND C.BILL_NO=A.BILL_NO and B.CONSIGNEE_CD=p_consignee_cd  AND (C.BILL_DT BETWEEN to_date(p_frmdt,'dd/mm/yyyy') AND to_date(p_todt,'dd/mm/yyyy')) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CONSIGNEE  
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (V40.JI_DT between to_date(p_frmdt,'dd/mm/yyyy') and to_date(p_todt,'dd/mm/yyyy')) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+            ) group by CONSIGNEE order by CONSIGNEE;
+     ELSIF p_finyear IS NOT NULL THEN
+     OPEN p_result FOR
+        Select  CONSIGNEE,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From
+        ( Select B.CONSIGNEE ,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V06_CONSIGNEE B, T22_BILL C  WHERE A.CONSIGNEE_CD=B.CONSIGNEE_CD AND C.BILL_NO=A.BILL_NO  AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CONSIGNEE  
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region   group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region   group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        ) group by CONSIGNEE order by CONSIGNEE ;
+     ELSIF p_finyear IS NOT NULL AND p_consignee_cd IS NOT NULL THEN
+     OPEN p_result FOR
+         Select  CONSIGNEE ,sum(NO_OF_INSPECTION) NO_OF_INSPECTION,sum(MATERIAL_VALUE) MATERIAL_VALUE,sum(RECD) RECD,sum(FINALISED) FINALISED,sum(PENDING) PENDING,sum(ACCEPTED) ACCEPTED,sum(UPHELD) UPHELD ,sum(SORTING) SORTING,sum(RECTIFICATION) RECTIFICATION,sum(PRICE_REDUCTION) PRICE_REDUCTION,sum(LIFTED_BEFORE_JI) LIFTED_BEFORE_JI,sum(TRANSIT_DEMAGE) TRANSIT_DEMAGE,sum(UNSTAMPED) UNSTAMPED,sum(NOT_ON_RITES_AC) NOT_ON_RITES_AC From
+        ( Select B.CONSIGNEE ,count(*)  NO_OF_INSPECTION,sum(nvl(C.MATERIAL_VALUE,0)) MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC FROM T20_IC A, V06_CONSIGNEE B, T22_BILL C  WHERE A.CONSIGNEE_CD=B.CONSIGNEE_CD AND C.BILL_NO=A.BILL_NO and B.CONSIGNEE_CD=p_consignee_cd  AND (substr(C.BILL_NO,2,2)=p_finyear) AND SUBSTR(A.case_no,1,1)=p_region GROUP BY B.CONSIGNEE 
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,count(*) RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,count(*) FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD<>0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,count(*)  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=0 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,count(*) ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=1 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=2 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=3 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=4 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=5 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,count(*) LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=6 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,count(*) TRANSIT_DEMAGE,0 UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=7 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,count(*) UNSTAMPED,0 NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=8 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        union all Select V06.CONSIGNEE,0 NO_OF_INSPECTION,0 MATERIAL_VALUE,0 RECD,0 FINALISED,0  PENDING,0 ACCEPTED,0 UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION,0 LIFTED_BEFORE_JI,0 TRANSIT_DEMAGE,0 UNSTAMPED,count(*) NOT_ON_RITES_AC from V40_CONSIGNEE_COMPLAINTS V40, V06_CONSIGNEE  V06 where V40.CONSIGNEE_CD=V06.CONSIGNEE_CD and V40.CONSIGNEE_CD=p_consignee_cd and JI_REQUIRED='Y' and JI_STATUS_CD=9 and (substr(V40.JI_SNO,4,5)=p_finyear) and substr(CASE_NO,1,1)=p_region group by V06.CONSIGNEE
+        ) group by CONSIGNEE order by CONSIGNEE;
+     END IF;
+END compliants_statement_AllConsignee_Report;

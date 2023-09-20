@@ -1,0 +1,97 @@
+﻿@model IBS.Models.Clientmaster
+
+@{
+    ViewData["Title"] = "Manage Client Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Client</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ClientMaster" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+
+    <div class="task-listinput">
+    <form asp-controller="ClientMaster" asp-action="ClientDetailsave" role="form" id="frmUserRole">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Client Name</label>
+                        <input type="text" class="input" ASP-FOR="USER_NAME" maxlength="300" required />
+                        <span asp-validation-for="USER_NAME" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Organisation</label>
+                        <input type="text" class="input" ASP-FOR="ORGANISATION" maxlength="300" required />
+                        <span asp-validation-for="ORGANISATION" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Client Designation</label>
+                        <input type="text" class="input" ASP-FOR="DESIGNATION" maxlength="300" required />
+                        <span asp-validation-for="DESIGNATION" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Mobile</label>
+                        <input type="number" class="input" ASP-FOR="MOBILE" maxlength="10" required />
+                        <span asp-validation-for="MOBILE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Email</label>
+                        <input type="email" class="input" ASP-FOR="EMAIL" maxlength="300" required />
+                        <span asp-validation-for="EMAIL" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Unit</label>
+                        <input type="text" class="input" ASP-FOR="UNIT" maxlength="300" required />
+                        <span asp-validation-for="UNIT" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Orgn Type</label>
+                        @Html.DropDownListFor(model => model.Orgn_Type, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                        <span asp-validation-for="Orgn_Type" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="Name">Password<i class="text-danger">*</i></label>
+                            <input id="password" class="form-control" asp-for="Pwd" maxlength="50" />
+                            <span asp-validation-for="Pwd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="Name">Confirm Password<i class="text-danger">*</i></label>
+                            <input asp-for="ConfirmPassword" class="form-control" id="confirmPassword" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            <div class="text-danger" id="confirmPasswordError"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            var password = $("#password").val();
+            var confirmPassword = $("#confirmPassword").val();
+
+            if (password !== confirmPassword) {
+                $("#confirmPasswordError").text("The password and confirmation password do not match.");
+            } else {
+                $("#confirmPasswordError").text("");
+                if ($("#frmUserRole").valid()) {
+                    $("#frmUserRole").submit();
+                }
+            }
+        }
+
+    </script>
+}

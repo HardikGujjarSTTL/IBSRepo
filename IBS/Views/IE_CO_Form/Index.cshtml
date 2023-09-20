@@ -10,27 +10,66 @@
         <a asp-area="" asp-controller="IE_CO_Form" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtCO" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>Controlling Officer Code</th>
-                        <th>Controlling Officer Name</th>
-                        <th>Designation</th>
-                        <th>Phone No.</th>
-                        <th>Email</th>
-                        <th>Type</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ControllingOfficerName">Controlling Officer</label>
+                    <input type="text" class="input" id="ControllingOfficerName" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="Designation">Designation</label>
+                    @Html.DropDownList("Designation", Common.GetDesignations(), "--Select--",  new { @class = "" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="Email">Email</label>
+                    <input type="text" class="input" id="Email" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="Type">CM Type</label>
+                    @Html.DropDownList("Type", new SelectList(Common.GetCMType() , "Value", "Text"), "--Select--", new { @class = "" })
+                </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtCO" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Controlling Officer Code</th>
+                            <th>Controlling Officer Name</th>
+                            <th>Designation</th>
+                            <th>Phone No.</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th style="text-align:center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -43,6 +82,12 @@
         });
 
         function InitializeDatatable() {
+
+            var ControllingOfficerName = $("#ControllingOfficerName").val();
+            var Designation = $("#Designation").val();
+            var Email = $("#Email").val();
+            var Type = $("#Type").val();
+
             $("#dtCO").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -60,6 +105,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            ControllingOfficerName, Designation, Email, Type
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -68,7 +114,7 @@
                 columns: [// Columns Setups
                     { data: "CoCd" },
                     { data: "CoName" },
-                    { data: "CoDesig" },
+                    { data: "CoDesigName" },
                     { data: "CoPhoneNo" },
                     { data: "CoEmail" },
                     { data: "CoTypeName" },
@@ -86,6 +132,15 @@
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function CLearControls() {
+            $("#ControllingOfficerName").val("");
+            $("#Designation").val("");
+            $("#Email").val("");
+            $("#Type").val("");
+
+            InitializeDatatable();
         }
 
         function Deelete(id) {
