@@ -209,7 +209,7 @@ builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseIn
 builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
-
+builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

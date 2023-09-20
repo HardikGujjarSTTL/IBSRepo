@@ -23,7 +23,7 @@ namespace IBS.Repositories
             this.context = context;
         }
        
-        public DetailsofPurchaserWiseInspModel SummaryInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular, string Regin)
+        public DetailsofPurchaserWiseInspModel SummaryInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string FromDate, string ToDate, string ForParticular, string lstParticular, string Regin, string TextPurchaser)
         {
 
             DetailsofPurchaserWiseInspModel model = new();
@@ -35,7 +35,7 @@ namespace IBS.Repositories
             par[1] = new OracleParameter("P_ForGPer", OracleDbType.Boolean, Convert.ToBoolean(ForGiven), ParameterDirection.Input);
             par[2] = new OracleParameter("P_rdbICDT", OracleDbType.Boolean, Convert.ToBoolean(ReportBasedon), ParameterDirection.Input);
             par[3] = new OracleParameter("P_rdbPart", OracleDbType.Boolean, ForParticular, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_TextPur", OracleDbType.NVarchar2, MaterialValue, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_TextPur", OracleDbType.NVarchar2, TextPurchaser, ParameterDirection.Input);
             par[5] = new OracleParameter("p_From_Date", OracleDbType.Date, FromDate, ParameterDirection.Input);
             par[6] = new OracleParameter("p_To_Date", OracleDbType.Date, ToDate, ParameterDirection.Input);
             par[7] = new OracleParameter("P_lstPurchaser", OracleDbType.NVarchar2, lstParticular, ParameterDirection.Input);
