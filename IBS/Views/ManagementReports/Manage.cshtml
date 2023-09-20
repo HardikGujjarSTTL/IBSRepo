@@ -63,6 +63,10 @@
             loadSuperSurpriseDetails();
             fileName = 'Super_Surprise_Details';
         }
+        else if ('@ReportType' == 'SUPSURPSUMM') {
+            loadSuperSurpriseSummary();
+            fileName = 'Super_Surprise_Summary';
+        }
     });
 
     function loadIEPerformance() {
@@ -114,6 +118,13 @@
         });
     }
 
+    function loadSuperSurpriseSummary() {
+        $("#dvReportViewer").load("@Url.Action("SuperSurpriseSummary", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
     $("#btnPrint").click(function () {
         generatePdf(true);
     });
@@ -142,13 +153,11 @@
     });
 
     function generatePdf(isPrint) {
-        var HTML = $('#dvReportViewer').html();
-
         $.ajax({
             url: "@Url.Action("GeneratePDF", "ManagementReports")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
+            data: { ReportType: '@ReportType' },
             xhrFields: {
                 responseType: 'blob'
             },

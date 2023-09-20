@@ -118,7 +118,7 @@ namespace IBS.Repositories.InspectionBilling
                         CaseNo = l.CaseNo,
                         CallRecvDt = l.CallRecvDt,
                         CallInstallNo = l.CallInstallNo,
-                        CallSno = l.CallSno,
+                        CallSno = (short)l.CallSno,
                         CallStatus = l.CallStatus,
                         CallLetterNo = l.CallLetterNo,
                         Remarks = l.Remarks,
@@ -161,7 +161,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.CaseNo = CallData.CaseNo;
                 model.PoNo = CallData.PoNo;
                 model.PoDt = CallData.PoDt;
-                model.CallSno = CallData.CallSno;
+                model.CallSno = (short)CallData.CallSno;
                 model.CallRecvDt = CallData.CallRecvDt;
                 model.Vendor = CallData.Vendor;
                 model.CallLetterNo = CallData.CallLetterNo;

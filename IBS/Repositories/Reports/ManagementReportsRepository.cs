@@ -21,8 +21,8 @@ namespace IBS.Repositories.Reports
         public IEPerformanceModel GetIEPerformanceData(DateTime FromDate, DateTime ToDate, string Region)
         {
             IEPerformanceModel model = new();
-            List<IEPerformanceListModel> lstPerformance = new();
-            List<IEPerformanceSummaryListModel> lstPerformanceSummaryList = new();
+            List<IEPerformanceModel.IEPerformanceListModel> lstPerformance = new();
+            List<IEPerformanceModel.IEPerformanceSummaryListModel> lstPerformanceSummaryList = new();
 
             model.FromDate = FromDate;
             model.ToDate = ToDate;
@@ -40,7 +40,7 @@ namespace IBS.Repositories.Reports
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                lstPerformance = JsonConvert.DeserializeObject<List<IEPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                lstPerformance = JsonConvert.DeserializeObject<List<IEPerformanceModel.IEPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                 lstPerformance.ToList().ForEach(i =>
                 {
@@ -66,13 +66,13 @@ namespace IBS.Repositories.Reports
                                                join t13 in context.T13PoMasters on t20.CaseNo equals t13.CaseNo
                                                join t22 in context.T22Bills on t20.BillNo equals t22.BillNo
                                                where t20.CaseNo.Substring(0, 1) == Region && (t22.BillDt >= FromDate && t22.BillDt <= ToDate)
-                                               select new IEPerformanceSummaryListModel
+                                               select new IEPerformanceModel.IEPerformanceSummaryListModel
                                                {
                                                    RLY_NONRLY = t13.RlyNonrly == "R" ? "Railway Inspections" : "Non-Railway Inspections",
                                                    IC_COUNT = 1,
                                                    MATERIAL_VALUE = t22.MaterialValue ?? 0
                                                }
-                                              ).GroupBy(group => group.RLY_NONRLY).Select(x => new IEPerformanceSummaryListModel { RLY_NONRLY = x.Key, IC_COUNT = x.Count(), MATERIAL_VALUE = x.Sum(x => x.MATERIAL_VALUE) }).OrderByDescending(x => x.RLY_NONRLY).ToList();
+                                              ).GroupBy(group => group.RLY_NONRLY).Select(x => new IEPerformanceModel.IEPerformanceSummaryListModel { RLY_NONRLY = x.Key, IC_COUNT = x.Count(), MATERIAL_VALUE = x.Sum(x => x.MATERIAL_VALUE) }).OrderByDescending(x => x.RLY_NONRLY).ToList();
 
             return model;
         }
@@ -80,7 +80,7 @@ namespace IBS.Repositories.Reports
         public ClusterPerformanceModel GetClusterPerformanceData(DateTime FromDate, DateTime ToDate, string Region)
         {
             ClusterPerformanceModel model = new();
-            List<ClusterPerformanceListModel> lstPerformance = new();
+            List<ClusterPerformanceModel.ClusterPerformanceListModel> lstPerformance = new();
 
             model.FromDate = FromDate;
             model.ToDate = ToDate;
@@ -97,7 +97,7 @@ namespace IBS.Repositories.Reports
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                lstPerformance = JsonConvert.DeserializeObject<List<ClusterPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                lstPerformance = JsonConvert.DeserializeObject<List<ClusterPerformanceModel.ClusterPerformanceListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                 lstPerformance.ToList().ForEach(i =>
                 {
@@ -120,8 +120,8 @@ namespace IBS.Repositories.Reports
         public RWBSummaryModel GetRWBSummaryData(string FromYearMonth, string ToYearMonth)
         {
             RWBSummaryModel model = new();
-            List<RWBSummaryListModel> lstRWBSummaryList = new();
-            List<RBWSectorListModel> lstRBWSectorList = new();
+            List<RWBSummaryModel.RWBSummaryListModel> lstRWBSummaryList = new();
+            List<RWBSummaryModel.RBWSectorListModel> lstRBWSectorList = new();
 
             if (!string.IsNullOrEmpty(ToYearMonth))
             {
@@ -143,10 +143,10 @@ namespace IBS.Repositories.Reports
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                lstRWBSummaryList = JsonConvert.DeserializeObject<List<RWBSummaryListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                lstRWBSummaryList = JsonConvert.DeserializeObject<List<RWBSummaryModel.RWBSummaryListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                 string serializeddt2 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
-                lstRBWSectorList = JsonConvert.DeserializeObject<List<RBWSectorListModel>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                lstRBWSectorList = JsonConvert.DeserializeObject<List<RWBSummaryModel.RBWSectorListModel>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                 lstRWBSummaryList.ToList().ForEach(i =>
                 {
@@ -193,7 +193,7 @@ namespace IBS.Repositories.Reports
             model.FromDate = FromDate;
             model.Outstanding = Outstanding;
 
-            List<RWCOListModel> lstRWCOList = new();
+            List<RWCOModel.RWCOListModel> lstRWCOList = new();
 
             OracleParameter[] parameter = new OracleParameter[2];
             parameter[0] = new OracleParameter("p_FROM_DT", OracleDbType.Date, FromDate, ParameterDirection.Input);
@@ -204,7 +204,7 @@ namespace IBS.Repositories.Reports
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                lstRWCOList = JsonConvert.DeserializeObject<List<RWCOListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                lstRWCOList = JsonConvert.DeserializeObject<List<RWCOModel.RWCOListModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
             if (model.Outstanding == "2") lstRWCOList = lstRWCOList.Where(x => x.TOT_ALL_OUTSTANDING > 0 || x.TOT_ALL_SUSPENSE > 0).ToList();
@@ -236,7 +236,7 @@ namespace IBS.Repositories.Reports
                             t20.SetNo
                         };
 
-            model.lstICSubmission = query.AsEnumerable().Select((item, index) => new ICSubmissionListModel
+            model.lstICSubmission = query.AsEnumerable().Select((item, index) => new ICSubmissionModel.ICSubmissionListModel
             {
                 ID = index + 1,
                 IC_SUBMIT_DATE = item.IcSubmitDt,
@@ -286,7 +286,7 @@ namespace IBS.Repositories.Reports
 
             var result = query.ToList();
 
-            model.lstPendingICAgainstCalls = query.AsEnumerable().Select((item, index) => new PendingICAgainstCallsListModel
+            model.lstPendingICAgainstCalls = query.AsEnumerable().Select((item, index) => new PendingICAgainstCallsModel.PendingICAgainstCallsListModel
             {
                 ID = index + 1,
                 CASE_NO = item.CaseNo,
@@ -336,7 +336,7 @@ namespace IBS.Repositories.Reports
             var result = query.ToList();
 
 
-            model.lstSuperSurprise = query.AsEnumerable().Select((item, index) => new SuperSurpriseListModel
+            model.lstSuperSurprise = query.AsEnumerable().Select((item, index) => new SuperSurpriseDetailsModel.SuperSurpriseListModel
             {
                 ID = index + 1,
                 SuperSurpriseNo = item.SuperSurpriseNo,
@@ -350,6 +350,51 @@ namespace IBS.Repositories.Reports
                 Discrepancy = item.Discrepancy,
                 Outcome = item.Outcome,
                 SbuHeadRemarks = item.SbuHeadRemarks,
+            }).ToList();
+
+            return model;
+        }
+
+        public SuperSurpriseSummaryModel GetSuperSurpriseSummaryData(DateTime FromDate, DateTime ToDate, string Region)
+        {
+            SuperSurpriseSummaryModel model = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            var query = from t44 in context.T44SuperSurprises
+                        join t09 in context.T09Ies on t44.IeCd equals t09.IeCd
+                        join t08 in context.T08IeControllOfficers on t44.CoCd equals t08.CoCd
+                        where t44.SuperSurpriseDt >= FromDate && t44.SuperSurpriseDt <= ToDate &&
+                              t44.CaseNo.Substring(0, 1) == Region
+                        group t44 by new
+                        {
+                            t44.CoCd,
+                            t08.CoName,
+                            t44.IeCd,
+                            t09.IeName
+                        } into grouped
+                        select new
+                        {
+                            CO_CD = grouped.Key.CoCd,
+                            CO_NAME = grouped.Key.CoName,
+                            IE_CD = grouped.Key.IeCd,
+                            IE_NAME = grouped.Key.IeName,
+                            SUP_SUR_NO = grouped.Count()
+                        }
+                        into resultGrouped
+                        orderby resultGrouped.CO_NAME, resultGrouped.IE_NAME
+                        select resultGrouped;
+
+            model.lstSuperSurpriseSummary = query.AsEnumerable().Select(x => new SuperSurpriseSummaryModel.SuperSurpriseSummaryListModel
+            {
+                CO_CD = x.CO_CD,
+                CO_NAME = x.CO_NAME,
+                IE_CD = x.IE_CD,
+                IE_NAME = x.IE_NAME,
+                SUP_SUR_NO = x.SUP_SUR_NO,
+
             }).ToList();
 
             return model;

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using IBS.Models.Reports;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace IBS.Helper
 {
@@ -639,5 +639,24 @@ namespace IBS.Helper
     {
         public string Value { get; set; }
         public string Text { get; set; }
+    }
+
+    public static class GlobalDeclaration
+    {
+        public static IEPerformanceModel IEPerformance { get; set; }
+
+        public static ClusterPerformanceModel ClusterPerformance { get; set; }
+
+        public static RWBSummaryModel RWBSummary { get; set; }
+
+        public static RWCOModel RWCO { get; set; }
+
+        public static ICSubmissionModel ICSubmission { get; set; }
+
+        public static PendingICAgainstCallsModel PendingICAgainstCalls { get; set; }
+
+        public static SuperSurpriseDetailsModel SuperSurpriseDetails { get; set; }
+
+        public static SuperSurpriseSummaryModel SuperSurpriseSummary { get; set; }
     }
 }
