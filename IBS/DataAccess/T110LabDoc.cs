@@ -9,7 +9,7 @@ public partial class T110LabDoc
 
     public DateTime? CallRecvDt { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public long? TestingCharges { get; set; }
 

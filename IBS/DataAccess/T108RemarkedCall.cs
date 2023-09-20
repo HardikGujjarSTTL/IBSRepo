@@ -9,7 +9,7 @@ public partial class T108RemarkedCall
 
     public DateTime? CallRecvDt { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public string? CallRemarkStatus { get; set; }
 
