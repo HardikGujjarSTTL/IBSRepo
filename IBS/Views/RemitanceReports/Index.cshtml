@@ -261,18 +261,22 @@
         $('input[type=radio][name="ACodeReport"]').change(function () {
             if (this.value == "ACodeReport2") {
                 $(".divAccCode").css("display", "");
+                $("#AccCode").val("");
             }
             else {
                 $(".divAccCode").css("display", "none");
+                $("#AccCode").val("");
             }
         });
 
         $('input[type=radio][name="BPO"]').change(function () {
             if (this.value == "BPO2") {
                 $(".divBPO").css("display", "");
+                $("#BPOName").val("");
             }
             else {
                 $(".divBPO").css("display", "none");
+                $("#BPOName").val("");
             }
         });
 
@@ -282,7 +286,7 @@
             $("#spnErrorToDate").html("");
 
             var IsValid = true;
-            
+
             if ($("#FromDate").val() == "") {
                 $("#spnErrorFromDate").html("The From Date field is required.");
                 IsValid = false;
@@ -309,7 +313,11 @@
             var AccCode = $("#AccCode").val();
             var RReport = $('input[name="RReport"]:checked').val();
 
-            let myObject = { ReportType, FromDate, ToDate, AccCode, RReport };
+            var BPOName = $("#BPOName").val();
+            var ClientType = $("#ClientType").val();
+            var ClientName = $("#ClientName").val();
+
+            let myObject = { ReportType, FromDate, ToDate, AccCode, RReport, BPOName, ClientType, ClientName };
 
             var url = '@Url.Action("Manage", "RemitanceReports")?' + $.param(myObject);
             window.open(url, '_blank');
