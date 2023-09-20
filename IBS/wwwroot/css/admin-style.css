@@ -1519,3 +1519,6 @@ input[type="datetime-local"]{ height:43px;}
 .navbar-static-side ul li .nav-second-level li a.selectLink{ color:#f2b604;}
 .navbar-static-side ul li .nav-second-level li a.thirdLabelTrigger{padding:15px 15px 15px 60px;}
 .navbar-static-side ul li .nav-second-level li a.thirdLabelTrigger i.fa{ left:30px;}
+
+.input-group {position: relative; display: flex; flex-wrap: wrap; align-items: stretch; width: 100%;}
+.input-group-prepend {margin-right: -2px; display:flex;}
