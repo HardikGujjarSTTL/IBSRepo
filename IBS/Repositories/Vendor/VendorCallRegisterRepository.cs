@@ -58,7 +58,7 @@ namespace IBS.Repositories.Vendor
             else
             {
                 model.CaseNo = CaseNo;
-                model.CallSno = user.CallSno;
+                model.CallSno = (short)user.CallSno;
                 model.CallRecvDt = user.CallRecvDt;
                 model.CallLetterNo = user.CallLetterNo;
                 model.CallLetterDt = user.CallLetterDt;
@@ -750,7 +750,7 @@ namespace IBS.Repositories.Vendor
                                join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
                                where t18.CaseNo == CNO &&
                                      t18.CallRecvDt == DateTime.ParseExact(DT, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                                     t18.CallSno == (short)model.CallSno
+                                     t18.CallSno == (int)model.CallSno
                                select new VenderCallRegisterModel
                                {
                                    Status = "Marked",
@@ -778,7 +778,7 @@ namespace IBS.Repositories.Vendor
                                      !(from t18 in context.T18CallDetails
                                        where t18.CaseNo == CNO &&
                              t18.CallRecvDt == DateTime.ParseExact(DT, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                             t18.CallSno == (short)model.CallSno
+                             t18.CallSno == (int)model.CallSno
                                        select t18.ItemSrnoPo).Contains(t15.ItemSrno)
                                select new VenderCallRegisterModel
                                {

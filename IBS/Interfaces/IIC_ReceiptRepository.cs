@@ -13,10 +13,10 @@ namespace IBS.Interfaces
         int IC_Receipt_Delete(IC_ReceiptModel model);
         int CheckIC(IC_ReceiptModel model);
 
-        DTResult<ICReportModel> Get_UnBilled_IC([FromBody] DTParameters dtParameters, string Region);
+        List<IC_Unbilled_List_Model> Get_UnBilled_IC(string FromDate, string ToDate, string Region);
 
-        DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd);
+        List<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive(string FromDate, string ToDate, UserSessionModel model);
 
-        DTResult<IC_ReceiptModel> Get_IC_Status([FromBody] DTParameters dtParameters, string Region);
+        List<ICStatusListModel> Get_IC_Status(string FromDate, string ToDate, string IECD, string Region);
     }
 }

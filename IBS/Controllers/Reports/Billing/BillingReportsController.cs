@@ -14,7 +14,8 @@ namespace IBS.Controllers.Reports.Billing
         {
             billraisedRepository = _billraisedRepository;
         }
-
+        
+        #region Main
         public IActionResult Index(string ActionType)
         {
             BillRaisedModel model = new();
@@ -76,25 +77,33 @@ namespace IBS.Controllers.Reports.Billing
 
             return View(model);
         }
+        #endregion
 
+        #region Client Report
         public IActionResult BillingClientReport(int FromMn, int FromYr, int ToMn, int ToYr, string ActionType, string rdo)
         {
             BillRaisedModel model = billraisedRepository.GetBillingClient(FromMn, FromYr, ToMn, ToYr, ActionType, rdo, Region);
             return View(model);
         }
+        #endregion
 
+        #region Sector Report
         public IActionResult BillingSectorReport(int FromMn, int FromYr, int ToMn, int ToYr, string ActionType, string rdo, string IncRites)
         {
             BillRaisedModel model = billraisedRepository.GetBillingSector(FromMn, FromYr, ToMn, ToYr, ActionType, rdo, Region, IncRites);
             return View(model);
         }
+        #endregion
 
+        #region Railway Online Report
         public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType,string chkRegion)
         {
             BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType,Region, chkRegion);
             return View(model);
         }
+        #endregion
 
+        #region Other Event
         [HttpGet]
         public IActionResult GetAU(string RlyCd)
         {
@@ -109,12 +118,15 @@ namespace IBS.Controllers.Reports.Billing
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+        #endregion
 
+        #region Bill Cris Reports
         public IActionResult BillsNotCrisReport(DateTime FromDate, DateTime ToDate, string chkRegion,string ClientType, string lstAU, string actiontype,string rdbPRly, string rdbPAU)
         {
             BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype,Region, rdbPRly, rdbPAU);
             return View(model);
         }
+        #endregion
 
     }
 }

@@ -76,7 +76,7 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 .toggleMenu .iconBar { float:right; width:25px; height:25px; background:url(../images/mobile-menu.png) no-repeat center center; background-position:right bottom; }
 #nav, #nav ul { list-style:none; margin:0; padding:0; }
 #nav li { float:left; margin:0; padding:0; position:relative; display:inline }
-#nav li a { padding: 10px 25px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; }
+#nav li a { padding: 10px 55px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; }
 #nav ul { width:300px; top:100%; padding:0; left:0; position:absolute; }
 .hasJS #nav ul { opacity:0; transition: opacity 400ms linear; -webkit-transition: opacity 400ms linear; }
 #nav ul li { float:left; height:auto; width:100%; margin:0; padding:0; }
@@ -1085,7 +1085,7 @@ img.mfp-img {
 }
 @media only screen and (max-width:1599px) {
 #nav li a{
-    padding:10px 16px;
+    padding:10px 45px;
 }
 }
 

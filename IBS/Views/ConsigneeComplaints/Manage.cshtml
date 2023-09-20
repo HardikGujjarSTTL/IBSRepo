@@ -226,7 +226,7 @@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label>Defect Coded</label>
-                        @Html.DropDownListFor(model => model.DefectDesc, new SelectList(IBS.Models.Common.GetDefectDesc() , "Text", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                        @Html.DropDownListFor(model => model.DefectDesc, new SelectList(IBS.Models.Common.GetDefectDesc() , "Value", "Text"),"--Select--", new { id = "Inspectionrequired" })
                     </div>
                     <div class="col-md-2 mb-2">
                         <label>Classification</label>
@@ -239,7 +239,7 @@
                             new { id = "Inspectionrequired" }
                         )
                         }else{
-                            @Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })
+                            @Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Text", "Text"),"--Select--", new { id = "Inspectionrequired" })
                         }
                         @*@Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Value", "Value"),"--Select--", new { id = "Inspectionrequired" })*@
                     </div>

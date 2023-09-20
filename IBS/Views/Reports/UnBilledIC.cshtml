@@ -1,0 +1,49 @@
+﻿@model IBS.Models.ICUnbilledModel
+<div>
+    @*<h3 class="center"></h3>*@
+    <h3 class="center">IC's Received but not Billed For<br /> <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span><br />(@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC Submit Date</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO.</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Client Type</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC Date</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks Date</font></b></th>
+
+                    
+                </tr>
+                @if (Model != null && Model.lstICUnBilledList != null && Model.lstICUnBilledList.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstICUnBilledList)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.SUBMIT_DATE</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BK_NO</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.SET_NO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_TYPE</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                            <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.REMARKS</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.REMARKS_DATE</font></td>
+                        </tr>
+                    }                    
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>   
+</div>

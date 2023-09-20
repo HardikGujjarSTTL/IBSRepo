@@ -17,7 +17,6 @@ namespace IBS.Helper
                 var cmd = context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = procedurename;
-
                 if (par != null && par.Length > 0)
                 {
                     foreach (var item in par)
