@@ -35,8 +35,8 @@
     var fileName = '';
 
     $(document).ready(function () {
-         loadComplaints();
-         fileName = 'Consignee_Complaint';
+        loadComplaints();
+        fileName = 'Consignee_Complaint';
     });
 
     function loadComplaints() {
@@ -45,7 +45,7 @@
             , regionsouth: '@Model.regionsouth', regioneast: '@Model.regioneast', regionwest: '@Model.regionwest', jiallregion: '@Model.jiallregion', jinorth: '@Model.jinorth', jisourth: '@Model.jisourth'
             , jieast: '@Model.jieast', jiwest: '@Model.jiwest', compallregion: '@Model.compallregion', compyes: '@Model.compyes', compno: '@Model.compno', cancelled: '@Model.cancelled'
             , underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp'
-            
+
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
@@ -74,34 +74,47 @@
     });
 
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
+        var HTML = $('#dvReportViewer').html();
 
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "ConsigneeCompPeriod")",
+            type: "POST",
+            //contentType: "application/x-www-form-urlencoded",
+            contentType: "application/json; charset=utf-8",
+            data: { htmlContent: HTML },
+            data: JSON.stringify(HTML),
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
     $(document).ajaxSend(function () {

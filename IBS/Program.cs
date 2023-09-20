@@ -103,6 +103,7 @@ builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsh
 builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
 builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
 builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
+builder.Services.AddScoped<INonRlyClientMasterRepository, IBS.Repositories.NonRlyClientMasterRepository>();
 builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();

@@ -5,6 +5,8 @@ using IBS.Interfaces.Transaction;
 using IBS.Models;
 using IBS.Repositories.Transaction;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 
 namespace IBS.Controllers
 {
@@ -12,10 +14,12 @@ namespace IBS.Controllers
     {
         #region Variables
         private readonly IJITopsheetReportRepository jITopsheetReportRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public JITopsheetReportController(IJITopsheetReportRepository _jITopsheetReportRepository)
+        public JITopsheetReportController(IJITopsheetReportRepository _jITopsheetReportRepository, IWebHostEnvironment _env)
         {
             jITopsheetReportRepository = _jITopsheetReportRepository;
+            this.env = _env;
         }
 
         [Authorization("JITopsheetReport", "Index", "view")]
@@ -56,5 +60,37 @@ namespace IBS.Controllers
             return PartialView(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        {
+            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
+            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
     }
 }
