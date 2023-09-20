@@ -59,6 +59,10 @@
             loadPendingICAgainstCalls();
             fileName = 'Pending_IC_Against_Calls';
         }
+        else if ('@ReportType' == 'SUPSUR') {
+            loadSuperSurpriseDetails();
+            fileName = 'Super_Surprise_Details';
+        }
     });
 
     function loadIEPerformance() {
@@ -98,6 +102,13 @@
 
     function loadPendingICAgainstCalls() {
         $("#dvReportViewer").load("@Url.Action("PendingICAgainstCalls", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadSuperSurpriseDetails() {
+        $("#dvReportViewer").load("@Url.Action("SuperSurpriseDetails", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', ParticularCM: '@Model.ParticularCM', ParticularSector: '@Model.ParticularSector' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

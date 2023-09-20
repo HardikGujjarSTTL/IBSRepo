@@ -39,6 +39,7 @@ namespace IBS.Models
         public string ReportTitle { get; set; }
         public string ForGiven { get; set; }
         public string ReportBasedon { get; set; }
+        public string MaterialValue { get; set; }
         public string TextPurchase { get; set; }
         public string ForParticular { get; set; }
         public string lstParticular { get; set; }
