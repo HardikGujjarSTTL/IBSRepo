@@ -25,31 +25,56 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate, string AccCode, string RReport)
+        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
         {
-            RemitanceReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, AccCode = AccCode, RReport = RReport };
+            RemitanceReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, AccCode = AccCode, RReport = RReport, BPOName = BPOName, ClientType = ClientType, ClientName = ClientName };
             if (ReportType == "R")
             {
                 model.ReportTitle = "Remitance Reports";
-                if (RReport == "Report1")
-                    model.ReportTitle = "Cheque Wise Remittances for the Period";
-                else if (RReport == "Report2")
-                    model.ReportTitle = "Bill Wise Remittances for the Period";
-
             }
 
             return View(model);
         }
 
-        public IActionResult RemitanceReport(DateTime FromDate, DateTime ToDate, string AccCode)
+        public IActionResult RemitanceReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
         {
-            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region);
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
             return PartialView(model);
         }
 
-        public IActionResult BillWiseRemittancesPeriodReport(DateTime FromDate, DateTime ToDate, string AccCode)
+        public IActionResult BillWiseRemittancesPeriodReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
         {
-            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region);
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
+            return PartialView(model);
+        }
+
+        public IActionResult BillWiseRemittancesCreatedBillReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
+        {
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
+            return PartialView(model);
+        }
+
+        public IActionResult ChequeWiseBillRemittanceReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
+        {
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
+            return PartialView(model);
+        }
+
+        public IActionResult AccountCodeWiseRemittanceReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
+        {
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
+            return PartialView(model);
+        }
+
+        public IActionResult ClientBPOWiseRemittanceReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
+        {
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
+            return PartialView(model);
+        }
+
+        public IActionResult StatementExcessRemittanceReport(DateTime FromDate, DateTime ToDate, string AccCode, string RReport, string BPOName, string ClientType, string ClientName)
+        {
+            RemitanceModel model = remitanceReportsRepository.GetRemitanceReport(FromDate, ToDate, AccCode, Region, RReport, BPOName, ClientType, ClientName);
             return PartialView(model);
         }
 

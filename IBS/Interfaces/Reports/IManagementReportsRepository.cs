@@ -15,5 +15,7 @@ namespace IBS.Interfaces.Reports
         public ICSubmissionModel GetICSubmissionData(DateTime FromDate, DateTime ToDate, string Region);
 
         public PendingICAgainstCallsModel GetPendingICAgainstCallsData(DateTime FromDate, DateTime ToDate, string Region);
+
+        public SuperSurpriseDetailsModel GetSuperSurpriseDetailsData(DateTime FromDate, DateTime ToDate, string Region, string ParticularCM, string ParticularSector);
     }
 }

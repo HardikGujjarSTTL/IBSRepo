@@ -1,0 +1,93 @@
+﻿@model IBS.Models.Reports.RemitanceModel
+<div>
+    <h3 class="heading3">Cheque Wise Bills Remitted For The Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="27%" valign="top" align="center"><b><font size="1" face="Verdana">BANK</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ NO.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ DATE</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL AMOUNT</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT POSTED</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">POSTING DATE</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstRemitanceChequeWiseBill != null && Model.lstRemitanceChequeWiseBill.Count > 0)
+                {
+                    int SrNo = 0, wCtr = 1;
+                    string wBANK = "", wCHQ_NO = "", wCHQ_DT = "";
+                    double wAmtPosted = 0, wTotAmtPosted = 0;
+                    @foreach (var item in Model.lstRemitanceChequeWiseBill)
+                    {
+                        @if (wBANK == @item.BANK_NAME && wCHQ_NO == @item.CHQ_NO && wCHQ_DT == Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy"))
+                        {
+                            <tr>
+                                <td align="center" colspan="5"><font size="1" face="Verdana"></font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT_CLEARED</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy")</font></td>
+                            </tr>
+                            wAmtPosted = wAmtPosted + Convert.ToDouble(@item.AMOUNT_CLEARED);
+                            wTotAmtPosted = wTotAmtPosted + Convert.ToDouble(@item.AMOUNT_CLEARED);
+                            wCtr = wCtr + 1;
+                        }
+                        else
+                        {
+                            @if (SrNo > 0 & wCtr > 1)
+                            {
+                                <tr>
+                                    <td align="right" colspan="7"><font size="1" face="Verdana"><b>Total of (@SrNo)</b></font></td>
+                                    <td align="right"><font size="1" face="Verdana"><b>@wAmtPosted</b></font></td>
+                                    <td align="right"><font size="1" face="Verdana"></font></td>
+                                </tr>
+                                wCtr = 1;
+                            }
+                            SrNo++;
+                            <tr>
+                                <td align="center" colspan="1"><font size="1" face="Verdana">@SrNo</font></td>
+                                <td align="left"><font size="1" face="Verdana">@item.BANK_NAME</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CHQ_NO</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT_CLEARED</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy")</font></td>
+                            </tr>
+                            wBANK = @item.BANK_NAME;
+                            wCHQ_NO = @item.CHQ_NO;
+                            wCHQ_DT = Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy");
+                            wAmtPosted = Convert.ToDouble(@item.AMOUNT_CLEARED);
+                            wTotAmtPosted = wTotAmtPosted + wAmtPosted;
+                        }
+                    }
+                    @if (wCtr > 1)
+                    {
+                        <tr>
+                            <td width='78%' valign='top' align='right' colspan='7'> <font size='1' face='Verdana'><b>Total of (@SrNo) </b></font></td>
+                            <td width='12%' valign='top' align='right'><font size='1' face='Verdana'>@wAmtPosted</font></td>
+                            <td width='10%' valign='top' align='center' colspan='1'><font size='1' face='Verdana'></font></td>
+                        </tr>
+                    }
+                    <tr style="background:#d4d0c8;">
+                        <td width='78%' valign='top' align='right' colspan='7'> <font size='1' face='Verdana'><b>Total Remittance : </b></font></td>
+                        <td width='12%' valign='top' align='right'><font size='1' face='Verdana'>@wTotAmtPosted</font></td>
+                        <td width='10%' valign='top' align='center' colspan='1'><font size='1' face='Verdana'></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

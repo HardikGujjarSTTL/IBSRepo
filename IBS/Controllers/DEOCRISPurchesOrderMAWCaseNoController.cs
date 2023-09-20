@@ -25,7 +25,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<DEOCRISPurchesOrderMAModel> dTResult = purchesorderRepository.GetDataList(dtParameters, GetRegionCode);
+            DTResult<DEOCRISPurchesOrderMAModel> dTResult = purchesorderRepository.GetDataList(dtParameters, Region);
             return Json(dTResult);
         }
 

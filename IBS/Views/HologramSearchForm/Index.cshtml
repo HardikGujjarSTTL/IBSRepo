@@ -17,15 +17,23 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Hologram No. From</label>
-                    <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
-                    <input type="text" id="txtFromNo" maxlength="7" style="text-transform: uppercase;width:94%;">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                        </div>
+                        <input type="text" class="form-control" id="txtFromNo" maxlength="7" style="text-transform: uppercase;">
+                    </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Hologram No. To</label>
-                    <span style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
-                    <input type="text" id="txtToNo" maxlength="7" style="text-transform: uppercase;width:94%;">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                    </div>
+                        <input type="text" id="txtToNo" class="form-control" maxlength="7" style="text-transform: uppercase;">
+                    </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3" id="secDrop">
