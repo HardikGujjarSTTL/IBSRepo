@@ -37,7 +37,8 @@ namespace IBS.Controllers
                 Hg_No_Fr = Hg_No_Fr.Substring(1, 7);
                 Hg_No_To = Hg_No_To.Substring(1, 7);
                 model = hologramSearchForm.FindByID(Hg_No_Fr, Hg_No_To, GetUserInfo.Region);
-            }            
+            }
+            model.Region = Convert.ToString(GetUserInfo.Region);
             return View(model);
         }
 

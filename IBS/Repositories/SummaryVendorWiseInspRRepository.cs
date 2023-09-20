@@ -139,7 +139,7 @@ namespace IBS.Repositories
                 recCount = recCount + 1;
                 //lstPerformance.ToList().ForEach(i => { i.C3 = decimal.Truncate(i.C3); i.C7 = decimal.Truncate(i.C7); i.CM7 = decimal.Truncate(i.CM7); i.C10 = decimal.Truncate(i.C10); i.CALLS = decimal.Truncate(i.CALLS); i.CALL_CANCEL = decimal.Truncate(i.CALL_CANCEL); i.REJECTIONS = decimal.Truncate(i.REJECTIONS); });
                 model.SrNo = recCount;
-                model.CONSIGNEE = Convert.ToString(ds.Tables[0].Rows[0]["VENDOR"]);
+                model.VENDOR = Convert.ToString(ds.Tables[0].Rows[0]["VENDOR"]);
                 model.NO_OF_INSP = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_INSP"]);
                 model.MATERIAL_VALUE = Convert.ToString(ds.Tables[0].Rows[0]["MATERIAL_VALUE"]);
                 model.INSP_FEE = Convert.ToString(ds.Tables[0].Rows[0]["INSP_FEE"]);

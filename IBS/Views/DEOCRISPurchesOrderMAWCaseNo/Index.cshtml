@@ -5,7 +5,7 @@
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>MA ISSUED BY CRIS AGAINST CRIS PURCHASE ORDERS NOT REGISTERED IN RITES List</h2>
+            <h2>Purchase order submitted by vendors awaiting allocation of case number List</h2>
         </div>
         @*<div class="list-btn">
         <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn"> Add New User</a>
@@ -18,16 +18,15 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Ref No.</th>
                             <th>Purchase Order Number</th>
                             <th>Purchase Order Date</th>
                             <th>Recv Date</th>
                             <th>Agency</th>
                             <th>Vendor</th>
-                            <th>MA No.</th>
-                            <th>MA DT</th>
-                            <th>Subject</th>
-                            <th>MA Field</th>
-                            <th>New Value</th>
+                            <th>Place of Inspection</th>
+                            <th>Region</th>
+                            <th>Remarks</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -82,6 +81,7 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    { data: "ImmsPokey" },
                     { data: "PoNo" },
                     {
                         data: "PoDt",
@@ -103,28 +103,17 @@
                     },
                     { data: "ImmsRlyShortname" },
                     { data: "VendorName" },
-                    { data: "MaNo" },
-                    {
-                        data: "MaDate",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "Subject" },
-                    { data: "MaFldDescr" },
-                    { data: "NewValue" },
-
+                    { data: "POI" },
+                    { data: "RegionCode" },
+                    { data: "Remarks" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Rly = data.Rly;
-                            var Makey = data.Makey;
+                            var ImmsPokey = data.ImmsPokey;
+                            var ImmsRlyCd = data.ImmsRlyCd;
                             var Slno = data.Slno;
-                            var editUrl = '@Url.Action("Manage", "DEOCRISPurchesOrderMAWCaseNo")?Rly=' + Rly + "&Makey=" + Makey + "&Slno=" + Slno;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            var editUrl = '@Url.Action("Manage", "DEOCRISPurchesOrderMAWCaseNo")?ImmsPokey=' + ImmsPokey + "&ImmsRlyCd=" + ImmsRlyCd;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }

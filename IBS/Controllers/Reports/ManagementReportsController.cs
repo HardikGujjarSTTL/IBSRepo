@@ -97,7 +97,7 @@ namespace IBS.Controllers.Reports
 
         public IActionResult SuperSurpriseDetails(DateTime FromDate, DateTime ToDate, string ParticularCM, string ParticularSector)
         {
-            PendingICAgainstCallsModel model = managementReportsRepository.GetPendingICAgainstCallsData(FromDate, ToDate, Region);
+            SuperSurpriseDetailsModel model = managementReportsRepository.GetSuperSurpriseDetailsData(FromDate, ToDate, Region, ParticularCM, ParticularSector);
             return PartialView(model);
         }
 

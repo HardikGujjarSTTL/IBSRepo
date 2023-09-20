@@ -43,5 +43,6 @@ namespace IBS.Models
         public string lblHgNoTo { get; set; }
 
         public string IEStatus { get; set; }
+        public string Region { get; set; }
     }    
 }
