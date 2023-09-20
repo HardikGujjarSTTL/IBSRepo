@@ -210,6 +210,9 @@ builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
 builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
+builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
+builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

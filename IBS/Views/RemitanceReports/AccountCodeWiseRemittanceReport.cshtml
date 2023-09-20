@@ -1,0 +1,164 @@
+﻿@model IBS.Models.Reports.RemitanceModel
+<div>
+    <h3 class="heading3">Cheque Wise Remittances : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (Account Code : <span class="orangeText"> @Model.ACC_DESC : @Model.ACC_CD</span> (@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">VOUCHER NO.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">VOUCHER DATE</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ NO.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">CHQ DATE</font></b></th>
+                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">BANK</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">AMOUNT</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">SUSPENSE AMOUNT</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">NARRATION</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DT</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">TDS</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">TDS DT</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">RECIPEINT GSTIN NO.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">BILL AMOUNT</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">AMT POSTED</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">POSTING DATE</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">ACC GROUP</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">SAP CUST CD(BPO-Z006/CON-Z007/IRFC BPO-NULL)</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstRemitanceAccountCodeWise != null && Model.lstRemitanceAccountCodeWise.Count > 0)
+                {
+                    int SrNo = 0, wCtr = 1;
+                    string wBANK = "", wCHQ_NO = "", wCHQ_DT = "";
+                    double wAmtPosted = 0, wTotAmtPosted = 0;
+                    decimal wTotChqAmt = 0, wTotSusAmt = 0;
+                    @foreach (var item in Model.lstRemitanceAccountCodeWise)
+                    {
+                        @if (wBANK == @item.BANK_NAME && wCHQ_NO == @item.CHQ_NO && wCHQ_DT == Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy"))
+                        {
+                            <tr>
+                                <td align="center" colspan="9"><font size="1" face="Verdana"></font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                                @if (@Convert.ToDateTime(@item.BILL_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.BILL_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="right"><font size="1" face="Verdana">@item.TDS_AMT</font></td>
+                                @if (@Convert.ToDateTime(@item.TDS_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.TDS_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.RECIPIENT_GSTIN_NO</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT_CLEARED</font></td>
+                                @if (@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.ACC_GROUP</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.SAP_CUST_CD</font></td>
+                            </tr>
+                            wAmtPosted = wAmtPosted + Convert.ToDouble(@item.AMOUNT_CLEARED);
+                            wTotAmtPosted = wTotAmtPosted + Convert.ToDouble(@item.AMOUNT_CLEARED);
+                            wCtr = wCtr + 1;
+                        }
+                        else
+                        {
+                            SrNo++;
+                            <tr>
+                                <td align="center" colspan="1"><font size="1" face="Verdana">@SrNo</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.VCHR_NO</font></td>
+                                @if (@Convert.ToDateTime(@item.VCHR_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.VCHR_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.CHQ_NO</font></td>
+                                @if (@Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="left"><font size="1" face="Verdana">@item.BANK_NAME</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.SUSPENSE_AMT</font></td>
+                                <td align="left"><font size="1" face="Verdana">@item.NARRATION</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                                @if (@Convert.ToDateTime(@item.BILL_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.BILL_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="right"><font size="1" face="Verdana">@item.TDS_AMT</font></td>
+                                @if (@Convert.ToDateTime(@item.TDS_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.TDS_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.RECIPIENT_GSTIN_NO</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td align="right"><font size="1" face="Verdana">@item.AMOUNT_CLEARED</font></td>
+                                @if (@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy") == "01/01/0001")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.POSTING_DT).ToString("dd/MM/yyyy")</font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.ACC_GROUP</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.SAP_CUST_CD</font></td>
+                            </tr>
+                            wTotChqAmt = wTotChqAmt + Convert.ToDecimal(@item.AMOUNT);
+                            wTotSusAmt = wTotSusAmt + Convert.ToDecimal(@item.SUSPENSE_AMT);
+                            wBANK = @item.BANK_NAME.ToString();
+                            wCHQ_NO = @item.CHQ_NO.ToString();
+                            wCHQ_DT = @Convert.ToDateTime(@item.CHQ_DT).ToString("dd/MM/yyyy");
+                            wAmtPosted = Convert.ToDouble(@item.AMOUNT_CLEARED);
+                            wTotAmtPosted = wTotAmtPosted + wAmtPosted;
+                        }
+                    }
+                    <tr style="background:#d4d0c8;">
+                        <td width='78%' valign='top' align='right' colspan='6'> <font size='1' face='Verdana'><b>Totals : </b></font></td>
+                        <td width='12%' valign='top' align='right'><font size='1' face='Verdana'><b>@wTotChqAmt</b></font></td>
+                        <td width='12%' valign='top' align='right' colspan='7'><font size='1' face='Verdana'></font></td>
+                        <td width='12%' valign='top' align='right'><font size='1' face='Verdana'><b>@wTotSusAmt</b></font></td>
+                        <td width='12%' valign='top' align='right'><font size='1' face='Verdana'><b>@wTotAmtPosted</b></font></td>
+                        <td width='10%' valign='top' align='center' colspan='3'><font size='1' face='Verdana'></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

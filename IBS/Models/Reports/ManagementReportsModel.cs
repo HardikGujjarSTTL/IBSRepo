@@ -324,6 +324,37 @@
         public DateTime? ToDate { get; set; }
 
         public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<SuperSurpriseListModel> lstSuperSurprise { get; set; }
     }
 
+    public class SuperSurpriseListModel
+    {
+        public int ID { get; set; }
+
+        public string SuperSurpriseNo { get; set; }
+
+        public DateTime? SuperSurpriseDt { get; set; }
+
+        public string Display_SuperSurpriseDt { get { return this.SuperSurpriseDt != null ? Common.ConvertDateFormat(this.SuperSurpriseDt.Value) : ""; } }
+
+        public string CoName { get; set; }
+
+        public string IeName { get; set; }
+
+        public string Vendor { get; set; }
+
+        public string ItemDesc { get; set; }
+
+        public string NameScopeItem { get; set; }
+
+        public string PreIntRej { get; set; }
+
+        public string Discrepancy { get; set; }
+
+        public string Outcome { get; set; }
+
+        public string SbuHeadRemarks { get; set; }
+
+    }
 }
