@@ -451,6 +451,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Tblexception> Tblexceptions { get; set; }
 
+    public virtual DbSet<TdsHistory> TdsHistories { get; set; }
+
     public virtual DbSet<Temp10Ic> Temp10Ics { get; set; }
 
     public virtual DbSet<Temp22Bill> Temp22Bills { get; set; }
@@ -14210,6 +14212,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Isdeleted)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Ispricevariation)
+                .HasPrecision(2)
+                .HasColumnName("ISPRICEVARIATION");
+            entity.Property(e => e.Isstageinspection)
+                .HasPrecision(2)
+                .HasColumnName("ISSTAGEINSPECTION");
             entity.Property(e => e.PoDt)
                 .HasColumnType("DATE")
                 .HasColumnName("PO_DT");
@@ -15159,6 +15167,56 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Exceptionmessage)
                 .IsUnicode(false)
                 .HasColumnName("EXCEPTIONMESSAGE");
+        });
+
+        modelBuilder.Entity<TdsHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("TDS_HISTORY_PK");
+
+            entity.ToTable("TDS_HISTORY");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"TDS_HISTORY_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.BillAmtCleared)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("BILL_AMT_CLEARED");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.RetentionMoney)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("RETENTION_MONEY");
+            entity.Property(e => e.Tds)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("TDS");
+            entity.Property(e => e.TdsCgst)
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("TDS_CGST");
+            entity.Property(e => e.TdsDt)
+                .HasColumnType("DATE")
+                .HasColumnName("TDS_DT");
+            entity.Property(e => e.TdsIgst)
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("TDS_IGST");
+            entity.Property(e => e.TdsSgst)
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("TDS_SGST");
+            entity.Property(e => e.WriteOffAmt)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("WRITE_OFF_AMT");
         });
 
         modelBuilder.Entity<Temp10Ic>(entity =>
@@ -19272,6 +19330,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T94_BANK_SEQ");
         modelBuilder.HasSequence("T96_MESSAGES_SEQ");
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
+        modelBuilder.HasSequence("TDS_HISTORY_SEQ");
         modelBuilder.HasSequence("USERROLESSEQ");
         modelBuilder.HasSequence("VENDOR_FEEDBACK_SEQ");
         modelBuilder.HasSequence("VENDORDOCUMENT_SEQ");
