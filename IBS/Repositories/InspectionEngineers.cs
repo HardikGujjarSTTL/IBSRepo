@@ -74,7 +74,7 @@ namespace IBS.Repositories
                          CallMarkingStartDt = t09.CallMarkingStartDt,
                          InspectionStartDt = t09.InspectionStartDt,
                          RepatriationDt = t09.RepatriationDt,
-                         Cluster = context.T101IeClusters.Where(x => x.IeCode == Id).Select(x => x.ClusterCode).SingleOrDefault(),
+                         Cluster = context.T101IeClusters.Where(x => x.IeCode == Id).Select(x => x.ClusterCode).SingleOrDefault() ?? 0,
                      }).FirstOrDefault();
 
             return model;

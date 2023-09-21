@@ -7,7 +7,7 @@ public partial class VenderCallRegisterItemView2
 {
     public string? Status { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 

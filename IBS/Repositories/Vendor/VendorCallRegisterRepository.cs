@@ -208,7 +208,7 @@ namespace IBS.Repositories.Vendor
                         CaseNo = l.CaseNo,
                         CallRecvDt = l.CallRecvDt,
                         CallInstallNo = l.CallInstallNo,
-                        CallSno = l.CallSno,
+                        CallSno = (short)l.CallSno,
                         CallStatus = l.CallStatus == null ? string.Empty : l.CallStatus,
                         CallLetterNo = l.CallLetterNo,
                         Remarks = l.Remarks == null ? string.Empty : l.Remarks,
