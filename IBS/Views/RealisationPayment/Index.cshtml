@@ -41,7 +41,8 @@
             </div>
         </div>
         <div class="task-inner row CRISRLY" style="display: none">
-            <div class="col-md-3">
+        <div class="row">
+        <div class="col-md-3">
                 <div class="input-search">
                     <label for="FromDate">From</label>
                     <input type="text" class="datepicker" id="FromDate_CRISRLY" placeholder="DD/MM/YYYY" />
@@ -55,17 +56,21 @@
                     <span class="text-danger field-validation-error" id="spnErrorToDate_CRISRLY"></span>
                 </div>
             </div>
+           
             <div class="col-md-2">
-                <div class="input-search">
+                <div class="input-search mt-5">
                     @Html.CheckBox("chkAllRegion", true) All Region
                 </div>
             </div>
+            </div>
+            <div class="row my-0">
             <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     @Html.RadioButton("rdType", "Detailed", new { @class = "text-darkblue font-bold font-size-8pt", @checked = true }) Detailed
                     &nbsp;&nbsp;
                     @Html.RadioButton("rdType", "Summary", new { @class = "text-darkblue font-bold font-size-8pt"}) Summary
                 </div>
+            </div>
             </div>
             <div class="col-md-4 mb-3 clsRailway" style="font-weight: bold;">
                 <div class="reference">
@@ -74,10 +79,12 @@
                     @Html.RadioButton("rdRailway", "PartiRailway", new { @id="rdPRly", @class = "text-darkblue font-bold font-size-8pt"}) Particular Railways
                 </div>
             </div>
+            <div class="row my-0">
             <div class="col-md-4 mb-3 clsRailway">
                 <div class="reference">
                     @Html.DropDownList("dpRailway", new SelectList(IBS.Models.Common.GetRailway().OrderBy(x => x.Value) , "Value", "Text"))
                 </div>
+            </div>
             </div>
             <div class="row my-0 clsAU">
                 <div class="col-md-4 mb-3 clsAU" style="font-weight: bold;">
@@ -87,10 +94,12 @@
                         @Html.RadioButton("rdAU", "PartiAU", new { @class = "text-darkblue font-bold font-size-8pt"}) Particular Railways
                     </div>
                 </div>
+                <div class="row my-0">
                 <div class="col-md-4 mb-3 clsAU" style="font-weight: bold;">
                     <div class="reference">
                         @Html.DropDownList("dpAU", new SelectList(IBS.Models.Common.GetAUCrisByRlyCd("") , "Value", "Text"),"-- Select --")
                     </div>
+                </div>
                 </div>
             </div>
             <div class="row my-0">
