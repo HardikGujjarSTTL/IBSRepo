@@ -7,9 +7,19 @@
         <div class="tast-list">
             <h2>Voucher List</h2>
         </div>
+        <form method="post" enctype="multipart/form-data" action="/AddRecieptVoucher/OnPostUpload">
+            <div class="form-group">
+                <label for="file">Select Excel File:</label>
+                <input type="file" name="file" id="file" accept=".xlsx" required />
+            </div>
+            <button type="submit">Upload and Process</button>
+        </form>
         <div class="list-btn">
-            <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn">Add New Voucher</a>
-        </div>
+            <input type="file" class="form-action"/>
+            <a href="~/ExcelSamples/AddVoucher.xlsx">Download Sample Excel</a>
+
+                <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn Permission_Add">Add New Voucher</a>
+            </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -98,7 +108,7 @@
                             var CHQ_DT = data.CHQ_DT;
 
                             var editUrl = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;

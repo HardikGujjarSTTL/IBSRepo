@@ -1,0 +1,173 @@
+﻿@model IBS.Models.TDSEntryModel
+
+@{
+    ViewData["Title"] = "TDS Entry";
+    string clsView = "";
+    //if (Model.SNO > 0)
+    //{
+    //    clsView = "Permission_View";
+    //}
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>TDS Form</h2>
+    </div>
+   @* <div>
+        <a asp-action="AddRecieptVoucher" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>
+    </div>*@
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="TDSEntry" asp-action="TDSEntry" data-ajax-method="post" data-ajax-complete="completed" id="frmTDSentry">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                       
+                            
+                        <div class="col-md-4 mb-3">
+                                <label for="Reference">BILL No.	</label>
+                                <input type="text" class="input" id="billNo" asp-for="BILL_NO" maxlength="20">
+                                <button type="button" class="save-btn active" onclick="search();">Search</button>
+
+                        </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Case No.</label>
+                                <input type="text" class="input" id="CaseNO" asp-for="CASE_NO" maxlength="20" readonly>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Bill Amount	</label>
+                                <input type="text" class="input" id="billAmount" asp-for="Bill_Amount" maxlength="20" readonly>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">TDS</label>
+                                <input type="text" class="input" id="TDS" asp-for="TDS" maxlength="9">
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">TDS CGST</label>
+                                <input type="text" class="input" id="tdsCgst" asp-for="TDSCGST" maxlength="9">
+
+                            </div>
+
+                        <div class="col-md-4 mb-4">
+                                <label for="Reference">TDS SGST	</label>
+                                <input type="text" class="input" id="tdsSgst" asp-for="TDSSGST" maxlength="9">
+
+                        </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">TDS IGST	</label>
+                                <input type="text" class="input" id="tdsIgst" asp-for="TDSIGST" maxlength="9">
+
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Retention Money</label>
+                                <input type="text" class="input" id="retentionMoney" asp-for="Retention_Money" maxlength="9">
+
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="Reference">Write off Amt/Amt Adjusted</label>
+                                <input type="text" class="input" id="writeOffmoney" asp-for="WrtOffAmount" maxlength="9">
+
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="Reference">TDS Posting Date	</label>
+                                <input type="text" class="input datepicker" id="postingDT" asp-for="TDSposting_DT" maxlength="20">
+
+                            </div>
+                    </div>
+
+                    <div class="savenext-btn">
+                        @*<a asp-controller="AddRecie   ptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active" onclick="enter();">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+           
+            var currentDate = new Date();
+
+
+            var month = currentDate.getMonth() + 1;
+            var day = currentDate.getDate();
+            var year = currentDate.getFullYear();
+
+
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+
+
+            var formattedDate = month + "/" + day + "/" + year;
+
+
+            $("#postingDT").val(formattedDate);
+
+        });
+
+
+        function enter(){
+            debugger;
+            $("#frmTDSentry").submit();
+        }
+        completed = function (response) {
+            alert("Data Inserted Successfully");
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = "/TDSEntry/Index";
+        }
+
+        function search(){
+
+            
+            debugger;
+            var formData = new FormData();
+            formData.append("Bill_NO", $("#billNo").val()); 
+
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: '/TDSEntry/GetValue', // Replace with your actual controller and action URL
+                dataType: "json",
+                data: formData,
+                success: function (data) {
+                    
+                    debugger;
+                    $("#CaseNO").val(data.CASE_NO);
+                    $("#billAmount").val(data.Bill_Amount);
+                    $("#TDS").val(data.TDS);
+                    $("#tdsCgst").val(data.TDSCGST);
+                    $("#tdsSgst").val(data.TDSSGST);
+                    $("#tdsIgst").val(data.TDSIGST);
+                    $("#retentionMoney").val(data.Retention_Money);
+                    $("#writeOffmoney").val(data.WrtOffAmount);
+                    $("#TDSposting_DT").val(data.TDSposting_DT);
+
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+    </script>
+}

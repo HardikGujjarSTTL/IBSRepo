@@ -1,0 +1,420 @@
+﻿@model IBS.Models.IECliamFormModel
+
+
+@{
+    ViewData["Title"] = "IE Claim Form";
+    string clsView = "";
+    if (Model.ID > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>IE Claim form</h2>
+    </div>
+    <div>
+        @*  <a asp-action="IEClaimForm" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>*@
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <form data-ajax="true" asp-antiforgery="true" asp-controller="IEClaimForm" asp-action="Insert_IE" data-ajax-method="post" data-ajax-complete="completed" id="frmIEClaimForm">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Claim No.</label>
+                            <input type="text" id="claimNO" placeholder="Claim No. will appear here "  asp-for="CLAIM_NO" maxlength="300" />
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Claim Date.</label>
+                            <input type="text" class="input datepicker" id="claimdate" asp-for="CLAIM_DT" maxlength="500" readonly />
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Claim Recieve Date.</label>
+                            <input type="text" class="input datepicker" id="claimRecievedate" asp-for="CLAIM_RECIEVE_DT" maxlength="500" readonly />
+                        </div>
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">IE</label>
+                            @Html.DropDownListFor(model => model.IE, Common.GetIEname(), new { id = "IEdropdown" })
+
+                        </div>
+
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">From Month</label>
+                           @* <select name="lstMonths" id="lstfrmMonths" tabindex="4" style="color:black;font-family:Verdana;font-size:8pt;" asp-for="PERIOD_FROM_MONTH">
+                                <option selected="selected" value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+
+                            </select>*@
+                            @Html.DropDownListFor(model => model.PERIOD_FROM_MONTH, Common.GetMonths(), new { id = "frmMonth" })
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">From Year</label>
+                          @*  <select name="lstYear" id="lstfrmYear" tabindex="5" style="color:black;font-family:Verdana;font-size:8pt;" asp-for="PERIOD_FROM_YEAR">
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014</option>
+                                <option value="2013">2013</option>
+                                <option value="2012">2012</option>
+                                <option value="2011">2011</option>
+                                <option value="2010">2010</option>
+                                <option value="2009">2009</option>
+                                <option value="2008">2008</option>
+
+                            </select>*@
+                            @Html.DropDownListFor(model => model.PERIOD_FROM_YEAR, Common.GetYear(), new { id = "frmYear" })
+
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">To Month</label>
+                           @* <select name="lstMonths" id="lsttoMonths" tabindex="4" style="color:black;font-family:Verdana;font-size:8pt;"asp-for="PERIOD_TO_MONTH">
+                                <option selected="selected"  value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+
+                            </select>*@
+                            @Html.DropDownListFor(model => model.PERIOD_TO_MONTH, Common.GetMonths(), new { id = "ToMonth" })
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">To Year</label>
+                            @*<select name="lstYear" id="lsttoYear" tabindex="5" style="color:black;font-family:Verdana;font-size:8pt;" asp-for="PERIOD_TO_YEAR">
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014</option>
+                                <option value="2013">2013</option>
+                                <option value="2012">2012</option>
+                                <option value="2011">2011</option>
+                                <option value="2010">2010</option>
+                                <option value="2009">2009</option>
+                                <option value="2008">2008</option>
+
+                            </select>*@
+                            @Html.DropDownListFor(model => model.PERIOD_TO_YEAR, Common.GetYear(), new { id = "toYear"  })
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Claim Head</label>
+                           @* <select name="lstClaim_Head" id="lstClaim_Head" tabindex="8" style="color:black;font-family:Verdana;font-size:8pt;width:100%;" asp-for="CLAIM_HEAD">
+                                <option value=""></option>
+                                <option value="308">308-Conveyance/Fare Charges</option>
+                                <option value="309">309-Traveling Allowance</option>
+                                <option value="310">310-Hotel Charges</option>
+                                <option value="608">608-Telephone/Mobile/Internet Charges</option>
+                                <option value="629">629-Others</option>
+
+                            </select>*@
+                            @Html.DropDownListFor(model => model.CLAIM_HEAD, Common.GetClaimHead(), new { id = "claimHead"  })
+
+
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Amount Claimed</label>
+                             <input type="text" id="AmountClaimed" asp-for="AMOUNT_CLAIMED" maxlength="300" />
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Amount Admitted</label>
+                            <input type="text" id="AmountAdmitted" asp-for="AMOUNT_ADMITTED" maxlength="300" />
+
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Amount Disallowed</label>
+                            <input type="text" id="AmountDisallowed" asp-for="AMOUNT_DISALLOWED" maxlength="300" />
+                        </div>
+
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Remarks</label>
+                            <input type="text" id="Remark" asp-for="REMARKS" maxlength="300" />
+                        </div>
+
+
+                        <div class="savenext-btn">
+                            @*<a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                            <button type="button" class="save-btn active Permission_Save" onclick="Save();">save</button>
+                        </div>
+
+                        <table id="dtIEdata" class="table-responsive">
+                            <thead>
+                                <tr>
+
+                                    @*<th>S NO</th>*@
+
+                                    <th>#</th>
+                                    <th>Claim Head</th>
+                                    <th>Amount Claimed</th>
+                                    <th>Amount Admitted</th>
+                                    <th>Amount Disallowed</th>
+                                    <th>Remarks</th>
+                                    @*<th>Action</th>*@
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+
+
+                        <div class="hide col-md-4 mb-4">
+                            <label for="Reference">Payment Voucher No.</label>
+                            <input type="text" class="input" id="paymentVoucherNo" asp-for="PAYMENT_VOUCHER_NUMBER" maxlength="500"  />
+                        </div>
+
+
+                        <div class="hide col-md-4 mb-4">
+                            <label for="Reference">Payment Voucher Date.</label>
+                            <input type="text" class="input" id="paymentVoucherDt" asp-for="PAYMENT_VOUCHER_DATE" maxlength="500"  />
+                        </div>
+
+                        <div class="hide savenext-btn">
+                            @*<a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                            <button type="button" class="save-btn active Permission_Save" onclick="Insert_Payment();">Save Payment Details</button>
+                        </div>
+
+
+
+                    </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section scripts
+    {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            var ACTION = "";
+
+           
+            $("#dtIEdata").css("display", "none");
+            $(".hide").css("display", "none");
+            debugger;
+            var currentUrl = window.location.href;
+
+            // Create a URLSearchParams object
+            var urlParams = new URLSearchParams(currentUrl);
+
+            var actionValue = urlParams.get('ACTION');
+            var PVCHR_NO = urlParams.get('PVCHR_NO');
+            var PVCHR_DT = urlParams.get('PVCHR_DT');
+            var CLAIM_NO = urlParams.get('CLAIM_NO');
+
+            if (actionValue === 'M') {
+                debugger;
+
+                $("#dtIEdata").css("display", "block");
+                $(".hide").css("display", "block");
+                //InitializeDatatable(CLAIM_NO, PVCHR_DT, PVCHR_NO);
+
+                // Assuming "#paymentVoucherNo" and "#paymentVoucherDt" are the IDs of your input elements
+                $("#paymentVoucherNo").val(PVCHR_NO);
+                $("#paymentVoucherDt").val(PVCHR_DT);
+                InitializeDatatable();
+            }
+            else if(actionValue != 'M')
+            {
+                
+                    var currentDate = new Date();
+
+
+                var month = currentDate.getMonth() + 1;
+                var day = currentDate.getDate();
+                var year = currentDate.getFullYear();
+
+
+                month = (month < 10 ? "0" : "") + month;
+                day = (day < 10 ? "0" : "") + day;
+
+
+                var formattedDate = day + "/" + month + "/" + year;
+
+
+                $("#claimdate").val(formattedDate);
+
+            }
+
+
+        });
+
+        function Save() {
+          
+            if ($("#claimNO").val() == "")
+            {
+            $("#frmIEClaimForm").submit();
+            }
+            else{
+                $("#frmIEClaimForm").submit();
+            }
+        }
+        completed = function (response) {
+            debugger;
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            $("#claimNO").val(res.result);
+            $("#dtIEdata").css("display", "block");
+            InitializeDatatable();
+            $(".hide").css("display", "block");
+            //window.location.href = "/IEClaimForm/Manage";
+        }
+
+        function Submit() {
+
+        }
+        function AddNew() {
+
+
+        }
+
+
+        function InitializeDatatable() {
+            debugger;
+
+            var CLAIM_NO = $("#claimNO").val();
+            var CLAIM_DT = $("#claimdate").val();
+            var IE = $("#IEdropdown").val();
+            var VCHR_NO = $("#paymentVoucherNo").val();
+
+
+            $("#dtIEdata").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("Manage_grid")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        debugger;
+                        var AdditionalValues = {
+                            CLAIM_NO: CLAIM_NO,
+                            CLAIM_DT: CLAIM_DT,
+                            IE: IE,
+                            VCHR_NO: VCHR_NO,
+
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                            ;
+                        }
+                    },
+                    //{ data: "SNO" },
+                    { data: "CLAIM_HEAD_NAME" },
+                    { data: "AMOUNT_CLAIMED" },
+                    { data: "AMOUNT_ADMITTED" },
+                    { data: "AMOUNT_DISALLOWED" },
+                    { data: "REMARKS" },
+
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        debugger;
+                    //        var CLAIM_NO = data.CLAIM_NO;
+
+                    //        var editUrl = '@Url.Action("FindBy", "IEClaimForm")?CLAIM_NO=' + CLAIM_NO;
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+
+      function  Insert_Payment()
+      {
+            var CLAIM_NO = $("#claimNO").val();
+            var VCHR_NO = $("#paymentVoucherNo").val();
+            var VCHR_DT = $("#paymentVoucherDt").val();
+          debugger;
+            $.ajax({
+                url: "/IEClaimForm/Payment_Save", // Replace with your controller and action names
+                type: "POST", // or "GET" depending on your action's HTTP verb
+                dataType: "json", // Expected data type from the server
+                data: { CLAIM_NO: CLAIM_NO ,
+                    VCHR_NO: VCHR_NO,
+                    VCHR_DT: VCHR_DT
+                },
+                success: function (response) {
+                    
+                    alert("hola");
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
+                    console.error(error);
+                }
+            });
+      }
+
+
+
+
+    </script>
+   }

@@ -103,6 +103,7 @@ builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsh
 builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
 builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
 builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
+builder.Services.AddScoped<INonRlyClientMasterRepository, IBS.Repositories.NonRlyClientMasterRepository>();
 builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
@@ -150,6 +151,19 @@ builder.Services.AddScoped<IEFTEntryRepository,EFTEntryRepository>();
 builder.Services.AddScoped<IInterUnit_TransferRepository,InterUnit_TransferRepository>();
 builder.Services.AddScoped<IUnregisteredCallsRepository, UnregisteredCallsRepository>();
 builder.Services.AddScoped<IInspectionFeeBillRepository, InspectionFeeBillRepository>();
+builder.Services.AddScoped<ITDSEntryRepository, TDSEntryRepository>();
+builder.Services.AddScoped<IIEClaimFormRepository, IEClaimFormRepository>();
+builder.Services.AddScoped<IRly_Online_Check_Posting_Form_Repository, Rly_Online_Check_Posting_Form_Rpository>();
+builder.Services.AddScoped<ICMIEWiseCancellationAcceptance_FormRepository, CMIEWiseCancellationAcceptance_FormRepository>();
+builder.Services.AddScoped<IPrint_Call_letter_Repository, Print_Call_letter_Repository>();
+builder.Services.AddScoped<ICallMarkedRepository, CallMarkedRepository>();
+builder.Services.AddScoped<ICalls_Marked_ReportRepository, Calls_Marked_ReportRepository>();
+builder.Services.AddScoped<ICall_Cancellation_FormRepository, Call_Cancellation_FormRepository>();
+builder.Services.AddScoped<ICalls_Marked_For_Specific_PORepository, Calls_Marked_For_Specific_PORepository>();
+
+
+
+
 
 #region IE Report
 builder.Services.AddScoped<IIE_PerfomanceRepository, IE_PerformanceRepository>();
@@ -200,6 +214,7 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
+builder.Services.AddScoped<IHighValueInspecReportRepository, HighValueInspecReportRepository>();
 builder.Services.AddScoped<ICoComplaintJIRequiredRepository, CoComplaintJIRequiredRepository>();
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IDefectCodeReportRepository, DefectCodeReportRepository>();
@@ -209,6 +224,9 @@ builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseIn
 builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
+builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
+builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
+builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 
 var app = builder.Build();
 

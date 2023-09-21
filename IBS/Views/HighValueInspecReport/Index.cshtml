@@ -1,0 +1,179 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>HIGH VALUE INSPECTIONS</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <table id="Table2" border="1" cellSpacing="1" borderColor="#b0c4de" cellPadding="1" width="80%" bgColor="#f0f8ff">
+               
+                    <tr>
+                        <td colSpan="3">
+                            <div class="custom-readio">
+                                @*<label for="Reference">Summary of Report</label>*@
+                                <div class="company-checkbox">
+                                    <div class="remember">
+                                        <div class="remecheckbox">
+                                        <input type="radio" value="formonth" id="formonth" name="formonth" checked="checked" />
+                                            <label for="formonth">For the Month</label>
+                                            &nbsp;&nbsp;
+                                        <input type="radio" value="forperiod" id="forperiod" name="formonth" />
+                                            <label for="forperiod">For Given Period</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="fromothyear">
+                        <td style="HEIGHT: 22px">
+                        <label for="month">Month</label>
+                        @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                        <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+                        </td>
+                        <td style="HEIGHT: 22px">
+                        <label for="year">Year</label>
+                        @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                        <span class="text-danger field-validation-error" id="spnErroryear"></span>
+                        </td>
+                    </tr>
+                    <tr id="forperioddt">
+                        <td style="HEIGHT: 22px">
+                        <label for="FromDate">Date From</label>
+                            <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+                             <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
+
+                        </td>
+                        <td style="HEIGHT: 22px">
+                        <label for="ToDate">Date To</label>
+                            <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
+                             <span class="text-danger field-validation-error" id="spnErrortodt"></span>
+                        </td>
+                    </tr>
+                <tr>
+                    <td colSpan="3">
+                        <div class="custom-readio">
+                            @*<label for="Reference">Summary of Report</label>*@
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <label for="year">Report based on</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                    <div class="remecheckbox">
+                                        <input type="radio" value="ICDate" id="ICDate" name="ICDate" checked="checked" />
+                                        <label for="ICDate">IC Date</label>
+                                        &nbsp;&nbsp;
+                                        <input type="radio" value="BillDate" id="BillDate" name="ICDate" />
+                                        <label for="BillDate">Bill Date</label>
+                                    </div>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <div>
+                                    
+                                    <label for="valinsp">No. of High Value Inspections</label>
+                                    <input type="text"  id="valinsp" />
+                                    <span class="text-danger field-validation-error" id="spnErrorvalinsp"></span>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                <button type="button" class="save-btn active" onclick="GetViewReport();">Generate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+         $(document).ready(function () {
+            $("#forperioddt").hide();
+         });
+
+         $('#forperiod').change(function () {
+            $("#forperioddt").show();
+            $("#fromothyear").hide();
+         });
+
+        $('#formonth').change(function () {
+            $("#forperioddt").hide();
+            $("#fromothyear").show();
+         });
+
+        function GetViewReport() {
+
+            $("#spnErrorvalinsp").html("");
+            $("#spnErrortodt").html("");
+            $("#spnErrorfromdt").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+            if ($("#valinsp").val() == "") {
+                $("#spnErrorvalinsp").html("Enter No of Inspection show in Report");
+                IsValid = false;
+            }
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorfromdt").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrortodt").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var valinsp = $('#valinsp').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var ICDate = $("#ICDate").is(":checked") == true ? "true" : "false";
+            var BillDate = $("#BillDate").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+
+            let myObject = { month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod };
+
+            var url = '@Url.Action("Manage", "HighValueInspecReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls(){
+            $("#month").val('');
+            $("#year").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#valinsp").val('');
+            $("#spnErrorvalinsp").val('');
+            $("#ICDate").prop("checked", true);
+            $("#formonth").prop("checked", true);
+        }
+    </script>
+}
