@@ -69,9 +69,9 @@
             </div>
             <div class="col-md-4 mb-3 clsRailway" style="font-weight: bold;">
                 <div class="reference">
-                    @Html.RadioButton("rdRailway", "AllRailway", new { @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All Railways
+                    @Html.RadioButton("rdRailway", "AllRailway", new { @id="rdAllRly", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All Railways
                     &nbsp;&nbsp;
-                    @Html.RadioButton("rdRailway", "PartiRailway", new { @class = "text-darkblue font-bold font-size-8pt"}) Particular Railways
+                    @Html.RadioButton("rdRailway", "PartiRailway", new { @id="rdPRly", @class = "text-darkblue font-bold font-size-8pt"}) Particular Railways
                 </div>
             </div>
             <div class="col-md-4 mb-3 clsRailway">
@@ -93,10 +93,10 @@
                     </div>
                 </div>
             </div>
-            <div class="row my-0">                
+            <div class="row my-0">
                 <div class="col-md-4 mb-3" style="font-weight: bold;">
                     <div class="reference">
-                    <label>Status</label>
+                        <label>Status</label>
                         @Html.DropDownList("dpStatus", new SelectList(IBS.Models.Common.GetCRISRLYStatus() , "Value", "Text"))
                         @Html.DropDownList("dpStatusDate", new SelectList(IBS.Models.Common.GetCRISRLYStatusDate() , "Value", "Text"))
                     </div>
@@ -109,14 +109,14 @@
                         &nbsp;&nbsp;
                         @Html.RadioButton("rdSummary", "AUWise", new { @class = "text-darkblue font-bold font-size-8pt"}) AU Wise Summary
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="row my-0">
                 <label class="text-danger" id="lblMessage">Report Based on Bill Date!!!</label>
             </div>
             <div class="col-md-3" style="margin-top: 30px;">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+                    <button type="button" class="save-btn active" onclick="ViewReportCRISRLY();">Submit</button>
                     @*<button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>*@
                 </div>
             </div>
@@ -151,7 +151,7 @@
                         $(".clsSummary").css("display", "none");
                         $(".clsRailway").css("display", "");
                         //$(".clsAU").css("display", "");
-                    } 
+                    }
                     else {
                         $("#chkAllRegion").prop("disabled", true);
                         $("#dpStatus").css("display", "none");
@@ -182,7 +182,7 @@
                 $('#dpStatus').change(function () {
                     var value = $(this).val();
                     if (value == "A" || value == "X") {
-                        $("#lblMessage").html("Report Based on Bill Date!!!");                        
+                        $("#lblMessage").html("Report Based on Bill Date!!!");
                     }
                     else if (value == "P") {
                         $("#lblMessage").html("Report Based on Payment Date!!!");
@@ -195,13 +195,13 @@
                     }
                 });
                 $('#dpStatusDate').change(function () {
-                    var value = $(this).val();                   
+                    var value = $(this).val();
                     if (value == "A") {
                         $("#lblMessage").html("Report Based on Bill Date!!!");
                     }
                     else if (value == "P") {
                         $("#lblMessage").html("Report Based on Payment Date!!!");
-                    }                    
+                    }
                 });
             }
         });
@@ -250,6 +250,56 @@
             var url = '@Url.Action("Manage", "RealisationPayment")?' + $.param(myObject);
             window.open(url, '_blank');
 
+        }
+        function ViewReportCRISRLY() {
+            $("#spnErrorFromDate_CRISRLY").val("");
+            $("#spnErrorToDate_CRISRLY").val("");
+            var IsValid = true;
+            IsValid = FromToDateValidate(IsValid, "FromDate_CRISRLY", "ToDate_CRISRLY", "spnErrorFromDate_CRISRLY", "spnErrorToDate_CRISRLY");
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var Type = $('input[name="rdType"]:checked').val();
+            let myObject = { ReportType, FromDate, ToDate };
+
+
+            if (Type == "Detailed") {
+                var rdPRly = $("#rdPRly").is(":ckecked");
+                myObject = { ReportType, FromDate, ToDate, Type };
+            } 
+            else {
+
+            }
+            var url = '@Url.Action("ManageCrisRlyDetail", "RealisationPayment")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        // Check From & To Date Validation
+        function FromToDateValidate(IsValid, FDateID, TDateID, EFDateID, ETDateID) {
+            FDateID = "#" + FDateID;
+            TDateID = "#" + TDateID;
+            EFDateID = "#" + EFDateID;
+            ETDateID = "#" + ETDateID;
+            if ($(FDateID).val() == "") {
+                $(EFDateID).html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($(TDateID).val() == "") {
+                $(ETDateID).html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($(FDateID).val() != "" && IsValidDate($(FDateID).val()) == false) {
+                $(EFDateID).html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($(TDateID).val() != "" && IsValidDate($(TDateID).val()) == false) {
+                $(ETDateID).html("Invalid date format.");
+                IsValid = false;
+            }
+            return IsValid;
         }
     </script>
 }

@@ -26,7 +26,7 @@ namespace IBS.Controllers.Reports.RealisationPayments
             _config = configuration;
         }
         public IActionResult Index()
-        {            
+        {
             return View();
         }
 
@@ -37,9 +37,21 @@ namespace IBS.Controllers.Reports.RealisationPayments
             return View(model);
         }
 
+        public IActionResult ManageCrisRlyDetail(string ReportType, DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
+        {
+            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
+            return View("Manage", model);
+        }
+
         public IActionResult SummaryOnlinePayment(DateTime FromDate, DateTime ToDate)
-        {            
+        {
             SummaryOnlinePaymentModel model = realisationPaymentRepository.GetSummaryOnlinePayment(FromDate, ToDate, Region);
+            return PartialView(model);
+        }
+
+        public IActionResult SummaryCrisRlyPaymentDetail(DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
+        {
+            SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentDetailed(FromDate, ToDate, IsRly, Rly, IsAU, AU, IsAllRegion, Status, Region);
             return PartialView(model);
         }
 

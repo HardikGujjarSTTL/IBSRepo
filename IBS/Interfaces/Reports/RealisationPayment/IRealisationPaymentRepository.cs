@@ -5,5 +5,6 @@ namespace IBS.Interfaces.Reports.RealisationPayment
     public interface IRealisationPaymentRepository
     {
         SummaryOnlinePaymentModel GetSummaryOnlinePayment(DateTime FromDate, DateTime ToDate, string Region);
+        SummaryCrisRlyPaymentModel GetSummaryCrisRlyPaymentDetailed(DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status, string Region);
     }
 }
