@@ -11,9 +11,9 @@
     else if (ReportType == "ICSUBMIT") ReportTitle = "IC Submission Report";
     else if (ReportType == "CALLSWITHOUTIC") ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
     else if (ReportType == "SUPSUR") ReportTitle = "Super Surprise Details";
+    else if (ReportType == "SUPSURPSUMM") ReportTitle = "CO Wise Super Surprise Summary";
 
     ViewData["Title"] = ReportTitle;
-
 
 }
 
@@ -195,7 +195,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X' || '@ReportType' == 'ICSUBMIT' || '@ReportType' == 'CALLSWITHOUTIC') {
+            if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X' || '@ReportType' == 'ICSUBMIT' || '@ReportType' == 'CALLSWITHOUTIC' || '@ReportType' == 'SUPSURPSUMM') {
                 $(".report1").css("display", "");
                 $(".RWB").css("display", "none");
                 $(".RWCO").css("display", "none");

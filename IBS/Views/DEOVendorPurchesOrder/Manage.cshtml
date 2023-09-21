@@ -13,9 +13,10 @@
         <h2>PO Master</h2>
     </div>
 </div>
-<section>
+<section id="tab-1">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="DEOVendorPurchesOrder" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" id="hdnType" />
@@ -188,6 +189,18 @@
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
                 </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.DrawingSpecification" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Amendment" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ParentLOA" />
+                    </div>
+                </div>
                 <div class="savenext-btn">
                     <a asp-controller="DEOVendorPurchesOrder" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
@@ -230,6 +243,7 @@
 
         function Save() {
             if ($("#frmPOMaster").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmPOMaster").submit();
             }
         }

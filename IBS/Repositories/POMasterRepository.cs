@@ -342,6 +342,8 @@ namespace IBS.Repositories
             else
             {
                 model.CaseNo = POMastersDetails.CaseNo;
+                model.DrawingNo = POMastersDetails.DrawingNo;
+                model.SpecificationNo = POMastersDetails.SpecificationNo;
                 model.ItemSrno = POMastersDetails.ItemSrno;
                 model.PlNo = POMastersDetails.PlNo;
                 model.BpoCd = POMastersDetails.BpoCd;
@@ -393,6 +395,8 @@ namespace IBS.Repositories
             {
                 T82PoDetail obj = new T82PoDetail();
                 obj.CaseNo = model.CaseNo;
+                obj.DrawingNo = model.DrawingNo;
+                obj.SpecificationNo = model.SpecificationNo;
                 obj.ItemSrno = (byte)model.ItemSrno;
                 obj.PlNo = model.PlNo;
                 obj.BpoCd = model.BpoCd;
@@ -430,6 +434,8 @@ namespace IBS.Repositories
             {
                 t82PoDetail.ItemDesc = model.ItemDesc;
                 t82PoDetail.PlNo = model.PlNo;
+                t82PoDetail.DrawingNo = model.DrawingNo;
+                t82PoDetail.SpecificationNo = model.SpecificationNo;
                 t82PoDetail.BpoCd = model.BpoCd;
                 t82PoDetail.Qty = model.Qty;
                 t82PoDetail.ConsigneeCd = model.ConsigneeCd;

@@ -19,56 +19,24 @@ namespace IBS.Repositories.Reports
             this.context = context;
             this.configuration = configuration;
         }
-        public DTResult<PendingJICasesReportModel> Get_Pending_JI_Cases(DTParameters dtParameters, string iecd)
+        public PendingJICasesReportModel Get_Pending_JI_Cases(DateTime FromDate, DateTime ToDate, string iecd)
         {
-            DTResult<PendingJICasesReportModel> dTResult = new() { draw = 0 };
-            IQueryable<PendingJICasesReportModel>? query = null;
+            PendingJICasesReportModel model = new();
+            List<PendingJICasesReportListModel> lstPendingJI = new();
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "BK_NO";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            }
-            else
-            {
-                orderCriteria = "BK_NO";
-                orderAscendingDirection = true;
-            }
-
-            string FromDate = "", ToDate = "", IE_CD = "";
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            {
-                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-                FromDate = Common.DateConcate(FromDate);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            {
-                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-                ToDate = Common.DateConcate(ToDate);
-            }
+            string IE_CD = null;
             if (!string.IsNullOrEmpty(iecd))
             {
                 IE_CD = iecd;
             }
-
-
-            FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
-            ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
-
+            IE_CD = "782";
+            var startDate = Common.DateConcate(FromDate.ToString());
+            var toDate = Common.DateConcate(ToDate.ToString());
             OracleParameter[] par = new OracleParameter[4];
-            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, startDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, toDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, IE_CD, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
@@ -76,7 +44,7 @@ namespace IBS.Repositories.Reports
             DataTable dt = ds.Tables[0];
 
 
-            List<PendingJICasesReportModel> list = dt.AsEnumerable().Select(row => new PendingJICasesReportModel
+            lstPendingJI = dt.AsEnumerable().Select(row => new PendingJICasesReportListModel
             {
                 COMPLAINT_ID = Convert.ToString(row["COMPLAINT_ID"]),
                 COMPLAINT_DATE = Convert.ToString(row["COMPLAINT_DATE"]),
@@ -109,88 +77,58 @@ namespace IBS.Repositories.Reports
                 ACTION_PROPOSED_DATE = Convert.ToString(row["ACTION_PROPOSED_DATE"]),
                 CO_NAME = Convert.ToString(row["CO_NAME"])
             }).ToList();
-
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            model.lstPendingJI = lstPendingJI;
+            return model;
         }
 
-        public DTResult<IEDairyModel> Get_IE_Dairy(DTParameters dtParameters, UserSessionModel userModel)
+        public IEDairyModel Get_IE_Dairy(DateTime FromDate, DateTime ToDate, string DpIE, string OrderByVisit, string IsAllIE, UserSessionModel userModel)
         {
-            DTResult<IEDairyModel> dTResult = new() { draw = 0 };
-            IQueryable<IEDairyModel>? query = null;
+            IEDairyModel model = new();
+            List<IEDairyListModel> list = new();
+            DTResult<IEDairyListModel> dTResult = new() { draw = 0 };
+            IQueryable<IEDairyListModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "IE_NAME";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            }
-            else
-            {
-                orderCriteria = "IE_NAME";
-                orderAscendingDirection = true;
-            }
-
-            string FromDate = "", ToDate = "", Region = "", IECD = null;
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(userModel.Region);
+            string startDate = "", toDate = "", Region = "", IECD = null;
             int sorByVisitDate = 0;
             var IsAll = true;
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            {
-                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-                FromDate = Common.DateConcate(FromDate);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            {
-                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-                ToDate = Common.DateConcate(ToDate);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["DpIE"]))
-            {
-                IECD = Convert.ToString(dtParameters.AdditionalValues["DpIE"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["OrderByVisit"]))
-            {
-                sorByVisitDate = Convert.ToInt16(dtParameters.AdditionalValues["OrderByVisit"]);
-            }
-            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IsAllIE"]))
-            {
-                IsAll = Convert.ToBoolean(dtParameters.AdditionalValues["IsAllIE"]);
-            }
+
+            startDate = Common.DateConcate(model.Display_FromDate);
+            toDate = Common.DateConcate(model.Display_ToDate);
+            IECD = Convert.ToString(userModel.IeCd);
+            sorByVisitDate = Convert.ToInt16(OrderByVisit);
+
+            //if (!string.IsNullOrEmpty(DpIE))
+            //{
+            //    IECD = Convert.ToString(DpIE);
+            //}
+            //if (!string.IsNullOrEmpty(OrderByVisit))
+            //{
+            //    sorByVisitDate = Convert.ToInt16(OrderByVisit);
+            //}
+            //if (!string.IsNullOrEmpty(IsAllIE))
+            //{
+            //    IsAll = Convert.ToBoolean(IsAllIE);
+            //}
 
 
-            if (userModel.RoleName == "Inspection Engineer (IE)")
-            {
-                IECD = Convert.ToString(userModel.IeCd);
-            }
-            else
-            {
-                if (IsAll == true)
-                {
-                    IECD = null;
-                }
-            }
-
-            FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
-            ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
+            //if (userModel.RoleName == "Inspection Engineer (IE)")
+            //{
+            //    IECD = Convert.ToString(userModel.IeCd);
+            //}
+            //else
+            //{
+            //    if (IsAll == true)
+            //    {
+            //        IECD = null;
+            //    }
+            //}
 
             OracleParameter[] par = new OracleParameter[6];
-            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, startDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, toDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, IECD, ParameterDirection.Input);
             par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, userModel.Region, ParameterDirection.Input);
             par[4] = new OracleParameter("P_SORTVISTDATE", OracleDbType.Int16, sorByVisitDate, ParameterDirection.Input);
@@ -200,7 +138,7 @@ namespace IBS.Repositories.Reports
             DataTable dt = ds.Tables[0];
 
 
-            List<IEDairyModel> list = dt.AsEnumerable().Select(row => new IEDairyModel
+            list = dt.AsEnumerable().Select(row => new IEDairyListModel
             {
                 IE_NAME = Convert.ToString(row["IE_NAME"]),
                 PO = Convert.ToString(row["PO"]),
@@ -212,20 +150,22 @@ namespace IBS.Repositories.Reports
                 QTY_TO_INSP = Convert.ToString(row["QTY_TO_INSP"]),
                 CALL_INSTALL_NO = Convert.ToString(row["CALL_INSTALL_NO"]),
                 BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
                 IC_ISSUE_DT = Convert.ToString(row["IC_ISSUE_DT"]),
                 CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
                 MATERIAL_VALUE = Convert.ToString(row["MATERIAL_VALUE"]),
                 SUBMIT_DT = Convert.ToString(row["SUBMIT_DT"]),
                 INSP_FEE = Convert.ToString(row["INSP_FEE"])
             }).ToList();
+            model.lstIEDairy = list;
+            return model;
+            //query = list.AsQueryable();
 
-            query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
-            return dTResult;
+            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
         }
 
         public DTResult<IE7thCopyListModel> Get_IE_7thCopyList(DTParameters dtParameters, UserSessionModel model)
@@ -265,9 +205,9 @@ namespace IBS.Repositories.Reports
                 Set_No_Fr = dtParameters.AdditionalValues["Set_No_Fr"];
             }
             query = from b in context.T10IcBooksets
-                    join i in context.T09Ies on b.IssueToIecd equals i.IeCd                    
-                    orderby b.BkNo,b.SetNoFr
-                    where i.IeCd == Convert.ToInt32(model.IeCd) 
+                    join i in context.T09Ies on b.IssueToIecd equals i.IeCd
+                    orderby b.BkNo, b.SetNoFr
+                    where i.IeCd == Convert.ToInt32(model.IeCd)
                     && (Bk_No == "" || (Bk_No != "" && b.BkNo.ToUpper().Trim().Contains(Bk_No)))
                     && (Set_No_Fr == "" || (Set_No_Fr != "" && b.SetNoFr == Set_No_Fr))
                     select new IE7thCopyListModel
@@ -305,7 +245,7 @@ namespace IBS.Repositories.Reports
             par[0] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, Bk_No, ParameterDirection.Input);
             par[1] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, Set_No, ParameterDirection.Input);
             par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, obj.IeCd, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, obj.Region, ParameterDirection.Input);            
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, obj.Region, ParameterDirection.Input);
             par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_GET_IE_7TH_COPY", par, 1);
@@ -315,12 +255,12 @@ namespace IBS.Repositories.Reports
             {
                 Case_No = Convert.ToString(row["CASE_NO"]),
                 Bk_No = Convert.ToString(row["BK_NO"]),
-                Set_No = Convert.ToString(row["SET_NO"])                
+                Set_No = Convert.ToString(row["SET_NO"])
             }).ToList();
             return model;
         }
 
-        public ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate,string IE_CD, string Region)
+        public ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate, string IE_CD, string Region)
         {
             ICStatusModel model = new() { FromDate = FromDate, ToDate = ToDate };
             List<ICStatusListModel> list = new();
