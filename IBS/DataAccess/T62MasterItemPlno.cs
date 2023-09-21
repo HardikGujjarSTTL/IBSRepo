@@ -22,4 +22,8 @@ public partial class T62MasterItemPlno
     public DateTime? Createddate { get; set; }
 
     public DateTime? Updateddate { get; set; }
+
+    public string? DrawingNo { get; set; }
+
+    public string? SpecificationNo { get; set; }
 }

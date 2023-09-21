@@ -9,41 +9,46 @@
         <h2>Manage Master Items PL Form</h2>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
+<div class="task-listinput">
+    <form asp-controller="MasterItemsPLForm" asp-action="Manage" id="frmMasterItemsPLForm">
+        <input type="hidden" asp-for="IsNew" />
         <div class="accordion-body">
-            <form asp-controller="MasterItemsPLForm" asp-action="Manage" id="frmMasterItemsPLForm">
-                <input type="hidden" asp-for="IsNew" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-12 mb-3">
-                            <label for="Reference">Select Item</label>
-                            @Html.DropDownListFor(model => model.ItemCd, Common.GetItems(), "--Select--",  IsReadOnly ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "" })
-                            <span asp-validation-for="ItemCd" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-12 mb-3">
-                            <label for="Reference">Item CD - Item Description</label>
-                            <input type="text" class="input" asp-for="ItemDesc" />
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">PL NO</label>
-                            <input type="text" class="input" asp-for="PlNo" maxlength="10" />
-                            <span asp-validation-for="PlNo" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="MasterItemsPLForm" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="SubmitPLData();">Save</button>
-                    </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Select Item</label>
+                    @Html.DropDownListFor(model => model.ItemCd, Common.GetItems(), "--Select--",  IsReadOnly ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "" })
+                    <span asp-validation-for="ItemCd" class="text-danger"></span>
                 </div>
-            </form>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Item CD - Item Description</label>
+                    <input type="text" class="input" asp-for="ItemDesc" />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">PL NO <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="PlNo" maxlength="10" />
+                    <span asp-validation-for="PlNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Drawing No.</label>
+                    <input type="text" class="input" asp-for="DrawingNo" maxlength="30" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Specification No.</label>
+                    <input type="text" class="input" asp-for="SpecificationNo" maxlength="30" />
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <a asp-controller="MasterItemsPLForm" asp-action="Index" class="reset-btn">Cancel</a>
+                <button type="button" class="save-btn active" onclick="SubmitPLData();">Save</button>
+            </div>
         </div>
-    </div>
-</section>
+    </form>
+</div>
+
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
 

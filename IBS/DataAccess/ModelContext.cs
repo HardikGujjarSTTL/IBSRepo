@@ -13176,6 +13176,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.DrawingNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("DRAWING_NO");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
@@ -13183,6 +13187,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasColumnName("ITEM_CD");
+            entity.Property(e => e.SpecificationNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("SPECIFICATION_NO");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
