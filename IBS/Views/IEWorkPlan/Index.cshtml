@@ -1,147 +1,120 @@
-﻿@model IBS.Models.IEFromToDate
-
-@{
+﻿@{
     ViewData["Title"] = "IE WorkPlan Report";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-    <div class="list-inner">
-        <div class="tast-list">
-            @*<h2>Call Details For Specific PO</h2>*@
-            <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">IE WorkPlan Report</label></h2>
-        </div>
+<div class="list-inner">
+    <div class="tast-list">
+        @*<h2>Call Details For Specific PO</h2>*@
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">IE WorkPlan Report</label></h2>
     </div>
-    <div class="accordion-body">
-        @if (@ViewBag.Action == "U" || @ViewBag.Action == "E")
+</div>
+<div class="accordion-body">
+    @if (@ViewBag.Action == "U" || @ViewBag.Action == "E")
+    {
+        <div class="row my-0">
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="Name">IE or Manager Wise</label>
+                    @Html.RadioButton("rdbIEManage", "IE Wise", new { @id="rdbIE", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) IE Wise
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdbIEManage", "Manager Wise", new { @id="rdbManage", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) Controlling Manager Wise
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="Name" id="statusIECM">Status of IE</label>
+                    @Html.RadioButton("rdbAllParti", "AllIES", new { @id="rdbAll", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true })<span id="lblAll">All IE'S</span>
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdbAllParti", "ParticularIE", new {@id="rdbParticular", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) <span id="lblParticular">For Particular IE</span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" id="secDrop">
+                <div class="reference">
+                    <label for="Name" id="lblIECM">IE</label>
+                    @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region) , "Value", "Text"),"--Select--", new{@id="DpIE"})
+                    @Html.DropDownList("lstCO", new SelectList(IBS.Models.Common.GetOfficerIsCoStatusIsNull(@ViewBag.Region) , "Value", "Text"),"--Select--", new{@id="DpCM"})
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row my-0">
+        <div class="col-md-4 mb-3">
+            <div class="reference">
+                <label for="Reference">From Date</label>
+                <input type="text" class="datepicker" id="FromDt" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="reference">
+                <label for="Reference">To Date</label>
+                <input type="text" class="datepicker" id="ToDt" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        @if (@ViewBag.Action == "E")
         {
-            <div class="row my-0">
-                <div class="col-md-4 mb-3" style="font-weight: bold;">
-                    <div class="reference">
-                        <label for="Name">IE or Manager Wise</label>
-                        @Html.RadioButton("rdbIEManage", "IE Wise", new { @id="rdbIE", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) IE Wise
-                        &nbsp;&nbsp;
-                        @Html.RadioButton("rdbIEManage", "Manager Wise", new { @id="rdbManage", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) Controlling Manager Wise
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3" style="font-weight: bold;">
-                    <div class="reference">
-                        <label for="Name" id="statusIECM">Status of IE</label>
-                        @Html.RadioButton("rdbAllParti", "AllIES", new { @id="rdbAll", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true })<span id="lblAll">All IE'S</span>
-                        &nbsp;&nbsp;
-                        @Html.RadioButton("rdbAllParti", "ParticularIE", new {@id="rdbParticular", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) <span id="lblParticular">For Particular IE</span>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3" id="secDrop">
-                    <div class="reference">
-                        <label for="Name" id="lblIECM">IE</label>
-                        @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region) , "Value", "Text"),"--Select--", new{@id="DpIE"})
-                        @Html.DropDownList("lstCO", new SelectList(IBS.Models.Common.GetOfficerIsCoStatusIsNull(@ViewBag.Region) , "Value", "Text"),"--Select--", new{@id="DpCM"})
-                    </div>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="Name" id="statusIECM">Sorted On</label>
+                    @Html.RadioButton("rdbIEVisitSort", "IE Sort", new { @id="rdbIESort", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true })<span id="lblIESort">IE </span>
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdbIEVisitSort", "Visit Sort", new {@id="rdbVisitSort", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) <span id="lblVisitSort">VISIT DATE</span>
                 </div>
             </div>
         }
-
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">From Date</label>
-                    <input type="text" class="datepicker" asp-for="FromDt" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="FromDt" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">To Date</label>
-                    <input type="text" class="datepicker" asp-for="ToDt" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="ToDt" class="text-danger"></span>
-                </div>
-            </div>
-            @if (@ViewBag.Action == "E")
-            {
-                <div class="col-md-4 mb-3" style="font-weight: bold;">
-                    <div class="reference">
-                        <label for="Name" id="statusIECM">Sorted On</label>
-                        @Html.RadioButton("rdbIEVisitSort", "IE Sort", new { @id="rdbIESort", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true })<span id="lblIESort">IE </span>
-                        &nbsp;&nbsp;
-                        @Html.RadioButton("rdbIEVisitSort", "Visit Sort", new {@id="rdbVisitSort", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) <span id="lblVisitSort">VISIT DATE</span>
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <div class="savenext-btn">
-                    <a asp-controller="IEWorkPlan" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
-                </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-6 mb-3">
+            <div class="savenext-btn">
+                @*<a asp-controller="IEWorkPlan" asp-action="Index" class="reset-btn">Cancel</a>*@
+                <button type="button" class="save-btn active" id="btnSearch">Search</button>
             </div>
         </div>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>SNO</th>
-                            <th>IE Name</th>
-                            <th>Dept</th>
-                            <th>Total Calls</th>
-                            <th>Calls Cancelled</th>
-                            <th>No. of IC</th>
-                            <th>Calls Attended Within 7 Days.</th>
-                            <th>Calls Attended Beyond 7 Days.</th>
-                            <th>Rejections</th>
-                            <th>Insp. Fee</th>
-                            <th>Material Value</th>
-                            <th>Average Fee</th>
-                            <th>No. Of IC Issued after 1 days of Last Inspection date.</th>
-                            <th>IC's Submitted beyond 7 Days after Issue of IC.</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>SNO</th>
+                        <th>IE Name</th>
+                        <th>Dept</th>
+                        <th>Total Calls</th>
+                        <th>Calls Cancelled</th>
+                        <th>No. of IC</th>
+                        <th>Calls Attended Within 7 Days.</th>
+                        <th>Calls Attended Beyond 7 Days.</th>
+                        <th>Rejections</th>
+                        <th>Insp. Fee</th>
+                        <th>Material Value</th>
+                        <th>Average Fee</th>
+                        <th>No. Of IC Issued after 1 days of Last Inspection date.</th>
+                        <th>IC's Submitted beyond 7 Days after Issue of IC.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-    </section>
-</form>
+    </div>
+</section>
 
-<script>
-    var Action = "@ViewBag.Action";
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 
-    $(document).ready(function () {
-        debugger
-        if ($('#rdbIE').is(':checked')) {
-            RdbAllPart();
-            //if ($('#rdbAll').is(':checked')) {
-            //    $("#DpIE").css("display", "none");
-            //    $("#DpCM").css("display", "none");
-            //} else if ($('#rdbParticular').is(':checked')) {
-            //    $("#DpIE").css("display", "block");
-            //    $("#DpCM").css("display", "none");
-            //}
-        }
+    <script type="text/javascript">
+        var Action = "@ViewBag.Action";
 
-        function RdbAllPart() {
-            if ($('#rdbAll').is(':checked')) {
-                $("#lblIECM").css("display", "none");
-                $("#DpIE").css("display", "none");
-                $("#DpCM").css("display", "none");
-            } else if ($('#rdbParticular').is(':checked')) {
-                $("#lblIECM").css("display", "block");
-                $("#DpIE").css("display", "block");
-                $("#DpCM").css("display", "none");
-            }
-        }
-
-        function ManageRadioButton() {
+        $(document).ready(function () {
+            debugger
             if ($('#rdbIE').is(':checked')) {
+                RdbAllPart();                
+            }
 
-                $("#lblAll").html("All IE's")
-                $("#lblParticular").html("For Particular IE")
-                $("#lblIECM").html("IE");
-                $("#statusIECM").html("Status of IE");
+            function RdbAllPart() {
                 if ($('#rdbAll').is(':checked')) {
                     $("#lblIECM").css("display", "none");
                     $("#DpIE").css("display", "none");
@@ -152,57 +125,52 @@
                     $("#DpCM").css("display", "none");
                 }
             }
-            else if ($('#rdbManage').is(':checked')) {
-                debugger
-                $("#lblAll").html("All CM's")
-                $("#lblParticular").html("For Particular CM")
-                $("#lblIECM").html("Controlling Manager");
-                $("#statusIECM").html("Status of CM");
-                //$("rdbAll").val("All CM's");
-                //$("rdbParticular").val("For Particular CM");
-                if ($('#rdbAll').is(':checked')) {
-                    $("#lblIECM").css("display", "none");
-                    $("#DpIE").css("display", "none");
-                    $("#DpCM").css("display", "none");
-                } else if ($('#rdbParticular').is(':checked')) {
-                    $("#lblIECM").css("display", "block");
-                    $("#DpIE").css("display", "none");
-                    $("#DpCM").css("display", "block");
+
+            function ManageRadioButton() {
+                if ($('#rdbIE').is(':checked')) {
+
+                    $("#lblAll").html("All IE's")
+                    $("#lblParticular").html("For Particular IE")
+                    $("#lblIECM").html("IE");
+                    $("#statusIECM").html("Status of IE");
+                    if ($('#rdbAll').is(':checked')) {
+                        $("#lblIECM").css("display", "none");
+                        $("#DpIE").css("display", "none");
+                        $("#DpCM").css("display", "none");
+                    } else if ($('#rdbParticular').is(':checked')) {
+                        $("#lblIECM").css("display", "block");
+                        $("#DpIE").css("display", "block");
+                        $("#DpCM").css("display", "none");
+                    }
+                }
+                else if ($('#rdbManage').is(':checked')) {
+                    
+                    $("#lblAll").html("All CM's")
+                    $("#lblParticular").html("For Particular CM")
+                    $("#lblIECM").html("Controlling Manager");
+                    $("#statusIECM").html("Status of CM");
+                    //$("rdbAll").val("All CM's");
+                    //$("rdbParticular").val("For Particular CM");
+                    if ($('#rdbAll').is(':checked')) {
+                        $("#lblIECM").css("display", "none");
+                        $("#DpIE").css("display", "none");
+                        $("#DpCM").css("display", "none");
+                    } else if ($('#rdbParticular').is(':checked')) {
+                        $("#lblIECM").css("display", "block");
+                        $("#DpIE").css("display", "none");
+                        $("#DpCM").css("display", "block");
+                    }
                 }
             }
-        }
-        $('input[type=radio][name=rdbIEManage]').change(function () {
-            ManageRadioButton();
-            //if ($('#rdbIE').is(':checked')) {
+            $('input[type=radio][name=rdbIEManage]').change(function () {
+                ManageRadioButton();                
+            });
 
-            //    $("#lblAll").html("All IE's")
-            //    $("#lblParticular").html("For Particular IE")
-            //    if ($('#rdbAll').is(':checked')) {
-            //        $("#DpIE").css("display", "none");
-            //        $("#DpCM").css("display", "none");
-            //    } else if ($('#rdbParticular').is(':checked')) {
-            //        $("#DpIE").css("display", "block");
-            //        $("#DpCM").css("display", "none");
-            //    }
-            //}
-            //else if ($('#rdbManage').is(':checked')) {
-            //    $("#lblAll").html("All CM's")
-            //    $("#lblParticular").html("For Particular CM")
-            //    //$("rdbAll").val("All CM's");
-            //    //$("rdbParticular").val("For Particular CM");
-            //    if ($('#rdbAll').is(':checked')) {
-            //        $("#DpIE").css("display", "none");
-            //        $("#DpCM").css("display", "none");
-            //    } else if ($('#rdbParticular').is(':checked')) {
-            //        $("#DpIE").css("display", "none");
-            //        $("#DpCM").css("display", "block");
-            //    }
-            //}
+            $('input[type=radio][name=rdbAllParti]').change(function () {
+                ManageRadioButton();
+            });
         });
+    </script>
+}
 
-        $('input[type=radio][name=rdbAllParti]').change(function () {
-            ManageRadioButton();
-        });
-    });
-</script>
 

@@ -41,7 +41,7 @@
                 return;
             }
 
-            var url = '@Html.Raw(Url.Action("GetBillDetails", "InspectionFeeBill", new { BillNo = "_BillNo" }))';
+            var url = '@Html.Raw(Url.Action("BillDetails", "InspectionFeeBill", new { BillNo = "_BillNo" }))';
             url = url.replace("_BillNo", BillNo);
 
             window.location.href = url;

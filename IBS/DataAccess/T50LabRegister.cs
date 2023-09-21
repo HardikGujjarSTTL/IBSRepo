@@ -21,7 +21,7 @@ public partial class T50LabRegister
 
     public DateTime? CallRecvDt { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public int? VendCd { get; set; }
 

@@ -7,13 +7,20 @@ using IBS.Interfaces.IE_Reports;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
+using IBS.Interfaces.Reports.Billing;
+using IBS.Interfaces.Reports.RealisationPayment;
+using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
+using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
 using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
+using IBS.Repositories.Reports.RealisationPayment;
+using IBS.Repositories.Transaction;
 using IBS.Repositories.Vendor;
+using IBS.Repositories.WebsitePages;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -43,6 +50,8 @@ SessionHelper.SetHttpContextAccessor(accessor);
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(60); });
 
+builder.Services.AddDataProtection();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -70,7 +79,9 @@ builder.Services.AddScoped<ICallRegisterRepository, IBS.Repositories.Vendor.Call
 builder.Services.AddScoped<IDownloadInspFeeBillRepository, IBS.Repositories.Vendor.DownloadInspFeeBillRepository>();
 builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Repositories.Vendor.VendorCallsMarkedForSpecificPORepository>();
 builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
-builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
+//builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
+builder.Services.AddScoped<IOnlineComplaintsRepository, OnlineComplaintsRepository>();
+builder.Services.AddScoped<IFeedbackSuggestionRepository, FeedbackSuggestionRepository>();
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
 builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPhotoEnclosedRepository>();
@@ -79,8 +90,20 @@ builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.Compla
 builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
 
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
+builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
 
+builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
+builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
 
+builder.Services.AddScoped<IRemitanceReportsRepository, IBS.Repositories.Reports.RemitanceReportsRepository>();
+
+builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
+builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
+builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsheetReportRepository>();
+builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
+builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
+builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
+builder.Services.AddScoped<IpfrmFromToDateRepository, IBS.Repositories.pfrmFromToDateRepository>();
 builder.Services.AddScoped<IConsigneeComplaintsRepository, IBS.Repositories.ConsigneeComplaintsRepository>();
 builder.Services.AddScoped<INCRRegisterRepository, IBS.Repositories.NCRRegisterRepository>();
 builder.Services.AddScoped<IUnitOfMeasurementsRepository, UnitOfMeasurementsRepository>();
@@ -117,7 +140,7 @@ builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineReposito
 builder.Services.AddScoped<ICityRepository,CityRepository>();
 builder.Services.AddScoped<I_ICBooksetFormRepository,ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
-builder.Services.AddScoped<IHologramSearchForm,HologramSearchForm>();
+builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLFormRepository,MasterItemsPLFormRepository>();
 builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
@@ -147,14 +170,45 @@ builder.Services.AddScoped<IClientCallStatusRepository, ClientCallStatusRReposit
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<I_ICBooksetFormRepository, ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
-builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
+//builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
 builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
 builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormRepository>();
 builder.Services.AddScoped<IClientEntryForm, ClientEntryForm>();
 builder.Services.AddScoped<ISpecificPOCallStatusRepository, SpecificPOCallStatusRRepository>();
 builder.Services.AddScoped<ILabInvoiceRptRepository, LabInvoiceRptRRepository>();
-builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
 builder.Services.AddScoped<IReturnedBillsRepository, ReturnedBillsRRepository>();
+builder.Services.AddScoped<IBillFinalisationFormRepository, BillFinalisationFormRepository>();
+builder.Services.AddScoped<IICCancellationRepository, ICCancellationRepository>();
+builder.Services.AddScoped<ICallRemarkingRepository, CallRemarkingRepository>();
+builder.Services.AddScoped<IVigilanceCaseMonitoringRepository, VigilanceCaseMonitoringRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IDownloadBillsRepository, DownloadBillsRRepository>();
+builder.Services.AddScoped<IBillRemarksRepository, BillRemarksRRepository>();
+builder.Services.AddScoped<IETrainingDetailsRepository, IETrainingDetailsRRepository>();
+builder.Services.AddScoped<IAdministratorPurchaseOrderRepository, AdministratorPurchaseOrderRepository>();
+builder.Services.AddScoped<ICentralRegionBillingInformationRepository, CentralRegionBillingInformationRepository>();
+builder.Services.AddScoped<ISuperSurpirseFormRepository, SuperSurpirseFormRRepository>();
+builder.Services.AddScoped<ICentralItemMasterRepository, CentralItemMasterRepository>();
+builder.Services.AddScoped<IInspectionBillingDelayRepository, InspectionBillingDelayRepository>();
+builder.Services.AddScoped<IConsigneeComplaintsReportRepository, ConsigneeComplaintsReportRepository>();
+
+builder.Services.AddScoped<IRegionalHRDataOfIERepository, RegionalHRDataOfIERepository>();
+builder.Services.AddScoped<ILabRegisterReportRepository, LabRegisterReportRRepository>();
+builder.Services.AddScoped<ILabPerfomanceReportRepository, LabPerformanceReportRRepository>();
+builder.Services.AddScoped<ILabPostingReportRepository, LabPostingReportRRepository>();
+builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRRepository>();
+builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
+builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
+
+builder.Services.AddScoped<ICoComplaintJIRequiredRepository, CoComplaintJIRequiredRepository>();
+builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
+builder.Services.AddScoped<IDefectCodeReportRepository, DefectCodeReportRepository>();
+builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
+builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
+builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
+builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
+
+builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
 
 var app = builder.Build();
 

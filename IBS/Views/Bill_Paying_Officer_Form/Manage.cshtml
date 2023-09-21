@@ -9,47 +9,296 @@
     </div>
 </div>
 
-    <div class="task-listinput">
-        
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="Bill_Paying_Officer_Form" asp-action="Bill_Paying_Officer_FormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmBill_Paying_Officer_Form">
-                <input type="hidden" asp-for="BpoCd" />
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">BPO Name</label>
-                            <textarea class="input" asp-for="BpoName" maxlength="30"> </textarea>
-                            <span asp-validation-for="BpoName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">City</label>
-                            <textarea class="input" asp-for="BpoCityCd" maxlength="30"> </textarea>
-                            <span asp-validation-for="BpoCityCd" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">GSTIN NO.</label>
-                            <input type="text" class="input" asp-for="GstinNo" maxlength="30">
-                            <span asp-validation-for="GstinNo" class="text-danger"></span>
-                        </div>
-
-                    </div>
-                    <div class="savenext-btn">
-                        <a asp-controller="Bill_Paying_Officer_Form" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Save();">Save</button>
-                    </div>
+<div class="task-listinput">
+    <form role="form" asp-controller="Bill_Paying_Officer_Form" asp-action="Manage" id="frmBPOMaster">
+        <input type="hidden" asp-for="ActionType" />
+        <div class="accordion-body">
+            @*<div class="row my-0">
+            <div class="col-md-3 mb-3" id="divBpoCd">
+            <label for="Reference">BPO Code</label>
+            <label style="text-transform: uppercase; color:red;">@Model.BpoCd</label>
+            </div>
+            <div class="col-md-3 mb-3" id="divSAPCd">
+            <label for="Reference">SAP CUST CD:</label>
+            <label style="text-transform: uppercase; color:red;">@Model.SapCustCdBpo</label>
+            </div>
+            </div>*@
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" id="divBpoCd">
+                    <label for="Reference">BPO Code : </label>
+                    <label style="text-transform: uppercase; color:red;"><b><u>@Model.BpoCd </u></b></label><br />
+                    <label style="text-transform: uppercase; color:red;" ><b>SAP CUST CD : @Model.SapCustCdBpo </b></label>
                 </div>
-            </form>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Name</label>
+                    <input type="text" class="input" asp-for="BpoName" maxlength="30" style="text-transform: uppercase;">
+                    <span asp-validation-for="BpoName" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Region Responsible For Chasing O/S</label>
+                    @Html.DropDownListFor(model => model.BpoRegion, new SelectList(IBS.Models.Common.GetRegionType() , "Value", "Text"))
+                    <span asp-validation-for="BpoRegion" class="text-danger"></span>
+                </div>
+            </div>
 
-    </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Type</label>
+                    @Html.DropDownListFor(model => model.BpoType, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"), "--Select--")
+                    <span asp-validation-for="BpoType" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO RLY Code(In Case Of Railways) </label>
+                    <input type="text" class="input" asp-for="BpoRly" maxlength="30" style="text-transform: uppercase;">
+                    <span asp-validation-for="BpoRly" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Abbreviated Name Of BPO (Otherwise)</label>
+                    @Html.DropDownListFor(model => model.BpoRlylst, new SelectList(IBS.Models.Common.BPORailway() , "Value", "Text"), "--Select--")
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Address</label>
+                    <textarea rows="4" asp-for="BpoAdd" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="BpoAdd" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Accounting Unit (AU)</label>
+                    @Html.DropDownListFor(model => model.Au, new SelectList(IBS.Models.Common.GetAUCris() , "Value", "Text"), "--Select--")
+                    <span asp-validation-for="Au" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO City ID</label>
+                    <input type="text" class="input" asp-for="BpoCityCd" maxlength="4" onkeypress="return isNumber(event)" style="text-transform: uppercase;">
+                    @*<span asp-validation-for="BpoCityCd" class="text-danger"></span>*@
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO City Name</label>
+                    @Html.DropDownListFor(model => model.BpoCity, new SelectList(IBS.Models.Common.GetIeCity(Model.BpoCityCd) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="BpoCity" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">PIN Code <span style="color:red">*</span></label>
+                    <input type="text" class="input" asp-for="PinCode" maxlength="6" onkeypress="return isNumber(event)" style="text-transform: uppercase;">
+                    <span asp-validation-for="PinCode" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO State <span style="color:red">*</span></label><br />
+                    @*<input type="text" class="input" asp-for="lblBpoState" style="color:red;" readonly="readonly" style="text-transform: uppercase;">*@
+                    <label style="text-transform: uppercase; color:red;">@Model.lblBpoState </label>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">GSTIN No. <span style="color:red">*</span></label>
+                    <input type="text" class="input" asp-for="GstinNo" maxlength="30">
+                    <span asp-validation-for="GstinNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Bill Pass Officer</label>
+                    <input type="text" class="input" asp-for="BillPassOfficer" maxlength="30" style="text-transform: uppercase;">
+                    <span asp-validation-for="BillPassOfficer" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">
+                    BPO FEE Details
+                </div>
+            </div>
+        </div>
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO FEE</label>
+                    <input type="text" class="input" asp-for="BpoFee" maxlength="6" onkeypress="return isNumber(event)">
+                    <span asp-validation-for="BpoFee" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO FEE Type</label>
+                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetBPOFeeType() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="BpoFeeType" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO TAX Type</label>
+                    @Html.DropDownListFor(model => model.BpoTaxType, new SelectList(IBS.Models.Common.GetBPOTaxType() , "Value", "Text"))
+                    <span asp-validation-for="BpoTaxType" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Flag</label>
+                    @Html.DropDownListFor(model => model.BpoFlg, new SelectList(IBS.Models.Common.GetBPOFlag() , "Value", "Text"), "--Select--")
+                    <span asp-validation-for="BpoFlg" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Advance Flag</label>
+                    @Html.DropDownListFor(model => model.BpoAdvFlg, new SelectList(IBS.Models.Common.GetBPOAdvFlag() , "Value", "Text"), "--Select--")
+                    <span asp-validation-for="BpoAdvFlg" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Location Code</label>
+                    <input type="text" class="input" asp-for="BpoLocCd" maxlength="4">
+                    <span asp-validation-for="BpoLocCd" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">
+                    BPO Organisation Details
+                </div>
+            </div>
+        </div>
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-8 mb-3">
+                    <label for="Reference">Organisation</label>
+                    <input type="text" class="input" asp-for="BpoOrgn" maxlength="30" style="text-transform: uppercase;">
+                    <span asp-validation-for="BpoOrgn" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO State</label>
+                    <input type="text" class="input" asp-for="BpoState" maxlength="30" style="text-transform: uppercase;">
+                    <span asp-validation-for="BpoState" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Address 1</label>
+                    <textarea rows="4" asp-for="BpoAdd1" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="BpoAdd1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Address 2</label>
+                    <textarea rows="4" asp-for="BpoAdd2" style="text-transform: uppercase;"></textarea>
+                    <span asp-validation-for="BpoAdd2" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Phone</label>
+                    <input type="text" class="input" asp-for="BpoPhone" maxlength="10" onkeypress="return isNumber(event)">
+                    <span asp-validation-for="BpoPhone" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Fax</label>
+                    <input type="text" class="input" asp-for="BpoFax" maxlength="30">
+                    <span asp-validation-for="BpoFax" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO Email</label>
+                    <input type="text" class="input" asp-for="BpoEmail" maxlength="30">
+                    <span asp-validation-for="BpoEmail" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Paying Window</label>
+                    @Html.DropDownListFor(model => model.BpoAdvFlg, new SelectList(IBS.Models.Common.GetPayingWindow() , "Value", "Text"), "--Select--")
+                    <span asp-validation-for="PayWindowId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            <button type="button" class="save-btn" onclick="Delete();">Delete</button>
+            <a asp-controller="Bill_Paying_Officer_Form" asp-action="Index" class="reset-btn">Cancel</a>
+        </div>
+    </form>
+
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const _actionType = urlParams.get('ActionType');
+            $("#ActionType").val(_actionType);
+            if (_actionType == null) {
+                $("#divBpoCd").hide();
+                //$("#divSAPCd").hide();
+            }
+        });
+
+        $("#BpoCity").change(function () {
+            $("#BpoCityCd").val($('option:selected', $(this)).val())
+            FillState();
+        });
+
+        $("#BpoCityCd").change(function () {
+            $("#BpoCity").val($("#BpoCityCd").val())
+            FillState();
+        });
+
+        function FillState() {
+            debugger
+            var BpoCityCd = $("#BpoCityCd").val();
+            $.ajax({
+                url: '@Url.Action("GetState", "Bill_Paying_Officer_Form")?BpoCityCd=' + BpoCityCd,
+                type: 'GET',
+                data: '{}',
+                dataType: 'json',
+                success: function (state) {
+                    $('#lblBpoState').val(state);
+                },
+                error: function () {
+                    ShowHideMsgNew(false, "Oops, something went wrong!");
+                }
+            });
+            //$.ajax({
+            //    url: '@Url.Action("GetState", "Bill_Paying_Officer_Form")?BpoCityCd=' + BpoCityCd,
+            //    type: 'GET',
+            //    cache: false,
+            //    data: '{}',
+            //    processData: false,
+            //    contentType: false
+            //}).done(function (response) {
+            //    if (response.status) {
+            //    }
+            //});
+        }
+
         function Save() {
-            if ($("#frmBill_Paying_Officer_Form").valid()) {
-                $("#frmBill_Paying_Officer_Form").submit();
+            if (($("#BpoCityCd").val() == null || $("#BpoCityCd").val() == "") && $("#BpoCity").val() == "") {
+                ShowHideMsgNew(false, "Plz Press the select City button first and then save it");
+                return;
+            }
+            if ($("#BpoState").val() == "") {
+                ShowHideMsgNew(false, "BPO State Cannot be left Blank, kindly fill the State for the given city first from City Master Directory");
+                return;
+            }
+            var gststate = $("#GstinNo").val().substring(0, 2);
+            var statecd = $("#lblBpoState").val().substring(0, 2);
+            if (gststate != statecd) {
+                ShowHideMsgNew(false, "Kindly enter the GST No according to the State Entered!!!");
+                return;
+            }
+            else {
+                if ($("#frmBPOMaster").valid()) {
+                    $("#frmBPOMaster").submit();
+                }
+            }
+
+
+        }
+
+        function Delete() {
+            if ($("#frmBPOMaster").valid()) {
+                $("#frmBPOMaster").submit();
             }
         }
         completed = function (response) {

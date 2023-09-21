@@ -85,6 +85,49 @@ namespace IBS.Controllers
                 return (GetUserInfo.UserName);
             }
         }
+        public string OrgnType
+        {
+            get
+            {
+                return (GetUserInfo.OrgnTypeL);
+            }
+        }
+        public string Organisation
+        {
+            get
+            {
+                return (GetUserInfo.OrganisationL);
+            }
+        }
+        public string OrgnTypeClient
+        {
+            get
+            {
+                return (GetUserInfo.OrgnType);
+            }
+        }
+        public string OrganisationClient
+        {
+            get
+            {
+                return (GetUserInfo.Organisation);
+            }
+        }
+
+        public int RoleId
+        {
+            get
+            {
+                return (GetUserInfo.RoleId);
+            }
+        }
+        public String RoleName
+        {
+            get
+            {
+                return (GetUserInfo.RoleName);
+            }
+        }
 
         public void AlertAddSuccess(string message = "")
         {

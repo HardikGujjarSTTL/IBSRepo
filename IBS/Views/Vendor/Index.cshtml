@@ -10,28 +10,66 @@
         <a asp-area="" asp-controller="Vendor" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtVendors" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Vendor Code</th>
-                        <th>Vendor Name</th>
-                        <th>Vendor Address</th>
-                        <th>Vendor City</th>
-                        <th>Vendor Tel No.</th>
-                        <th>Email</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="VendorCode">Vendor Code</label>
+                    <input type="text" id="VendorCode" placeholder="Enter your Keyword">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="VendorName">Vendor Name</label>
+                    <input type="text" id="VendorName" placeholder="Enter your Keyword">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="VendorAddress">Vendor Address</label>
+                    <input type="text" id="VendorAddress" placeholder="Enter your Keyword">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="VendorCity">Vendor City</label>
+                    <input type="text" id="VendorCity" placeholder="Enter your Keyword">
+                </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtVendors" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Vendor Code</th>
+                            <th>Vendor Name</th>
+                            <th>Vendor Address</th>
+                            <th>Vendor City</th>
+                            <th>Vendor Tel No.</th>
+                            <th>Email</th>
+                            <th style="text-align:center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -40,10 +78,16 @@
     <script type="text/javascript">
 
         $(function () {
-            InitializeVendorsDatatable();
+            InitializeDatatable();
         });
 
-        function InitializeVendorsDatatable() {
+        function InitializeDatatable() {
+
+            var VendorCode = $("#VendorCode").val();
+            var VendorName = $("#VendorName").val();
+            var VendorAddress = $("#VendorAddress").val();
+            var VendorCity = $("#VendorCity").val();
+
             $("#dtVendors").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -53,7 +97,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                searching: false,// Searching Setups
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -61,6 +105,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            VendorCode, VendorName, VendorAddress, VendorCity
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -83,9 +128,9 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.VEND_CD;
-                            var editUrl = '@Url.Action("Manage", "VendorProfile")?VEND_CD=' + id;
+                            var editUrl = '@Url.Action("Manage", "Vendor")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="VendorsDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -95,7 +140,16 @@
             });
         }
 
-        function VendorsDelete(id) {
+        function CLearControls() {
+            $("#VendorCode").val("");
+            $("#VendorName").val("");
+            $("#VendorAddress").val("");
+            $("#VendorCity").val("");
+
+            InitializeDatatable();
+        }
+
+        function Delete(id) {
             var url = '@Url.Action("Delete", "VendorProfile")?VEND_CD=' + id;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");

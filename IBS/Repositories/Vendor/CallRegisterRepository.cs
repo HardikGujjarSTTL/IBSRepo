@@ -342,12 +342,12 @@ namespace IBS.Repositories.Vendor
             }
 
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
             CallSNo = CallSNo.ToString() == "" ? string.Empty : CallSNo.ToString();
 
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_DT", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt), ParameterDirection.Input);
             par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSNo, ParameterDirection.Input);
 
             par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);

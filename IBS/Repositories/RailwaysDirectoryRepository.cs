@@ -52,13 +52,20 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = from l in context.T91Railways
+            string RailwayCode = !string.IsNullOrEmpty(dtParameters.AdditionalValues["RailwayCode"]) ? Convert.ToString(dtParameters.AdditionalValues["RailwayCode"]) : "";
+            string RailwaysProductionUnit = !string.IsNullOrEmpty(dtParameters.AdditionalValues["RailwaysProductionUnit"]) ? Convert.ToString(dtParameters.AdditionalValues["RailwaysProductionUnit"]) : "";
+            string HeadQuarter = !string.IsNullOrEmpty(dtParameters.AdditionalValues["HeadQuarter"]) ? Convert.ToString(dtParameters.AdditionalValues["HeadQuarter"]) : "";
+
+            query = from t91 in context.T91Railways
+                    where (!string.IsNullOrEmpty(RailwayCode) ? t91.RlyCd.ToLower().Contains(RailwayCode.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(RailwaysProductionUnit) ? t91.Railway.ToLower().Contains(RailwaysProductionUnit.ToLower()) : true)
+                    && (!string.IsNullOrEmpty(HeadQuarter) ? t91.HeadQuarter.ToLower().Contains(HeadQuarter.ToLower()) : true)
                     select new RailwaysDirectoryModel
                     {
-                        Id = l.Id,
-                        RlyCd = l.RlyCd,
-                        Railway = l.Railway,
-                        HeadQuarter = l.HeadQuarter,
+                        Id = t91.Id,
+                        RlyCd = t91.RlyCd,
+                        Railway = t91.Railway,
+                        HeadQuarter = t91.HeadQuarter,
                     };
 
             dTResult.recordsTotal = query.Count();

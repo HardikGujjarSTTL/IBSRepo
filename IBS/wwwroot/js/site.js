@@ -52,28 +52,24 @@ function isNumberWithDot(evt) {
         evt.preventDefault();
 }
 
-function getContactEntryModal(ContactId, ContactTypeID, ContactRefrenceID) {
-    $.post("/Contact/Manage", { ContactId, ContactTypeID, ContactRefrenceID }, function (response) {
-        $("#contactEntryModal").find(".modal-body").html(response);
-        $("#contactEntryModal").modal('show');
-    });
+function IsValidDate(myInput) {
+    var pattern = /(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))/;
+    if (!pattern.test(myInput)) {
+        return false;
+    }
 }
 
-function showMapModal() {
-    $("#mapModal").modal('show');
-}
+function getExportFileName(title) {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    var mi = today.getMinutes();
+    mi = mi > 9 ? mi : '0' + mi;
+    var sec = today.getSeconds();
+    sec = sec > 9 ? sec : '0' + sec;
 
-function getCallEntryModal(CdId, CdRtId, CdRefType) {
-    $.post("/CallDetail/Manage", { CdId, CdRtId, CdRefType }, function (response) {
-        $("#callDetailEntryModal").find(".modal-body").html(response);
-        $("#callDetailEntryModal").modal('show');
-    });
+    return title + '_' + dd + '_' + mm + '_' + yyyy + '_' + hh + '_' + mi + '_' + sec;
 }
-
-function getNoteEntryModal(NdId, NdRtId, NdRefType) {
-    $.post("/Notes/Manage", { NdId, NdRtId, NdRefType }, function (response) {
-        $("#noteEntryModal").find(".modal-body").html(response);
-        $("#noteEntryModal").modal('show');
-    });
-}
-

@@ -17,166 +17,162 @@
             <input type="hidden" asp-for="FOS" />
             <input type="hidden" asp-for="RegionCode" />
             <input type="hidden" asp-for="UpdateAllowed" />
-
-
+            <input type="hidden" asp-for="RlyNonrly" />
         </div>
         <div class="accordion-body">
             <div class="row my-0">
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Case No.</label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Case No. : </label>
                     <input type="text" class="input" asp-for="CaseNo" maxlength="100" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;"> @Model.CaseNo </label>*@
                     <span asp-validation-for="CaseNo" class="text-danger"></span>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Call Date</label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Call Date : </label>
                     <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Convert.ToDateTime(@Model.CallRecvDt).ToString("dd/MM/yyyy") </label>*@
                     <span asp-validation-for="CallRecvDt" class="text-danger"></span>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Call SNo.</label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Call SNo. : </label>
                     <input type="text" class="input" asp-for="CallSno" maxlength="30" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Model.CallSno </label>*@
                     <span asp-validation-for="CallSno" class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
-                    <label for="Reference">Purchaser</label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Purchaser : </label>
                     <input type="text" class="input" asp-for="PurchaserCd" maxlength="100" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Model.PurchaserCd </label>*@
                     <span asp-validation-for="PurchaserCd" class="text-danger"></span>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="Reference">Vendor</label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Vendor : </label>
                     <input type="text" class="input" asp-for="VendCd" maxlength="30" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Model.VendCd </label>*@
                     <span asp-validation-for="VendCd" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-6 mb-3">
-                    <label for="Reference">Purchase Order Date</label>
+                <div class="col-md-4 mb-3">
+                    <label for="PoDt">Purchase Order Date : </label>
                     <input type="text" class="input" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy") </label>*@
                     <span asp-validation-for="PoDt" class="text-danger"></span>
                 </div>
-
-                <div class="col-md-6 mb-3">
-                    <div class="reference">
-                        <label for="Name">Purchase Order No.</label>
-                        <input type="text" class="input" asp-for="PoNo" maxlength="30" style="color:orangered" readonly="readonly">
-                        <span asp-validation-for="PoNo" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="PoNo">Purchase Order No. : </label>
+                    <input type="text" class="input" asp-for="PoNo" maxlength="30" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;"> @Model.PoNo </label>*@
+                    <span asp-validation-for="PoNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="CallStatus">Call Status : </label>
+                    <input type="text" asp-for="CallStatus" style="color:orangered" readonly="readonly">
+                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Model.CallStatus </label>*@
+                    <span asp-validation-for="CallStatus" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="RegionCode">Region : </label>
+                    @if (Model.RegionCode == "N")
+                    {
+                        <span style="color:orangered">Norther</span>
+                    }
+                    @if (Model.RegionCode == "S")
+                    {
+                        <span style="color:orangered">Southern</span>
+                    }
+                    @if (Model.RegionCode == "W")
+                    {
+                        <span style="color:orangered">Western</span>
+                    }
+                    @if (Model.RegionCode == "E")
+                    {
+                        <span style="color:orangered">Eastern</span>
+                    }
+                    @if (Model.RegionCode == "C")
+                    {
+                        <span style="color:orangered">Central</span>
+                    }
+                    @if (Model.RegionCode == "Q")
+                    {
+                        <span style="color:orangered">CO QA Division</span>
+                    }
+                    <span asp-validation-for="RegionCode" class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
-                    <div class="reference">
-                        <label for="Name">Call Status</label>
-                        <input type="text" asp-for="CallStatus" style="color:orangered" readonly="readonly">
-                        @*<textarea rows="4" asp-for="CallStatus" style="color:orangered" readonly="readonly"></textarea>*@
-                        <span asp-validation-for="CallStatus" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="reference">
-                        <label for="Name">Region</label>
-                        @if (Model.RegionCode == "N")
-                        {
-                            <span style="color:orangered">Norther</span>
-                        }
-                        @if (Model.RegionCode == "S")
-                        {
-                            <span style="color:orangered">Southern</span>
-                        }
-                        @if (Model.RegionCode == "W")
-                        {
-                            <span style="color:orangered">Western</span>
-                        }
-                        @if (Model.RegionCode == "E")
-                        {
-                            <span style="color:orangered">Eastern</span>
-                        }
-                        @if (Model.RegionCode == "C")
-                        {
-                            <span style="color:orangered">Central</span>
-                        }
-                        @if (Model.RegionCode == "Q")
-                        {
-                            <span style="color:orangered">CO QA Division</span>
-                        }
-                        @*<input type="text" class="input" asp-for="RegionCode" style="color:orangered" readonly="readonly">*@
-                        <span asp-validation-for="RegionCode" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Date of Mark of call to IE</label>
                         <input type="text" class="input" asp-for="CallMarkDt" readonly="readonly">
                         <span asp-validation-for="CallMarkDt" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Call Status date</label>
                         <input type="text" class="input" asp-for="CallStatusDt" readonly="readonly">
                         <span asp-validation-for="CallStatusDt" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked</label>
-                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="IeCd" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="ClusterCode" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Expected Date of Inspection/Material Readiness Date.</label>
+
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="DtInspDesire">Expected Date of Inspection/Material Readiness Date.</label>
                     <input type="text" class="input" asp-for="DtInspDesire" readonly="readonly">
                     <span asp-validation-for="DtInspDesire" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Name">Call Letter Number\ Dispatch Reference No.</label>
+                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No.</label>
                         <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
                         <span asp-validation-for="CallLetterNo" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="reference">
-                        <label for="Name">Call Letter Date (DD/MM/YYYY)</label>
+                <div class="col-md-4 mb-3">
+                    <div class="CallLetterDt">
+                        <label for="CallLetterDt">Call Letter Date (DD/MM/YYYY)</label>
                         <input type="text" class="input" asp-for="CallLetterDt" readonly="readonly">
                         <span asp-validation-for="CallLetterDt" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Name">Call Re-Mark Status(If Call has been Re-marked)</label>
+                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked)</label>
                         @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Name">Call Install No.</label>
+                        <label for="CallInstallNo">Call Install No.</label>
                         <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
                         <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="row my-0">
-                <div class="col-md-6 mb-3">
-                    <div class="reference">
-                        <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
-                        @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="DepartmentCode" class="text-danger"></span>
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label for="DepartmentCode">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
+                    @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="DepartmentCode" class="text-danger"></span>
                 </div>
-                <div class="col-md-6 mb-3">
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Name">State whether the Call is for Final Or Stage Inspection</label>
+                        <label for="drone">State whether the Call is for Final Or Stage Inspection</label>
                         <div class="company-checkbox">
                             <div class="remember">
                                 <div class="remecheckbox">
@@ -190,6 +186,12 @@
                         </div>
                         <label for="Name" style="color:DarkMagenta">* Select Stage in case of Stage Inspection Call.</label>
 
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3" id="dvIrfcFunded">
+                    <div class="reference">
+                        <label for="IrfcFunded"><span style="color:red">In case of IRFC Funded Project, Select 'Yes'</span></label>
+                        @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
             </div>
@@ -261,21 +263,21 @@
                     <div class="reference">
                         <label for="Name">Contact Person's Name</label>
                         <input type="text" class="input" asp-for="VendContactPer1">
-                        <span asp-validation-for="VendContactPer1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactPer1" class="text-danger" id="spnVendContactPer1"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Name">Manufacturer Email</label>
                         <input type="text" class="input" asp-for="VendEmail">
-                        <span asp-validation-for="VendEmail" class="text-danger"></span>
+                        <span asp-validation-for="VendEmail" class="text-danger" id="spnVendEmail"></span>
                     </div>
                 </div>
                 <div class="col-md-2 mb-3">
                     <div class="reference">
                         <label for="Name">Phone No.</label>
                         <input type="text" class="input" asp-for="VendContactTel1">
-                        <span asp-validation-for="VendContactTel1" class="text-danger"></span>
+                        <span asp-validation-for="VendContactTel1" class="text-danger" id="spnVendContactTel1"></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -319,7 +321,7 @@
                 </div>
                 <div class="savenext-btn center">
                     <button type="button" class="save-btn active" id="btnUpload">Upload Documents</button>
-                    <a asp-controller="VendorCallRegisterDetail" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
+                    <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
                 </div>
             </div>
         </div>
@@ -332,7 +334,12 @@
         $(document).ready(function () {
             debugger
             $("#MfgCd").prop("disabled", "disabled");
-
+            if ($("#RlyNonrly").val() == "R") {
+                $("#dvIrfcFunded").show();
+            }
+            else {
+                $("#dvIrfcFunded").hide();
+            }
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
             const FOS = urlParams.get('FOS');
@@ -361,9 +368,9 @@
                 $("#btnRegiserCallSave").hide();
                 $("#btnCDetails").show();
             }
-            else if(actiontype == "A")
-            {
+            else if (actiontype == "A") {
                 $("#btnCDetails").hide();
+                $("#btnDelete").hide();
                 $("#CallStatus").val("Marked");
             }
 
@@ -472,6 +479,19 @@
         }
 
         $("#btnUpdateMDetails").click(function () {
+            if ($("#VendContactPer1").val() == "" || $("#VendContactPer1").val() == null) {
+                $("#spnVendContactPer1").html("Contact Person's Name");
+                //ShowHideMsgNew(false, "Please add Contact Person's Name");
+                return;
+            }
+            if ($("#VendEmail").val() == "" || $("#VendEmail").val() == null) {
+                $("#spnVendEmail").html("Manufacturer Email");
+                return;
+            }
+            if ($("#VendContactTel1").val() == "" || $("#VendContactTel1").val() == null) {
+                $("#spnVendContactTel1").html("Phone No.");
+                return;
+            }
             var formData = {
                 MfgCd: $("#MfgCd").val(),
                 VendCd: $("#VendCd").val(),
@@ -534,7 +554,7 @@
             event.preventDefault();
 
             var formData = $("#frmDetails").serialize();
-            $.post("@Url.Action("DetailsDelete", "VendorCallRegister")", formData, function (response) {
+            $.post("@Url.Action("DetailsDelete", "CallRegisterIB")", formData, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
                 }
@@ -545,17 +565,20 @@
         $("#btnCDetails").click(function () {
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
             const urlParams = new URLSearchParams(window.location.search);
-            var CallSno = urlParams.get('CallSno');
+            //var CallSNo = urlParams.get('CallSNo');
+            var cstatus = urlParams.get('cstatus');
             var status = "";
-
-            if ($('#btnRegiserCallSave').prop('disabled') === false || $('#btnDelete').prop('disabled') === false) {
+            debugger
+            //if ($('#btnRegiserCallSave').prop('disabled') === false || $('#btnDelete').prop('disabled') === false) {
+            if ($('#btnRegiserCallSave').hide() === true || $('#btnDelete').hide() === true) {
                 status = "M";
             }
             else {
                 status = "N";
             }
-            window.location.href = '@Url.Action("CallDetails", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSno + "&cstatus=" + status;
+            window.location.href = '@Url.Action("CallDetails", "CallRegisterIB")' + '?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&cstatus=" + status;
         });
 
         $("#btnUpload").click(function () {

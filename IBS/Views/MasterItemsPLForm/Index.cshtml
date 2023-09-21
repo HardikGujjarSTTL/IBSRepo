@@ -10,24 +10,49 @@
         <a asp-area="" asp-controller="MasterItemsPLForm" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtMSIL" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Item Description</th>
-                        <th>PL NO</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-6">
+                <div class="input-search">
+                    <label for="ItemDescription">Item Description</label>
+                    <input type="text" class="input" id="ItemDescription" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="PLNO">PL NO</label>
+                    <input type="text" class="input" id="PLNO" />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtMSIL" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item Description</th>
+                            <th>PL NO</th>
+                            <th style="text-align:center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -40,6 +65,10 @@
         });
 
         function InitializeDatatable() {
+
+            var ItemDescription = $("#ItemDescription").val();
+            var PLNO = $("#PLNO").val();
+
             $("#dtMSIL").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -57,6 +86,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            ItemDescription, PLNO
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -77,7 +107,7 @@
                             var id = data.PlNo;
                             var editUrl = '@Url.Action("Manage", "MasterItemsPLForm")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="MSILDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -87,7 +117,14 @@
             });
         }
 
-        function MSILDelete(id) {
+        function CLearControls() {
+            $("#ItemDescription").val("");
+            $("#PLNO").val("");
+
+            InitializeDatatable();
+        }
+
+        function Delete(id) {
             var url = '@Url.Action("Delete", "MasterItemsPLForm")';
             $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");

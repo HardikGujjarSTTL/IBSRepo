@@ -10,25 +10,55 @@
         <a asp-area="" asp-controller="RailwaysDirectory" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Railways Directory</a>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtRailwaysDirectory" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Railways Code</th>
-                        <th>Railway/Production Unit</th>
-                        <th>Head Quarter</th>
-                        <th style="text-align:center">View Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="RailwayCode">Railway Code</label>
+                    <input type="text" class="input" id="RailwayCode" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-search">
+                    <label for="RailwaysProductionUnit">Railways / Production Unit</label>
+                    <input type="text" class="input" id="RailwaysProductionUnit" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="HeadQuarter">Head Quarter</label>
+                    <input type="text" class="input" id="HeadQuarter" />
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
+                    <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtRailwaysDirectory" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Railways Code</th>
+                            <th>Railway/Production Unit</th>
+                            <th>Head Quarter</th>
+                            <th style="text-align:center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -41,6 +71,11 @@
         });
 
         function InitializeDatatable() {
+
+            var RailwayCode = $("#RailwayCode").val();
+            var RailwaysProductionUnit = $("#RailwaysProductionUnit").val();
+            var HeadQuarter = $("#HeadQuarter").val();
+
             $("#dtRailwaysDirectory").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -58,6 +93,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            RailwayCode, RailwaysProductionUnit, HeadQuarter
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -87,6 +123,14 @@
                 ],
                 "order": [[1, "asc"]]
             });
+        }
+
+        function CLearControls() {
+            $("#RailwayCode").val("");
+            $("#RailwaysProductionUnit").val("");
+            $("#HeadQuarter").val("");
+
+            InitializeDatatable();
         }
 
         function Delete(id) {

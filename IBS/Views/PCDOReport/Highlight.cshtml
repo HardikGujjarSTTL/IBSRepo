@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Highlights";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Highlights</h2>
+        </div>
+    </div>
+    @Html.Partial("_PCDOReportHeader")
+
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        function Search() {
+            GetData();
+        }
+        function GetData() {
+            var Month = $("#ddlMonth").val();
+            var Monthtext = $("#ddlMonth option:selected").text();
+            var Year = $("#ddlYear").val();
+            var p_wYrMth = Year + Month;
+            let myObject = { p_wYrMth, Year, Monthtext };
+            var url = '@Url.Action("TableHighlight", "PCDOReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

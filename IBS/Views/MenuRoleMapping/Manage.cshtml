@@ -28,7 +28,6 @@
                 </div>
             </div>
             <div class="row my-0">
-                <section class="table-section">
                     <div class="task-listinput">
                         <div class="dash-table">
                             <table id="dtMenu" class="table-responsive">
@@ -46,7 +45,6 @@
                             </table>
                         </div>
                     </div>
-                </section>
             </div>
             <div class="savenext-btn">
                 @*<a asp-controller="MenuRoleMapping" asp-action="Index" class="reset-btn">Cancel</a>*@
@@ -213,18 +211,42 @@
                 {
                     "data": null, "defaultContent": '', bSortable: false, "orderable": false,
                     "mRender": function (data, type, row) {
-                    if(data.ChildTitle == "" || data.ChildTitle == null)
-                    {
-                        return data.ParentTitle;
-                    }
-                    else
-                    {
-                        return ""; 
-                    }
+                        //if(data.ChildTitle == "" || data.ChildTitle == null)
+                        //{
+                        //    return data.ParentTitle;
+                        //}
+                        //else
+                        //{
+                        //    return ""; 
+                        //}
+                            if (data.ParentID == "" || data.ParentID == null || data.ParentID == "0") {
+                                return data.title;
+                            }
+                            else {
+                                return "";
+                            }
                     }
                 },
                 //{ data: "ParentTitle" },
-                { data: "ChildTitle" },
+                //{ data: "ChildTitle" },
+                    {
+                        "data": null, "defaultContent": '', bSortable: false, "orderable": false,
+                        "mRender": function (data, type, row) {
+                            if (data.ParentID != "" && data.ParentID != null && data.ParentID != "0") {
+                                if ((data.ParentID != "" && data.ParentID != null && data.ParentID != "0") && data.controllername == null && data.actionname == null)
+                                {
+                                    return "<a><b>" + data.title + "</b></a>";
+                                }
+                                else
+                                {
+                                    return "<a style='margin-left: 30px;'>" + data.title + "</a>";
+                                }
+                            }
+                            else {
+                                return "";
+                            }
+                        }
+                    },
             ],
             "order": [[0, "asc"]],
                 "pageLength": 250

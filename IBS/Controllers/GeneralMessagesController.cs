@@ -1,10 +1,12 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class GeneralMessagesController : BaseController
     {
         #region Variables
@@ -15,6 +17,7 @@ namespace IBS.Controllers
             messageRepository = _messageRepository;
         }
 
+        [Authorization("GeneralMessages", "MessageMaster", "view")]
         public IActionResult MessageMaster()
         {
             return View();
@@ -26,6 +29,7 @@ namespace IBS.Controllers
             DTResult<GeneralMessageModel> dTResult = messageRepository.GetMessageList(dtParameters);
             return Json(dTResult);
         }
+        [Authorization("GeneralMessages", "MessageMaster", "delete")]
         public IActionResult Delete(int MessageID)
         {
             try
@@ -45,6 +49,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("GeneralMessages", "MessageMaster", "edit")]
         public IActionResult DetailsSave(GeneralMessageModel model)
         {
             try
@@ -70,6 +75,7 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        [Authorization("GeneralMessages", "MessageMaster", "view")]
         public IActionResult MessageManage(int MessageID)
         {
             GeneralMessageModel model = new();

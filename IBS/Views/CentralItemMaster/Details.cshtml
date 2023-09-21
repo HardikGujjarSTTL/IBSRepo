@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Central Item Details List";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Central Item Details List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-action="Index" asp-controller="CentralItemMaster" class="formBtn viewall-btn">Back</a> &nbsp;
+            <a asp-area="" asp-controller="CentralItemMaster" asp-action="ManageDetails" asp-route-RailId="@ViewBag.RailId" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add Details</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtCentralDetails" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Rail Price Per Mt</th>
+                            <th>Packing Charge</th>
+                            <th>Price Date From</th>
+                            <th>Price Date To</th>
+                            <th>Is Active</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            var RailId = '@ViewBag.RailId';
+            $("#dtCentralDetails").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadDetailsTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            RailId: RailId
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "RailPricePerMt" },
+                    { data: "PackingCharge" },
+                    { data: "PriceDateFr" },
+                    { data: "PriceDateTo" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            if (data.Isactive != null){
+                                return data.Isactive ? "YES" : "NO";
+                            }
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Id = data.Id;
+                            var RailId = data.RailId;
+                            var editUrl = '@Url.Action("ManageDetails", "CentralItemMaster")/' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="DeleteDetails(' + Id + ',' + RailId + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function DeleteDetails(id, RailId) {
+            var url = '@Url.Action("DeleteDetails", "CentralItemMaster")?id=' + id + "&RailId=" + RailId;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+    </script>
+}

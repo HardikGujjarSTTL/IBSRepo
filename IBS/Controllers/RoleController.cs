@@ -25,12 +25,14 @@ namespace IBS.Controllers
             return View();
         }
         [Authorization("Role", "Index", "view")]
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string id)
         {
+            //string Encrypt1 = Common.EncryptQueryString(id.ToString());
+            string DecryptId = Common.DecryptQueryString(id);
             RoleModel model = new();
-            if (id > 0)
+            if (DecryptId != null && DecryptId != "")
             {
-                model = roleRepository.FindByID(id);
+                model = roleRepository.FindByID(Convert.ToInt32(DecryptId));
             }
             return View(model);
         }
@@ -42,11 +44,12 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [Authorization("Role", "Index", "delete")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             try
             {
-                if (roleRepository.Remove(id, UserId))
+                string DecryptId = Common.DecryptQueryString(id);
+                if (roleRepository.Remove(Convert.ToInt32(DecryptId), UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -67,7 +70,6 @@ namespace IBS.Controllers
             try
             {
                 string msg = "Role Inserted Successfully.";
-
                 if (model.RoleId > 0)
                 {
                     msg = "Role Updated Successfully.";

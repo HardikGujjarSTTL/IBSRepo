@@ -34,7 +34,7 @@ namespace IBS.Controllers
         }
 
         #endregion
-        [Authorization("UserAdministrator", "UserManage", "view")]
+        [Authorization("UserAdministrator", "UserMaster", "view")]
         public IActionResult UserManage(string UserId)
         {
             UserModel model = new();
@@ -67,7 +67,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("UserAdministrator", "UserManage", "add")]
+        [Authorization("UserAdministrator", "UserMaster", "edit")]
         public IActionResult UserDetailsSave(UserModel model)
         {
             try
@@ -77,8 +77,9 @@ namespace IBS.Controllers
                 if (model.ID > 0)
                 {
                     msg = "User Updated Successfully.";
+                    model.Updatedby =Convert.ToString(UserId);
                 }
-
+                model.Createdby = Convert.ToString(UserId);
                 int i = userRepository.UserDetailsInsertUpdate(model);
                 if (i > 0)
                 {

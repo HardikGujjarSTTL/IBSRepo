@@ -2,11 +2,9 @@
 
 @{
     ViewData["Title"] = "Manage User";
-    string clsSave = "Permission_Save";
     string clsView = "";
     if (Model.UserId != null)
     {
-        clsSave = "Permission_Update";
         clsView = "Permission_View";
     }
 }
@@ -47,21 +45,22 @@
                         <span asp-validation-for="Region" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4 mb-3">
+                    @*<div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Role </label>
                             @Html.DropDownListFor(model => model.AuthLevl, new SelectList(IBS.Models.Common.GetRole() , "Value", "Text"),"--Select--", new { @class = ""})
                             <span class="text-danger" id="spnErrorAuthLevl"></span>
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Status</label>
-                        <select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
+                        @*<select id="ddlStatus" class="form-control col-md-8" name="Status" asp-for="Status">
                             <option value="">--Select--</option>
                             <option value="A">Active</option>
                             <option value="I">InActive</option>
-                        </select>
+                        </select>*@
+                        @Html.DropDownListFor(model => model.Status, new SelectList(IBS.Models.Common.GetActiveInActive() , "Value", "Text"),"--Select--", new { @class = ""})
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
 
@@ -133,19 +132,25 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">User Type</label>
-                        <select id="ddlUserType" class="form-control col-md-8" name="UserType" asp-for="UserType">
+                        @*<select id="ddlUserType" class="form-control col-md-8" name="UserType" asp-for="UserType">
                             <option value="">--Select--</option>
                             <option value="U">User</option>
                             <option value="C">CM</option>
                             <option value="G">GM</option>
                             <option value="S">SBU HEAD</option>
-                        </select>
+                        </select>*@
+                        @Html.DropDownListFor(model => model.UserType, new SelectList(IBS.Models.Common.GetUserType() , "Value", "Text"),"--Select--", new { @class = ""})
                         <span asp-validation-for="UserType" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Role Name</label>
+                        @Html.DropDownListFor(model => model.RoleId, new SelectList(IBS.Models.Common.GetRoles() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="UserAdministrator" asp-action="UserMaster" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active @clsSave" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
         </form>

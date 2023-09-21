@@ -9,7 +9,7 @@ public partial class T19CallCancel
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public byte? CancelCd1 { get; set; }
 

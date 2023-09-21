@@ -15,49 +15,47 @@
         </div>
         <div class="accordion-body">
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Document Type </label>
                         @Html.DropDownListFor(model => model.DocType, new SelectList(IBS.Models.Common.GetDocType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="GetDocSubType('')"})
                         <span class="text-danger" id="spnErrorAuthLevl"></span>
                     </div>
                 </div>
-
-                <div class="col-md-6 mb-3" id="divIEName" style="display:none;">
+                <div class="col-md-4 mb-3" id="divIEName" style="display:none;">
                     <div class="reference">
                         <label id="IEName" for="Name">INSTRUCTIONS TO IE </label>
                         @Html.DropDownListFor(model => model.DocSubType, new SelectList(IBS.Models.Common.GetDocSubType("") , "Value", "Text"),"--Select--", new { @class = "" })
                         <span class="text-danger" id="spnErrorLlRef"></span>
                     </div>
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Name of the Document</label>
                     <input type="text" class="input" asp-for="DocumentName" maxlength="30" style="text-transform: uppercase;">
                     <span asp-validation-for="DocumentName" class="text-danger"></span>
                 </div>
-                <div class="col-md-6 mb-3">
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Document No.</label>
                     <input type="text" class="input" asp-for="DocumentNo" maxlength="100" style="text-transform: uppercase;">
                     <span asp-validation-for="DocumentNo" class="text-danger"></span>
                 </div>
-
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Issue Date</label>
                         <input type="text" class="datepicker" placeholder="dd-MM-yyyy" asp-for="IssueDt" maxlength="30" style="text-transform: uppercase;" readonly="readonly">
                         <span asp-validation-for="IssueDt" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
                 </div>
             </div>
 
             <div class="savenext-btn">
-                <a asp-controller="AdminUserUploadDoc" asp-action="UploadDoc" class="reset-btn">Cancel</a>
                 <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                <a asp-controller="AdminUserUploadDoc" asp-action="UploadDoc" class="reset-btn">Clear</a>
             </div>
 
         </div>

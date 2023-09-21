@@ -30,7 +30,23 @@ namespace IBS.Repositories
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "InvoiceNo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "InvoiceNo";
+                orderAscendingDirection = true;
+            }
             //if (dtParameters.Order != null)
             //{
             //    // in this example we just default sort on the 1st column
@@ -80,11 +96,14 @@ namespace IBS.Repositories
             //        modelList.Add(model);
             //    }
             //}
-            var par = new List<OracleParameter>();
-            par.Add(new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input));
-            par.Add(new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output));
-
-            var ds = DataAccessDB.GetDataSet("GET_LabINVOICE_GridLoad", par.ToArray(), 1);
+            //var par = new List<OracleParameter>();
+            //par.Add(new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input));
+            //par.Add(new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output));
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            
+            var ds = DataAccessDB.GetDataSet("GET_LabINVOICE_GridLoad", par, 1);
 
             List<LabInvoiceModel> modelList = new List<LabInvoiceModel>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -130,15 +149,15 @@ namespace IBS.Repositories
 
             dTResult.recordsTotal = query.Count();
 
-            //if (!string.IsNullOrEmpty(searchBy))
-            //    query = query.Where(w => Convert.ToString(w.InvoiceNo).ToLower().Contains(searchBy.ToLower())
-            //    || Convert.ToString(w.InvoiceNo).ToLower().Contains(searchBy.ToLower())
-            //    );
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Item).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Item).ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsFiltered = query.Count();
 
-            // dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.data = query.ToList();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.data = query.ToList();
 
             dTResult.draw = dtParameters.Draw;
 

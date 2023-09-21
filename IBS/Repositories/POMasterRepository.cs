@@ -118,6 +118,44 @@ namespace IBS.Repositories
             context.SaveChanges();
             return true;
         }
+        public PO_MasterModel alreadyExistT80_PO_MASTER(PO_MasterModel model)
+        {
+            PO_MasterModel models = new PO_MasterModel();
+            T80PoMaster POMaster = (from m in context.T80PoMasters
+                                    where m.PoNo == model.PoNo && m.PoDt == model.PoDt && m.RegionCode == model.RegionCode
+                                    select m).FirstOrDefault();
+
+            if (POMaster == null)
+            {
+                models = null;
+                return models;
+            }
+            else
+            {
+                models.CaseNo = POMaster.CaseNo.Trim();
+                models.PoDt = POMaster.PoDt;
+                return models;
+            }
+        }
+        public PO_MasterModel alreadyExistT13_PO_MASTER(PO_MasterModel model)
+        {
+            PO_MasterModel models = new PO_MasterModel();
+            T13PoMaster POMaster = (from m in context.T13PoMasters
+                                    where m.PoNo == model.PoNo && m.PoDt == model.PoDt && m.RegionCode == model.RegionCode
+                                    select m).FirstOrDefault();
+
+            if (POMaster == null)
+            {
+                models = null;
+                return models;
+            }
+            else
+            {
+                models.CaseNo = POMaster.CaseNo.Trim();
+                models.PoDt = POMaster.PoDt;
+                return models;
+            }
+        }
         public string POMasterDetailsInsertUpdate(PO_MasterModel model)
         {
             string CaseNo = "";
@@ -355,7 +393,7 @@ namespace IBS.Repositories
             {
                 T82PoDetail obj = new T82PoDetail();
                 obj.CaseNo = model.CaseNo;
-                obj.ItemSrno = model.ItemSrno;
+                obj.ItemSrno = (byte)model.ItemSrno;
                 obj.PlNo = model.PlNo;
                 obj.BpoCd = model.BpoCd;
                 obj.ItemDesc = model.ItemDesc;

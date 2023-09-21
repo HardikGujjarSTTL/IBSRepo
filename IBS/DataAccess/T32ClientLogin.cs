@@ -11,7 +11,7 @@ public partial class T32ClientLogin
 
     public string? Designation { get; set; }
 
-    public string Mobile { get; set; } = null!;
+    public string? Mobile { get; set; }
 
     public string? Email { get; set; }
 
@@ -32,4 +32,6 @@ public partial class T32ClientLogin
     public int? Createdby { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public int Id { get; set; }
 }

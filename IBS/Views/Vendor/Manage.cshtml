@@ -9,10 +9,10 @@
         <h2>Manage Vendor/Manufacturer Master</h2>
     </div>
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <form role="form" asp-controller="Vendor" asp-action="Manage" id="frmVendor">
-            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+        <form role="form" asp-controller="Vendor" asp-action="Manage" id="frmVendor" enctype="multipart/form-data">
+            <input type="hidden" name="hdnUploadedDocumentList" id="hdnUploadedDocumentList" value="" />
             <input type="hidden" asp-for="VendCd" />
             <div class="accordion-body">
                 <div class="row my-0">
@@ -28,6 +28,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="VendAdd2">Address (Count).</label>
+                        <textarea class="input" asp-for="VendAdd2"></textarea>
                     </div>
                 </div>
                 <div class="row my-0">
@@ -96,32 +97,29 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="VendInspStopped">Has any item of this Vendor blocked?</label>
-                        @Html.DropDownListFor(model => model.VendInspStopped, new SelectList(IBS.Models.Common.ItemBlocked() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="VendInspStopped" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-5 mb-3" style="margin-top: 40px">
-                        <i class="text-danger">* If Yes, kindly enter the details of Blocked Item in Remarks column!!!</i>
+                        @Html.DropDownListFor(model => model.VendInspStopped, new SelectList(Common.ItemBlocked() , "Value", "Text"))
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-12 mb-3">
                         <label for="VendRemarks">Remarks</label>
                         <textarea class="input" asp-for="VendRemarks"></textarea>
+                        <span class="text-danger">* If Yes, kindly enter the details of Blocked Item in Remarks column!!!</span>
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-4">
                         <label for="OnlineCallStatus">Vendor Online Call Registration Status (Y/N)</label>
                         @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
                         <span asp-validation-for="OnlineCallStatus" class="text-danger"></span>
                     </div>
-                    <div class="col-md-8 mb-3" style="margin-top: 40px">
-                        <i class="text-danger">* Select Yes in case the given Vendor Name & Address is given Vendor ID and Password for online Call Registration.</i>
+                    <div class="col-md-12 mb-3">
+                    <span class="text-danger">* Select Yes in case the given Vendor Name & Address is given Vendor ID and Password for online Call Registration.</span>
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-6 mb-3">
-                        @*   <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Vendor_Manufacturer" /> *@
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(FileUploaderDTO)ViewBag.Vendor_Manufacturer" />
                     </div>
                 </div>
                 <div class="savenext-btn">
@@ -169,6 +167,7 @@
 
         function SubmitVendorData() {
             if ($("#frmVendor").valid()) {
+                if (!SaveDocuments()) { return; }
                 $("#frmVendor").submit();
             }
         }

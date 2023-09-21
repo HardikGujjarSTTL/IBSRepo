@@ -1,16 +1,55 @@
-﻿@{
+﻿@model IBS.Models.ICFromToModel
+@{
     ViewData["Title"] = "Issue of Hologram to IE";
 }
 
-<div>
+<form data-ajax="true" asp-antiforgery="true" asp-controller="" asp-action="" data-ajax-method="post" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
             <h2>Issue of Hologram to IE</h2>
         </div>
-        <div class="list-btn">
-            <a asp-area="" asp-controller="HologramSearchForm" asp-action="Manage" class="formBtn"> Add New Form</a>
+        <div class="list-btn" id="addNewForm">
+            <a asp-area="" asp-controller="HologramSearchForm" asp-action="Manage" class="formBtn Permission_Add"> <span class="fa fa-plus Permission_Add"></span> Add New</a>
         </div>
-
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Hologram No. From</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                        </div>
+                        <input type="text" class="form-control" id="txtFromNo" maxlength="7" style="text-transform: uppercase;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Hologram No. To</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="color: orangered;font-weight: bold;">@ViewBag.Region</span>
+                    </div>
+                        <input type="text" id="txtToNo" class="form-control" maxlength="7" style="text-transform: uppercase;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" id="secDrop">
+                <div class="reference">
+                    <label for="Name" id="lblIECM">IE</label>
+                    @Html.DropDownList("lstIE", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region) , "Value", "Text"),"--Select--", new{@id="DpIE"})
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -32,18 +71,29 @@
             </div>
         </div>
     </section>
-</div>
+</form>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-
-        $(function () {
-            InitializeDatatable();
+        var Role = "@ViewBag.Role";
+        $(document).ready(function () {
+            $("#btnSearch").click(function () {
+                InitializeDatatable();
+                //if (Role != "Admin") {
+                //    var table = $("#dtSOF").DataTable();
+                //    table.column(5).visible(false);
+                //}
+            });
+            //if (Role != "Admin") {
+            //    $("#addNewForm").css("display", "none");
+            //}
         });
-
         function InitializeDatatable() {
+            var FromNo = $("#txtFromNo").val();
+            var ToNo = $("#txtToNo").val();
+            var IE = $("#DpIE").val();
             $("#dtSOF").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -61,6 +111,9 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            "HFromNo": FromNo,
+                            "HToNo": ToNo,
+                            "IE": IE
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -73,17 +126,38 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "HgNoFr" },
-                    { data: "HgNoTo" },
-                    { data: "HgIssueDt" },
-                    { data: "HgIecd" },
+                    {
+                        data: "HgNoFr",
+                        render: function (data, type, row) {
+                            return row.HgRegion.substring(0, 1) + row.HgNoFr
+                        }
+                    },
+                    {
+                        data: "HgNoTo",
+                        render: function (data, type, row) {
+                            return row.HgRegion.substring(0, 1) + row.HgNoTo
+                        }
+                    },
+                    {
+                        data: "HgIssueDt",//"Display_HgIssueDt"
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "HgIeName" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.HgNoFr;
-                            var editUrl = '@Url.Action("Manage", "HologramSearchForm")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="SOFDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var HgNoFr = data.HgRegion.substring(0, 1) + data.HgNoFr;
+                            var HgNoTo = data.HgRegion.substring(0, 1) + data.HgNoTo;
+                            var editUrl = '@Url.Action("Manage", "HologramSearchForm")?Hg_No_Fr=' + HgNoFr + '&Hg_No_To=' + HgNoTo;
+                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\">';
+                            //html += '<a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="Edit(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="SOFDelete(\'' + data.HgNoFr + '\',\'' + data.HgNoTo + '\',\'' + data.HgRegion.substring(0, 1) + '\')" href="javascript:void(\'0\');" id=\"' + HgNoFr + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -93,10 +167,46 @@
             });
         }
 
-        function SOFDelete(id) {
-            var url = '@Url.Action("Delete", "HologramSearchForm")';
-            $("#btn-delete-yes").attr("href", url + "/" + id);
-            $("#modal-delete-conf").modal("show");
+        function Edit(Hg_No_Fr, Hg_No_To, Region) {
+            Hg_No_Fr = Region + Hg_No_Fr;
+            Hg_No_To = Region + Hg_No_To;
+            $.ajax({
+                url: '@Url.Action("MatchHologram", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To,
+                type: "POST",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != "") {
+                        ShowHideMsgNew(false, response);
+                    } else {
+                        window.location.href = '@Url.Action("Manage", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To;
+                    }
+                }
+            });
+
+        }
+
+        function SOFDelete(Hg_No_Fr, Hg_No_To, Region) {
+            Hg_No_Fr = Region + Hg_No_Fr;
+            Hg_No_To = Region + Hg_No_To;
+            $.ajax({
+                url: '@Url.Action("MatchHologram", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To,
+                type: "POST",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != "") {
+                        ShowHideMsgNew(false, response);
+                    } else {
+                        var url = '@Url.Action("Delete", "HologramSearchForm")?Hg_No_Fr=' + Hg_No_Fr + '&Hg_No_To=' + Hg_No_To;
+                        $("#btn-delete-yes").attr("href", url);
+                        $("#modal-delete-conf").modal("show");
+                    }
+                }
+            });
+
         }
     </script>
 }

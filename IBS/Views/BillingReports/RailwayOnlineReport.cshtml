@@ -1,0 +1,168 @@
+﻿@model IBS.Models.BillRaisedModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Billing Report";
+}
+<html>
+<head>
+    <title>Railway online bills</title>
+</head>
+<body>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ExportExcel('xlsx')">Export table to excel</button>
+        <button type="button" class="save-btn active" onclick="ExportPDF('pdf')">Export table to pdf</button>
+    </div>
+    <br />
+    <table id="dtList" border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <tbody>
+            <tr>
+                <td width='100%' colspan='22'>
+                    <h5 align='center'><font face='Verdana'>@Model.Region</font></h5>
+                    @*<h5 align='center'><font face='Verdana'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</font></h5>*@
+                    @if (Model.BillSummary == "M")
+                    {
+                        <h5 align='center'><font face='Verdana'>Download documents for rly invoices for the period : @Model.FromMonthName - @Model.FromYr</font></h5>
+                    }
+                    else
+                    {
+                        <h5 align='center'><font face='Verdana'>Download documents for rly invoices for the period : @Model.FromDt - @Model.ToDt</font></h5>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th width="2%" valign="top" align="center"><b><font size="2" face="Verdana">Sr. No.</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">RLY</font></b></th>
+                <th width="6%" valign="top" align="center"><b><font size="2" face="Verdana">PO No.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">PO Dt</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Case No.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">PO or Letter</font></b></th>
+                <th width="4%" valign="top" align="center"><b><font size="2" face="Verdana">BPO Name</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Bill No.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Dt.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Invoice No.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">AU</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">IC No.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">IC Date</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">BK No.</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">Set No.</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Amount</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Outstanding Amt</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Digital Bill Gen Date</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">Digital Invoice</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">Digital IC</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">PO</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Invoice Supp Docs</font></b></th>
+            </tr>
+            @if (Model != null && Model.lstBillRailway.Count > 0)
+            {
+                int SrNo = 1;
+
+                @foreach (var item in Model.lstBillRailway)
+                {
+                    <tr>
+                        <th align="center"><b><font size="1" face="Verdana">@SrNo</font></b></th>
+                        <th align="center"><b><font size="1" face="Verdana">@item.BPO_RLY</font></b></th>
+                        <th align="left"><b><font size="1" face="Verdana">@item.PO_NO</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.PO_DT</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.CASE_NO</font></b></th>
+                        <th align="center"><b><font size="1" face="Verdana">@item.PO_OR_LETTER</font></b></th>
+                        <th align="center"><b><font size="1" face="Verdana">@item.BPO_NAME</font></b></th>
+                        <th align="left"><b><font size="1" face="Verdana">@item.BILL_NO</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.BILL_DT</font></b></th>
+                        <th align="left"><b><font size="1" face="Verdana">@item.INVOICE_NO</font></b></th>
+                        <th align="left"><b><font size="1" face="Verdana">@item.AU_DESC</font></b></th>
+                        <th align="left"><b><font size="1" face="Verdana">@item.IC_NO</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.IC_DT</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.BK_NO</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.SET_NO</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.BILL_AMOUNT</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.AMOUNT_OUTSTANDING</font></b></th>
+                        <th align="right"><b><font size="1" face="Verdana">@item.DIG_BILL_GEN_DATE</font></b></th>
+                        @if (@item.ONLINE_INVOICE != null)
+                        {
+                            <th align="left">
+                                <b>
+                                    <font size="1" face="Verdana">
+                                        <a href=@item.ONLINE_INVOICE target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>INVOICE</font></h5></a>
+                                    </font>
+                                </b>
+                            </th>
+                        }
+                        else
+                        {
+                            <th align="left"><b><font size="1" face="Verdana"></font></b></th>
+                        }
+                        <th align="left"><b><font size="1" face="Verdana">@item.IC_PHOTO</font></b></th>
+                        @if (@item.PO_SOURCE == "C")
+                        {
+                            string po_source = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + @item.PO_YR + "/" + @item.IMMS_RLY_CD + "/" + @item.PO_NO + ".pdf";
+                            <th align="left">
+                                <b>
+                                    <font size="1" face="Verdana">
+                                        <a href=@po_source target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>PO</font></h5></a>
+                                    </font>
+                                </b>
+                            </th>
+                        }
+                        else
+                        {
+                            string fpath_po = "/RBS/CASE_NO/" + @item.CASE_NO + ".pdf";
+                            <th align="left">
+                                <b>
+                                    <font size="1" face="Verdana">
+                                        <a href=@fpath_po target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>PO</font></h5></a>
+                                    </font>
+                                </b>
+                            </th>
+                        }
+                        
+                        <th align="left"><b><font size="1" face="Verdana">@item.INVOICE_SUPP_DOCS</font></b></th>
+                    </tr>
+                    SrNo++;
+                }
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const actiontype = urlParams.get('ActionType');
+    });
+
+    function FileExists(url) {
+        var exists = false;
+
+        $.ajax({
+            url: url,
+            type: 'HEAD', // Use HEAD request to check if the file exists
+            async: false, // Set to synchronous to wait for the response
+            success: function () {
+                exists = true;
+            },
+            error: function () {
+                exists = false;
+            }
+        });
+
+        return exists;
+    }
+
+
+    function ExportExcel(type, fn, dl) {
+        var elt = document.getElementById('dtList');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('SectorBillExcel.' + (type || 'xlsx')));
+    }
+    function ExportPDF(type, fn, dl) {
+
+    }
+
+</script>

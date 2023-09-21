@@ -1,0 +1,152 @@
+﻿@model IBS.Models.BillRaisedModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Billing Report";
+}
+<html>
+<head>
+    <title class="heading3">Bills Not Submitted to CRIS</title>
+</head>
+<body>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ExportExcel('xlsx')">Export table to excel</button>
+        <button type="button" class="save-btn active" onclick="ExportPDF('pdf')">Export table to pdf</button>
+    </div>
+    <br />
+    <table id="dtList" class="borderTable" border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <tbody>
+            @if (Model.ActionType == "NSC")
+            {
+                <tr>
+                    <td width='100%' colspan='12'>
+                        <h5 align='center'><font face='Verdana'>@Model.Region</font></h5>
+                        <h5 align='center'><font face='Verdana'>CRIS PAYMENT DETAILS FOR THE PERIOD : @Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy") To @Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy") (Report Sorted on Vendor)</font></h5>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th width="4%" valign="top" align="center"><b><font size="2" face="Verdana">Sr. No.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">RLY</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">PO OR LOA</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">AU</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Bill No.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Dt.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Invoice No.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Amount</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Amount Recieved</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Amt Cleared</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Gen Dt</font></b></th>
+                    <th width="16%" valign="top" align="center"><b><font size="2" face="Verdana">IRN NO.</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstBillCris.Count > 0)
+                {
+                    int SrNo = 1;
+                    int TotalBILL_AMOUNT = 0;
+                    int TotalAMT_RECEIVED = 0;
+                    int TotalAMT_CLEARED = 0;
+
+                    @foreach (var item in Model.lstBillCris)
+                    {
+                        <tr>
+                            <th align="center"><b><font size="1" face="Verdana">@SrNo</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BPO_RLY</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.PO_OR_LETTER</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.AU</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BILL_NO</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BILL_DT</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.INVOICE_NO</font></b></th>
+                            <th align="right"><b><font size="1" face="Verdana">@item.BILL_AMOUNT</font></b></th>
+                            <th align="right"><b><font size="1" face="Verdana">@item.AMT_RECEIVED</font></b></th>
+                            <th align="right"><b><font size="1" face="Verdana">@item.AMT_CLEARED</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BILL_GEN_DATE</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.IRN_NO</font></b></th>
+                        </tr>
+                        SrNo++;
+                        TotalBILL_AMOUNT += Convert.ToInt32(@item.BILL_AMOUNT);
+                        TotalAMT_RECEIVED += Convert.ToInt32(@item.AMT_RECEIVED);
+                        TotalAMT_CLEARED += Convert.ToInt32(@item.AMT_CLEARED);
+                    }
+                    <tr style="background:#d4d0c8;">
+                        <th align="center" colspan="7"><b><font size="2" face="Verdana">Total :</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@TotalAMT_RECEIVED</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@TotalAMT_CLEARED</font></b></th>
+                        <th align="center" colspan="2"><b><font size="2" face="Verdana"></font></b></th>
+                    </tr>
+                }
+            }
+
+            @if (Model.ActionType == "RBNRS")
+            {
+                <tr>
+                    <td width='100%' colspan='12'>
+                        <h5 align='center'><font face='Verdana'>@Model.Region</font></h5>
+                        <h5 align='center'><font face='Verdana'>Returned Bills yet to be Resent (Not Posted in IBS)</font></h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="4%" valign="top" align="center"><b><font size="2" face="Verdana">Sr. No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">Client</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">Bill No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Dt.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Amount</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">BK No.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="2" face="Verdana">SET No.</font></b></th>
+                    <th width="22%" valign="top" align="center"><b><font size="2" face="Verdana">Return Reason</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">Return Date</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">AU CODE</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstBillCrisSubmitted.Count > 0)
+                {
+                    int SrNo = 1;
+                    int TotalBILL_AMOUNT = 0;
+
+                    @foreach (var item in Model.lstBillCrisSubmitted)
+                    {
+                        <tr>
+                            <th align="center"><b><font size="1" face="Verdana">@SrNo</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BPO_RLY</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BILL_NO</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BILL_DT</font></b></th>
+                            <th align="right"><b><font size="1" face="Verdana">@item.BILL_AMOUNT</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.BK_NO</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.SET_NO</font></b></th>
+                            <th align="left"><b><font size="1" face="Verdana">@item.RETURN_REASON</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.RETURN_DT</font></b></th>
+                            <th align="center"><b><font size="1" face="Verdana">@item.AU</font></b></th>
+                        </tr>
+                        SrNo++;
+                        TotalBILL_AMOUNT += Convert.ToInt32(@item.BILL_AMOUNT);
+                    }
+                    <tr style="background:#d4d0c8;">
+                        <th align="center" colspan="4"><b><font size="2" face="Verdana">Total :</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT</font></b></th>
+                        <th align="center" colspan="5"><b><font size="2" face="Verdana"></font></b></th>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const actiontype = urlParams.get('ActionType');
+    });
+
+    function ExportExcel(type, fn, dl) {
+        var elt = document.getElementById('dtList');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('SectorBillExcel.' + (type || 'xlsx')));
+    }
+    function ExportPDF(type, fn, dl) {
+
+    }
+
+</script>

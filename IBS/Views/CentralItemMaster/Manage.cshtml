@@ -1,0 +1,58 @@
+﻿@model IBS.Models.CentralItemMasterModel
+
+@{
+    ViewData["Title"] = "Manage Central Item Master";
+    string clsView = "";
+    if (Model.Id > 0)
+    {
+        clsView = "Permission_View";
+    }
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Central Item Master</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="CentralItemMaster" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form role="form" asp-controller="CentralItemMaster" asp-action="SaveMaster" id="frmMaster">
+            <input type="hidden" asp-for="Id" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rail Cd</label>
+                        <input type="text" class="input" asp-for="RailCd" maxlength="30">
+                        <span asp-validation-for="RailCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rail Length Meter</label>
+                        <input type="text" class="input" asp-for="RailLengthMeter" maxlength="30">
+                        <span asp-validation-for="RailLengthMeter" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rail Description</label>
+                        <textarea class="input" asp-for="RailDesc" maxlength="30"> </textarea>
+                        <span asp-validation-for="RailDesc" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmMaster").valid()) {
+                $("#frmMaster").submit();
+            }
+        }
+    </script>
+}

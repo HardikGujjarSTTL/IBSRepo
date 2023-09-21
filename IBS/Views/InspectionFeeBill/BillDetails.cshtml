@@ -1,55 +1,211 @@
 ﻿@model IBS.Models.InspectionFeeBillModel
 
 @{
-    ViewData["Title"] = "INSPECTION FEE BILL";
+    ViewData["Title"] = "Inspection Fee Bill";
 }
 
 <form role="form" method="post" id="frmInspectionFeeBill">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>INSPECTION FEE BILL</h2>
+            <h2>Inspection Fee Bill</h2>
         </div>
     </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-4 mb-3">
-                <label for="Reference">Bill No</label>
-                <input type="text" class="input" asp-for="BillNo">
+                <label for="BillNo">Bill No</label>
+                <input type="text" class="input" asp-for="BillNo" style="color: OrangeRed">
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Bill Date (dd/mm/yyyy)</label>
-                <input type="text" class="input" asp-for="Display_BillDt">
+                <label for="Display_BillDt">Bill Date (dd/mm/yyyy)</label>
+                <input type="text" class="input" asp-for="Display_BillDt" style="color: OrangeRed">
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Case No</label>
-                <input type="text" class="input" asp-for="CaseNo">
+                <label for="CaseNo">Case No</label>
+                <input type="text" class="input" asp-for="CaseNo" style="color: OrangeRed">
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-4 mb-3">
-                <label for="Reference">Max Fee Allowed</label>
+                <label for="MaxFee">Max Fee Allowed</label>
                 <input type="text" class="input" asp-for="MaxFee">
             </div>
             <div class="col-md-4 mb-3">
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Min Fee Payable</label>
+                <label for="MinFee">Min Fee Payable</label>
                 <input type="text" class="input" asp-for="MinFee">
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-4 mb-3">
-                <label for="Reference">Fee Rate</label>
+                <label for="FeeRate">Fee Rate</label>
                 <input type="text" class="input" asp-for="FeeRate">
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Fee Type</label>
-                @Html.DropDownListFor(model => model.FeeType, Common.GetFeeType(), "",  new { @class = ""})
+                <label for="FeeType">Fee Type</label>
+                @*@Html.DropDownListFor(model => model.FeeType, Common.GetFeeType(), "",  new { @class = ""})*@
+                @Html.DropDownListFor(model => model.FeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"))
             </div>
             <div class="col-md-4 mb-3">
-                <label for="Reference">Tax Type</label>
-                @Html.DropDownListFor(model => model.TaxType, Common.GetTaxType(), "",  new { @class = ""})
-                @Html.DropDownListFor(model => model.TaxType_GST, Common.GetTaxType_GST(), new { @class = ""})
+                <label for="TaxType">Tax Type</label>
+                @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"))
+                @Html.DropDownListFor(model => model.TaxType_GST, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"))
+                @*@Html.DropDownListFor(model => model.TaxType, Common.GetTaxType(), "",  new { @class = ""})
+                @Html.DropDownListFor(model => model.TaxType_GST, Common.GetTaxType_GST(), new { @class = ""})*@
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="MaterialValue">Total Value</label>
+                <input type="text" class="input" asp-for="MaterialValue">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="InspFee">Insp. Fee</label>
+                <input type="text" class="input" asp-for="InspFee">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="ServiceTax">Serv. Tax</label>
+                <input type="text" class="input" asp-for="ServiceTax">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="EduCess">Edu. Cess</label>
+                <input type="text" class="input" asp-for="EduCess">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="SheCess">S.Higher Edu Cess</label>
+                <input type="text" class="input" asp-for="SheCess">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="SwachhBharatCess">Swachh Bharat Cess</label>
+                <input type="text" class="input" asp-for="SwachhBharatCess">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="KrishiKalyanCess">Krishi Kalyan Cess</label>
+                <input type="text" class="input" asp-for="KrishiKalyanCess">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Cgst">CGST</label>
+                <input type="text" class="input" asp-for="Cgst">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Sgst">SGST</label>
+                <input type="text" class="input" asp-for="Sgst">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Igst">IGST</label>
+                <input type="text" class="input" asp-for="Igst">
+            </div>
+            <div class="col-md-4 mb-3">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BillAmount">T. Fee</label>
+                <input type="text" class="input" asp-for="BillAmount">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <div class="dash-table">
+                    <table id="dtBillItemsList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Item S No.</th>
+                                <th>Item Description</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>UOM</th>
+                                <th>Basic</th>
+                                <th>Sales Tax %</th>
+                                <th>Sales Tax</th>
+                                <th>Excise %</th>
+                                <th>Excise</th>
+                                <th>Discount %</th>
+                                <th>Discount Value</th>
+                                <th>Other Charges</th>
+                                <th>Total Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="alert alert-warning">
+                Receipt Details
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="BillNo">Bill No.</label>
+                <input type="text" class="input" asp-for="BillNo" style="color: OrangeRed">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BillAmount">Bill Amount</label>
+                <input type="text" class="input" asp-for="BillAmount" style="color: OrangeRed">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Sgst">Amount Recieved Thru Cheque/DD</label>
+                <input type="text" class="input" asp-for="AmountRecievedThruChequeDD" style="color: DarkGreen">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Tds">TDS</label>
+                <input type="text" class="input" asp-for="Tds" style="color: OrangeRed">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BillNo">Retention Money</label>
+                <input type="text" class="input" asp-for="RetentionMoney" style="color: OrangeRed">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BillAmount">Write off Amt/Amt Adjusted</label>
+                <input type="text" class="input" asp-for="WriteOffAmt" style="color: OrangeRed">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Tds">CNote Amount</label>
+                <input type="text" class="input" asp-for="CnoteAmount" style="color: OrangeRed">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BillNo">Total Amount Recieved</label>
+                <input type="text" class="input" asp-for="TotalAmountReceived" style="color: OrangeRed">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BillAmount">Amount To Recover</label>
+                <input type="text" class="input" asp-for="AmountRecover" style="color: OrangeRed">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="alert alert-warning">
+                Cheque Wise Breakup Of Amount Recieved
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <div class="dash-table">
+                    <table id="dtChequeDetailsList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>Cheque No.</th>
+                                <th>Cheque Dt</th>
+                                <th>Cheque Amount</th>
+                                <th>Amount Cleared</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="savenext-btn">
@@ -59,6 +215,7 @@
 </form>
 
 @section scripts{
+    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
@@ -74,11 +231,110 @@
                 $("#TaxType_GST").show();
                 $("#TaxType").hide();
             }
-            else{
+            else {
                 $("#TaxType_GST").hide();
                 $("#TaxType").show();
             }
+
+            var BillNo = $("#BillNo").val();
+
+            if (BillNo != "") {
+                BindBillItemsList(BillNo);
+                BindChequeList(BillNo);
+            }
+
         });
+
+        function BindBillItemsList(_BillNo) {
+            $("#dtBillItemsList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: '500px',
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                info: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableBillItems")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "BillNo": _BillNo,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "ItemSrno" },
+                    { data: "ItemDesc" },
+                    { data: "Qty" },
+                    { data: "Rate" },
+                    { data: "UomSDesc" },
+                    { data: "BasicValue" },
+                    { data: "SalesTaxPer" },
+                    { data: "SalesTax" },
+                    { data: "ExcisePer" },
+                    { data: "Excise" },
+                    { data: "DiscountPer" },
+                    { data: "Discount" },
+                    { data: "OtherCharges" },
+                    { data: "Value" },
+                ],
+            });
+        }
+
+        function BindChequeList(_BillNo) {
+            $("#dtChequeDetailsList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: '500px',
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                info: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableChequeDetails")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "BillNo": _BillNo,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "BankName" },
+                    { data: "ChqNo" },
+                    {
+                        data: "ChqDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Amount" },
+                    { data: "AmountCleared" },
+                ],
+            });
+        }
 
     </script>
 

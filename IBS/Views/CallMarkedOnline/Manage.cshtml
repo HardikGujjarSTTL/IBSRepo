@@ -1,8 +1,19 @@
 ﻿@model IBS.Models.CallMarkedOnlineModel
-
-<div class="row">
-    <form asp-action="Manage" id="frmCallMarked">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@{    
+    ViewData["Title"] = "Call Marked Manage";    
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="CallMarkedOnline" class="formBtn viewall-btn" id="viewList">View List</a>
+    </div>
+</div>
+@*<div class="row">*@
+<form asp-action="Manage" asp-controller="" id="frmCallMarked">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="accordion-body" id="body">
         <div class="row my-0">
             <div class="col-md-3 mb-3">
                 <label for="Reference" style="padding-right:10px;">Case No :</label>
@@ -11,9 +22,11 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference" style="padding-right:10px;">Call Date - SNO :</label>
-                <span id="lblCallDate" style="text-transform: uppercase; color:red;"></span>
-                <span id="lblRegTime" style="text-transform: uppercase; color:red;"></span> -
-                <span id="lblSNo" style="text-transform: uppercase; color:red;"></span>
+                <label>
+                    <span id="lblCallDate" style="text-transform: uppercase; color:red;"></span>
+                    <span id="lblRegTime" style="text-transform: uppercase; color:red;"></span> -
+                    <span id="lblSNo" style="text-transform: uppercase; color:red;"></span>
+                </label>
                 <input type="hidden" asp-for="CALL_RECV_DT" />
                 <input type="hidden" asp-for="REG_TIME" />
                 <input type="hidden" asp-for="CALL_SNO" />
@@ -38,7 +51,7 @@
             <div class="col-md-9 mb-3">
                 <label for="Reference" style="padding-right:71px;">Vendor :</label>
                 <label id="lblVendor" style="text-transform: uppercase; color:red;"></label>
-                <input type="text" id="txtCALLLETTERDT" style="width:95px;" />
+                <input type="text" id="txtCALLLETTERDT" style="width:102px;display:none;" />
                 <input type="hidden" asp-for="VEND_NAME" />
             </div>
         </div>
@@ -46,7 +59,7 @@
             <div class="col-md-12 mb-3">
                 <label for="Reference" style="padding-right: 20px;">Manufacturer/Place of Inspection : </label>
                 <label id="lblMFG" style="text-transform: uppercase; color:red;"></label>
-                <label id="lblManuf" style="text-transform: uppercase;"></label>
+                <label id="lblManuf" style="text-transform: uppercase;display:none;"></label>
                 <input type="hidden" asp-for="MFG" />
                 <input type="hidden" asp-for="MFG_CD" />
             </div>
@@ -118,8 +131,8 @@
                 <div class="reference">
                     <label for="Reference">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
                     @Html.DropDownListFor(Model => Model.DEPT_DROPDOWN, new SelectList(@ViewBag.InspectedList , "Value", "Text"),"--Select--")
-                    <label id="lblDept_CD"></label> <input type="hidden" asp-for="DEPARTMENT_CODE" />
-                    <label id="lblDepartment"></label> <input type="hidden" asp-for="DEPARTMENT" />
+                    <label id="lblDept_CD" style="display:none;"></label> <input type="hidden" asp-for="DEPARTMENT_CODE" />
+                    <label id="lblDepartment" style="display:none;"></label> <input type="hidden" asp-for="DEPARTMENT" />
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -128,15 +141,18 @@
                 <input type="hidden" asp-for="FINAL_OR_STAGE" />
             </div>
         </div>
-        <div class="alert alert-warning center" style="text-align:center;">
-            <h4>PREVIOUS CALL DETAILS</h4>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-12 mb-3">
-                <label id="lblCall1" style="text-transform: uppercase; color:red;"></label>
-                <label id="lblCall2" style="text-transform: uppercase; color:red;"></label>
+        @if (Model.PREV_CALL_1 != null || Model.PREV_CALL_2 != null)
+        {
+            <div class="alert alert-warning center" style="text-align:center;">
+                <h4>PREVIOUS CALL DETAILS</h4>
             </div>
-        </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <div id="lblCall1" style="text-transform: uppercase; color:red;"></div>
+                    <div id="lblCall2" style="text-transform: uppercase; color:red;"></div>
+                </div>
+            </div>
+        }
         <div class="row my-0">
             <div class="col-md-12 mb-3">
                 <div class="savenext-btn">
@@ -164,8 +180,9 @@
                 </div>
             </div>
         </section>
-    </form>
-</div>
+    </div>
+</form>
+@*</div>*@
 
 <script>
     $(document).ready(function () {
@@ -174,18 +191,29 @@
             SaveCallMarkedDetail();
         });
 
+        $("#DEPT_DROPDOWN").change(function () {
+            FillClusterIE();
+        });
+
         $("#btnRejectCall").click(function () {
             $("#rejectCall").css("display", "block");
         });
 
         $("#btnCaseHistory").click(function () {
-            window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();;
+            //window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();
+            window.open("@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html(), "_blank");
         });
 
         //$("#btnCancel").click(function () {
         //    window.location.href = "@Url.Action("Index","CallMarkedOnline")";
         //});
+        $("#btnSaveReject").click(function () {
+            RejectCall();
+        });
 
+        $("#btnSendMail").click(function () {
+            IncompleteCall()
+        })
 
         $("#lblContractNo").html("@Model.PO_NO");
         $("#lblDate").html("@Model.PO_DT");
@@ -218,6 +246,16 @@
         $("#lblDept_CD").html("@Model.DEPARTMENT_CODE");
         $("#lblDepartment").html("@Model.DEPARTMENT");
         $("#lblFinalStageInspection").html("@Model.FINAL_OR_STAGE");
+
+        $("#lblCall1").html("@Model.PREV_CALL_1");
+        $("#lblCall2").html("@Model.PREV_CALL_2");
+
+        if ($("#lblItem").html() == "" || $("#lblQtyOffer").html() == "" || $("#lblQtyOffer").html() == "0") {
+            $("#btnSendMail").css("display", "block");
+        }
+        else {
+            $("#btnSendMail").css("display", "none");
+        }
     });
 
     function SaveCallMarkedDetail() {
@@ -234,9 +272,89 @@
                 if (response) {
                     ShowHideMsgNew(response, "Successful");
                 } else {
-                    ShowHideMsgNew(response, "Somthing went wrong");
+                    ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
                 }
                 console.log("success");
+            }
+        });
+    }
+
+    function RejectCall() {
+        var formData = new FormData($("#frmCallMarked")[0]);
+        $.ajax({
+            url: '@Url.Action("SendVendorMailForRejectedCall", "CallMarkedOnline")',
+            type: "POST",
+            dataType: "JSON",
+            data: formData,
+            processData: false, // Prevent jQuery from converting the data to a string
+            contentType: false,
+            success: function (response) {
+                debugger
+                if (response) {
+                    ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
+                    setTimeout(function () {
+                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                    }, 1000);
+                } else {
+                    ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
+                }
+            }
+        });
+    }
+
+    function IncompleteCall() {
+        var formData = new FormData($("#frmCallMarked")[0]);
+        $.ajax({
+            url: '@Url.Action("SendVendorEmailForIncompleteCall", "CallMarkedOnline")',
+            type: "POST",
+            dataType: "JSON",
+            data: formData,
+            processData: false, // Prevent jQuery from converting the data to a string
+            contentType: false,
+            success: function (response) {
+                debugger
+                if (response == 1) {
+                    ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
+                    setTimeout(function () {
+                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                    }, 1000);
+                }
+                else if (response == 2) {
+                    ShowHideMsgNew(false, "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!");
+                }
+                else {
+                    ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
+                }
+            }
+        });
+    }
+
+    function FillClusterIE() {
+        debugger
+        var dept = $("#DEPT_DROPDOWN").val();
+        $.ajax({
+            url: '@Url.Action("BindClusterIE", "CallMarkedOnline")',
+            type: "GET",
+            dataType: "JSON",
+            data: { DeptName: dept },
+            success: function (contacts) {
+                $("#IE_NAME").html(""); // clear before appending new list
+                $("#IE_NAME").append($('<option></option>').val(0).html("--Select--"));
+                if (contacts && contacts.length > 0) {
+                    $.each(contacts, function (i, cnt) {
+                        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    });
+                    //if (MfgCd1 > 0) {
+                    //    $.each(contacts, function (i, cnt) {
+                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    //    });
+                    //    $("#IE_NAME").val(MfgCd1);
+                    //} else {
+                    //    $.each(contacts, function (i, cnt) {
+                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                    //    });
+                    //}
+                }
             }
         });
     }

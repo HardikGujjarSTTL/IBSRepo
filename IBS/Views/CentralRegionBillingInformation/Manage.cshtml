@@ -1,0 +1,249 @@
+﻿@model IBS.Models.CentralRegionBillingInformationModel
+
+@{
+    ViewData["Title"] = "Manage Central Region Billing Information Master";
+    string clsView = "";
+    if (Model.BillNo != null)
+    {
+        clsView = "Permission_View";
+    }
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Central Region Billing Information</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="CentralRegionBillingInformation" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+<section id="tab-1" class="@clsView">
+    <div class="task-listinput">
+        <form role="form" asp-controller="CentralRegionBillingInformation" asp-action="BillingInformationSave" id="frmCentralRegion">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <input type="hidden" asp-for="IsEdited" />
+
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Bill No.</label>
+                        <input type="text" class="input" asp-for="BillNo">
+                        <span asp-validation-for="BillNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Bill Date </label>
+                        <input id="BillDt" asp-for="BillDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="BillDt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rly/ Non Rly </label>
+                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchase Order No.</label>
+                        <input type="text" class="input" asp-for="PoNo">
+                        <span asp-validation-for="PoNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PO Date </label>
+                        <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="PoDt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchaser</label>
+                        <textarea class="input" asp-for="Purchaser"> </textarea>
+                        <span asp-validation-for="Purchaser" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">BPO </label>
+                        <textarea class="input" asp-for="Bpo"> </textarea>
+                        <span asp-validation-for="Bpo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Consignee </label>
+                        <textarea class="input" asp-for="Consignee"> </textarea>
+                        <span asp-validation-for="Consignee" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Rail Description</label>
+                        @Html.DropDownListFor(model => model.RailDescID, new SelectList(IBS.Models.Common.GetRailPrices() , "Text", "Text"),"--Select--", new{ @onChange="FillRailPrices();"})
+                        <span asp-validation-for="RailDescID" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference"> </label>
+                        <input type="text" class="input" asp-for="RailDesc">
+                        <span asp-validation-for="RailDesc" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">IC No.</label>
+                        <input type="text" class="input" asp-for="IcNo">
+                        <span asp-validation-for="IcNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">IC Date </label>
+                        <input id="IcDt" asp-for="IcDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="IcDt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Base Price</label>
+                        <input type="text" class="input" asp-for="BasePrice">
+                        <span asp-validation-for="BasePrice" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Quantity </label>
+                        <input type="text" class="input" asp-for="Qty">
+                        <span asp-validation-for="Qty" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Total Base Value</label>
+                        <input type="text" class="input" asp-for="TotBaseValue">
+                        <span asp-validation-for="TotBaseValue" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Laying </label>
+                        <input type="text" class="input" asp-for="Laying">
+                        <span asp-validation-for="Laying" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Excise (%)</label>
+                        <input type="text" class="input" asp-for="ExcisePer">
+                        <span asp-validation-for="ExcisePer" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Excise </label>
+                        <input type="text" class="input" asp-for="Excise">
+                        <span asp-validation-for="Excise" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Sale Tax(%)</label>
+                        <input type="text" class="input" asp-for="SalesTaxPer">
+                        <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Sale Tax </label>
+                        <input type="text" class="input" asp-for="SalesTax">
+                        <span asp-validation-for="SalesTax" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Material Value</label>
+                        <input type="text" class="input" asp-for="MaterialValue">
+                        <span asp-validation-for="MaterialValue" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Fee Rate </label>
+                        <input type="text" class="input" asp-for="FeeRate">
+                        <span asp-validation-for="FeeRate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Inspection Fee</label>
+                        <input type="text" class="input" asp-for="InspFee">
+                        <span asp-validation-for="InspFee" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Bill Amount </label>
+                        <input type="text" class="input" asp-for="BillAmount">
+                        <span asp-validation-for="BillAmount" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Service Tax Rate</label>
+                        <input type="text" class="input" asp-for="ServTaxRate">
+                        <span asp-validation-for="ServTaxRate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Service Tax </label>
+                        <input type="text" class="input" asp-for="ServiceTax">
+                        <span asp-validation-for="ServiceTax" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">EDU CESS</label>
+                        <input type="text" class="input" asp-for="EduCess">
+                        <span asp-validation-for="EduCess" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">SHE CESS </label>
+                        <input type="text" class="input" asp-for="SheCess">
+                        <span asp-validation-for="SheCess" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Remarks</label>
+                        <textarea class="input" asp-for="Remarks"> </textarea>
+                        <span asp-validation-for="EduCess" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div id="AddEditConsigneeModal" class="modal" tabindex="-1" role="dialog">
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        
+        function SubmitBankData() {
+            if ($("#frmCentralRegion").valid()) {
+                $("#frmCentralRegion").submit();
+            }
+        }
+        function Save() {
+            if ($("#frmCentralRegion").valid()) {
+                if ('@Model.IsEdited' == 'False') {
+                    var BillNo = $("#BillNo").val();
+                    $.ajax({
+                        url: '@Url.Action("CheckAlreadyExist", "CentralRegionBillingInformation")?BillNo=' + BillNo,
+                        type: 'GET',
+                        cache: false,
+                        processData: false,
+                        contentType: false
+                    }).done(function (response) {
+                        if (response != null) {
+                            if (response.status) {
+                                $("#frmCentralRegion").submit();
+                            }
+                            else {
+                                ShowHideMsgNew(response.status, response.responseText);
+                            }
+                        }
+                    });
+                }
+                else{
+                    $("#frmCentralRegion").submit();
+                }
+            }
+        }
+        function FillRailPrices() {
+            $("#RailDesc").val($("#RailDescID").val());
+        }
+    </script>
+}

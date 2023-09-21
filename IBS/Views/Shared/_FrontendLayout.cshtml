@@ -1,0 +1,226 @@
+﻿@using IBS.Helper;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="~/frontend/images/favicon.ico">
+    <title>RITES Limited, A Government of India Enterprise</title>
+    <link href="~/frontend/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="~/frontend/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
+    <link href="~/frontend/css/front-style.css" type="text/css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="RITES Limited, A Government of India Enterprise" />
+    <script type="text/javascript" src="~/frontend/js/modernizr.js"></script>
+    <script type="text/javascript" src="~/frontend/js/jquery-min.js"></script>
+</head>
+
+<body class="noJS">
+    <div class="wrapper">
+        <header id="header">
+            <div class="headerRow">
+                <div class="container">
+                    <div class="logoRow">
+                        <div class="row m-0">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="mainLogo">
+                                    <a asp-action="Index" asp-controller="Fhome" title="RITES Limited, A Government of India Enterprise"><img src="~/frontend/images/rites-logo.png" alt="RITES Limited, A Government of India Enterprise" /></a>
+                                    <div class="brandDetail"> <span class="firstTitle">Quality Assurance Division</span> <span class="secondTitle">(A Government of India Enterprise)</span> <span class="secondTitle">An ISO 9001 Company/Accreditation to ISO/IEC 17020</span> </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="">
+                                    <ul class="rightLinks">
+                                        <li class="helpLineNumber">National Helpline Number <span>1800 425 7000 (TOLL FREE)</span> </li>
+                                        <li class="langSelectBoxIn">
+                                            <label for="languages" id="languageSelection">Language</label>
+                                            <select name="Languages" id="languages" title="Select Language" class="">
+                                                <option selected="selected" value="">English</option>
+                                                <option value="">हिन्दी</option>
+                                            </select>
+                                            <input type="submit" name="btnSearchLng" value="Go" id="btnSearchLng" class="goButton">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mainNavigationWrap">
+                <div class="container">
+                    <div id="mainNav" class="mainNavigation">
+                        <div class="menuPart cf">
+                            <ul id="nav">
+                                <li><a asp-action="Index" asp-controller="Fhome">Home</a></li>
+                                <li>
+                                    <a href="#" title="About Us">About Us</a>
+                                    <ul>
+                                        <li><a asp-action="QaDivisionProfile" asp-controller="AboutUs">QA Division Profile</a></li>
+                                        <li><a asp-action="ServiceSpectrum" asp-controller="AboutUs">Service Spectrum</a></li>
+                                        <li><a asp-action="Resources" asp-controller="AboutUs">Resources</a></li>
+                                        <li><a asp-action="OurClients" asp-controller="AboutUs">Our Clients</a></li>
+                                        <li><a asp-action="OurCommittment" asp-controller="AboutUs">Our Commitments</a></li>
+                                    </ul>
+                                </li>
+                                @*<li><a asp-action="Index" asp-controller="Home">Admin</a></li>*@
+                                <li>
+                                    <a href="#" title="Client">Client</a>
+                                    <ul>
+                                        <li><a asp-action="Index" asp-controller="Home">Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Vendor Performance</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Specific PO/CALL Status With Ddownloading facility of IC/TEST Plan</a></li>
+                                        <li><a asp-action="Index" asp-controller="ClientFeedback">Client Feedback</a></li>
+                                        <li><a asp-action="Index" asp-controller="OnlineComplaints">Facility to Register Online Rejection Advice</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" title="Vendor">Vendor</a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">Guidelines for Call Registration(for New, Existing Vendors & Uploading of Lab Payment Reciept)</a>
+                                            <ul>
+                                                <li><a href="~/frontend/pdf/IVRS_NEW.pdf" target="_blank">Interactive Automatic Call Desk Helpline No. 1800 425 7000 (Toll Free)</a></li>
+                                                <li><a href="~/frontend/pdf/General-Guidelines.PDF" target="_blank">General Guidelines to Regsiter Inspection Call</a></li>
+                                                <li><a href="~/frontend/pdf/Indicative-Guidelines.PDF" target="_blank">Indicative Guidelines to Suppliers For TPI</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="~/frontend/pdf/Vendor-Lab-Reciept-Upload-Mannual.pdf" target="_blank">Guidance for Uploading Lab Charges Payment Reciept</a></li>
+                                        <li>
+                                            <a href="javascript:void(0);">Inspection</a>
+                                            <ul>
+                                                <li><a asp-action="Index" asp-controller="Home">Po/call Registration</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Qty Enhancement</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">New Items In Alreday Registered Loa</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Documents Upload</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Specific Po/call Status</a></li>
+                                                <li><a asp-action="Index" asp-controller="Home">Download Insp Invoice</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a asp-action="Index" asp-controller="Home">Online Payment Through Gateway</a></li>
+                                        <li><a href="~/frontend/pdf/CRCharges.pdf" target="_blank">Cancellation Charges</a></li>
+                                        <li><a href="~/frontend/pdf/CRCharges.pdf" target="_blank">Rejection Charges</a></li>
+                                        <li><a href="javascript:void(0);" target="_blank">Lab Charges</a>
+                                            <ul>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-NR.pdf" target="_blank">Northern Region</a></li>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-WR.pdf" target="_blank">Western Region</a></li>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-SR.pdf" target="_blank">Southern Region</a></li>
+                                                <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-ER.pdf" target="_blank">Eastern Region</a></li>
+                                            </ul>    
+                                        </li>
+                                        <li><a asp-action="Index" asp-controller="VendorFeedback">Vendor Feedback</a></li>
+                                        <li><a href="~/frontend/pdf/BANK-DETAILS.PDF" target="_blank">Bank Details of All Regions</a></li>
+                                        <li><a href="javascript:void(0);" target="_blank">Manual Insp Call Format</a></li>
+                                        <li><a href="~/frontend/pdf/Online-Inspection-Invoice-of-RITES.pdf" target="_blank">Online Insp Invoice of Rites</a></li>
+                                    </ul>
+                                </li>
+                                @*<li><a href="#" title="Inspection engineer Interface">Inspection engineer Interface</a></li>*@
+                                <li><a href="#" title="Quick Links">Quick Links</a>
+                                    <ul>
+                                        <li><a asp-action="Index" asp-controller="Home">Client Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Vendor Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">IE Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">User Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Online Payment Through Gateway</a></li>
+                                        <li><a asp-action="Index" asp-controller="FeedbackSuggestion">FeddBack & Suggestions</a></li>
+                                        <li><a href="https://rites.com/" target="_blank">Online Payment Through Gateway</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#" title="Miscellaneous">Miscellaneous</a>
+                                    <ul>
+                                        <li><a asp-action="InfoInstructions" asp-controller="Miscellaneous">Info &amp; Instructions</a></li>
+                                        <li><a asp-action="PhotoGallery" asp-controller="Miscellaneous">Photo Gallery</a></li>
+                                        <li><a asp-action="QaChannelYouTube" asp-controller="Miscellaneous">QA Channel (YouTube)</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#" title="Contact Us">Contact Us</a>
+                                    <ul>
+                                        <li><a asp-action="NorthernRegion" asp-controller="ContactUs">Northern Region</a></li>
+                                        <li><a asp-action="WesternRegion" asp-controller="ContactUs">Western Region</a></li>
+                                        <li><a asp-action="SouthernRegion" asp-controller="ContactUs">Southern Region</a></li>
+                                        <li><a asp-action="EasternRegion" asp-controller="ContactUs">Eastern Region</a></li>
+                                        <li><a asp-action="CentralRegion" asp-controller="ContactUs">Central Region</a></li>
+                                        <li><a asp-action="ForeignInspection" asp-controller="ContactUs">Foreign Inspection</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        @RenderBody()
+       @* <div class="container">
+            <div class="innerContent">
+                
+                
+            </div>
+
+        </div>*@
+        <div class="ourClientSection">
+            <div class="container">
+                <div class="ourClientWrap">
+                    <h2 class="text-center">Our Clients</h2>
+                    <div class="ourClientSlider">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/01-indian-railways.jpg" alt="Indian Railways" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/02-dedicated-freight-corridor.jpg" alt="Dedicted Freight Corridor" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/03-dmrc.jpg" alt="Delhi Metro Rail Corporation" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/04-indian-railway-cofmow.jpg" alt="Indian Railway, COFMOW" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/05-central-organization-for-railway-electrification.jpg" alt="Central Organization for Railway Electrification" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/06-rail-vikas-nigam-limited.jpg" alt="Rail Vikas Nigam Limited" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/07-rail-coach-factory-kapurthala.jpg" alt="Rail Coach Factory, Kapurthala" /> </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="ourClientImageBox"> <img src="~/frontend/images/08-modern-coach-factory-raebareli.jpg" alt="Modern Coach Factory, Raibareli" /> </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="ourClientSlider-prev sliderSmallArrow" role="button" aria-label="Previous slide" tabindex="0"><img src="~/frontend/images/slider-left-arrow.png" alt="Left Arrow" /> </div>
+                        <div class="ourClientSlider-next sliderSmallArrow" role="button" aria-label="Next slide" tabindex="0"><img src="~/frontend/images/slider-right-arrow.png" alt="Right Arrow" /> </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footerStrip">
+            <div class="container">
+                <p>Copyright © 2023 RITES IT Division, Northern Region</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script type="text/javascript" src="~/frontend/js/bootstrap.min.js"></script>
+    <noscript class="displayNone">
+    </noscript>
+    <script type="text/javascript" src="~/frontend/js/functions.js"></script>
+    <noscript class="displayNone">
+    </noscript>
+    <script type="text/javascript" src="~/frontend/js/general.js"></script>
+    <noscript class="displayNone">
+    </noscript>
+
+</body>
+
+</html>

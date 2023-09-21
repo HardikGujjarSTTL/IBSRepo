@@ -1,0 +1,133 @@
+﻿@model IBS.Models.BillRaisedModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Billing Report";
+}
+<html>
+<head>
+    <title>Sector wise billing summary</title>
+</head>
+<body>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ExportExcel('xlsx')">Export table to excel</button>
+        <button type="button" class="save-btn active" onclick="ExportPDF('pdf')">Export table to pdf</button>
+    </div>
+    <br />
+    <table id="dtList" border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <tbody>
+            <tr>
+                <td width='100%' colspan='13'>
+                    <h5 align='center'><font face='Verdana'>@Model.Region</font></h5>
+                    @*<h5 align='center'><font face='Verdana'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</font></h5>*@
+                    @if (Model.BillSummary == "M")
+                    {
+                        <h5 align='center'><font face='Verdana'>Bills Raised During The Month of @Model.FromMonthName - @Model.FromYr (all figures in Rs.)</font></h5>
+                    }
+                    else
+                    {
+                        <h5 align='center'><font face='Verdana'>Bills Raised During The Period @Model.FromMonthName - @Model.FromYr to @Model.ToMonthName - @Model.ToYr (all figures in Rs.)</font></h5>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th width="2%" valign="top" align="center"><b><font size="2" face="Verdana">Sr. No.</font></b></th>
+                <th width="10%" valign="top" align="left"><b><font size="2" face="Verdana">Sector</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">Insp Fee</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">Service Tax</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">Edu. Cess</font></b></th>
+                <th width="11%" valign="top" align="right"><b><font size="2" face="Verdana">Sec.& Higher Edu Cess</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">Swachh Bharat Cess</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">Krishi Kalyan Cess</font></b></th>
+                <th width="7%" valign="top" align="right"><b><font size="2" face="Verdana">CGST</font></b></th>
+                <th width="7%" valign="top" align="right"><b><font size="2" face="Verdana">SGST</font></b></th>
+                <th width="7%" valign="top" align="right"><b><font size="2" face="Verdana">IGST</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">Total</font></b></th>
+                <th width="8%" valign="top" align="right"><b><font size="2" face="Verdana">No. Of Bills.</font></b></th>
+            </tr>
+            @if (Model != null && Model.lstBillSector.Count > 0)
+            {
+                int SrNo = 1;
+
+                int TotalINSP_FEE = 0;
+                int TotalSERVICE_TAX = 0;
+                int TotalEDU_CESS = 0;
+                int TotalSHE_CESS = 0;
+                int TotalSWACHH_BHARAT_CESS = 0;
+                int TotalKRISHI_KALYAN_CESS = 0;
+                int TotalCGST = 0;
+                int TotalSGST = 0;
+                int TotalIGST = 0;
+                int TotalBILL_AMOUNT = 0;
+                int TotalNO_OF_BILLS = 0;
+
+                @foreach (var item in Model.lstBillSector)
+                {
+                    <tr>
+                        <th align="center"><b><font size="2" face="Verdana">@SrNo</font></b></th>
+                        <th align="left"><b><font size="2" face="Verdana">@item.SECTOR</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.INSP_FEE</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.SERVICE_TAX</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.EDU_CESS</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.SHE_CESS</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.SWACHH_BHARAT_CESS</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.KRISHI_KALYAN_CESS</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.CGST</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.SGST</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.IGST</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.BILL_AMOUNT</font></b></th>
+                        <th align="right"><b><font size="2" face="Verdana">@item.NO_OF_BILLS</font></b></th>
+                    </tr>
+                    SrNo++;
+                    TotalINSP_FEE += Convert.ToInt32(@item.INSP_FEE);
+                    TotalSERVICE_TAX += Convert.ToInt32(@item.SERVICE_TAX);
+                    TotalEDU_CESS += Convert.ToInt32(@item.EDU_CESS);
+                    TotalSHE_CESS += Convert.ToInt32(@item.SHE_CESS);
+
+                    TotalSWACHH_BHARAT_CESS += Convert.ToInt32(@item.SWACHH_BHARAT_CESS);
+                    TotalKRISHI_KALYAN_CESS += Convert.ToInt32(@item.KRISHI_KALYAN_CESS);
+                    TotalCGST += Convert.ToInt32(@item.CGST);
+                    TotalSGST += Convert.ToInt32(@item.SGST);
+                    TotalIGST += Convert.ToInt32(@item.IGST);
+                    TotalBILL_AMOUNT += Convert.ToInt32(@item.BILL_AMOUNT);
+                    TotalNO_OF_BILLS += Convert.ToInt32(@item.NO_OF_BILLS);
+                }
+                <tr style="background:#d4d0c8;">
+                    <th align="center" colspan="2"><b><font size="2" face="Verdana">Total :</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalINSP_FEE</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalSERVICE_TAX</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalEDU_CESS</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalSHE_CESS</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalSWACHH_BHARAT_CESS</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalKRISHI_KALYAN_CESS</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalCGST</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalSGST</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalIGST</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT</font></b></th>
+                    <th align="right"><b><font size="2" face="Verdana">@TotalNO_OF_BILLS</font></b></th>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const actiontype = urlParams.get('ActionType');
+    });
+
+    function ExportExcel(type, fn, dl) {
+        var elt = document.getElementById('dtList');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('SectorBillExcel.' + (type || 'xlsx')));
+    }
+    function ExportPDF(type, fn, dl) {
+
+    }
+
+</script>

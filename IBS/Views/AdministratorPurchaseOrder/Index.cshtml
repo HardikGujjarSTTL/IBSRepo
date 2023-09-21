@@ -8,41 +8,44 @@
             <h2>Purchase Order List</h2>
         </div>
     </div>
-    <div class="accordion-body" style="margin-bottom: 11px !important;">
-        <div class="row my-0">
-            <div class="col-md-12 mb-12 center">
-                <h4> <b>In Case Of New PO</b></h4>
+    <div class="accordion-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="heading3">In Case Of New PO</h3>
             </div>
         </div>
-        <div class="row my-0">
-            <div class="col-md-1 mb-3">
+        <ul class="radioListForm">
+            <li>
                 <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">Railway</label><br>
-            </div>
-            <div class="col-md-1 mb-3">
+            </li>
+            <li>
                 <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">Private</label><br>
-            </div>
-            <div class="col-md-2 mb-3">
+            </li>
+            <li>
                 <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">Foreign Railway</label><br>
-            </div>
-            <div class="col-md-1 mb-3">
+            </li>
+            <li>
                 <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">PSU</label><br>
-            </div>
-            <div class="col-md-2 mb-3">
+            </li>
+            <li>
                 <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                 <label for="Reference" class="billInvoiceClass">State Government</label><br>
+            </li>
+           
+        </ul>
+        <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="list-btn">
+                <a class="formBtn Permission_Add" onclick="Add()"><span class="fa fa-plus"></span> Add New PO</a>
             </div>
-            <div class="col-md-3 mb-3">
-                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
-            </div>
-            <div class="col-md-2 mb-3">
-                <div class="savenext-btn">
-                    <a class="formBtn Permission_Add" onclick="Add()"><span class="fa fa-plus"></span> Add New PO</a>
-                </div>
-            </div>
+        </div>
         </div>
         </div>
     <div class="accordion-body">

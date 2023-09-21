@@ -9,7 +9,7 @@ public partial class T109LabSampleInfo
 
     public DateTime? CallRecvDt { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public byte? IeCd { get; set; }
 

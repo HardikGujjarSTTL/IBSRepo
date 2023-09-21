@@ -44,6 +44,8 @@ namespace IBS.Repositories.Inspection_Billing
                 model.PoiCd = POMaster.PoiCd;
                 model.L5noPo= POMaster.L5noPo;
                 model.InspectingAgency = POMaster.InspectingAgency;
+                model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
+                model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 var T14 = context.T14aPoNonrlies.Where(x => x.CaseNo == POMaster.CaseNo).FirstOrDefault();
                 if (T14 != null)
                 {
@@ -190,6 +192,10 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.UserId = model.UserId;
                 obj.InspectingAgency = model.InspectingAgency;
                 obj.L5noPo = model.L5noPo;
+                obj.Createdby = model.Createdby;
+                obj.Createddate = DateTime.Now;
+                obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
+                obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 context.T13PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -229,6 +235,10 @@ namespace IBS.Repositories.Inspection_Billing
                 POMaster.UserId = model.UserId;
                 POMaster.InspectingAgency = model.InspectingAgency;
                 POMaster.L5noPo = model.L5noPo;
+                POMaster.Updatedby = model.Updatedby;
+                POMaster.Updateddate = DateTime.Now;
+                POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
+                POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
 
@@ -423,6 +433,44 @@ namespace IBS.Repositories.Inspection_Billing
 
             dTResult.data = query;
             return dTResult;
+        }
+        public PO_MasterModel alreadyExistT80_PO_MASTER(AdministratorPurchaseOrderModel model)
+        {
+            PO_MasterModel models = new PO_MasterModel();
+            T80PoMaster POMaster = (from m in context.T80PoMasters
+                                    where m.PoNo == model.PoNo && m.PoDt == model.PoDt && m.RegionCode == model.RegionCode
+                                    select m).FirstOrDefault();
+
+            if (POMaster == null)
+            {
+                models = null;
+                return models;
+            }
+            else
+            {
+                models.CaseNo = POMaster.CaseNo.Trim();
+                models.PoDt = POMaster.PoDt;
+                return models;
+            }
+        }
+        public PO_MasterModel alreadyExistT13_PO_MASTER(AdministratorPurchaseOrderModel model)
+        {
+            PO_MasterModel models = new PO_MasterModel();
+            T13PoMaster POMaster = (from m in context.T13PoMasters
+                                    where m.PoNo == model.PoNo && m.PoDt == model.PoDt && m.RegionCode == model.RegionCode
+                                    select m).FirstOrDefault();
+
+            if (POMaster == null)
+            {
+                models = null;
+                return models;
+            }
+            else
+            {
+                models.CaseNo = POMaster.CaseNo.Trim();
+                models.PoDt = POMaster.PoDt;
+                return models;
+            }
         }
         public int POMasterSubDetailsInsertUpdate(PO_MasterDetailsModel model)
         {

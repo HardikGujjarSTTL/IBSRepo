@@ -1,0 +1,338 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "R") ReportTitle = "Remitance Reports";
+
+    ViewData["Title"] = ReportTitle;
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row report1" style="display: none">
+            <div class="row my-0">
+                <div class="col-md-6">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report1" name="RReport" value="Report1" checked>
+                                    <label for="Report1">Cheque Wise Remittance For The Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report2" name="RReport" value="Report2">
+                                    <label for="Report2">Bill Wise Remittance For The Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report3" name="RReport" value="Report3">
+                                    <label for="Report3">Bill Wise Remittance (Bills Created & Remitted For The Period)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report4" name="RReport" value="Report4">
+                                    <label for="Report4">Cheque Wise Bills Remitted For The Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report5" name="RReport" value="Report5">
+                                    <label for="Report5">Account Code Wise Remittance For The Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report6" name="RReport" value="Report6">
+                                    <label for="Report6">Client/BPO wise Bills Remitted against the cheque For The Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row my-0 divClient" style="display: none">
+                        <div class="col-md-6 mb-3">
+                            <label for="ClientType" id="lblClientType">Client Type</label> <br />
+                            @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.GetRailType() , "Value", "Text"),"--Select--",new { @onchange="GetBPORlyCd()" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ClientName" id="lblClientName">Select Client</label> <br />
+                            @Html.DropDownList("ClientName", new SelectList(IBS.Models.Common.GetBPORlyCd("") , "Value", "Text"),"--Select--" ,new { @onchange="GetlstBPOType()" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="custom-readio">
+                                <div class="company-checkbox">
+                                    <div class="remember">
+                                        <div class="remecheckbox">
+                                            <input type="radio" id="BPO1" name="BPO" value="BPO1" checked>
+                                            <label for="BPO1">All BPOs</label>
+                                        </div>
+                                    </div>
+                                    <div c lass="remember">
+                                        <div class="remecheckbox">
+                                            <input type="radio" id="BPO2" name="BPO" value="BPO2">
+                                            <label for="BPO2">Particular BPO</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3 divBPO" style="display: none">
+                            <label for="BPOName" id="lblClientName">Select BPO</label> <br />
+                            @Html.DropDownList("BPOName", new SelectList(IBS.Models.Common.GetlstBPOType("","") , "Value", "Text"))
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report7" name="RReport" value="Report7">
+                                    <label for="Report7">Statement For Excess Or Short Bills For The Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0 divCodeType">
+                <div class="col-md-6">
+                    <label for="FromDate">Account Codes :</label>
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="ACodeReport1" name="ACodeReport" value="ACodeReport1" checked>
+                                    <label for="ACodeReport1">All Account Codes</label>
+                                </div>
+                            </div>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="ACodeReport2" name="ACodeReport" value="ACodeReport2">
+                                    <label for="ACodeReport2">Particular Account Code</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3 divAccCode" style="display: none">
+                    <label for="BPOName" id="lblAccCode">Select Account Code</label> <br />
+                    @Html.DropDownList("AccCode", new SelectList(IBS.Models.Common.GetAccountCodeLst() , "Value", "Text"),"--Select--")
+                </div>
+            </div>
+            <br />
+            <div class="row my-0">
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="FromDate">For The Period From</label>
+                        <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="ToDate">To</label>
+                        <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                        <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            GetBPORlyCd();
+            GetlstBPOType();
+            if ('@ReportType' == 'R') {
+                $(".report1").css("display", "")
+            }
+
+        });
+
+        function GetBPORlyCd() {
+            $("#ClientName").empty();
+            $("#ClientName").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetBPORlyCd", "RemitanceReports")", { ClientType: $("#ClientType").val() }, function (response) {
+                if (response != null) {
+                    $("#ClientName").empty();
+                    $("#ClientName").append($('<option value="">--Select--</option>'));
+                    $.each(response.list, function (ind, val) {
+                        $("#ClientName").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
+        }
+
+        function GetlstBPOType() {
+            $("#BPOName").empty();
+            $("#BPOName").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetlstBPOType", "RemitanceReports")", { ClientType: $("#ClientType").val(), ClientName: $("#ClientName").val() }, function (response) {
+                if (response != null) {
+                    $("#BPOName").empty();
+                    $("#BPOName").append($('<option value="">--Select--</option>'));
+                    $.each(response.list, function (ind, val) {
+                        $("#BPOName").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
+        }
+
+        $('input[type=radio][name="RReport"]').change(function () {
+            if (this.value == "Report1" || this.value == "Report5") {
+                $(".divCodeType").css("display", "");
+                $(".divClient").css("display", "none");
+                $("#BPO1").prop("checked", true);
+                $("#ClientType").val("");
+                $("#ClientName").val("");
+                $("#BPOName").val("");
+            }
+            else if (this.value == "Report6") {
+                $(".divCodeType").css("display", "none");
+                $("#ACodeReport1").prop("checked", true);
+                $("#AccCode").val("");
+
+                $(".divClient").css("display", "");
+
+            }
+            else {
+                $(".divCodeType").css("display", "none");
+                $("#ACodeReport1").prop("checked", true);
+                $("#AccCode").val("");
+
+                $(".divClient").css("display", "none");
+                $("#BPO1").prop("checked", true);
+                $("#ClientType").val("");
+                $("#ClientName").val("");
+                $("#BPOName").val("");
+            }
+        });
+
+        $('input[type=radio][name="ACodeReport"]').change(function () {
+            if (this.value == "ACodeReport2") {
+                $(".divAccCode").css("display", "");
+                $("#AccCode").val("");
+            }
+            else {
+                $(".divAccCode").css("display", "none");
+                $("#AccCode").val("");
+            }
+        });
+
+        $('input[type=radio][name="BPO"]').change(function () {
+            if (this.value == "BPO2") {
+                $(".divBPO").css("display", "");
+                $("#BPOName").val("");
+            }
+            else {
+                $(".divBPO").css("display", "none");
+                $("#BPOName").val("");
+            }
+        });
+
+        function ViewReport1() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDate").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var AccCode = $("#AccCode").val();
+            var RReport = $('input[name="RReport"]:checked').val();
+
+            var BPOName = $("#BPOName").val();
+            var ClientType = $("#ClientType").val();
+            var ClientName = $("#ClientName").val();
+
+            let myObject = { ReportType, FromDate, ToDate, AccCode, RReport, BPOName, ClientType, ClientName };
+
+            var url = '@Url.Action("Manage", "RemitanceReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls1() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            $('#Report1').change();
+            $("#Report1").prop("checked", true);
+            $("#ACodeReport1").prop("checked", true);
+        }
+
+    </script>
+}

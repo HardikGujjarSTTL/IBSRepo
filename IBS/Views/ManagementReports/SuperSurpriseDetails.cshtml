@@ -1,0 +1,58 @@
+﻿@model IBS.Models.Reports.SuperSurpriseDetailsModel
+
+<div>
+    <h3 class="center">Super Surprise Details : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (@Model.Region)</h3>
+    <h3 class="center">Note: For details of Super/Surprise inspection please refer Super/Surprise report format - F/8.2/2/4</h3>
+
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Super Surprise No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Super Surprise Dt</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CM</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Scope of Sector Where Item is Covered</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Previous Internal/Consignee Rejections</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Discrepancy if any</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Overall outcome of the visit</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">SBU HEAD REMARKS/RECOMMENDATION</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstSuperSurprise != null && Model.lstSuperSurprise.Count > 0)
+                {
+                    @foreach (var item in Model.lstSuperSurprise)
+                    {
+                        <tr>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ID</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.SuperSurpriseNo</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_SuperSurpriseDt</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CoName</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.IeName</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.Vendor</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.ItemDesc</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.NameScopeItem</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.PreIntRej</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.Discrepancy</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.Outcome</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.SbuHeadRemarks</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

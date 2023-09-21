@@ -1,0 +1,79 @@
+﻿@model IBS.Models.DetailsofPurchaserWiseInspModel
+
+<div>
+     <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></font></p>
+    <br />
+    @{
+        if (ViewBag.ForGiven == "Yes")
+        {
+            <p align="center"><font size="3" face="Verdana"><b><u>NR Inspections For The Period  @ViewBag.From To @ViewBag.To (@ViewBag.ReportBase)</u></b></font></p>
+       }
+       else
+       {
+            <p align="center"><font size="3" face="Verdana"><b><u>NR Inspections For The Month of @ViewBag.month, @ViewBag.year (@ViewBag.ReportBase)</u></b></font></p>
+       }
+    
+    }
+    <br>
+    
+    <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
+        <tbody>
+            <tr>
+                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">PURCHASER</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">PO NO.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">PO DT.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">PO REMARKS</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DT.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">IC_NO.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">IC DT.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO.</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BPO</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">VISITS</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">INSP_FEE</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">VALUE</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">ITEM DESCRIPTION</font></b></th>
+
+            </tr>
+            @if (Model != null && Model.lstdetailspinsp.Count > 0)
+            {
+                var serialNumber = 1;
+                @foreach (var item in Model.lstdetailspinsp)
+                {
+
+                            <tr>
+                                <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                                <td width="3%" valign="top" align="Left"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.PURCHASER</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.PO_DT</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.REMARKS</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.IC_NO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.IC_DT</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.BK_NO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.SET_NO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.BILL_DATE</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.IE_SNAME</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.BPO</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.VISITS</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.VALUE</font></td>
+                                <td width="3%" valign="top" align="center"><font size="1" face="Verdana"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
+                    </tr>
+                    serialNumber++;
+                }                   
+
+            }
+        </tbody>
+    </table>
+   
+</div>
+
+
