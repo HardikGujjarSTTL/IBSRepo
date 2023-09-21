@@ -2326,3 +2326,71 @@ END sp_PCDOReport_FinancialBilling;
 
 
 ================
+
+create or replace PROCEDURE sp_PCDOReport_FinancialExpenditureRealization (
+    wYrMth_Past IN VARCHAR2,
+    CumYrPast IN VARCHAR2,
+    wYrMth IN NUMBER,
+    CumYrMth IN VARCHAR2,
+    byear IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    Select decode(Region_Code,'N','Northern','E','Eastern','W','Western','S','Southern','C','Central','Q','QA Corporate')Region_Code,
+				decode(Region_Code,'N','A','E','B','W','C','S','D','C','E','Q','F')Serial_Code,
+				Round((sum(DTM_EXP_FEE))/100000,2)DTM_EXP_FEE,
+				Round((sum(DTM_TAX_FEE))/100000,2)DTM_TAX_FEE,
+				Round((sum(CTM_EXP_FEE))/100000,2)CTM_EXP_FEE,
+				Round((sum(CTM_TAX_FEE))/100000,2)CTM_TAX_FEE,
+				Round((sum(CDTM_EXP_FEE))/100000,2)CDTM_EXP_FEE,
+				Round((sum(CDTM_TAX_FEE))/100000,2)CDTM_TAX_FEE,
+				Round((sum(CCTM_EXP_FEE))/100000,2)CCTM_EXP_FEE,
+				Round((sum(CCTM_TAX_FEE))/100000,2)CCTM_TAX_FEE,
+				Round((sum(TOA1))/100000,2)TOA1,
+				Round((sum(TOA2))/100000,2)TOA2,
+				Round((Round((sum(CCTM_EXP_FEE))/100000,2)/(Round((sum(TOA1))/100000,2)+Round((sum(TOA2))/100000,2)-Round((sum(CUTM_adj_Fee))/100000,2)))*100,2) OR_Actual,
+				Round(sum(TOR),2)TOR,
+				Round((sum(CUTM_adj_Fee))/100000,2) CUTM_adj_Fee 
+				FROM 
+				(SELECT Region_Code,Region_Code Serial_Code,sum(NVL(exp_amt,0)) DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP  
+				WHERE exp_per=wYrMth_Past GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,sum(NVL(tax_amt,0)) DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP  
+				WHERE exp_per=wYrMth_Past  GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,sum(NVL(exp_amt,0)) CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrPast AND wYrMth_Past GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,sum(NVL(tax_amt,0)) CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrPast AND wYrMth_Past GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,sum(NVL(exp_amt,0)) CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per=wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,sum(NVL(tax_amt,0)) CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per=wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,sum(NVL(exp_amt,0)) CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,sum(NVL(tax_amt,0)) CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,sum(NVL(INSP_FEE,0)) TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM V22A_BILLING_SUMMARY 
+				where substr(sector,1,1) in ('1','2', '3','5','6') and BILLING_YR_MTH BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,sum(NVL(LAB_EXP,0)) TOA2,0 TOR,0 CUTM_adj_Fee FROM t59_lab_exp 
+				where lab_bill_per BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,sum(NVL(E_TARGET,0)) TOR,0 CUTM_adj_Fee FROM T83_BE_TARGET 
+				where BE_PER=byear GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,sum(NVL(adjustment_amt,0)) CUTM_adj_Fee FROM t85_billing_adjustement_pcdo 
+				where adjusment_yr_mth between CumYrMth and wYrMth group by Region_Code
+				)
+                Group by Region_Code order by Serial_Code;
+
+END sp_PCDOReport_FinancialExpenditureRealization;
+=================================
+
