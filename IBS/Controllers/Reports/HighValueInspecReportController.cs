@@ -1,7 +1,8 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
-using IBS.Interfaces.Reports;
 using IBS.Models;
+using IBS.Models.Reports;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
@@ -9,30 +10,42 @@ using PuppeteerSharp;
 
 namespace IBS.Controllers.Reports
 {
-    public class CoComplaintJIRequiredController : BaseController
+    public class HighValueInspecReportController : BaseController
     {
         #region Variables
-        private readonly ICoComplaintJIRequiredRepository coComplaintJIRequiredRepository;
+        private readonly IHighValueInspecReportRepository highValueInspecReportRepository;
         private readonly IWebHostEnvironment env;
         #endregion
-        public CoComplaintJIRequiredController(ICoComplaintJIRequiredRepository _coComplaintJIRequiredRepository, IWebHostEnvironment _env)
+        public HighValueInspecReportController(IHighValueInspecReportRepository _highValueInspecReportRepository, IWebHostEnvironment _env)
         {
-            coComplaintJIRequiredRepository = _coComplaintJIRequiredRepository;
+            highValueInspecReportRepository = _highValueInspecReportRepository;
             this.env = _env;
         }
+        [Authorization("HighValueInspecReport", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Manage(string FinancialYearsText,string FinancialYearsValue)
+        public IActionResult Manage(string month,string year,string valinsp,string FromDate,string ToDate,string ICDate,string BillDate,string formonth,string forperiod)
         {
-            JIRequiredReport model = new() { FinancialYearsText = FinancialYearsText, FinancialYearsValue= FinancialYearsValue };
-            model.ReportTitle = "JI Complaints Report";
+            HighValueInspReport model = new()
+            {
+                month = month,
+                year = year,
+                valinsp = valinsp,
+                FromDate = FromDate,
+                ToDate = ToDate,
+                ICDate = ICDate,
+                BillDate = BillDate,
+                formonth = formonth,
+                forperiod = forperiod
+            };
+            model.ReportTitle = "High Value Inspection";
             return View(model);
         }
 
-        public IActionResult JICompReport(string FinancialYearsText, string FinancialYearsValue)
+        public IActionResult TopNHighValueInsp(string month, string year, string valinsp, string FromDate, string ToDate, string ICDate, string BillDate, string formonth, string forperiod)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -41,9 +54,13 @@ namespace IBS.Controllers.Reports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            JIRequiredReport model = coComplaintJIRequiredRepository.GetJIComplaintsList(FinancialYearsText,FinancialYearsValue);
-            ViewBag.Financialperiod = FinancialYearsText;
+            HighValueInspReport model = highValueInspecReportRepository.GetHighValueInspdata(month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod, Region);
             ViewBag.Regions = wRegion;
+            ViewBag.FromDT = FromDate;
+            ViewBag.ToDT = ToDate;
+            ViewBag.TotalInspValue = valinsp;
+            ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
+            ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
             return PartialView(model);
         }
 

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using IBS.Helper;
-using Newtonsoft.Json;
 
 namespace IBS.Controllers.Reports
 {
@@ -34,6 +33,7 @@ namespace IBS.Controllers.Reports
             else if (ReportType == "CLUSTER_X") model.ReportTitle = "Cluster Wise Performance Report";
             else if (ReportType == "ICSUBMIT") model.ReportTitle = "IC Submission Report";
             else if (ReportType == "CALLSWITHOUTIC") model.ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
+            else if (ReportType == "SUPSURPSUMM") model.ReportTitle = "CO Wise Super Surprise Summary";
 
             return View(model);
         }
@@ -62,50 +62,104 @@ namespace IBS.Controllers.Reports
         public IActionResult IEPerformance(DateTime FromDate, DateTime ToDate)
         {
             IEPerformanceModel model = managementReportsRepository.GetIEPerformanceData(FromDate, ToDate, Region);
+            GlobalDeclaration.IEPerformance = model;
             return PartialView(model);
         }
 
         public IActionResult ClusterPerformance(DateTime FromDate, DateTime ToDate)
         {
             ClusterPerformanceModel model = managementReportsRepository.GetClusterPerformanceData(FromDate, ToDate, Region);
+            GlobalDeclaration.ClusterPerformance = model;
             return PartialView(model);
         }
 
         public IActionResult RegionWiseBillingSummary(string FromYearMonth, string ToYearMonth)
         {
             RWBSummaryModel model = managementReportsRepository.GetRWBSummaryData(FromYearMonth, ToYearMonth);
+            GlobalDeclaration.RWBSummary = model;
             return PartialView(model);
         }
 
         public IActionResult RegionWiseComparisonOutstanding(DateTime FromDate, string Outstanding)
         {
             RWCOModel model = managementReportsRepository.GetRWCOData(FromDate, Outstanding);
+            GlobalDeclaration.RWCO = model;
             return PartialView(model);
         }
 
         public IActionResult ICSubmission(DateTime FromDate, DateTime ToDate)
         {
             ICSubmissionModel model = managementReportsRepository.GetICSubmissionData(FromDate, ToDate, Region);
+            GlobalDeclaration.ICSubmission = model;
             return PartialView(model);
         }
 
         public IActionResult PendingICAgainstCalls(DateTime FromDate, DateTime ToDate)
         {
             PendingICAgainstCallsModel model = managementReportsRepository.GetPendingICAgainstCallsData(FromDate, ToDate, Region);
+            GlobalDeclaration.PendingICAgainstCalls = model;
             return PartialView(model);
         }
 
         public IActionResult SuperSurpriseDetails(DateTime FromDate, DateTime ToDate, string ParticularCM, string ParticularSector)
         {
             SuperSurpriseDetailsModel model = managementReportsRepository.GetSuperSurpriseDetailsData(FromDate, ToDate, Region, ParticularCM, ParticularSector);
+            GlobalDeclaration.SuperSurpriseDetails = model;
+            return PartialView(model);
+        }
+
+        public IActionResult SuperSurpriseSummary(DateTime FromDate, DateTime ToDate)
+        {
+            SuperSurpriseSummaryModel model = managementReportsRepository.GetSuperSurpriseSummaryData(FromDate, ToDate, Region);
+            GlobalDeclaration.SuperSurpriseSummary = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF(string ReportType)
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+
+            if (ReportType == "IE_X")
+            {
+                IEPerformanceModel model = GlobalDeclaration.IEPerformance;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/IEPerformance.cshtml", model);
+            }
+            else if (ReportType == "CLUSTER_X")
+            {
+                ClusterPerformanceModel model = GlobalDeclaration.ClusterPerformance;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/ClusterPerformance.cshtml", model);
+            }
+            else if (ReportType == "RWB")
+            {
+                RWBSummaryModel model = GlobalDeclaration.RWBSummary;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/RegionWiseBillingSummary.cshtml", model);
+            }
+            else if (ReportType == "R")
+            {
+                RWCOModel model = GlobalDeclaration.RWCO;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/RegionWiseComparisonOutstanding.cshtml", model);
+            }
+            else if (ReportType == "ICSUBMIT")
+            {
+                ICSubmissionModel model = GlobalDeclaration.ICSubmission;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/ICSubmission.cshtml", model);
+            }
+            else if (ReportType == "CALLSWITHOUTIC")
+            {
+                PendingICAgainstCallsModel model = GlobalDeclaration.PendingICAgainstCalls;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", model);
+            }
+            else if (ReportType == "SUPSUR")
+            {
+                SuperSurpriseDetailsModel model = GlobalDeclaration.SuperSurpriseDetails;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/SuperSurpriseDetails.cshtml", model);
+            }
+            else if (ReportType == "SUPSURPSUMM")
+            {
+                SuperSurpriseSummaryModel model = GlobalDeclaration.SuperSurpriseSummary;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/SuperSurpriseSummary.cshtml", model);
+            }
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

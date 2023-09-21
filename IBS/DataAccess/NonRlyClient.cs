@@ -15,7 +15,7 @@ public partial class NonRlyClient
 
     public string? Contactdesignation { get; set; }
 
-    public decimal? Mobileno { get; set; }
+    public string? Mobileno { get; set; }
 
     public string? Emailid { get; set; }
 
@@ -28,4 +28,6 @@ public partial class NonRlyClient
     public int? Createdby { get; set; }
 
     public int? Isdeleted { get; set; }
+
+    public string? Orgntype { get; set; }
 }

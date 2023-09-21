@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-    public class ClientMasterController : BaseController
+    public class NonRlyClientMasterController : BaseController
     {
         #region Variables
-        private readonly IClientMasterRepository clientMasterRepository ;
+        private readonly INonRlyClientMasterRepository nonRlyClientMasterRepository;
         #endregion
-        public ClientMasterController(IClientMasterRepository _clientMasterRepository)
+        public NonRlyClientMasterController(INonRlyClientMasterRepository _nonRlyClientMasterRepository)
         {
-            clientMasterRepository = _clientMasterRepository;
+            nonRlyClientMasterRepository = _nonRlyClientMasterRepository;
         }
 
         public IActionResult Index()
@@ -21,40 +21,33 @@ namespace IBS.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-        {
-            DTResult<Clientmaster> dTResult  = clientMasterRepository.GetClientList(dtParameters);
-            return Json(dTResult);
-        }
-
         public IActionResult Manage(int id)
         {
             Clientmaster model = new();
             if (id > 0)
             {
-                model = clientMasterRepository.FindClientByID(id);
+                model = nonRlyClientMasterRepository.FindNonClientByID(id);
             }
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("ClientMaster", "Index", "edit")]
-        public IActionResult ClientDetailsave(Clientmaster model)
+        [Authorization("NonRlyClientMaster", "Index", "edit")]
+        public IActionResult NonClientDetailsave(Clientmaster model)
         {
             try
             {
                 if (model.Id > 0)
                 {
                     model.Updatedby = UserId;
-                    clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
                     AlertAddSuccess("Record Updated Successfully.");
                 }
                 else
                 {
                     model.Createdby = UserId;
-                    clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
                     AlertAddSuccess("Record Added Successfully.");
                 }
 
@@ -62,28 +55,34 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "ClientDetailsave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NonRlyClientMaster", "NonClientDetailsave", 1, GetIPAddress());
             }
             return View(model);
         }
 
-        [Authorization("ClientMaster", "Index", "delete")]
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<Clientmaster> dTResult = nonRlyClientMasterRepository.GetNonClientList(dtParameters);
+            return Json(dTResult);
+        }
+
+        [Authorization("NonRlyClientMaster", "Index", "delete")]
         public IActionResult Delete(int ID)
         {
             try
             {
-                if (clientMasterRepository.Remove(ID, UserId))
+                if (nonRlyClientMasterRepository.Remove(ID, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "Delete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NonRlyClientMaster", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("Index");
         }
-
     }
 }

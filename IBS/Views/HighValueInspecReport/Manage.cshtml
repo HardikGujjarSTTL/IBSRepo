@@ -1,19 +1,21 @@
-﻿@{
-    Layout = "";
+﻿@model IBS.Models.Reports.HighValueInspReport
+@{
+    Layout = null;
+    string ReportTitle = (Model != null ? Model.ReportTitle : "");
+    ViewData["Title"] = ReportTitle;
 }
+
 <html>
 <head>
-    <title>Item Wise Inspections For Tender Queries</title>
+    <title>@ReportTitle</title>
 </head>
 <body>
     <p align="right">
-        <input type="button" value="Print" id="btnPrint" />
-        <input type="button" value="Export To PDF" id="btnExportToPdf" />
-        <input type="button" value="Export To Excel" id="btnExportToExcel" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
-@Html.Raw(ViewBag.html)
-</div>
+    <div id="dvReportViewer"></div>
     <div class="overlayLoader" style="display: none">
         <div class="loaderHolder">
             <div class="lds-dual-ring"></div>
@@ -21,20 +23,30 @@
     </div>
 </body>
 </html>
+
 <link href="~/css/report.css" rel="stylesheet" />
 <script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
+
 <script type="text/javascript">
-    var fileName = 'ItemWiseInspectionsForTenderQueries';
 
-    $(document).ajaxSend(function () {
-        $(".overlayLoader").show();
+    var fileName = '';
+
+    $(document).ready(function () {
+        loadTopInspReport();
+        fileName = 'Top N High Inspection Report';
     });
 
-    $(document).ajaxComplete(function () {
-        $(".overlayLoader").hide();
-    });
+    function loadTopInspReport() {
+        $("#dvReportViewer").load("@Url.Action("TopNHighValueInsp")", {
+            month: '@Model.month', year: '@Model.year', valinsp: '@Model.valinsp', FromDate: '@Model.FromDate'
+            , ToDate: '@Model.ToDate', ICDate: '@Model.ICDate', BillDate: '@Model.BillDate', formonth: '@Model.formonth', forperiod: '@Model.forperiod'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -45,7 +57,10 @@
     });
 
     $("#btnExportToExcel").click(function () {
-        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
         let url = URL.createObjectURL(file);
         let a = $("<a />", {
             href: url,
@@ -58,7 +73,7 @@
         var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "PurchaseOrdersofSpecificValues")",
+            url: "@Url.Action("GeneratePDF", "HighValueInspecReport")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
             data: { htmlContent: HTML },
@@ -95,4 +110,13 @@
             }
         });
     }
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
 </script>
