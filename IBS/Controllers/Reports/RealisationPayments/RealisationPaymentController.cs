@@ -37,9 +37,15 @@ namespace IBS.Controllers.Reports.RealisationPayments
             return View(model);
         }
 
-        public IActionResult ManageCrisRlyDetail(string ReportType, DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
+        public IActionResult ManageCrisRlyDetail(string ReportType, DateTime FromDate, DateTime ToDate, string IsDetailed, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
         {
-            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
+            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, IsDetailed = IsDetailed, IsRly = IsRly, Rly = Rly, IsAU = IsAU, AU = AU, IsAllRegion = IsAllRegion, Status = Status };
+            return View("Manage", model);
+        }
+
+        public IActionResult ManageCrisRlySummary(string ReportType, DateTime FromDate, DateTime ToDate, string IsRlyWise, string Status)
+        {
+            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, IsRlyWise = IsRlyWise, Status = Status };
             return View("Manage", model);
         }
 
@@ -52,6 +58,12 @@ namespace IBS.Controllers.Reports.RealisationPayments
         public IActionResult SummaryCrisRlyPaymentDetail(DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
         {
             SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentDetailed(FromDate, ToDate, IsRly, Rly, IsAU, AU, IsAllRegion, Status, Region);
+            return PartialView(model);
+        }
+
+        public IActionResult SummaryCrisRlyPaymentSummary(DateTime FromDate, DateTime ToDate, string IsRlyWise, string Status)
+        {
+            SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentSummary(FromDate, ToDate, IsRlyWise, Status, Region);
             return PartialView(model);
         }
 

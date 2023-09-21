@@ -77,5 +77,30 @@ namespace IBS.Repositories.Reports.RealisationPayment
 
             return model;
         }
+
+        public SummaryCrisRlyPaymentModel GetSummaryCrisRlyPaymentSummary(DateTime FromDate, DateTime ToDate, string IsRlyWise, string Status, string Region)
+        {
+            SummaryCrisRlyPaymentModel model = new();
+            List<SummaryCrisRlyPaymentSummaryListModel> lstSummary = new();
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_STATUS", OracleDbType.Varchar2, Status, ParameterDirection.Input);            
+            par[3] = new OracleParameter("P_ISRLYWISE", OracleDbType.Varchar2, IsRlyWise, ParameterDirection.Input);            
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_SUMMARY_CRIS_RLY_PAYMENT_DETAILED", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lstSummary = JsonConvert.DeserializeObject<List<SummaryCrisRlyPaymentSummaryListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            model.lstCrisRlySummary = lstSummary;
+
+            return model;
+        }
     }
 }
