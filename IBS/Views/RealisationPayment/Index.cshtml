@@ -4,6 +4,7 @@
     string ReportTitle = string.Empty;
 
     if (ReportType == "ONLINENRPAYMENTS") ReportTitle = "Summary of Online Payment";
+    if (ReportType == "CRISRLY") ReportTitle = "Summary of CRIS-RLY Payments";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -38,8 +39,89 @@
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
             </div>
-        </div>                
-    </div>    
+        </div>
+        <div class="task-inner row CRISRLY" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">From</label>
+                    <input type="text" class="datepicker" id="FromDate_CRISRLY" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate_CRISRLY"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="ToDate_CRISRLY" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate_CRISRLY"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    @Html.CheckBox("chkAllRegion", true) All Region
+                </div>
+            </div>
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    @Html.RadioButton("rdType", "Detailed", new { @class = "text-darkblue font-bold font-size-8pt", @checked = true }) Detailed
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdType", "Summary", new { @class = "text-darkblue font-bold font-size-8pt"}) Summary
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 clsRailway" style="font-weight: bold;">
+                <div class="reference">
+                    @Html.RadioButton("rdRailway", "AllRailway", new { @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All Railways
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdRailway", "PartiRailway", new { @class = "text-darkblue font-bold font-size-8pt"}) Particular Railways
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 clsRailway">
+                <div class="reference">
+                    @Html.DropDownList("dpRailway", new SelectList(IBS.Models.Common.GetRailway().OrderBy(x => x.Value) , "Value", "Text"))
+                </div>
+            </div>
+            <div class="row my-0 clsAU">
+                <div class="col-md-4 mb-3 clsAU" style="font-weight: bold;">
+                    <div class="reference">
+                        @Html.RadioButton("rdAU", "AllAU", new { @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All AU's
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdAU", "PartiAU", new { @class = "text-darkblue font-bold font-size-8pt"}) Particular Railways
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 clsAU" style="font-weight: bold;">
+                    <div class="reference">
+                        @Html.DropDownList("dpAU", new SelectList(IBS.Models.Common.GetAUCrisByRlyCd("") , "Value", "Text"),"-- Select --")
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">                
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                    <label>Status</label>
+                        @Html.DropDownList("dpStatus", new SelectList(IBS.Models.Common.GetCRISRLYStatus() , "Value", "Text"))
+                        @Html.DropDownList("dpStatusDate", new SelectList(IBS.Models.Common.GetCRISRLYStatusDate() , "Value", "Text"))
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0 clsSummary">
+                <div class="col-md-5 mb-3 clsSummary" style="font-weight: bold;">
+                    <div class="reference">
+                        @Html.RadioButton("rdSummary", "RailwayWise", new { @class = "text-darkblue font-bold font-size-8pt", @checked = true }) Railway Wise Summary
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdSummary", "AUWise", new { @class = "text-darkblue font-bold font-size-8pt"}) AU Wise Summary
+                    </div>
+                </div>                
+            </div>
+            <div class="row my-0">
+                <label class="text-danger" id="lblMessage">Report Based on Bill Date!!!</label>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+                    @*<button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
@@ -50,8 +132,78 @@
 
         $(document).ready(function () {
             if ('@ReportType' == "ONLINENRPAYMENTS") {
-                $(".report1").css("display", "");               
-            }            
+                $(".report1").css("display", "");
+            }
+            else if ('@ReportType' == "CRISRLY") {
+                $(".CRISRLY").css("display", "");
+
+                $("#dpStatusDate").css("display", "none");
+                $("#dpRailway").css("display", "none");
+                $("#dpAU").css("display", "none");
+                $(".clsAU").css("display", "none");
+                $(".clsSummary").css("display", "none");
+                $('input[type=radio][id=rdType]').change(function () {
+                    var value = $(this).val();
+                    if (value == "Detailed") {
+                        $("#chkAllRegion").prop("disabled", false);
+                        $("#dpStatus").css("display", "");
+                        $("#dpStatusDate").css("display", "none");
+                        $(".clsSummary").css("display", "none");
+                        $(".clsRailway").css("display", "");
+                        //$(".clsAU").css("display", "");
+                    } 
+                    else {
+                        $("#chkAllRegion").prop("disabled", true);
+                        $("#dpStatus").css("display", "none");
+                        $("#dpStatusDate").css("display", "");
+                        $(".clsSummary").css("display", "");
+                        $(".clsRailway").css("display", "none");
+                        $(".clsAU").css("display", "none");
+                    }
+                });
+                $('input[type=radio][id=rdRailway]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllRailway") {
+                        $("#dpRailway").css("display", "none");
+                        $(".clsAU").css("display", "none");
+                    } else {
+                        $("#dpRailway").css("display", "");
+                        $(".clsAU").css("display", "");
+                    }
+                });
+                $('input[type=radio][id=rdAU]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllAU") {
+                        $("#dpAU").css("display", "none");
+                    } else {
+                        $("#dpAU").css("display", "");
+                    }
+                });
+                $('#dpStatus').change(function () {
+                    var value = $(this).val();
+                    if (value == "A" || value == "X") {
+                        $("#lblMessage").html("Report Based on Bill Date!!!");                        
+                    }
+                    else if (value == "P") {
+                        $("#lblMessage").html("Report Based on Payment Date!!!");
+                    }
+                    else if (value == "R") {
+                        $("#lblMessage").html("Report Based on Return Date!!!");
+                    }
+                    else if (value == "S") {
+                        $("#lblMessage").html("Report Based on Resubmit Date!!!");
+                    }
+                });
+                $('#dpStatusDate').change(function () {
+                    var value = $(this).val();                   
+                    if (value == "A") {
+                        $("#lblMessage").html("Report Based on Bill Date!!!");
+                    }
+                    else if (value == "P") {
+                        $("#lblMessage").html("Report Based on Payment Date!!!");
+                    }                    
+                });
+            }
         });
 
         // Clear Functions Start
@@ -60,7 +212,7 @@
             $("#ToDate").val("");
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
-        }       
+        }
         // Clear Functions End
 
         function ViewReport() {
@@ -94,10 +246,10 @@
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
             let myObject = { ReportType, FromDate, ToDate };
-            
+
             var url = '@Url.Action("Manage", "RealisationPayment")?' + $.param(myObject);
             window.open(url, '_blank');
-            
-        }        
+
+        }
     </script>
 }

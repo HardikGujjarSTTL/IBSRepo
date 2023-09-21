@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Models;
 using IBS.Models.Reports;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports.RealisationPayments
 {
@@ -30,15 +32,48 @@ namespace IBS.Controllers.Reports.RealisationPayments
 
         public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
         {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
+            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
             if (ReportType == "ONLINENRPAYMENTS") model.ReportTitle = "Summary Online Payment";
             return View(model);
         }
 
         public IActionResult SummaryOnlinePayment(DateTime FromDate, DateTime ToDate)
-        {
+        {            
             SummaryOnlinePaymentModel model = realisationPaymentRepository.GetSummaryOnlinePayment(FromDate, ToDate, Region);
             return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        {
+            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
+            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
     }
 }

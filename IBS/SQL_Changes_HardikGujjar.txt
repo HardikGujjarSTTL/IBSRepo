@@ -2333,7 +2333,10 @@ create or replace PROCEDURE sp_PCDOReport_FinancialExpenditureRealization (
     wYrMth IN NUMBER,
     CumYrMth IN VARCHAR2,
     byear IN VARCHAR2,
-    p_Result OUT SYS_REFCURSOR
+    p_Result OUT SYS_REFCURSOR,
+    p_Result1 OUT SYS_REFCURSOR,
+    p_Result2 OUT SYS_REFCURSOR,
+    p_Result3 OUT SYS_REFCURSOR
 ) AS
 BEGIN
     OPEN p_Result FOR
@@ -2390,6 +2393,85 @@ BEGIN
 				where adjusment_yr_mth between CumYrMth and wYrMth group by Region_Code
 				)
                 Group by Region_Code order by Serial_Code;
+
+OPEN p_Result1 FOR
+        Select decode(Region,'N','Northern','E','Eastern','W','Western','S','Southern','C','Central')Region,decode(Region,'N','A','E','B','W','C','S','D','C','E','Q','Z')Serial_Code,sum(real_amt)real_amt from 
+				(Select Region,Region Serial_Code,sum(to_number(decode(Region,'N',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 
+				UNION ALL 
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'E',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 
+				UNION ALL 
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'W',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 
+				UNION ALL 
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'S',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 
+				UNION ALL 
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'C',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region) 
+				Group by Region order by Serial_Code;
+
+    OPEN p_Result2 FOR
+        Select decode(Region,'N','Northern','E','Eastern','W','Western','S','Southern','C','Central','Q','QA')Region,decode(Region,'N','A','E','B','W','C','S','D','C','E','Q','Z')Serial_Code,sum(real_amt)real_amt from 			
+				(Select Region,Region Serial_Code,sum(to_number(decode(Region,'N',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 			
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 			
+				UNION ALL 			
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'E',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 			
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 			
+				UNION ALL 			
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'W',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 			
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 			
+				UNION ALL 			
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'S',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 			
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region 			
+				UNION ALL 			
+				Select Region,Region Serial_Code,sum(to_number(decode(Region,'C',Round((INSPECTION_FEE)/100000,2)+Round((advance_adjusted)/100000,2)+Round((lab_fee)/100000,2)+Round((receipt_fr_wr)/100000,2)+Round((receipt_fr_nr)/100000,2)+Round((receipt_fr_er)/100000,2)+Round((receipt_fr_sr)/100000,2)+Round((receipt_fr_cr)/100000,2)+Round((misc_receipt)/100000,2)-Round((transfer_to_wr)/100000,2)-Round((transfer_to_er)/100000,2)-Round((transfer_to_nr)/100000,2)-Round((transfer_to_sr)/100000,2)-Round((transfer_to_cr)/100000,2)-Round((misc_transfer)/100000,2),'0')))real_amt 			
+				from TEMP24_25_REALISATION where Region Not in('Q') Group by Region) 
+				Group by Region order by Serial_Code;
+
+    OPEN p_Result3 FOR
+        Select region_code,decode(region_code,'N','A','E','B','W','C','S','D','C','E')Serial_Code,sum(bill_am)bill_am,sum(cubill_amt)cubill_amt from 
+				(Select region_code,region_code Serial_Code,sum(to_number(decode(REGION_CODE,'N',(bill_amount)/100000,'0')))bill_am,0 cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between wYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,sum(to_number(decode(REGION_CODE,'E',(bill_amount)/100000,'0')))bill_am,0 cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between wYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,sum(to_number(decode(REGION_CODE,'W',(bill_amount)/100000,'0')))bill_am,0 cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between wYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,sum(to_number(decode(REGION_CODE,'S',(bill_amount)/100000,'0')))bill_am,0 cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between wYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,sum(to_number(decode(REGION_CODE,'C',(bill_amount)/100000,'0')))bill_am,0 cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between wYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select Region_Code, Region_Code Serial_Code,sum(to_number(decode(Region_Code,'N',(LAB_EXP*1.18)/100000,'0')))bill_am,0 culab_amt from t59_lab_exp where lab_bill_per=wYrMth group by Region_Code 
+				Union All 
+				Select Region_Code, Region_Code Serial_Code,sum(to_number(decode(Region_Code,'E',(LAB_EXP*1.18)/100000,'0')))bill_am,0 culab_amt from t59_lab_exp where lab_bill_per=wYrMth group by Region_Code 
+				Union All 
+				Select Region_Code, Region_Code Serial_Code,sum(to_number(decode(Region_Code,'W',(LAB_EXP*1.18)/100000,'0')))bill_am,0 culab_amt from t59_lab_exp where lab_bill_per=wYrMth group by Region_Code 
+				Union All 
+				Select Region_Code, Region_Code Serial_Code,sum(to_number(decode(Region_Code,'S',(LAB_EXP*1.18)/100000,'0')))bill_am,0 culab_amt from t59_lab_exp where lab_bill_per=wYrMth group by Region_Code 
+				Union All 
+				Select Region_Code, Region_Code Serial_Code,sum(to_number(decode(Region_Code,'C',(LAB_EXP*1.18)/100000,'0')))bill_am,0 culab_amt from t59_lab_exp where lab_bill_per=wYrMth group by Region_Code 
+				Union All 
+				Select region_code,region_code Serial_Code,0 bill_am,sum(to_number(decode(REGION_CODE,'N',(bill_amount)/100000,'0'))) cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between CumYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,0 bill_am,sum(to_number(decode(REGION_CODE,'E',(bill_amount)/100000,'0'))) cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between CumYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,0 bill_am,sum(to_number(decode(REGION_CODE,'W',(bill_amount)/100000,'0'))) cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between CumYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,0 bill_am,sum(to_number(decode(REGION_CODE,'S',(bill_amount)/100000,'0'))) cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between CumYrMth and wYrMth)Group by region_code 
+				Union All 
+				Select region_code,region_code Serial_Code,0 bill_am,sum(to_number(decode(REGION_CODE,'C',(bill_amount)/100000,'0'))) cubill_amt from V22_BILL where (to_char(BILL_DT,'YYYYMM') between CumYrMth and wYrMth)Group by region_code 
+				UNION ALL 
+				Select Region_Code,Region_Code Serial_Code,0 bill_am,sum(to_number(decode(Region_Code,'N',(LAB_EXP*1.18)/100000,'0'))) cubill_amt from t59_lab_exp where lab_bill_per between CumYrMth and wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,Region_Code Serial_Code,0 bill_am,sum(to_number(decode(Region_Code,'E',(LAB_EXP*1.18)/100000,'0'))) cubill_amt from t59_lab_exp where lab_bill_per between CumYrMth and wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,Region_Code Serial_Code,0 bill_am,sum(to_number(decode(Region_Code,'W',(LAB_EXP*1.18)/100000,'0'))) cubill_amt from t59_lab_exp where lab_bill_per between CumYrMth and wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,Region_Code Serial_Code,0 bill_am,sum(to_number(decode(Region_Code,'S',(LAB_EXP*1.18)/100000,'0'))) cubill_amt from t59_lab_exp where lab_bill_per between CumYrMth and wYrMth group by Region_Code 
+				UNION ALL 
+				Select Region_Code,Region_Code Serial_Code,0 bill_am,sum(to_number(decode(Region_Code,'C',(LAB_EXP*1.18)/100000,'0'))) cubill_amt from t59_lab_exp where lab_bill_per between CumYrMth and wYrMth group by Region_Code) 
+				Group by region_code order by Serial_Code;
 
 END sp_PCDOReport_FinancialExpenditureRealization;
 =================================

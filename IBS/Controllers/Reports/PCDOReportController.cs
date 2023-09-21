@@ -4,16 +4,20 @@ using IBS.Models;
 using IBS.Models.Reports;
 using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 
 namespace IBS.Controllers.Reports
 {
     public class PCDOReportController : BaseController
     {
         private readonly IPCDOReportRepository pCDOReportController;
+        private readonly IWebHostEnvironment env;
 
-        public PCDOReportController(IPCDOReportRepository _pCDOReportController)
+        public PCDOReportController(IPCDOReportRepository _pCDOReportController, IWebHostEnvironment env)
         {
             pCDOReportController = _pCDOReportController;
+            this.env = env;
         }
 
         #region CO Highlight
@@ -181,5 +185,36 @@ namespace IBS.Controllers.Reports
         }
 
         #endregion
+
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        {
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
     }
 }
