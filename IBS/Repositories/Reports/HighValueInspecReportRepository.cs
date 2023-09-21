@@ -79,29 +79,6 @@ namespace IBS.Repositories.Reports
                     break; 
                 }
             }
-
-            //if (ds != null && ds.Tables.Count > 0)
-            //{
-            //    dt = ds.Tables[0];
-            //    List<ValueInspList> listcong = dt.AsEnumerable().Select(row => new ValueInspList
-            //    {
-            //        BillNo = row.Field<string>("BillNo"),
-            //        BillDate = DateTime.TryParseExact(row.Field<string>("COMPLAINT_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue)
-            //        ? dateValue
-            //        : (DateTime?)null,
-            //        CaseNo = row.Field<string>("CONSIGNEE"),
-            //        EngName = row.Field<string>("PO"),
-            //        VENDOR = row.Field<string>("IE_NAME"),
-            //        CONSIGNEE = row.Field<string>("INSP_REGION_NAME"),
-            //        ITEMDESC = row.Field<string>("IC"),
-            //        MATERIALVALUE = row.Field<string>("BK_NO") + "/" + row.Field<string>("SET_NO"),
-            //        INSPFEE = row.Field<string>("VENDOR"),
-            //        ICDate = DateTime.TryParseExact(row.Field<string>("JI_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValues)
-            //        ? dateValues
-            //        : (DateTime?)null,
-            //    }).ToList();
-            //    model.lstValueInspList = listcong;
-            //}
             model.lstValueInspList = listcong;
             return model;
         }
