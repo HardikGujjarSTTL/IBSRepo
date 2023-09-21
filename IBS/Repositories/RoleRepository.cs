@@ -313,6 +313,7 @@ namespace IBS.Repositories
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model = JsonConvert.DeserializeObject<List<MenuListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
             }
+
             query = model.AsQueryable();
 
             dTResult.recordsTotal = query.Count();

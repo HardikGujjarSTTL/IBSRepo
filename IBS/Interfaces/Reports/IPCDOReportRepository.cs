@@ -8,6 +8,7 @@ namespace IBS.Interfaces.Reports
         List<HighlightReportsModel> GetHighlightData(string p_wYrMth);
 
         List<FinancialBillingModel> GetFinancialBillingData(int dmonth, string wYrMth_Past, string CumYrPast, string wYrMth, string CumYrMth, int byear);
+        FinancialExpenditureRealizationMainModel GetFinancialExpenditureRealizationData(string wYrMth_Past, string CumYrPast, string wYrMth, string CumYrMth, int byear);
 
     }
 }

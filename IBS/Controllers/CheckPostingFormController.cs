@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace IBS.Controllers
        
 
         [HttpPost]
+        [Authorization("CheckPostingForm", "Index", "view")]
         public IActionResult ChequePost([FromBody] DTParameters dtParameters)
         {
             DTResult<CheckPostingFormModel> dTResult = checkpostingrepository.BillList(dtParameters);
@@ -38,7 +40,7 @@ namespace IBS.Controllers
                 
         }
 
-      
+        [Authorization("CheckPostingForm", "Index", "view")]
         public IActionResult Index(string BankNameDropdown="", string CHQ_NO = "", string CHQ_DATE = "") 
         {
       
@@ -49,6 +51,8 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("CheckPostingForm", "Index", "view")]
+
         public IActionResult FindByID( string billNo)
             {
             CheckPostingFormModel model = new CheckPostingFormModel();
@@ -66,6 +70,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("CheckPostingForm", "Index", "view")]
         public JsonResult UpdateInfo() {
             try
             {

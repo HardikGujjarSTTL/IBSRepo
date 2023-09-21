@@ -1017,6 +1017,59 @@ END;
 
 ================
 
+//create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
+//(
+//    p_ROLEID IN NUMBER,
+//    p_cursor OUT SYS_REFCURSOR
+//)
+//AS
+//BEGIN
+//    OPEN p_cursor FOR
+//        SELECT
+//            CONNECT_BY_ROOT(m.ID) AS RootParentID,
+//            m.ID AS ParentID,
+//            NULL AS ChildID,
+//            m.TITLE AS ParentTitle,
+//            NULL AS ChildTitle,
+//            m.ID AS ID,
+//            CASE
+//                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
+//                ELSE 'False'
+//            END AS Selected,
+//            (SELECT IsAdd FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
+//            (SELECT IsEdit FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
+//            (SELECT PIsDelete FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
+//            (SELECT IsView FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
+//        FROM MENU_MASTER m
+//        WHERE m.PARENTID IS NULL
+//        AND m.IsDisplay = 1
+//        CONNECT BY PRIOR m.ID = m.PARENTID
+
+//        UNION ALL
+
+//        SELECT
+//            CONNECT_BY_ROOT(p.ID) AS RootParentID,
+//            p.PARENTID AS ParentID,
+//            c.ID AS ChildID,
+//            p.TITLE AS ParentTitle,
+//            c.TITLE AS ChildTitle,
+//            c.ID AS ID,
+//            CASE
+//                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
+//                ELSE 'False'
+//            END AS Selected,
+//            (SELECT IsAdd FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
+//            (SELECT IsEdit FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
+//            (SELECT PIsDelete FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
+//            (SELECT IsView FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
+//        FROM MENU_MASTER p
+//        JOIN MENU_MASTER c ON p.ID = c.PARENTID
+//        AND p.IsDisplay = 1
+//        CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
+
+//        ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
+//END;
+
 create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 (
     p_ROLEID IN NUMBER,
@@ -1024,51 +1077,125 @@ create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 )
 AS
 BEGIN
-    OPEN p_cursor FOR
-        SELECT
-            CONNECT_BY_ROOT(m.ID) AS RootParentID,
-            m.ID AS ParentID,
-            NULL AS ChildID,
-            m.TITLE AS ParentTitle,
-            NULL AS ChildTitle,
-            m.ID AS ID,
-            CASE
-                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
-                ELSE 'False'
-            END AS Selected,
-            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
-            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
-            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
-            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
-        FROM MENU_MASTER m
-        WHERE m.PARENTID IS NULL
-        AND m.IsDisplay = 1
-        CONNECT BY PRIOR m.ID = m.PARENTID
+OPEN p_cursor FOR
+WITH RecursiveMenu (id, parentid, controllername, actionname, title, menudescription, role_id, iconcssclass, isactive, sortorder, iconpath, isdisplay,
+Selected,IsAdd,IsEdit,PIsDelete,IsView) AS (
+    SELECT
+        v.id,
+        v.parentid,
+        v.controllername,
+        v.actionname,
+        v.title,
+        v.menudescription,
+        v.role_id,
+        v.iconcssclass,
+        v.isactive,
+        v.sortorder,
+        v.iconpath,
+        v.isdisplay,
+        CASE
+            WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) > 0 THEN 'True'
+            ELSE 'False'
+        END AS Selected,
+        (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsAdd,
+        (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsEdit,
+        (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS PIsDelete,
+        (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsView
+    FROM
+        menu_master v
+    WHERE
+        parentid IS NULL
+    UNION ALL
+    SELECT
+        m.id,
+        m.parentid,
+        m.controllername,
+        m.actionname,
+        m.title,
+        m.menudescription,
+        m.role_id,
+        m.iconcssclass,
+        m.isactive,
+        m.sortorder,
+        m.iconpath,
+        m.isdisplay,
+        CASE
+            WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) > 0 THEN 'True'
+            ELSE 'False'
+        END AS Selected,
+        (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsAdd,
+        (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsEdit,
+        (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS PIsDelete,
+        (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsView
+    FROM
+        menu_master m
+    INNER JOIN
+        RecursiveMenu rm ON m.parentid = rm.id
+)
 
-        UNION ALL
 
-        SELECT
-            CONNECT_BY_ROOT(p.ID) AS RootParentID,
-            p.PARENTID AS ParentID,
-            c.ID AS ChildID,
-            p.TITLE AS ParentTitle,
-            c.TITLE AS ChildTitle,
-            c.ID AS ID,
-            CASE
-                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
-                ELSE 'False'
-            END AS Selected,
-            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
-            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
-            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
-            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
-        FROM MENU_MASTER p
-        JOIN MENU_MASTER c ON p.ID = c.PARENTID
-        AND p.IsDisplay = 1
-        CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
+SELECT
+    id,
+    parentid,
+    controllername,
+    actionname,
+    title,
+    menudescription,
+    role_id,
+    iconcssclass,
+    isactive,
+    sortorder,
+    iconpath,
+    isdisplay,
+    Selected,
+    IsAdd,
+    IsEdit,
+    PIsDelete,
+    IsView
+FROM
+    RecursiveMenu
+START WITH
+    parentid IS NULL
+CONNECT BY
+    PRIOR id = parentid
+ORDER SIBLINGS BY
+    parentid, id; 
 
-        ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
+
 END;
+
+========================
+
+SELECT
+    id,
+    parentid,
+    controllername,
+    actionname,
+    title,
+    menudescription,
+    role_id,
+    iconcssclass,
+    isactive,
+    sortorder,
+    iconpath,
+    isdisplay,
+    Selected,
+    IsAdd,
+    IsEdit,
+    PIsDelete,
+    IsView
+FROM
+    RecursiveMenu
+START WITH
+    parentid IS NULL
+CONNECT BY
+    PRIOR id = parentid
+ORDER SIBLINGS BY
+    parentid, id; 
+
+
+END;
+
 ====================
 create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
     p_cs_no VARCHAR2,
@@ -2199,3 +2326,71 @@ END sp_PCDOReport_FinancialBilling;
 
 
 ================
+
+create or replace PROCEDURE sp_PCDOReport_FinancialExpenditureRealization (
+    wYrMth_Past IN VARCHAR2,
+    CumYrPast IN VARCHAR2,
+    wYrMth IN NUMBER,
+    CumYrMth IN VARCHAR2,
+    byear IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    Select decode(Region_Code,'N','Northern','E','Eastern','W','Western','S','Southern','C','Central','Q','QA Corporate')Region_Code,
+				decode(Region_Code,'N','A','E','B','W','C','S','D','C','E','Q','F')Serial_Code,
+				Round((sum(DTM_EXP_FEE))/100000,2)DTM_EXP_FEE,
+				Round((sum(DTM_TAX_FEE))/100000,2)DTM_TAX_FEE,
+				Round((sum(CTM_EXP_FEE))/100000,2)CTM_EXP_FEE,
+				Round((sum(CTM_TAX_FEE))/100000,2)CTM_TAX_FEE,
+				Round((sum(CDTM_EXP_FEE))/100000,2)CDTM_EXP_FEE,
+				Round((sum(CDTM_TAX_FEE))/100000,2)CDTM_TAX_FEE,
+				Round((sum(CCTM_EXP_FEE))/100000,2)CCTM_EXP_FEE,
+				Round((sum(CCTM_TAX_FEE))/100000,2)CCTM_TAX_FEE,
+				Round((sum(TOA1))/100000,2)TOA1,
+				Round((sum(TOA2))/100000,2)TOA2,
+				Round((Round((sum(CCTM_EXP_FEE))/100000,2)/(Round((sum(TOA1))/100000,2)+Round((sum(TOA2))/100000,2)-Round((sum(CUTM_adj_Fee))/100000,2)))*100,2) OR_Actual,
+				Round(sum(TOR),2)TOR,
+				Round((sum(CUTM_adj_Fee))/100000,2) CUTM_adj_Fee 
+				FROM 
+				(SELECT Region_Code,Region_Code Serial_Code,sum(NVL(exp_amt,0)) DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP  
+				WHERE exp_per=wYrMth_Past GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,sum(NVL(tax_amt,0)) DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP  
+				WHERE exp_per=wYrMth_Past  GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,sum(NVL(exp_amt,0)) CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrPast AND wYrMth_Past GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,sum(NVL(tax_amt,0)) CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrPast AND wYrMth_Past GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,sum(NVL(exp_amt,0)) CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per=wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,sum(NVL(tax_amt,0)) CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per=wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,sum(NVL(exp_amt,0)) CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,sum(NVL(tax_amt,0)) CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM T63_EXP 
+				WHERE exp_per BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,sum(NVL(INSP_FEE,0)) TOA1,0 TOA2,0 TOR,0 CUTM_adj_Fee FROM V22A_BILLING_SUMMARY 
+				where substr(sector,1,1) in ('1','2', '3','5','6') and BILLING_YR_MTH BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,sum(NVL(LAB_EXP,0)) TOA2,0 TOR,0 CUTM_adj_Fee FROM t59_lab_exp 
+				where lab_bill_per BETWEEN CumYrMth AND wYrMth GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,sum(NVL(E_TARGET,0)) TOR,0 CUTM_adj_Fee FROM T83_BE_TARGET 
+				where BE_PER=byear GROUP BY region_code 
+				UNION ALL 
+				SELECT Region_Code,Region_Code Serial_Code,0 DTM_EXP_FEE,0 DTM_TAX_FEE,0 CTM_EXP_FEE,0 CTM_TAX_FEE,0 CDTM_EXP_FEE,0 CDTM_TAX_FEE,0 CCTM_EXP_FEE,0 CCTM_TAX_FEE,0 TOA1,0 TOA2,0 TOR,sum(NVL(adjustment_amt,0)) CUTM_adj_Fee FROM t85_billing_adjustement_pcdo 
+				where adjusment_yr_mth between CumYrMth and wYrMth group by Region_Code
+				)
+                Group by Region_Code order by Serial_Code;
+
+END sp_PCDOReport_FinancialExpenditureRealization;
+=================================
+
