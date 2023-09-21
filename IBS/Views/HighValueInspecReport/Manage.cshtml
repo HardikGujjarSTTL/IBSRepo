@@ -41,7 +41,7 @@
     function loadTopInspReport() {
         $("#dvReportViewer").load("@Url.Action("TopNHighValueInsp")", {
             month: '@Model.month', year: '@Model.year', valinsp: '@Model.valinsp', FromDate: '@Model.FromDate'
-            , ToDate: '@Model.ToDate', ICDate: '@Model.ICDate', BillDate: '@Model.BillDate', formonth: '@Model.formonth', forperiod: '@Model.forperiod'
+            , ToDate: '@Model.ToDate', ICDate: '@Model.ICDate', BillDate: '@Model.BillDate', formonth: '@Model.formonth', forperiod: '@Model.forperiod', monthChar: '@Model.monthChar'
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

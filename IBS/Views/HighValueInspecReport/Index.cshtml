@@ -1,6 +1,6 @@
 ﻿<div class="list-inner">
     <div class="tast-list">
-        <h2>HIGH VALUE INSPECTIONS</h2>
+        <h2>Top N HIGH VALUE INSPECTIONS</h2>
     </div>
 </div>
 
@@ -71,7 +71,7 @@
                                 <div>
                                     
                                     <label for="valinsp">No. of High Value Inspections</label>
-                                    <input type="text"  id="valinsp" />
+                                    <input type="text" onkeypress="return isNumber(event)" maxlength="10"  id="valinsp"/>
                                     <span class="text-danger field-validation-error" id="spnErrorvalinsp"></span>
                                    
                                 </div>
@@ -99,11 +99,15 @@
          $('#forperiod').change(function () {
             $("#forperioddt").show();
             $("#fromothyear").hide();
+            $("#month").val('');
+            $("#year").val('');
          });
 
         $('#formonth').change(function () {
             $("#forperioddt").hide();
             $("#fromothyear").show();
+            $("#FromDate").val('');
+            $("#ToDate").val('');
          });
 
         function GetViewReport() {
@@ -144,12 +148,11 @@
                 }
             }
 
-
             if (!IsValid) return;
 
             var IsValid = true;
-
-            var month = $('#month').val();
+            var monthChar = $('#month option:selected').text();
+            var month = getMonthNumber(monthChar);
             var year = $('#year').val();
             var valinsp = $('#valinsp').val();
             var FromDate = $('#FromDate').val();
@@ -159,7 +162,7 @@
             var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
             var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
 
-            let myObject = { month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod };
+                let myObject = { month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod,monthChar };
 
             var url = '@Url.Action("Manage", "HighValueInspecReport")?' + $.param(myObject);
             window.open(url, '_blank');
@@ -174,6 +177,15 @@
             $("#spnErrorvalinsp").val('');
             $("#ICDate").prop("checked", true);
             $("#formonth").prop("checked", true);
+            $("#forperioddt").hide();
+            $("#fromothyear").show();
+        }
+
+        function getMonthNumber(monthName) {
+
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0'); 
+            return monthNumber;
         }
     </script>
 }

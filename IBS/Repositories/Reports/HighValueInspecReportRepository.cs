@@ -33,15 +33,14 @@ namespace IBS.Repositories.Reports
 
             model.month = month; model.year = year; model.valinsp = valinsp; model.FromDate = FromDate; model.ToDate = ToDate; model.ICDate = ICDate; model.BillDate = BillDate; model.formonth = formonth; model.forperiod = forperiod;
 
-            OracleParameter[] par = new OracleParameter[8];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2,Region , ParameterDirection.Input);
             par[1] = new OracleParameter("p_rdoBill", OracleDbType.Varchar2,BillDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_rdoDt", OracleDbType.Varchar2,forperiod , ParameterDirection.Input);
             par[3] = new OracleParameter("p_fromdt", OracleDbType.Varchar2,FromDate , ParameterDirection.Input);
             par[4] = new OracleParameter("p_todate", OracleDbType.Varchar2,ToDate , ParameterDirection.Input);
-            par[5] = new OracleParameter("p_month", OracleDbType.Varchar2,month , ParameterDirection.Input);
-            par[6] = new OracleParameter("p_year", OracleDbType.Varchar2,year , ParameterDirection.Input);
-            par[7] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_monthyear", OracleDbType.Varchar2,year+month , ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
 
             ds = DataAccessDB.GetDataSet("GetNHighValueInspReport", par, 1);
 
