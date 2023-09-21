@@ -2,19 +2,21 @@
 
 <div>
     <h3 class="heading3">@ViewBag.Regions</h3>
+    <h3 class="heading3">Top @ViewBag.TotalInspValue Inspections For The Period : @ViewBag.FromDT To @ViewBag.ToDT ( @ViewBag.BillDT @ViewBag.ICDT)</h3>
         <div class="tableOuter">
             <table class="borderTable" cellpadding="0" cellspacing="0">
                 <tbody>
                     <tr>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DT</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IC DT</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">ENG. NAME</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DT</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IC DT</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">ENG. NAME</font></b></th>
                         <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR</font></b></th>
                         <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CONSIGNEE</font></b></th>
                         <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">ITEM DESC.</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">PL NO.</font></b></th>
                         <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">MATERIAL VALUE</font></b></th>
                         <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">INSP. FEE</font></b></th>
                     </tr>
@@ -25,15 +27,24 @@
                         {
                             SrNo = SrNo + 1;
                             <tr>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BillNo</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BillDate</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ICDate</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CaseNo</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.EngName</font></td>
+                                <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.BillNo</font></td>
+                                <td width="7%" valign="top" align="left">
+                                    <font size="1" face="Verdana">
+                                        @((item.BillDate.HasValue) ? item.BillDate.Value.ToString("dd/MM/yyyy") : string.Empty)
+                                    </font>
+                                </td>
+                                 <td width="7%" valign="top" align="left">
+                                    <font size="1" face="Verdana">
+                                        @((item.ICDate.HasValue) ? item.ICDate.Value.ToString("dd/MM/yyyy") : string.Empty)
+                                    </font>
+                                </td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.CaseNo</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.EngName</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.VENDOR</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ITEMDESC</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.PLNO</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.MATERIALVALUE</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.INSPFEE</font></td>
                             </tr>

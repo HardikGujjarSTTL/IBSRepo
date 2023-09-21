@@ -56,6 +56,11 @@ namespace IBS.Controllers.Reports
             else if (Region == "C") { wRegion = "Central Region"; }
             HighValueInspReport model = highValueInspecReportRepository.GetHighValueInspdata(month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod, Region);
             ViewBag.Regions = wRegion;
+            ViewBag.FromDT = FromDate;
+            ViewBag.ToDT = ToDate;
+            ViewBag.TotalInspValue = valinsp;
+            ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
+            ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
             return PartialView(model);
         }
 

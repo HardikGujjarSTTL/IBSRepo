@@ -1,5 +1,4 @@
 ﻿@model IBS.Models.Reports.HighValueInspReport
-
 @{
     Layout = null;
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
@@ -35,22 +34,14 @@
     var fileName = '';
 
     $(document).ready(function () {
-        loadJI();
-        fileName = 'JI_Complaint_Report';
+        loadTopInspReport();
+        fileName = 'Top N High Inspection Report';
     });
 
-    function loadJI() {
+    function loadTopInspReport() {
         $("#dvReportViewer").load("@Url.Action("TopNHighValueInsp")", {
-            month = '@Model.month',
-            year = '@Model.year',
-            valinsp = '@Model.valinsp',
-            FromDate = '@Model.FromDate',
-            ToDate = '@Model.ToDate',
-            ICDate = '@Model.ICDate',
-            BillDate = '@Model.BillDate',
-            formonth = '@Model.formonth',
-            forperiod = '@Model.forperiod',
-
+            month: '@Model.month', year: '@Model.year', valinsp: '@Model.valinsp', FromDate: '@Model.FromDate'
+            , ToDate: '@Model.ToDate', ICDate: '@Model.ICDate', BillDate: '@Model.BillDate', formonth: '@Model.formonth', forperiod: '@Model.forperiod'
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

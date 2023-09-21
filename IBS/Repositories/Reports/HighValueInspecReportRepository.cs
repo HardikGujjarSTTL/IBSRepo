@@ -45,42 +45,65 @@ namespace IBS.Repositories.Reports
 
             ds = DataAccessDB.GetDataSet("GetNHighValueInspReport", par, 1);
 
-            //int recCount = 0;
-            //foreach (DataRow row in ds.Tables[0].Rows)
-            //{
-            //    if (recCount < Convert.ToInt32(valinsp))
-            //    {
-            //        recCount++;
-            //    }
-            //    else
-            //    {
-            //        break;  // Stop processing once the desired number of records is reached
-            //    }
-            //}
+            int recCount = 0;
+            List<ValueInspList> listcong = new List<ValueInspList>();
 
-            if (ds != null && ds.Tables.Count > 0)
+            foreach (DataRow row in ds.Tables[0].Rows)
             {
-                dt = ds.Tables[0];
-                List<ValueInspList> listcong = dt.AsEnumerable().Select(row => new ValueInspList
+                if (recCount < Convert.ToInt32(valinsp))
                 {
-                    BillNo = row.Field<string>("BillNo"),
-                    BillDate = DateTime.TryParseExact(row.Field<string>("COMPLAINT_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue)
-                    ? dateValue
-                    : (DateTime?)null,
-                    CaseNo = row.Field<string>("CONSIGNEE"),
-                    EngName = row.Field<string>("PO"),
-                    VENDOR = row.Field<string>("IE_NAME"),
-                    CONSIGNEE = row.Field<string>("INSP_REGION_NAME"),
-                    ITEMDESC = row.Field<string>("IC"),
-                    MATERIALVALUE = row.Field<string>("BK_NO") + "/" + row.Field<string>("SET_NO"),
-                    INSPFEE = row.Field<string>("VENDOR"),
-                    ICDate = DateTime.TryParseExact(row.Field<string>("JI_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValues)
-                    ? dateValues
-                    : (DateTime?)null,
-                }).ToList();
-                model.lstValueInspList = listcong;
+                    dt = ds.Tables[0];
+                    ValueInspList valueInsp = new ValueInspList
+                    {
+                        // Populate the properties based on the row data
+                        BillNo = row.Field<string>("BILL_NO"),
+                        BillDate = DateTime.TryParseExact(row.Field<string>("BILL_DT"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue)
+                            ? dateValue
+                            : (DateTime?)null,
+                        CaseNo = row.Field<string>("CASE_NO"),
+                        EngName = row.Field<string>("IE_NAME"),
+                        VENDOR = row.Field<string>("VENDOR"),
+                        CONSIGNEE = row.Field<string>("CONSIGNEE"),
+                        ITEMDESC = row.Field<string>("ITEM_DESC"),
+                        MATERIALVALUE = row.Field<decimal>("MATERIAL_VALUE").ToString(), // Convert to string if needed
+                        PLNO = row.Field<string>("PL_NO"),
+                        INSPFEE = row.Field<decimal>("INSP_FEE").ToString(), // Convert to string if needed
+                        ICDate = DateTime.TryParseExact(row.Field<string>("IC_DT"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValues)
+                        ? dateValues
+                        : (DateTime?)null
+                    };
+                    listcong.Add(valueInsp);
+                    recCount++;
+                }
+                else
+                {
+                    break; 
+                }
             }
 
+            //if (ds != null && ds.Tables.Count > 0)
+            //{
+            //    dt = ds.Tables[0];
+            //    List<ValueInspList> listcong = dt.AsEnumerable().Select(row => new ValueInspList
+            //    {
+            //        BillNo = row.Field<string>("BillNo"),
+            //        BillDate = DateTime.TryParseExact(row.Field<string>("COMPLAINT_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue)
+            //        ? dateValue
+            //        : (DateTime?)null,
+            //        CaseNo = row.Field<string>("CONSIGNEE"),
+            //        EngName = row.Field<string>("PO"),
+            //        VENDOR = row.Field<string>("IE_NAME"),
+            //        CONSIGNEE = row.Field<string>("INSP_REGION_NAME"),
+            //        ITEMDESC = row.Field<string>("IC"),
+            //        MATERIALVALUE = row.Field<string>("BK_NO") + "/" + row.Field<string>("SET_NO"),
+            //        INSPFEE = row.Field<string>("VENDOR"),
+            //        ICDate = DateTime.TryParseExact(row.Field<string>("JI_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValues)
+            //        ? dateValues
+            //        : (DateTime?)null,
+            //    }).ToList();
+            //    model.lstValueInspList = listcong;
+            //}
+            model.lstValueInspList = listcong;
             return model;
         }
     }
