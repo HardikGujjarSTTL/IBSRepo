@@ -7,6 +7,8 @@ using IBS.Models.Reports;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports
 {
@@ -38,7 +40,34 @@ namespace IBS.Controllers.Reports
         {
             ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
+            else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
             return View(model);
+        }
+        public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
+        {
+            ReportsModel model = new() { ReportType = ReportType, Bk_No = Bk_No, Set_No = Set_No_Fr };
+            if (ReportType == "IE7thCopy") model.ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
+            return View("Manage", model);
+        }
+        public IActionResult ManageICIssued(string ReportType, string Type, DateTime FromDate, DateTime ToDate)
+        {
+            ReportsModel model = new() { ReportType = ReportType, Type = Type, FromDate = FromDate, ToDate = ToDate };
+            model.ReportTitle = "IC Issued But Not Received in Office";
+            return View("Manage", model);
+        }
+        public IActionResult ManageStausIC(string ReportType, string Type, string IE_CD, string IE_Name, DateTime FromDate, DateTime ToDate)
+        {
+            var Region = GetUserInfo.Region;
+            ReportsModel model = new() { ReportType = ReportType, Type = Type, Ie_Cd = IE_CD, IE_Name = IE_Name, FromDate = FromDate, ToDate = ToDate };
+            if (ReportType == "ICStatus") model.ReportTitle = "IC Status";
+            return View("Manage", model);
+        }
+
+        public IActionResult ManageIEDairy(string ReportType,DateTime FromDate, DateTime ToDate, string OrderByVisit)
+        {
+            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate , OrderByVisit= OrderByVisit };
+            if (ReportType == "IEDairy") model.ReportTitle = "IC Status";
+            return View("Manage", model);
         }
 
         #region UnBilled IC //UnBilled IC
@@ -58,13 +87,7 @@ namespace IBS.Controllers.Reports
         }
         #endregion
 
-        #region IC 7th Copy Report //IC7thCopyReport
-        public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
-        {
-            ReportsModel model = new() { ReportType = ReportType, Bk_No = Bk_No, Set_No = Set_No_Fr };
-            if (ReportType == "IE7thCopy") model.ReportTitle = "INSPECTION CERTIFICATE BOOK SET 7TH COPY REPORT";
-            return View("Manage", model);
-        }
+        #region IC 7th Copy Report //IC7thCopyReport        
         public IActionResult IE7thCopyReport(string Bk_No, string Set_No)
         {
             var model = reportsRepository.GetIE7thCopyReport(Bk_No, Set_No, GetUserInfo);
@@ -78,29 +101,9 @@ namespace IBS.Controllers.Reports
             var data = reportsRepository.Get_IE_7thCopyList(dTParameters, GetUserInfo);
             return Json(data);
         }
-        #endregion
+        #endregion       
 
-        public IActionResult FromToDate()
-        {
-            var action = Request.Query["actiontype"];
-            ViewBag.Action = action;
-            var partialView = "";
-            if (action == "PJI")
-            {
-                partialView = "../Reports/Pending_JI_Cases_Partial";
-            }
-            ViewBag.PartialView = partialView;
-            ViewBag.RoleName = GetUserInfo.RoleName;
-            return View();
-        }
-
-        #region IC Issued But Not Received in Office
-        public IActionResult ManageICIssued(string ReportType, string Type, DateTime FromDate, DateTime ToDate)
-        {
-            ReportsModel model = new() { ReportType = ReportType, Type = Type, FromDate = FromDate, ToDate = ToDate };
-            model.ReportTitle = "IC Issued But Not Received in Office";
-            return View("Manage", model);
-        }
+        #region IC Issued But Not Received in Office        
         public IActionResult ICIssuedNotReceived(string Type, DateTime FromDate, DateTime ToDate)
         {
             var wRegion = "";
@@ -123,15 +126,7 @@ namespace IBS.Controllers.Reports
         }
         #endregion
 
-        #region Status of IC //IC Status
-        public IActionResult ManageStausIC(string ReportType, string Type, string IE_CD, string IE_Name, DateTime FromDate, DateTime ToDate)
-        {
-            var Region = GetUserInfo.Region;
-            ReportsModel model = new() { ReportType = ReportType, Type = Type, Ie_Cd = IE_CD, IE_Name = IE_Name, FromDate = FromDate, ToDate = ToDate };
-            if (ReportType == "ICStatus") model.ReportTitle = "IC Status";
-            return View("Manage", model);
-        }
-
+        #region Status of IC //IC Status        
         public IActionResult ICStatus(string Type, DateTime FromDate, DateTime ToDate, string IE_CD, string IE_Name)
         {
             var wRegion = "";
@@ -149,39 +144,38 @@ namespace IBS.Controllers.Reports
         }
         #endregion
 
-        public IActionResult Get_Pending_JI_Cases([FromBody] DTParameters dtParameters)
+        #region Pending JI Cases
+        public IActionResult Pending_JI_Cases_Partial(DateTime FromDate, DateTime ToDate)
         {
-            DTResult<PendingJICasesReportModel> dtList = new();
-            try
-            {
-                var region = GetUserInfo.Region;
-                var username = GetUserInfo.UserName;
-                var iecd = Convert.ToString(GetUserInfo.IeCd);
-                dtList = reportsRepository.Get_Pending_JI_Cases(dtParameters, iecd);
+            var IeCd = Convert.ToString(GetUserInfo.IeCd);
+            PendingJICasesReportModel model = new();
+            model = reportsRepository.Get_Pending_JI_Cases(FromDate, ToDate, IeCd);
 
-                foreach (var row in dtList.data)
-                {
-                    //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "LAB", fileName);
-                    var tempcasetifpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "COMPLAINTS_CASES" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF");
-                    var casetifpath = Path.Combine(env.WebRootPath, "/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF");
-                    var casepdfpath = Path.Combine(env.WebRootPath, "/RBS/COMPLAINTS_CASES/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF");
+            foreach (var row in model.lstPendingJI)
+            {             
+                var casetifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var casepdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
 
-                    var reporttifpath = Path.Combine(env.WebRootPath, "/RBS/COMPLAINTS_REPORT/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF");
-                    var reportpdfpath = Path.Combine(env.WebRootPath, "/RBS/COMPLAINTS_REPORT/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF");
-                    row.IsCaseTIF = System.IO.File.Exists(casetifpath) == true ? true : false;
-                    row.IsCasePDF = System.IO.File.Exists(casepdfpath) == true ? true : false;
+                var reporttifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var reportpdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
 
-                    row.IsReportTIF = System.IO.File.Exists(reporttifpath) == true ? true : false;
-                    row.IsReportPDF = System.IO.File.Exists(reportpdfpath) == true ? true : false;
-                }
+                row.IsCaseTIF = System.IO.File.Exists(casetifpath) == true ? true : false;
+                row.IsCasePDF = System.IO.File.Exists(casepdfpath) == true ? true : false;
+
+                row.IsReportTIF = System.IO.File.Exists(reporttifpath) == true ? true : false;
+                row.IsReportPDF = System.IO.File.Exists(reportpdfpath) == true ? true : false;
             }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Reports", "Get_Pending_JI_Cases", 1, GetIPAddress());
-            }
-            return Json(dtList);
+            return PartialView(model);
         }
+        #endregion
+        
 
+        public IActionResult IEDairy_Partial(DateTime FromDate, DateTime ToDate, string OrderByVisit)
+        {
+            IEDairyModel model = new();
+            model = reportsRepository.Get_IE_Dairy( FromDate,  ToDate,  "",  OrderByVisit,  "true", GetUserInfo);
+            return PartialView(model);
+        }
         [Authorization("Reports", "IEDairy", "view")]
         public IActionResult IEDairy()
         {
@@ -193,22 +187,55 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Get_IEDairy([FromBody] DTParameters dtParameters)
+        //public IActionResult Get_IEDairy([FromBody] DTParameters dtParameters)
+        //{
+        //    DTResult<IEDairyModel> dtList = new();
+        //    try
+        //    {
+        //        var region = GetUserInfo.Region;
+        //        var username = GetUserInfo.UserName;
+        //        var roleName = GetUserInfo.RoleName;
+        //        var iecd = Convert.ToString(GetUserInfo.IeCd);
+        //        dtList = reportsRepository.Get_IE_Dairy(dtParameters, GetUserInfo);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "Reports", "Get_IEDairy", 1, GetIPAddress());
+        //    }
+        //    return Json(dtList);
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
         {
-            DTResult<IEDairyModel> dtList = new();
-            try
+            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
+            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
-                var region = GetUserInfo.Region;
-                var username = GetUserInfo.UserName;
-                var roleName = GetUserInfo.RoleName;
-                var iecd = Convert.ToString(GetUserInfo.IeCd);
-                dtList = reportsRepository.Get_IE_Dairy(dtParameters, GetUserInfo);
-            }
-            catch (Exception ex)
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Reports", "Get_IEDairy", 1, GetIPAddress());
-            }
-            return Json(dtList);
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
 
     }
