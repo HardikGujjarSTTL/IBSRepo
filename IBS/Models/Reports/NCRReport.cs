@@ -25,11 +25,11 @@ namespace IBS.Models.Reports
     public class AllNCRCMIE
     {
         public string IECMName { get; set; }
-        public string Total_NO_Call { get; set; }
-        public string Total_NC { get; set; }
-        public string Total_Minor { get; set; }
-        public string Total_Major { get; set; }
-        public string Total_Critical { get; set; }
+        public decimal Total_NO_Call { get; set; }
+        public decimal Total_NC { get; set; }
+        public decimal Total_Minor { get; set; }
+        public decimal Total_Major { get; set; }
+        public decimal Total_Critical { get; set; }
         public string NO_NC { get; set; }
     }
 

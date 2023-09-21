@@ -41,7 +41,7 @@ namespace IBS.Controllers.Reports
                 formonth = formonth,
                 monthChar = monthChar,
                 controllingmanager = controllingmanager,
-                reporttype = monthChar,
+                reporttype = reporttype,
                 forperiod = forperiod
             };
             model.ReportTitle = "NCR Report Controling Wise";

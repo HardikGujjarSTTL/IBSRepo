@@ -87,14 +87,15 @@ namespace IBS.Repositories.Reports
                     dt = ds.Tables[0];
                     List<AllNCRCMIE> listcong = dt.AsEnumerable().Select(row => new AllNCRCMIE
                     {
-                        IECMName = row.Field<string>("BothName"),
-                        Total_NO_Call = row.Field<string>("TOTAL_NO_CALLS"),
-                        Total_NC = row.Field<string>("TOTAL_NC"),
-                        Total_Minor = row.Field<string>("TOTAL_MINOR"),
-                        Total_Major = row.Field<string>("TOTAL_MAJOR"),
-                        Total_Critical = row.Field<string>("TOTAL_CRITICAL"),
-                        NO_NC = row.Field<string>("NC_NO"),
+                        IECMName = Convert.ToString(row["BOTHNAME"]),
+                        Total_NO_Call = Convert.ToDecimal(row["TOTAL_NO_CALLS"]),
+                        Total_NC = Convert.ToDecimal(row["TOTAL_NC"]),
+                        Total_Minor = Convert.ToDecimal(row["TOTAL_MINOR"]),
+                        Total_Major = Convert.ToDecimal(row["TOTAL_MAJOR"]),
+                        Total_Critical = Convert.ToDecimal(row["TOTAL_CRITICAL"]),
+                        NO_NC = Convert.ToString(row["NO_NC"]),
                     }).ToList();
+
                     model.lstAllNCRCMIE = listcong;
                 }
             }

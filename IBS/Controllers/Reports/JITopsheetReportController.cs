@@ -7,6 +7,7 @@ using IBS.Repositories.Transaction;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using IBS.Models.Reports;
 
 namespace IBS.Controllers
 {
@@ -61,10 +62,12 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+
+            ConsigneeComplaints model = GlobalDeclaration.ConsigneeComplaint;
+            htmlContent = await this.RenderViewToStringAsync("/Views/JITopsheetReport/JIComplaintsReport.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

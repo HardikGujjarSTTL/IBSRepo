@@ -41,7 +41,7 @@
     function loadTopInspReport() {
         $("#dvReportViewer").load("@Url.Action("NCRCWiseReport")", {
             month: '@Model.month', year: '@Model.year', FromDate: '@Model.FromDate',ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', forCM: '@Model.forCM',
-            All: '@Model.All', Outstanding: '@Model.Outstanding',formonth: '@Model.formonth', monthChar: '@Model.monthChar', forperiod: '@Model.forperiod'
+            All: '@Model.All', Outstanding: '@Model.Outstanding',formonth: '@Model.formonth', monthChar: '@Model.monthChar', forperiod: '@Model.forperiod', reporttype: '@Model.reporttype'
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

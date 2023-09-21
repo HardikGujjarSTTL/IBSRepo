@@ -1,4 +1,5 @@
-﻿using IBS.Models.Reports;
+﻿using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
@@ -661,6 +662,7 @@ namespace IBS.Helper
     public static class GlobalDeclaration
     {
         public static IEPerformanceModel IEPerformance { get; set; }
+        public static ConsigneeComplaints ConsigneeComplaint { get; set; }
 
         public static ClusterPerformanceModel ClusterPerformance { get; set; }
 
