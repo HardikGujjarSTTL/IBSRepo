@@ -45,6 +45,19 @@ namespace IBS.Repositories.Reports
 
             ds = DataAccessDB.GetDataSet("GetNHighValueInspReport", par, 1);
 
+            //int recCount = 0;
+            //foreach (DataRow row in ds.Tables[0].Rows)
+            //{
+            //    if (recCount < Convert.ToInt32(valinsp))
+            //    {
+            //        recCount++;
+            //    }
+            //    else
+            //    {
+            //        break;  // Stop processing once the desired number of records is reached
+            //    }
+            //}
+
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];
