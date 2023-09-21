@@ -45,5 +45,16 @@ namespace IBS.Models
         public bool? Pisdelete { get; set; }
 
         public bool? Isview { get; set; }
+
+        public string? controllername { get; set; }
+        public string? actionname { get; set; }
+        public string? title { get; set; }
+        public string? menudescription { get; set; }
+        public string? role_id { get; set; }
+        public string? iconcssclass { get; set; }
+        public string? isactive { get; set; }
+        public string? sortorder { get; set; }
+        public string? iconpath { get; set; }
+        public string? isdisplay { get; set; }
     }
 }

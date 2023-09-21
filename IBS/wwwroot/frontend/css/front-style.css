@@ -75,7 +75,10 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 .toggleMenu .mobileMenu { font-size:1.250em; color:#fff; }
 .toggleMenu .iconBar { float:right; width:25px; height:25px; background:url(../images/mobile-menu.png) no-repeat center center; background-position:right bottom; }
 #nav, #nav ul { list-style:none; margin:0; padding:0; }
-#nav li { float:left; margin:0; padding:0; position:relative; display:inline }
+#nav li { float:left; margin:0; padding:0; position:relative; display:inline; }
+#nav li{ position:relative;}
+#nav li:after{ content:""; height:100%; width:1px; background: rgb(255,255,255); background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(8,92,34,1) 50%, rgba(255,255,255,0) 100%); position:absolute; right:0; top:0;}
+#nav li:last-child:after{ display:none;}
 #nav li a { padding: 10px 55px; line-height: 30px; color: #fff; font-size: 1em; display: inline-block; text-decoration: none; }
 #nav ul { width:300px; top:100%; padding:0; left:0; position:absolute; }
 .hasJS #nav ul { opacity:0; transition: opacity 400ms linear; -webkit-transition: opacity 400ms linear; }

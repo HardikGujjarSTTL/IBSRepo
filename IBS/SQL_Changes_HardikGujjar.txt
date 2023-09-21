@@ -1017,6 +1017,59 @@ END;
 
 ================
 
+//create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
+//(
+//    p_ROLEID IN NUMBER,
+//    p_cursor OUT SYS_REFCURSOR
+//)
+//AS
+//BEGIN
+//    OPEN p_cursor FOR
+//        SELECT
+//            CONNECT_BY_ROOT(m.ID) AS RootParentID,
+//            m.ID AS ParentID,
+//            NULL AS ChildID,
+//            m.TITLE AS ParentTitle,
+//            NULL AS ChildTitle,
+//            m.ID AS ID,
+//            CASE
+//                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
+//                ELSE 'False'
+//            END AS Selected,
+//            (SELECT IsAdd FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
+//            (SELECT IsEdit FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
+//            (SELECT PIsDelete FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
+//            (SELECT IsView FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
+//        FROM MENU_MASTER m
+//        WHERE m.PARENTID IS NULL
+//        AND m.IsDisplay = 1
+//        CONNECT BY PRIOR m.ID = m.PARENTID
+
+//        UNION ALL
+
+//        SELECT
+//            CONNECT_BY_ROOT(p.ID) AS RootParentID,
+//            p.PARENTID AS ParentID,
+//            c.ID AS ChildID,
+//            p.TITLE AS ParentTitle,
+//            c.TITLE AS ChildTitle,
+//            c.ID AS ID,
+//            CASE
+//                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
+//                ELSE 'False'
+//            END AS Selected,
+//            (SELECT IsAdd FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
+//            (SELECT IsEdit FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
+//            (SELECT PIsDelete FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
+//            (SELECT IsView FROM MenuRoleMapping WHERE(ISDELETED = 0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
+//        FROM MENU_MASTER p
+//        JOIN MENU_MASTER c ON p.ID = c.PARENTID
+//        AND p.IsDisplay = 1
+//        CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
+
+//        ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
+//END;
+
 create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 (
     p_ROLEID IN NUMBER,
@@ -1024,51 +1077,125 @@ create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 )
 AS
 BEGIN
-    OPEN p_cursor FOR
-        SELECT
-            CONNECT_BY_ROOT(m.ID) AS RootParentID,
-            m.ID AS ParentID,
-            NULL AS ChildID,
-            m.TITLE AS ParentTitle,
-            NULL AS ChildTitle,
-            m.ID AS ID,
-            CASE
-                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) > 0 THEN 'True'
-                ELSE 'False'
-            END AS Selected,
-            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsAdd,
-            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsEdit,
-            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As PIsDelete,
-            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = m.ID) As IsView
-        FROM MENU_MASTER m
-        WHERE m.PARENTID IS NULL
-        AND m.IsDisplay = 1
-        CONNECT BY PRIOR m.ID = m.PARENTID
+OPEN p_cursor FOR
+WITH RecursiveMenu (id, parentid, controllername, actionname, title, menudescription, role_id, iconcssclass, isactive, sortorder, iconpath, isdisplay,
+Selected,IsAdd,IsEdit,PIsDelete,IsView) AS (
+    SELECT
+        v.id,
+        v.parentid,
+        v.controllername,
+        v.actionname,
+        v.title,
+        v.menudescription,
+        v.role_id,
+        v.iconcssclass,
+        v.isactive,
+        v.sortorder,
+        v.iconpath,
+        v.isdisplay,
+        CASE
+            WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) > 0 THEN 'True'
+            ELSE 'False'
+        END AS Selected,
+        (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsAdd,
+        (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsEdit,
+        (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS PIsDelete,
+        (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = v.id) AS IsView
+    FROM
+        menu_master v
+    WHERE
+        parentid IS NULL
+    UNION ALL
+    SELECT
+        m.id,
+        m.parentid,
+        m.controllername,
+        m.actionname,
+        m.title,
+        m.menudescription,
+        m.role_id,
+        m.iconcssclass,
+        m.isactive,
+        m.sortorder,
+        m.iconpath,
+        m.isdisplay,
+        CASE
+            WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) > 0 THEN 'True'
+            ELSE 'False'
+        END AS Selected,
+        (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsAdd,
+        (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsEdit,
+        (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS PIsDelete,
+        (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED = 0 OR ISDELETED IS NULL) AND RoleID = p_ROLEID AND MENUID = m.id) AS IsView
+    FROM
+        menu_master m
+    INNER JOIN
+        RecursiveMenu rm ON m.parentid = rm.id
+)
 
-        UNION ALL
 
-        SELECT
-            CONNECT_BY_ROOT(p.ID) AS RootParentID,
-            p.PARENTID AS ParentID,
-            c.ID AS ChildID,
-            p.TITLE AS ParentTitle,
-            c.TITLE AS ChildTitle,
-            c.ID AS ID,
-            CASE
-                WHEN (SELECT COUNT(*) FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) > 0 THEN 'True'
-                ELSE 'False'
-            END AS Selected,
-            (SELECT IsAdd FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsAdd,
-            (SELECT IsEdit FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsEdit,
-            (SELECT PIsDelete FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As PIsDelete,
-            (SELECT IsView FROM MenuRoleMapping WHERE (ISDELETED =0 or ISDELETED is null) and RoleID = p_ROLEID AND MENUID = c.ID) As IsView
-        FROM MENU_MASTER p
-        JOIN MENU_MASTER c ON p.ID = c.PARENTID
-        AND p.IsDisplay = 1
-        CONNECT BY PRIOR c.ID = c.PARENTID AND PRIOR p.ID = p.PARENTID
+SELECT
+    id,
+    parentid,
+    controllername,
+    actionname,
+    title,
+    menudescription,
+    role_id,
+    iconcssclass,
+    isactive,
+    sortorder,
+    iconpath,
+    isdisplay,
+    Selected,
+    IsAdd,
+    IsEdit,
+    PIsDelete,
+    IsView
+FROM
+    RecursiveMenu
+START WITH
+    parentid IS NULL
+CONNECT BY
+    PRIOR id = parentid
+ORDER SIBLINGS BY
+    parentid, id; 
 
-        ORDER BY RootParentID, ParentID, ChildID NULLS FIRST;
+
 END;
+
+========================
+
+SELECT
+    id,
+    parentid,
+    controllername,
+    actionname,
+    title,
+    menudescription,
+    role_id,
+    iconcssclass,
+    isactive,
+    sortorder,
+    iconpath,
+    isdisplay,
+    Selected,
+    IsAdd,
+    IsEdit,
+    PIsDelete,
+    IsView
+FROM
+    RecursiveMenu
+START WITH
+    parentid IS NULL
+CONNECT BY
+    PRIOR id = parentid
+ORDER SIBLINGS BY
+    parentid, id; 
+
+
+END;
+
 ====================
 create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
     p_cs_no VARCHAR2,

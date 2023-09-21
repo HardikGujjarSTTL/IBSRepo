@@ -1,0 +1,194 @@
+﻿@model IBS.Models.IECliamFormModel
+           
+
+    @{
+        ViewData["Title"] = "IE Claim Form";
+        string clsView = "";
+        //if (Model.SNO > 0)
+        //{
+        //    clsView = "Permission_View";
+        //}
+    }
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>IE Claim Form</h2>
+        </div>
+         <div class="list-btn">
+                <a asp-area="" asp-controller="IEClaimForm" asp-action="Manage" class="formBtn Permission_Add">Add New</a>
+            </div>
+        <div>
+      @*  <a asp-action="IEClaimForm" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>*@
+        </div>
+    </div>
+    <section class="@clsView">
+        <div class="task-listinput">
+            <div class="accordion-body">
+                @*<form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">*@
+                    <div class="accordion-body">
+                        <div class="row my-0">
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Claim No.</label>
+                                <input type="text" id="claimNO"  asp-for="CLAIM_NO" maxlength="300" />
+                                 <input type="text" id="ID" asp-for="ID" hidden maxlength="300" />
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label for="Reference">Claim Date.</label>
+                                <input type="text" class="input datepicker" id="claimdate" asp-for="CLAIM_DT" maxlength="500" />
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+                                  <label for="Reference">IE</label>
+                             @Html.DropDownListFor(model => model.IE, Common.GetIEname(), "- Select All -"    ,new { id = "IEdropdown" })
+                               
+                            </div>
+
+                             <div class="savenext-btn">
+                            @*<a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                            <button type="button" class="save-btn active Permission_Save" onclick="Search();">Search</button>
+                        </div>
+
+
+                             <table id="dtIEdata" class="table-responsive">
+                        <thead>
+                            <tr>
+
+                                @*<th>S NO</th>*@
+
+                                <th>#</th>
+                                <th>Claim No.</th>
+                                <th>Claim Date.</th>
+                                <th>Claim Receive Date</th>
+                                <th>IE</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+
+
+                       
+
+
+
+
+                         
+                        
+                    </div>
+                @*</form>*@
+            </div>
+        </div>
+    </section>
+
+    @section scripts
+    {
+        <partial name="_DataTablesScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
+        <script type="text/javascript">
+                $(document).ready(function () {
+
+               
+
+                });
+
+                function Search(){
+                    debugger;
+                    var claimNO = $("#claimNO").val();
+                    var claimdate = $("#claimdate").val();
+                    var IEdropdown = $("#IEdropdown").val();
+                   
+
+                    InitializeDatatable(claimNO , claimdate , IEdropdown);
+
+                }
+
+                function Submit(){
+
+                }
+                function AddNew()
+                {
+             
+                              
+                }
+
+
+                 function InitializeDatatable(claimNO , claimdate , IEdropdown)
+                 {
+                     var CLAIM_NO = claimNO;
+                     var CLAIM_DT = claimdate;
+                     var IE = IEdropdown;
+                     var ACTION = "M";
+                    debugger;
+                    $("#dtIEdata").DataTable({
+                        stateSave: false,// Design Assets
+                        autoWidth: true,
+                        scrollX: true,
+                        scrollCollapse: true,
+                        processing: true, // ServerSide Setups
+                        serverSide: false,
+                        destroy: true,
+                        paging: false,// Paging Setups
+                        searching: false,// Searching Setups
+                        ajax: {// Ajax Filter
+                            url: "@Url.Action("IEList")",
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: function (d) {
+                                debugger;
+                                var AdditionalValues = {
+                                    CLAIM_NO : CLAIM_NO ,
+                                    CLAIM_DT : CLAIM_DT,
+                                    IE : IE
+                            
+                                };
+                                d.AdditionalValues = AdditionalValues;
+                                return JSON.stringify(d);
+                            }
+                        },
+                        columns: [// Columns Setups
+                            {
+                                data: '', orderable: false, width: '5%',
+                                render: function (data, type, row, meta) {
+                                    return meta.row + meta.settings._iDisplayStart + 1;
+                                    ;
+                                }
+                            },
+                            //{ data: "SNO" },
+                            { data: "CLAIM_NO" },
+                            { data: "CLAIM_DT" },
+                            { data: "CLAIM_RECIEVE_DT" },
+                            { data: "IE_NAME" },
+                           
+                            {
+                                data: null, orderable: false,
+                                render: function (data, type, row) {
+                                    debugger;
+                                     var CLAIM_NO = data.CLAIM_NO;
+                                    var CLAIM_DT = data.CLAIM_DT;
+                                    var IE = data.IE;
+                                    var ACTION = "M";
+                                   var ID = data.ID;
+                                  var PVCHR_NO = data.PAYMENT_VOUCHER_NUMBER;
+                                   var PVCHR_DT = data.PAYMENT_VOUCHER_DATE;
+
+                                    var editUrl = '@Url.Action("Manage", "IEClaimForm")?CLAIM_NO=' + CLAIM_NO + '&CLAIM_DT=' + CLAIM_DT + '&ID=' + ID + '&ACTION=' + ACTION + '&PVCHR_NO=' + PVCHR_NO + '&PVCHR_DT=' + PVCHR_DT;
+                                    var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                                    // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                                    html += '</div>';
+                                    return html;
+                                }
+                            },
+                        ],
+                        "order": [[0, "asc"]]
+                    });
+                 }
+
+          
+
+
+
+        </script>
+   }

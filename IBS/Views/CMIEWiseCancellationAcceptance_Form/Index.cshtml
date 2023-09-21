@@ -1,0 +1,316 @@
+﻿@model IBS.Models.CMIEWiseCancellationAcceptance_FormModel
+
+@{
+    ViewData["Title"] = "CONTROLLING WISE CALLS CANCELLATION APPROVAL FORM";
+    string clsView = "";
+    //if (Model.SNO > 0)
+    //{
+    //    clsView = "Permission_View";
+    //}
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>CONTROLLING WISE CALLS CANCELLATION APPROVAL FORM</h2>
+    </div>
+  @*  <div>
+        <a asp-action="AddRecieptVoucher" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>
+    </div>*@
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <div class="accordion-body">
+           @* <form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">*@
+                <div class="accordion-body">
+                    <div class="row my-0">
+
+                        <div class="col-md-4 mb-4">
+                        <label for="Reference">Controlling Officer</label>
+                        @Html.DropDownListFor(model => model.ControllingOfficers, Common.GetControllingOfficer(), new { id = "controllingOfficers" })
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                        <label for="Reference">Inspection Engineer</label>  
+                        <br></br>
+                        <label for="Reference">All IE</label>
+                        <input type="radio" id="allie" name="all" value="1" checked>
+                        <br></br>
+                        <label for="Reference">Particular IE</label>
+                        <input type="radio" id="particularie" name="all" value="2">
+                        <select id="particularIE"></select>
+                        </div>
+
+                  
+
+                    </div>
+
+                    <div class="savenext-btn">
+                        @*<a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Submit</button>
+                    </div>
+
+                <table id="dtcallcancel" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call SNO.</th>
+                            <th>Manufacturer</th>
+                            <th>Manufacturer Place</th>
+                            <th>Desire Dt</th>
+                            <th>Call Cancel Doc</th>
+                            <th>Call Canecllation Form</th>
+                            <th>Call Letter</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <button type="button" class="save-btn active Permission_Save" onclick="approve();">Approve</button>
+
+
+                </div>
+       @*     </form>*@
+        </div>
+    </div>
+</section>
+@section scripts
+{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () 
+        {
+            debugger;
+            $("#particularIE").hide();
+            $("#controllingOfficers").change(function () {
+                
+                var selectedValue = $(this).val();
+
+                
+                $.ajax({
+                    url: '/CMIEWiseCancellationAcceptance_Form/Ie_dropdown',
+                    type: 'POST', 
+                    data: { selectedValue: selectedValue },
+                    success: function (response) {
+                        // Check if the response is valid and contains the expected properties
+                        if (response && response.IE_CD && response.IE_NAME) {
+                            // Clear the dropdown before adding new options
+                            $('#particularIE').empty();
+
+                            // Append the option to the dropdown
+                            $('#particularIE').append($('<option>', {
+                                value: response.IE_CD,
+                                text: response.IE_NAME
+                            }));
+                        }
+                    },
+                    error: function (error) {
+                       
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            $('input[type="radio"]').change(function () {
+                
+                var selectedValue = $(this).val();
+
+                if (selectedValue === "1") {
+                    //$('#dropdown1').show();
+                    $('#particularIE').hide();
+                } else if (selectedValue === "2") {
+                    //$('#dropdown1').hide();
+                    $('#particularIE').show();
+                }
+            });
+
+
+        });
+
+
+        function InitializeDatatable(lstCO, lstIE) {
+            var selectedOption = $("input[name='all']:checked").val();
+
+            $("#dtcallcancel").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: false,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("CMIEWTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            
+                            lstCO: lstCO,
+                            lstIE : lstIE,
+                            selectedOption: selectedOption
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CASE_NO" },
+                    { data: "CALL_RECV_DATE" },
+                    { data: "CALL_SNO" },
+                    { data: "MFG" },
+                    { data: "MFG_PLACE" },
+                    { data: "DESIRE_DT" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            // Add data attributes to the link for the required values
+                            return '<a href="' + row.Your_Link_Column3 + '">View call cancel doc</a>';
+                        },
+                        orderable: false
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            // Replace 'Your_Link_Column' with the actual property name for your link
+                            return '<a href="#" class="view-call-cancellation-form" data-case-no="' + row.CASE_NO + '" data-call-recv-date="' + row.CALL_RECV_DATE + '" data-call-sno="' + row.CALL_SNO + '">View Call Canecllation Form</a>';
+                        },
+                        orderable: false
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            // Replace 'Your_Link_Column' with the actual property name for your link
+                            return '<a href="#" class="view-call-letter" data-case-no="' + row.CASE_NO + '" data-call-recv-date="' + row.CALL_RECV_DATE + '" data-call-sno="' + row.CALL_SNO + '">View call letter</a>';
+                        },
+                        orderable: false
+                    },
+                    {
+                        data: null,
+                        defaultContent: '<input type="checkbox" class="row-checkbox" />',
+                        orderable: false
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function Save()
+        {
+            debugger;
+            var lstIE = $("#particularIE").val();
+            var lstCO = $("#controllingOfficers").val();
+            InitializeDatatable(lstCO, lstIE);
+
+            $('#dtcallcancel tbody').on('click', 'a.view-call-letter', function (e) {
+                debugger;
+                e.preventDefault(); // Prevent the default link behavior
+
+                // Extract the values from the data attributes
+                var caseNo = $(this).data('case-no');
+                var callRecvDate = $(this).data('call-recv-date');
+                var callSno = $(this).data('call-sno');
+
+                // Now, you can use these values as needed
+                console.log('CASE_NO:', caseNo);
+                console.log('CALL_RECV_DATE:', callRecvDate);
+                console.log('CALL_SNO:', callSno);
+
+                var redirectTo = '/Print_Call_letter_/Index?caseNo=' + caseNo + '&callRecvDate=' + callRecvDate + '&callSno=' + callSno;
+
+                // Redirect to the new page
+                window.location.href = redirectTo;
+            });
+
+            $('#dtcallcancel tbody').on('click', 'a.view-call-cancellation-form', function (e) {
+                debugger;
+                e.preventDefault(); // Prevent the default link behavior
+
+                // Extract the values from the data attributes
+                var caseNo = $(this).data('case-no');
+                var callRecvDate = $(this).data('call-recv-date');
+                var callSno = $(this).data('call-sno');
+
+                // Now, you can use these values as needed
+                console.log('CASE_NO:', caseNo);
+                console.log('CALL_RECV_DATE:', callRecvDate);
+                console.log('CALL_SNO:', callSno);
+
+                var redirectTo = '/Call_Cancellation_Form/Index?caseNo=' + caseNo + '&callRecvDate=' + callRecvDate + '&callSno=' + callSno;
+
+                // Redirect to the new page
+                window.location.href = redirectTo;
+            });
+        }
+        function approve()
+        {
+            debugger;
+            var selectedData = [];
+            var selectedCASE_NO, selectedCALL_RECV_DATE, selectedCALL_SNO, selectedMFG, selectedMFG_PLACE, selectedDESIRE_DT;
+            $("#dtcallcancel tbody input[type='checkbox']:checked").each(function () {
+                var rowData = $("#dtcallcancel").DataTable().row($(this).closest("tr")).data();
+                if (rowData) {
+                    debugger;
+                    selectedData.push(rowData);
+                    selectedCASE_NO = rowData.CASE_NO;
+                    selectedCALL_RECV_DATE = rowData.CALL_RECV_DATE;
+                    selectedCALL_SNO = rowData.CALL_SNO;
+                    selectedMFG = rowData.MFG;
+                    selectedMFG_PLACE = rowData.MFG_PLACE;
+                    selectedDESIRE_DT = rowData.DESIRE_DT;
+
+                    var formData = new FormData();
+                    formData.append("CASE_NO", selectedCASE_NO);
+                    formData.append("CALL_RECV_DATE", selectedCALL_RECV_DATE);
+                    formData.append("CALL_SNO", selectedCALL_SNO);
+
+                        $.ajax({
+                           
+                            type: 'POST',
+                            contentType: false,
+                            processData: false,
+                            //contentType: "application/json",
+                            url: "/CMIEWiseCancellationAcceptance_Form/update",
+                            dataType: "json",
+                            data: formData,
+                                success: function (response) {
+                                    debugger;
+                                    if(response == "UPDATED"){
+                                        alert("APPROVED SUCCESSFULLY");
+                                    }
+                                    else{
+                                        alert("SORRY! SOMETHING WENT WRONG");
+                                    }
+                                    var lstIE = $("#particularIE").val();
+                                    var lstCO = $("#controllingOfficers").val();
+                                    InitializeDatatable(lstCO, lstIE);
+                                },
+                                error: function (error) {
+                                    // Handle any errors that occur during the AJAX request
+                                    console.error('Error:', error);
+                                }
+                        });
+                }
+            });
+
+
+
+
+        }
+
+
+    </script>
+ }
