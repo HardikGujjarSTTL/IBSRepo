@@ -16,9 +16,10 @@
         <a asp-action="Index" asp-controller="POMaster" class="formBtn viewall-btn">View List</a>
     </div>
 </div>
-<section class="@clsView">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="POMaster" asp-action="POMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMaster">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" id="hdnType" />
@@ -178,7 +179,6 @@
                     </div>
                 </div>
                 <div class="row my-0">
-                 
                     <div class="col-md-4 mb-3" id="dvPlaceOfInspection">
                         <label for="Reference">Place of Inspection</label>
                         <input type="text" class="input" id="txtMPOI" disabled="disabled">
@@ -187,6 +187,18 @@
                         <label for="Reference">Remarks</label>
                         <textarea class="input" asp-for="Remarks"> </textarea>
                         <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.DrawingSpecification" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Amendment" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ParentLOA" />
                     </div>
                 </div>
                 <div class="savenext-btn">
@@ -232,6 +244,7 @@
 
         function Save() {
             if ($("#frmPOMaster").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmPOMaster").submit();
             }
         }

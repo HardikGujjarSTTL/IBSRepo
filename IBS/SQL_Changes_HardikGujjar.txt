@@ -294,10 +294,13 @@ ALTER TABLE IBS_Document ADD (
 CREATE SEQUENCE IBS_Document_seq
   START WITH 1
   INCREMENT BY 1
-  CACHE 20;
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
   
-ALTER TABLE IBS_Document
-    MODIFY ID  NUMBER(6,0) DEFAULT IBS_Document_seq.nextval;
+   
+ALTER TABLE T16_Ic_Cancel
+    MODIFY ID NUMBER(6,0) DEFAULT IBS_Document_seq.nextval;
 
 -------------------------------
     
@@ -314,13 +317,16 @@ CREATE TABLE IBS_DocumentCategory(
 ALTER TABLE IBS_DocumentCategory ADD (
   CONSTRAINT IBS_DocumentCategory_pk PRIMARY KEY (ID));
   
-CREATE SEQUENCE IBS_DocumentCategory_seq
+CREATE SEQUENCE IBS_DOCUMENTCATEGORY_seq
   START WITH 1
   INCREMENT BY 1
-  CACHE 20;
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+  
    
-ALTER TABLE IBS_DocumentCategory
-    MODIFY ID  NUMBER(6,0) DEFAULT IBS_DocumentCategory_seq.nextval;
+ALTER TABLE IBS_DOCUMENTCATEGORY
+    MODIFY ID NUMBER(6,0) DEFAULT IBS_DOCUMENTCATEGORY_seq.nextval;
 
 -------------------------------
     
@@ -2476,3 +2482,37 @@ OPEN p_Result1 FOR
 END sp_PCDOReport_FinancialExpenditureRealization;
 =================================
 
+
+ALTER TABLE T16_Ic_Cancel 
+ADD ID NUMBER(6,0) ;
+
+CREATE SEQUENCE T16_Ic_Cancel_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+  
+UPDATE T16_Ic_Cancel
+   SET ID = T16_Ic_Cancel_seq.nextval;
+   
+ALTER TABLE T16_Ic_Cancel
+    MODIFY ID NUMBER(6,0) DEFAULT T16_Ic_Cancel_seq.nextval;
+
+
+===================
+
+ALTER TABLE T15_PO_DETAIL 
+ADD DRAWING_NO VARCHAR2(30 BYTE);
+
+ALTER TABLE T15_PO_DETAIL 
+ADD SPECIFICATION_NO VARCHAR2(30 BYTE);
+
+======================
+ALTER TABLE T82_Po_Detail 
+ADD DRAWING_NO VARCHAR2(30 BYTE);
+
+ALTER TABLE T82_Po_Detail 
+ADD SPECIFICATION_NO VARCHAR2(30 BYTE);
+
+=====================

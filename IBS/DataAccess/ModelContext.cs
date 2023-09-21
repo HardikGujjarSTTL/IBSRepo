@@ -7637,6 +7637,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.OfflineCallStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("OFFLINE_CALL_STATUS");
             entity.Property(e => e.OnlineCallStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -8379,21 +8384,25 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T101IeCluster>(entity =>
         {
-            entity.HasKey(e => new { e.ClusterCode, e.DepartmentCode });
+            entity.HasKey(e => e.Id).HasName("T101_IE_CLUSTER_PK");
 
             entity.ToTable("T101_IE_CLUSTER");
 
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T101_IE_CLUSTER_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.ClusterCode)
                 .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
             entity.Property(e => e.DepartmentCode)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("DEPARTMENT_CODE");
-            entity.Property(e => e.Datetime)
-                .HasColumnType("DATE")
-                .HasColumnName("DATETIME");
             entity.Property(e => e.IeCode)
                 .HasPrecision(6)
                 .HasColumnName("IE_CODE");
@@ -9365,6 +9374,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("DISCOUNT_TYPE");
+            entity.Property(e => e.DrawingNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("DRAWING_NO");
             entity.Property(e => e.Excise)
                 .HasColumnType("NUMBER(13,2)")
                 .HasColumnName("EXCISE");
@@ -9417,6 +9430,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SalesTaxPer)
                 .HasColumnType("NUMBER(4,2)")
                 .HasColumnName("SALES_TAX_PER");
+            entity.Property(e => e.SpecificationNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("SPECIFICATION_NO");
             entity.Property(e => e.UomCd)
                 .HasPrecision(3)
                 .HasColumnName("UOM_CD");
@@ -9480,6 +9497,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("IC_STATUS");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IBS_DOCUMENT_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
@@ -9753,7 +9774,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
             entity.Property(e => e.CallSno)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CallStatus)
                 .HasMaxLength(39)
@@ -14388,6 +14409,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("DISCOUNT_TYPE");
+            entity.Property(e => e.DrawingNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("DRAWING_NO");
             entity.Property(e => e.Excise)
                 .HasColumnType("NUMBER(10,2)")
                 .HasColumnName("EXCISE");
@@ -14440,6 +14465,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SalesTaxPer)
                 .HasColumnType("NUMBER(4,2)")
                 .HasColumnName("SALES_TAX_PER");
+            entity.Property(e => e.SpecificationNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("SPECIFICATION_NO");
             entity.Property(e => e.UomCd)
                 .HasPrecision(3)
                 .HasColumnName("UOM_CD");
@@ -17352,7 +17381,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
             entity.Property(e => e.CallSno)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)
@@ -17377,7 +17406,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC_PO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.QtyDue)
                 .HasColumnType("NUMBER(12,4)")
@@ -17437,7 +17466,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC_PO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.QtyDue)
                 .HasColumnType("NUMBER")
@@ -19212,9 +19241,11 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T07_RITES_DESIG_SEQ");
         modelBuilder.HasSequence("T09_IE_HISTORY_SEQ");
         modelBuilder.HasSequence("T10_IC_BOOKSET_SEQ");
+        modelBuilder.HasSequence("T101_IE_CLUSTER_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
+        modelBuilder.HasSequence("T16_IC_CANCEL_SEQ");
         modelBuilder.HasSequence("T31_HOLOGRAM_ISSUED_SEQ");
         modelBuilder.HasSequence("T32_CLIENT_LOGIN_SEQ");
         modelBuilder.HasSequence("T34_CENTRAL_ITEM_MASTER_SEQ");
