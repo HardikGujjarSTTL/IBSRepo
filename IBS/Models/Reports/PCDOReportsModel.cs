@@ -85,4 +85,31 @@
         public decimal bill_am { get; set; }
         public decimal cubill_amt { get; set; }
     }
+
+    public class FinancialOutstandingMainModel
+    {
+        public List<FinancialOutstandingModel> financialOutstandingModels { get; set; }
+        public List<FinancialOutstanding1Model> financialOutstanding1Models { get; set; }
+    }
+    public class FinancialOutstandingModel
+    {
+        public string region_code { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal lm_amt { get; set; }
+        public decimal sinc_amt { get; set; }
+        public decimal cum_amt { get; set; }
+        public decimal Pri_amt { get; set; }
+        public decimal amt_out { get; set; }
+        public decimal tot_exp { get; set; }
+        public decimal bill_amt { get; set; }
+        public string days { get; set; }
+    }
+    public class FinancialOutstanding1Model
+    {
+        public string region_code { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal amtR { get; set; }
+        public decimal amtNR { get; set; }
+        public decimal total { get; set; }
+    }
 }

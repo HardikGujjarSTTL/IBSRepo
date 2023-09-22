@@ -201,6 +201,28 @@
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ParentLOA" />
                     </div>
                 </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" asp-for="Ispricevariation" />
+                                    Does the PO include PVC clause?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" asp-for="Isstageinspection" />
+                                    Does the PO include Stage Inspection Clause?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="savenext-btn">
                     <a asp-controller="DEOVendorPurchesOrder" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>

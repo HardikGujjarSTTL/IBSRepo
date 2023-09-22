@@ -42,6 +42,8 @@ namespace IBS.Repositories
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
+                model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
+                model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 return model;
             }
         }
@@ -198,6 +200,8 @@ namespace IBS.Repositories
                 obj.Remarks = model.Remarks;
                 obj.Datetime = DateTime.Now;
                 obj.PoiCd = model.PoiCd;
+                obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
+                obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 context.T80PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -218,6 +222,8 @@ namespace IBS.Repositories
                 POMaster.Remarks = model.Remarks;
                 POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
+                POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
+                POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }
