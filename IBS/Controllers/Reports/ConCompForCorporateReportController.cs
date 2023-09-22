@@ -4,6 +4,8 @@ using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using IBS.Helper;
+using IBS.Models.Reports;
 
 namespace IBS.Controllers.Reports
 {
@@ -79,14 +81,16 @@ namespace IBS.Controllers.Reports
 
             ViewBag.Regions = region;
             ViewBag.JiRequiredStatus = jirequired;
+            GlobalDeclaration.ConsigneeCompPeriod = model;
             return PartialView("~/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+            ConsigneeCompPeriodReport model = GlobalDeclaration.ConsigneeCompPeriod;
+            htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

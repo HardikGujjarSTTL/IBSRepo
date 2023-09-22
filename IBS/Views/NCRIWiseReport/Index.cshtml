@@ -1,6 +1,6 @@
 ﻿<div class="list-inner">
     <div class="tast-list">
-        <h2>CONTROLLING MANAGER WISE NON CONFORMITIES REPORT</h2>
+        <h2>IE WISE NON CONFORMITIES REPORT</h2>
     </div>
 </div>
 
@@ -67,25 +67,25 @@
             </div>
         </div>
     </div>
-    <br/>
+    <br />
     <div class="custom-readio">
         <div class="company-checkbox">
             <div class="remember">
                 <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
                 <div class="remecheckbox">
                     <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
-                    <label for="AllCM">All CM</label>
+                    <label for="AllCM">All IE</label>
                     &nbsp;&nbsp;
                     <input type="radio" value="forCM" id="forCM" name="AllCM" />
-                    <label for="forCM">For Given CM</label>
+                    <label for="forCM">For Given IE</label>
                 </div>
             </div>
             <div>
-                @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetCOData(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
+                @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetIEIEToWhomIssued(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
             </div>
         </div>
     </div>
-    <br/>
+    <br />
     <div class="custom-readio">
         <div class="company-checkbox">
             <div class="remember">
@@ -165,8 +165,6 @@
                 }
             }
 
-           
-
             if (forperiod == "true") {
                 if ($("#FromDate").val() == "") {
                     $("#spnErrorFromDate").html("Enter From Date.");
@@ -174,14 +172,6 @@
                 }
                 if ($("#ToDate").val() == "") {
                     $("#spnErrorToDate").html("Enter To Date.");
-                    IsValid = false;
-                }
-                if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
-                    $("#spnErrorFromDate").html("Invalid date format.");
-                    IsValid = false;
-                }
-                if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
-                    $("#spnErrorToDate").html("Invalid date format.");
                     IsValid = false;
                 }
             }
@@ -201,20 +191,20 @@
             var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
             var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
             var iecmname = $('#iecmname').val();
-            var reporttype = "C";
-            var COName = $('#iecmname option:selected').text();
+            var reporttype = "I";
+            var IENametext = $('#iecmname option:selected').text();
 
-            let myObject = { month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, monthChar, iecmname, reporttype, COName };
+            let myObject = { month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, monthChar, iecmname, reporttype, IENametext };
 
-            var url = '@Url.Action("Manage", "NCRCWiseReport")?' + $.param(myObject);
+            var url = '@Url.Action("Manage", "NCRIWiseReport")?' + $.param(myObject);
             window.open(url, '_blank');
         }
 
-             function getMonthNumber(monthName) {
+        function getMonthNumber(monthName) {
 
-                const date = new Date(`${monthName} 1, 2000`);
-                const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0'); 
-                return monthNumber;
-            }
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
+            return monthNumber;
+        }
     </script>
 }

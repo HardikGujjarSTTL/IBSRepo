@@ -97,14 +97,16 @@ namespace IBS.Controllers
             ViewBag.Financialperiod = FinancialYears;
             ViewBag.Regions = wRegion;
             ViewBag.Detailedchk = Detailed;
+            GlobalDeclaration.JIRequiredReports = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+            JIRequiredReport model = GlobalDeclaration.JIRequiredReports;
+            htmlContent = await this.RenderViewToStringAsync("/Views/ComplaintsJIRequiredReport/ComplaintRecieved.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

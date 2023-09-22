@@ -64,14 +64,16 @@ namespace IBS.Controllers.Reports
             ViewBag.TotalInspValue = valinsp;
             ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
             ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
+            GlobalDeclaration.HighValueInspReports = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+            HighValueInspReport model = GlobalDeclaration.HighValueInspReports;
+            htmlContent = await this.RenderViewToStringAsync("/Views/HighValueInspecReport/TopNHighValueInsp.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

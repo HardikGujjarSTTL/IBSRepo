@@ -11,16 +11,16 @@ using IBS.Interfaces;
 
 namespace IBS.Controllers.Reports
 {
-    public class NCRCWiseReportController : BaseController
+    public class NCRIWiseReportController : Controller
     {
         private readonly INCRCWiseReportRepository iNCRCWiseReportRepository;
         private readonly IWebHostEnvironment env;
-        public NCRCWiseReportController(INCRCWiseReportRepository _iNCRCWiseReportRepository, IWebHostEnvironment _env)
+        public NCRIWiseReportController(INCRCWiseReportRepository _iNCRCWiseReportRepository, IWebHostEnvironment _env)
         {
             iNCRCWiseReportRepository = _iNCRCWiseReportRepository;
             this.env = _env;
         }
-        [Authorization("NCRCWiseReport", "Index", "view")]
+        [Authorization("NCRIWiseReport", "Index", "view")]
         public IActionResult Index()
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -34,7 +34,7 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string month,string year,string FromDate,string ToDate,string AllCM,string forCM,string All,string Outstanding,string formonth,string forperiod,string monthChar,string iecmname, string reporttype,string COName)
+        public IActionResult Manage(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string iecmname, string reporttype, string IENametext)
         {
             NCRReport model = new()
             {
@@ -51,13 +51,13 @@ namespace IBS.Controllers.Reports
                 iecmname = iecmname,
                 reporttype = reporttype,
                 forperiod = forperiod,
-                COName= COName
+                IENametext = IENametext
             };
             model.ReportTitle = "NCR Report Controling Wise";
             return View(model);
         }
 
-        public IActionResult NCRCWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string iecmname, string reporttype, string COName, string IENametext)
+        public IActionResult NCRIWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string controllingmanager, string reporttype, string iecmname, string COName,string IENametext)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -74,9 +74,10 @@ namespace IBS.Controllers.Reports
             ViewBag.yearshow = year;
             ViewBag.monthshow = monthChar;
             ViewBag.CONameview = COName;
-            ViewBag.Todaydt = DateTime.Now.ToString("dd/MM/yyyyy"); 
+            ViewBag.IENametextView = IENametext;
+            ViewBag.Todaydt = DateTime.Now.ToString("dd/MM/yyyyy");
             GlobalDeclaration.NCRReports = model;
-            return PartialView(model);
+            return PartialView("~/Views/NCRCWiseReport/NCRCWiseReport.cshtml", model);
         }
 
         [HttpPost]

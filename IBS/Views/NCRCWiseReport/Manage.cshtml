@@ -41,7 +41,8 @@
     function loadTopInspReport() {
         $("#dvReportViewer").load("@Url.Action("NCRCWiseReport")", {
             month: '@Model.month', year: '@Model.year', FromDate: '@Model.FromDate',ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', forCM: '@Model.forCM',
-            All: '@Model.All', Outstanding: '@Model.Outstanding', formonth: '@Model.formonth', monthChar: '@Model.monthChar', controllingmanager: '@Model.controllingmanager', forperiod: '@Model.forperiod', reporttype: '@Model.reporttype'
+            All: '@Model.All', Outstanding: '@Model.Outstanding', formonth: '@Model.formonth', monthChar: '@Model.monthChar', iecmname: '@Model.iecmname',
+            forperiod: '@Model.forperiod', reporttype: '@Model.reporttype', IENametext: '@Model.IENametext', COName: '@Model.COName'
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
@@ -76,7 +77,6 @@
             url: "@Url.Action("GeneratePDF", "NCRCWiseReport")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
             xhrFields: {
                 responseType: 'blob'
             },
