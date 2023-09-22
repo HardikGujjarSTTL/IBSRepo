@@ -7,6 +7,8 @@ using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using IBS.Models;
 
 namespace IBS.Controllers.Reports.OtherReports
 {
@@ -23,12 +25,13 @@ namespace IBS.Controllers.Reports.OtherReports
         }
         public IActionResult Index()
         {
+            ViewBag.Region = Region;
             return View();
         }
 
         public IActionResult Manage(string ReportType)
         {
-            OtherReportsModel model = new() { ReportType = ReportType};
+            OtherReportsModel model = new() { ReportType = ReportType };
             if (ReportType == "COWISEIE") model.ReportTitle = "Controlling Officer's Wise Inspection Engineers";
             return View(model);
         }
@@ -40,6 +43,23 @@ namespace IBS.Controllers.Reports.OtherReports
             return PartialView(model);
         }
 
+        #region Other Event
+        [HttpGet]
+        public IActionResult GetIE(string CO)
+        {
+            try
+            {
+                List<SelectListItem> lstAu = Common.GetControllingSelectedIE(Region, CO);
+                return Json(new { status = true, list = lstAu });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillingReports", "GetAU", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+        #endregion
+
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string ReportType)
         {
@@ -49,7 +69,7 @@ namespace IBS.Controllers.Reports.OtherReports
             {
                 ControllingOfficerIEModel model = GlobalDeclaration.ControllingOfficerIE;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoWiseIE.cshtml", model);
-            }            
+            }
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

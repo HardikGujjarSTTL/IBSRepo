@@ -3504,6 +3504,18 @@ namespace IBS.Models
             };
             return textValueDropDownDTO.ToList();
         }
+
+        public static List<SelectListItem> GetControllingSelectedIE(string Region, string CO)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region && ( (c.IeCoCd == Convert.ToInt16(CO) && CO != "") || CO == "") 
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
     }
 
     public static class DbContextHelper

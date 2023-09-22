@@ -5,6 +5,7 @@
     string ReportTitle = string.Empty;
 
     if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
+    else if (ReportType == "COIEWiseCalls") ReportTitle = "CONTROLLING WISE CALLS MARKED";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -15,25 +16,52 @@
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
-        <div class="task-inner row report1" style="display: none">
-            <div class="col-md-3">
-                <div class="input-search">
-                    <label for="FromDate">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+        <div class="task-inner row COIEWiseCalls" style="display: none">
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="dpCO">Controlling Officer</label>
+                    @Html.DropDownList("dpCO", new SelectList(IBS.Models.Common.GetControllingOfficers(ViewBag.Region) , "Value", "Text"))
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="input-search">
-                    <label for="ToDate">To</label>
-                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="status">Status of Call</label>
+                    @Html.DropDownList("status", new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"),"-- Select --")
                 </div>
             </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+            <div class="row my-0 ">
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                        <label for="rdbIE">Inspection Engineer</label>
+                        @Html.RadioButton("rdbIE", "AllIE", new { @id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All IE
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdbIE", "PartiIE", new { @id="rdPIE",@class = "text-darkblue font-bold font-size-8pt"}) Particular IE
+                    </div>
+                </div>               
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3" style="font-weight: bold;">
+                        <div class="reference">
+                            @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Region,"") , "Value", "Text"),"-- Select --",new { @onchange = "BindlstIE();" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0 ">
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                        <label for="rdbSort">Report Sorted On</label>
+                        @Html.RadioButton("rdbSort", "CallDate", new { @id="rdCallDate", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) Call Date
+                        &nbsp;&nbsp;
+                        @Html.RadioButton("rdbSort", "Vendor", new { @id="rdVendor",@class = "text-darkblue font-bold font-size-8pt"}) Vendor
+                    </div>
+                </div>                
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                        <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,9 +75,21 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger
+            BindlstIE();
             if ('@ReportType' == 'COWISEIE') {
                 ViewReportCOWISEIE();
+            }
+            else if ('@ReportType' == "COIEWiseCalls") {
+                $(".COIEWiseCalls").css("display", "");
+                $("#dpIE").css("display", "none");
+                $('input[type=radio][name=rdbIE]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllIE") {
+                        $("#dpIE").css("display", "none");
+                    } else {
+                        $("#dpIE").css("display", "");
+                    }
+                });
             }
         });
 
@@ -58,6 +98,21 @@
             let myObject = { ReportType };
             var url = '@Url.Action("Manage", "OtherReports")?' + $.param(myObject);
             window.open(url, '_blank');
+        }
+
+        function BindlstIE() {
+            $("#dpIE").empty();
+            $("#dpIE").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetIE", "OtherReports")", { RlyCd: $("#dpCO").val() }, function (response) {
+                if (response != null) {
+                    $("#dpIE").empty();
+                    $("#dpIE").append($('<option value="">--Select--</option>'));
+                    $.each(response.list, function (ind, val) {
+                        $("#dpIE").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
         }
     </script>
 }
