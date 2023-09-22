@@ -24,14 +24,14 @@
         </ul>
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tr>
-                <th width='7%' valign='top' align='center'><b><font size='2' face='Verdana'>Region</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>Corresponding Month L.Y.</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>Since @ViewBag.sincedate</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@ViewBag.todate</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>prior to @ViewBag.priordate</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>Total (Not considering suspense a/c)</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>Total (Considering suspense a/c)</font></b></th>
-                <th width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>No of Days Outstanding</font></b></th>
+                <th width='7%' valign='top' align='center'><b><font size='1' face='Verdana'>Region</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>Corresponding Month L.Y.</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>Since @ViewBag.sincedate</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@ViewBag.todate</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>prior to @ViewBag.priordate</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>Total (Not considering suspense a/c)</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>Total (Considering suspense a/c)</font></b></th>
+                <th width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>No of Days Outstanding</font></b></th>
             </tr>
             @{
                 decimal tgt, tgtsus;
@@ -53,7 +53,7 @@
                     t7 = t7 + Convert.ToDecimal(@item.bill_amt);
 
                     <tr>
-                        <td width='7%' valign='top' align='center'><b><font size='2' face='Verdana'>@item.region_code</font></b></td>
+                        <td width='7%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region_code</font></b></td>
                         <td width='15.5%' valign='top' align='center'><b><font size='1.5' face='Verdana'>@item.lm_amt</font></b></td>
                         <td width='13.2%' valign='top' align='center'><b><font size='1.5' face='Verdana'>@item.sinc_amt</font></b></td>
                         <td width='13.2%' valign='top' align='center'><b><font size='1.5' face='Verdana'>@item.cum_amt</font></b></td>
@@ -65,17 +65,17 @@
                 }
             }
             @{
-                double Tot_days=Math.Ceiling((Convert.ToDouble(t6)*365/Convert.ToDouble(t7)));
+                double Tot_days = Math.Ceiling((Convert.ToDouble(t6) * 365 / Convert.ToDouble(t7)));
             }
             <tr>
-                <td width='7%' valign='top' align='center'><b><font size='2' face='Verdana'>Total</font></b></td>
-                <td width='15.5%' valign='top' align='center'><b><font size='2' face='Verdana'>@t1</font></b></td>
-                <td width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@t2</font></b></td>
-                <td width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@t3</font></b></td>
-                <td width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@t4</font></b></td>
-                <td width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@t5</font></b></td>
-                <td width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@t6</font></b></td>
-                <td width='13.2%' valign='top' align='center'><b><font size='2' face='Verdana'>@Tot_days</font></b></td>
+                <td width='7%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@t1</font></b></td>
+                <td width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@t2</font></b></td>
+                <td width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@t3</font></b></td>
+                <td width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@t4</font></b></td>
+                <td width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@t5</font></b></td>
+                <td width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@t6</font></b></td>
+                <td width='13.2%' valign='top' align='center'><b><font size='1' face='Verdana'>@Tot_days</font></b></td>
             </tr>
         </table>
 
@@ -84,8 +84,91 @@
             <br />
             <li><span class="labelName">@ViewBag.Title1</span></li>
         </ul>
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tr>
+                <th width='7%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>Region</font></b></th>
+                <th width='15.5%' valign='top' align='center' colspan='3'><b><font size='1' face='Verdana'>As on 31.03.2022</font></b></th>
+                <th width='15.5%' valign='top' align='center' colspan='3'><b><font size='1' face='Verdana'>As an end of this month</font></b></th>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana' rowspan='2'>% Realisation</font></b></th>
+            </tr>
+            <tr>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Rly</font></b></th>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Non Rly</font></b></th>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></th>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Rly</font></b></th>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Non Rly</font></b></th>
+                <th width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></th>
+            </tr>
+            @{
+                Decimal NRly = 460.88M, NNRly = 489.99M, NTotal = 950.87M;
+                Decimal ERly = 279.54M, ENRly = 106.88M, ETotal = 386.42M;
+                Decimal WRly = 56.42M, WNRly = 482.99M, WTotal = 539.41M;
+                Decimal SRly = 178.71M, SNRly = 147.51M, STotal = 326.23M;
+                Decimal CRly = 291.97M, CNRly = 137.28M, CTotal = 429.25M;
+                Decimal Rtotal = 1267.52M, NRtotal = 1364.65M, GTotal = 2632.18M;
+                decimal DrTotal = 0, DnrTotal = 0, DTotal = 0;
+            }
+            @if (Model != null && Model.financialOutstanding1Models.Count > 0)
+            {
+                foreach (var item in Model.financialOutstanding1Models)
+                {
+                    <tr>
+                        <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region_code</font></b></td>
 
-        
+                        @if (item.region_code == "Northern")
+                        {
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@ERly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@NNRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@NTotal</font></b></td>
+                        }
+                        else @if (item.region_code == "Eastern")
+                        {
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@ERly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@ENRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@ETotal</font></b></td>
+                        }
+                        else @if (item.region_code == "Western")
+                        {
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@WRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@WNRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@WTotal</font></b></td>
+                        }
+                        else @if (item.region_code == "Southern")
+                        {
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@SRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@SNRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@STotal</font></b></td>
+                        }
+                        else
+                        {
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@CRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@CNRly</font></b></td>
+                            <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@CTotal</font></b></td>
+                        }
+                        
+                        <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.amtR</font></b></td>
+                        <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.amtNR</font></b></td>
+                        <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.total</font></b></td>
+                    </tr>
+                    DrTotal = DrTotal + Convert.ToDecimal(@item.amtR);
+                    DnrTotal = DnrTotal + Convert.ToDecimal(@item.amtNR);
+                    DTotal = DTotal + Convert.ToDecimal(@item.total);
+                }
+            }
+            <tr>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@Rtotal</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@NRtotal</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@GTotal</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@DrTotal</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@DnrTotal</font></b></td>
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana'>@DTotal</font></b></td>
+                @{
+                    Decimal Realisation=Math.Round((((GTotal-DTotal)/GTotal)*100),2);
+                }
+                <td width='15.5%' valign='top' align='center'><b><font size='1' face='Verdana' rowspan='6'>@Realisation%</font></b></td>
+            </tr>
+        </table>
     </div>
     <div class="overlayLoader" style="display: none">
         <div class="loaderHolder">

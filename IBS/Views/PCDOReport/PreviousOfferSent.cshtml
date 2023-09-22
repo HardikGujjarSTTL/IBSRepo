@@ -1,15 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "Highlights";
+    ViewData["Title"] = "Previous Offer Sent";
 }
 
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Financial(Billing)</h2>
+            <h2>Previous Offer Sent</h2>
         </div>
     </div>
     @Html.Partial("_PCDOReportHeader")
-
 </div>
 @section scripts{
     <script type="text/javascript">
@@ -21,7 +20,7 @@
             var Monthtext = $("#ddlMonth option:selected").text();
             var Year = $("#ddlYear").val();
             let myObject = { month, Year, Monthtext };
-            var url = '@Url.Action("TableFinancialBilling", "PCDOReport")?' + $.param(myObject);
+            var url = '@Url.Action("TablePreviousOfferSent", "PCDOReport")?' + $.param(myObject);
             window.open(url, '_blank');
         }
     </script>

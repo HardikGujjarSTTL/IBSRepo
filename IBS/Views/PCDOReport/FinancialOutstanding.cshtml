@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Financial (Outstanding)";
 }
-
 <div>
     <div class="list-inner">
         <div class="tast-list">
@@ -12,10 +11,7 @@
 
 </div>
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-
         function Search() {
             GetData();
         }
@@ -27,6 +23,5 @@
             var url = '@Url.Action("TableFinancialOutstanding", "PCDOReport")?' + $.param(myObject);
             window.open(url, '_blank');
         }
-
     </script>
 }
