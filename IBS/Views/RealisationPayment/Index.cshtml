@@ -82,7 +82,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3 clsRailway">
                     <div class="reference">
-                        @Html.DropDownList("dpRailway", new SelectList(IBS.Models.Common.GetRailway().OrderBy(x => x.Value) , "Value", "Text"))
+                        @Html.DropDownList("dpRailway", new SelectList(IBS.Models.Common.GetRailway().OrderBy(x => x.Value) , "Value", "Text"),new { @onchange = "BindlstAU();" })
                     </div>
                 </div>
             </div>
@@ -140,6 +140,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            BindlstAU();
             if ('@ReportType' == "ONLINENRPAYMENTS") {
                 $(".report1").css("display", "");
             }
@@ -229,27 +230,30 @@
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
 
+            //var IsValid = true;
+            //if ($("#FromDate").val() == "") {
+            //    $("#spnErrorFromDate").html("The From Date field is required.");
+            //    IsValid = false;
+            //}
+            //if ($("#ToDate").val() == "") {
+            //    $("#spnErrorToDate").html("The To Date field is required.");
+            //    IsValid = false;
+            //}
+
+            //if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+            //    $("#spnErrorFromDate").html("Invalid date format.");
+            //    IsValid = false;
+            //}
+            //if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+            //    $("#spnErrorToDate").html("Invalid date format.");
+            //    IsValid = false;
+            //}
             var IsValid = true;
-
-            if ($("#FromDate").val() == "") {
-                $("#spnErrorFromDate").html("The From Date field is required.");
-                IsValid = false;
-            }
-            if ($("#ToDate").val() == "") {
-                $("#spnErrorToDate").html("The To Date field is required.");
-                IsValid = false;
-            }
-
-            if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
-                $("#spnErrorFromDate").html("Invalid date format.");
-                IsValid = false;
-            }
-            if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
-                $("#spnErrorToDate").html("Invalid date format.");
-                IsValid = false;
-            }
-
+            IsValid = FromToDateValidate(IsValid, "FromDate", "ToDate", "spnErrorFromDate", "spnErrorToDate");            
             if (!IsValid) return;
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
 
             var ReportType = '@ReportType';
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
@@ -261,11 +265,14 @@
 
         }
         function ViewReportCRISRLY() {
-            $("#spnErrorFromDate_CRISRLY").val("");
-            $("#spnErrorToDate_CRISRLY").val("");
+            $("#spnErrorFromDate_CRISRLY").html("");
+            $("#spnErrorToDate_CRISRLY").html("");
             var IsValid = true;
             IsValid = FromToDateValidate(IsValid, "FromDate_CRISRLY", "ToDate_CRISRLY", "spnErrorFromDate_CRISRLY", "spnErrorToDate_CRISRLY");
             if (!IsValid) return;
+
+            $("#spnErrorFromDate_CRISRLY").html("");
+            $("#spnErrorToDate_CRISRLY").html("");
 
             var ReportType = '@ReportType';
             var FromDate = moment($('#FromDate_CRISRLY').datepicker('getDate')).format("YYYY-MM-DD");
@@ -320,6 +327,21 @@
                 IsValid = false;
             }
             return IsValid;
+        }
+
+        function BindlstAU() {
+            $("#dpAU").empty();
+            $("#dpAU").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetAU", "RealisationPayment")", { RlyCd: $("#dpRailway").val() }, function (response) {
+                if (response != null) {
+                    $("#dpAU").empty();
+                    $("#dpAU").append($('<option value="">--Select--</option>'));
+                    $.each(response.list, function (ind, val) {
+                        $("#dpAU").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
         }
     </script>
 }

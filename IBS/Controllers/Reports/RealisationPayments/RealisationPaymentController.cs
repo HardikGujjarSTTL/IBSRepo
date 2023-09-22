@@ -7,6 +7,7 @@ using IBS.Models;
 using IBS.Models.Reports;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.Reports.RealisationPayments
 {
@@ -29,6 +30,23 @@ namespace IBS.Controllers.Reports.RealisationPayments
         {
             return View();
         }
+
+        #region Other Event
+        [HttpGet]
+        public IActionResult GetAU(string RlyCd)
+        {
+            try
+            {
+                List<SelectListItem> lstAu = Common.GetAUCrisByRlyCd(RlyCd);
+                return Json(new { status = true, list = lstAu });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillingReports", "GetAU", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+        #endregion
 
         public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
         {

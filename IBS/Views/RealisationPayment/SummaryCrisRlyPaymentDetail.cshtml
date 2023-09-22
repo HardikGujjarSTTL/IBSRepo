@@ -44,30 +44,30 @@
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.INVOICENO</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_NO</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Convert.ToString(decimal.Truncate(Convert.ToDecimal(item.AMOUNT)))</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Math.Round(item.AMOUNT,0)</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO6_NO</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO6_DATE</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PASSED_AMT</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.DEDUCTED_AMT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(Convert.ToDecimal(item.NET_AMT))</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Math.Round(item.NET_AMT,0)</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BOOKDATE</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.RETURN_DATE</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.RETURN_REASON</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO7_NO</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO7_DATE</font></td>
                             <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PAYMENT_DT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(Convert.ToDecimal(item.IBS_AMT_CLEARED))</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Math.Round(Convert.ToDecimal(item.IBS_AMT_CLEARED),0)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
                         <td width="15%" valign="top" align="right" colspan="9"><font size="1" face="Verdana"><b>Total</b></font></td>
-                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => x.AMOUNT)</b></font></td>
+                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(x.AMOUNT,0))</b></font></td>
                         <td width="15%" valign="top" align="right" colspan="2"><font size="1" face="Verdana"><b></b></font></td>
                         <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => x.PASSED_AMT)</b></font></td>
                         <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => x.DEDUCTED_AMT)</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => x.NET_AMT)</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(x.NET_AMT,0))</b></font></td>
                         <td width="15%" valign="top" align="right" colspan="6"><font size="1" face="Verdana"><b></b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => decimal.Truncate(Convert.ToDecimal(x.IBS_AMT_CLEARED)))</b></font></td>
+                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(Convert.ToDecimal(x.IBS_AMT_CLEARED),0))</b></font></td>
                     </tr>
                 }
                 else

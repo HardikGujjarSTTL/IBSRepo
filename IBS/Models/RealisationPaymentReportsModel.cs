@@ -53,9 +53,10 @@
     {
         public DateTime? FromDate { get; set; }
         public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
-
         public DateTime? ToDate { get; set; }
         public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public string IsRlyWise { get; set; }
+        public string Status { get; set; }
         public string Region { get; set; }
         public List<SummaryCrisRlyPaymentDetailedModel> lstCrisRlyDetailed { get; set; }
         public List<SummaryCrisRlyPaymentSummaryListModel> lstCrisRlySummary { get; set; }

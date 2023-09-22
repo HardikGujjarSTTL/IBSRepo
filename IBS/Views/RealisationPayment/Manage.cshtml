@@ -61,7 +61,7 @@
             });
         } 
         else {
-            $("#dvReportViewer").load("@Url.Action("SummaryCrisRlyPaymentDetail")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', IsRly: '@Model.IsRly', Rly: '@Model.Rly', IsAU: '@Model.IsAU', AU: '@Model.AU', IsAllRegion: '@Model.IsAllRegion', Status: '@Model.Status' }, function (response) {
+            $("#dvReportViewer").load("@Url.Action("SummaryCrisRlyPaymentSummary")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', IsRlyWise: '@Model.IsRlyWise', Status: '@Model.Status' }, function (response) {
                 $("#dvReportViewer").empty();
                 $("#dvReportViewer").html(response);
             });
