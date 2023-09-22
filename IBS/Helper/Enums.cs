@@ -688,5 +688,11 @@ namespace IBS.Helper
         public static DefectCodeReport DefectCodeReports { get; set; }
 
         public static HighValueInspReport HighValueInspReports { get; set; }
+
+        public static VendorClusterReportModel VendorClusterReport { get; set; }
+
+        public static IEAlterMappingReportModel IEAlterMappingReport { get; set; }
+
+        public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
     }
 }

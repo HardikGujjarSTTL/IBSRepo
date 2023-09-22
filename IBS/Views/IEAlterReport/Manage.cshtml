@@ -1,8 +1,7 @@
-﻿@model IBS.Models.DefectCodeReport
-
+﻿
 @{
     Layout = null;
-    string ReportTitle = (Model != null ? Model.ReportTitle : "");
+    string ReportTitle = (Model != null ? "IE Alternate Mapping Report" : "");
     ViewData["Title"] = ReportTitle;
 }
 
@@ -35,17 +34,19 @@
     var fileName = '';
 
     $(document).ready(function () {
-        loadDefectCodeReport();
-        fileName = 'Defect_Code';
+        loadJI();
+        fileName = 'IE Alternate Mapping Report';
     });
 
-    function loadDefectCodeReport() {
-        $("#dvReportViewer").load("@Url.Action("DefectCodeReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
-            $("#dvReportViewer").empty();
-            $("#dvReportViewer").html(response);
-        });
+    function loadJI() {
+        $("#dvReportViewer").load("@Url.Action("IEAlterMappingReport")", {
+            
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
     }
-
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -69,13 +70,11 @@
     });
 
     function generatePdf(isPrint) {
-        var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "DefectCodeReport")",
+            url: "@Url.Action("GeneratePDF", "IEAlterReport")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
             xhrFields: {
                 responseType: 'blob'
             },
