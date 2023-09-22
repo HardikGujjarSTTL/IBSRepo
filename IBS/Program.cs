@@ -204,14 +204,12 @@ builder.Services.AddScoped<ICoComplaintJIRequiredRepository, CoComplaintJIRequir
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IDefectCodeReportRepository, DefectCodeReportRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
-builder.Services.AddScoped<ISummaryConsigneeWiseInspRepository, SummaryConsigneeWiseInspRRepository>();
-builder.Services.AddScoped<ISummaryVendorWiseInspRepository, SummaryVendorWiseInspRRepository>();
+
 builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
-builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
-builder.Services.AddScoped<IDetailsofPurchaserWiseInspRepository, DetailsofPurchaserWiseInspRRepository>();
 builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
+builder.Services.AddScoped<ILabReportsRepository, LabReportsRRepository>();
 
 var app = builder.Build();
 
