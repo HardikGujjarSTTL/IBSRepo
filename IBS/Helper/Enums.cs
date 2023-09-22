@@ -677,5 +677,6 @@ namespace IBS.Helper
         public static SuperSurpriseDetailsModel SuperSurpriseDetails { get; set; }
 
         public static SuperSurpriseSummaryModel SuperSurpriseSummary { get; set; }
+        public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
     }
 }

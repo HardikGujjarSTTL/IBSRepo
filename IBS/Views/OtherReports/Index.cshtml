@@ -1,0 +1,63 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
+    ViewData["Title"] = ReportTitle;
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row report1" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            debugger
+            if ('@ReportType' == 'COWISEIE') {
+                ViewReportCOWISEIE();
+            }
+        });
+
+        function ViewReportCOWISEIE() {
+            var ReportType = '@ReportType';
+            let myObject = { ReportType };
+            var url = '@Url.Action("Manage", "OtherReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}
