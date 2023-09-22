@@ -53,7 +53,7 @@ namespace IBS.Repositories.Reports
                     List<IECMWise> listcong = dt.AsEnumerable().Select(row => new IECMWise
                     {
                         CASE_NO = row.Field<string>("CASE_NO"),
-                        NCR_NO = row.Field<string>("NCR_NO"),
+                        NC_NO = row.Field<string>("NC_NO"),
                         ITEM = row.Field<string>("ITEM"),
                         VENDOR = row.Field<string>("VENDOR"),
                         IE_NAME = row.Field<string>("IE_NAME"),
@@ -93,9 +93,12 @@ namespace IBS.Repositories.Reports
                         Total_Minor = Convert.ToDecimal(row["TOTAL_MINOR"]),
                         Total_Major = Convert.ToDecimal(row["TOTAL_MAJOR"]),
                         Total_Critical = Convert.ToDecimal(row["TOTAL_CRITICAL"]),
-                        NO_NC = Convert.ToString(row["NO_NC"]),
+                        NO_NC = Convert.ToDecimal(row["NO_NC"]),
                     }).ToList();
-
+                    foreach (var item in listcong)
+                    {
+                        item.Total = (decimal)item.Total_Minor + (decimal)item.Total_Major + (decimal)item.Total_Critical;
+                    }
                     model.lstAllNCRCMIE = listcong;
                 }
             }

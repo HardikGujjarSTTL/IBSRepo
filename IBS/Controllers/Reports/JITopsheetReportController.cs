@@ -57,6 +57,7 @@ namespace IBS.Controllers
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
             ConsigneeComplaints model = jITopsheetReportRepository.GetComplaintReportDetails(JISNO, Region);
+            GlobalDeclaration.ConsigneeComplaint = model;
             ViewBag.Regions = wRegion;
             return PartialView(model);
         }

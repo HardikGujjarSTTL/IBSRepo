@@ -30,13 +30,14 @@ namespace IBS.Models.Reports
         public decimal Total_Minor { get; set; }
         public decimal Total_Major { get; set; }
         public decimal Total_Critical { get; set; }
-        public string NO_NC { get; set; }
+        public decimal NO_NC { get; set; }
+        public decimal Total { get; set; }
     }
 
     public class IECMWise
     {
         public string CASE_NO { get; set; }
-        public string NCR_NO { get; set; }
+        public string NC_NO { get; set; }
         public string ITEM { get; set; }
         public string VENDOR { get; set; }
         public string IE_NAME { get; set; }
