@@ -1,4 +1,4 @@
-﻿@model IBS.Models.InspectionStatusModel
+﻿@model IBS.Models.LabReportsModel
 
 @{
     Layout = null;
@@ -40,39 +40,69 @@
     });
 
     $(document).ready(function () {
-        if ('@ReportType' == 'ConInsp') {
-            loadSummartReport();
-            fileName = 'Summary_of_Consignee_Wise_Inspections';
+        if ('@ReportType' == 'LabReg') {
+             loadLabRegReport();
+            fileName = 'LAB_REGISTER_REPORT';
         }
-        else if ('@ReportType' == 'VenInsp') {
-            loadSummartVendorReport();
-            fileName = 'Summary_of_Vendor_Wise_Inspections';
+        else if ('@ReportType' == 'LabPer') {
+            loadLabPerReport();
+            fileName = 'LAB_PERFORMANCE_REPORT';
         }
-        else if ('@ReportType' == 'RTIInsp') {
-            loadSummartRTIReport();
-            fileName = 'SUMMARY_OF_INSPECTIONS_FOR_RTI';
+        else if ('@ReportType' == 'LabPos') {
+            loadLabPosReport();
+            fileName = 'LAB_POSTING_REPORT';
         }
-        
-    });
+        else if ('@ReportType' == 'SummNR') {
+            loadSummNRReport();
+            fileName = 'SUMMARY_OF_ONLINE_PAYMENT_IN_NR';
+        }
+        else if ('@ReportType' == 'LabInv') {
+            loadLabInvReport();
+            fileName = 'LAB_INVOICE_REPORT';
+        }
+        else if ('@ReportType' == 'LabInfo') {
+            loadLabInfoReport();
+            fileName = 'LAB_SAMPLE_INFO_DETAILS';
+        }
 
-    function loadSummartReport() {
-        $("#dvReportViewer").load("@Url.Action("SummaryConsigneeWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
+    });
+    function loadLabRegReport() {
+        $("#dvReportViewer").load("@Url.Action("LabRegisterReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', rdbIEWise: '@Model.rdbIEWise', rdbPIE: '@Model.rdbPIE', rdbVendWise: '@Model.rdbVendWise', rdbPVend: '@Model.rdbPVend', rdbLabWise: '@Model.rdbLabWise', rdbPLab: '@Model.rdbPLab', rdbPending: '@Model.rdbPending', rdbPaid: '@Model.rdbPaid', rdbDue: '@Model.rdbDue', rdbPartlyPaid: '@Model.rdbPartlyPaid', lstTStatus: '@Model.lstTStatus', lstIE: '@Model.lstIE', ddlVender: '@Model.ddlVender', lstLab: '@Model.lstLab' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
-    function loadSummartVendorReport() {
-        $("#dvReportViewer").load("@Url.Action("SummaryVendorWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
+    function loadLabPerReport() {
+        $("#dvReportViewer").load("@Url.Action("LabPerformanceReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
-    function loadSummartRTIReport() {
-        $("#dvReportViewer").load("@Url.Action("SummaryofInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular', TextPurchaser: '@Model.TextPurchase' }, function (response) {
+    function loadLabPosReport() {
+        $("#dvReportViewer").load("@Url.Action("LabPostingReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
+    function loadSummNRReport() {
+        $("#dvReportViewer").load("@Url.Action("OnlinePaymentReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    function loadLabInvReport() {
+        $("#dvReportViewer").load("@Url.Action("LabInvoiceReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    function loadLabInfoReport() {
+        $("#dvReportViewer").load("@Url.Action("LabSamplePaymentReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', lstStatus: '@Model.lstStatus', rdbrecvdt: '@Model.rdbrecvdt' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -99,7 +129,7 @@
         var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "InspectionStatus")",
+            url: "@Url.Action("GeneratePDF", "LabReports")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
             data: { htmlContent: HTML },

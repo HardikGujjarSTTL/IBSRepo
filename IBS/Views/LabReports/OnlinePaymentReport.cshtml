@@ -1,0 +1,123 @@
+﻿@model IBS.Models.LabReportsModel
+
+<div>
+    <h3 class="center">(@ViewBag.Region)</h3>
+
+
+    <h3 class="center">Online Payment Gateway Details: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
+
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">S.No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Merchant TXN Ref</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Order Infofont</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Transaction No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">RRN NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Auth CD</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Case No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Call Dt</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Call Sno</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Vendor</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Amountb</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Charges Typefo</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Status</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">DateTime</font></b></th>
+                    
+
+                </tr>
+                @if (Model != null && Model.lstLabReport.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstLabReport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.MER_TXN_REF
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.ORDER_INFO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TRANSACTION_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.RRN_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.AUTH_CD
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CASE_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_DT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_SNO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.VENDOR
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.AMOUNT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TYPE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.STATUS
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.DATETIME
+                                </font>
+                            </td>
+                            
+
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
