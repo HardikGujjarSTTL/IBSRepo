@@ -1,9 +1,13 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
+using IBS.Helpers;
 using IBS.Interfaces;
+using IBS.Interfaces.Administration;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System.Drawing;
 
 namespace IBS.Controllers
@@ -15,13 +19,19 @@ namespace IBS.Controllers
         private readonly IDEOVendorPurchesOrderRepository deovendorpurchesRepository;
         private readonly IPOMasterRepository pOMasterRepository;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IUploadDocRepository uploaddocRepository;
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
         #endregion
 
-        public DEOVendorPurchesOrderController(IDEOVendorPurchesOrderRepository _deovendorpurchesRepository, IPOMasterRepository _pOMasterRepository, ISendMailRepository _pSendMailRepository)
+        public DEOVendorPurchesOrderController(IDEOVendorPurchesOrderRepository _deovendorpurchesRepository, IPOMasterRepository _pOMasterRepository, ISendMailRepository _pSendMailRepository, IUploadDocRepository _uploaddocRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment)
         {
             deovendorpurchesRepository = _deovendorpurchesRepository;
             pOMasterRepository = _pOMasterRepository;
             pSendMailRepository = _pSendMailRepository;
+            uploaddocRepository = _uploaddocRepository;
+            iDocument = _iDocumentRepository;
+            env = _environment;
         }
 
         [Authorization("DEOVendorPurchesOrder", "Index", "view")]
@@ -45,12 +55,38 @@ namespace IBS.Controllers
             {
                 model = pOMasterRepository.FindByID(CaseNo);
             }
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+            FileUploaderDTO FileUploaderDrawingSpecification = new FileUploaderDTO();
+            FileUploaderDrawingSpecification.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderDrawingSpecification.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification).ToList();
+            FileUploaderDrawingSpecification.OthersSection = false;
+            FileUploaderDrawingSpecification.MaxUploaderinOthers = 5;
+            FileUploaderDrawingSpecification.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.DrawingSpecification = FileUploaderDrawingSpecification;
+
+            List<IBS_DocumentDTO> lstAmendmentDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+            FileUploaderDTO FileUploaderAmendment = new FileUploaderDTO();
+            FileUploaderAmendment.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderAmendment.IBS_DocumentList = lstAmendmentDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.Amendment).ToList();
+            FileUploaderAmendment.OthersSection = false;
+            FileUploaderAmendment.MaxUploaderinOthers = 5;
+            FileUploaderAmendment.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Amendment = FileUploaderAmendment;
+
+            List<IBS_DocumentDTO> lstParentLOADocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+            FileUploaderDTO FileUploaderParentLOA = new FileUploaderDTO();
+            FileUploaderParentLOA.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderParentLOA.IBS_DocumentList = lstParentLOADocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.ParentLOA).ToList();
+            FileUploaderParentLOA.OthersSection = false;
+            FileUploaderParentLOA.MaxUploaderinOthers = 5;
+            FileUploaderParentLOA.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.ParentLOA = FileUploaderParentLOA;
             return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorization("DEOVendorPurchesOrder", "Index", "edit")]
-        public IActionResult POMasterSave(PO_MasterModel model)
+        public IActionResult POMasterSave(PO_MasterModel model, IFormCollection FrmCollection)
         {
             try
             {
@@ -78,9 +114,15 @@ namespace IBS.Controllers
                 //    var Retmsg = "This Po No. Already Registered Vide Case No." + pO_MasterModel2.CaseNo + " And PO Date: " + pO_MasterModel2.PoDt + ". Use this Case No. to register the call using Call for Inspection Menu.";
                 //    return Json(new { status = false, responseText = Retmsg });
                 //}
-                string i = pOMasterRepository.POMasterDetailsInsertUpdate(model);
-                if (i != "" && i != null)
+                string id = pOMasterRepository.POMasterDetailsInsertUpdate(model);
+                if (id != "" && id != null)
                 {
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+                        int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                    }
                     return Json(new { status = true, responseText = msg });
                 }
             }

@@ -13,7 +13,7 @@ public partial class T17CallRegisterSearchView
 
     public byte? CallInstallNo { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public string? CallStatus { get; set; }
 

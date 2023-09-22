@@ -1,52 +1,27 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
-using IBS.Interfaces;
+using IBS.Interfaces.Reports;
 using IBS.Models;
 using IBS.Models.Reports;
-using IBS.Repositories;
+using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using IBS.Interfaces;
 
 namespace IBS.Controllers.Reports
 {
-    public class HighValueInspecReportController : BaseController
+    public class NCRCWiseReportController : BaseController
     {
-        #region Variables
-        private readonly IHighValueInspecReportRepository highValueInspecReportRepository;
+        private readonly INCRCWiseReportRepository iNCRCWiseReportRepository;
         private readonly IWebHostEnvironment env;
-        #endregion
-        public HighValueInspecReportController(IHighValueInspecReportRepository _highValueInspecReportRepository, IWebHostEnvironment _env)
+        public NCRCWiseReportController(INCRCWiseReportRepository _iNCRCWiseReportRepository, IWebHostEnvironment _env)
         {
-            highValueInspecReportRepository = _highValueInspecReportRepository;
+            iNCRCWiseReportRepository = _iNCRCWiseReportRepository;
             this.env = _env;
         }
-        [Authorization("HighValueInspecReport", "Index", "view")]
+        [Authorization("NCRCWiseReport", "Index", "view")]
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Manage(string month,string year,string valinsp,string FromDate,string ToDate,string ICDate,string BillDate,string formonth,string forperiod,string monthChar)
-        {
-            HighValueInspReport model = new()
-            {
-                month = month,
-                year = year,
-                valinsp = valinsp,
-                FromDate = FromDate,
-                ToDate = ToDate,
-                ICDate = ICDate,
-                BillDate = BillDate,
-                formonth = formonth,
-                monthChar = monthChar,
-                forperiod = forperiod
-            };
-            model.ReportTitle = "High Value Inspection";
-            return View(model);
-        }
-
-        public IActionResult TopNHighValueInsp(string month, string year, string valinsp, string FromDate, string ToDate, string ICDate, string BillDate, string formonth, string forperiod,string monthChar)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -55,15 +30,49 @@ namespace IBS.Controllers.Reports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            HighValueInspReport model = highValueInspecReportRepository.GetHighValueInspdata(month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod, Region);
+            ViewBag.Regions = Region;
+            return View();
+        }
+
+        public IActionResult Manage(string month,string year,string FromDate,string ToDate,string AllCM,string forCM,string All,string Outstanding,string formonth,string forperiod,string monthChar,string controllingmanager,string reporttype)
+        {
+            NCRReport model = new()
+            {
+                month = month,
+                year = year,
+                FromDate = FromDate,
+                ToDate = ToDate,
+                AllCM = AllCM,
+                forCM = forCM,
+                All = All,
+                Outstanding = Outstanding,
+                formonth = formonth,
+                monthChar = monthChar,
+                controllingmanager = controllingmanager,
+                reporttype = reporttype,
+                forperiod = forperiod
+            };
+            model.ReportTitle = "NCR Report Controling Wise";
+            return View(model);
+        }
+
+        public IActionResult NCRCWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string controllingmanager, string reporttype,string iename)
+        {
+            string Region = SessionHelper.UserModelDTO.Region;
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            NCRReport model = iNCRCWiseReportRepository.GetNCRIECOWiseData(month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, Region, controllingmanager, reporttype, iename);
             ViewBag.Regions = wRegion;
             ViewBag.FromDT = FromDate;
             ViewBag.ToDT = ToDate;
             ViewBag.yearshow = year;
             ViewBag.monthshow = monthChar;
-            ViewBag.TotalInspValue = valinsp;
-            ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
-            ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
+           // ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
+           // ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
             return PartialView(model);
         }
 

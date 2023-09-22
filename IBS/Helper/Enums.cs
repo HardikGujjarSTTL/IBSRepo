@@ -1,4 +1,5 @@
-﻿using IBS.Models.Reports;
+﻿using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
@@ -58,7 +59,11 @@ namespace IBS.Helper
             [Description("/ReadWriteData/Files/Complaints_Report")]
             COMPLAINTSREPORT = 17,
             [Description("/ReadWriteData/Files/Complaints_Tech_Ref")]
-            ComplaintTechRef = 17,
+            ComplaintTechRef = 18,
+            [Description("/ReadWriteData/Files/ICCancellation")]
+            ICCancellation = 19,
+            [Description("/ReadWriteData/Files/PurchaseOrderForm")]
+            PurchaseOrderForm = 20,
         }
 
         public enum DocumentCategory : int
@@ -72,12 +77,14 @@ namespace IBS.Helper
             TechnicalReferences = 8,
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
-            AdministratorPurchaseOrder =13,
+            //AdministratorPurchaseOrder =13,
             OnlineComplaints=11,
             ConsigneeComplaints = 12,
             IEFullSignature = 14,
             IEInitials = 15,
             ContractEntryDoc=16,
+            ICCancellation = 17,
+            PurchaseOrderForm = 18,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -92,13 +99,24 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
-            Upload_a_scanned_copy_of_Purchase_Order = 54,
             Upload_Rejection_Memo=50,
             Upload_JI_Case=51,
             Upload_JI_Report=52,
             Upload_Tech_Ref1 = 53,
             Upload_Contract_Doc=16,
+        }
 
+        public enum DocumentICCancellation : int
+        {
+            FIR_Upload = 55,
+        }
+
+        public enum DocumentPurchaseOrderForm : int
+        {
+            Upload_a_scanned_copy_of_Purchase_Order = 54,
+            DrawingSpecification = 56,
+            Amendment = 57,
+            ParentLOA = 58,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
@@ -644,6 +662,7 @@ namespace IBS.Helper
     public static class GlobalDeclaration
     {
         public static IEPerformanceModel IEPerformance { get; set; }
+        public static ConsigneeComplaints ConsigneeComplaint { get; set; }
 
         public static ClusterPerformanceModel ClusterPerformance { get; set; }
 

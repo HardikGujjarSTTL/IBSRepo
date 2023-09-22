@@ -31,5 +31,7 @@ public partial class T16IcCancel
 
     public byte? Status { get; set; }
 
+    public int? Id { get; set; }
+
     public virtual T09Ie? IssueToIecdNavigation { get; set; }
 }

@@ -102,5 +102,31 @@ namespace IBS.Repositories.Reports
             return model;
         }
 
+        public FinancialOutstandingMainModel GetFinancialOutstandingData(string wYrMth_Past, string CumYrPast, string wYrMth, string CumYrMth, string bakdate, string lstdate)
+        {
+            OracleParameter[] par = new OracleParameter[8];
+            par[0] = new OracleParameter("wYrMth_Past", OracleDbType.Varchar2, wYrMth_Past, ParameterDirection.Input);
+            par[1] = new OracleParameter("CumYrPast", OracleDbType.Varchar2, CumYrPast, ParameterDirection.Input);
+            par[2] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[3] = new OracleParameter("CumYrMth", OracleDbType.Varchar2, CumYrMth, ParameterDirection.Input);
+            par[4] = new OracleParameter("bakdate", OracleDbType.Varchar2, bakdate, ParameterDirection.Input);
+            par[5] = new OracleParameter("lstdate", OracleDbType.Varchar2, lstdate, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("p_Result1", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_FinancialOutstanding", par, 2);
+            DataTable dt = ds.Tables[0];
+
+            FinancialOutstandingMainModel model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.financialOutstandingModels = JsonConvert.DeserializeObject<List<FinancialOutstandingModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                model.financialOutstanding1Models = JsonConvert.DeserializeObject<List<FinancialOutstanding1Model>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return model;
+        }
+
     }
 }

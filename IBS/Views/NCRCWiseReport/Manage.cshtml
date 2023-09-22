@@ -1,5 +1,4 @@
-﻿@model IBS.Models.ConsigneeComplaints
-
+﻿@model IBS.Models.Reports.NCRReport
 @{
     Layout = null;
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
@@ -35,14 +34,14 @@
     var fileName = '';
 
     $(document).ready(function () {
-        loadJI();
-        fileName = 'JI_Complaint_Report';
+        loadTopInspReport();
+        fileName = 'Top N High Inspection Report';
     });
 
-    function loadJI() {
-        $("#dvReportViewer").load("@Url.Action("JIComplaintsReport")", {
-            JISNO: '@Model.JiSno'
-
+    function loadTopInspReport() {
+        $("#dvReportViewer").load("@Url.Action("NCRCWiseReport")", {
+            month: '@Model.month', year: '@Model.year', FromDate: '@Model.FromDate',ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', forCM: '@Model.forCM',
+            All: '@Model.All', Outstanding: '@Model.Outstanding', formonth: '@Model.formonth', monthChar: '@Model.monthChar', controllingmanager: '@Model.controllingmanager', forperiod: '@Model.forperiod', reporttype: '@Model.reporttype'
         }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
@@ -71,11 +70,13 @@
     });
 
     function generatePdf(isPrint) {
+        var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "JITopsheetReport")",
+            url: "@Url.Action("GeneratePDF", "NCRCWiseReport")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
             xhrFields: {
                 responseType: 'blob'
             },
