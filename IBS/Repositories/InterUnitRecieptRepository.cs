@@ -297,8 +297,8 @@ namespace IBS.Repositories
         public DTResult<InterUnitRecieptModel> RecieptList(DTParameters dtParameters , string Region)
         {
             string VCHR_NO = dtParameters.AdditionalValues?.GetValueOrDefault("VCHR_NO");
-            DTResult<InterUnitRecieptModel> dTResult = new() { draw = 0 };
-            IQueryable<InterUnitRecieptModel>? query = null;
+                DTResult<InterUnitRecieptModel> dTResult = new() { draw = 0 };
+                IQueryable<InterUnitRecieptModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;

@@ -1,0 +1,74 @@
+﻿@model IBS.Models.Clientmaster
+
+@{
+    ViewData["Title"] = "Manage Non Client Master";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Non Client</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="NonRlyClientMaster" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+
+<div class="task-listinput">
+    <form asp-controller="NonRlyClientMaster" asp-action="NonClientDetailsave" role="form" id="frmNonClient">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <input type="hidden" asp-for="Id" />
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Client Name</label>
+                    <input type="text" class="input" ASP-FOR="USER_NAME" maxlength="300" required />
+                    <span asp-validation-for="USER_NAME" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Short Code</label>
+                    <input type="text" class="input" ASP-FOR="ShortCode" maxlength="300" required />
+                    <span asp-validation-for="ShortCode" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Orgn Type(Sector)</label>
+                    @Html.DropDownListFor(model => model.Orgn_Type, new SelectList(IBS.Models.Common.Non_Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                    <span asp-validation-for="Orgn_Type" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Contact Name</label>
+                    <input type="text" class="input" ASP-FOR="ContactName" maxlength="300" required />
+                    <span asp-validation-for="ContactName" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Contact Designation</label>
+                    <input type="text" class="input" ASP-FOR="DESIGNATION" maxlength="10" required />
+                    <span asp-validation-for="DESIGNATION" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Mobile No</label>
+                    <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10" onkeypress="return isNumber(event)"  required />
+                    <span asp-validation-for="MOBILE" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Email</label>
+                    <input type="email" class="input" ASP-FOR="EMAIL" maxlength="300" required />
+                    <span asp-validation-for="EMAIL" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            if ($("#frmNonClient").valid()) {
+                $("#frmNonClient").submit();
+            }
+        }
+    </script>
+}

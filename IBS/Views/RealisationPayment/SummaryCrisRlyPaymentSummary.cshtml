@@ -1,0 +1,144 @@
+﻿@model IBS.Models.SummaryCrisRlyPaymentModel
+<div>
+    @{
+        if (Model.IsRlyWise == "1" || Model.IsRlyWise == "0")
+        {
+            if (Model.Status == "A")
+            {
+                <h3 class="center">@Model.Region <br /> CRIS BILLS SUMMARY FOR THE PERIOD : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate</span><br />(All Columns Based on Invoice Date)</h3>
+            }
+            else if ((Model.Status == "P"))
+            {
+                <h3 class="center" style="font-size: 18px;"> @Model.Region<br />CRIS BILLS SUMMARY FOR THE PERIOD : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate</span><br />(No. of Bills Passed & Total Amount Passed Based on Payment Date & Return Bills based on Return Date & Resent Bills Based on Resent Date & Total Bills Sent to CRIS)</h3>
+            }            
+        }
+    }
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    @if (Model.IsRlyWise == "1")
+                    {
+
+                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">RLY</font></b></th>
+                    }
+                    else
+                    {
+                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">AU</font></b></th>
+                    }
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">No. of Bills (A)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Bill Amount(AA)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">No. of Bills Passed(B)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total Passed Amount(BB)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Bills Returned to RITES(C)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total Bill Amount of Bills Returned to RITES(CC)</font></b></th>
+                    @if (Model.IsRlyWise == "1")
+                    {
+                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Bills Yet to Resent(E) Already Posted in IBS</font></b></th>
+                        <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total Amount Posted of Bills Yet to Resent(EE) Already Posted in IBS</font></b></th>
+                    }
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Bills Resent to RAILWAYS(D)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Total Bill Amount of Bills Resent to RAILWAYS(DD)</font></b></th>
+
+                    @if (Model.Status == "A")
+                    {
+                        <th width='1%' valign='top' align="center"><b><font size='1' face='Verdana'>Pending Bills with Railways(P=A-C+D-B)</font></b></th>
+                        <th width='1%' valign='top' align="center"><b><font size='1' face='Verdana'>Total Outstanding With Railways(OUTS=AA-CC+DD-BB)</font></b></th>
+                        if (Model.IsRlyWise == "1")
+                        {
+                            <th width='1%' valign='top' align="center"><b><font size='1' face='Verdana'>Short Payment By Railways</font></b></th>
+                            <th width='1%' valign='top' align="center"><b><font size='1' face='Verdana'>Pending Bills with Railways Already Posted in IBS</font></b></th>
+                            <th width='1%' valign='top' align="center"><b><font size='1' face='Verdana'>Total Bill Amount Outstanding With Railways Already Posted in IBS</font></b></th>
+                        }
+                    }
+                </tr>
+                @if (Model != null && Model.lstCrisRlySummary != null && Model.lstCrisRlySummary.Count > 0)
+                {
+                    var SrNo = 0;
+                    decimal Pending_Bill = 0, W_Pending_Bill = 0, Outstanding = 0, W_Outstanding = 0, W_Short_Payment = 0, w_pend_bill_cleared_ibs = 0, w_pend_bill_amt_cleared_ibs = 0;
+                    @foreach (var item in Model.lstCrisRlySummary)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            @if (Model.IsRlyWise == "1")
+                            {
+                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            }
+                            else
+                            {
+                                <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.AU_DESC</font></td>
+                            }
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.TOTAL_BILLS,0)</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.TOTAL_AMT,0)</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.NO_BILLS_PASSED,0)</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.TOTAL_AMT_PASSED,0)</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.RETURN_BILLS,0)</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.RETURN_AMOUNT,0)</font></td>
+                            @if (Model.IsRlyWise == "1")
+                            {
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.RET_BILL_CLEARED,0)</font></td>
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.RET_BILL_CLEARED_AMT,0)</font></td>
+                            }
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.RESENT_BILLS,0)</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.RESENT_AMOUNT,0)</font></td>
+
+                            @if (Model.Status == "A")
+                            {
+                                Pending_Bill = item.TOTAL_BILLS - item.RETURN_BILLS + item.RESENT_BILLS - item.NO_BILLS_PASSED;
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(Pending_Bill,0)</font></td>
+                                W_Pending_Bill = W_Pending_Bill + Pending_Bill;
+                                Outstanding = (item.TOTAL_AMT - item.RETURN_AMOUNT + item.RESENT_AMOUNT - item.TOTAL_AMT_PASSED);
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(Outstanding,0)</font></td>
+                                W_Outstanding = W_Outstanding + Outstanding;
+                                if (Model.IsRlyWise == "1")
+                                {                                    
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.SHORT_PAYMENT,0)</font></td>
+                                W_Short_Payment = W_Short_Payment + Math.Round(item.SHORT_PAYMENT, 0);
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.PEND_BILL_CLEARED,0)</font></td>
+                                w_pend_bill_cleared_ibs = w_pend_bill_cleared_ibs + item.PEND_BILL_CLEARED;
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@Math.Round(item.PEND_BILL_CLEARED_AMT,0)</font></td>
+                                w_pend_bill_amt_cleared_ibs = w_pend_bill_amt_cleared_ibs + item.PEND_BILL_CLEARED_AMT;
+                                }
+                            }
+                        </tr>
+                    }
+                    <tr class="reportTotal">
+                        <td width="1%" valign="top" align="right" colspan="2"><font size="1" face="Verdana"><b>Total</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.TOTAL_BILLS,0))</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.TOTAL_AMT,0))</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.NO_BILLS_PASSED,0))</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.TOTAL_AMT_PASSED,0))</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.RETURN_BILLS,0))</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.RETURN_AMOUNT,0))</b></font></td>
+                        @if (Model.IsRlyWise == "1")
+                        {
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.RET_BILL_CLEARED,0))</b></font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.RET_BILL_CLEARED_AMT,0))</b></font></td>
+                        }
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.RESENT_BILLS,0))</b></font></td>
+                        <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlySummary.Sum(x => Math.Round(x.RESENT_AMOUNT,0))</b></font></td>
+                        @if (Model.Status == "A")
+                        {
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(W_Pending_Bill,0)</b></font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(W_Outstanding,0)</b></font></td>
+                            if (Model.IsRlyWise == "1")
+                            {                                
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(W_Short_Payment,0)</b></font></td>
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(w_pend_bill_cleared_ibs,0)</b></font></td>
+                                <td width="1%" valign="top" align="right"><font size="1" face="Verdana"><b>@Math.Round(w_pend_bill_amt_cleared_ibs,0)</b></font></td>
+                            }
+                        }
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="22" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

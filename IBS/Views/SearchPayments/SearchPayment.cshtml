@@ -1,9 +1,14 @@
 ﻿@model IBS.Models.SearchPaymentsModel
 @{
-    ViewData["Title"] = "Contract List";
+    ViewData["Title"] = "Search Payment";
+    string clsView = "";
+    //if (Model.SNO > 0)
+    //{
+    //    clsView = "Permission_View";
+    //}
 }
 
-<section>
+<section class="@clsView">
     <div class="task-listinput">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">
                 <div class="accordion-body">
@@ -54,7 +59,7 @@
                     </div>
 
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active" onclick="Save();">Search</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Search</button>
                     @*<button type="submit" onclick="find();">Search2</button>*@
                     </div>
                 </div>

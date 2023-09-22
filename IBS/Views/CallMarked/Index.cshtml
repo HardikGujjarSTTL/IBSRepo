@@ -1,0 +1,103 @@
+﻿@model IBS.Models.CallMarkedModel
+
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Call Marked</h2>
+    </div>
+   @* <div>
+        <a asp-action="AddRecieptVoucher" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>
+    </div>*@
+</div>
+<section>
+    <div class="task-listinput">
+        <div class="accordion-body">
+            @*<form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">*@
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                        <label for="Reference">View Calls Marked between the period</label>
+                        <label for="Reference">From</label>
+                        <input type="text" class=" datepicker" asp-for="frmDate" id="fromDate" maxlength="300" />
+                        <label for="Reference">To</label>
+                        <input type="text" class=" datepicker" asp-for="toDate" id="toDate" maxlength="300" />
+                        </div>
+                    <div>
+                        <label>Report to be Sorted on</label>
+                        <br></br>
+                        <label for="option1">   
+                            <input type="radio" id="vendor" name="options" value="option1" checked> Vendor
+                        </label>
+                        <br>
+                        <label for="option2">
+                            <input type="radio" id="callDate" name="options" value="option2"> Call Date
+                        </label>
+                    </div>
+                     
+                    </div>
+
+                    <div class="savenext-btn">
+                        @*<a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Show</button>
+                    </div>
+                </div>
+            @*</form>*@
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+
+
+        });
+        function Save() {
+            debugger;
+
+            var wSortkEy = "";
+
+
+            if ($("#vendor").is(":checked")) {
+                wSortkEy = "V";
+            } else if ($("#callDate").is(":checked")) {
+                wSortkEy = "D";
+            }
+
+            console.log("wSortkEy value: " + wSortkEy);
+
+
+
+            var txtDtFrValue = $("#fromDate").val();
+            var txtDtToValue = $("#toDate").val();
+               // var regionValue = "<%= Session["Region"].ToString() %>";
+            var wSortKeyValue = wSortkEy; // Assuming you already have wSortKey defined.
+
+                // Construct the URL with query parameters
+            var controllerName = "Calls_Marked_Report";
+            var actionName = "Index";
+
+            var url = "/Calls_Marked_Report/Index?pDtFr=" + txtDtFrValue + "&pDtTo=" + txtDtToValue + "&pSortKey=" + wSortKeyValue;
+            window.location.href = url;
+
+
+        }
+        completed = function (response) {
+          
+        }
+
+
+
+       
+
+
+       
+
+
+
+    </script>
+    }

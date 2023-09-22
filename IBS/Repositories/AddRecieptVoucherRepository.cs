@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore; 
+﻿    using Microsoft.AspNetCore; 
 using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
@@ -10,6 +10,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using IBS.Helper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
+using System.Drawing;
 
 namespace IBS.Repositories
 {
@@ -132,24 +133,11 @@ namespace IBS.Repositories
                 string vchr_dt = model.VCHR_DT.ToString() ?? string.Empty;
                 string ss = Region + vchr_dt.Substring(8, 2) + vchr_dt.Substring(3, 2);
                 string ss1 = ss.Substring(Convert.ToInt32(model.VCHR_NO), 5);
-
-
-                //var  voucher = from l in context.Generatevouchers
-                //          where l.VchrNo.Substring(1,5) == ss
-                //          select new 
-                //          {
-                //           voucher=l.VchrNo  
-                //          };
-                //string voucher1 = (from l in context.T24Rvs
-                //                where l.VchrNo.Substring(0, 5) == ss
-                //                select l.VchrNo.Substring(6, 8)).Max();
-
-
                 var voucher1 = context.T24Rvs
                   .Where(r => r.VchrNo.StartsWith(ss))
-                  .Select(r => r.VchrNo.Substring(5, 8)) // Extract the portion after 'N23161'
+                  .Select(r => r.VchrNo.Substring(5, 8)) 
                   .AsEnumerable()
-                  .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0) // Parse to integer
+                  .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0) 
                   .DefaultIfEmpty(0)
                   .Max() + 1;
 
@@ -162,7 +150,7 @@ namespace IBS.Repositories
                     VCHR_NO = ss + (Convert.ToInt32(0) + 1);
                 }
             }
-            var GetValue = context.T24Rvs.Find(model.VCHR_NO);
+                    var GetValue = context.T24Rvs.Find(model.VCHR_NO);
 
             var GetValue2 = context.T25RvDetails.Find(Convert.ToInt32(model.BANK_CD), model.CHQ_NO, Convert.ToDateTime(model.CHQ_DT));
 
@@ -209,10 +197,10 @@ namespace IBS.Repositories
             }
             else
             {
-                    DateTime parsedDate;
-                    DateTime vdt;
-                    DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
-                    DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
+                        DateTime parsedDate;
+                        DateTime vdt;
+                        DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
+                        DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
                 VCHR_NO = model.VCHR_NO;
 
                 T24Rv data = new T24Rv();
@@ -304,6 +292,31 @@ namespace IBS.Repositories
 
             return DropdownValues;
 
+        }
+
+        public string Insert(AddRecieptVoucherModel model, string VoucherDate , string Bank_Code , string VoucherType , string Region)
+        {
+            string VCHR_NO = "";
+
+            string vchr_dt = VoucherDate.ToString() ?? string.Empty;
+            string ss = Region + vchr_dt.Substring(8, 2) + vchr_dt.Substring(4, 2);
+            string ss1 = ss.Substring(Convert.ToInt32(model.VCHR_NO), 5);
+            var voucher1 = context.T24Rvs
+                .Where(r => r.VchrNo.StartsWith(ss))
+                .Select(r => r.VchrNo.Substring(5, 8))
+                .AsEnumerable()
+                .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0)
+                .DefaultIfEmpty(0)
+                .Max() + 1;
+            if (voucher1 != null)
+            {
+                VCHR_NO = ss + "00" + voucher1.ToString();
+                }
+            else
+            {
+                VCHR_NO = ss + "001";
+            }
+            return null;
         }
 
     }

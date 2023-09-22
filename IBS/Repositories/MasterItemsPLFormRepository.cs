@@ -24,6 +24,8 @@ namespace IBS.Repositories
             {
                 model.ItemCd = item.ItemCd;
                 model.PlNo = item.PlNo;
+                model.DrawingNo = item.DrawingNo;
+                model.SpecificationNo = item.SpecificationNo;
                 model.IsNew = false;
                 return model;
             }
@@ -63,6 +65,8 @@ namespace IBS.Repositories
                         ItemCd = t62.ItemCd,
                         ItemDesc = t61.ItemDesc,
                         PlNo = t62.PlNo,
+                        DrawingNo = t62.DrawingNo,
+                        SpecificationNo = t62.SpecificationNo,
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -70,6 +74,8 @@ namespace IBS.Repositories
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => (w.ItemDesc != null && w.ItemDesc.ToLower().Contains(searchBy.ToLower()))
                                                 || (w.PlNo != null && w.PlNo.ToLower().Contains(searchBy.ToLower()))
+                                                || (w.DrawingNo != null && w.DrawingNo.ToLower().Contains(searchBy.ToLower()))
+                                                || (w.SpecificationNo != null && w.SpecificationNo.ToLower().Contains(searchBy.ToLower()))
                                            );
 
             dTResult.recordsFiltered = query.Count();
@@ -91,6 +97,8 @@ namespace IBS.Repositories
                 {
                     ItemCd = model.ItemCd,
                     PlNo = model.PlNo,
+                    DrawingNo = model.DrawingNo,
+                    SpecificationNo = model.SpecificationNo,
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,
@@ -107,6 +115,8 @@ namespace IBS.Repositories
                 if (items != null)
                 {
                     items.PlNo = model.PlNo;
+                    items.DrawingNo = model.DrawingNo;
+                    items.SpecificationNo = model.SpecificationNo;
                     items.UserId = model.UserId;
                     items.Datetime = DateTime.Now.Date;
                     items.Updatedby = model.Updatedby;

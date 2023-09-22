@@ -1,0 +1,88 @@
+﻿@model IBS.Models.Reports.NCRReport
+
+<div>
+    <h3 class="heading3">@ViewBag.Regions</h3>
+
+   @* @if(@Model.formonth == "true")
+    {
+        <h3 class="heading3">Top @ViewBag.TotalInspValue Inspections For The Month of : @ViewBag.monthshow , @ViewBag.yearshow ( @ViewBag.BillDT @ViewBag.ICDT)</h3>
+    }else{
+        <h3 class="heading3">Top @ViewBag.TotalInspValue Inspections For The Period : @ViewBag.FromDT To @ViewBag.ToDT ( @ViewBag.BillDT @ViewBag.ICDT)</h3>
+    }*@
+        <div class="tableOuter">
+            <table class="borderTable" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. OF Calls</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. OF NCR</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. OF NO NCR</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Minor</font></b></th>
+                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Major</font></b></th>
+                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total No. of Critical</font></b></th>
+                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total NCR Marks</font></b></th>
+                    </tr>
+                    @if (Model != null && Model.lstAllNCRCMIE.Count > 0)
+                    {
+                         var SrNo = 0;
+                        @foreach (var item in Model.lstAllNCRCMIE)
+                        {
+                            SrNo = SrNo + 1;
+                            <tr>
+                                <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IECMName</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_NO_Call</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_NC</font></td>
+                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.NO_NC</font></td>
+                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_Minor</font></td>
+                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_Major</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_Critical</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total</font></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Case No. (BK No-Set No.)</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">NCR No.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">ITEM</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">NCR CODES SNo.</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">NCR Desc</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE Remarks</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Remark</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstIECMWise.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstIECMWise)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.NC_NO</font></td>
+                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ITEM</font></td>
+                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.NC_CD_SNO</font></td>
+                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.NC</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_ACTION1</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.CO_FINAL_REMARKS1</font></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

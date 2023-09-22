@@ -38,4 +38,78 @@
         public decimal CCTM_adj_Fee_past { get; set; }
         public decimal CUTM_adj_Fee_past { get; set; }
     }
+
+    public class FinancialExpenditureRealizationMainModel
+    {
+        public List<FinancialExpenditureRealizationModel> financialExpenditureRealizationModels { get; set; }
+        public List<RealisationModel> realisationModel { get; set; }
+        public List<Realisation1Model> realisation1Model { get; set; }
+        public List<Realisation2Model> realisation2Model { get; set; }
+    }
+    public class FinancialExpenditureRealizationModel
+    {
+        public string Region_Code { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal DTM_EXP_FEE { get; set; }
+        public decimal DTM_TAX_FEE { get; set; }
+        public decimal CTM_EXP_FEE { get; set; }
+        public decimal CTM_TAX_FEE { get; set; }
+        public decimal CDTM_EXP_FEE { get; set; }
+        public decimal CDTM_TAX_FEE { get; set; }
+        public decimal CCTM_EXP_FEE { get; set; }
+        public decimal CCTM_TAX_FEE { get; set; }
+        public decimal TOA1 { get; set; }
+        public decimal TOA2 { get; set; }
+        public decimal OR_Actual { get; set; }
+        public decimal TOR { get; set; }
+        public decimal CUTM_adj_Fee { get; set; }
+        
+    }
+
+    public class RealisationModel
+    {
+        public string Region { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal real_amt { get; set; }
+    }
+    public class Realisation1Model
+    {
+        public string Region { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal real_amt { get; set; }
+    }
+    public class Realisation2Model
+    {
+        public string region_code { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal bill_am { get; set; }
+        public decimal cubill_amt { get; set; }
+    }
+
+    public class FinancialOutstandingMainModel
+    {
+        public List<FinancialOutstandingModel> financialOutstandingModels { get; set; }
+        public List<FinancialOutstanding1Model> financialOutstanding1Models { get; set; }
+    }
+    public class FinancialOutstandingModel
+    {
+        public string region_code { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal lm_amt { get; set; }
+        public decimal sinc_amt { get; set; }
+        public decimal cum_amt { get; set; }
+        public decimal Pri_amt { get; set; }
+        public decimal amt_out { get; set; }
+        public decimal tot_exp { get; set; }
+        public decimal bill_amt { get; set; }
+        public string days { get; set; }
+    }
+    public class FinancialOutstanding1Model
+    {
+        public string region_code { get; set; }
+        public string Serial_Code { get; set; }
+        public decimal amtR { get; set; }
+        public decimal amtNR { get; set; }
+        public decimal total { get; set; }
+    }
 }

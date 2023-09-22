@@ -1,0 +1,193 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>Top N HIGH VALUE INSPECTIONS</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="col-md-6">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="formonth" name="formonth" value="formonth" checked>
+                                <label for="formonth">For The Month</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="forperiod" name="formonth" value="forperiod">
+                                <label for="forperiod">For Given Period</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0" id="forperioddt">
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="FromDate">For The Period From</label>
+                        <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="ToDate">To</label>
+                        <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrortodt"></span>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="row my-0" id="fromothyear">
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="FromDate">Month</label>
+                        @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                        <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="ToDate">Year</label>
+                        @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                        <span class="text-danger field-validation-error" id="spnErroryear"></span>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="custom-readio">
+                @*<label for="Reference">Summary of Report</label>*@
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <label for="year">Report based on</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                        <div class="remecheckbox">
+                            <input type="radio" value="ICDate" id="ICDate" name="ICDate" checked="checked" />
+                            <label for="ICDate">IC Date</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" value="BillDate" id="BillDate" name="ICDate" />
+                            <label for="BillDate">Bill Date</label>
+                        </div>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div>
+
+                        <label for="valinsp">No. of High Value Inspections</label>
+                        <input type="text" onkeypress="return isNumber(event)" maxlength="10" id="valinsp" />
+                        <span class="text-danger field-validation-error" id="spnErrorvalinsp"></span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                <button type="button" class="save-btn active" onclick="GetViewReport();">Generate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+         $(document).ready(function () {
+            $("#forperioddt").hide();
+         });
+
+         $('#forperiod').change(function () {
+            $("#forperioddt").show();
+            $("#fromothyear").hide();
+            $("#month").val('');
+            $("#year").val('');
+         });
+
+        $('#formonth').change(function () {
+            $("#forperioddt").hide();
+            $("#fromothyear").show();
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+         });
+
+        function GetViewReport() {
+
+            $("#spnErrorvalinsp").html("");
+            $("#spnErrortodt").html("");
+            $("#spnErrorfromdt").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+            if ($("#valinsp").val() == "") {
+                $("#spnErrorvalinsp").html("Enter No of Inspection show in Report");
+                IsValid = false;
+            }
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorfromdt").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrortodt").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+            var monthChar = $('#month option:selected').text();
+            var month = getMonthNumber(monthChar);
+            var year = $('#year').val();
+            var valinsp = $('#valinsp').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var ICDate = $("#ICDate").is(":checked") == true ? "true" : "false";
+            var BillDate = $("#BillDate").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+
+                let myObject = { month, year, valinsp, FromDate, ToDate, ICDate, BillDate, formonth, forperiod,monthChar };
+
+            var url = '@Url.Action("Manage", "HighValueInspecReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls(){
+            $("#month").val('');
+            $("#year").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#valinsp").val('');
+            $("#spnErrorvalinsp").val('');
+            $("#ICDate").prop("checked", true);
+            $("#formonth").prop("checked", true);
+            $("#forperioddt").hide();
+            $("#fromothyear").show();
+        }
+
+        function getMonthNumber(monthName) {
+
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0'); 
+            return monthNumber;
+        }
+    </script>
+}
