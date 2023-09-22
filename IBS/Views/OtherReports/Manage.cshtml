@@ -38,8 +38,7 @@
         if ('@ReportType' == 'COWISEIE') {
             loadCOWISEIE();
             fileName = 'Controlling_Office_Wise_IE';
-        }
-        
+        }        
     });
 
     function loadCOWISEIE() {
@@ -48,9 +47,7 @@
             $("#dvReportViewer").html(response);
         });
     }
-
     
-
     $("#btnPrint").click(function () {
         generatePdf(true);
     });
@@ -71,13 +68,7 @@
         }).appendTo("body").get(0).click();
         e.preventDefault();
     });
-
-    $("#btnTest").click(function () {
-        var HTML = $('#dvReportViewer').html();
-
-
-    });
-
+    
     function generatePdf(isPrint) {
         $.ajax({
             url: "@Url.Action("GeneratePDF", "OtherReports")",
