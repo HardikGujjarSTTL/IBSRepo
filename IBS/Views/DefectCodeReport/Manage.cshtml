@@ -40,7 +40,6 @@
     });
 
     function loadDefectCodeReport() {
-        debugger
         $("#dvReportViewer").load("@Url.Action("DefectCodeReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

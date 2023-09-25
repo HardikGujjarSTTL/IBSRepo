@@ -77,14 +77,16 @@ namespace IBS.Controllers
 
             ViewBag.Regions = region;
             ViewBag.JiRequiredStatus = jirequired;
+            GlobalDeclaration.ConsigneeCompPeriod = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //ConsigneeCompPeriodReport _model = consigneeCompPeriodRepository.GetCompPeriodData(FromDate, ToDate, actiondrp, actioncodedrp, actionjidrp);
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+            ConsigneeCompPeriodReport model = GlobalDeclaration.ConsigneeCompPeriod;
+            htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

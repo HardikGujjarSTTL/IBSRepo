@@ -1,4 +1,4 @@
-﻿@model IBS.Models.SummaryConsigneeWiseInspModel
+﻿@model IBS.Models.InspectionStatusModel
 
 @{
     Layout = null;
@@ -48,6 +48,10 @@
             loadSummartVendorReport();
             fileName = 'Summary_of_Vendor_Wise_Inspections';
         }
+        else if ('@ReportType' == 'RTIInsp') {
+            loadSummartRTIReport();
+            fileName = 'SUMMARY_OF_INSPECTIONS_FOR_RTI';
+        }
         
     });
 
@@ -59,6 +63,12 @@
     }
     function loadSummartVendorReport() {
         $("#dvReportViewer").load("@Url.Action("SummaryVendorWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    function loadSummartRTIReport() {
+        $("#dvReportViewer").load("@Url.Action("SummaryofInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular', TextPurchaser: '@Model.TextPurchase' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

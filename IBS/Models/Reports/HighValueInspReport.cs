@@ -10,6 +10,7 @@
         public string ICDate { get; set; }
         public string BillDate { get; set; }
         public string formonth { get; set; }
+        public string monthChar { get; set; }
         public string forperiod { get; set; }
         public string ReportTitle { get; set; }
 

@@ -14212,6 +14212,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Isdeleted)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Ispricevariation)
+                .HasPrecision(2)
+                .HasColumnName("ISPRICEVARIATION");
+            entity.Property(e => e.Isstageinspection)
+                .HasPrecision(2)
+                .HasColumnName("ISSTAGEINSPECTION");
             entity.Property(e => e.PoDt)
                 .HasColumnType("DATE")
                 .HasColumnName("PO_DT");

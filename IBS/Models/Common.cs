@@ -1092,7 +1092,7 @@ namespace IBS.Models
 
             single = new SelectListItem();
             single.Text = "-xx-";
-            single.Value = " ";     
+            single.Value = " ";
 
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
@@ -2545,7 +2545,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> ControllingOfficers = (from a in context.T08IeControllOfficers
-                                                        where a.CoStatus == null &&  a.CoRegion == "N"
+                                                        where a.CoStatus == null && a.CoRegion == "N"
                                                         orderby a.CoName
                                                         select
                                  new SelectListItem
@@ -2563,14 +2563,14 @@ namespace IBS.Models
             List<SelectListItem> IE_NAME = new List<SelectListItem>();
             IE_NAME.Add(new SelectListItem { Value = "-1", Text = "ALL" });
             IE_NAME = (from a in context.T09Ies
-                                            where a.IeStatus == null && a.IeRegion == "N"
-                                            orderby a.IeName
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.IeName),
-                                     Value = Convert.ToString(a.IeCd)
-                                 }).ToList();
+                       where a.IeStatus == null && a.IeRegion == "N"
+                       orderby a.IeName
+                       select
+             new SelectListItem
+             {
+                 Text = Convert.ToString(a.IeName),
+                 Value = Convert.ToString(a.IeCd)
+             }).ToList();
             return IE_NAME;
         }
 
@@ -3483,6 +3483,38 @@ namespace IBS.Models
         public static List<TextValueDropDownDTO> GetScopeOfsector()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ScopeOfsector)).ToList();
+        }
+
+        public static List<SelectListItem> GetCRISRLYStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Passed", Value = "P" },
+                new SelectListItem() { Text = "Returned", Value = "R" },
+                new SelectListItem() { Text = "Pending", Value = "X" },
+                new SelectListItem() { Text = "Returned Bills Resent", Value = "S" },
+                new SelectListItem() { Text = "ALL", Value = "A" }                
+            };           
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> GetCRISRLYStatusDate()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Invoice Date", Value = "A" },
+                new SelectListItem() { Text = "Payment Date", Value = "P" }                
+            };
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetControllingSelectedIE(string Region, string CO)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region && ( (c.IeCoCd == Convert.ToInt16(CO) && CO != "") || CO == "") 
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
         }
     }
 

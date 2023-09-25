@@ -27,7 +27,7 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string month,string year,string valinsp,string FromDate,string ToDate,string ICDate,string BillDate,string formonth,string forperiod)
+        public IActionResult Manage(string month,string year,string valinsp,string FromDate,string ToDate,string ICDate,string BillDate,string formonth,string forperiod,string monthChar)
         {
             HighValueInspReport model = new()
             {
@@ -39,13 +39,14 @@ namespace IBS.Controllers.Reports
                 ICDate = ICDate,
                 BillDate = BillDate,
                 formonth = formonth,
+                monthChar = monthChar,
                 forperiod = forperiod
             };
             model.ReportTitle = "High Value Inspection";
             return View(model);
         }
 
-        public IActionResult TopNHighValueInsp(string month, string year, string valinsp, string FromDate, string ToDate, string ICDate, string BillDate, string formonth, string forperiod)
+        public IActionResult TopNHighValueInsp(string month, string year, string valinsp, string FromDate, string ToDate, string ICDate, string BillDate, string formonth, string forperiod,string monthChar)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -58,17 +59,21 @@ namespace IBS.Controllers.Reports
             ViewBag.Regions = wRegion;
             ViewBag.FromDT = FromDate;
             ViewBag.ToDT = ToDate;
+            ViewBag.yearshow = year;
+            ViewBag.monthshow = monthChar;
             ViewBag.TotalInspValue = valinsp;
             ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
             ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
+            GlobalDeclaration.HighValueInspReports = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+            HighValueInspReport model = GlobalDeclaration.HighValueInspReports;
+            htmlContent = await this.RenderViewToStringAsync("/Views/HighValueInspecReport/TopNHighValueInsp.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

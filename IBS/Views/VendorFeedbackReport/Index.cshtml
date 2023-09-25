@@ -1,0 +1,31 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>Vendor Feedback REPORT</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="custom-readio">
+        <div class="company-checkbox">
+            <div class="col-md-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        function ViewReport1() {
+
+            var url = '@Url.Action("Manage", "VendorFeedbackReport")';
+            window.open(url, '_blank');
+        }
+    </script>
+}

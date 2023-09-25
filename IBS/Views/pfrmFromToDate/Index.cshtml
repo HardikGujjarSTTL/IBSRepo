@@ -28,9 +28,12 @@
         </div>
     </div>
 </div>
-    <section class="table-section" id="tblsection">
-        @Html.Partial(@partialView)
-    </section>
+    @if (@partialView != null && @partialView != "")
+    {
+        <section class="table-section" id="tblsection">
+            @Html.Partial(@partialView)
+        </section>
+    }
 </form>
 
 

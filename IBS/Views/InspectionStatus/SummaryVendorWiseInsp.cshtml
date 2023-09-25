@@ -1,4 +1,4 @@
-﻿@model IBS.Models.SummaryVendorWiseInspModel
+﻿@model IBS.Models.InspectionStatusModel
 
 <div>
     <h3 class="center">(@ViewBag.Region)</h3>
@@ -28,7 +28,7 @@
                 <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">INSP. FEE</font></b></th>
 
             </tr>
-            @if (Model != null && Model.lstSummaryConreport.Count > 0)
+            @* @if (Model != null && Model.lstSummaryConreport.Count > 0)
             {
                 var serialNumber = 1;
                 @foreach (var item in Model.lstSummaryConreport)
@@ -44,7 +44,7 @@
                     serialNumber++;
                 }
 
-            }
+            } *@
         </tbody>
     </table>
 </div>

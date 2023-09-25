@@ -1,0 +1,635 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "LabReg") ReportTitle = "LAB REGISTER REPORT";
+    else if (ReportType == "LabPer") ReportTitle = "LAB PERFORMANCE REPORT";
+    else if (ReportType == "LabPos") ReportTitle = "LAB POSTING REPORT";
+    else if (ReportType == "SummNR") ReportTitle = "SUMMARY OF ONLINE PAYMENT IN NR";
+    else if (ReportType == "LabInv") ReportTitle = "LAB INVOICE REPORT";
+    else if (ReportType == "LabInfo") ReportTitle = "LAB SAMPLE INFO DETAILS";
+
+    ViewData["Title"] = ReportTitle;
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="datepicker" id="dtfrom" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="datepicker" id="dtto" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+        <div class="task-inner row report1" style="display: none">
+            <div class="row my-0">
+
+                <div class="col-md-2 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">IE Wise</label>
+                    <input type="radio" name="radioGroup" id="rb1" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">Vendor Wise</label>
+                    <input type="radio" name="radioGroup" id="rb2" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">Lab Wise</label>
+                    <input type="radio" name="radioGroup" id="rb3" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+
+                <div class="col-md-3 mb-3" style="display:none" id="ie1">
+                    <label for="PropertyId">All IE</label>
+                    <input type="radio" name="child1" id="rbc1" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3" style="display:none" id="ie2">
+                    <label for="PropertyId">Particular IE</label>
+                    <input type="radio" name="child1" id="rbc2" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3" style="display:none" id="dd1">
+                        @Html.DropDownList("ieName", new SelectList(IBS.Models.Common.GetInspEngCd(@ViewBag.Region), "Value", "Text"), new { id = "ddl1p" })
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3" style="display:none" id="ie3">
+                    <label for="PropertyId">All Vendors</label>
+                    <input type="radio" name="child2" id="rbc3" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3" style="display:none" id="ie4">
+                    <label for="PropertyId">Particular Vendor</label>
+                    <input type="radio" name="child2" id="rbc4" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-8 mb-3" style="display:none" id="dd2">
+                        @Html.DropDownList("vendor", new SelectList(IBS.Models.Common.GetVendorLabRpt(), "Value", "Text"), new { id = "ddl2p" })
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3" style="display:none" id="ie5">
+                    <label for="PropertyId">All Lab</label>
+                    <input type="radio" name="child3" id="rbc5" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3" style="display:none" id="ie6">
+                    <label for="PropertyId">Particular Lab</label>
+                    <input type="radio" name="child3" id="rbc6" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3" style="display:none" id="dd3">
+                        @Html.DropDownList("LAB", new SelectList(IBS.Models.Common.GetLab(), "Value", "Text"), new { id = "ddl3p" })
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="PropertyId">Test Result</label>
+                    @Html.DropDownList("TestStatus", new SelectList(IBS.Models.Common.GetStatusLabRpt(), "Value", "Text"), new { id = "ddlstatus" })
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <label>Report Type -></label>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">All Records</label>
+                    <input type="radio" name="Group" id="r1" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-7 mb-3">
+                    <label for="PropertyId">Pending Records (Where Test Report Not Recieved)</label>
+                    <input type="radio" name="Group" id="r2" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-7 mb-3">
+                    <label for="PropertyId">Paid Records (Where Full Payment Recieved from the Vendor)</label>
+                    <input type="radio" name="Group" id="r3" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-7 mb-3">
+                    <label for="PropertyId">Due Records (Where Full Payment Not Recieved from the Vendor)</label>
+                    <input type="radio" name="Group" id="r4" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-7 mb-3">
+                    <label for="PropertyId">Partly Paid Records (Where Part Payment not Recieved from the Vendor)</label>
+                    <input type="radio" name="Group" id="r5" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report2" style="display: none">
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport2();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report3" style="display: none">
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport3();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report4" style="display: none">
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport4();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report5" style="display: none">
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport5();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report6" style="display: none">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label for="PropertyId">Report Status</label>
+                    @Html.DropDownList("ReportStatus", new SelectList(IBS.Models.Common.LabInfoReportStatus() , "Value", "Text"),new { @id = "ddlinfostatus", @class = "" })
+                </div>
+                <div class="col-md-3" style="margin-top:3%">
+                    <label for="rb1">
+                        <input type="radio" name="inforadioGroup" id="inforb1" />
+                        Sample Receive Date Wise
+
+                    </label>
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-5" style="margin-top:3%">
+                    <label for="rb2">
+                        <input type="radio" name="inforadioGroup" id="inforb2" />
+                        Sample Approved By Finance Date Wise
+
+                    </label>
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport6();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function ClearControls() {
+            location.reload(true);
+        }
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+                sessionStorage.removeItem("rbb1");
+                sessionStorage.setItem("rbb1", true);
+                $("#ie1").css("display", "block");
+                $("#ie2").css("display", "block");
+                $("#rbc1").prop("checked", true);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+            }
+            else if (selectedId == "rb2") {
+                sessionStorage.removeItem("rbb2");
+                sessionStorage.setItem("rbb2", true);
+                $("#ie3").css("display", "block");
+                $("#ie4").css("display", "block");
+                $("#rbc3").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+            }
+            else if (selectedId == "rb3") {
+                sessionStorage.removeItem("rbb3");
+                sessionStorage.setItem("rbb3", true);
+                $("#ie5").css("display", "block");
+                $("#ie6").css("display", "block");
+                $("#rbc5").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+
+            }
+
+        });
+        $('input[name="child1"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc1") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd1").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd1").css("display", "block");
+            }
+        });
+        $('input[name="child2"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc3") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd2").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd2").css("display", "block");
+            }
+        });
+        $('input[name="child3"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc5") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.setItem("ch1", true);
+                $("#dd3").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch2");
+                sessionStorage.setItem("ch2", true);
+                $("#dd3").css("display", "block");
+            }
+        });
+        $('input[name="Group"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "r1") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr1", true);
+            }
+            else if (selectedId == "r2") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr2", true);
+            }
+            else if (selectedId == "r3") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr3", true);
+            }
+            else if (selectedId == "r4") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr4", true);
+            }
+            else if (selectedId == "r5") {
+                sessionStorage.removeItem("rr1");
+                sessionStorage.removeItem("rr2");
+                sessionStorage.removeItem("rr3");
+                sessionStorage.removeItem("rr4");
+                sessionStorage.removeItem("rr5");
+                sessionStorage.setItem("rr5", true);
+            }
+        });
+        $('input[name="inforadioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "inforb1") {
+                sessionStorage.removeItem("infor1");
+                sessionStorage.setItem("infor1", true);
+                
+            }
+            else {
+                sessionStorage.removeItem("infor1");
+                sessionStorage.setItem("infor1", true);
+                
+            }
+            
+
+        });
+
+        $(function () {
+            $("#r1").prop("checked", true);
+            $("#inforb1").prop("checked", true);
+            if ('@ReportType' == 'LabReg') {
+                $(".report1").css("display", "");
+            }
+            else if ('@ReportType' == 'LabPer') {
+                $(".report2").css("display", "");
+            }
+            else if ('@ReportType' == 'LabPos') {
+                $(".report3").css("display", "");
+            }
+            else if ('@ReportType' == 'SummNR') {
+                $(".report4").css("display", "");
+            }
+            else if ('@ReportType' == 'LabInv') {
+                $(".report5").css("display", "");
+            }
+            else if ('@ReportType' == 'LabInfo') {
+                $(".report6").css("display", "");
+            }
+        });
+
+        function ViewReport1() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            var rdbIEWise = sessionStorage.getItem("rbb1");
+            var rdbPIE = sessionStorage.getItem("ch2");
+            var rdbVendWise = sessionStorage.getItem("rbb2");
+            var rdbPVend = sessionStorage.getItem("ch4");
+            var rdbLabWise = sessionStorage.getItem("rbb3");
+            var rdbPLab = sessionStorage.getItem("ch6");
+            var rdbPending = sessionStorage.getItem("rr2");
+            var rdbPaid = sessionStorage.getItem("rr3");
+            var rdbDue = sessionStorage.getItem("rr4");
+            var rdbPartlyPaid = sessionStorage.getItem("rr5");
+            var lstTStatus = $("#ddlstatus").val();
+            var lstIE = $("#ddl1p").val();
+            var ddlVender = $("#ddl2p").val();
+            var lstLab = $("#ddl3p").val();
+            let myObject = { ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+        function ViewReport2() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            let myObject = { ReportType, wFrmDtO, wToDt };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+        function ViewReport3() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            let myObject = { ReportType, wFrmDtO, wToDt };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+        function ViewReport4() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var parts = $("#dtfrom").val().split('/');
+            var wFrmDtO = parts[2] + '/' + parts[1] + '/' + parts[0];
+
+            var parts1 = $("#dtto").val().split('/');
+            var wToDt = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
+            //var wFrmDtO = $("#dtfrom").val();
+            //var wToDt = $("#dtto").val();
+            let myObject = { ReportType, wFrmDtO, wToDt };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+        function ViewReport5() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            let myObject = { ReportType, wFrmDtO, wToDt };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+        function ViewReport6() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            var rdbrecvdt = sessionStorage.getItem("infor1");
+            var lstStatus = $("#ddlinfostatus").val();
+            let myObject = { ReportType, wFrmDtO, wToDt, lstStatus, rdbrecvdt };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+    </script>
+}

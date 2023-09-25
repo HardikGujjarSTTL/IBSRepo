@@ -53,7 +53,7 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .navbar-toggle { height: 33px; width: 33px;line-height: 37px;font-size: 34px; }
 .navBtn, .left-side-collapsed .navBtn{ right:0;left: 208px; top:21px;  }
 #sidebar{ top: 75px; z-index: 22; }
-.logoSection { position: absolute;top: -70px;left: 15px;display: none; }
+.logoSection { }
 #header { padding: 0px; display:inherit; }
 .userDetail h4, a.openDrpPopup i, .userDetail p{ color: #fff; }
 .topLinksAndSearch .userTopLinks{  padding: 4px 0; }
@@ -163,23 +163,31 @@ tast-date{ margin-top:15px; }
 .topLinksAndSearch li{ padding: 0; }
 .topLinksAndSearch .userTopLinks{ margin-left: 0;padding: 0; }
 .topLinksAndSearch .userTopLinks .messagePopup li { position: relative; }
-.logoSection { max-width: 223px; }
+.logoSection { max-width:inherit; width:100%;}
 .remember{ display: block; }
 .remember a.link1{ margin-top: 15px; display: block; }
 .mobi_logoSection{ width: 120px; }
 .userImg { width: 35px;height: 35px;margin-right: 7px; }
 .navBtn, .left-side-collapsed .navBtn { left: 133px;top: 10px; }
 .userInformation{ align-items: center; }
-#sidebar { top: 55px; }
+#sidebar { top: 0px; }
 .mobi_logoSection{ left: 7px; }
 .list-inner { display: block; }
 .list-inner .tast-list h2 { margin: 15px 0; }
 .mobi_logoSection img { width: 124px;height: 37px; }
 .userDetail{ margin-left: 0; padding: 0; width:auto; }
 .userDetail .dropPopup { top: 22px; right: 0; }
-.userDetail .openDrpPopup{ display:none}
 .dropPopup::before{ right:15px;}
-
+.logoSection a{ padding:5px 0; display:block;}
+.graph-section .datefrom .from-celender, .table-section .datefrom .from-celender{ margin-right:0!important}
+.countBlock, .radioListForm, .savenext-btn{flex-direction:column}
+.countBlock li{ width:100%;}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination{ flex-wrap:wrap;}
+.dataTables_filter{ margin-top:10px;}
+.reset-btn, .savenext-btn button.active, .savenext-btn button{ width:100%; margin-bottom:5px;}
+.savenext-btn button, .reset-btn{ margin-right:0;}
+.reset-btn{ text-align:center;}
+#sidebar{ height:100%;}
 }
 @media only screen and (max-width:400px) {
 .adminForm .sixColFeild li .feildCol { width: 100%; margin-bottom: 10px; }

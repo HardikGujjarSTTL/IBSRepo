@@ -7,6 +7,8 @@ using IBS.Repositories;
 using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 using System.Collections.Generic;
 using System.Data;
 
@@ -15,10 +17,12 @@ namespace IBS.Controllers.Reports.Queries
     public class PurchaseOrdersofSpecificValuesController : BaseController
     {
         private readonly IPurchaseOrdersofSpecificValuesRepository purchaseOrdersofSpecificValuesRepository;
+        private readonly IWebHostEnvironment env;
 
-        public PurchaseOrdersofSpecificValuesController(IPurchaseOrdersofSpecificValuesRepository _purchaseOrdersofSpecificValuesRepository)
+        public PurchaseOrdersofSpecificValuesController(IPurchaseOrdersofSpecificValuesRepository _purchaseOrdersofSpecificValuesRepository, IWebHostEnvironment env)
         {
             purchaseOrdersofSpecificValuesRepository = _purchaseOrdersofSpecificValuesRepository;
+            this.env = env;
         }
 
         #region Detailed Report - P O of Specific Values
@@ -342,5 +346,35 @@ namespace IBS.Controllers.Reports.Queries
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         #endregion
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        {
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
     }
 }

@@ -43,10 +43,27 @@
                         <label for="Reference">Item Serial No.</label>
                         <input type="text" class="input" asp-for="ItemSrno" readonly="readonly">
                     </div>
+                </div>
+                <div class="row my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">PL NO.</label>
                         <input type="text" class="input" asp-for="PlNo">
                         <span asp-validation-for="PlNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitPlNo();" style="margin-top: 30px;">Submit</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Drawing No.</label>
+                        <input type="text" class="input" asp-for="DrawingNo">
+                        <span asp-validation-for="DrawingNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Specification No.</label>
+                        <input type="text" class="input" asp-for="SpecificationNo">
+                        <span asp-validation-for="SpecificationNo" class="text-danger"></span>
                     </div>
                 </div>
                 
@@ -440,6 +457,25 @@
                 $("#frmPOMasterDetails").submit();
             }
         }
+
+        function SubmitPlNo()
+        {
+            var PlNo = $("#PlNo").val();
+            $.ajax({
+                url: '@Url.Action("GetPODetails", "AdministratorPurchaseOrder")?PlNo=' + PlNo,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#DrawingNo").val(response.model.DrawingNo);
+                    $("#SpecificationNo").val(response.model.SpecificationNo);
+                }
+            });
+        }
+
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);

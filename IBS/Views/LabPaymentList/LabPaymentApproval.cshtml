@@ -138,92 +138,91 @@ input[type="date"] {
 </div>
 <section class="@clsView">
 @*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
-    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
-           bgColor="#f0f8ff" border="1">
+    <table class="borderGrid">
         <tr>
-           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+           <td>
             <label class="control-label">Case No.</label>
             </td>
-           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+           <td>
                 <label  class="control-label" id="lblcno"></label>
             </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">
                 Call Sno.
             </label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lblCallSno"></label>
         </td>
         </tr>
     <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">
                 Call Recv Dt.
             </label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lblCallDT"></label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">Gross Testing Charges Submitted by LAB Official.</label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">          
+        <td>          
             <label class="control-label" id="lblgrosstc"></label>
         </td>
     </tr>
     <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">
                 Net Testing Charges Paid by Vendor.*
             </label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lblnettcv"></label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">TDS Deducted by Vendor. (If Any)*</label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lbltds"></label>
         </td>
     </tr>
     <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">
                 Gross Testing Charges Submitted by Vendor*
             </label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lblgrosstcv"></label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">UTR No.*</label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lblutrno"></label>
         </td>
     </tr>
 
     <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">
                 UTR Date*
             </label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lblutrdt"></label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label">LAB Sample Payment Reciept</label>
         </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <td>
             <label class="control-label" id="lbllabspr"></label>
         </td>
     </tr>
        
         <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+        <td colspan="5">
            
             <label>Status</label>
             
@@ -234,7 +233,7 @@ input[type="date"] {
     <tr id="remark" style="display:none;">
 
         
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
+        <td>
             <label>Remarks</label>
             <textarea  class="form-control custom-textarea" id="txtremark"></textarea>
         </td>
