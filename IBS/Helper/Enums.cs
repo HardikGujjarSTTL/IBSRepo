@@ -694,6 +694,17 @@ namespace IBS.Helper
         public static IEAlterMappingReportModel IEAlterMappingReport { get; set; }
 
         public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
+
         public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
+
+        public static OngoingContrcatsReportModel OngoingContrcatsReport { get; set; }
+
+        public static ContractReportModel ContractReport { get; set; }
+
+        public static IEWiseTrainingReportModel IEWiseTrainingReport { get; set; }
+
+        public static VendorPerformanceReportModel VendorPerformanceReport { get; set; }
+
+        public static PeriodWiseChecksheetReportModel PeriodWiseChecksheetReport { get; set; }
     }
 }
