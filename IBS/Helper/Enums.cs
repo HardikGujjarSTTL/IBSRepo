@@ -694,5 +694,6 @@ namespace IBS.Helper
         public static IEAlterMappingReportModel IEAlterMappingReport { get; set; }
 
         public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
+        public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
     }
 }

@@ -180,8 +180,14 @@ tast-date{ margin-top:15px; }
 .dropPopup::before{ right:15px;}
 .logoSection a{ padding:5px 0; display:block;}
 .graph-section .datefrom .from-celender, .table-section .datefrom .from-celender{ margin-right:0!important}
-.countBlock{flex-direction:column}
+.countBlock, .radioListForm, .savenext-btn{flex-direction:column}
 .countBlock li{ width:100%;}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination{ flex-wrap:wrap;}
+.dataTables_filter{ margin-top:10px;}
+.reset-btn, .savenext-btn button.active, .savenext-btn button{ width:100%; margin-bottom:5px;}
+.savenext-btn button, .reset-btn{ margin-right:0;}
+.reset-btn{ text-align:center;}
+#sidebar{ height:100%;}
 }
 @media only screen and (max-width:400px) {
 .adminForm .sixColFeild li .feildCol { width: 100%; margin-bottom: 10px; }

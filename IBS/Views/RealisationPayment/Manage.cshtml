@@ -39,7 +39,11 @@
         if ('@ReportType' == 'ONLINENRPAYMENTS') {
             loadOnlinePayment();
             fileName = 'Summary_Online_Payment';
-        }        
+        }
+        if ('@ReportType' == 'CRISRLY') {
+            loadCrisRlyPayment();
+            fileName = 'Summary_Cris_Rly_Payment';
+        }
     });
 
     function loadOnlinePayment() {
@@ -47,7 +51,22 @@
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
-    }    
+    }
+
+    function loadCrisRlyPayment() {
+        if ('@Model.IsDetailed' == 'true') {
+            $("#dvReportViewer").load("@Url.Action("SummaryCrisRlyPaymentDetail")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', IsRly: '@Model.IsRly', Rly: '@Model.Rly', IsAU: '@Model.IsAU', AU: '@Model.AU', IsAllRegion: '@Model.IsAllRegion', Status: '@Model.Status' }, function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+        } 
+        else {
+            $("#dvReportViewer").load("@Url.Action("SummaryCrisRlyPaymentSummary")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', IsRlyWise: '@Model.IsRlyWise', Status: '@Model.Status' }, function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+        }
+    }
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -111,37 +130,6 @@
             }
         });
     }
-
-    //function generatePdf(isPrint) {
-    //    var element = document.getElementById('dvReportViewer');
-
-    //    element.style.width = "1100px";
-
-    //    const options = {
-    //        margin: 0,
-    //        filename: getExportFileName(fileName) + '.pdf',
-    //        image: { type: 'jpeg', quality: 1 },
-    //        html2canvas: {
-    //            scale: 4,
-    //            useCORS: true
-    //        },
-    //        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-    //    };
-
-    //    if (isPrint) {
-    //        html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-    //            pdfObj.autoPrint();
-    //            window.open(pdfObj.output('bloburl'), '_blank');
-    //        });
-    //    }
-    //    else {
-    //        html2pdf().set(options).from(element).save();
-    //    }
-
-    //    setTimeout(function () {
-    //        element.style.width = "100%";
-    //    }, 1000);
-    //}
 
     $(document).ajaxSend(function () {
         $(".overlayLoader").show();

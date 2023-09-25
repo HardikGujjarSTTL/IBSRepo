@@ -6,6 +6,7 @@
 
     if (ReportType == "ConInsp") ReportTitle = "Summary of Consignee Wise Inspections";
     else if (ReportType == "VenInsp") ReportTitle = "Summary of Vendor Wise Inspections";
+    else if (ReportType == "RTIInsp") ReportTitle = "SUMMARY OF INSPECTIONS FOR RTI";
    
     ViewData["Title"] = ReportTitle;
 }
@@ -99,7 +100,7 @@
             <div class="col-md-3" style="margin-top: 30px;">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
             </div>
         </div>
@@ -185,7 +186,89 @@
             <div class="col-md-3" style="margin-top: 30px;">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="ViewReport2();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report3" style="display: none">
+            <div class="row my-0">
+                <div class="col-md-8 mb-3">
+                    <label for="Reference" style="width: 100%;">
+                        Select Purchaser
+                    </label>
+                    <input type="text" class="input" id="txtSPur" style="width: 46%;">
+                    <button type="button" class="save-btn active" onclick="SearchPurchaser();">Search Purchaser</button>
+                </div>
+
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3" style="display:none;" id="hdnPDropdown">
+                    <label for="Reference"></label>
+                    <select id="PurchaserCD"></select>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-5 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">All Purchasers</label>
+                    <input type="radio" name="RradioGroup" id="Rrb1" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-5 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">For Particular Purchaser</label>
+                    <input type="radio" name="RradioGroup" id="Rrb2" />
+                    <span class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="row my-0">
+                <div class="col-md-2 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">For the Month</label>
+                    <input type="radio" name="RradioGroup2" id="Rrb3" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">For Given Period</label>
+                    <input type="radio" name="RradioGroup2" id="Rrb4" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="display:none" id="Rdtf">
+                    <label for="PropertyId">From Date</label>
+                    <input type="text" class="input datepicker" id="Rdtfrom" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="display:none" id="Rdtt">
+                    <label for="PropertyId">To Date</label>
+                    <input type="text" class="input datepicker" id="Rdtto" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" id="dd1">
+                    <label for="PropertyId">Month</label>
+                    @Html.DropDownList("Month", Common.GetMonth(), new { @id="Rddlmonth"})
+                    <span  class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" id="dd2">
+                    <label for="PropertyId">Year</label>
+                    @Html.DropDownList("Year", Common.GetYear(), new { @id="Rddlyear"})
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <label>Report based on </label>
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">IC Date</label>
+                    <input type="radio" name="RradioGroup3" id="Rrb5" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">Bill Date</label>
+                    <input type="radio" name="RradioGroup3" id="Rrb6" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport3();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
             </div>
         </div>
@@ -235,7 +318,6 @@
                 //$("#dd1").css("display", "block");
             }
         });
-
         $('input[name="radioGroup2"]').change(function () {
 
             var selectedId = $(this).attr('id');
@@ -310,7 +392,6 @@
                 //$("#dd1").css("display", "block");
             }
         });
-
         $('input[name="VradioGroup2"]').change(function () {
 
             var selectedId = $(this).attr('id');
@@ -352,6 +433,66 @@
             }
         });
 
+        $('input[name="RradioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "Rrb1") {
+                sessionStorage.removeItem("Rrbb1");
+                sessionStorage.removeItem("Rrbb2");
+                sessionStorage.setItem("Rrbb1", true);
+
+            }
+            else {
+                sessionStorage.removeItem("Rrbb1");
+                sessionStorage.removeItem("Rrbb2");
+                sessionStorage.setItem("Rrbb2", true);
+
+
+            }
+
+        });
+        $('input[name="RradioGroup3"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "Rrb5") {
+                sessionStorage.removeItem("Rrbb5");
+                sessionStorage.removeItem("Rrbb6");
+                sessionStorage.setItem("Rrbb5", true);
+                //$("#dd1").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("Rrbb5");
+                sessionStorage.removeItem("Rrbb6");
+                sessionStorage.setItem("Rrbb6", true);
+                //$("#dd1").css("display", "block");
+            }
+        });
+
+        $('input[name="RradioGroup2"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "Rrb3") {
+                sessionStorage.removeItem("Rrbb3");
+                sessionStorage.removeItem("Rrbb4");
+                sessionStorage.setItem("Rrbb4", false);
+                $("#Rdtf").css("display", "none");
+                $("#Rdtt").css("display", "none");
+                $("#Rdd1").css("display", "block");
+                $("#Rdd2").css("display", "block");
+
+            }
+            else {
+                sessionStorage.removeItem("Rrbb3");
+
+                sessionStorage.removeItem("Rrbb4");
+                sessionStorage.setItem("Rrbb4", true);
+
+                $("#Rdtf").css("display", "block");
+                $("#Rdtt").css("display", "block");
+                $("#Rdd1").css("display", "none");
+                $("#Rdd2").css("display", "none");
+            }
+        });
+
         $(function () {
             $("#rb1").prop("checked", true);
             $("#rb3").prop("checked", true);
@@ -365,13 +506,56 @@
             sessionStorage.setItem("Vrbb5", true);
             sessionStorage.setItem("Vrbb4", false);
             $("#Vrb7").prop("checked", true);
+            $("#Rrb1").prop("checked", true);
+            $("#Rrb3").prop("checked", true);
+            $("#Rrb5").prop("checked", true);
+            sessionStorage.setItem("Rrbb5", true);
+            sessionStorage.setItem("Rrbb4", false);
             if ('@ReportType' == 'ConInsp') {
                 $(".report1").css("display", "");                
             }
             else if ('@ReportType' == 'VenInsp') {
                 $(".report2").css("display", "");                
             }
+            else if ('@ReportType' == 'RTIInsp') {
+                $(".report3").css("display", "");
+            }
         });
+        function FillPurchaserCd(ids) {
+            var txtSPur = $("#txtSPur").val();
+            $.ajax({
+                url: '@Url.Action("GetPurchaserCd", "InspectionStatus")?Purchaser=' + txtSPur,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PurchaserCD").html("");
+                    $("#PurchaserCD").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#PurchaserCD").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#PurchaserCD").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#PurchaserCD").val(ids);
+                    }
+                    //$("#hdnRCD").val($("#RlyCd").val());
+                    //$("#hdnRailway").val($("#RlyCd option:selected").text());
+                }
+            });
+        }
+        function SearchPurchaser() {
+            FillPurchaserCd();
+            $("#hdnPDropdown").css("display", "block");
+        }
         function ViewReport1() {
             var ReportType = '@ReportType';
             var ForGiven = sessionStorage.getItem("rbb4");
@@ -417,6 +601,32 @@
             var ForParticular = sessionStorage.getItem("Vrbb2");
             var lstParticular = sessionStorage.getItem("Vcon");
             let myObject = { ReportType, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular };
+
+            var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+        function ViewReport3() {
+
+            // var ReportType = "Summary of Consignee Wise Inspections";
+            var ReportType = '@ReportType';
+            var ForGiven = sessionStorage.getItem("Rrbb4");
+            var ReportBasedon = sessionStorage.getItem("Rrbb5");
+            var TextPurchaser = $("#txtSPur").val();
+            if (sessionStorage.getItem("Rrbb4") == "false") {
+                var Month = $("#Rddlmonth").val();
+                var Year = $("#Rddlyear").val();
+            }
+            else {
+                var parts = $("#Rdtfrom").val().split('/');
+                var FromDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+                var parts2 = $("#Rdtto").val().split('/');
+                var ToDate = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+
+            }
+
+            var ForParticular = sessionStorage.getItem("Rrbb2");
+            var lstParticular = $("#PurchaserCD").val();
+            let myObject = {ReportType, ForGiven, ReportBasedon, FromDate, ToDate, Month, Year, ForParticular, lstParticular, TextPurchaser };
 
             var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
             window.open(url, '_blank');

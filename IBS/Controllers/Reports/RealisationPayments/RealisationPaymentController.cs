@@ -7,6 +7,7 @@ using IBS.Models;
 using IBS.Models.Reports;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.Reports.RealisationPayments
 {
@@ -30,6 +31,23 @@ namespace IBS.Controllers.Reports.RealisationPayments
             return View();
         }
 
+        #region Other Event
+        [HttpGet]
+        public IActionResult GetAU(string RlyCd)
+        {
+            try
+            {
+                List<SelectListItem> lstAu = Common.GetAUCrisByRlyCd(RlyCd);
+                return Json(new { status = true, list = lstAu });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillingReports", "GetAU", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+        #endregion
+
         public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
         {
             RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
@@ -37,9 +55,15 @@ namespace IBS.Controllers.Reports.RealisationPayments
             return View(model);
         }
 
-        public IActionResult ManageCrisRlyDetail(string ReportType, DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
+        public IActionResult ManageCrisRlyDetail(string ReportType, DateTime FromDate, DateTime ToDate, string IsDetailed, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
         {
-            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
+            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, IsDetailed = IsDetailed, IsRly = IsRly, Rly = Rly, IsAU = IsAU, AU = AU, IsAllRegion = IsAllRegion, Status = Status };
+            return View("Manage", model);
+        }
+
+        public IActionResult ManageCrisRlySummary(string ReportType, DateTime FromDate, DateTime ToDate, string IsRlyWise, string Status)
+        {
+            RealisationPaymentReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, IsRlyWise = IsRlyWise, Status = Status };
             return View("Manage", model);
         }
 
@@ -52,6 +76,12 @@ namespace IBS.Controllers.Reports.RealisationPayments
         public IActionResult SummaryCrisRlyPaymentDetail(DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
         {
             SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentDetailed(FromDate, ToDate, IsRly, Rly, IsAU, AU, IsAllRegion, Status, Region);
+            return PartialView(model);
+        }
+
+        public IActionResult SummaryCrisRlyPaymentSummary(DateTime FromDate, DateTime ToDate, string IsRlyWise, string Status)
+        {
+            SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentSummary(FromDate, ToDate, IsRlyWise, Status, Region);
             return PartialView(model);
         }
 

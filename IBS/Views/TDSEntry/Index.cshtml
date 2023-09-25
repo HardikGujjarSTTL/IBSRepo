@@ -17,9 +17,9 @@
         <a asp-action="AddRecieptVoucher" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>
     </div>*@
 </div>
-<section class="table-section">
+<section>
     <div class="task-listinput">
-        <div class="accordion-body">
+        
             <form data-ajax="true" asp-antiforgery="true" asp-controller="TDSEntry" asp-action="TDSEntry" data-ajax-method="post" data-ajax-complete="completed" id="frmTDSentry">
                 <div class="accordion-body">
                     <div class="row my-0">
@@ -27,9 +27,10 @@
                             
                         <div class="col-md-4 mb-3">
                                 <label for="Reference">BILL No.	</label>
+                                <div class="fileUploadWrap">
                                 <input type="text" class="input" id="billNo" asp-for="BILL_NO" maxlength="20">
-                                <button type="button" class="save-btn active" onclick="search();">Search</button>
-
+                                <button type="button" class="button" onclick="search();">Search</button>
+                            </div>
                         </div>
 
                             <div class="col-md-4 mb-4">
@@ -92,7 +93,7 @@
                     </div>
                 </div>
             </form>
-        </div>
+      
     </div>
 </section>
 
