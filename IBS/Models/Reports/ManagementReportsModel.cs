@@ -19,6 +19,14 @@
         public string ParticularCM { get; set; }
 
         public string ParticularSector { get; set; }
+
+        public string Region { get; set; }
+
+        public string Status { get; set; }
+
+        public string ClientType { get; set; }
+
+        public string BPORailway { get; set; }
     }
 
     public class IEPerformanceModel
@@ -382,4 +390,157 @@
             public int SUP_SUR_NO { get; set; }
         }
     }
+
+    public class ConsignRejectModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<ConsignRejectListModel> lstConsignReject { get; set; }
+
+        public class ConsignRejectListModel
+        {
+            public int ID { get; set; }
+
+            public string TempComplaintId { get; set; }
+
+            public DateTime? TempComplaintDt { get; set; }
+
+            public string Display_TempComplaintDt { get { return this.TempComplaintDt != null ? Common.ConvertDateFormat(this.TempComplaintDt.Value) : ""; } }
+
+            public string ConsigneeName { get; set; }
+
+            public string ConsigneeDesig { get; set; }
+
+            public string ConsigneeEmail { get; set; }
+
+            public string ConsigneeMobile { get; set; }
+
+            public string RejMemoNo { get; set; }
+
+            public DateTime? RejMemoDt { get; set; }
+
+            public string Display_RejMemoDt { get { return this.RejMemoDt != null ? Common.ConvertDateFormat(this.RejMemoDt.Value) : ""; } }
+
+            public string CaseNo { get; set; }
+
+            public string BkNo { get; set; }
+
+            public string SetNo { get; set; }
+
+            public string InspRegion { get; set; }
+
+            public int? IeCd { get; set; }
+
+            public int? CoCd { get; set; }
+
+            public int? ConsigneeCd { get; set; }
+
+            public string ItemDesc { get; set; }
+
+            public string Vendor { get; set; }
+
+            public decimal? QtyRejected { get; set; }
+
+            public decimal? RejectionValue { get; set; }
+
+            public string RejectionReason { get; set; }
+
+            public string Status { get; set; }
+
+            public string TempCompRejReason { get; set; }
+
+            public string ComplaintId { get; set; }
+
+            public string JiRequired { get; set; }
+
+            public string JiSno { get; set; }
+        }
+    }
+
+    public class OutstandingOverRegionModel
+    {
+        public DateTime FromDate { get; set; }
+
+        public string Display_FromDate { get { return Common.ConvertDateFormat(this.FromDate); } }
+
+        public List<OutstandingOverRegionListModel> lstOutstandingOverRegion { get; set; }
+
+        public class OutstandingOverRegionListModel
+        {
+            public int Count { get; set; }
+
+            public string BpoRegion { get; set; }
+
+            public string RegionCode { get; set; }
+
+            public decimal Total { get; set; }
+        }
+    }
+
+    public class ClientWiseRejectionModel
+    {
+        public DateTime FromDate { get; set; }
+
+        public string Display_FromDate { get { return Common.ConvertDateFormat(this.FromDate); } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public string ClientType { get; set; }
+
+        public string BPORailway { get; set; }
+
+        public List<ClientWiseRejectionListModel> lstClientWiseRejection { get; set; }
+
+        public class ClientWiseRejectionListModel
+        {
+            public int ID { get; set; }
+
+            public string BillNo { get; set; }
+
+            public DateTime? BillDt { get; set; }
+
+            public string Display_BillDt { get { return this.BillDt != null ? Common.ConvertDateFormat(this.BillDt.Value) : ""; } }
+
+            public string PoNo { get; set; }
+
+            public DateTime? PoDt { get; set; }
+
+            public string Display_PoDt { get { return this.PoDt != null ? Common.ConvertDateFormat(this.PoDt.Value) : ""; } }
+
+            public string RlyCd { get; set; }
+
+            public string BkNo { get; set; }
+
+            public string SetNo { get; set; }
+
+            public string ReasonReject { get; set; }
+
+            public string IeName { get; set; }
+
+            public string Vendor { get; set; }
+
+            public DateTime? IcDt { get; set; }
+
+            public string Display_IcDt { get { return this.IcDt != null ? Common.ConvertDateFormat(this.IcDt.Value) : ""; } }
+
+            public decimal? BillAmount { get; set; }
+
+            public string ItemDesc { get; set; }
+
+            public decimal? QtyToInsp { get; set; }
+
+            public decimal? QtyRejected { get; set; }
+        }
+    }
+
 }

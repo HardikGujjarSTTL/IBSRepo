@@ -317,7 +317,7 @@ namespace IBS.Helper
             [Description("Private")]
             P,
             [Description("PSU")]
-            PSU,
+            U,
             [Description("State Govt")]
             S,
             [Description("Foreign Railways")]
@@ -552,6 +552,16 @@ namespace IBS.Helper
             O,
         }
 
+        public enum Status
+        {
+            [Description("Pending")]
+            P,
+            [Description("Accepted")]
+            A,
+            [Description("Rejected")]
+            R,
+        }
+
     }
 
     public class EnumUtility<T>
@@ -694,6 +704,13 @@ namespace IBS.Helper
         public static IEAlterMappingReportModel IEAlterMappingReport { get; set; }
 
         public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
+
         public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
+
+        public static ConsignRejectModel ConsignReject { get; set; }
+
+        public static OutstandingOverRegionModel OutstandingOverRegion { get; set; }
+
+        public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
     }
 }

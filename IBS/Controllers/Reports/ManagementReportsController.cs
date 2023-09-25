@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using IBS.Helper;
+using IBS.Models;
 
 namespace IBS.Controllers.Reports
 {
@@ -56,6 +57,27 @@ namespace IBS.Controllers.Reports
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ParticularCM = ParticularCM, ParticularSector = ParticularSector };
             if (ReportType == "SUPSUR") model.ReportTitle = "Super Surprise Details";
+            return View("Manage", model);
+        }
+
+        public IActionResult ManageConsignReject(string ReportType, DateTime FromDate, DateTime ToDate, string Region, string Status)
+        {
+            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, Region = Region, Status = Status };
+            if (ReportType == "CONSIGN_REJECT") model.ReportTitle = "Online Consignee Rejection Report";
+            return View("Manage", model);
+        }
+
+        public IActionResult ManageOutstandingOverRegion(string ReportType, DateTime FromDate)
+        {
+            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, Region = Region };
+            if (ReportType == "X") model.ReportTitle = "Outstanding of One Region Over Other";
+            return View("Manage", model);
+        }
+
+        public IActionResult ManageClientWiseRejection(string ReportType, DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway)
+        {
+            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ClientType = ClientType, BPORailway = BPORailway };
+            if (ReportType == "CLIENTWISEREJ") model.ReportTitle = "Rejection Details Client Wise";
             return View("Manage", model);
         }
 
@@ -115,6 +137,27 @@ namespace IBS.Controllers.Reports
             return PartialView(model);
         }
 
+        public IActionResult ConsignReject(DateTime FromDate, DateTime ToDate, string InspRegion, string Status)
+        {
+            ConsignRejectModel model = managementReportsRepository.GetConsignRejectData(FromDate, ToDate, Region, InspRegion, Status);
+            GlobalDeclaration.ConsignReject = model;
+            return PartialView(model);
+        }
+
+        public IActionResult OutstandingOverRegion(DateTime FromDate)
+        {
+            OutstandingOverRegionModel model = managementReportsRepository.GetOutstandingOverRegion(FromDate);
+            GlobalDeclaration.OutstandingOverRegion = model;
+            return PartialView(model);
+        }
+
+        public IActionResult ClientWiseRejection(DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway)
+        {
+            ClientWiseRejectionModel model = managementReportsRepository.GetClientWiseRejection(FromDate, ToDate, ClientType, BPORailway);
+            GlobalDeclaration.ClientWiseRejection = model;
+            return PartialView(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string ReportType)
         {
@@ -160,6 +203,16 @@ namespace IBS.Controllers.Reports
                 SuperSurpriseSummaryModel model = GlobalDeclaration.SuperSurpriseSummary;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/SuperSurpriseSummary.cshtml", model);
             }
+            else if (ReportType == "CONSIGN_REJECT")
+            {
+                ConsignRejectModel model = GlobalDeclaration.ConsignReject;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/ConsignReject.cshtml", model);
+            }
+            else if (ReportType == "X")
+            {
+                OutstandingOverRegionModel model = GlobalDeclaration.OutstandingOverRegion;
+                htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/OutstandingOverRegion.cshtml", model);
+            }
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
@@ -186,6 +239,11 @@ namespace IBS.Controllers.Reports
             await browser.CloseAsync();
 
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
+
+        public IActionResult GetBPORailway(string ClientType)
+        {
+            return Json(Common.GetBPORailway(ClientType).ToList());
         }
     }
 }

@@ -1530,6 +1530,7 @@ namespace IBS.Models
             return CoName;
 
         }
+
         public static List<SelectListItem> TestToBe()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1544,6 +1545,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> TestToBeConducted()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1578,6 +1580,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> PaymentStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1634,7 +1637,6 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-
 
         public static List<SelectListItem> Non_Orgn_Type()
         {
@@ -2753,6 +2755,7 @@ namespace IBS.Models
             }
             return objdata;
         }
+
         public static List<SelectListItem> GetSummaryConsignee()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -3492,15 +3495,16 @@ namespace IBS.Models
                 new SelectListItem() { Text = "Returned", Value = "R" },
                 new SelectListItem() { Text = "Pending", Value = "X" },
                 new SelectListItem() { Text = "Returned Bills Resent", Value = "S" },
-                new SelectListItem() { Text = "ALL", Value = "A" }                
-            };           
+                new SelectListItem() { Text = "ALL", Value = "A" }
+            };
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> GetCRISRLYStatusDate()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
                 new SelectListItem() { Text = "Invoice Date", Value = "A" },
-                new SelectListItem() { Text = "Payment Date", Value = "P" }                
+                new SelectListItem() { Text = "Payment Date", Value = "P" }
             };
             return textValueDropDownDTO.ToList();
         }
@@ -3509,12 +3513,43 @@ namespace IBS.Models
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
             return (from c in context.T09Ies
-                    where c.IeStatus == null && c.IeRegion == Region && ( (c.IeCoCd == Convert.ToInt16(CO) && CO != "") || CO == "") 
+                    where c.IeStatus == null && c.IeRegion == Region && ((c.IeCoCd == Convert.ToInt16(CO) && CO != "") || CO == "")
                     select new SelectListItem
                     {
                         Value = c.IeCd.ToString(),
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetOnlineStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Status)).ToList();
+        }
+
+        public static IEnumerable<SelectListItem> GetBPORailway(string ClientType)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            if (ClientType == "R")
+            {
+                return (from c in context.T91Railways
+                        select new SelectListItem
+                        {
+                            Value = c.RlyCd.ToString().Trim().ToUpper(),
+                            Text = c.Railway
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else
+            {
+                return (from c in context.T12BillPayingOfficers
+                        where c.BpoType == ClientType
+                        select new SelectListItem
+                        {
+                            Value = c.BpoRly.ToString().Trim().ToUpper(),
+                            Text = c.BpoOrgn
+                        }).Distinct().OrderBy(c => c.Text).ToList();
+
+            }
         }
     }
 
