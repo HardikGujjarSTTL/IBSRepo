@@ -54,7 +54,7 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("LabRegisterReport", par, 17);
 
-            if (ds.Tables.Count != 0)
+            if (ds.Tables[0].Rows.Count != 0)
             {
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -105,7 +105,7 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("Lab_Performance_Report", par, 2);
 
-            if (ds.Tables.Count != 0)
+            if (ds.Tables[0].Rows.Count != 0)
             {
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -142,7 +142,7 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("LabRegisterReportPosting", par, 3);
 
-            if (ds.Tables.Count != 0)
+            if (ds.Tables[0].Rows.Count != 0)
             {
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -188,7 +188,7 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("GetOnlinePaymentReport", par, 3);
 
-            if (ds.Tables.Count != 0)
+            if (ds.Tables[0].Rows.Count != 0)
             {
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -230,7 +230,7 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("GetLabInvoiceReport", par, 4);
 
-            if (ds.Tables.Count != 0)
+            if (ds.Tables[0].Rows.Count != 0)
             {
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -299,7 +299,7 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("GET_PaymentReport", par, 5);
 
-            if (ds.Tables.Count != 0)
+            if (ds.Tables[0].Rows.Count != 0)
             {
                 if (ds != null && ds.Tables.Count > 0)
                 {

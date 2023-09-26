@@ -52,6 +52,14 @@
             loadSummartRTIReport();
             fileName = 'SUMMARY_OF_INSPECTIONS_FOR_RTI';
         }
+        else if ('@ReportType' == 'VenInspStatus') {
+            loadVendorInspReport();
+            fileName = 'VENDOR_WISE_INSPECTION_STATUS';
+        }
+        else if ('@ReportType' == 'ICPO') {
+            loadICDetailsPO();
+            fileName = 'IC_DETAILS_FOR_SPECIFIC_PO';
+        }
         
     });
 
@@ -69,6 +77,18 @@
     }
     function loadSummartRTIReport() {
         $("#dvReportViewer").load("@Url.Action("SummaryofInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular', TextPurchaser: '@Model.TextPurchase' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    function loadVendorInspReport() {
+        $("#dvReportViewer").load("@Url.Action("VendorWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', rdbGIE: '@Model.rdbGIE', rdbForMonth: '@Model.rdbForMonth', ForGPer: '@Model.ForGPer', ddlVender: '@Model.ddlVender' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    function loadICDetailsPO() {
+        $("#dvReportViewer").load("@Url.Action("ICDetailsPO")", { PO_NO: '@Model.PO_NO', PO_DT: '@Model.PO_DT', RLY_NONRLY: '@Model.RLY_NONRLY', RLY_CD: '@Model.RLY_CD' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

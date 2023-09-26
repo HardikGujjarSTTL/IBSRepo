@@ -19,5 +19,11 @@ namespace IBS.Interfaces.Reports
         public SuperSurpriseDetailsModel GetSuperSurpriseDetailsData(DateTime FromDate, DateTime ToDate, string Region, string ParticularCM, string ParticularSector);
 
         public SuperSurpriseSummaryModel GetSuperSurpriseSummaryData(DateTime FromDate, DateTime ToDate, string Region);
+
+        public ConsignRejectModel GetConsignRejectData(DateTime FromDate, DateTime ToDate, string Region, string InspRegion, string Status);
+
+        public OutstandingOverRegionModel GetOutstandingOverRegion(DateTime FromDate);
+
+        public ClientWiseRejectionModel GetClientWiseRejection(DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway);
     }
 }
