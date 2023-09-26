@@ -37,6 +37,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<CallsmarkedtoieView> CallsmarkedtoieViews { get; set; }
 
+    public virtual DbSet<CallsmarkedtoieViewNew> CallsmarkedtoieViewNews { get; set; }
+
     public virtual DbSet<CheckCall> CheckCalls { get; set; }
 
     public virtual DbSet<CheckPo> CheckPos { get; set; }
@@ -955,7 +957,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
             entity.Property(e => e.CallSno)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CallStatus)
                 .HasMaxLength(1)
@@ -1008,6 +1010,136 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("IE_PHONE_NO");
+            entity.Property(e => e.ItemDescPo)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("ITEM_DESC_PO");
+            entity.Property(e => e.Manufacturer)
+                .HasMaxLength(151)
+                .IsUnicode(false)
+                .HasColumnName("MANUFACTURER");
+            entity.Property(e => e.MfgCd)
+                .HasPrecision(6)
+                .HasColumnName("MFG_CD");
+            entity.Property(e => e.MfgPers)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("MFG_PERS");
+            entity.Property(e => e.MfgPhone)
+                .HasMaxLength(45)
+                .IsUnicode(false)
+                .HasColumnName("MFG_PHONE");
+            entity.Property(e => e.NewVendor)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("NEW_VENDOR");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.PoSource)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("PO_SOURCE");
+            entity.Property(e => e.PoYr)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("PO_YR");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.Source)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("SOURCE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.Vendor)
+                .HasMaxLength(151)
+                .IsUnicode(false)
+                .HasColumnName("VENDOR");
+        });
+
+        modelBuilder.Entity<CallsmarkedtoieViewNew>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("CALLSMARKEDTOIE_VIEW_NEW");
+
+            entity.Property(e => e.CallMarkDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_MARK_DT");
+            entity.Property(e => e.CallRecvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_RECV_DT");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(6)
+                .HasColumnName("CALL_SNO");
+            entity.Property(e => e.CallStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALL_STATUS");
+            entity.Property(e => e.CallStatusFull)
+                .HasMaxLength(108)
+                .IsUnicode(false)
+                .HasColumnName("CALL_STATUS_FULL");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Colour)
+                .HasMaxLength(7)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("COLOUR");
+            entity.Property(e => e.Consignee)
+                .HasMaxLength(116)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE");
+            entity.Property(e => e.Count)
+                .HasColumnType("NUMBER")
+                .HasColumnName("COUNT");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.DocsSubmitted)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("DOCS_SUBMITTED");
+            entity.Property(e => e.ExtDelvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("EXT_DELV_DT");
+            entity.Property(e => e.IeCd)
+                .HasPrecision(6)
+                .HasColumnName("IE_CD");
+            entity.Property(e => e.IeName)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_NAME");
+            entity.Property(e => e.IePhoneNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("IE_PHONE_NO");
+            entity.Property(e => e.InspDesireDt)
+                .HasColumnType("DATE")
+                .HasColumnName("INSP_DESIRE_DT");
             entity.Property(e => e.ItemDescPo)
                 .HasMaxLength(400)
                 .IsUnicode(false)
@@ -7434,6 +7566,7 @@ public partial class ModelContext : DbContext
                 .HasColumnName("ALLOW_UP_CHKSHT");
             entity.Property(e => e.AuthLevl)
                 .HasPrecision(2)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("AUTH_LEVL");
             entity.Property(e => e.CallMarking)
                 .HasMaxLength(1)
@@ -7475,6 +7608,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Region)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("REGION");
             entity.Property(e => e.RitesEmp)
@@ -9791,6 +9925,16 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("IE_SNAME");
+            entity.Property(e => e.OfflineCallStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("OFFLINE_CALL_STATUS");
+            entity.Property(e => e.OnlineCallStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("ONLINE_CALL_STATUS");
             entity.Property(e => e.PoDt)
                 .HasColumnType("DATE")
                 .HasColumnName("PO_DT");
@@ -10142,9 +10286,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T21_CALL_STATUS_CODES");
 
             entity.Property(e => e.CallStatusCd)
-                .HasMaxLength(3)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasMaxLength(20)
                 .HasColumnName("CALL_STATUS_CD");
             entity.Property(e => e.CallStatusColor)
                 .HasMaxLength(7)
@@ -10391,7 +10533,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.OtChargePer)
                 .HasColumnType("NUMBER(10,2)")
@@ -17994,6 +18136,25 @@ public partial class ModelContext : DbContext
                 .HasNoKey()
                 .ToView("VIEW_GET_CALL_STATUS_DETAILS");
 
+            entity.Property(e => e.BkNo)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("BK_NO");
+            entity.Property(e => e.CallCancelCharges)
+                .HasPrecision(5)
+                .HasColumnName("CALL_CANCEL_CHARGES");
+            entity.Property(e => e.CallCancelStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALL_CANCEL_STATUS");
+            entity.Property(e => e.CallLetterDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_LETTER_DT");
+            entity.Property(e => e.CallLetterNo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("CALL_LETTER_NO");
             entity.Property(e => e.CallMarkDt)
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_MARK_DT");
@@ -18001,7 +18162,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
             entity.Property(e => e.CallSno)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CallStatus)
                 .HasMaxLength(1)
@@ -18012,6 +18173,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(22)
                 .IsUnicode(false)
                 .HasColumnName("CALL_STATUS1");
+            entity.Property(e => e.CallStatusDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_STATUS_DT");
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)
                 .IsUnicode(false)
@@ -18024,6 +18188,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Count)
                 .HasColumnType("NUMBER")
                 .HasColumnName("COUNT");
+            entity.Property(e => e.DesireDt)
+                .HasColumnType("DATE")
+                .HasColumnName("DESIRE_DT");
+            entity.Property(e => e.Hologram)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("HOLOGRAM");
             entity.Property(e => e.IeName)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -18054,6 +18225,14 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(75)
                 .IsUnicode(false)
                 .HasColumnName("PO_NO");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.SetNo)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("SET_NO");
             entity.Property(e => e.UpdateAllowed)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -18089,7 +18268,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
             entity.Property(e => e.CallSno)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)
@@ -18338,7 +18517,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALLRECVDT");
             entity.Property(e => e.Callsno)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALLSNO");
             entity.Property(e => e.Callstatus)
                 .HasMaxLength(1)

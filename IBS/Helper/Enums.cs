@@ -317,7 +317,7 @@ namespace IBS.Helper
             [Description("Private")]
             P,
             [Description("PSU")]
-            PSU,
+            U,
             [Description("State Govt")]
             S,
             [Description("Foreign Railways")]
@@ -552,6 +552,16 @@ namespace IBS.Helper
             O,
         }
 
+        public enum Status
+        {
+            [Description("Pending")]
+            P,
+            [Description("Accepted")]
+            A,
+            [Description("Rejected")]
+            R,
+        }
+
     }
 
     public class EnumUtility<T>
@@ -662,6 +672,7 @@ namespace IBS.Helper
     public static class GlobalDeclaration
     {
         public static IEPerformanceModel IEPerformance { get; set; }
+
         public static ConsigneeComplaints ConsigneeComplaint { get; set; }
 
         public static ClusterPerformanceModel ClusterPerformance { get; set; }
@@ -677,5 +688,39 @@ namespace IBS.Helper
         public static SuperSurpriseDetailsModel SuperSurpriseDetails { get; set; }
 
         public static SuperSurpriseSummaryModel SuperSurpriseSummary { get; set; }
+
+        public static NCRReport NCRReports { get; set; }
+
+        public static JIRequiredReport JIRequiredReports { get; set; }
+
+        public static ConsigneeCompPeriodReport ConsigneeCompPeriod { get; set; }
+
+        public static DefectCodeReport DefectCodeReports { get; set; }
+
+        public static HighValueInspReport HighValueInspReports { get; set; }
+
+        public static VendorClusterReportModel VendorClusterReport { get; set; }
+
+        public static IEAlterMappingReportModel IEAlterMappingReport { get; set; }
+
+        public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
+
+        public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
+
+        public static OngoingContrcatsReportModel OngoingContrcatsReport { get; set; }
+
+        public static ContractReportModel ContractReport { get; set; }
+
+        public static IEWiseTrainingReportModel IEWiseTrainingReport { get; set; }
+
+        public static VendorPerformanceReportModel VendorPerformanceReport { get; set; }
+
+        public static PeriodWiseChecksheetReportModel PeriodWiseChecksheetReport { get; set; }
+
+        public static ConsignRejectModel ConsignReject { get; set; }
+
+        public static OutstandingOverRegionModel OutstandingOverRegion { get; set; }
+
+        public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
     }
 }

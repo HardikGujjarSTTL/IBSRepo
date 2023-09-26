@@ -1,0 +1,142 @@
+﻿@model List<IBS.Models.Reports.EOIPricedOfferSentModel>
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Previous Offer Sent</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="heading3">Previous Offer Sent</h3>
+        <ul class="reportLabelList">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+            <br />
+            <br />
+            <li><span class="labelName">2.(d) Previous Offers</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Scope of Work</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Offer Date</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Rate of Insp Fee</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total Expected Fee(Rs. in Lacs)</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Expected OR</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
+            </tr>
+            @{
+                int sno = 1;
+            }
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@sno</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CLIENT_NAME</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.SCOPE_OF_WORK</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.OFFER_DATE</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CONT_INSP_FEE</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CONTRACT_FEE_NUM</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.EXP_OR</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.REGION</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CO_NAME</font></b></td>
+                    </tr>
+                    sno = sno + 1;
+                }
+            }
+        </table>
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    var fileName = 'EOIPricedOfferSent';
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var HTML = $('#dvReportViewer').html();
+
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "PCDOReport")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

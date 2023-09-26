@@ -1643,7 +1643,7 @@ namespace IBS.Repositories.Vendor
                 orderCriteria = "CaseNo";
                 orderAscendingDirection = true;
             }
-            string CaseNo = "", CallRecvDt = "", CallSno="";
+            string CaseNo = "", CallRecvDt = "", CallSno = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
             {
                 CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);

@@ -34,7 +34,7 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string month,string year,string FromDate,string ToDate,string AllCM,string forCM,string All,string Outstanding,string formonth,string forperiod,string monthChar,string controllingmanager,string reporttype)
+        public IActionResult Manage(string month,string year,string FromDate,string ToDate,string AllCM,string forCM,string All,string Outstanding,string formonth,string forperiod,string monthChar,string iecmname, string reporttype,string COName)
         {
             NCRReport model = new()
             {
@@ -48,15 +48,16 @@ namespace IBS.Controllers.Reports
                 Outstanding = Outstanding,
                 formonth = formonth,
                 monthChar = monthChar,
-                controllingmanager = controllingmanager,
+                iecmname = iecmname,
                 reporttype = reporttype,
-                forperiod = forperiod
+                forperiod = forperiod,
+                COName= COName
             };
             model.ReportTitle = "NCR Report Controling Wise";
             return View(model);
         }
 
-        public IActionResult NCRCWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string controllingmanager, string reporttype,string iename)
+        public IActionResult NCRCWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string iecmname, string reporttype, string COName, string IENametext)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -65,22 +66,25 @@ namespace IBS.Controllers.Reports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            NCRReport model = iNCRCWiseReportRepository.GetNCRIECOWiseData(month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, Region, controllingmanager, reporttype, iename);
+            NCRReport model = iNCRCWiseReportRepository.GetNCRIECOWiseData(month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, Region, iecmname, reporttype);
             ViewBag.Regions = wRegion;
             ViewBag.FromDT = FromDate;
+            ViewBag.AllCMData = AllCM;
             ViewBag.ToDT = ToDate;
             ViewBag.yearshow = year;
             ViewBag.monthshow = monthChar;
-           // ViewBag.BillDT = (BillDate == "true") ? "Report Based On Bill Date" : "";
-           // ViewBag.ICDT = (ICDate == "true") ? "Report Based On IC Date" : "";
+            ViewBag.CONameview = COName;
+            ViewBag.Todaydt = DateTime.Now.ToString("dd/MM/yyyyy"); 
+            GlobalDeclaration.NCRReports = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF()
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+            NCRReport model = GlobalDeclaration.NCRReports;
+            htmlContent = await this.RenderViewToStringAsync("/Views/NCRCWiseReport/NCRCWiseReport.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

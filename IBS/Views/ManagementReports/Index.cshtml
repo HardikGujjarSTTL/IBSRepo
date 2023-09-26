@@ -12,9 +12,11 @@
     else if (ReportType == "CALLSWITHOUTIC") ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
     else if (ReportType == "SUPSUR") ReportTitle = "Super Surprise Details";
     else if (ReportType == "SUPSURPSUMM") ReportTitle = "CO Wise Super Surprise Summary";
+    else if (ReportType == "CONSIGN_REJECT") ReportTitle = "Online Consignee Rejection Report";
+    else if (ReportType == "X") ReportTitle = "Outstanding of One Region Over Other";
+    else if (ReportType == "CLIENTWISEREJ") ReportTitle = "Rejection Details Client Wise";
 
     ViewData["Title"] = ReportTitle;
-
 }
 
 <div class="list-inner">
@@ -185,6 +187,82 @@
                 </div>
             </div>
         </div>
+        <div class="task-inner row ConsignReject" style="display: none">
+            <div class="col-md-3">
+                <label for="RegionConsignReject">For The Region</label>
+                @Html.DropDownList("RegionConsignReject", new SelectList(Common.GetRegion() , "Value", "Text"), "--All--")
+            </div>
+            <div class="col-md-3">
+                <label for="RegionStatus">Status</label>
+                @Html.DropDownList("RegionStatus", new SelectList(Common.GetOnlineStatus() , "Value", "Text"), "--All--")
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDateConsignReject">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDateConsignReject" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDateConsignReject"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDateConsignReject">To</label>
+                    <input type="text" class="datepicker" id="ToDateConsignReject" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDateConsignReject"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportConsignReject();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsConsignReject();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row OutstandingOverRegion" style="display: none">
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="FromDateOutstandingOverRegion">Client wise Outstanding Statement as on</label>
+                    <input type="text" class="datepicker" id="FromDateOutstandingOverRegion" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDateOutstandingOverRegion"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportOutstandingOverRegion();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsOutstandingOverRegion();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row ClientWiseRejection" style="display: none">
+            <div class="col-md-3 mb-3">
+                <label for="ClientType_ClientWiseRejection">Client</label>
+                @Html.DropDownList("ClientType_ClientWiseRejection", new SelectList(Common.ClientType() , "Value", "Text"), "--Select--", new { @onchange = "BindBPORailway();" })
+                <span class="text-danger field-validation-error" id="spnErrorClientTypeClientWiseRejection"></span>
+            </div>
+            <div class="col-md-3 mb-3" style="margin-top: 34px;">
+                @Html.DropDownList("BPORailway_ClientWiseRejection", Common.GetBPORailway(""),  "--Select--")
+                <span class="text-danger field-validation-error" id="spnErrorBPORailwayClientWiseRejection"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="FromDateClientWiseRejection">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDateClientWiseRejection" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDateClientWiseRejection"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="ToDateClientWiseRejection">To</label>
+                    <input type="text" class="datepicker" id="ToDateClientWiseRejection" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDateClientWiseRejection"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportClientWiseRejection();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsClientWiseRejection();">Clear</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -200,24 +278,65 @@
                 $(".RWB").css("display", "none");
                 $(".RWCO").css("display", "none");
                 $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "");
+                $(".ClientWiseRejection").css("display", "none");
             }
             else if ('@ReportType' == 'RWB') {
                 $(".report1").css("display", "none");
                 $(".RWB").css("display", "");
                 $(".RWCO").css("display", "none");
                 $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
             }
             else if ('@ReportType' == 'R') {
                 $(".report1").css("display", "none");
                 $(".RWB").css("display", "none");
                 $(".RWCO").css("display", "");
-                $(".SuperSurprise").css("display", "none")
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
             }
             else if ('@ReportType' == 'SUPSUR') {
                 $(".report1").css("display", "none");
                 $(".RWB").css("display", "none");
                 $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "")
+                $(".SuperSurprise").css("display", "");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
+            }
+            else if ('@ReportType' == 'CONSIGN_REJECT') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
+
+                $("#RegionConsignReject option[value='Q']").remove();
+            }
+            else if ('@ReportType' == 'X') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "");
+                $(".ClientWiseRejection").css("display", "none");
+            }
+            else if ('@ReportType' == 'CLIENTWISEREJ') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "");
             }
         });
 
@@ -405,10 +524,175 @@
         }
 
         function ClearControlsSuperSurprise() {
-            $("#FromDate").val("");
-            $("#ToDate").val("");
-            $("#spnErrorFromDate").html("");
-            $("#spnErrorToDate").html("");
+            $("#FromDateSuperSurprise").val("");
+            $("#ToDateSuperSurprise").val("");
+            $("input[type=radio][name=CM][value=CM1]").prop('checked', true);
+            $(".CM").css("display", "none");
+            $("#ParticularCM").get(0).selectedIndex = 0;
+
+            $("input[type=radio][name=Sector][value=Sector1]").prop('checked', true);
+            $(".Sector").css("display", "none");
+            $("#ParticularSector").get(0).selectedIndex = 0;
+
+            $("#spnErrorFromDateSuperSurprise").html("");
+            $("#spnErrorToDateSuperSurprise").html("");
+        }
+
+        function ViewReportConsignReject() {
+
+            $("#spnErrorFromDateConsignReject").html("");
+            $("#spnErrorToDateConsignReject").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDateConsignReject").val() == "") {
+                $("#spnErrorFromDateConsignReject").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDateConsignReject").val() == "") {
+                $("#spnErrorToDateConsignReject").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDateConsignReject").val() != "" && IsValidDate($("#FromDateConsignReject").val()) == false) {
+                $("#spnErrorFromDateConsignReject").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateConsignReject").val() != "" && IsValidDate($("#ToDateConsignReject").val()) == false) {
+                $("#spnErrorToDateConsignReject").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var Region = $("#RegionConsignReject").val();
+            var Status = $("#RegionStatus").val();
+            var FromDate = moment($('#FromDateConsignReject').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDateConsignReject').datepicker('getDate')).format("YYYY-MM-DD");
+
+            let myObject = { ReportType, FromDate, ToDate, Region, Status };
+
+            var url = '@Url.Action("ManageConsignReject", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsConsignReject() {
+            $("#RegionConsignReject").get(0).selectedIndex = 0;
+            $("#RegionStatus").get(0).selectedIndex = 0;
+            $("#FromDateConsignReject").val("");
+            $("#ToDateConsignReject").val("");
+            $("#spnErrorFromDateConsignReject").html("");
+            $("#spnErrorToDateConsignReject").html("");
+        }
+
+        function ViewReportOutstandingOverRegion() {
+
+            $("#spnErrorFromDateOutstandingOverRegion").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDateOutstandingOverRegion").val() == "") {
+                $("#spnErrorFromDateOutstandingOverRegion").html("The Date field is required.");
+                IsValid = false;
+            }
+            if ($("#FromDateOutstandingOverRegion").val() != "" && IsValidDate($("#FromDateOutstandingOverRegion").val()) == false) {
+                $("#spnErrorFromDateOutstandingOverRegion").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDateOutstandingOverRegion').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = { ReportType, FromDate };
+
+            var url = '@Url.Action("ManageOutstandingOverRegion", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsOutstandingOverRegion() {
+            $("#FromDateOutstandingOverRegion").val("");
+            $("#spnErrorFromDateOutstandingOverRegion").html("");
+        }
+
+        function BindBPORailway() {
+            $("#BPORailway_ClientWiseRejection").empty();
+            $("#BPORailway_ClientWiseRejection").append($('<option value="">--Select--</option>'));
+
+            var ClientType = $("#ClientType_ClientWiseRejection").val();
+
+            if (ClientType != '') {
+                $.get("@Url.Action("GetBPORailway", "ManagementReports")", { ClientType }, function (response) {
+                    if (response != null) {
+                        $("#BPORailway_ClientWiseRejection").empty();
+                        $("#BPORailway_ClientWiseRejection").append($('<option value="">--Select--</option>'));
+                        $.each(response, function (ind, val) {
+                            $("#BPORailway_ClientWiseRejection").append($('<option></option>').val(val.Value).html(val.Text));
+                        });
+                    }
+                });
+            }
+        }
+
+        function ViewReportClientWiseRejection() {
+
+            $("#spnErrorClientTypeClientWiseRejection").html("");
+            $("#spnErrorBPORailwayClientWiseRejection").html("");
+            $("#spnErrorFromDateClientWiseRejection").html("");
+            $("#spnErrorToDateClientWiseRejection").html("");
+
+            var IsValid = true;
+
+            if ($("#ClientType_ClientWiseRejection").val() == "") {
+                $("#spnErrorClientTypeClientWiseRejection").html("The Client field is required.");
+                IsValid = false;
+            }
+            if ($("#BPORailway_ClientWiseRejection").val() == "") {
+                $("#spnErrorBPORailwayClientWiseRejection").html("The field is required.");
+                IsValid = false;
+            }
+            if ($("#FromDateClientWiseRejection").val() == "") {
+                $("#spnErrorFromDateClientWiseRejection").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDateClientWiseRejection").val() == "") {
+                $("#spnErrorToDateClientWiseRejection").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDateClientWiseRejection").val() != "" && IsValidDate($("#FromDateClientWiseRejection").val()) == false) {
+                $("#spnErrorFromDateClientWiseRejection").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateClientWiseRejection").val() != "" && IsValidDate($("#ToDateClientWiseRejection").val()) == false) {
+                $("#spnErrorToDateClientWiseRejection").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDateClientWiseRejection').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDateClientWiseRejection').datepicker('getDate')).format("YYYY-MM-DD");
+            var ClientType = $("#ClientType_ClientWiseRejection").val();
+            var BPORailway = $("#BPORailway_ClientWiseRejection").val();
+
+            let myObject = { ReportType, FromDate, ToDate, ClientType, BPORailway };
+
+            var url = '@Url.Action("ManageClientWiseRejection", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsClientWiseRejection() {
+            $("#ClientType_ClientWiseRejection").get(0).selectedIndex = 0;
+            BindBPORailway();
+            $("#FromDateClientWiseRejection").val("");
+            $("#ToDateClientWiseRejection").val("");
+            $("#spnErrorClientTypeClientWiseRejection").html("");
+            $("#spnErrorBPORailwayClientWiseRejection").html("");
+            $("#spnErrorFromDateClientWiseRejection").html("");
+            $("#spnErrorToDateClientWiseRejection").html("");
         }
 
     </script>

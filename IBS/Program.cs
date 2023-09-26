@@ -8,6 +8,7 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.Billing;
+using IBS.Interfaces.Reports.OtherReports;
 using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
@@ -17,6 +18,7 @@ using IBS.Repositories.IE_Report;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
+using IBS.Repositories.Reports.OtherReports;
 using IBS.Repositories.Reports.RealisationPayment;
 using IBS.Repositories.Transaction;
 using IBS.Repositories.Vendor;
@@ -214,6 +216,14 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
+builder.Services.AddScoped<IPeriodWiseChecksheetReportRepository, PeriodWiseChecksheetReportRepository>();
+builder.Services.AddScoped<IVendorPerformanceReportRepository, VendorPerformanceReportRepository>();
+builder.Services.AddScoped<IIEWiseTrainingReportRepository, IEWiseTrainingReportRepository>();
+builder.Services.AddScoped<IContractsReportsRepository, ContractsReportsRepository>();
+builder.Services.AddScoped<IOngoingContractsReportRepository, OngoingContractsReportRepository>();
+builder.Services.AddScoped<IVendorFeedbackReportRepository, VendorFeedbackReportRepository>();
+builder.Services.AddScoped<IIEAlterReportRepository, IEAlterReportRepository>();
+builder.Services.AddScoped<IVendorClusterIERepository, VendorClusterIERepository>();
 builder.Services.AddScoped<INCRCWiseReportRepository, NCRCWiseReportRepository>();
 builder.Services.AddScoped<IHighValueInspecReportRepository, HighValueInspecReportRepository>();
 builder.Services.AddScoped<ICoComplaintJIRequiredRepository, CoComplaintJIRequiredRepository>();
@@ -226,6 +236,7 @@ builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
 builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepository>();
 builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 builder.Services.AddScoped<ILabReportsRepository, LabReportsRRepository>();
+builder.Services.AddScoped<IOtherReportsRepository, OtherReportsRepository>();
 
 var app = builder.Build();
 

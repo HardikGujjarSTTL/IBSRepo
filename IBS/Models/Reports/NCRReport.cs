@@ -15,8 +15,11 @@ namespace IBS.Models.Reports
         public string monthChar { get; set; }
         public string forperiod { get; set; }
         public string ReportTitle { get; set; }
-        public string controllingmanager { get; set; }
+        public string iecmname { get; set; }
         public string reporttype { get; set; }
+        public string COName { get; set; }
+        public string IEName { get; set; }
+        public string IENametext { get; set; }
 
         public List<AllNCRCMIE> lstAllNCRCMIE { get; set; }
         public List<IECMWise> lstIECMWise { get; set; }
