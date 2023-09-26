@@ -706,5 +706,7 @@ namespace IBS.Helper
         public static VendorPerformanceReportModel VendorPerformanceReport { get; set; }
 
         public static PeriodWiseChecksheetReportModel PeriodWiseChecksheetReport { get; set; }
+
+        public static PeriodWiseTechnicalRefReportModel PeriodWiseTechnicalRefReport { get; set; }
     }
 }

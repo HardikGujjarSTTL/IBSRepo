@@ -14,43 +14,47 @@ using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Reports
 {
-    public class PeriodWiseChecksheetReportRepository : IPeriodWiseChecksheetReportRepository
+    public class PeriodWiseTechnicalReportRepository : IPeriodWiseTechnicalReportRepository
     {
         private readonly ModelContext context;
 
-        public PeriodWiseChecksheetReportRepository(ModelContext context)
+        public PeriodWiseTechnicalReportRepository(ModelContext context)
         {
             this.context = context;
         }
 
-        public PeriodWiseChecksheetReportModel Getperiodwisechecksheetdetails(string FromDate, string ToDate, string Region)
+        public PeriodWiseTechnicalRefReportModel Getperiodwisetechrefdetails(string FromDate, string ToDate, string Region)
         {
-            PeriodWiseChecksheetReportModel model = new();
-            List<PeriodWiseChecksheet> lstPeriodWiseChecksheet = new();
+            PeriodWiseTechnicalRefReportModel model = new();
+            List<PeriodWiseTechnicalRef> lstPeriodWiseTechnicalRef = new();
 
             DataSet ds = null;
             DataTable dt = new DataTable();
-           
+
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_frmdt", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_todt", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[3] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            ds = DataAccessDB.GetDataSet("GetPeriodWiseChecksheetReports", par, 1);
+            ds = DataAccessDB.GetDataSet("GetPeriodWiseTechRefReport", par, 1);
 
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];
-                List<PeriodWiseChecksheet> listcong = dt.AsEnumerable().Select(row => new PeriodWiseChecksheet
+                List<PeriodWiseTechnicalRef> listcong = dt.AsEnumerable().Select(row => new PeriodWiseTechnicalRef
                 {
-                    ITEM_DESC = Convert.ToString(row["ITEM_DESC"]),
-                    IE = Convert.ToString(row["IE"]),
-                    CO_NAME = Convert.ToString(row["CO_NAME"]),
-                    CREATION_REV_DT = Convert.ToString(row["CREATION_REV_DT"]),
+                    cm_name = Convert.ToString(row["cm_name"]),
+                    ie_name = Convert.ToString(row["ie_name"]),
+                    item_des = Convert.ToString(row["item_des"]),
+                    spec_drg = Convert.ToString(row["spec_drg"]),
+                    letter_no = Convert.ToString(row["letter_no"]),
+                    tech_date = Convert.ToString(row["tech_date"]),
+                    ref_made = Convert.ToString(row["ref_made"]),
+                    tech_content = Convert.ToString(row["tech_content"]),
                 }).ToList();
 
-                model.lstPeriodWiseChecksheet = listcong;
+                model.lstPeriodWiseTechnicalRef = listcong;
             }
 
             return model;
