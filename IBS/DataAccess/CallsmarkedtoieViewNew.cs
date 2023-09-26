@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class CallsmarkedtoieView
+public partial class CallsmarkedtoieViewNew
 {
     public string? Vendor { get; set; }
 
@@ -21,11 +21,13 @@ public partial class CallsmarkedtoieView
 
     public DateTime? CallMarkDt { get; set; }
 
-    public DateTime? DtInspDesire { get; set; }
+    public DateTime? InspDesireDt { get; set; }
 
     public DateTime CallRecvDt { get; set; }
 
     public string? NewVendor { get; set; }
+
+    public int? IeCd { get; set; }
 
     public string? IeName { get; set; }
 
@@ -64,8 +66,6 @@ public partial class CallsmarkedtoieView
     public int CallSno { get; set; }
 
     public string? DocsSubmitted { get; set; }
-
-    public int? IeCd { get; set; }
 
     public decimal? Count { get; set; }
 }

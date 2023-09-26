@@ -1,0 +1,96 @@
+﻿@using IBS.Helper;
+@model IBS.Models.Reports.OutstandingOverRegionModel
+
+@{
+    char[] lstRegions = new char[5] { 'N', 'E', 'W', 'S', 'C' };
+}
+
+<div>
+    <h3 class="center">Outstanding of All Region as on : <span class="orangeText"> @Model.Display_FromDate </span> On Other Regions </h3>
+    <h3 class="center">Outstanding to be chased by the Region</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                    <th width="5%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Northern</font></b></th>
+                    <th width="5%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Eastern</font></b></th>
+                    <th width="5%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Western</font></b></th>
+                    <th width="5%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Southern</font></b></th>
+                    <th width="5%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Central</font></b></th>
+                    <th width="5%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Other</font></b></th>
+                </tr>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana"><u>Outstanding bills of the Region</u></font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Outstanding Amount</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Outstanding Amount</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Outstanding Amount</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Outstanding Amount</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Outstanding Amount</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Outstanding Amount</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstOutstandingOverRegion != null && Model.lstOutstandingOverRegion.Count > 0)
+                {
+                    @foreach (var region in lstRegions)
+                    {
+                        string str = string.Empty;
+
+                        if (region.ToString() == "N") str = "Northern";
+                        else if (region.ToString() == "S") str = "Southern";
+                        else if (region.ToString() == "E") str = "Eastern";
+                        else if (region.ToString() == "W") str = "Western";
+                        else if (region.ToString() == "C") str = "Central";
+
+                        <tr>
+                            <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana"><u>@str</u></font></b></td>
+                            <td width="5%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "N" && x.RegionCode == region.ToString()).Select(x => x.Count).FirstOrDefault()</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "N" && x.RegionCode == region.ToString()).Select(x => x.Total).FirstOrDefault()</font></td>
+                            <td width="5%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "E" && x.RegionCode == region.ToString()).Select(x => x.Count).FirstOrDefault()</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "E" && x.RegionCode == region.ToString()).Select(x => x.Total).FirstOrDefault()</font></td>
+                            <td width="5%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "W" && x.RegionCode == region.ToString()).Select(x => x.Count).FirstOrDefault()</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "W" && x.RegionCode == region.ToString()).Select(x => x.Total).FirstOrDefault()</font></td>
+                            <td width="5%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "S" && x.RegionCode == region.ToString()).Select(x => x.Count).FirstOrDefault()</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "S" && x.RegionCode == region.ToString()).Select(x => x.Total).FirstOrDefault()</font></td>
+                            <td width="5%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "C" && x.RegionCode == region.ToString()).Select(x => x.Count).FirstOrDefault()</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "C" && x.RegionCode == region.ToString()).Select(x => x.Total).FirstOrDefault()</font></td>
+                            <td width="5%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == null && x.RegionCode == region.ToString()).Select(x => x.Count).FirstOrDefault()</font></td>
+                            <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == null && x.RegionCode == region.ToString()).Select(x => x.Total).FirstOrDefault()</font></td>
+                        </tr>
+                    }
+                    <tr class="reportTotal">
+                        <td width="5%" valign="top" align="center"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="5%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "N").Sum(x => x.Count)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "N").Sum(x => x.Total)</b></font></td>
+                        <td width="5%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "E").Sum(x => x.Count)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "E").Sum(x => x.Total)</b></font></td>
+                        <td width="5%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "W").Sum(x => x.Count)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "W").Sum(x => x.Total)</b></font></td>
+                        <td width="5%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "S").Sum(x => x.Count)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "S").Sum(x => x.Total)</b></font></td>
+                        <td width="5%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "C").Sum(x => x.Count)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == "C").Sum(x => x.Total)</b></font></td>
+                        <td width="5%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == null).Sum(x => x.Count)</b></font></td>
+                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstOutstandingOverRegion.Where(x => x.BpoRegion == null).Sum(x => x.Total)</b></font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
