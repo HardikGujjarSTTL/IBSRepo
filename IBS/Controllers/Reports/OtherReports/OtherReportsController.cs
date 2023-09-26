@@ -37,9 +37,9 @@ namespace IBS.Controllers.Reports.OtherReports
             return View(model);
         }
 
-        public IActionResult ManageCoIeWiseCalls(string ReportType, string CO, string Status, string IE, bool IsCallDate)
+        public IActionResult ManageCoIeWiseCalls(string ReportType, string Case_No, string Call_Recv_Date, string Call_SNo)
         {
-            OtherReportsModel model = new() { ReportType = ReportType, CO = CO, Status = Status, IE = IE, IsCallDate = IsCallDate };
+            OtherReportsModel model = new() { ReportType = ReportType, Case_No = Case_No, Call_Recv_Date = Call_Recv_Date, Call_SNo = Call_SNo };
             return View("Manage", model);
         }
 
@@ -48,6 +48,18 @@ namespace IBS.Controllers.Reports.OtherReports
             ControllingOfficerIEModel model = otherReportsRepository.GetControllingOfficerWiseIE(Region);
             GlobalDeclaration.ControllingOfficerIE = model;
             return PartialView(model);
+        }
+
+        public IActionResult CoIeWiseCalls(string Case_No, string Call_Recv_Date, string Call_SNo)
+        {
+            CoIeWiseCallsModel model = otherReportsRepository.GetCoIeWiseCallsReport(Case_No, Call_Recv_Date, Call_SNo);
+            GlobalDeclaration.CoIeWiseCalls = model;
+            return PartialView(model);
+        }
+
+        public IActionResult TermsAndConditions()
+        {
+            return View();
         }
 
 
@@ -71,7 +83,7 @@ namespace IBS.Controllers.Reports.OtherReports
         [HttpPost]
         public IActionResult Get_CoIeWiseCalls([FromBody] DTParameters dTParameters)
         {
-            DTResult<CoIeWiseCallsListModel> dtResult =  new();
+            DTResult<CoIeWiseCallsListModel> dtResult = new();
             //IE = IE == "" ? null : IE;
             dtResult = otherReportsRepository.GetCoIeWiseCalls(dTParameters);
             var data = dtResult.data.ToList();
@@ -112,6 +124,11 @@ namespace IBS.Controllers.Reports.OtherReports
             {
                 ControllingOfficerIEModel model = GlobalDeclaration.ControllingOfficerIE;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoWiseIE.cshtml", model);
+            }
+            else if(ReportType == "COIEWiseCalls")
+            {
+                CoIeWiseCallsModel model = GlobalDeclaration.CoIeWiseCalls;
+                htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoIeWiseCalls.cshtml", model);
             }
 
             await new BrowserFetcher().DownloadAsync();

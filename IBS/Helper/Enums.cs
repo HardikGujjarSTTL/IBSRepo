@@ -695,5 +695,6 @@ namespace IBS.Helper
 
         public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
         public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
+        public static CoIeWiseCallsModel CoIeWiseCalls { get; set; }
     }
 }

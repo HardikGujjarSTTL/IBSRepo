@@ -191,7 +191,7 @@ namespace IBS.Repositories.Reports.OtherReports
                         if (!wasOpen) command.Connection.Open();
                         try
                         {
-                            command.CommandText = "SELECT DECODE(STATUS,'S','SAMPLE RECEIVED ON: '||TO_CHAR(SAMPLE_RECV_DT,'DD/MM/YYYY')||', TOTAL TESTING CHARGES ARE: Rs.'||DECODE(TESTING_CHARGES,0,'_',TESTING_CHARGES)||', LIKELY TEST REPORT RELEASE DATE IS: '||NVL(TO_CHAR(LIKELY_DT_REPORT,'DD/MM/YYYY'),'_'),'C','Lab Report under Compilation','U','Lab Report Uploaded on: '||to_char(LAB_REP_UPLOADED_DT,'dd/mm/yyyy-HH24:MI:SS'),'O','Others- '||REMARKS) FROM T109_LAB_SAMPLE_INFO where CASE_NO='" + list[i].CASE_NO + "' and CALL_RECV_DT=to_date('" + list[i].CALL_RECV_DT + "','dd/mm/yyyy') and CALL_SNO='" + list[i].CALL_SNO+"' ";
+                            command.CommandText = "SELECT DECODE(STATUS,'S','SAMPLE RECEIVED ON: '||TO_CHAR(SAMPLE_RECV_DT,'DD/MM/YYYY')||', TOTAL TESTING CHARGES ARE: Rs.'||DECODE(TESTING_CHARGES,0,'_',TESTING_CHARGES)||', LIKELY TEST REPORT RELEASE DATE IS: '||NVL(TO_CHAR(LIKELY_DT_REPORT,'DD/MM/YYYY'),'_'),'C','Lab Report under Compilation','U','Lab Report Uploaded on: '||to_char(LAB_REP_UPLOADED_DT,'dd/mm/yyyy-HH24:MI:SS'),'O','Others- '||REMARKS) FROM T109_LAB_SAMPLE_INFO where CASE_NO='" + list[i].CASE_NO + "' and CALL_RECV_DT=to_date('" + list[i].CALL_RECV_DT + "','dd/mm/yyyy') and CALL_SNO='" + list[i].CALL_SNO + "' ";
                             list[i].Lab_Status = Convert.ToString(command.ExecuteScalar());
                         }
                         finally
@@ -203,12 +203,41 @@ namespace IBS.Repositories.Reports.OtherReports
             }
             query = list.AsQueryable();
 
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                query = query.Where(x => x.IE_NAME.ToLower().Contains(searchBy.ToLower()));
+            }
             dTResult.recordsTotal = ds.Tables[0].Rows.Count;
             dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public CoIeWiseCallsModel GetCoIeWiseCallsReport(string Case_No, string Call_Recv_Date, string Call_SNo)
+        {
+            CoIeWiseCallsModel model = new();
+            List<CoIeWiseCallsList1Model> coIeWiseCallsList1s = new();
+            List<CoIeWiseCallsList2Model> coIeWiseCallsList2s = new();
+
+            OracleParameter[] parameter = new OracleParameter[5];
+            parameter[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, Case_No, ParameterDirection.Input);
+            parameter[1] = new OracleParameter("P_CALL_RECV_DT", OracleDbType.Varchar2, Call_Recv_Date, ParameterDirection.Input);
+            parameter[2] = new OracleParameter("P_CALL_SNO", OracleDbType.Varchar2, Call_SNo, ParameterDirection.Input);
+            parameter[3] = new OracleParameter("P_RESUT_CURSOR1", OracleDbType.RefCursor, ParameterDirection.Output);
+            parameter[4] = new OracleParameter("P_RESUT_CURSOR2", OracleDbType.RefCursor, ParameterDirection.Output);
+            DataSet ds = DataAccessDB.GetDataSet("SP_GET_CO_IE_WISE_CALL_REPORT", parameter, 2);
+
+            //coIeWiseCallsList1s =
+            string serializedDt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+            coIeWiseCallsList1s = JsonConvert.DeserializeObject<List<CoIeWiseCallsList1Model>>(serializedDt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            model.coIeWiseCallsList1 = coIeWiseCallsList1s;
+
+            string serializedDt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+            coIeWiseCallsList2s = JsonConvert.DeserializeObject<List<CoIeWiseCallsList2Model>>(serializedDt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            model.coIeWiseCallsList2 = coIeWiseCallsList2s;
+            return model;
         }
     }
 }

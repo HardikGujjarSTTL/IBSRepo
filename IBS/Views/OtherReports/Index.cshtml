@@ -18,35 +18,35 @@
 <div class="task-listinput">
     <div class="accordion-body">
         <div class="task-inner row COIEWiseCalls" style="display: none">
-            <div class="col-md-4 mb-3" style="font-weight: bold;">
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="dpCO">Controlling Officer</label>
                     @Html.DropDownList("dpCO", new SelectList(IBS.Models.Common.GetControllingOfficers(ViewBag.Region) , "Value", "Text"),new { @onchange = "BindlstIE();" })
                 </div>
             </div>
-            <div class="col-md-4 mb-3" style="font-weight: bold;">
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="status">Status of Call</label>
                     @Html.DropDownList("status", new SelectList(IBS.Models.Common.CallStatus().OrderBy(X => X.Text) , "Value", "Text"),"All")
                 </div>
             </div>
-            <div class="row my-0 ">
-                <div class="col-md-4 mb-3" style="font-weight: bold;">
-                    <div class="reference">
-                        <label for="rdbIE">Inspection Engineer</label>
-                        @Html.RadioButton("rdbIE", "AllIE", new { @id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All IE
-                        &nbsp;&nbsp;
-                        @Html.RadioButton("rdbIE", "PartiIE", new { @id="rdPIE",@class = "text-darkblue font-bold font-size-8pt"}) Particular IE
-                    </div>
-                </div>
-                <div class="row my-0">
-                    <div class="col-md-4 mb-3" style="font-weight: bold;">
-                        <div class="reference">
-                            @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Region,"") , "Value", "Text"),"-- Select --")
-                        </div>
-                    </div>
+
+            <div class="col-md-4 mb-3" style="font-weight: bold;width:auto;">
+                <div class="reference">
+                    <label for="rdbIE">Inspection Engineer</label>
+                    @Html.RadioButton("rdbIE", "AllIE", new { @id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All IE
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdbIE", "PartiIE", new { @id="rdPIE",@class = "text-darkblue font-bold font-size-8pt"}) Particular IE
                 </div>
             </div>
+
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="dpIE"></label>
+                    @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Region,"") , "Value", "Text"),"-- Select --")
+                </div>
+            </div>
+
             <div class="row my-0 ">
                 <div class="col-md-4 mb-3" style="font-weight: bold;">
                     <div class="reference">
@@ -88,7 +88,7 @@
                             @*<th style="display:none;" class="takenworkplan">TAKEN IN TODAY'S WORKPLAN</th> Hide*@
                             <th>PO SOURCE</th>
                             <th>STATUS</th>
-                            <th>VIEW IC</th>
+                            @*<th>VIEW IC</th>*@
                             <th>REMARKS</th>
                             <th>PONO</th>
                             <th>PO DATE</th>
@@ -143,17 +143,17 @@
             window.open(url, '_blank');
         }
 
-        function ViewReportCOIEWiseCalls() {
+        function ViewReportCOIEWiseCalls(Case_No, Call_Recv_Date, Call_SNo) {
             var ReportType = '@ReportType';
-            var CO = $("#dpCO").val();
-            var Status = $("#status").val();
-            var IE = $("#dpIE").val();
-            var IsAllPartiIE = $("#rdAllIE").is(":checked");
-            var IsCallDate = $("#rdCallDate").is(":checked");
-            if (IsAllPartiIE) {
-                IE = null;
-            }
-            let myObject = { ReportType, CO, Status, IE, IsCallDate };
+            //var CO = $("#dpCO").val();
+            //var Status = $("#status").val();
+            //var IE = $("#dpIE").val();
+            //var IsAllPartiIE = $("#rdAllIE").is(":checked");
+            //var IsCallDate = $("#rdCallDate").is(":checked");
+            //if (IsAllPartiIE) {
+            //    IE = null;
+            //}
+            let myObject = { ReportType, Case_No, Call_Recv_Date, Call_SNo };
             var url = '@Url.Action("ManageCoIeWiseCalls", "OtherReports")?' + $.param(myObject);
             window.open(url, '_blank');
         }
@@ -212,9 +212,10 @@
                 columns: [
                     {
                         data: "", render: function (data, type, row, meta) {
-                            var Bk_No = row.Bk_No;
-                            var Set_No_Fr = row.Set_No_Fr;
-                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\"> <a onclick="ViewReportIE7thCopy(\'' + Bk_No + '\',\'' + Set_No_Fr + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-eye\" title="Report"></i></a>';
+                            var CASE_NO = row.CASE_NO;
+                            var CALL_RECV_DT = row.CALL_RECV_DT;
+                            var CALL_SNO = row.CALL_SNO;
+                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\"> <a onclick="ViewReportCOIEWiseCalls(\'' + CASE_NO + '\',\'' + CALL_RECV_DT + '\',\'' + CALL_SNO + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-eye\" title="Report"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -282,7 +283,7 @@
                             var html = "";
                             if (row.PO_SOURCE == "C") {
                                 html = "<a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.SS + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
-                            } 
+                            }
                             else {
                                 if (row.IsCaseNoTif == true) {
                                     html = "<a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
@@ -301,9 +302,9 @@
                     {
                         data: "", // Call Status Full
                         render: function (data, type, row, meta) {
-                            debugger
+                            
                             var html = "<font size='1' face='Verdana' color=" + row.COLOUR + ">" + row.CALL_STATUS_FULL + "</font>";
-                            if(row.CALL_STATUS == "U"){
+                            if (row.CALL_STATUS == "U") {
                                 if (row.Lab_Status != "" && row.Lab_Status != null) {
                                     //if (data != "" && data != null) {
                                     html += "<br><p><font size='1' face='Verdana'>" + row.Lab_Status + "</font></p>";
@@ -318,7 +319,7 @@
                             return html;
                         }
                     },
-                    { data: "" }, //IC_PHOTO path doc
+                    //{ data: "" }, //IC_PHOTO path doc
                     { data: "REMARKS" },
                     { data: "PO_NO" },
                     { data: "PO_DATE" },
