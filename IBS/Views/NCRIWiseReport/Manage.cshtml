@@ -1,5 +1,4 @@
-﻿@model IBS.Models.DefectCodeReport
-
+﻿@model IBS.Models.Reports.NCRReport
 @{
     Layout = null;
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
@@ -35,17 +34,19 @@
     var fileName = '';
 
     $(document).ready(function () {
-        loadDefectCodeReport();
-        fileName = 'Defect_Code';
+        loadTopInspReport();
+        fileName = 'Top N High Inspection Report';
     });
 
-    function loadDefectCodeReport() {
-        $("#dvReportViewer").load("@Url.Action("DefectCodeReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+    function loadTopInspReport() {
+        $("#dvReportViewer").load("@Url.Action("NCRIWiseReport")", {
+            month: '@Model.month', year: '@Model.year', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', forCM: '@Model.forCM',
+            All: '@Model.All', Outstanding: '@Model.Outstanding', formonth: '@Model.formonth', monthChar: '@Model.monthChar', iecmname: '@Model.iecmname', forperiod: '@Model.forperiod', reporttype: '@Model.reporttype', IENametext: '@Model.IENametext'
+        }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
-
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -72,10 +73,9 @@
         var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "DefectCodeReport")",
+            url: "@Url.Action("GeneratePDF", "NCRIWiseReport")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
             xhrFields: {
                 responseType: 'blob'
             },

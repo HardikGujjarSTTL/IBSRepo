@@ -1,4 +1,4 @@
-﻿@model IBS.Models.DefectCodeReport
+﻿@model IBS.Models.VendorClusterReportModel
 
 @{
     Layout = null;
@@ -35,17 +35,18 @@
     var fileName = '';
 
     $(document).ready(function () {
-        loadDefectCodeReport();
-        fileName = 'Defect_Code';
+        loadJI();
+        fileName = 'Vendor Cluster report';
     });
 
-    function loadDefectCodeReport() {
-        $("#dvReportViewer").load("@Url.Action("DefectCodeReport")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+    function loadJI() {
+        $("#dvReportViewer").load("@Url.Action("VendorClusterIEReport")", {
+            department: '@Model.department',allreport: '@Model.allreport',departreport: '@Model.departreport'}
+            , function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
     }
-
 
     $("#btnPrint").click(function () {
         generatePdf(true);
@@ -69,13 +70,11 @@
     });
 
     function generatePdf(isPrint) {
-        var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "DefectCodeReport")",
+            url: "@Url.Action("GeneratePDF", "VendorClusterIE")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
             xhrFields: {
                 responseType: 'blob'
             },

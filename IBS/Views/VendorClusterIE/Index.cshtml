@@ -1,0 +1,69 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>VENDOR CLUSTER IE DEPARTMENT REPORT</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="custom-readio">
+        <div class="company-checkbox">
+            <div class="remember">
+                <div class="remecheckbox">
+                    <input type="radio" value="allreport" id="allreport" name="allreport" checked="checked" />
+                    <label for="allreport">Show Report for All</label>
+                    &nbsp;&nbsp;
+                    <input type="radio" value="departreport" id="departreport" name="allreport" />
+                    <label for="departreport">Show Report for departmentwise</label>
+                </div>
+            </div>
+            <div>
+                @Html.DropDownList("department", new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--", new { id = "department" })
+            </div>
+            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+            <div class="col-md-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#department").hide();
+        });
+
+        $('#departreport').change(function () {
+            $("#department").show();
+        });
+
+        $('#allreport').change(function () {
+            $("#department").val('');
+            $("#department").hide();
+        });
+
+        function ClearControls1() {
+            $("#department").val('');
+            $("#allreport").prop("checked", true);
+            $("#department").hide();
+        }
+
+        function ViewReport1() {
+
+            var department = $('#department').val();
+            var allreport = $("#allreport").is(":checked") == true ? "true" : "false";
+            var departreport = $("#departreport").is(":checked") == true ? "true" : "false";
+
+            let myObject = { department, allreport, departreport };
+
+            var url = '@Url.Action("Manage", "VendorClusterIE")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}

@@ -1,39 +1,36 @@
 ﻿using IBS.Helper;
-using IBS.Interfaces;
-using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Repositories;
+using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using IBS.Interfaces.Reports;
 using IBS.Models.Reports;
 
 namespace IBS.Controllers.Reports
 {
-    public class CoComplaintJIRequiredController : BaseController
+    public class VendorFeedbackReportController : BaseController
     {
         #region Variables
-        private readonly ICoComplaintJIRequiredRepository coComplaintJIRequiredRepository;
+        private readonly IVendorFeedbackReportRepository vendorFeedbackReportRepository;
         private readonly IWebHostEnvironment env;
         #endregion
-        public CoComplaintJIRequiredController(ICoComplaintJIRequiredRepository _coComplaintJIRequiredRepository, IWebHostEnvironment _env)
+        public VendorFeedbackReportController(IVendorFeedbackReportRepository _vendorFeedbackReportRepository, IWebHostEnvironment _env)
         {
-            coComplaintJIRequiredRepository = _coComplaintJIRequiredRepository;
+            vendorFeedbackReportRepository = _vendorFeedbackReportRepository;
             this.env = _env;
         }
         public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult Manage(string FinancialYearsText,string FinancialYearsValue)
+        
+        public IActionResult Manage()
         {
-            JIRequiredReport model = new() { FinancialYearsText = FinancialYearsText, FinancialYearsValue= FinancialYearsValue };
-            model.ReportTitle = "JI Complaints Report";
-            return View(model);
+            return View();
         }
 
-        public IActionResult JICompReport(string FinancialYearsText, string FinancialYearsValue)
+        public IActionResult VendorFeedback()
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -42,10 +39,9 @@ namespace IBS.Controllers.Reports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            JIRequiredReport model = coComplaintJIRequiredRepository.GetJIComplaintsList(FinancialYearsText,FinancialYearsValue);
-            ViewBag.Financialperiod = FinancialYearsText;
+            VendorFeedbackReportModel model = vendorFeedbackReportRepository.GetVendorFeedbackReport(Region);
             ViewBag.Regions = wRegion;
-            GlobalDeclaration.JIRequiredReports = model;
+            GlobalDeclaration.VendorFeedbackReport = model;
             return PartialView(model);
         }
 
@@ -53,8 +49,9 @@ namespace IBS.Controllers.Reports
         public async Task<IActionResult> GeneratePDF()
         {
             string htmlContent = string.Empty;
-            JIRequiredReport model = GlobalDeclaration.JIRequiredReports;
-            htmlContent = await this.RenderViewToStringAsync("/Views/CoComplaintJIRequired/JICompReport.cshtml", model);
+
+            VendorFeedbackReportModel model = GlobalDeclaration.VendorFeedbackReport;
+            htmlContent = await this.RenderViewToStringAsync("/Views/VendorFeedbackReport/VendorFeedback.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
