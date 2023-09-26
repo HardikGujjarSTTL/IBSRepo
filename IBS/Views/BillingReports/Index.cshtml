@@ -50,10 +50,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="display:none;" id="tdFrom">
+                        <td style="display:none; width:150px;" id="tdFrom">
                             <label id="lblFrom" runat="server">From</label>
                         </td>
-                        <td>
+                        <td style="width:45%;">
                             @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
                             <span asp-validation-for="FromMn" class="text-danger"></span>
                         </td>
@@ -129,7 +129,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="width:30%">
                             <div class="custom-readio">
                                 <div class="company-checkbox">
                                     <div class="remember">
@@ -176,8 +176,7 @@
                                 <div class="company-checkbox">
                                     <div class="remember">
                                         <div class="remecheckbox">
-                                            <input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" />
-                                            <label for="Region_A">All Regions</label>
+                                            <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
                                         </div>
                                     </div>
                                 </div>
@@ -206,9 +205,8 @@
                     }
 
                     <tr>
-                        <td>
-                            <input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" />
-                            <label for="Region_A">All Regions</label>
+                        <td>                            
+                            <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
                         </td>
                     </tr>
                     <tr>
