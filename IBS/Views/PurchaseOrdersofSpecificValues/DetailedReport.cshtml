@@ -42,7 +42,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
             </div>
         </div>
@@ -76,16 +76,15 @@
                 <input id="txtToDate" name="txtToDate" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
             </div>
         </div>
-        <div class="row my-0 align-items-end">
+        <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="reference">Report Should be based on</label>
                 @Html.DropDownList("ddlSelCriteria", new SelectList(IBS.Models.Common.GetCriteria() , "Value", "Text"),"--Select--")
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="Search();">Submit</button>
-                </div>
-            </div>
+        </div>
+
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="Search();">Submit</button>
         </div>
     </div>
     
