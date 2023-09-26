@@ -1,4 +1,4 @@
-﻿@model List<IBS.Models.Reports.BDEffortsModel>
+﻿@model List<IBS.Models.Reports.ClientContactModel>
 
 @{
     Layout = "";
@@ -6,7 +6,7 @@
 
 <html>
 <head>
-    <title>BD Efforts</title>
+    <title>DFO Visit</title>
 </head>
 <body>
     <p align="right">
@@ -15,74 +15,74 @@
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
     <div id="dvReportViewer">
-        <h3 class="center">BD Efforts</h3>
+        <h3 class="center">DFO Visit</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
             <br />
             <br />
-            <li><span class="labelName">2.(c) Region wise details of BD Efforts</span></li>
+            <li><span class="labelName">8. Region wise details of DFO</span></li>
         </ul>
+
         @{
             string region_cd = "";
         }
-        @for (int i = 0; i < 6; i++)
+        @for (int i = 0; i < 5; i++)
         {
-
             <ul class="reportLabelList center">
-                <br />
                 <br />
                 @if (i == 0)
                 {
-                    <li><span class="labelName">(i)Northern Region</span></li>
+                    <li><span class="labelName">(i) Northern Region</span></li>
                     region_cd = "N";
                 }
                 else if (i == 1)
                 {
-                    <li><span class="labelName">(ii)Eastern Region</span></li>
+                    <li><span class="labelName">(ii) Eastern Region</span></li>
                     region_cd = "E";
                 }
                 else if (i == 2)
                 {
-                    <li><span class="labelName">(iii)Western Region</span></li>
+                    <li><span class="labelName">(iii) Western Region</span></li>
                     region_cd = "W";
                 }
                 else if (i == 3)
                 {
-                    <li><span class="labelName">(iv)Southern Region</span></li>
+                    <li><span class="labelName">(iv) Southern Region</span></li>
                     region_cd = "S";
                 }
                 else if (i == 4)
                 {
-                    <li><span class="labelName">(v)Central Region</span></li>
+                    <li><span class="labelName">(v) Central Region</span></li>
                     region_cd = "C";
-                }
-                else if (i == 5)
-                {
-                    <li><span class="labelName">(vi)Corporate QA</span></li>
-                    region_cd = "Q";
                 }
             </ul>
             <table class="borderTable">
                 <tr>
-                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Name of Rites Officer S/Shri</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Organisation visited</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Name of Officer visited S/Shri</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Feedback from Client</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Overall outcome of the visit</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size='1' face="Verdana">S.No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size='1' face="Verdana">Date of Visit</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size='1' face="Verdana">Details of Officers Contacted (with Organization)</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size='1' face="Verdana">Name of RITES Officer</font></b></th>
+                    <th width="28%" valign="top" align="center"><b><font size='1' face="Verdana">Amount O/s with the client/ Zonal Railway(all regions)</font></b></th>
+                    <th width="28%" valign="top" align="center"><b><font size='1' face="Verdana">Feedback from Client</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size='1' face="Verdana">Overall Outcome of the Visit</font></b></th>
                 </tr>
+                @{
+                    int count = 1;
+                }
                 @if (Model != null && Model.Count > 0)
                 {
                     foreach (var item in Model.Where(x => x.region_cd == region_cd))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.sn</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Rites_officer</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Organisation_visited</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Detail_visit</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.highlights</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.overall_outcome</font></b></td>
+                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@count</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.Visit_dt</font></td>
+                            <td width="25%" valign="top" align="left"><font size="1" face="Verdana">@item.Detail_visit</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.Rites_officer</font></td>
+                            <td width="28%" valign="top" align="left"><font size="1" face="Verdana">@item.out_amt</font></td>
+                            <td width="25%" valign="top" align="left"><font size="1" face="Verdana">@item.highlights</font></td>
+                            <td width="25%" valign="top" align="left"><font size="1" face="Verdana">@item.overall_outcome</font></td>
                         </tr>
+                        count = count + 1;
                     }
                 }
             </table>
@@ -101,7 +101,7 @@
 <script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 <script type="text/javascript">
-    var fileName = 'EOIPricedOfferSent';
+    var fileName = 'DFOVisit';
 
     $(document).ajaxSend(function () {
         $(".overlayLoader").show();
