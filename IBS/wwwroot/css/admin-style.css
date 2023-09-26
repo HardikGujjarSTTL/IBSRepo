@@ -1374,7 +1374,7 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .vendor-dashboard .dashboard-box{ min-height:155px;}
 .fileUploadWrap input[type="file"] { position: absolute; opacity: 0; visibility: hidden; }
 .fileUploadWrap { position: relative; padding-right: 110px; width: 100%; }
-.fileUploadWrap .button { position: absolute; right: 0; top: 0; }
+.fileUploadWrap .button { position: absolute; right: 0; top: 0; padding:11px; }
 .fileUploadWrap input[type="file"] { position: absolute; opacity: 0; visibility: hidden; }
 .fileUploadWrap label { background: #fff; border: 1px solid #e1e1e1; height: 40px;  width: 100%; padding: 8px 20px; font-weight: 400; position: relative; padding-right: 35px; border-radius: 5px;}
 .fileUploadWrap label:after { content: "\f093"; font-size: 16px; font-family: 'FontAwesome'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); color: #F66A2F; transition: all 0.3s ease-out; -webkit-transition: all 0.3s ease-out; line-height: 1; }
