@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using Humanizer;
+using System.Collections.Generic;
 
 namespace IBS.Controllers.Reports
 {
@@ -327,7 +328,7 @@ namespace IBS.Controllers.Reports
                 string wYrMth, wHdr_YrMth;
                 wYrMth = Year + month;
                 wHdr_YrMth = month + ", " + Year;
-                ViewBag.Title = "EOI/Priced offers sent during the month (in Descending order in terms of Inspection Fees) for the Period : " + wHdr_YrMth + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title = "EOI/Priced offers sent during the month (in Descending order in terms of Inspection Fees) for the Period : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 List<EOIPricedOfferSentModel> model = pCDOReportController.GetEOIPricedOfferSentData(wYrMth);
                 return View(model);
             }
@@ -351,7 +352,7 @@ namespace IBS.Controllers.Reports
                 string wYrMth, wHdr_YrMth;
                 wYrMth = Year + month;
                 wHdr_YrMth = month + ", " + Year;
-                ViewBag.Title = "Contracts secured during the month (in Descending order in terms of Inspection Fees) for the Period : " + wHdr_YrMth + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title = "Contracts secured during the month (in Descending order in terms of Inspection Fees) for the Period : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 List<EOIPricedOfferSentModel> model = pCDOReportController.GetEOIPricedOfferSentData(wYrMth);
                 return View(model);
             }
@@ -361,7 +362,6 @@ namespace IBS.Controllers.Reports
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-
         #endregion
 
         #region Annexure-II Business Development - BD Efforts
@@ -376,7 +376,7 @@ namespace IBS.Controllers.Reports
                 string wYrMth, wHdr_YrMth;
                 wYrMth = Year + month;
                 wHdr_YrMth = month + ", " + Year;
-                ViewBag.Title = "BD Efforts for the period : " + wHdr_YrMth + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title = "BD Efforts for the period : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 List<BDEffortsModel> model = pCDOReportController.GetBDEffortsData(wYrMth);
                 return View(model);
             }
@@ -394,7 +394,6 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-
         public IActionResult TablePreviousOfferSent(string month, string Year, string Monthtext)
         {
             try
@@ -402,7 +401,7 @@ namespace IBS.Controllers.Reports
                 string wYrMth, wHdr_YrMth;
                 wYrMth = Year + month;
                 wHdr_YrMth = month + ", " + Year;
-                ViewBag.Title = "Previous offers still under consideration, for the Period : " + wHdr_YrMth + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title = "Progress of Check sheets for the period : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 List<EOIPricedOfferSentModel> model = pCDOReportController.GetPreviousOfferSentData(wYrMth);
                 return View(model);
             }
@@ -420,6 +419,24 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
+        public IActionResult TableProgressofChecksheets(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Previous offers still under consideration, for the Period : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<ProgressofChecksheetsModel> model = pCDOReportController.GetProgressofChecksheetsData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableProgressofChecksheets", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
         #endregion
 
         #region Annexure-IV Complaints
@@ -427,7 +444,23 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-
+        public IActionResult TableComplaints(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Complaints Upto : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ComplaintsMainModel model = pCDOReportController.GetComplaintsData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableComplaints", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region Annexure-V Quality of Inspection
@@ -436,12 +469,66 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
+        public IActionResult TableQualityofInspection(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Quality of Inspection For The Period : " + Monthtext +", "+ Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<QualityofInspectionModel> model = pCDOReportController.GetQualityofInspectionData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableQualityofInspection", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region Annexure-V Quality of Inspection(Central)
         public IActionResult QualityofInspectionCentral()
         {
             return View();
+        }
+
+        public IActionResult TableQualityofInspectionCentral(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth, CumYrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+
+                Int64 result;
+                Int64 x = Convert.ToInt64(Year);
+                Int64 y = 1;
+                result = (x - y);
+                string z = "04";
+                Int64 lst = Convert.ToInt64(month);
+                Int64 lstl = lst + 1;
+
+                if (lst == 1 || lst == 2 || lst == 3)
+                {
+                    CumYrMth = Convert.ToString(result) + z;
+
+                }
+                else
+                {
+                    CumYrMth = Year + z;
+                }
+
+                ViewBag.Title = "Quality of Inspection For The Period : " + Monthtext + ", " + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                QualityofInspectionCentralMainModel model = pCDOReportController.GetQualityofInspectionCentralData(wYrMth, CumYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableQualityofInspectionCentral", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         #endregion
@@ -452,12 +539,47 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
+        public IActionResult TableImprovementInQualityofService(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth, CumYrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Improvement in Quality of Service For Date : " + Monthtext + ", " + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ImprovementInQualityofServiceMainModel model = pCDOReportController.GetImprovementInQualityofServiceData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableImprovementInQualityofService", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region Annexure-VII Outstanding Railways 
         public IActionResult OutstandingRailways()
         {
             return View();
+        }
+        public IActionResult TableOutstandingRailways(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "OUTSTANDING-RAILWAYS Status as on: " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title1 = "ZONAL RAILWAY WISE OUTSTANDING UPTO: " + DateTime.Now.ToString("dd/MM/yyy") + wHdr_YrMth;
+                List<OutstandingRailwaysModel> model = pCDOReportController.GetOutstandingRailwaysData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableOutstandingRailways", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         #endregion
@@ -468,6 +590,23 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
+        public IActionResult TableOutstandingNonRailways(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Non-Railway Wise outstanding upto: " + Monthtext + " ," + Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<OutstandingNonRailwaysModel> model = pCDOReportController.GetOutstandingNonRailwaysData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableOutstandingNonRailways", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region Annexure-VII Top 5 Outstanding Railway & Non-Railways
@@ -475,12 +614,47 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
+        public IActionResult TableTop5OutstandingRailwayNonRailways(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth, CumYrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "TOP FIVE OUTSTANDING RAILWAYS AND NON-RAILWAYS CLIENTS UPTO : " + Monthtext + ", " + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                Top5OutstandingRailwayNonRailwaysMainModel model = pCDOReportController.GetTop5OutstandingRailwayNonRailwaysData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableTop5OutstandingRailwayNonRailways", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
 
         #endregion
         #region Annexure-VIII Client Contact
         public IActionResult ClientContact()
         {
             return View();
+        }
+
+        public IActionResult TableClientContact(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Client Contact for the period : " + Monthtext + " ," + Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<ClientContactModel> model = pCDOReportController.GetClientContactData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableClientContact", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         #endregion
@@ -491,6 +665,24 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
+        public IActionResult TableDFOVisit(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "DFO for the period : " + Monthtext + " ," + Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<ClientContactModel> model = pCDOReportController.GetDFOVisitData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableDFOVisit", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
         #endregion
 
         #region Annexure-IX Training
@@ -498,7 +690,37 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-
+        public IActionResult TableTraining(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth, CumYrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                Int64 result;
+                Int64 x = Convert.ToInt64(Year);
+                Int64 y = 1;
+                result = (x - y);
+                string z = "04";
+                Int64 lst = Convert.ToInt64(month);
+                if (lst == 1 || lst == 2 || lst == 3)
+                {
+                    CumYrMth = Convert.ToString(result) + z;
+                }
+                else
+                {
+                    CumYrMth = Year + z;
+                }
+                ViewBag.Title = "Region wise details of training Upto : " + Monthtext + ", " + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                TrainingMainModel model = pCDOReportController.GetTrainingData(wYrMth, CumYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableTraining", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region Annexure-X Technical References
@@ -506,7 +728,23 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-
+        public IActionResult TableTechnicalReferences(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                ViewBag.Title = "Technical References made during the month of : " + Monthtext + " ," + Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<TechnicalReferencesModel> model = pCDOReportController.GetTechnicalReferencesData(wYrMth);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TableTechnicalReferences", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region PCDO Summary
@@ -514,10 +752,48 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-
+        public IActionResult TablePCDOSummary(string month, string Year, string Monthtext)
+        {
+            try
+            {
+                string wYrMth, wHdr_YrMth,CumYrMth, bakdate, lstdate, sincedate, todate, priordate;;
+                wYrMth = Year + month;
+                wHdr_YrMth = month + ", " + Year;
+                Int64 result;
+                Int64 x = Convert.ToInt64(Year);
+                Int64 y = 1;
+                result = (x - y);
+                string z = "04";
+                Int64 lst = Convert.ToInt64(month);
+                wYrMth = Year + month;
+                if (lst == 1 || lst == 2 || lst == 3)
+                {
+                    CumYrMth = Convert.ToString(result) + z;
+                }
+                else
+                {
+                    CumYrMth = Year + z;
+                }
+                int dst = 0, dmonth = 0, byear = 0;
+                dst = Convert.ToInt16(month);
+                byear = Convert.ToInt16(Year);
+                dmonth = (dst - 3);
+                if (dst == 1 || dst == 2 || dst == 3)
+                {
+                    dmonth = (dst + 9);
+                    byear = (byear - 1);
+                }
+                ViewBag.Title = "Region wise PCDO Summary Upto : " + Monthtext +", "+ Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<PCDOSummaryModel> model = pCDOReportController.GetPCDOSummaryData(wYrMth, CumYrMth, byear.ToString(), dmonth.ToString());
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "PCDOReport", "TablePCDOSummary", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
-
-
 
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string htmlContent)
