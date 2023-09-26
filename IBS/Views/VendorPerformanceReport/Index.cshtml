@@ -1,6 +1,6 @@
 ﻿<div class="list-inner">
     <div class="tast-list">
-        <h2>IE WISE NON CONFORMITIES REPORT</h2>
+        <h2>VENDOR PERFORMANCE</h2>
     </div>
 </div>
 
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    <div class="row align-items-end my-0" id="divdate">
+    <div class="row my-0" id="divdate">
         <div class="col-md-3">
             <div class="input-search">
                 <label for="FromDate">For The Period From</label>
@@ -38,14 +38,9 @@
                 <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
-                <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
-            </div>
-        </div>
     </div>
-    <div class="row align-items-end my-0" id="divmonth">
+   
+    <div class="row my-0" id="divmonth">
         <div class="col-md-3">
             <div class="input-search">
                 <label for="FromDate">Month</label>
@@ -60,99 +55,99 @@
                 <span class="text-danger field-validation-error" id="spnErroryear"></span>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
-                <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
-            </div>
-        </div>
+       
     </div>
 
-    <div class="col-md-12 custom-readio">
-        <div class="company-checkbox">
-            <div class="remember">
-                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
-                <div class="remecheckbox">
-                    <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
-                    <label for="AllCM">All IE</label>
-                    &nbsp;&nbsp;
-                    <input type="radio" value="forCM" id="forCM" name="AllCM" />
-                    <label for="forCM">For Given IE</label>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-md-3">
-        @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetIEIEToWhomIssued(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
+        <label for="Reference">Vendor</label>
+        <input type="text" id="vendor" class="input" maxlength="3" />
+        <span class="text-danger field-validation-error" id="spnErrorvendor"></span>
     </div>
-    
-    <div class="col-md-12 custom-readio">
-        <div class="company-checkbox">
-            <div class="remember">
-                <label for="year">Report Type</label> &nbsp;&nbsp; &nbsp;&nbsp;
-                <div class="remecheckbox">
-                    <input type="radio" value="All" id="All" name="All" checked="checked" />
-                    <label for="All">All</label>
-                    &nbsp;&nbsp;
-                    <input type="radio" value="Outstanding" id="Outstanding" name="All" />
-                    <label for="Outstanding">Outstanding</label>
-                </div>
-            </div>
+    <div class="col-md-3" style="margin-top: 30px;">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
         </div>
     </div>
 </div>
-
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
+    @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#divdate").hide();
-            $("#iecmname").hide();
-        });
 
-        $('#forperiod').change(function () {
-            $("#divdate").show();
-            $("#divmonth").hide();
-            $("#month").val('');
-            $("#year").val('');
+            $("#divdate").hide();
+
+            $("#vendor").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
         });
 
         $('#formonth').change(function () {
-            $("#divdate").hide();
-            $("#divmonth").show();
             $("#FromDate").val('');
             $("#ToDate").val('');
+            $("#vendor").val('');
+            $("#divdate").hide();
+            $("#divmonth").show();
         });
 
-        $('#forCM').change(function () {
-            $("#iecmname").show();
-        });
-
-        $('#AllCM').change(function () {
-            $("#iecmname").hide();
-        });
-
-
-        function ClearControls1() {
+        $('#forperiod').change(function () {
             $("#month").val('');
             $("#year").val('');
-            $("#FromDate").val('');
-            $("#ToDate").val('');
-            $("#formonth").prop("checked", true);
-            $("#divdate").hide();
-            $("#divmonth").show();
+            $("#vendor").val('');
+            $("#divmonth").hide();
+            $("#divdate").show();
+        });
+
+        function ClearControls1() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#vendor").val("");
+            $("#vendordt").val("");
+            $("#month").val("");
+            $("#year").val("");
         }
 
         function ViewReport1() {
 
-            $("#spnErrorToDate").html("");
             $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
             $("#spnErrormonth").html("");
             $("#spnErroryear").html("");
+            $("#spnErrorvendor").html("");
+
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
             var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
             var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var vendor = $('#vendor').val();
+
             var IsValid = true;
+            debugger
+
+            if ($("#vendor").val() == "") {
+                $("#spnErrorvendor").html("Enter Vendor");
+                IsValid = false;
+            }
 
             if (formonth == "true") {
                 if ($("#month").val() == "") {
@@ -177,33 +172,26 @@
             }
 
             if (!IsValid) return;
+
             var IsValid = true;
-            var monthChar = $('#month option:selected').text();
-            var month = getMonthNumber(monthChar);
-            var year = $('#year').val();
-            var FromDate = $('#FromDate').val();
-            var ToDate = $('#ToDate').val();
-            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
-            var forCM = $("#forCM").is(":checked") == true ? "true" : "false";
-            var All = $("#All").is(":checked") == true ? "true" : "false";
-            var Outstanding = $("#Outstanding").is(":checked") == true ? "true" : "false";
+
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
             var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
             var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
-            var iecmname = $('#iecmname').val();
-            var reporttype = "I";
-            var IENametext = $('#iecmname option:selected').text();
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var vendor = $('#vendor').val();
+            var indexOfHyphen = vendor.indexOf("-");
+            var vendcd = vendor.substr(0, indexOfHyphen).trim();
+            var monthtxt = $('#month option:selected').text();
 
-            let myObject = { month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, monthChar, iecmname, reporttype, IENametext };
+            let myObject = {
+                FromDate, ToDate, formonth, forperiod, month, year, vendcd, vendor, monthtxt
+            };
 
-            var url = '@Url.Action("Manage", "NCRIWiseReport")?' + $.param(myObject);
+            var url = '@Url.Action("Manage", "VendorPerformanceReport")?' + $.param(myObject);
             window.open(url, '_blank');
-        }
-
-        function getMonthNumber(monthName) {
-
-            const date = new Date(`${monthName} 1, 2000`);
-            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
-            return monthNumber;
         }
     </script>
 }

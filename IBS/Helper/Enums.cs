@@ -707,6 +707,16 @@ namespace IBS.Helper
 
         public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
 
+        public static OngoingContrcatsReportModel OngoingContrcatsReport { get; set; }
+
+        public static ContractReportModel ContractReport { get; set; }
+
+        public static IEWiseTrainingReportModel IEWiseTrainingReport { get; set; }
+
+        public static VendorPerformanceReportModel VendorPerformanceReport { get; set; }
+
+        public static PeriodWiseChecksheetReportModel PeriodWiseChecksheetReport { get; set; }
+
         public static ConsignRejectModel ConsignReject { get; set; }
 
         public static OutstandingOverRegionModel OutstandingOverRegion { get; set; }
