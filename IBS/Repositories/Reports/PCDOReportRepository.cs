@@ -157,6 +157,7 @@ namespace IBS.Repositories.Reports
             }
             return list;
         }
+
         public List<BDEffortsModel> GetBDEffortsData(string wYrMth)
         {
             OracleParameter[] par = new OracleParameter[2];
@@ -183,6 +184,254 @@ namespace IBS.Repositories.Reports
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<EOIPricedOfferSentModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public List<ProgressofChecksheetsModel> GetProgressofChecksheetsData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_ProgressofChecksheets", par, 1);
+            List<ProgressofChecksheetsModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<ProgressofChecksheetsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public ComplaintsMainModel GetComplaintsData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[7];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("p_Result_jIdisposedComplaints", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_Result_breakupComplaintsModels", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_Result_othercasesComplaintsModels", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_Result_long_PendingModels", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("p_Result_cR_REJModels", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_Complaints", par, 6);
+            ComplaintsMainModel model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.complaintsModels = JsonConvert.DeserializeObject<List<ComplaintsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                model.jIdisposedComplaintsModels = JsonConvert.DeserializeObject<List<JIdisposedComplaintsModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt2 = JsonConvert.SerializeObject(ds.Tables[2], Formatting.Indented);
+                model.breakupComplaintsModels = JsonConvert.DeserializeObject<List<BreakupComplaintsModel>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt3 = JsonConvert.SerializeObject(ds.Tables[3], Formatting.Indented);
+                model.othercasesComplaintsModels = JsonConvert.DeserializeObject<List<OthercasesComplaintsModel>>(serializeddt3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt4 = JsonConvert.SerializeObject(ds.Tables[4], Formatting.Indented);
+                model.long_PendingModels = JsonConvert.DeserializeObject<List<Long_pendingModel>>(serializeddt4, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt5 = JsonConvert.SerializeObject(ds.Tables[5], Formatting.Indented);
+                model.cR_REJModels = JsonConvert.DeserializeObject<List<CR_REJModel>>(serializeddt5, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return model;
+        }
+
+        public List<QualityofInspectionModel> GetQualityofInspectionData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_QualityofInspection", par, 1);
+            List<QualityofInspectionModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<QualityofInspectionModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public QualityofInspectionCentralMainModel GetQualityofInspectionCentralData(string wYrMth, string CumYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[6];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("CumYrMth", OracleDbType.Varchar2, CumYrMth, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_Result_RSM", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_Result_URM", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_Result_JINDAL", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_QualityofInspectionCentral", par, 4);
+            QualityofInspectionCentralMainModel model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.qualityofInspectionCentralModels = JsonConvert.DeserializeObject<List<QualityofInspectionCentralModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                model.qualityofInspectionCentral_RSMModels = JsonConvert.DeserializeObject<List<QualityofInspectionCentral_RSMModel>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt2 = JsonConvert.SerializeObject(ds.Tables[2], Formatting.Indented);
+                model.qualityofInspectionCentral_URMModels = JsonConvert.DeserializeObject<List<QualityofInspectionCentral_URMModel>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt3 = JsonConvert.SerializeObject(ds.Tables[3], Formatting.Indented);
+                model.qualityofInspectionCentral_JINDALModels = JsonConvert.DeserializeObject<List<QualityofInspectionCentral_JINDALModel>>(serializeddt3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return model;
+        }
+
+        public ImprovementInQualityofServiceMainModel GetImprovementInQualityofServiceData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("p_Result1", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_Result2", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_ImprovementofQualityofService", par, 3);
+            ImprovementInQualityofServiceMainModel model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.improvementInQualityofServiceModels = JsonConvert.DeserializeObject<List<ImprovementInQualityofServiceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                model.improvementInQualityofService1Models = JsonConvert.DeserializeObject<List<ImprovementInQualityofService1Model>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt2 = JsonConvert.SerializeObject(ds.Tables[2], Formatting.Indented);
+                model.improvementInQualityofService2Models = JsonConvert.DeserializeObject<List<ImprovementInQualityofService2Model>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return model;
+        }
+
+        public List<OutstandingRailwaysModel> GetOutstandingRailwaysData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_OutstandingRailways", par, 1);
+            List<OutstandingRailwaysModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<OutstandingRailwaysModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public List<OutstandingNonRailwaysModel> GetOutstandingNonRailwaysData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_OutstandingNonRailways", par, 1);
+            List<OutstandingNonRailwaysModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<OutstandingNonRailwaysModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public Top5OutstandingRailwayNonRailwaysMainModel GetTop5OutstandingRailwayNonRailwaysData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("p_Result1", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_Top5OutstandingRailwayNonRailways", par, 2);
+            Top5OutstandingRailwayNonRailwaysMainModel model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.top5OutstandingRailwayNonRailwaysModels = JsonConvert.DeserializeObject<List<Top5OutstandingRailwayNonRailwaysModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                model.top5OutstandingRailwayNonRailways1Models = JsonConvert.DeserializeObject<List<Top5OutstandingRailwayNonRailways1Model>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return model;
+        }
+
+        public List<ClientContactModel> GetClientContactData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_ClientContact", par, 1);
+            List<ClientContactModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<ClientContactModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public List<ClientContactModel> GetDFOVisitData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_DFOVisit", par, 1);
+            List<ClientContactModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<ClientContactModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public TrainingMainModel GetTrainingData(string wYrMth,string CumYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("CumYrMth", OracleDbType.Varchar2, CumYrMth, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_Result1", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_Training", par, 2);
+            TrainingMainModel model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.trainingModels = JsonConvert.DeserializeObject<List<TrainingModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                model.training1Models = JsonConvert.DeserializeObject<List<Training1Model>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return model;
+        }
+
+        public List<TechnicalReferencesModel> GetTechnicalReferencesData(string wYrMth)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_TechnicalReferences", par, 1);
+            List<TechnicalReferencesModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<TechnicalReferencesModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return list;
+        }
+
+        public List<PCDOSummaryModel> GetPCDOSummaryData(string wYrMth, string CumYrMth, string byear, string dmonth)
+        {
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
+            par[1] = new OracleParameter("CumYrMth", OracleDbType.Varchar2, CumYrMth, ParameterDirection.Input);
+            par[2] = new OracleParameter("byear", OracleDbType.Varchar2, byear, ParameterDirection.Input);
+            par[3] = new OracleParameter("dmonth", OracleDbType.Varchar2, dmonth, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_Summary", par, 1);
+            List<PCDOSummaryModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<PCDOSummaryModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
             return list;
         }

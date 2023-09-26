@@ -17,7 +17,7 @@ public partial class ViewGetInspectionCertDetail
 
     public DateTime Callrecvdt { get; set; }
 
-    public short Callsno { get; set; }
+    public int Callsno { get; set; }
 
     public string? Iesname { get; set; }
 
