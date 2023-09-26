@@ -19,83 +19,105 @@
 <div class="task-listinput">
     <div class="accordion-body">
         <div class="task-inner row report1" style="display: none">
-            <div class="row">
-                <div class="col-md-5 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">For All Consignee's</label>
-                    <input type="radio" name="radioGroup" id="rb1" />
-                    <span class="text-danger"></span>
+            <div class="row my-0">
+                <div class="col-md-12">
+                <ul class="radioListForm">
+                        <li>
+                            <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> For All Consignee's</label>
+                            <span class="text-danger"></span>
+                        </li>
+                        <li>
+                            <label for="rb2"><input type="radio" name="radioGroup" id="rb2" /> For Particular Consignee</label>
+                            
+                            <span class="text-danger"></span>
+                        </li>
+                </ul>
                 </div>
-                <div class="col-md-5 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">For Particular Consignee</label>
-                    <input type="radio" name="radioGroup" id="rb2" />
-                    <span class="text-danger"></span>
-                </div>
-
             </div>
-            <div class="row">
-                <div class="col-md-7 mb-3" id="ddlc" style="display:none;">
+            <div class="row my-0">
+                <div class="col-md-4" id="ddlc" style="display:none;">
                     <label for="PropertyId">Select Particular Consignee</label>
                     @Html.DropDownList("CONSIGNEE", Common.GetSummaryConsignee(), new { @id="ddlcon"})
                     <span class="text-danger"></span>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">For the Month</label>
-                    <input type="radio" name="radioGroup2" id="rb3" />
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-2 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">For Given Period</label>
-                    <input type="radio" name="radioGroup2" id="rb4" />
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-2 mb-3" style="display:none" id="dtf">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                   <ul class="radioListForm my-0">
+                        <li>
+                            <label for="rb3" class="py-0"><input type="radio" name="radioGroup2" id="rb3" /> For the Month</label>
+                            <span class="text-danger"></span>
+                        </li>
+                        <li>
+                            <label for="rb4" class="py-0"><input type="radio" name="radioGroup2" id="rb4" /> For Given Period</label>
+                            <span class="text-danger"></span>
+                        </li>
+                   </ul>
+                   </div>
+                <div class="col-md-2" style="display:none" id="dtf">
                     <label for="PropertyId">From Date</label>
                     <input type="text" class="input datepicker" id="dtfrom" />
                     <span class="text-danger"></span>
                 </div>
-                <div class="col-md-2 mb-3" style="display:none" id="dtt">
+                <div class="col-md-2" style="display:none" id="dtt">
                     <label for="PropertyId">To Date</label>
                     <input type="text" class="input datepicker" id="dtto" />
                     <span class="text-danger"></span>
                 </div>
-                <div class="col-md-2 mb-3" id="dd1">
+                <div class="col-md-2" id="dd1">
                     <label for="PropertyId">Month</label>
                     @Html.DropDownList("Month", Common.GetMonth(), new { @id="ddlmonth"})
                     <span class="text-danger"></span>
                 </div>
-                <div class="col-md-2 mb-3" id="dd2">
+                <div class="col-md-2" id="dd2">
                     <label for="PropertyId">Year</label>
                     @Html.DropDownList("Year", Common.GetYear(), new { @id="ddlyear"})
                     <span class="text-danger"></span>
                 </div>
             </div>
-            <div class="row">
-                <label>Report based on </label>
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">IC Date</label>
-                    <input type="radio" name="radioGroup3" id="rb5" />
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Bill Date</label>
-                    <input type="radio" name="radioGroup3" id="rb6" />
-                    <span class="text-danger"></span>
+            <div class="row my-0">
+             <div class="col-md-3">    
+            <h3 class="heading3 mb-4">Report based on </h3>
+            </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12">
+                <ul class="radioListForm">
+                        <li>
+                            <label for="rb5"><input type="radio" name="radioGroup3" id="rb5" /> IC Date</label>                            
+                            <span class="text-danger"></span>
+                        </li>
+                        <li>
+                            <label for="rb6"><input type="radio" name="radioGroup3" id="rb6" /> Bill Date</label>                            
+                            <span class="text-danger"></span>
+                        </li>
+                </ul>   
+                    
+               
+                    
                 </div>
             </div>
-            <div class="row">
-                <label>Report to be Sorted on </label>
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Consignee Name</label>
-                    <input type="radio" name="radioGroup4" id="rb7" />
-                    <span class="text-danger"></span>
+            <div class="row my-0">
+                <div class="col-md-3">
+                    <h3 class="heading3 mb-4">Report to be Sorted on </h3>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Material Value</label>
-                    <input type="radio" name="radioGroup4" id="rb8" />
-                    <span class="text-danger"></span>
-                </div>
+            </div>
+            <div class="row my-0">
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <ul class="radioListForm">
+                            <li>
+                                <label for="rb7"><input type="radio" name="radioGroup4" id="rb7" /> Consignee Name</label>
+                                
+                                <span class="text-danger"></span>
+                            </li>
+                            <li>
+                                <label for="rb8"><input type="radio" name="radioGroup4" id="rb8" /> Material Value</label>
+                                
+                                <span class="text-danger"></span>
+                            </li>
+                    </ul>
+                    </div>
             </div>
             <div class="col-md-3" style="margin-top: 30px;">
                 <div class="savenext-btn">
@@ -104,7 +126,7 @@
                 </div>
             </div>
         </div>
-        <div class="task-inner row report2" style="display: none">
+        <div class="task-inner row my-0 report2" style="display: none">
             <div class="row my-0">
                 <div class="col-md-5 mb-3" style="margin-top:auto;">
                     <label for="PropertyId">For All Vendor's</label>
@@ -265,7 +287,7 @@
                     <span class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3" style="margin-top: 30px;">
+            <div class="col-md-12">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="ViewReport3();">Submit</button>
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
