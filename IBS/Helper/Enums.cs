@@ -78,11 +78,11 @@ namespace IBS.Helper
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
             //AdministratorPurchaseOrder =13,
-            OnlineComplaints=11,
+            OnlineComplaints = 11,
             ConsigneeComplaints = 12,
             IEFullSignature = 14,
             IEInitials = 15,
-            ContractEntryDoc=16,
+            ContractEntryDoc = 16,
             ICCancellation = 17,
             PurchaseOrderForm = 18,
         }
@@ -99,11 +99,11 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
-            Upload_Rejection_Memo=50,
-            Upload_JI_Case=51,
-            Upload_JI_Report=52,
+            Upload_Rejection_Memo = 50,
+            Upload_JI_Case = 51,
+            Upload_JI_Report = 52,
             Upload_Tech_Ref1 = 53,
-            Upload_Contract_Doc=16,
+            Upload_Contract_Doc = 16,
         }
 
         public enum DocumentICCancellation : int
@@ -562,6 +562,16 @@ namespace IBS.Helper
             R,
         }
 
+        public enum CallsStatus
+        {
+            [Description("Pending")]
+            P,
+            [Description("Approved")]
+            A,
+            [Description("Rejected")]
+            R,
+        }
+
     }
 
     public class EnumUtility<T>
@@ -636,7 +646,7 @@ namespace IBS.Helper
 
         public static string GetDescriptionByKey(string key)
         {
-            if(string.IsNullOrEmpty(key)) return string.Empty;
+            if (string.IsNullOrEmpty(key)) return string.Empty;
             Enum e = (Enum)Enum.Parse(typeof(T), key);
             return e.Description();
         }
@@ -722,5 +732,18 @@ namespace IBS.Helper
         public static OutstandingOverRegionModel OutstandingOverRegion { get; set; }
 
         public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
+
+        public static NonConformityModel NonConformity { get; set; }
+
+        public static PendingCallsModel PendingCalls { get; set; }
+
+        public static ICIssuedNotReceivedModel ICIssuedNotReceived { get; set; }
+
+        public static TentativeInspectionFeeWisePendingCallsModel TentativeInspectionFeeWisePendingCalls { get; set; }
+
+        public static Models.Reports.CallRemarkingModel CallRemarking { get; set; }
+
+        public static CallDetailsDashboradModel CallDetailsDashborad { get; set; }
+
     }
 }

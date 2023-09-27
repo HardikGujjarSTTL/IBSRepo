@@ -26,6 +26,7 @@ namespace IBS.Models
         public const string CommonDateFormate1 = "dd/MM/yyyy";
         public static string AccessDeniedMessage = "You don't have permission to do this action.";
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
+        public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -3565,6 +3566,16 @@ namespace IBS.Models
                         }).Distinct().OrderBy(c => c.Text).ToList();
 
             }
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetCallsStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.CallsStatus)).ToList();
+        }
+
+        public static string ConvertDateTimeFormat(this DateTime dt)
+        {
+            return dt.ToString(Common.CommonDateTimeFormat);
         }
     }
 

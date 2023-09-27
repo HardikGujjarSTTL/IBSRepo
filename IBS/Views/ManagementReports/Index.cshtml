@@ -15,6 +15,12 @@
     else if (ReportType == "CONSIGN_REJECT") ReportTitle = "Online Consignee Rejection Report";
     else if (ReportType == "X") ReportTitle = "Outstanding of One Region Over Other";
     else if (ReportType == "CLIENTWISEREJ") ReportTitle = "Rejection Details Client Wise";
+    else if (ReportType == "NON_CONFORMITY") ReportTitle = "Format for Monthly Non Conformity Report";
+    else if (ReportType == "PENDING_CALLS") ReportTitle = "Overdue/Pending Calls";
+    else if (ReportType == "COUNTIC") ReportTitle = "CM and IE wise IC issued but not recieved";
+    else if (ReportType == "HIGHVALUE") ReportTitle = "Tentative Inspection Fee Wise Pending Call";
+    else if (ReportType == "REMARKING") ReportTitle = "Call Remarking Detail";
+    else if (ReportType == "CALL_DETAILS") ReportTitle = "Call Details Dashborad";
 
     ViewData["Title"] = ReportTitle;
 }
@@ -263,6 +269,170 @@
                 </div>
             </div>
         </div>
+        <div class="task-inner row NonConformity" style="display: none">
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="SummaryReport3" name="NonConformitySummaryReport" value="SummaryReport3" checked>
+                                <label for="SummaryReport3">Summary Report For the Month</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="SummaryReport4" name="NonConformitySummaryReport" value="SummaryReport4">
+                                <label for="SummaryReport4">Summary Report For the Given Period</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="FromMonthNonConformity" id="lblFromMonthNonConformity">Month</label> <br />
+                @Html.DropDownList("FromMonthNonConformity", Common.GetMonths())
+            </div>
+            <div class="col-md-2">
+                <label for="FromYearNonConformity" id="lblFromYearNonConformity">Year</label> <br />
+                @Html.DropDownList("FromYearNonConformity", Common.GetYears())
+            </div>
+            <div class="col-md-2 NonConformitySummaryReportTo" style="display: none">
+                <label for="ToMonthNonConformity">To Month</label> <br />
+                @Html.DropDownList("ToMonthNonConformity", Common.GetMonths())
+            </div>
+            <div class="col-md-2 NonConformitySummaryReportTo" style="display: none">
+                <label for="ToYearNonConformity">To Year</label> <br />
+                @Html.DropDownList("ToYearNonConformity", Common.GetYears())
+            </div>
+            <div class="col-md-4">
+                <label for="IecdNonConformity">IE</label> <br />
+                @Html.DropDownList("IecdNonConformity", Common.GetIEIEToWhomIssued(Region), new { @class = "" })
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportNonConformity();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsNonConformity();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row TentativeInspection" style="display: none">
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="FromDateTentativeInspection">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDateTentativeInspection" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDateTentativeInspection"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="ToDateTentativeInspection">To</label>
+                    <input type="text" class="datepicker" id="ToDateTentativeInspection" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDateTentativeInspection"></span>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="CM3" name="TentativeInspectionCM" value="CM3" checked>
+                                <label for="CM3">All CM</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="CM4" name="TentativeInspectionCM" value="CM4">
+                                <label for="CM4">Particular CM</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 TentativeInspectionCM" style="display: none;">
+                @Html.DropDownList("ParticularCM2", Common.GetControllingOfficers(Region))
+            </div>
+            <div class="col-md-12">
+                <div class="custom-readio">
+                    <label>Report To be Sorted On</label>
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="InspFee" name="SortedOn" value="InspFee" checked>
+                                <label for="InspFee">Insp Fee</label>
+                            </div>
+                        </div>
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="DeliveryPeriod" name="SortedOn" value="DeliveryPeriod">
+                                <label for="DeliveryPeriod">Delivery Period</label>
+                            </div>
+                        </div>
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="DesireDate" name="SortedOn" value="DesireDate">
+                                <label for="DesireDate">Desire Date</label>
+                            </div>
+                        </div>
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="PendingSince" name="SortedOn" value="PendingSince">
+                                <label for="PendingSince">Pending Since</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportTentativeInspection();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsTentativeInspection();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row CallRemarking" style="display: none">
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="FromDateCallRemarking">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDateCallRemarking" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDateCallRemarking"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="input-search">
+                    <label for="ToDateCallRemarking">To</label>
+                    <input type="text" class="datepicker" id="ToDateCallRemarking" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDateCallRemarking"></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3" style="margin-top: 30px;">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="InitiatedDate" name="CallRemarkingDate" value="InitiatedDate" checked>
+                                <label for="InitiatedDate">By Remark Initiated Date</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="ApprovedDate" name="CallRemarkingDate" value="ApprovedDate">
+                                <label for="ApprovedDate">By Remark Approved Date</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3" >
+                <label for="CallsStatus">Status of Calls</label>
+                @Html.DropDownList("CallsStatus", new SelectList(Common.GetCallsStatus() , "Value", "Text"), "--All--")
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportCallRemarking();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsCallRemarking();">Clear</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -273,14 +443,17 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X' || '@ReportType' == 'ICSUBMIT' || '@ReportType' == 'CALLSWITHOUTIC' || '@ReportType' == 'SUPSURPSUMM') {
+            if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X' || '@ReportType' == 'ICSUBMIT' || '@ReportType' == 'CALLSWITHOUTIC' || '@ReportType' == 'SUPSURPSUMM' || '@ReportType' == 'COUNTIC') {
                 $(".report1").css("display", "");
                 $(".RWB").css("display", "none");
                 $(".RWCO").css("display", "none");
                 $(".SuperSurprise").css("display", "none");
                 $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "");
+                $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'RWB') {
                 $(".report1").css("display", "none");
@@ -290,6 +463,9 @@
                 $(".ConsignReject").css("display", "none");
                 $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'R') {
                 $(".report1").css("display", "none");
@@ -299,6 +475,9 @@
                 $(".ConsignReject").css("display", "none");
                 $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'SUPSUR') {
                 $(".report1").css("display", "none");
@@ -308,6 +487,9 @@
                 $(".ConsignReject").css("display", "none");
                 $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'CONSIGN_REJECT') {
                 $(".report1").css("display", "none");
@@ -317,6 +499,9 @@
                 $(".ConsignReject").css("display", "");
                 $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
 
                 $("#RegionConsignReject option[value='Q']").remove();
             }
@@ -328,6 +513,9 @@
                 $(".ConsignReject").css("display", "none");
                 $(".OutstandingOverRegion").css("display", "");
                 $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'CLIENTWISEREJ') {
                 $(".report1").css("display", "none");
@@ -337,6 +525,57 @@
                 $(".ConsignReject").css("display", "none");
                 $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
+            }
+            else if ('@ReportType' == 'NON_CONFORMITY') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "none");
+            }
+            else if ('@ReportType' == 'PENDING_CALLS') {
+                var ReportType = '@ReportType';
+                let myObject = { ReportType };
+                var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            }
+            else if ('@ReportType' == 'HIGHVALUE') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "");
+                $(".CallRemarking").css("display", "none");
+            }
+            else if ('@ReportType' == 'REMARKING') {
+                $(".report1").css("display", "none");
+                $(".RWB").css("display", "none");
+                $(".RWCO").css("display", "none");
+                $(".SuperSurprise").css("display", "none");
+                $(".ConsignReject").css("display", "none");
+                $(".OutstandingOverRegion").css("display", "none");
+                $(".ClientWiseRejection").css("display", "none");
+                $(".NonConformity").css("display", "none");
+                $(".TentativeInspection").css("display", "none");
+                $(".CallRemarking").css("display", "");
+            }
+            else if ('@ReportType' == 'CALL_DETAILS') {
+                var ReportType = '@ReportType';
+                let myObject = { ReportType };
+                var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
+                window.open(url, '_blank');
             }
         });
 
@@ -693,6 +932,167 @@
             $("#spnErrorBPORailwayClientWiseRejection").html("");
             $("#spnErrorFromDateClientWiseRejection").html("");
             $("#spnErrorToDateClientWiseRejection").html("");
+        }
+
+        $('input[type=radio][name="NonConformitySummaryReport"]').change(function () {
+            if (this.value == "SummaryReport3") {
+                $("#lblFromMonthNonConformity").text("Month");
+                $("#lblFromYearNonConformity").text("Year");
+                $(".NonConformitySummaryReportTo").css("display", "none");
+            }
+            else {
+                $("#lblFromMonthNonConformity").text("From Month");
+                $("#lblFromYearNonConformity").text("From Year");
+                $(".NonConformitySummaryReportTo").css("display", "")
+            }
+        });
+
+        function ViewReportNonConformity() {
+
+            var ReportType = '@ReportType', FromYearMonth = '', ToYearMonth = '', Iecd = '';
+
+            var _NonConformitySummaryReport = $('input[name="NonConformitySummaryReport"]:checked').val();
+
+            FromYearMonth = $("#FromYearNonConformity").val() + ('0'.repeat(2) + $("#FromMonthNonConformity").val()).slice(-2);
+
+            if (_NonConformitySummaryReport == "SummaryReport4") {
+                ToYearMonth = $("#ToYearNonConformity").val() + ('0'.repeat(2) + $("#ToMonthNonConformity").val()).slice(-2);
+            }
+
+            Iecd = $("#IecdNonConformity").val();
+
+            let myObject = { ReportType, FromYearMonth, ToYearMonth, Iecd };
+
+            var url = '@Url.Action("ManageNonConformity", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsNonConformity() {
+
+            $("input[type=radio][name=NonConformitySummaryReport][value=SummaryReport3]").prop('checked', true);
+            $('input[type=radio][name="NonConformitySummaryReport"]').change();
+
+            $("#lblFromMonthNonConformity").text("Month");
+            $("#lblFromYearNonConformity").text("Year");
+            $(".NonConformitySummaryReportTo").css("display", "none");
+
+            $("#FromMonthNonConformity").get(0).selectedIndex = 0;
+            $("#FromYearNonConformity").get(0).selectedIndex = 0;
+            $("#ToMonthNonConformity").get(0).selectedIndex = 0;
+            $("#ToYearNonConformity").get(0).selectedIndex = 0;
+        }
+
+        $('input[type=radio][name="TentativeInspectionCM"]').change(function () {
+            if (this.value == "CM3") {
+                $(".TentativeInspectionCM").css("display", "none");
+            }
+            else {
+                $(".TentativeInspectionCM").css("display", "")
+            }
+        });
+
+        function ViewReportTentativeInspection() {
+
+            $("#spnErrorFromDateTentativeInspection").html("");
+            $("#spnErrorToDateTentativeInspection").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDateTentativeInspection").val() == "") {
+                $("#spnErrorFromDateTentativeInspection").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDateTentativeInspection").val() == "") {
+                $("#spnErrorToDateTentativeInspection").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDateTentativeInspection").val() != "" && IsValidDate($("#FromDateTentativeInspection").val()) == false) {
+                $("#spnErrorFromDateTentativeInspection").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateTentativeInspection").val() != "" && IsValidDate($("#ToDateTentativeInspection").val()) == false) {
+                $("#spnErrorToDateTentativeInspection").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDateTentativeInspection').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDateTentativeInspection').datepicker('getDate')).format("YYYY-MM-DD");
+
+            var ParticularCM = '', SortedOn = '';
+
+            var _CM = $('input[name="TentativeInspectionCM"]:checked').val();
+            var SortedOn = $('input[name="SortedOn"]:checked').val();
+
+            if (_CM == "CM4") ParticularCM = $("#ParticularCM2").val();
+
+            let myObject = { ReportType, FromDate, ToDate, ParticularCM, SortedOn };
+
+            var url = '@Url.Action("ManageTentativeInspection", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsTentativeInspection() {
+            $("#FromDateTentativeInspection").val("");
+            $("#ToDateTentativeInspection").val("");
+            $("input[type=radio][name=TentativeInspectionCM][value=CM3]").prop('checked', true);
+            $(".TentativeInspectionCM").css("display", "none");
+            $("#ParticularCM2").get(0).selectedIndex = 0;
+            $("input[type=radio][name=SortedOn][value=InspFee]").prop('checked', true);
+
+            $("#spnErrorFromDateTentativeInspection").html("");
+            $("#spnErrorToDateTentativeInspection").html("");
+        }
+
+        function ViewReportCallRemarking() {
+
+            $("#spnErrorFromDateCallRemarking").html("");
+            $("#spnErrorToDateCallRemarking").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDateCallRemarking").val() == "") {
+                $("#spnErrorFromDateCallRemarking").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDateCallRemarking").val() == "") {
+                $("#spnErrorToDateCallRemarking").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDateCallRemarking").val() != "" && IsValidDate($("#FromDateCallRemarking").val()) == false) {
+                $("#spnErrorFromDateCallRemarking").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateCallRemarking").val() != "" && IsValidDate($("#ToDateCallRemarking").val()) == false) {
+                $("#spnErrorToDateCallRemarking").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDateCallRemarking').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDateCallRemarking').datepicker('getDate')).format("YYYY-MM-DD");
+            var CallRemarkingDate = $('input[name="CallRemarkingDate"]:checked').val();
+            var CallsStatus = $("#CallsStatus").val();
+
+            let myObject = { ReportType, FromDate, ToDate, CallRemarkingDate, CallsStatus };
+
+            var url = '@Url.Action("ManageCallRemarking", "ManagementReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControlsCallRemarking() {
+            $("#FromDateCallRemarking").val("");
+            $("#ToDateCallRemarking").val("");
+            $("input[type=radio][name=CallRemarkingDate][value=InitiatedDate]").prop('checked', true);
+            $("#CallsStatus").get(0).selectedIndex = 0;
+            $("#spnErrorFromDateCallRemarking").html("");
+            $("#spnErrorToDateCallRemarking").html("");
         }
 
     </script>

@@ -1,0 +1,76 @@
+﻿@model IBS.Models.Reports.PendingCallsModel
+
+@{
+    string currDate = DateTime.Now.ToString("dd/MM/yyyy");
+}
+
+<div>
+    <h3 class="center">Statement of Overdue/Pending Calls as on : <span class="orangeText">@currDate </span></h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="10%" valign="middle" align="center" rowspan="3"><b><font size="1" face="Verdana">Region</font></b></th>
+                    <th width="40%" valign="top" align="center" colspan="4"><b><font size="1" face="Verdana">No. of Overdue calls</font></b></th>
+                    <th width="40%" valign="top" align="center" colspan="4"><b><font size="1" face="Verdana">No. of calls pending for</font></b></th>
+                </tr>
+                <tr>
+                    <th width="20%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">More than 7 days</font></b></th>
+                    <th width="20%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">More than 5 days</font></b></th>
+                    <th width="20%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">More than 7 days</font></b></th>
+                    <th width="20%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">More than 5 days</font></b></th>
+                </tr>
+                <tr>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">NSIC</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">NSIC</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">NSIC</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">NSIC</font></b></th>
+                </tr>
+
+                @if (Model != null && Model.lstPendingCalls != null && Model.lstPendingCalls.Count > 0)
+                {
+                    @foreach (var item in Model.lstPendingCalls)
+                    {
+                        <tr>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@item.REGION</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRO_SEVEN_INSP)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRO_SEVEN_NSIC)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRO_FIVE_INSP)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRO_FIVE_NSIC)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRP_SEVEN_INSP)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRP_SEVEN_NSIC)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRP_FIVE_INSP)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.GRP_FIVE_NSIC)</font></b></td>
+                        </tr>
+                    }
+                    <tr class="reportTotal">
+                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana"><b>Totals</b></font></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRO_SEVEN_INSP))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRO_SEVEN_NSIC))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRO_FIVE_INSP))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRO_FIVE_NSIC))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRP_SEVEN_INSP))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRP_SEVEN_NSIC))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRP_FIVE_INSP))</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(Model.lstPendingCalls.Sum(x => x.GRP_FIVE_NSIC))</font></b></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
