@@ -372,6 +372,7 @@
         $('#table1').on('click', '.custom-edit-button', function () {
             debugger;
             // Get the data for the clicked row
+            var ReportType = '@ReportType';
             var table1 = $("#table1").DataTable();
             var rowData = table1.row($(this).closest('tr')).data();
 
@@ -379,7 +380,7 @@
             var url = '/CallsReport/Manage?PO_NO=' + rowData.PO_NO +
                 '&PO_DT=' + rowData.PO_DT +
                 '&RLY_NONRLY=' + rowData.RLY_NONRLY +
-                '&RLY_CD=' + rowData.RLY_CD;
+                '&RLY_CD=' + rowData.RLY_CD + '&ReportType=' + '@ReportType';
 
             // Redirect to the URL
             window.location.href = url;

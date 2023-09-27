@@ -42,6 +42,23 @@
         public string L5NO_PO { get; set; }
         public string PO_NO { get; set; }
         public string RLY_NONRLY { get; set; }
+        public string MANUFACTURER { get; set; }
+        public string ITEM_DESC_PO { get; set; }
+        public string QTY_TO_INSP { get; set; }
+        public DateTime CALL_MARK_DT { get; set; }
+        public string CONSIGNEE  { get; set; }
+        public string IE_PHONE_NO { get; set; }
+        public string REMARK { get; set; }
+        public string COLOUR { get; set; }
+        public string MFG_PERS { get; set; }
+        public string MFG_PHONE { get; set; }
+        public string Hologram { get; set; }
+        public string ICPhoto { get; set; }
+        public string ICPhotoA1 { get; set; }
+        public string ICPhotoA2 { get; set; }
+        public int COUNT  { get; set; }
+        public string CALL_STATUS { get; set; }
+        public int VEND_CD { get; set; }
         
         public List<railway_dropdown1> Railways { get; set; }
 

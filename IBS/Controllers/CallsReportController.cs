@@ -47,7 +47,11 @@ namespace IBS.Controllers
 
         public IActionResult Manage(string ReportType , string frmDate , string toDate , string WiseRadio , string IeStatus , int Days , string includeNSIC , string pendingCallsOnly, string PO_NO , string PO_DT , string RLY_NONRLY , string RLY_CD)
         {
-            
+            if(ReportType != "IeVendorWise" || ReportType != "OverdueCalls" || ReportType != "ApprovalReport")
+            {
+                ReportType = "SpecificPO";
+            }    
+
             Statement_IeVendorWiseModel model = new() {ReportType = ReportType , FromDate = frmDate , ToDate = toDate , WiseRadio = WiseRadio , IeStatus = IeStatus , Days = Days , includeNSIC = includeNSIC , pendingCallsOnly = pendingCallsOnly , PO_NO  = PO_NO , PO_DT  = Convert.ToDateTime(PO_DT), RLY_NONRLY = RLY_NONRLY , RLY_CD = RLY_CD };
             if (ReportType == "IeVendorWise") model.ReportTitle = "STATEMENT OF IE AND VENDOR WISE CALLS CANCELLED";
             else if (ReportType == "OverdueCalls") model.ReportTitle = "STATEMENT OF OVERDUE CALLS";
