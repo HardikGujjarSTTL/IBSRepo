@@ -87,7 +87,6 @@ namespace IBS.Helper
             ContractEntryDoc = 16,
             ICCancellation = 17,
             PurchaseOrderForm = 18,
-            ContractEntryDoc=16,
             ICDocument = 20,
         }
 
