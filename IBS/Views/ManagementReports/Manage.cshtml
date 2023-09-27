@@ -1,5 +1,4 @@
 ﻿@using System.Web;
-
 @model IBS.Models.Reports.ManagementReportsModel
 
 @{
@@ -8,6 +7,7 @@
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
     string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "ManagementReports");
+    if (ReportType == "PENDING_CALLS" || ReportType == "CALL_DETAILS") gobackUrl = Url.Action("Index", "Dashboard");
 }
 
 <html>
