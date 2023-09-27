@@ -95,6 +95,28 @@
             InitializeDatatable();
         }
 
+        function ViewReport1() {
+
+            var CaseNo = $("#CaseNo").val();
+            var CallRecDT = $("#CallRecDT").val();
+            var CallSno = $("#CallSno").val();
+            var BKNO = $("#BKNO").val();
+            var SETNO = $("#SETNO").val();
+
+            let myObject = { CaseNo, CallRecDT, CallSno, BKNO, SETNO };
+
+            var url = '@Url.Action("Manage", "IEICPhotoEnclosedReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls1(){
+            $("#CaseNo").val('');
+            $("#CallRecDT").val('');
+            $("#CallSno").val('');
+            $("#BKNO").val('');
+            $("#SETNO").val('');
+        }
+
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val();
             var CallRecDT = $("#CallRecDT").val();
@@ -137,9 +159,90 @@
                     { data: "CallSno", width: "10%" },
                     { data: "BKNO", width: "10%" },
                     { data: "SETNO", width: "10%" },
+                    {
+                        data: "FILE_1", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_1;
+                            var fileName = getFileNameFromUrl(row.FILE_1);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    },
+                    {
+                        data: "FILE_2", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_2;
+                            var fileName = getFileNameFromUrl(row.FILE_2);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    },
+                    {
+                        data: "FILE_3", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_3;
+                            var fileName = getFileNameFromUrl(row.FILE_3);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    },
+                    {
+                        data: "FILE_4", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_4;
+                            var fileName = getFileNameFromUrl(row.FILE_4);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    }, {
+                        data: "FILE_5", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_5;
+                            var fileName = getFileNameFromUrl(row.FILE_5);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    }, {
+                        data: "FILE_6", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_6;
+                            var fileName = getFileNameFromUrl(row.FILE_6);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    }, {
+                        data: "FILE_7", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_7;
+                            var fileName = getFileNameFromUrl(row.FILE_7);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    }, {
+                        data: "FILE_8", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_8;
+                            var fileName = getFileNameFromUrl(row.FILE_8);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    }, {
+                        data: "FILE_9", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_9;
+                            var fileName = getFileNameFromUrl(row.FILE_9);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    }, {
+                        data: "FILE_10", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/IC_PHOTOS/")' + row.FILE_10;
+                            var fileName = getFileNameFromUrl(row.FILE_10);
+                            return '<a href="' + photoUrl + '" download target="_blank">' + fileName + '</a>';
+                        }
+                    },
+
                 ],
                 "order": [[0, "asc"]]
             });
         }
+
+        function getFileNameFromUrl(url) {
+            var parts = url.split('/');
+            return parts[parts.length - 1]; // Get the last part (the file name)
+        }
+
     </script>
 }

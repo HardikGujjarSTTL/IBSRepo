@@ -727,5 +727,6 @@ namespace IBS.Helper
         public static PeriodWiseTechnicalRefReportModel PeriodWiseTechnicalRefReport { get; set; }
 
         public static DailyIECMWorkPlanReportModel DailyIECMWorkPlanReport { get; set; }
+        public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
     }
 }

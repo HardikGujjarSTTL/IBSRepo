@@ -94,7 +94,7 @@ namespace IBS.Repositories.Reports
                     OracleParameter[] par = new OracleParameter[7];
                     par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
                     par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-                    par[2] = new OracleParameter("p_recdt", OracleDbType.Varchar2, parsedCallRecDT, ParameterDirection.Input);
+                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, parsedCallRecDT, ParameterDirection.Input); // Corrected type to OracleDbType.Date
                     par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
                     par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
                     par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
@@ -152,6 +152,60 @@ namespace IBS.Repositories.Reports
             }
 
             return dTResult;
+        }
+
+        public IEICPhotoEnclosedModelReport GetDataListReport(string CaseNo, string CallRecDT, string CallSno, string BKNO, string SETNO,string Region)
+        {
+            IEICPhotoEnclosedModelReport model = new();
+            List<listSubmittedPhotobyIE> lstlistSubmittedPhotobyIE = new();
+
+            DataSet ds = null;
+            DataTable dt = new DataTable();
+
+
+            DateTime? parsedCallRecDT = null;
+
+            if (CallRecDT != null && CallRecDT != "")
+            {
+                 parsedCallRecDT = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
+             OracleParameter[] par = new OracleParameter[7];
+             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+             par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+             par[2] = new OracleParameter("p_recdt", OracleDbType.Date, parsedCallRecDT, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+             par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
+             par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
+             par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
+             par[6] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+             ds = DataAccessDB.GetDataSet("GetIEICPhotoReport", par, 1);
+
+             if (ds != null && ds.Tables.Count > 0)
+             {
+                 dt = ds.Tables[0];
+                 List<listSubmittedPhotobyIE> listcong = dt.AsEnumerable().Select(row => new listSubmittedPhotobyIE
+                 {
+                     CaseNo = Convert.ToString(row["CASE_NO"]),
+                     CallRecDT = Convert.ToString(row["CALL_DT"]),
+                     CallSno = Convert.ToString(row["CALL_SNO"]),
+                     BKNO = Convert.ToString(row["BK_NO"]),
+                     SETNO = Convert.ToString(row["SET_NO"]),
+                     FILE_1 = Convert.ToString(row["FILE_1"]),
+                     FILE_2 = Convert.ToString(row["FILE_2"]),
+                     FILE_3 = Convert.ToString(row["FILE_3"]),
+                     FILE_4 = Convert.ToString(row["FILE_4"]),
+                     FILE_5 = Convert.ToString(row["FILE_5"]),
+                     FILE_6 = Convert.ToString(row["FILE_6"]),
+                     FILE_7 = Convert.ToString(row["FILE_7"]),
+                     FILE_8 = Convert.ToString(row["FILE_8"]),
+                     FILE_9 = Convert.ToString(row["FILE_9"]),
+                     FILE_10 = Convert.ToString(row["FILE_10"]),
+
+                 }).ToList();
+                 model.lstlistSubmittedPhotobyIE = listcong;
+             }
+
+            return model;
         }
     }
 }
