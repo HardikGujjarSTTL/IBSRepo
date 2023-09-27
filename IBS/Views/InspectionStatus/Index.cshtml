@@ -7,7 +7,9 @@
     if (ReportType == "ConInsp") ReportTitle = "Summary of Consignee Wise Inspections";
     else if (ReportType == "VenInsp") ReportTitle = "Summary of Vendor Wise Inspections";
     else if (ReportType == "RTIInsp") ReportTitle = "SUMMARY OF INSPECTIONS FOR RTI";
-   
+    else if (ReportType == "VenInspStatus") ReportTitle = "VENDOR WISE INSPECTION STATUS";
+    else if (ReportType == "ICPO") ReportTitle = "IC DETAILS FOR SPECIFIC PO";
+
     ViewData["Title"] = ReportTitle;
 }
 
@@ -125,6 +127,7 @@
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
             </div>
+        </div>
         </div>
         <div class="task-inner row my-0 report2" style="display: none">
             <div class="row my-0">
@@ -266,7 +269,7 @@
                 <div class="col-md-2 mb-3" id="dd1">
                     <label for="PropertyId">Month</label>
                     @Html.DropDownList("Month", Common.GetMonth(), new { @id="Rddlmonth"})
-                    <span  class="text-danger"></span>
+                    <span class="text-danger"></span>
                 </div>
                 <div class="col-md-2 mb-3" id="dd2">
                     <label for="PropertyId">Year</label>
@@ -294,6 +297,105 @@
                 </div>
             </div>
         </div>
+        <div class="task-inner row report4" style="display: none">
+            <div class="row my-0">
+                <div class="col-md-5 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">All Vendor's</label>
+                    <input type="radio" name="VWradioGroup" id="VWrb1" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-5 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">For Particular Vendor</label>
+                    <input type="radio" name="VWradioGroup" id="VWrb2" />
+                    <span class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="col-md-7 mb-3" id="VWdd1" style="display:none;">
+                <label for="PropertyId">Vendor</label>
+                @Html.DropDownList("VENDOR", Common.GetVendorLabRpt(), new { @id="ddlvendor"})
+                <span class="text-danger"></span>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-2 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">For the Month</label>
+                    <input type="radio" name="VWradioGroup2" id="VWrb3" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="margin-top:auto;">
+                    <label for="PropertyId">For Given Period</label>
+                    <input type="radio" name="VWradioGroup2" id="VWrb4" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="display:none" id="VWdtf">
+                    <label for="PropertyId">From Date</label>
+                    <input type="text" class="input datepicker" id="VWdtfrom" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" style="display:none" id="VWdtt">
+                    <label for="PropertyId">To Date</label>
+                    <input type="text" class="input datepicker" id="VWdtto" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" id="VWdd11">
+                    <label for="PropertyId">Month</label>
+                    @Html.DropDownList("Month", Common.GetMonth(), new { @id="VWddlmonth"})
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3" id="VWdd22">
+                    <label for="PropertyId">Year</label>
+                    @Html.DropDownList("Year", Common.GetYear(), new { @id="VWddlyear"})
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport4();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row report5" style="display: none">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">Client Type</label>
+                    @Html.DropDownList("ClientType", Common.ClientWise(),"--Select--", new { @id="ddlclienttype"})
+                    <span class="text-danger field-validation-error" id="spnErrorClientType"></span>
+                </div>
+                <div class="col-md-7 mb-3">
+                    <div class="col-md-12 mb-3">
+                        <label for="PropertyId">Select Client</label>
+                        <select id="selectclient"></select>
+                        <span class="text-danger field-validation-error" id="spnErrorSelectClient"></span>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="PropertyId">PO Date</label>
+                    <input type="text" class="input datepicker" id="dtpo" />
+                    <span class="text-danger field-validation-error" id="spnErrorPODate"></span>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 30px;margin-left:40%;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="Submit();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+            <div id="hndgrid" style="display:none;">
+            <table id="table1" class="table-responsive">
+                <thead>
+                    <tr>
+
+                        <th>#</th>
+                        <th>PO No.</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -306,6 +408,139 @@
         function ClearControls() {
             location.reload(true);
         }
+        function Submit() {
+            
+            $("#spnErrorClientType").html("");
+            $("#spnErrorSelectClient").html("");
+            $("#spnErrorPODate").html("");
+
+            var IsValid = true;
+
+            if ($("#ddlclienttype").val() == "") {
+                $("#spnErrorClientType").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#selectclient").val() == "") {
+                $("#spnErrorSelectClient").html("The To Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtpo").val() == "") {
+                $("#spnErrorPODate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+
+
+            if (!IsValid) return;
+            var ClientType = $("#ddlclienttype").val();
+            var SelectClient = $("#selectclient").val();
+            var PODate = $("#dtpo").val();
+            InitializeDatatable(ClientType, SelectClient, PODate);
+            $("#hndgrid").css("display", "block");
+        }
+        $('#ddlclienttype').change(function () {
+
+            var selectedValue = $(this).val();
+
+            $('#selectclient').select2({
+                // Optional: You can customize Select2 options here
+                placeholder: 'Select a client type',
+                allowClear: true, // Adds a clear button
+                minimumResultsForSearch: 5 // Show search input only if there are 5 or more options
+            });
+
+            $.ajax({
+                url: '@Url.Action("dropdown", "InspectionStatus")',
+                type: 'POST',
+                data: { selectedValue: selectedValue },
+                dataType: 'json',
+                success: function (data) {
+                    var dropdown = $("#selectclient");
+
+                    // Clear existing options (if any)
+                    dropdown.empty();
+
+                    // Add a default option if needed
+                    dropdown.append($("<option>").val("").text("Select Railway"));
+
+                    // Loop through the data and add options to the dropdown
+                    $.each(data, function (index, item) {
+                        dropdown.append($("<option>").val(item.RLY_CD).text(item.RAILWAY_ORGN));
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        function InitializeDatatable(ClientType, SelectClient, PODate) {
+            //$("#dtchequepost").css("display", "block");
+            $("#table1").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("gridData")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            ClientType: ClientType,
+                            SelectClient: SelectClient,
+                            PODate: PODate,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+
+                        }
+                    },
+
+                    { data: "PO_NO" },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+
+                            var editButtonHtml = '<button class="custom-edit-button btn-sm btn-primary"><i class="fa fa-pencil" title="Edit"></i></button>';
+                            return editButtonHtml;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+
+
+        }
+        $('#table1').on('click', '.custom-edit-button', function () {
+
+            // Get the data for the clicked row
+            var table1 = $("#table1").DataTable();
+            var rowData = table1.row($(this).closest('tr')).data();
+
+            // Construct the URL for your controller action
+            var PO_NO = rowData.PO_NO;
+            var PO_DT = rowData.PO_DT;
+            var RLY_NONRLY = rowData.RLY_NONRLY;
+            var RLY_CD = rowData.RLY_CD;
+            ViewReport5(PO_NO, PO_DT, RLY_NONRLY, RLY_CD);
+        });
+
 
         $('input[name="radioGroup"]').change(function () {
 
@@ -515,6 +750,45 @@
             }
         });
 
+        $('input[name="VWradioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "VWrb1") {
+                sessionStorage.removeItem("VW1");
+                sessionStorage.removeItem("VW2");
+                sessionStorage.setItem("VW1", true);
+                $("#VWdd1").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("VW1");
+                sessionStorage.removeItem("VW2");
+                sessionStorage.setItem("VW2", true);
+                $("#VWdd1").css("display", "block");
+            }
+        });
+        $('input[name="VWradioGroup2"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "VWrb3") {
+                sessionStorage.removeItem("VW3");
+                sessionStorage.removeItem("VW4");
+                sessionStorage.setItem("VW3", true);
+                $("#VWdtf").css("display", "none");
+                $("#VWdtt").css("display", "none");
+                $("#VWdd11").css("display", "block");
+                $("#VWdd22").css("display", "block");
+            }
+            else {
+                sessionStorage.removeItem("VW3");
+                sessionStorage.removeItem("VW4");
+                sessionStorage.setItem("VW4", true);
+                $("#VWdtf").css("display", "block");
+                $("#VWdtt").css("display", "block");
+                $("#VWdd11").css("display", "none");
+                $("#VWdd22").css("display", "none");
+            }
+        });
+
         $(function () {
             $("#rb1").prop("checked", true);
             $("#rb3").prop("checked", true);
@@ -528,19 +802,31 @@
             sessionStorage.setItem("Vrbb5", true);
             sessionStorage.setItem("Vrbb4", false);
             $("#Vrb7").prop("checked", true);
+
             $("#Rrb1").prop("checked", true);
             $("#Rrb3").prop("checked", true);
             $("#Rrb5").prop("checked", true);
             sessionStorage.setItem("Rrbb5", true);
             sessionStorage.setItem("Rrbb4", false);
+
+            $("#VWrb1").prop("checked", true);
+            $("#VWrb3").prop("checked", true);
+            sessionStorage.setItem("VW4", false);
+            sessionStorage.setItem("VW3", true);
             if ('@ReportType' == 'ConInsp') {
-                $(".report1").css("display", "");                
+                $(".report1").css("display", "");
             }
             else if ('@ReportType' == 'VenInsp') {
-                $(".report2").css("display", "");                
+                $(".report2").css("display", "");
             }
             else if ('@ReportType' == 'RTIInsp') {
                 $(".report3").css("display", "");
+            }
+            else if ('@ReportType' == 'VenInspStatus') {
+                $(".report4").css("display", "");
+            }
+            else if ('@ReportType' == 'ICPO') {
+                $(".report5").css("display", "");
             }
         });
         function FillPurchaserCd(ids) {
@@ -597,7 +883,7 @@
 
             var ForParticular = sessionStorage.getItem("rbb2");
             var lstParticular = sessionStorage.getItem("con");
-            let myObject = {ReportType, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular };
+            let myObject = { ReportType, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular };
 
             var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
             window.open(url, '_blank');
@@ -648,7 +934,46 @@
 
             var ForParticular = sessionStorage.getItem("Rrbb2");
             var lstParticular = $("#PurchaserCD").val();
-            let myObject = {ReportType, ForGiven, ReportBasedon, FromDate, ToDate, Month, Year, ForParticular, lstParticular, TextPurchaser };
+            let myObject = { ReportType, ForGiven, ReportBasedon, FromDate, ToDate, Month, Year, ForParticular, lstParticular, TextPurchaser };
+
+            var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+        function ViewReport4() {
+
+            // var ReportType = "Summary of Consignee Wise Inspections";
+            var ReportType = '@ReportType';
+            var rdbGIE = sessionStorage.getItem("VW2");
+            var rdbForMonth = sessionStorage.getItem("VW3");
+            var ForGPer = sessionStorage.getItem("VW4");
+            if (sessionStorage.getItem("VW4") == "false") {
+                var Month = $("#VWddlmonth").val();
+                var Year = $("#VWddlyear").val();
+            }
+            else {
+                var parts = $("#VWdtfrom").val().split('/');
+                var FromDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+                var parts2 = $("#VWdtto").val().split('/');
+                var ToDate = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+
+            }
+            if (rdbGIE == "true") {
+                var ddlVender = $("#ddlvendor").val();
+            }
+
+            let myObject = { ReportType, FromDate, ToDate, Month, Year, rdbGIE, rdbForMonth, ForGPer, ddlVender };
+
+            var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+        function ViewReport5(PO_NO, PO_DT, RLY_NONRLY, RLY_CD) {
+            
+            
+            
+            // var ReportType = "Summary of Consignee Wise Inspections";
+            var ReportType = '@ReportType';
+
+            let myObject = { ReportType, PO_NO, PO_DT, RLY_NONRLY, RLY_CD };
 
             var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
             window.open(url, '_blank');

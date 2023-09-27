@@ -733,6 +733,12 @@ namespace IBS.Helper
 
         public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
 
+        public static CoIeWiseCallsModel CoIeWiseCalls { get; set; }
+
+        public static PeriodWiseTechnicalRefReportModel PeriodWiseTechnicalRefReport { get; set; }
+
+        public static DailyIECMWorkPlanReportModel DailyIECMWorkPlanReport { get; set; }
+
         public static NonConformityModel NonConformity { get; set; }
 
         public static PendingCallsModel PendingCalls { get; set; }

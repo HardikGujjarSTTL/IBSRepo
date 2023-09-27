@@ -1,4 +1,5 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+﻿@using IBS.Helper;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
     string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
@@ -17,35 +18,35 @@
 <div class="task-listinput">
     <div class="accordion-body">
         <div class="task-inner row COIEWiseCalls" style="display: none">
-            <div class="col-md-4 mb-3" style="font-weight: bold;">
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="dpCO">Controlling Officer</label>
-                    @Html.DropDownList("dpCO", new SelectList(IBS.Models.Common.GetControllingOfficers(ViewBag.Region) , "Value", "Text"))
+                    @Html.DropDownList("dpCO", new SelectList(IBS.Models.Common.GetControllingOfficers(ViewBag.Region) , "Value", "Text"),new { @onchange = "BindlstIE();" })
                 </div>
             </div>
-            <div class="col-md-4 mb-3" style="font-weight: bold;">
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="status">Status of Call</label>
-                    @Html.DropDownList("status", new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"),"-- Select --")
+                    @Html.DropDownList("status", new SelectList(IBS.Models.Common.CallStatus().OrderBy(X => X.Text) , "Value", "Text"),"All")
                 </div>
             </div>
-            <div class="row my-0 ">
-                <div class="col-md-4 mb-3" style="font-weight: bold;">
-                    <div class="reference">
-                        <label for="rdbIE">Inspection Engineer</label>
-                        @Html.RadioButton("rdbIE", "AllIE", new { @id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All IE
-                        &nbsp;&nbsp;
-                        @Html.RadioButton("rdbIE", "PartiIE", new { @id="rdPIE",@class = "text-darkblue font-bold font-size-8pt"}) Particular IE
-                    </div>
-                </div>               
-                <div class="row my-0">
-                    <div class="col-md-4 mb-3" style="font-weight: bold;">
-                        <div class="reference">
-                            @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Region,"") , "Value", "Text"),"-- Select --",new { @onchange = "BindlstIE();" })
-                        </div>
-                    </div>
+
+            <div class="col-md-4 mb-3" style="font-weight: bold;width:auto;">
+                <div class="reference">
+                    <label for="rdbIE">Inspection Engineer</label>
+                    @Html.RadioButton("rdbIE", "AllIE", new { @id="rdAllIE", @class = "text-darkblue font-bold font-size-8pt", @checked = true }) All IE
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdbIE", "PartiIE", new { @id="rdPIE",@class = "text-darkblue font-bold font-size-8pt"}) Particular IE
                 </div>
             </div>
+
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="dpIE"></label>
+                    @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Region,"") , "Value", "Text"),"-- Select --")
+                </div>
+            </div>
+
             <div class="row my-0 ">
                 <div class="col-md-4 mb-3" style="font-weight: bold;">
                     <div class="reference">
@@ -54,18 +55,55 @@
                         &nbsp;&nbsp;
                         @Html.RadioButton("rdbSort", "Vendor", new { @id="rdVendor",@class = "text-darkblue font-bold font-size-8pt"}) Vendor
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-3" style="margin-top: 30px;">
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                        <button type="button" class="save-btn active" onclick="InitializeDatatable();">Submit</button>
                         <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <section class="table-section COIEWiseCalls" id="tblCOIEWiseCalls" style="display: none">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtCOIEWiseCalls" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>VIEW REPORT</th>
+                            <th>IE Name</th>
+                            <th>VENDOR NAME</th>
+                            <th>NEW VENDOR</th>
+                            <th>PURCHASER</th>
+                            <th>ITEM</th>
+                            <th>DELV DATE</th>
+                            <th>INSP DESIRE DATE</th>
+                            <th>CALL DATE</th>
+                            <th>CALL SERIAL NO.</th>
+                            <th>CALL DOCUMENT(IF ANY).</th>
+                            <th>CASE NO/VIEW PO</th>
+                            @*<th style="display:none;" class="takenworkplan">TAKEN IN TODAY'S WORKPLAN</th> Hide*@
+                            <th>PO SOURCE</th>
+                            <th>STATUS</th>
+                            @*<th>VIEW IC</th>*@
+                            <th>REMARKS</th>
+                            <th>PONO</th>
+                            <th>PO DATE</th>
+                            <th>CONTACT PERSON</th>
+                            <th>CONTACT PERSON PHONE NO.</th>
+                            <th>USER</th>
+                            <th>LAST UPDATION DATE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </div>
 
 @section scripts{
@@ -87,11 +125,16 @@
                     if (value == "AllIE") {
                         $("#dpIE").css("display", "none");
                     } else {
-                        $("#dpIE").css("display", "");
+                        var CO = $("#dpCO").val();
+                        if (CO != "") {
+                            $("#dpIE").css("display", "");
+                        }
                     }
                 });
             }
         });
+
+
 
         function ViewReportCOWISEIE() {
             var ReportType = '@ReportType';
@@ -100,11 +143,26 @@
             window.open(url, '_blank');
         }
 
+        function ViewReportCOIEWiseCalls(Case_No, Call_Recv_Date, Call_SNo) {
+            var ReportType = '@ReportType';
+            //var CO = $("#dpCO").val();
+            //var Status = $("#status").val();
+            //var IE = $("#dpIE").val();
+            //var IsAllPartiIE = $("#rdAllIE").is(":checked");
+            //var IsCallDate = $("#rdCallDate").is(":checked");
+            //if (IsAllPartiIE) {
+            //    IE = null;
+            //}
+            let myObject = { ReportType, Case_No, Call_Recv_Date, Call_SNo };
+            var url = '@Url.Action("ManageCoIeWiseCalls", "OtherReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
         function BindlstIE() {
             $("#dpIE").empty();
             $("#dpIE").append($('<option value="">--Select--</option>'));
 
-            $.get("@Url.Action("GetIE", "OtherReports")", { RlyCd: $("#dpCO").val() }, function (response) {
+            $.get("@Url.Action("GetIE", "OtherReports")", { CO: $("#dpCO").val() }, function (response) {
                 if (response != null) {
                     $("#dpIE").empty();
                     $("#dpIE").append($('<option value="">--Select--</option>'));
@@ -112,6 +170,165 @@
                         $("#dpIE").append($('<option></option>').val(val.Value).html(val.Text));
                     });
                 }
+            });
+        }
+        function InitializeDatatable() {
+            var CO_CD = $("#dpCO").val();
+            var Status_Call = $("#status").val();
+            var IE_CD = $("#dpIE").val();
+            var IsAllIE_Call = $("#rdAllIE").is(":checked") == true ? "true" : "false";
+            var IsCallDate_Sort = $("#rdCallDate").is(":checked") == true ? "true" : "false";
+            if (IsAllIE_Call == "true") {
+                IE_CD = "";
+            }
+            $("#dtCOIEWiseCalls").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("Get_CoIeWiseCalls", "OtherReports")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            CO: CO_CD,
+                            Status: Status_Call,
+                            IE: IE_CD,
+                            IsAllIE: IsAllIE_Call,
+                            IsCallDate: IsCallDate_Sort
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [
+                    {
+                        data: "", render: function (data, type, row, meta) {
+                            var CASE_NO = row.CASE_NO;
+                            var CALL_RECV_DT = row.CALL_RECV_DT;
+                            var CALL_SNO = row.CALL_SNO;
+                            var html = '<div align=\"center\" class=\"reportIcon\" style=\"text-align: center;\"> <a onclick="ViewReportCOIEWiseCalls(\'' + CASE_NO + '\',\'' + CALL_RECV_DT + '\',\'' + CALL_SNO + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-eye\" title="Report"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    { data: "IE_NAME" },
+                    {
+                        data: "",
+                        render: function (data, type, row, meta) {
+                            var wVendor = "";
+                            if (parseInt(row.VEND_CD) == parseInt(row.MFG_CD)) {
+                                wVendor = row.VENDOR;
+                            } else {
+                                wVendor = row.VENDOR + " <font color='#FF00CC'>At<font color='#3333FF'> " + row.MANUFACTURER;
+                            }
+                            return wVendor;
+                        }
+                    },
+                    {
+                        data: "",
+                        render: function (row, type, row, meta) {
+                            var html = "";
+                            if (row.NEW_VENDOR == "Y") {
+                                html = "<font size='1' color=crimson face='Verdana'><b>Yes</b></font>";
+                            } else {
+                                html = "<font size='1' face='Verdana'></font>";
+                            }
+                            return html;
+                        }
+                    },
+                    { data: "CONSIGNEE" },
+                    {
+                        data: "",
+                        render: function (data, type, row, meta) {
+
+                            var html = "";
+                            if (parseInt(row.COUNT) > 1) {
+                                html = "<font size='1' face='Verdana'>" + row.ITEM_DESC_PO + "<font color='#FF00CC'> and more items as per call";
+                            } else {
+                                html = "<font size='1' face='Verdana'>" + row.ITEM_DESC_PO;
+                            }
+                            return html;
+                        }
+                    },
+                    { data: "EXT_DELV_DT" },
+                    { data: "INSP_DESIRE_DT" },
+                    { data: "CALL_MARK_DT" },
+                    { data: "CALL_SNO" },
+                    {
+                        data: "", // Calls Documents pdf
+                        render: function (data, type, row, meta) {
+                            var fpath = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Vendor)" + "/CALLS_DOCUMENTS" + row.CASE_NO + "-" + row.CALL_RECV_DT.toString().substring(6, 4) + row.CALL_RECV_DT.toString().substring(3, 2) + row.CALL_RECV_DT.toString().substring(0, 2) + row.CASE_NO + ".pdf";
+                            var html = "";
+                            if (row.IsCallDocument) {
+                                html = "<a href='" + fpath + "' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>Call Documents</font></a>";
+                            } else {
+                                html = "<font size='1' face='Verdana'></font>";
+                            }
+                            return html;
+                        }
+                    },
+                    {
+                        data: "", //Check PO_SOURCE == C and CaseNo tof and PDf
+                        render: function (data, type, row, meta) {
+                            var fpath = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Vendor)" + "/CALLS_DOCUMENTS" + row.CASE_NO + "-" + row.CALL_RECV_DT.toString().substring(6, 4) + row.CALL_RECV_DT.toString().substring(3, 2) + row.CALL_RECV_DT.toString().substring(0, 2) + row.CASE_NO + ".pdf";
+                            var html = "";
+                            if (row.PO_SOURCE == "C") {
+                                html = "<a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.SS + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
+                            }
+                            else {
+                                if (row.IsCaseNoTif == true) {
+                                    html = "<a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
+                                }
+                                else if (row.IsCaseNoPdf == true) {
+                                    html = "<a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
+                                } else {
+                                    html = "<font size='1' face='Verdana' >" + row.CASE_NO;
+                                }
+                            }
+                            return html;
+                        }
+                    },
+                    //{ data: "VIST" }, Status  = M then display column for VIST
+                    { data: "SOURCE" },
+                    {
+                        data: "", // Call Status Full
+                        render: function (data, type, row, meta) {
+                            
+                            var html = "<font size='1' face='Verdana' color=" + row.COLOUR + ">" + row.CALL_STATUS_FULL + "</font>";
+                            if (row.CALL_STATUS == "U") {
+                                if (row.Lab_Status != "" && row.Lab_Status != null) {
+                                    //if (data != "" && data != null) {
+                                    html += "<br><p><font size='1' face='Verdana'>" + row.Lab_Status + "</font></p>";
+                                } else {
+                                    html += "<br><p><font size='1' face='Verdana'>Sample Not Recieved in Lab.</font></p>";
+                                }
+
+                                if (row.IsLabPdf == true) {
+                                    html += "<a href='/RBS/LAB/" + row.MyFile_ex + ".PDF' Font-Names='Verdana' Font-Size='8pt'>Lab Report</a>"
+                                }
+                            }
+                            return html;
+                        }
+                    },
+                    //{ data: "" }, //IC_PHOTO path doc
+                    { data: "REMARKS" },
+                    { data: "PO_NO" },
+                    { data: "PO_DATE" },
+                    { data: "MFG_PERS" },
+                    { data: "MFG_PHONE" },
+                    { data: "USER_ID" },
+                    { data: "DATETIME" }
+                ],
+                "order": [[0, "asc"]]
             });
         }
     </script>

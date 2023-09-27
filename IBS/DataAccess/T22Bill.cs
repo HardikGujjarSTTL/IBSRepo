@@ -107,6 +107,16 @@ public partial class T22Bill
 
     public string? SapStatus { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
 
     public virtual ICollection<T30IcReceived> T30IcReceiveds { get; set; } = new List<T30IcReceived>();

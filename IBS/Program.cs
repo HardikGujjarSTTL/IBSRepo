@@ -216,6 +216,9 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
+builder.Services.AddScoped<IIEICPhotoEnclosedReportRepository, IEICPhotoEnclosedReportRepository>();
+builder.Services.AddScoped<IDailyIEWorkPlanReportRepository, DailyIEWorkPlanReportRepository>();
+builder.Services.AddScoped<IPeriodWiseTechnicalReportRepository, PeriodWiseTechnicalReportRepository>();
 builder.Services.AddScoped<IPeriodWiseChecksheetReportRepository, PeriodWiseChecksheetReportRepository>();
 builder.Services.AddScoped<IVendorPerformanceReportRepository, VendorPerformanceReportRepository>();
 builder.Services.AddScoped<IIEWiseTrainingReportRepository, IEWiseTrainingReportRepository>();
@@ -237,6 +240,9 @@ builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepo
 builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 builder.Services.AddScoped<ILabReportsRepository, LabReportsRRepository>();
 builder.Services.AddScoped<IOtherReportsRepository, OtherReportsRepository>();
+builder.Services.AddScoped<IReceiptsRemitanceRepository, ReceiptsRemitanceRRepository>();
+builder.Services.AddScoped<IBillingRepository, BillingRRepository>();
+builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 
 var app = builder.Build();
 

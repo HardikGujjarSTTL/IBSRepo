@@ -9,6 +9,7 @@ using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using IBS.Models;
+using System.IO;
 
 namespace IBS.Controllers.Reports.OtherReports
 {
@@ -36,12 +37,31 @@ namespace IBS.Controllers.Reports.OtherReports
             return View(model);
         }
 
+        public IActionResult ManageCoIeWiseCalls(string ReportType, string Case_No, string Call_Recv_Date, string Call_SNo)
+        {
+            OtherReportsModel model = new() { ReportType = ReportType, Case_No = Case_No, Call_Recv_Date = Call_Recv_Date, Call_SNo = Call_SNo };
+            return View("Manage", model);
+        }
+
         public IActionResult CoWiseIE()
         {
             ControllingOfficerIEModel model = otherReportsRepository.GetControllingOfficerWiseIE(Region);
             GlobalDeclaration.ControllingOfficerIE = model;
             return PartialView(model);
         }
+
+        public IActionResult CoIeWiseCalls(string Case_No, string Call_Recv_Date, string Call_SNo)
+        {
+            CoIeWiseCallsModel model = otherReportsRepository.GetCoIeWiseCallsReport(Case_No, Call_Recv_Date, Call_SNo);
+            GlobalDeclaration.CoIeWiseCalls = model;
+            return PartialView(model);
+        }
+
+        public IActionResult TermsAndConditions()
+        {
+            return View();
+        }
+
 
         #region Other Event
         [HttpGet]
@@ -61,6 +81,41 @@ namespace IBS.Controllers.Reports.OtherReports
         #endregion
 
         [HttpPost]
+        public IActionResult Get_CoIeWiseCalls([FromBody] DTParameters dTParameters)
+        {
+            DTResult<CoIeWiseCallsListModel> dtResult = new();
+            //IE = IE == "" ? null : IE;
+            dtResult = otherReportsRepository.GetCoIeWiseCalls(dTParameters);
+            var data = dtResult.data.ToList();
+            for (int i = 0; i < data.Count(); i++)
+            {
+                var row = data[i];
+                var CallDocPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.Vendor) + "/CALLS_DOCUMENTS" + row.CASE_NO + "-" + row.CALL_RECV_DT.Substring(6, 4) + row.CALL_RECV_DT.Substring(3, 2) + row.CALL_RECV_DT.Substring(0, 2) + row.CASE_NO + ".pdf";
+                row.IsCallDocument = System.IO.File.Exists(CallDocPath) == true ? true : false;
+
+                if (row.PO_SOURCE != "C")
+                {
+                    var tifPath = env.WebRootPath + "/CASE_NO/" + row.CASE_NO + ".TIF";
+                    var pdfPath = env.WebRootPath + "/CASE_NO/" + row.CASE_NO + ".PDF";
+                    row.IsCaseNoTif = System.IO.File.Exists(tifPath) == true ? true : false;
+                    row.IsCaseNoPdf = System.IO.File.Exists(pdfPath) == true ? true : false;
+                }
+
+                if (row.CALL_STATUS == "U")
+                {
+                    string MyFile_ex;
+                    var mdt_ex = Common.DateConcate(row.CALL_RECV_DT);
+                    MyFile_ex = row.CASE_NO.Trim() + "_" + row.CALL_SNO.Trim() + "_" + mdt_ex;
+                    row.MyFile_ex = MyFile_ex;
+                    string fpath = env.WebRootPath + "/RBS/LAB/" + MyFile_ex + ".PDF";
+                    row.IsLabPdf = System.IO.File.Exists(fpath) == true ? true : false;
+                }
+            }
+            dtResult.data = data.AsQueryable();
+            return Json(dtResult);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> GeneratePDF(string ReportType)
         {
             string htmlContent = string.Empty;
@@ -69,6 +124,11 @@ namespace IBS.Controllers.Reports.OtherReports
             {
                 ControllingOfficerIEModel model = GlobalDeclaration.ControllingOfficerIE;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoWiseIE.cshtml", model);
+            }
+            else if(ReportType == "COIEWiseCalls")
+            {
+                CoIeWiseCallsModel model = GlobalDeclaration.CoIeWiseCalls;
+                htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoIeWiseCalls.cshtml", model);
             }
 
             await new BrowserFetcher().DownloadAsync();
