@@ -755,5 +755,7 @@ namespace IBS.Helper
 
         public static CallDetailsDashboradModel CallDetailsDashborad { get; set; }
 
+        public static AllICStatusModel AllICStatus { get; set; }
+        public static ReInspectionICsModel ReInspectionICs { get; set; }
     }
 }
