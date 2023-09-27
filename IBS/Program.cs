@@ -237,6 +237,7 @@ builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepo
 builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 builder.Services.AddScoped<ILabReportsRepository, LabReportsRRepository>();
 builder.Services.AddScoped<IOtherReportsRepository, OtherReportsRepository>();
+builder.Services.AddScoped<IMonthlyReportsRepository, MonthlyReportsRepository>();
 
 var app = builder.Build();
 

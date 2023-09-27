@@ -723,5 +723,7 @@ namespace IBS.Helper
 
         public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
         public static CoIeWiseCallsModel CoIeWiseCalls { get; set; }
+        public static AllICStatusModel AllICStatus { get; set; }
+        public static ReInspectionICsModel ReInspectionICs { get; set; }
     }
 }
