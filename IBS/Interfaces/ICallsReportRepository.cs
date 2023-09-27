@@ -11,5 +11,6 @@ namespace IBS.Interfaces
         public List<railway_dropdown1> GetValue2(string selectedValue);
         public DTResult<Statement_IeVendorWiseModel> gridData(DTParameters dtParameters);
         public Statement_IeVendorWiseModel Statement_SpecificPO(string ReportType, string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD);
+        public Statement_IeVendorWiseModel Statement_CallMarked(string ReportType, string frmDate, string toDate, string wSortkEy, string Region);
     }
 }
