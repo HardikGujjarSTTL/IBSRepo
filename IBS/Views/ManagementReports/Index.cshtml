@@ -445,101 +445,28 @@
         $(document).ready(function () {
             if ('@ReportType' == 'IE_X' || '@ReportType' == 'CLUSTER_X' || '@ReportType' == 'ICSUBMIT' || '@ReportType' == 'CALLSWITHOUTIC' || '@ReportType' == 'SUPSURPSUMM' || '@ReportType' == 'COUNTIC') {
                 $(".report1").css("display", "");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'RWB') {
-                $(".report1").css("display", "none");
                 $(".RWB").css("display", "");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'R') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
                 $(".RWCO").css("display", "");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'SUPSUR') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
                 $(".SuperSurprise").css("display", "");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'CONSIGN_REJECT') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
                 $(".ConsignReject").css("display", "");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
-
                 $("#RegionConsignReject option[value='Q']").remove();
             }
             else if ('@ReportType' == 'X') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
                 $(".OutstandingOverRegion").css("display", "");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'CLIENTWISEREJ') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
                 $(".ClientWiseRejection").css("display", "");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'NON_CONFORMITY') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
                 $(".NonConformity").css("display", "");
-                $(".TentativeInspection").css("display", "none");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'PENDING_CALLS') {
                 var ReportType = '@ReportType';
@@ -548,27 +475,9 @@
                 window.open(url, '_blank');
             }
             else if ('@ReportType' == 'HIGHVALUE') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
                 $(".TentativeInspection").css("display", "");
-                $(".CallRemarking").css("display", "none");
             }
             else if ('@ReportType' == 'REMARKING') {
-                $(".report1").css("display", "none");
-                $(".RWB").css("display", "none");
-                $(".RWCO").css("display", "none");
-                $(".SuperSurprise").css("display", "none");
-                $(".ConsignReject").css("display", "none");
-                $(".OutstandingOverRegion").css("display", "none");
-                $(".ClientWiseRejection").css("display", "none");
-                $(".NonConformity").css("display", "none");
-                $(".TentativeInspection").css("display", "none");
                 $(".CallRemarking").css("display", "");
             }
             else if ('@ReportType' == 'CALL_DETAILS') {
@@ -611,7 +520,7 @@
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
             let myObject = { ReportType, FromDate, ToDate };
 
-            var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
+            var url = '@Url.Action("Manage1", "ManagementReports")?' + $.param(myObject);
             window.open(url, '_blank');
         }
 
