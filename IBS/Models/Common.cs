@@ -3604,7 +3604,7 @@ namespace IBS.Models
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
             return (from c in context.T09Ies
-                    where c.IeStatus == null && c.IeRegion == Region && ((c.IeCoCd == Convert.ToInt16(CO) && CO != "") || CO == "")
+                    where c.IeStatus == null && c.IeRegion == Region && (CO == "" || (c.IeCoCd == Convert.ToInt16(CO) && CO != "")) 
                     select new SelectListItem
                     {
                         Value = c.IeCd.ToString(),

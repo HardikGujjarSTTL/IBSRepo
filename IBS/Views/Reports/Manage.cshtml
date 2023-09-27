@@ -35,7 +35,7 @@
     var fileName = '';
 
     $(document).ready(function () {
-        debugger
+        
         if ('@ReportType' == 'UNBILLEDIC') {
             loadUnBilledIC();
             fileName = 'UnBilled_IC';
@@ -70,7 +70,6 @@
     }
 
     function loadIE7thCopy() {
-        debugger
         $("#dvReportViewer").load("@Url.Action("IE7thCopyReport")", { Bk_No: '@Model.Bk_No', Set_No: '@Model.Set_No' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

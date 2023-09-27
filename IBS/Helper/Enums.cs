@@ -722,5 +722,10 @@ namespace IBS.Helper
         public static OutstandingOverRegionModel OutstandingOverRegion { get; set; }
 
         public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
+        public static CoIeWiseCallsModel CoIeWiseCalls { get; set; }
+
+        public static PeriodWiseTechnicalRefReportModel PeriodWiseTechnicalRefReport { get; set; }
+
+        public static DailyIECMWorkPlanReportModel DailyIECMWorkPlanReport { get; set; }
     }
 }

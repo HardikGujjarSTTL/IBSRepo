@@ -175,35 +175,7 @@ namespace IBS.Controllers.Reports
             IEDairyModel model = new();
             model = reportsRepository.Get_IE_Dairy( FromDate,  ToDate,  "",  OrderByVisit,  "true", GetUserInfo);
             return PartialView(model);
-        }
-        [Authorization("Reports", "IEDairy", "view")]
-        public IActionResult IEDairy()
-        {
-            var action = Convert.ToString(Request.Query["actiontype"]) == null ? "" : Convert.ToString(Request.Query["actiontype"]);
-            ViewBag.Action = action;
-            ViewBag.Region = Convert.ToString(GetUserInfo.Region);
-            ViewBag.UserName = Convert.ToString(GetUserInfo.UserName);
-            ViewBag.IECD = Convert.ToString(GetUserInfo.IeCd);
-            return View();
-        }
-
-        //public IActionResult Get_IEDairy([FromBody] DTParameters dtParameters)
-        //{
-        //    DTResult<IEDairyModel> dtList = new();
-        //    try
-        //    {
-        //        var region = GetUserInfo.Region;
-        //        var username = GetUserInfo.UserName;
-        //        var roleName = GetUserInfo.RoleName;
-        //        var iecd = Convert.ToString(GetUserInfo.IeCd);
-        //        dtList = reportsRepository.Get_IE_Dairy(dtParameters, GetUserInfo);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "Reports", "Get_IEDairy", 1, GetIPAddress());
-        //    }
-        //    return Json(dtList);
-        //}
+        }        
 
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string htmlContent)

@@ -30,19 +30,6 @@ namespace IBS.Repositories.Reports
 
             DataSet ds = null;
             DataTable dt = new DataTable();
-
-            string formattedFromDate = "";
-            string formattedToDate = "";
-
-            if (FromDate != null && ToDate != null)
-            {
-                DateTime parsedFromDate = DateTime.ParseExact(FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                DateTime parsedToDate = DateTime.ParseExact(ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
-                formattedFromDate = parsedFromDate.ToString("yyyy/MM/dd");
-                formattedToDate = parsedToDate.ToString("yyyy/MM/dd");
-            }
-
            
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);

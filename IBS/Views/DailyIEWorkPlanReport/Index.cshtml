@@ -1,0 +1,201 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Regions;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["Action"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["Action"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "U") ReportTitle = "Daily IE Work Plan Report";
+   // else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
+
+    ViewData["Title"] = ReportTitle;
+
+}
+
+@if (ReportType == "U")
+{
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>IE DAILY WORK PLAN REPORT</h2>
+        </div>
+    </div>
+}
+else
+{
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>IE DAILY WORK PLAN EXCEPTION REPORT</h2>
+        </div>
+    </div>
+}
+
+
+<div class="accordion-body">
+    <div class="row my-0" id="divdate">
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="radio" id="IEWise" name="CMWises" value="IEWise">
+                <label for="IEWise">IE Wise</label>
+                <div class="row my-0">
+                    <div class="col-md-12" id="AllIE">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllIEs" name="IEWise" value="AllIE">
+                                <label for="AllIEs">All IE</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="ParticularIEs" name="IEWise" value="ParticularIEs">
+                                <label for="ParticularIEs">Particular IE</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6" id="particularIE">
+                        @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="radio" id="CMWise" name="CMWises" value="CMWise">
+                <label for="CMWise">Controlling Manager Wise</label>
+                <div class="row my-0">
+                    <div class="col-md-12" id="AllCMWise">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllCM" name="CMWise" value="AllCM">
+                                <label for="AllCM">All CM </label>
+                            </li>
+                            <li>
+                                <input type="radio" id="ParticularCMs" name="CMWise" value="ParticularCMs">
+                                <label for="ParticularCMs">Particular CM</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6" id="particularCM">
+                        @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
+                    </div>
+                </div>
+            </div>
+            @if (ReportType == "E")
+            {
+                <div class="col-md-4">
+                    <div class="row my-0">
+                        <label for="CMWise">Sorted On</label>
+                        <div class="col-md-12">
+                            <ul class="radioListForm m-0">
+                                <li>
+                                    <input type="radio" id="SortedIE" name="visitdate" value="SortedIE">
+                                    <label for="SortedIE">IE</label>
+                                </li>
+                                <li>
+                                    <input type="radio" id="visitdate" name="visitdate" value="visitdate">
+                                    <label for="visitdate">VISIT DATE</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ddlsupercm").hide();
+            $("#ddliename").hide();
+            $("#AllIE").hide();
+            $("#AllCMWise").hide();
+        });
+
+        $('#IEWise').change(function () {
+            $("#AllIE").show();
+            $("#AllCMWise").hide();
+            $("#ddlsupercm").hide();
+            $("#ddliename").hide();
+        });
+
+        $('#CMWise').change(function () {
+            $("#AllCMWise").show();
+            $("#AllIE").hide();
+            $("#ddlsupercm").hide();
+            $("#ddliename").hide();
+        });
+
+        $('#ParticularIEs').change(function () {
+            $("#ddlsupercm").hide();
+            $("#ddliename").show();
+        });
+
+        $('#ParticularCMs').change(function () {
+            $("#ddlsupercm").show();
+            $("#ddliename").hide();
+        });
+
+        $('#AllCM').change(function () {
+            $("#ddlsupercm").hide();
+            $("#ddliename").hide();
+        });
+
+        $('#AllIEs').change(function () {
+            $("#ddlsupercm").hide();
+            $("#ddliename").hide();
+        });
+
+        function ClearControls1() {
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#ddlsupercm").hide();
+            $("#ddliename").hide();
+            $("#AllIE").hide();
+            $("#AllCMWise").hide();
+        }
+
+        function ViewReport() {
+
+            var lstIE = $('#ddliename').val();
+            var lstCM = $('#ddlsupercm').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            //var StatusOffertxt = $('#StatusOffer option:selected').text();
+           // var Regiontxt = $('#Region option:selected').text();
+            var AllIEs = $("#AllIEs").is(":checked") == true ? "true" : "false";
+            var ParticularIEs = $("#ParticularIEs").is(":checked") == true ? "true" : "false";
+            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+            var ParticularCMs = $("#ParticularCMs").is(":checked") == true ? "true" : "false";
+            var IEWise = $("#IEWise").is(":checked") == true ? "true" : "false";
+            var CMWise = $("#CMWise").is(":checked") == true ? "true" : "false";
+            var SortedIE = $("#SortedIE").is(":checked") == true ? "true" : "false";
+            var visitdate = $("#visitdate").is(":checked") == true ? "true" : "false";
+            var ReportType = '@ReportType';
+
+            let myObject = { FromDate, ToDate, lstIE, lstCM, AllIEs, ParticularIEs, AllCM, ParticularCMs, ReportType, IEWise, CMWise, SortedIE, visitdate };
+
+            var url = '@Url.Action("Manage", "DailyIEWorkPlanReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}
