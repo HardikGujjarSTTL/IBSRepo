@@ -43,6 +43,7 @@ namespace IBS.Controllers
         {
             ViewBag.From = FromDate;
             ViewBag.To = ToDate;
+            ViewBag.ReportType = ReportType;
             
             ViewBag.year = Year;
             if(Convert.ToBoolean(ReportBasedon) == true)

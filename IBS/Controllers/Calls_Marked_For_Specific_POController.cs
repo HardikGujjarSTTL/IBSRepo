@@ -37,7 +37,8 @@ namespace IBS.Controllers
 
         public IActionResult edit(string PO_NO , string PO_DT, string RLY_NONRLY, string RLY_CD)
         {
-            return View();
+           Calls_Marked_For_Specific_POModel dTResult = callmarkedforspecificpo.edit(PO_NO, PO_DT, RLY_NONRLY, RLY_CD);
+            return View(dTResult);
         }
 
         public IActionResult Index()

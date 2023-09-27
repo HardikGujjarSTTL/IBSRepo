@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "DAILY IE WISE CALLS";
+   
+   
+}
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Daily IE Wise Call</h2>
+    </div>
+</div>
+<section>
+    <div class="task-listinput">     
+            <div class="accordion-body">
+                <div class="row my-0">
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Call Date </label>
+                        <input type="text" id="callDate" class="input datepicker">
+                    </div>
+                </div>
+
+                <div class="savenext-btn">
+                <button type="button" class="save-btn" onclick="submit();">Search</button>
+                    @*<button type="submit" onclick="find();">Search2</button>*@
+                </div>
+            </div>
+    </div>
+</section>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+
+        $(function () {
+           
+        });
+
+        function submit() {
+            debugger;
+            var callDate = $("#callDate").val();
+            var RegNo = '@ViewBag.Region';
+            var QueryString = "RptFlag=4" +
+                "&callDate=" + encodeURIComponent(callDate) +
+                "&RegNo=" + encodeURIComponent(RegNo);
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+            if (oWin === null || typeof oWin === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+
+            window.opener = 'x';
+            window.close();
+           
+        }
+
+       
+
+
+    </script>
+}

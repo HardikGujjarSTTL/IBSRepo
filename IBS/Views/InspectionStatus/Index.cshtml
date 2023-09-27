@@ -1,4 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+﻿    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
     string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
@@ -15,7 +15,7 @@
         <h2>@ReportTitle</h2>
     </div>
 </div>
-<div class="task-listinput">
+<div class="task-listinput">    
     <div class="accordion-body">
         <div class="task-inner row report1" style="display: none">
             <div class="row">
