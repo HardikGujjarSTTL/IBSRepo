@@ -1,0 +1,57 @@
+﻿@model IBS.Models.Statement_IeVendorWiseModel
+
+<div>
+    @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></font></p> *@
+    <h3 class="center">(@ViewBag.Region)</h3>
+
+
+
+    <h3 class="center">Statement of IE & Vendor Wise Calls Cancelled during the Period <span class="orangeText"> @ViewBag.Frm </span> To <span class="orangeText">@ViewBag.To </span></h3>
+        
+       
+   
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Cancel Date</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Cancel Reason</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Cancel Status</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Cancel Charges</font></b></th>
+
+                </tr>
+                @if (Model != null && Model.statement_IeVendorWiseModels.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.statement_IeVendorWiseModels)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.RLY_CD</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CANCEL_DT</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CANCEL_REASON</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_CANCEL_STATUS</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_CANCEL_CHARGES</font></td>
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

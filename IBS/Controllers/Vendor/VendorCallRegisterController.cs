@@ -6,7 +6,9 @@ using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Net.NetworkInformation;
+using static IBS.Helper.Enums;
 
 namespace IBS.Controllers.Vendor
 {
@@ -25,27 +27,27 @@ namespace IBS.Controllers.Vendor
         {
             VenderCallRegisterModel model = new();
             //model = venderRepository.FindByID(UserId);
-            model.CDATE = DateTime.Now.ToString("dd-MM-yyyy");
+            model.CDATE = DateTime.Now.ToString("dd/MM/yyyy");
             model.CDAY = DateTime.Now.DayOfWeek.ToString("D");
             model.CTYM = DateTime.Now.ToString("HH24MI");
 
             if (model.CDAY == "1")
             {
-                model.CDATE = DateTime.Now.AddDays(1).ToString("dd-MM-yyyy");
+                model.CDATE = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
             }
             if (model.CaseNo == null || model.CallRecvDt == null)
             {
-                if (model.CDATE == "27-01-2023")
+                if (model.CDATE == "27/01/2023")
                 {
-                    model.CallRecvDt = Convert.ToDateTime("27-01-2023");
+                    model.CallRecvDt = Convert.ToDateTime("27/01/2023");
                 }
-                else if (model.CDATE == "15-08-2023")
+                else if (model.CDATE == "15/08/2023")
                 {
-                    model.CallRecvDt = Convert.ToDateTime("16-08-2023");
+                    model.CallRecvDt = Convert.ToDateTime("16/08/2023");
                 }
-                else if (model.CDATE == "02-10-2023")
+                else if (model.CDATE == "02/10/2023")
                 {
-                    model.CallRecvDt = Convert.ToDateTime("03-10-2023");
+                    model.CallRecvDt = Convert.ToDateTime("03/10/2023");
                 }
                 else
                 {
@@ -71,7 +73,7 @@ namespace IBS.Controllers.Vendor
         {
             VenderCallRegisterModel model = new();
 
-            if (CaseNo != null && CallRecvDt != null && CallSno != null)
+            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = venderRepository.FindByID(CaseNo, CallRecvDt, CallSno, UserName);
             }
@@ -289,7 +291,7 @@ namespace IBS.Controllers.Vendor
             {
                 string i = "";
                 string msg = "Message Delete Successfully.";
-                if(model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
+                if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
                 {
                     model.UserId = UserName;
                     model.Createdby = UserName;
@@ -325,5 +327,162 @@ namespace IBS.Controllers.Vendor
             DTResult<VenderCallRegisterModel> dTResult = venderRepository.GetDataListReport(dtParameters);
             return Json(dTResult);
         }
+
+        //public IActionResult GetAddCallDetails(string CaseNo)
+        //{
+        //    DTResult<VenderCallRegisterModel> dTResult = venderRepository.FindByAddDetails(CaseNo, UserId);
+        //    return Json(dTResult);
+        //}
+
+        //public IActionResult MAXCALL(string CaseNo,string CallStage)
+        //{
+        //    return Json(Common.GetMAXCALL(CaseNo, CallStage));
+        //}
+
+        [HttpPost]
+        public IActionResult VendorCallRegister(string CaseNo, DateTime CallRecvDt, string CallStage)
+        {
+            VenderCallRegisterModel model = new();
+            try
+            {
+
+                if (CaseNo != null)
+                {
+                    model = venderRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, UserId);
+                    if (model.OnlineCallStatus == "Y")
+                    {
+                        if (model.InspectingAgency == "R")
+                        {
+                            if (model.PoOrLetter == "P")
+                            {
+                                if (model.PendingCharges > 0)
+                                {
+                                    AlertDanger("Call Cancellation/Rejection charges are pending, Kindly submit the pending charges before submitting the call.");
+                                }
+                                else
+                                {
+                                    string check = model.VendCd;
+                                    if (check == "2")
+                                    {
+                                        int cno = model.MaxCount;
+                                        if (cno == 0)
+                                        {
+                                            if (model.RlyNonrly == "R" || model.RlyNonrly == "U")
+                                            {
+                                                string dp = model.dp;
+                                                if (dp == "0")
+                                                {
+                                                    AlertDanger("Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.");
+                                                }
+                                                else if (dp == "2")
+                                                {
+                                                    AlertDanger("Delivery Period not available, so Call shall not be accepted.");
+                                                }
+                                                else
+                                                {
+                                                    return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            AlertDanger("Call is already registered against given Case No. and the Call Status is still Pending, so New Call shall not be accepted.");
+                                        }
+                                    }
+                                    else if (check == "0")
+                                    {
+                                        AlertDanger("No Record Present for the Given Case No.!!! ");
+                                    }
+                                    else
+                                    {
+                                        AlertDanger("You are not Authorised to Add The Call For Other Vendors.!!! ");
+                                    }
+
+                                }
+                            }
+                            else if (model.PoOrLetter == "L")
+                            {
+                                if (model.RlyNonrly == "R" || model.RlyNonrly == "U")
+                                {
+                                    string dp = model.dp;
+                                    if (dp == "0")
+                                    {
+                                        AlertDanger("Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.");
+                                    }
+                                    else if (dp == "2")
+                                    {
+                                        AlertDanger("Delivery Period not available, so Call shall not be accepted.");
+                                    }
+                                    else
+                                    {
+                                        return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                    }
+                                }
+                                else
+                                {
+                                    return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                }
+                            }
+                            else
+                            {
+                                AlertDanger("Online Call cannot be registered as Purchase Order OR Letter of Offer is Blank.");
+                            }
+                        }
+                        else
+                        {
+                            if (model.InspectingAgency == "C")
+                            {
+                                if (model.Remarks == "")
+                                {
+                                    AlertDanger("RITES is not the Inspection Agency for this CASE.");
+                                }
+                                else
+                                {
+                                    AlertDanger("RITES is not the Inspection Agency for this CASE. Kindly see the comments below : " + "\\n" + model.Remarks.Trim());
+                                }
+                            }
+                            else if (model.InspectingAgency == "X")
+                            {
+                                if (model.Remarks == "")
+                                {
+                                    AlertDanger("Railways has cancelled the PO for this CASE.");
+                                }
+                                else
+                                {
+                                    AlertDanger("Railways has cancelled the PO for this CASE. Kindly see the comments below : " + "\\n" + model.Remarks.Trim());
+                                }
+                            }
+                            else if (model.InspectingAgency == "S")
+                            {
+                                if (model.Remarks == "")
+                                {
+                                    AlertDanger("RITES has Suspended the Inspection against this PO.");
+                                }
+                                else
+                                {
+                                    AlertDanger("RITES has Suspended the Inspection against this PO. Kindly see the comments below : " + "\\n" + model.Remarks.Trim());
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AlertDanger("Please Your Call are Register in Online.");
+                    }
+                    //return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "VendorCallRegister", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+
     }
 }

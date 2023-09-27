@@ -1,4 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+﻿    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
     string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
@@ -18,7 +18,7 @@
         <h2>@ReportTitle</h2>
     </div>
 </div>
-<div class="task-listinput">
+<div class="task-listinput">    
     <div class="accordion-body">
         <div class="task-inner row report1" style="display: none">
             <div class="row my-0">
@@ -127,6 +127,7 @@
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
             </div>
+        </div>
         </div>
         <div class="task-inner row my-0 report2" style="display: none">
             <div class="row my-0">
@@ -359,18 +360,19 @@
                 <div class="col-md-3 mb-3">
                     <label for="PropertyId">Client Type</label>
                     @Html.DropDownList("ClientType", Common.ClientWise(),"--Select--", new { @id="ddlclienttype"})
-                    <span class="text-danger"></span>
+                    <span class="text-danger field-validation-error" id="spnErrorClientType"></span>
                 </div>
                 <div class="col-md-7 mb-3">
                     <div class="col-md-12 mb-3">
                         <label for="PropertyId">Select Client</label>
                         <select id="selectclient"></select>
+                        <span class="text-danger field-validation-error" id="spnErrorSelectClient"></span>
                     </div>
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="PropertyId">PO Date</label>
                     <input type="text" class="input datepicker" id="dtpo" />
-                    <span class="text-danger"></span>
+                    <span class="text-danger field-validation-error" id="spnErrorPODate"></span>
                 </div>
             </div>
             <div class="col-md-3" style="margin-top: 30px;margin-left:40%;">
@@ -407,6 +409,29 @@
             location.reload(true);
         }
         function Submit() {
+            
+            $("#spnErrorClientType").html("");
+            $("#spnErrorSelectClient").html("");
+            $("#spnErrorPODate").html("");
+
+            var IsValid = true;
+
+            if ($("#ddlclienttype").val() == "") {
+                $("#spnErrorClientType").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#selectclient").val() == "") {
+                $("#spnErrorSelectClient").html("The To Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtpo").val() == "") {
+                $("#spnErrorPODate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+
+
+            if (!IsValid) return;
             var ClientType = $("#ddlclienttype").val();
             var SelectClient = $("#selectclient").val();
             var PODate = $("#dtpo").val();
@@ -942,6 +967,8 @@
             window.open(url, '_blank');
         }
         function ViewReport5(PO_NO, PO_DT, RLY_NONRLY, RLY_CD) {
+            
+            
             
             // var ReportType = "Summary of Consignee Wise Inspections";
             var ReportType = '@ReportType';

@@ -1,13 +1,13 @@
 ﻿@model IBS.Models.InterUnit_TransferModel
 @{
-    ViewData["Title"] = "Inter Unit Transfer";
-        string clsView = "";
-    if (Model.BANK_CD > 0)
-        {
-            clsView = "Permission_View";
-        }
+    //ViewData["Title"] = "Inter Unit Transfer";
+    //    string clsView = "";
+    //if (Model.BANK_CD > 0)
+    //    {
+    //        clsView = "Permission_View";
+    //    }
 }
-<section class="@clsView">
+<section >
     <div class="task-listinput">
         
             <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnit_Transfer" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmUnitTransfer">

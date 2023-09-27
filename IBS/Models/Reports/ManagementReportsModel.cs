@@ -27,6 +27,15 @@
         public string ClientType { get; set; }
 
         public string BPORailway { get; set; }
+
+        public int IeCd { get; set; }
+
+        public string SortedOn { get; set; }
+
+        public string CallRemarkingDate { get; set; }
+
+        public string CallsStatus { get; set; }
+
     }
 
     public class IEPerformanceModel
@@ -543,4 +552,278 @@
         }
     }
 
+    public class NonConformityModel
+    {
+        public string FromYearMonth { get; set; }
+
+        public string ToYearMonth { get; set; }
+
+        public int IeCd { get; set; }
+
+        public string IEName { get; set; }
+
+        public List<NonConformityListModel> lstNonConformity { get; set; }
+
+        public class NonConformityListModel
+        {
+            public int ID { get; set; }
+
+            public string IE_CD { get; set; }
+
+            public string NCR_MON { get; set; }
+
+            public string NCR_MM { get; set; }
+
+            public decimal A01 { get; set; }
+
+            public decimal A02 { get; set; }
+
+            public decimal A03 { get; set; }
+
+            public decimal A04 { get; set; }
+
+            public decimal A05 { get; set; }
+
+            public decimal A06 { get; set; }
+
+            public decimal A07 { get; set; }
+
+            public decimal A08 { get; set; }
+
+            public decimal A09 { get; set; }
+
+            public decimal A10 { get; set; }
+
+            public decimal A11 { get; set; }
+
+            public decimal A12 { get; set; }
+
+            public decimal A99 { get; set; }
+
+            public decimal B01 { get; set; }
+
+            public decimal B02 { get; set; }
+
+            public decimal B03 { get; set; }
+
+            public decimal B04 { get; set; }
+
+            public decimal B05 { get; set; }
+
+            public decimal B06 { get; set; }
+
+            public decimal B07 { get; set; }
+
+            public decimal B08 { get; set; }
+
+            public decimal B09 { get; set; }
+
+            public decimal B10 { get; set; }
+
+            public decimal B11 { get; set; }
+
+            public decimal B12 { get; set; }
+
+            public decimal B13 { get; set; }
+
+            public decimal B14 { get; set; }
+
+            public decimal B99 { get; set; }
+
+            public decimal C01 { get; set; }
+
+            public decimal C02 { get; set; }
+
+            public decimal C03 { get; set; }
+
+            public decimal C04 { get; set; }
+
+            public decimal C05 { get; set; }
+
+            public decimal C06 { get; set; }
+
+            public decimal C99 { get; set; }
+        }
+    }
+
+    public class PendingCallsModel
+    {
+        public List<PendingCallsListModel> lstPendingCalls { get; set; }
+
+        public class PendingCallsListModel
+        {
+            public string REGION { get; set; }
+
+            public string SERIAL_CODE { get; set; }
+
+            public decimal GRO_SEVEN_INSP { get; set; }
+
+            public decimal GRO_SEVEN_NSIC { get; set; }
+
+            public decimal GRO_FIVE_INSP { get; set; }
+
+            public decimal GRO_FIVE_NSIC { get; set; }
+
+            public decimal GRP_SEVEN_INSP { get; set; }
+
+            public decimal GRP_SEVEN_NSIC { get; set; }
+
+            public decimal GRP_FIVE_INSP { get; set; }
+
+            public decimal GRP_FIVE_NSIC { get; set; }
+
+        }
+    }
+
+    public class ICIssuedNotReceivedModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<ICIssuedNotReceivedListModel> lstICIssuedNotReceived { get; set; }
+
+        public class ICIssuedNotReceivedListModel
+        {
+            public string CO_NAME { get; set; }
+
+            public string IE_NAME { get; set; }
+
+            public decimal NO_IC { get; set; }
+        }
+    }
+
+    public class TentativeInspectionFeeWisePendingCallsModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<TentativeInspectionFeeWisePendingCallsListModel> lstTentativeInspectionFeeWisePendingCalls { get; set; }
+
+        public class TentativeInspectionFeeWisePendingCallsListModel
+        {
+            public int ID { get; set; }
+
+            public string CASE_NO { get; set; }
+
+            public string CALL_SNO { get; set; }
+
+            public DateTime? CALL_RECV_DT { get; set; }
+
+            public string Display_CALL_RECV_DT { get { return this.CALL_RECV_DT != null ? Common.ConvertDateFormat(this.CALL_RECV_DT.Value) : ""; } }
+
+            public string IE_NAME { get; set; }
+
+            public string CO_NAME { get; set; }
+
+            public string CLIENT_RLY { get; set; }
+
+            public string RLY { get; set; }
+
+            public decimal PENDING_SINCE { get; set; }
+
+            public DateTime? INSP_DESIRE_DATE { get; set; }
+
+            public string Display_INSP_DESIRE_DATE { get { return this.INSP_DESIRE_DATE != null ? Common.ConvertDateFormat(this.INSP_DESIRE_DATE.Value) : ""; } }
+
+            public DateTime? EXT_DELV_DATE { get; set; }
+
+            public string Display_EXT_DELV_DATE { get { return this.EXT_DELV_DATE != null ? Common.ConvertDateFormat(this.EXT_DELV_DATE.Value) : ""; } }
+
+            public decimal MAT_VALUE { get; set; }
+
+            public decimal INSP_FEE { get; set; }
+
+        }
+    }
+
+    public class CallRemarkingModel
+    {
+        public string Region { get; set; }
+
+        public DateTime? FromDate { get; set; }
+
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+
+        public List<CallRemarkingListModel> lstCallRemarking { get; set; }
+
+        public class CallRemarkingListModel
+        {
+            public int ID { get; set; }
+
+            public string CaseNo { get; set; }
+
+            public DateTime? CallRecvDt { get; set; }
+
+            public string Display_CallRecvDt { get { return this.CallRecvDt != null ? Common.ConvertDateFormat(this.CallRecvDt.Value) : ""; } }
+
+            public int? CallSno { get; set; }
+
+            public string RemarkingStatus { get; set; }
+
+            public string RemarkReason { get; set; }
+
+            public string IE_Name_From { get; set; }
+
+            public string IE_Name_To { get; set; }
+
+            public int? FrIePendingCalls { get; set; }
+
+            public int? ToIePendingCalls { get; set; }
+
+            public string User_Name { get; set; }
+
+            public DateTime? RemInitDatetime { get; set; }
+
+            public string Display_RemInitDatetime { get { return this.RemInitDatetime != null ? Common.ConvertDateTimeFormat(this.RemInitDatetime.Value) : ""; } }
+
+            public string User_Name_App { get; set; }
+
+            public DateTime? RemAppDatetime { get; set; }
+
+            public string Display_RemAppDatetime { get { return this.RemAppDatetime != null ? Common.ConvertDateTimeFormat(this.RemAppDatetime.Value) : ""; } }
+
+            public string CallRemarkStatus { get; set; }
+
+        }
+    }
+
+    public class CallDetailsDashboradModel
+    {
+        public string Region { get; set; }
+
+        public List<CallDetailsDashboradListModel> lstCallDetailsDashborad { get; set; }
+
+        public class CallDetailsDashboradListModel
+        {
+            public string IE_DEPT { get; set; }
+
+            public decimal CALL_MARKED { get; set; }
+
+            public decimal CALL_ATTENDED { get; set; }
+
+            public decimal CALL_PENDING { get; set; }
+
+            public decimal IE_NO { get; set; }
+
+            public decimal AVG_PEN { get; set; }
+        }
+    }
 }

@@ -12,68 +12,59 @@
 <div class="task-listinput">
     <form role="form" asp-controller="InspectionCert" asp-action="Index" id="frmDetails">
         <div class="accordion-body" style="overflow-x: auto;">
-            <table class="tableData">
-                <tr>
-                    <td style="background-color:#ccccff" colSpan="2">
-                        <span>UPDATE INSPECTION CERTIFICATE</span>
-                    </td>
-                    <td colSpan="1">
-                    </td>
-                    <td style="background-color:#ccccff" colSpan="3">
-                        <span>NEW INSPECTION CERTIFICATE</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" style="background-color:#ffcccc" colSpan="1">
-                        <span>Book No.</span>
-                    </td>
-                    <td align="center" style="background-color:#ffcccc" colSpan="1">
-                        <span>Set No.</span>
-                    </td>
-                    <td rowspan="2"></td>
-                    <td align="center" style="background-color:#ffcccc" colSpan="1">
-                        <span>Case No.</span>
-                    </td>
-                    <td align="center" style="background-color:#ffcccc" colSpan="1">
-                        <span>Call Recieve Date</span>
-                    </td>
-                    <td align="center" style="background-color:#ffcccc" colSpan="1">
-                        <span>Call SNO.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text" asp-for="Bkno" class="input" maxlength="30" style="text-transform: uppercase;">
-                    </td>
-                    <td>
-                        <input type="text" asp-for="Setno" class="input" maxlength="30" style="text-transform: uppercase;">
-                    </td>
-                    <td>
-                        <input type="text" asp-for="Caseno" class="input" maxlength="30" style="text-transform: uppercase;">
-                    </td>
-                    <td>
-                        <input type="text" asp-for="Callrecvdt" class="datepicker" maxlength="30">
-                    </td>
-                    <td>
-                        <input type="text" asp-for="Callsno" class="input" maxlength="30" style="text-transform: uppercase;">
-                    </td>
-                </tr>
-
-            </table>
+            <h3 class="heading3">New Inspection Certificate </h3>
             <div class="row my-0">
-                <div class="col-md-9 mb-3">
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Case No.</label>
+                        <input type="text" class="input" asp-for="Caseno" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Call Recieve Date</label>
+                        <input type="text" class="datepicker" asp-for="Callrecvdt" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Call SNo.</label>
+                        <input type="text" class="input" asp-for="Callsno" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="heading3">Update Inspection Certificate </h3>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Book No.</label>
+                        <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Set No.</label>
+                        <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="btnSearch" onclick="Search();">Search</button>
+                    <button type="button" class="save-btn" id="btnAddNew">New Certificate</button>
                     <button type="button" class="reset-btn active" id="btnModify">Modify</button>
                     <button type="button" class="reset-btn" id="btnDelete">Delete</button>
                     <button type="button" class="reset-btn" id="btnChangeConsignee">Change Consignee</button>
                     <button type="button" class="reset-btn" id="btnBPOReturned">Change BPO in Returned Bills</button>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <button type="button" class="reset-btn" id="btnAddNew">New Certificate</button>
-                </div>
             </div>
+
             <div class="row my-0">
-                <div class="col-md-12 mb-4 text-center">
-                    <button type="button" class="reset-btn" id="btnSearch" onclick="Search();">Search</button>
+                <div class="col-md-12 mb-3">
+                    <div class="savenext-btn">
+                        
+                    </div>
                 </div>
             </div>
             <div class="alert alert-warning center">
@@ -156,7 +147,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: false,// Searching Setups
+                searching: true,// Searching Setups
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable", "InspectionCert")",
                     type: "POST",
