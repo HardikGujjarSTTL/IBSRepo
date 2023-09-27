@@ -78,6 +78,8 @@ namespace IBS.Models
 
         public string? OnlineCallStatus { get; set; }
 
+        public string? OfflineCallStatus { get; set; }
+
         public byte? Isdeleted { get; set; }
 
         public int? Createdby { get; set; }

@@ -1,0 +1,161 @@
+﻿@model IBS.Models.LabReportsModel
+
+<div>
+    <h3 class="center">(@ViewBag.Region)</h3>
+
+
+    <h3 class="center">LAB INVOICE DETAILS FOR THE PERIOD: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
+
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">S.NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Name of Party</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">GSTIN</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">State CD</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Invoice No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Invoice Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Type (L/C)</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">HSN Code</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Invoice Type(N/C)</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Invoice Value</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Amount(Without Tax)</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">SGST</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CGST</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">IGST</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Total GST</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Bill Finalised</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sent to Sap</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">IRN_NO</font></b></th>
+
+
+                </tr>
+                @if (Model != null && Model.lstLabReport.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstLabReport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BPO_NAME
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.recipient_gstin_no
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.St_cd
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.invoice_no
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.invoice_dt
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INV_TYPE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.HSN_CD
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INVOICE_TYPE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.Total_AMT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INV_amount
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INV_sgst
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INV_cgst
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INV_igst
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.Total_GST
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BILL_FINALIZE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BILL_SENT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IRN_NO
+                                </font>
+                            </td>
+
+                        </tr>
+                        serialNumber++;
+                    }
+                    <tr class="reportTotal">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        
+                        <td width="15%" valign="top" align="center" colspan="4"><font size="1" face="Verdana"><b>Total(Normal Invoice-Credit Note Invoice)</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@Model.SumAMT</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@Model.Sumamount</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@Model.Sumsgst</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@Model.Sumcgst</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@Model.Sumigst</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@Model.SumGST</b></font></td>
+                    </tr>
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

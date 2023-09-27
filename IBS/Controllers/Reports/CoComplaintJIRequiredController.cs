@@ -4,6 +4,9 @@ using IBS.Interfaces.Reports;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
+using IBS.Models.Reports;
 
 namespace IBS.Controllers.Reports
 {
@@ -11,10 +14,12 @@ namespace IBS.Controllers.Reports
     {
         #region Variables
         private readonly ICoComplaintJIRequiredRepository coComplaintJIRequiredRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public CoComplaintJIRequiredController(ICoComplaintJIRequiredRepository _coComplaintJIRequiredRepository)
+        public CoComplaintJIRequiredController(ICoComplaintJIRequiredRepository _coComplaintJIRequiredRepository, IWebHostEnvironment _env)
         {
             coComplaintJIRequiredRepository = _coComplaintJIRequiredRepository;
+            this.env = _env;
         }
         public IActionResult Index()
         {
@@ -40,7 +45,42 @@ namespace IBS.Controllers.Reports
             JIRequiredReport model = coComplaintJIRequiredRepository.GetJIComplaintsList(FinancialYearsText,FinancialYearsValue);
             ViewBag.Financialperiod = FinancialYearsText;
             ViewBag.Regions = wRegion;
+            GlobalDeclaration.JIRequiredReports = model;
             return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF()
+        {
+            string htmlContent = string.Empty;
+            JIRequiredReport model = GlobalDeclaration.JIRequiredReports;
+            htmlContent = await this.RenderViewToStringAsync("/Views/CoComplaintJIRequired/JICompReport.cshtml", model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
     }
 }

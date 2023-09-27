@@ -20,9 +20,7 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-        <div class="accordion-body">
-            
-                <div class="accordion-body">
+       <div class="accordion-body">
                     <div class="row my-0">
 
 
@@ -93,32 +91,36 @@
 
                      
 
-                        <div class="savenext-btn">
+                        <div class="savenext-btn mb-4">
                         <button type="button" class="save-btn active Permission_Save" onclick="search();">Search</button>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                        <h3 class="heading3">Online Bills Cleared for the Period</h3>
+                            </div>
+                        </div>
+                        
 
-                        <br></br>
+                       <div class="hide1 col-md-12 mb-4">
 
-                       <div class="hide1 col-md-4 mb-4">
-
-                        <label for="Reference">Online Bills Cleared for the Period:</label>
+                      
                           @*  <input type="text" id="AmtSuspense" class="input" maxlength="300" readonly />*@
-                        <label for="Reference">From</label>
-                        <input type="text" id="From" class="input" maxlength="300" />
-                        <label for="Reference">To</label>
-                        <input type="text" id="To" class="input" maxlength="300" />
-                        <button type="button" class="save-btn active Permission_Save" onclick="showbill();">Show Bills Cleared </button>
-                       </div>
-
-
-                     
-
-                        @*<div class="hide1 col-md-4 mb-4">
-
-                       
-                        </div>*@
-
-
+                        <div class="row my-0">
+                            <div class="col-md-4">
+                            <label for="Reference">From</label>
+                            <input type="text" id="From" class="input" maxlength="300" />
+                            </div>
+                        <div class="col-md-4">
+                            <label for="Reference">To</label>
+                            <div class="fileUploadWrap">
+                                <input type="text" id="To" class="input" maxlength="300" />
+                                <button type="button" class="button Permission_Save" onclick="showbill();">Show Bills Cleared </button>
+                            </div>
+                           
+                        </div>
+                        </div>                     
+                        </div>
+                        @*<div class="hide1 col-md-4 mb-4"></div>*@
                         <table id="dtrlychkpost" class="table-responsive">
                             <thead>
                                 <tr>
@@ -159,9 +161,6 @@
 
 
                 </div>
-        </div>
-        
-    </div>
     </div>
 </section>
 

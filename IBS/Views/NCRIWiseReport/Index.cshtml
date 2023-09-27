@@ -1,0 +1,209 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>IE WISE NON CONFORMITIES REPORT</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="col-md-6">
+        <div class="custom-readio">
+            <div class="company-checkbox">
+                <div class="remember">
+                    <div class="remecheckbox">
+                        <input type="radio" id="formonth" name="formonth" value="formonth" checked>
+                        <label for="formonth">For The Month</label>
+                    </div>
+                </div>
+                <div c lass="remember">
+                    <div class="remecheckbox">
+                        <input type="radio" id="forperiod" name="formonth" value="forperiod">
+                        <label for="forperiod">For Given Period</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-end my-0" id="divdate">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+                <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-end my-0" id="divmonth">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">Month</label>
+                @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">Year</label>
+                @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                <span class="text-danger field-validation-error" id="spnErroryear"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+                <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 custom-readio">
+        <div class="company-checkbox">
+            <div class="remember">
+                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                <div class="remecheckbox">
+                    <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
+                    <label for="AllCM">All IE</label>
+                    &nbsp;&nbsp;
+                    <input type="radio" value="forCM" id="forCM" name="AllCM" />
+                    <label for="forCM">For Given IE</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetIEIEToWhomIssued(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
+    </div>
+    
+    <div class="col-md-12 custom-readio">
+        <div class="company-checkbox">
+            <div class="remember">
+                <label for="year">Report Type</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                <div class="remecheckbox">
+                    <input type="radio" value="All" id="All" name="All" checked="checked" />
+                    <label for="All">All</label>
+                    &nbsp;&nbsp;
+                    <input type="radio" value="Outstanding" id="Outstanding" name="All" />
+                    <label for="Outstanding">Outstanding</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#divdate").hide();
+            $("#iecmname").hide();
+        });
+
+        $('#forperiod').change(function () {
+            $("#divdate").show();
+            $("#divmonth").hide();
+            $("#month").val('');
+            $("#year").val('');
+        });
+
+        $('#formonth').change(function () {
+            $("#divdate").hide();
+            $("#divmonth").show();
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+        });
+
+        $('#forCM').change(function () {
+            $("#iecmname").show();
+        });
+
+        $('#AllCM').change(function () {
+            $("#iecmname").hide();
+        });
+
+
+        function ClearControls1() {
+            $("#month").val('');
+            $("#year").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#formonth").prop("checked", true);
+            $("#divdate").hide();
+            $("#divmonth").show();
+        }
+
+        function ViewReport1() {
+
+            $("#spnErrorToDate").html("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorFromDate").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrorToDate").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+            var IsValid = true;
+            var monthChar = $('#month option:selected').text();
+            var month = getMonthNumber(monthChar);
+            var year = $('#year').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+            var forCM = $("#forCM").is(":checked") == true ? "true" : "false";
+            var All = $("#All").is(":checked") == true ? "true" : "false";
+            var Outstanding = $("#Outstanding").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var iecmname = $('#iecmname').val();
+            var reporttype = "I";
+            var IENametext = $('#iecmname option:selected').text();
+
+            let myObject = { month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, monthChar, iecmname, reporttype, IENametext };
+
+            var url = '@Url.Action("Manage", "NCRIWiseReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function getMonthNumber(monthName) {
+
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
+            return monthNumber;
+        }
+    </script>
+}

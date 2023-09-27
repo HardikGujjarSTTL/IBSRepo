@@ -1,0 +1,51 @@
+﻿@model IBS.Models.Reports.CallDetailsDashboradModel
+
+@{
+    string currDate = DateTime.Now.ToString("dd/MM/yyyy - hh:mm tt");
+    string todayDate = DateTime.Now.Date.ToString("dd/MM/yyyy");
+    string yesterdayDate = DateTime.Now.Date.AddDays(-1).ToString("dd/MM/yyyy");
+}
+
+<div>
+    <h3 class="center">CALL DETAILS DASHBOARD</h3>
+    <h3 class="center">Call Details Status report as on Date: <span class="orangeText">@currDate </span> (@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Descipline</font></b></th>
+                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">No of Calls Registered Yesterday as on @yesterdayDate</font></b></th>
+                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">No of Calls Planned Yesterday as on @yesterdayDate</font></b></th>
+                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">No. of Pending Calls as on @todayDate</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">No. of IE</font></b></th>
+                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">Avg (No of pending calls/IE)</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstCallDetailsDashborad != null && Model.lstCallDetailsDashborad.Count > 0)
+                {
+                    @foreach (var item in Model.lstCallDetailsDashborad)
+                    {
+                        <tr>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@item.IE_DEPT</font></b></td>
+                            <td width="20%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.CALL_MARKED)</font></b></td>
+                            <td width="20%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.CALL_ATTENDED)</font></b></td>
+                            <td width="20%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.CALL_PENDING)</font></b></td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(item.IE_NO)</font></b></td>
+                            <td width="20%" valign="top" align="center"><b><font size="1" face="Verdana">@item.AVG_PEN</font></b></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

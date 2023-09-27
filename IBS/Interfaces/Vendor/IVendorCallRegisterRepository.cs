@@ -10,7 +10,9 @@ namespace IBS.Interfaces.Vendor
 
         DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd);
 
-        DTResult<VenderCallRegisterModel> GetUserList(DTParameters dtParameters,string UserName);
+        //DTResult<VenderCallRegisterModel> FindByAddDetails(string CaseNo,int UserId);
+
+        DTResult<VenderCallRegisterModel> GetUserList(DTParameters dtParameters, string UserName);
 
         DTResult<VenderCallRegisterModel> GetVenderList(DTParameters dtParameters, string UserName);
 
@@ -27,5 +29,7 @@ namespace IBS.Interfaces.Vendor
         public VendorCallRegPrintReport FindByPrintReport(string CaseNo, string CallRecvDt, int CallSno, string UserName);
 
         DTResult<VenderCallRegisterModel> GetDataListReport(DTParameters dtParameters);
+
+        public VenderCallRegisterModel FindByAddDetails(string CaseNo, DateTime CallRecvDt, string CallStage, int UserId);
     }
 }

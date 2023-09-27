@@ -1,9 +1,9 @@
-﻿@model IBS.Models.SummaryConsigneeWiseInspModel
+﻿@model IBS.Models.InspectionStatusModel
 
 <div>
     @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></font></p> *@
     <h3 class="center">(@ViewBag.Region)</h3>
-    
+
     @{
         if (ViewBag.ForGiven == "Yes")
         {
@@ -29,7 +29,7 @@
                     <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">INSP. FEE</font></b></th>
 
                 </tr>
-                @if (Model != null && Model.lstSummaryConreport.Count > 0)
+                @if (Model != null && Model.lstSummaryConreport != null && Model.lstSummaryConreport.Count > 0)
                 {
                     var serialNumber = 1;
                     @foreach (var item in Model.lstSummaryConreport)
@@ -45,6 +45,12 @@
                         serialNumber++;
                     }
 
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="17" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
                 }
             </tbody>
         </table>

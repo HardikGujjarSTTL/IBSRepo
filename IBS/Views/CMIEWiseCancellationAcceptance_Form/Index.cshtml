@@ -19,24 +19,32 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-        <div class="accordion-body">
+       
            @* <form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">*@
                 <div class="accordion-body">
-                    <div class="row my-0">
+                    <div class="row">
 
-                        <div class="col-md-4 mb-4">
+                        <div class="col-md-4">
                         <label for="Reference">Controlling Officer</label>
                         @Html.DropDownListFor(model => model.ControllingOfficers, Common.GetControllingOfficer(), new { id = "controllingOfficers" })
                         </div>
-
-                        <div class="col-md-4 mb-4">
-                        <label for="Reference">Inspection Engineer</label>  
-                        <br></br>
-                        <label for="Reference">All IE</label>
-                        <input type="radio" id="allie" name="all" value="1" checked>
-                        <br></br>
-                        <label for="Reference">Particular IE</label>
-                        <input type="radio" id="particularie" name="all" value="2">
+                        </div>
+            <h3 class="heading3 mb-4">Inspection Engineer</h3>
+            <div class="row align-items-center my-0">
+                        <div class="col-md-4">
+                       
+                       <ul class="radioListForm">
+                        <li>
+                            <label for="allie"><input type="radio" id="allie" name="all" value="1" checked> All IE</label>
+                        </li>
+                        <li>
+                            <label for="particularie"><input type="radio" id="particularie" name="all" value="2"> Particular IE</label>
+                        </li>
+                       </ul>
+                       </div>
+                       </div>
+            <div class="row">
+                <div class="col-md-4">
                         <select id="particularIE"></select>
                         </div>
 
@@ -68,13 +76,13 @@
                     <tbody>
                     </tbody>
                 </table>
-
+            <div class="savenext-btn">
                 <button type="button" class="save-btn active Permission_Save" onclick="approve();">Approve</button>
-
+                </div>
 
                 </div>
        @*     </form>*@
-        </div>
+       
     </div>
 </section>
 @section scripts

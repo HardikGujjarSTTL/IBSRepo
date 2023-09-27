@@ -26,6 +26,7 @@ namespace IBS.Models
         public const string CommonDateFormate1 = "dd/MM/yyyy";
         public static string AccessDeniedMessage = "You don't have permission to do this action.";
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
+        public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -314,6 +315,21 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "CERTIFER APPROVED";
             single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        
+        public static List<SelectListItem> StatusOffer()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Ongoing Contract";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "BID Lost";
+            single.Value = "B";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -1038,6 +1054,28 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> ClientWiseBPO()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PSU";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Govt";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> ReportStatus()
         {
@@ -1092,7 +1130,7 @@ namespace IBS.Models
 
             single = new SelectListItem();
             single.Text = "-xx-";
-            single.Value = " ";     
+            single.Value = " ";
 
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
@@ -1530,6 +1568,7 @@ namespace IBS.Models
             return CoName;
 
         }
+
         public static List<SelectListItem> TestToBe()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1544,6 +1583,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> TestToBeConducted()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1578,6 +1618,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
         public static List<SelectListItem> PaymentStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1615,6 +1656,42 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> GetBpoType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Non-Railways";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> AccCD()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All Account Heads (Fees,Advance & Testing Charges)";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Advance (2709)";
+            single.Value = "2709";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Testing Charges (2210,2212)";
+            single.Value = "2210";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Other then Advance & Testing Charges";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> Orgn_Type()
         {
@@ -1631,6 +1708,33 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Other";
             single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> Non_Orgn_Type()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PSU";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Government";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Foreing Railways";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Central Government";
+            single.Value = "C";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -2342,6 +2446,24 @@ namespace IBS.Models
                       }).Distinct().ToList();
             return BpoRly;
         }
+        public static List<SelectListItem> GetBPO(string BpoType)
+        {
+            string searchText = BpoType.Trim().ToUpper();
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> BpoRly = new();
+
+            BpoRly = (from bpo in ModelContext.T12BillPayingOfficers
+                      where bpo.BpoCd.Trim().ToUpper() == searchText ||
+                  bpo.BpoName.Trim().ToUpper().StartsWith(searchText)
+                      orderby bpo.BpoName
+                      select new SelectListItem
+                      {
+                           Value= bpo.BpoCd,
+                          Text = bpo.BpoName + "/" + bpo.BpoAdd + "/" + bpo.BpoRly
+                      }).Distinct().ToList();
+            return BpoRly;
+        }
 
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
@@ -2517,7 +2639,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> ControllingOfficers = (from a in context.T08IeControllOfficers
-                                                        where a.CoStatus == null &&  a.CoRegion == "N"
+                                                        where a.CoStatus == null && a.CoRegion == "N"
                                                         orderby a.CoName
                                                         select
                                  new SelectListItem
@@ -2535,14 +2657,14 @@ namespace IBS.Models
             List<SelectListItem> IE_NAME = new List<SelectListItem>();
             IE_NAME.Add(new SelectListItem { Value = "-1", Text = "ALL" });
             IE_NAME = (from a in context.T09Ies
-                                            where a.IeStatus == null && a.IeRegion == "N"
-                                            orderby a.IeName
-                                           select
-                                 new SelectListItem
-                                 {
-                                     Text = Convert.ToString(a.IeName),
-                                     Value = Convert.ToString(a.IeCd)
-                                 }).ToList();
+                       where a.IeStatus == null && a.IeRegion == "N"
+                       orderby a.IeName
+                       select
+             new SelectListItem
+             {
+                 Text = Convert.ToString(a.IeName),
+                 Value = Convert.ToString(a.IeCd)
+             }).ToList();
             return IE_NAME;
         }
 
@@ -2725,6 +2847,7 @@ namespace IBS.Models
             }
             return objdata;
         }
+
         public static List<SelectListItem> GetSummaryConsignee()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -2774,6 +2897,37 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Calibration Records";
             single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> RlyBPOFee()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "0.522% (For PO Value between 5 Lakhs to 1 Crore)";
+            single.Value = ".522";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.116% (For PO Value between 1 Crore to 25 Crores)";
+            single.Value = ".116";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.053% (For PO Value between 25 Crores to 100 Crores)";
+            single.Value = ".053";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.035% (For PO Value between more then 100 Crores)";
+            single.Value = ".035";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.9% (For PO Date on or before 26-Nov-2022)";
+            single.Value = ".9";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.55% (For CR Billing)";
+            single.Value = ".55";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -3455,6 +3609,80 @@ namespace IBS.Models
         public static List<TextValueDropDownDTO> GetScopeOfsector()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ScopeOfsector)).ToList();
+        }
+
+        public static List<SelectListItem> GetCRISRLYStatus()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Passed", Value = "P" },
+                new SelectListItem() { Text = "Returned", Value = "R" },
+                new SelectListItem() { Text = "Pending", Value = "X" },
+                new SelectListItem() { Text = "Returned Bills Resent", Value = "S" },
+                new SelectListItem() { Text = "ALL", Value = "A" }
+            };
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetCRISRLYStatusDate()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Invoice Date", Value = "A" },
+                new SelectListItem() { Text = "Payment Date", Value = "P" }
+            };
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetControllingSelectedIE(string Region, string CO)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeStatus == null && c.IeRegion == Region && (CO == "" || (c.IeCoCd == Convert.ToInt16(CO) && CO != "")) 
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetOnlineStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.Status)).ToList();
+        }
+
+        public static IEnumerable<SelectListItem> GetBPORailway(string ClientType)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            if (ClientType == "R")
+            {
+                return (from c in context.T91Railways
+                        select new SelectListItem
+                        {
+                            Value = c.RlyCd.ToString().Trim().ToUpper(),
+                            Text = c.Railway
+                        }).OrderBy(c => c.Text).ToList();
+            }
+            else
+            {
+                return (from c in context.T12BillPayingOfficers
+                        where c.BpoType == ClientType
+                        select new SelectListItem
+                        {
+                            Value = c.BpoRly.ToString().Trim().ToUpper(),
+                            Text = c.BpoOrgn
+                        }).Distinct().OrderBy(c => c.Text).ToList();
+
+            }
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetCallsStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.CallsStatus)).ToList();
+        }
+
+        public static string ConvertDateTimeFormat(this DateTime dt)
+        {
+            return dt.ToString(Common.CommonDateTimeFormat);
         }
     }
 

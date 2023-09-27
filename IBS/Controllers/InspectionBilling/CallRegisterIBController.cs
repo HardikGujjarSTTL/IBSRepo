@@ -4,10 +4,13 @@ using IBS.Interfaces;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
+using IBS.Models.Reports;
 using IBS.Repositories;
 using IBS.Repositories.InspectionBilling;
+using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
@@ -226,10 +229,11 @@ namespace IBS.Controllers.InspectionBilling
         {
             try
             {
+                string Client = "";
                 if (CaseNo != null)
                 {
                     var GetData = callregisterRepository.FindAddDetails(CaseNo);
-
+                    Client = GetData.OfflineCallStatus;
                     if (GetData.InspectingAgency == "R")
                     {
                         DateTime inputDateTime = DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
@@ -324,7 +328,7 @@ namespace IBS.Controllers.InspectionBilling
                         }
                     }
                 }
-                return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, CallSno= CallSno, w_itemBlocked = "" });
+                return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, CallSno = CallSno, w_itemBlocked = "", Client = Client });
             }
             catch (Exception ex)
             {
@@ -458,13 +462,15 @@ namespace IBS.Controllers.InspectionBilling
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno)
+        public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, string IeCd,string ActionType)
         {
             VenderCallStatusModel model = new();
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
             }
+            model.IeCd = IeCd;
+            model.ActionType = ActionType;
             return View(model);
         }
 
@@ -552,5 +558,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             return RedirectToAction("Index");
         }
+
+        
     }
 }

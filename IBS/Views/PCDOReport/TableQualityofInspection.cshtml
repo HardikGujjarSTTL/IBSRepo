@@ -1,0 +1,199 @@
+﻿@model List<IBS.Models.Reports.QualityofInspectionModel>
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Quality of Inspection</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="center">Quality of Inspection</h3>
+        <ul class="reportLabelList center">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+            <br />
+            <br />
+        </ul>
+
+        <table class="borderTable">
+            <tr>
+                <th width="2%" valign="top" align="center" rowspan="2"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                <th width="22%" valign="top" align="center" rowspan="2"><b><font size="1" face="Verdana">Description</font></b></th>
+                <th width="19%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Northern</font></b></th>
+                <th width="19%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Eastern</font></b></th>
+                <th width="19%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Western</font></b></th>
+                <th width="19%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Southern</font></b></th>
+            </tr>
+            <tr>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">Nos.</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">% of Total Inspection</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">Nos.</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">% of Total Inspection</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">Nos.</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">% of Total Inspection</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">Nos.</font></b></td>
+                <td width="9.5%" valign="top"><b><font size="1" face="Verdana">% of Total Inspection</font></b></td>
+            </tr>
+            @if (Model != null && Model.Count > 0)
+            {
+                <tr>
+                    <td width="2%"><b><font size="1" face="Verdana">1.</font></b></td>
+                    <td width="22%"><b><font size="1" face="Verdana">Inspections done during the Month</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].C1</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana"></font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].C1</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana"></font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].C1</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana"></font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].C1</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana"></font></b></td>
+                </tr>
+                <tr>
+                    <td width="2%"><b><font size="1" face="Verdana">2.</font></b></td>
+                    <td width="22%"><b><font size="1" face="Verdana">Cases where IE has issued rejection memo</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].C2</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].AVE_Rejection</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].C2</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].AVE_Rejection%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].C2</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].AVE_Rejection%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].C2</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].AVE_Rejection%</font></b></td>
+                </tr>
+                <tr>
+                    <td width="2%"><b><font size="1" face="Verdana">3.</font></b></td>
+                    <td width="22%"><b><font size="1" face="Verdana">Call Cancellation issued by IE</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].C3</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].AVE_Cancell%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].C3</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].AVE_Cancell%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].C3</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].AVE_Cancell%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].C3</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].AVE_Cancell%</font></b></td>
+                </tr>
+                <tr>
+                    <td width="2%"><b><font size="1" face="Verdana">4.</font></b></td>
+                    <td width="22%"><b><font size="1" face="Verdana">Average response time in attending call in No. of days</font></b></td>
+                    <td width="9.5%" colspan="2"><b><font size="1" face="Verdana">@Model[1].C4 days</font></b></td>
+                    <td width="9.5%" colspan="2"><b><font size="1" face="Verdana">@Model[0].C4 days</font></b></td>
+                    <td width="9.5%" colspan="2"><b><font size="1" face="Verdana">@Model[3].C4 days</font></b></td>
+                    <td width="9.5%" colspan="2"><b><font size="1" face="Verdana">@Model[2].C4 days</font></b></td>
+                </tr>
+                <tr>
+                    <td width="2%"><b><font size="1" face="Verdana">a.</font></b></td>
+                    <td width="22%"><b><font size="1" face="Verdana">Up to 7 days</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].C5</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].AVE_Upto7%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].C5</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].AVE_Upto7%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].C5</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].AVE_Upto7%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].C5</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].AVE_Upto7%</font></b></td>
+                </tr>
+                <tr>
+                    <td width="2%"><b><font size="1" face="Verdana">b.</font></b></td>
+                    <td width="22%"><b><font size="1" face="Verdana">Beyond 7 days</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].C6</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[1].AVE_Beyond7%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].C6</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[0].AVE_Beyond7%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].C6</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[3].AVE_Beyond7%</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].C6</font></b></td>
+                    <td width="9.5%"><b><font size="1" face="Verdana">@Model[2].AVE_Beyond7%</font></b></td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    var fileName = 'QualityofInspection';
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var HTML = $('#dvReportViewer').html();
+
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "PCDOReport")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

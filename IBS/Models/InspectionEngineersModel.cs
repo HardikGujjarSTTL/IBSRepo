@@ -99,6 +99,8 @@ namespace IBS.Models
         [Required]
         public int Cluster { get; set; }
 
+        public string lstCluster { get; set; }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? CallMarkingStartDt { get; set; }
@@ -112,5 +114,28 @@ namespace IBS.Models
         public DateTime? RepatriationDt { get; set; }
 
         public string? IeJobType { get; set; }
+
+        public int ID { get; set; }
+
+        public int ClusterID { get; set; }
+
+        public List<InspectionEngineersListModel> lstInspectionEClusterModel { get; set; }
+    }
+
+    public partial class InspectionEngineersListModel
+    {
+        public int In_ID { get; set; }
+
+        public int IeCd { get; set; }
+
+        public string? IeName { get; set; }
+
+        public string? IeDepartment { get; set; }
+
+        public string lstCluster { get; set; }
+
+        public int Cluster { get; set; }
+
+        public string ClusterID { get; set; }
     }
 }

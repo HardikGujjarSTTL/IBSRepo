@@ -96,7 +96,7 @@
             </div>
             <div class="col-md-6" id="vendor">
                 <label for="Reference">Vendor</label>
-                <input type="text" id="vendor" class="input" maxlength="3" />
+                <input type="text" id="vendortxt" class="input" maxlength="3" />
             </div>
         </div>
     </div>
@@ -116,8 +116,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-6" id="particularclient">
-                @Html.DropDownList("Clientwise", new SelectList(IBS.Models.Common.ClientWise(), "Value", "Text"), "--Select--", new { id = "Clientwiseddl" })
+            <div class="col-md-12" id="particularclient">
+                @Html.DropDownList("Clientwiseddl", new SelectList(IBS.Models.Common.ClientWise(), "Value", "Text"), "--Select--", new { id = "Clientwiseddl" })
                 <select id="Item" class="form-control" required></select>
             </div>
         </div>
@@ -138,7 +138,7 @@
             </div>
             <div class="col-md-6" id="consignee">
                 <label for="Reference">Consignee</label>
-                <input type="text" id="consignee" class="input" maxlength="3" />
+                <input type="text" id="consigneetxt" class="input" maxlength="3" />
             </div>
         </div>
     </div>
@@ -223,7 +223,7 @@
             $("#CMWise").prop("checked", true);
             $("#AllCM").prop("checked", true);
 
-            $("#vendor").autocomplete({
+            $("#vendortxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
                         url: "/Search/GetVendorData",
@@ -240,7 +240,7 @@
                 minLength: 3
             });
 
-            $("#consignee").autocomplete({
+            $("#consigneetxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
                         url: "/Search/GetConsigneeData",
@@ -257,7 +257,7 @@
                 minLength: 3
             });
 
-            $("#Clientwise").change(function () {
+            $("#Clientwiseddl").change(function () {
                 var Clientwise = $(this).val();
                 debugger
                 $.ajax({
@@ -314,6 +314,7 @@
             });
 
             $('#IEWise').change(function () {
+                debugger
                 $("#vendorrdo").hide();
                 $("#clientwises").hide();
                 $("#consignees").hide();
@@ -323,7 +324,7 @@
                 $("#consignee").hide();
                 $("#detailed").hide();
                 $("#AllCMWise").hide();
-                $("#ddlsupercm").hide();
+                $("#ddlsupercm").show();
             });
             $('#ParticularIEs').change(function () {
                 $("#particularIE").show();
@@ -542,10 +543,10 @@
             $("#FromDate").val("");
             $("#ToDate").val("");
             $("#ddliename").val("");
-            $("#vendor").val("");
+            $("#vendortxt").val("");
             $("#Clientwiseddl").val("");
             $("#Item").val("");
-            $("#consignee").val("");
+            $("#consigneetxt").val("");
            
         }
     </script>

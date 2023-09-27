@@ -4,7 +4,11 @@ namespace IBS.Interfaces
 {
     public interface ITDSEntryRepository
     {
-        public TDSEntryModel GetTextboxValues(string txtBNO, string Region);
-        public string TDSdetailSave(TDSEntryModel model);
+        public TDSEntryModel GetBillDetails(string BillNo, string Region);
+
+        public bool SaveDetails(TDSEntryModel model);
+
+        public DTResult<TDSEntryModel> GetTDSHistroyList(DTParameters dtParameters);
+
     }
 }

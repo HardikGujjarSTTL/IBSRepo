@@ -1,0 +1,63 @@
+﻿@model IBS.Models.ConsigneeModel
+<div class="modal-dialog modal-lg" role="document">
+    <input type="hidden" asp-for="CaseNo" />
+    @*<input type="hidden" asp-for="ConsigneeCd" />
+    <input type="hidden" asp-for="BpoCd" />*@
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Manage Consignee</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Firm</label>
+                    <label for="Reference" class="bold" style="margin-left: 5% !important;">@ViewBag.RLY_CD</label>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Consignee<i class="text-danger">*</i></label>
+                    <input type="text" class="input" id="txtSCon">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="LoadConsignee();" style="margin-top: 33px;">Search Consignee</button>
+                        <i class="text-danger">*</i> In Case Of other Client
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsigneeUsingConsignee(@Model.ConsigneeCd) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();",@style="margin-top: 33px;"})
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">BPO<i class="text-danger">*</i></label>
+                    <input type="text" class="input" id="txtSBPO">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="LoadBPO();" style="margin-top: 33px;">Search BPO</button>
+                        <i class="text-danger">*</i> In Case Of other Client
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficerUsingSBPO(@Model.BpoCd) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();",@style="margin-top: 33px;"})
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" data-bs-dismiss="modal">Close</button>
+                <button class="save-btn active" id="btnAddEditConsignee" onclick="AddEditConsignee()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

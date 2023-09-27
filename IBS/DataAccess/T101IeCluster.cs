@@ -7,11 +7,13 @@ public partial class T101IeCluster
 {
     public int? IeCode { get; set; }
 
-    public string DepartmentCode { get; set; } = null!;
+    public string? DepartmentCode { get; set; }
 
-    public int ClusterCode { get; set; }
+    public int? ClusterCode { get; set; }
 
     public string? UserId { get; set; }
 
     public DateTime? Datetime { get; set; }
+
+    public int Id { get; set; }
 }

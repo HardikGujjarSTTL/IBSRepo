@@ -21,32 +21,30 @@
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Case No.</label>
                 <input type="text" class="input" asp-for="RitesCaseNo" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                 <span asp-validation-for="RitesCaseNo" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">PO No.</label>
                 <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                 <span asp-validation-for="PoNo" class="text-danger"></span>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">PO Date</label>
                 <input type="text" class="input" asp-for="PoDt" maxlength="30" style="text-transform: uppercase;" readonly="readonly">
                 <span asp-validation-for="PoDt" class="text-danger"></span>
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">MA No.</label>
                 <input type="text" class="input" asp-for="MaNo" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                 <span asp-validation-for="MaNo" class="text-danger"></span>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">MA Date</label>
                     <input type="text" class="input" asp-for="MaDate" maxlength="30" style="text-transform: uppercase;" readonly="readonly">
@@ -55,41 +53,37 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-12 mb-3">
+            <div class="col-md-8 mb-3">
                 <div class="reference">
                     <label for="Name">Vendor</label>
                     <input type="text" class="input" asp-for="VendorName" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="VendorName" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">MA Subject</label>
                     <input type="text" class="input" asp-for="Subject" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="Subject" class="text-danger"></span>
                 </div>
             </div>
-
-            <div class="col-md-6 mb-3">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">MA Field</label>
                     <input type="text" class="input" asp-for="MaFldDescr" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="MaFldDescr" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">New Value</label>
                     <input type="text" class="input" asp-for="NewValue" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="NewValue" class="text-danger"></span>
                 </div>
             </div>
-
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Old Value</label>
                     <input type="text" class="input" asp-for="OldValue" style="text-transform: uppercase;" readonly="readonly">
@@ -97,18 +91,8 @@
                 </div>
             </div>
         </div>
+        
         <div class="row my-0">
-            @*<div class="col-md-4 mb-3">
-                <label for="pro">MA Status</label>
-                <select id="MaStatus" class="form-control col-md-8" name="Status" asp-for="MaStatus">
-                    <option value="">--Select--</option>
-                    <option value="A">Approved</option>
-                    <option value="N">Approved With No Changes in IBS</option>
-                </select>
-                <span asp-validation-for="MaStatus" class="text-danger"></span>
-                <input type="hidden" asp-for="MaStatus" id="MaStatus" />
-            </div>*@
-
             <div class="col-md-4 mb-3">
                 <label for="Reference">MA Status</label>
                 @Html.DropDownListFor(model => model.MaStatus, new SelectList(IBS.Models.Common.MAStatus() , "Value", "Text"),"--Select--")

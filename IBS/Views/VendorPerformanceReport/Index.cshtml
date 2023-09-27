@@ -1,0 +1,197 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>VENDOR PERFORMANCE</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="col-md-6">
+        <div class="custom-readio">
+            <div class="company-checkbox">
+                <div class="remember">
+                    <div class="remecheckbox">
+                        <input type="radio" id="formonth" name="formonth" value="formonth" checked>
+                        <label for="formonth">For The Month</label>
+                    </div>
+                </div>
+                <div c lass="remember">
+                    <div class="remecheckbox">
+                        <input type="radio" id="forperiod" name="formonth" value="forperiod">
+                        <label for="forperiod">For Given Period</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row my-0" id="divdate">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+    </div>
+   
+    <div class="row my-0" id="divmonth">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">Month</label>
+                @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">Year</label>
+                @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                <span class="text-danger field-validation-error" id="spnErroryear"></span>
+            </div>
+        </div>
+       
+    </div>
+
+    <div class="col-md-3">
+        <label for="Reference">Vendor</label>
+        <input type="text" id="vendor" class="input" maxlength="3" />
+        <span class="text-danger field-validation-error" id="spnErrorvendor"></span>
+    </div>
+    <div class="col-md-3" style="margin-top: 30px;">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#divdate").hide();
+
+            $("#vendor").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+        });
+
+        $('#formonth').change(function () {
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#vendor").val('');
+            $("#divdate").hide();
+            $("#divmonth").show();
+        });
+
+        $('#forperiod').change(function () {
+            $("#month").val('');
+            $("#year").val('');
+            $("#vendor").val('');
+            $("#divmonth").hide();
+            $("#divdate").show();
+        });
+
+        function ClearControls1() {
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#vendor").val("");
+            $("#vendordt").val("");
+            $("#month").val("");
+            $("#year").val("");
+        }
+
+        function ViewReport1() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            $("#spnErrorvendor").html("");
+
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var vendor = $('#vendor').val();
+
+            var IsValid = true;
+            debugger
+
+            if ($("#vendor").val() == "") {
+                $("#spnErrorvendor").html("Enter Vendor");
+                IsValid = false;
+            }
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorFromDate").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrorToDate").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var vendor = $('#vendor').val();
+            var indexOfHyphen = vendor.indexOf("-");
+            var vendcd = vendor.substr(0, indexOfHyphen).trim();
+            var monthtxt = $('#month option:selected').text();
+
+            let myObject = {
+                FromDate, ToDate, formonth, forperiod, month, year, vendcd, vendor, monthtxt
+            };
+
+            var url = '@Url.Action("Manage", "VendorPerformanceReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}

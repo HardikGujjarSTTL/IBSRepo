@@ -3,7 +3,6 @@ using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
-
 namespace IBS.Controllers
 {
     public class Call_Cancellation_FormController : BaseController

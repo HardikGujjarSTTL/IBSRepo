@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using IBS.Models;
+using IBS.Models.Reports;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace IBS.Helper
 {
@@ -58,7 +59,13 @@ namespace IBS.Helper
             [Description("/ReadWriteData/Files/Complaints_Report")]
             COMPLAINTSREPORT = 17,
             [Description("/ReadWriteData/Files/Complaints_Tech_Ref")]
-            ComplaintTechRef = 17,
+            ComplaintTechRef = 18,
+            [Description("/ReadWriteData/Files/ICCancellation")]
+            ICCancellation = 19,
+            [Description("/ReadWriteData/Files/PurchaseOrderForm")]
+            PurchaseOrderForm = 20,
+            [Description("/ReadWriteData/Files/INVOICE_SUPP_DOCS")]
+            ICDocument = 21,
         }
 
         public enum DocumentCategory : int
@@ -72,12 +79,15 @@ namespace IBS.Helper
             TechnicalReferences = 8,
             MasterItemDoc = 9,
             CallRegistrationDoc = 10,
-            AdministratorPurchaseOrder =13,
-            OnlineComplaints=11,
+            //AdministratorPurchaseOrder =13,
+            OnlineComplaints = 11,
             ConsigneeComplaints = 12,
             IEFullSignature = 14,
             IEInitials = 15,
-            ContractEntryDoc=16,
+            ContractEntryDoc = 16,
+            ICCancellation = 17,
+            PurchaseOrderForm = 18,
+            ICDocument = 20,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -92,13 +102,24 @@ namespace IBS.Helper
             Contract_Documents_If_Any = 9,
             Upload_Tech_Ref = 11,
             Upload_Tech_Ref_Reply = 12,
-            Upload_a_scanned_copy_of_Purchase_Order = 54,
-            Upload_Rejection_Memo=50,
-            Upload_JI_Case=51,
-            Upload_JI_Report=52,
+            Upload_Rejection_Memo = 50,
+            Upload_JI_Case = 51,
+            Upload_JI_Report = 52,
             Upload_Tech_Ref1 = 53,
-            Upload_Contract_Doc=16,
+            Upload_Contract_Doc = 16,
+        }
 
+        public enum DocumentICCancellation : int
+        {
+            FIR_Upload = 55,
+        }
+
+        public enum DocumentPurchaseOrderForm : int
+        {
+            Upload_a_scanned_copy_of_Purchase_Order = 54,
+            DrawingSpecification = 56,
+            Amendment = 57,
+            ParentLOA = 58,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
@@ -106,7 +127,8 @@ namespace IBS.Helper
             Browse_the_Document_to_Upload = 7,
             CallRegistrationDoc = 13,
             IEFullSignature = 14,
-            IEInitials = 15
+            IEInitials = 15,
+            ICDocument = 2
         }
 
         public enum DocumentCategory_VendorMADoc : int
@@ -299,7 +321,7 @@ namespace IBS.Helper
             [Description("Private")]
             P,
             [Description("PSU")]
-            PSU,
+            U,
             [Description("State Govt")]
             S,
             [Description("Foreign Railways")]
@@ -534,6 +556,26 @@ namespace IBS.Helper
             O,
         }
 
+        public enum Status
+        {
+            [Description("Pending")]
+            P,
+            [Description("Accepted")]
+            A,
+            [Description("Rejected")]
+            R,
+        }
+
+        public enum CallsStatus
+        {
+            [Description("Pending")]
+            P,
+            [Description("Approved")]
+            A,
+            [Description("Rejected")]
+            R,
+        }
+
     }
 
     public class EnumUtility<T>
@@ -608,7 +650,7 @@ namespace IBS.Helper
 
         public static string GetDescriptionByKey(string key)
         {
-            if(string.IsNullOrEmpty(key)) return string.Empty;
+            if (string.IsNullOrEmpty(key)) return string.Empty;
             Enum e = (Enum)Enum.Parse(typeof(T), key);
             return e.Description();
         }
@@ -639,5 +681,79 @@ namespace IBS.Helper
     {
         public string Value { get; set; }
         public string Text { get; set; }
+    }
+
+    public static class GlobalDeclaration
+    {
+        public static IEPerformanceModel IEPerformance { get; set; }
+
+        public static ConsigneeComplaints ConsigneeComplaint { get; set; }
+
+        public static ClusterPerformanceModel ClusterPerformance { get; set; }
+
+        public static RWBSummaryModel RWBSummary { get; set; }
+
+        public static RWCOModel RWCO { get; set; }
+
+        public static ICSubmissionModel ICSubmission { get; set; }
+
+        public static PendingICAgainstCallsModel PendingICAgainstCalls { get; set; }
+
+        public static SuperSurpriseDetailsModel SuperSurpriseDetails { get; set; }
+
+        public static SuperSurpriseSummaryModel SuperSurpriseSummary { get; set; }
+
+        public static NCRReport NCRReports { get; set; }
+
+        public static JIRequiredReport JIRequiredReports { get; set; }
+
+        public static ConsigneeCompPeriodReport ConsigneeCompPeriod { get; set; }
+
+        public static DefectCodeReport DefectCodeReports { get; set; }
+
+        public static HighValueInspReport HighValueInspReports { get; set; }
+
+        public static VendorClusterReportModel VendorClusterReport { get; set; }
+
+        public static IEAlterMappingReportModel IEAlterMappingReport { get; set; }
+
+        public static VendorFeedbackReportModel VendorFeedbackReport { get; set; }
+
+        public static ControllingOfficerIEModel ControllingOfficerIE { get; set; }
+
+        public static OngoingContrcatsReportModel OngoingContrcatsReport { get; set; }
+
+        public static ContractReportModel ContractReport { get; set; }
+
+        public static IEWiseTrainingReportModel IEWiseTrainingReport { get; set; }
+
+        public static VendorPerformanceReportModel VendorPerformanceReport { get; set; }
+
+        public static PeriodWiseChecksheetReportModel PeriodWiseChecksheetReport { get; set; }
+
+        public static ConsignRejectModel ConsignReject { get; set; }
+
+        public static OutstandingOverRegionModel OutstandingOverRegion { get; set; }
+
+        public static ClientWiseRejectionModel ClientWiseRejection { get; set; }
+
+        public static CoIeWiseCallsModel CoIeWiseCalls { get; set; }
+
+        public static PeriodWiseTechnicalRefReportModel PeriodWiseTechnicalRefReport { get; set; }
+
+        public static DailyIECMWorkPlanReportModel DailyIECMWorkPlanReport { get; set; }
+
+        public static NonConformityModel NonConformity { get; set; }
+
+        public static PendingCallsModel PendingCalls { get; set; }
+
+        public static ICIssuedNotReceivedModel ICIssuedNotReceived { get; set; }
+
+        public static TentativeInspectionFeeWisePendingCallsModel TentativeInspectionFeeWisePendingCalls { get; set; }
+
+        public static Models.Reports.CallRemarkingModel CallRemarking { get; set; }
+
+        public static CallDetailsDashboradModel CallDetailsDashborad { get; set; }
+
     }
 }
