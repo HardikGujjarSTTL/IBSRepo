@@ -39,13 +39,24 @@
             fileName = 'Daily IE Work Plan Report';
         }
         if ('@ReportType' == 'E') {
-            loadDailyIEWork();
+            loadDailyIEExcpWork();
             fileName = 'Daily IE Work Plan Report';
         }
     });
 
     function loadDailyIEWork() {
         $("#dvReportViewer").load("@Url.Action("DailyWorkIECMReport")", {
+            ReportType: '@Model.ReportType', FromDate: '@Model.FromDate'
+            , ToDate: '@Model.ToDate', lstIE: '@Model.lstIE', lstCM: '@Model.lstCM', AllIEs: '@Model.AllIEs', ParticularIEs: '@Model.ParticularIEs',
+            AllCM: '@Model.AllCM', ParticularCMs: '@Model.ParticularCMs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise', SortedIE: '@Model.SortedIE', visitdate: '@Model.visitdate'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    
+    function loadDailyIEExcpWork() {
+        $("#dvReportViewer").load("@Url.Action("DailyWorkIEExcepReport")", {
             ReportType: '@Model.ReportType', FromDate: '@Model.FromDate'
             , ToDate: '@Model.ToDate', lstIE: '@Model.lstIE', lstCM: '@Model.lstCM', AllIEs: '@Model.AllIEs', ParticularIEs: '@Model.ParticularIEs',
             AllCM: '@Model.AllCM', ParticularCMs: '@Model.ParticularCMs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise', SortedIE: '@Model.SortedIE', visitdate: '@Model.visitdate'
