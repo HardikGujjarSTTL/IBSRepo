@@ -10,6 +10,7 @@
 </head>
 <body>
     <p align="right">
+        <input type="button" class="commonBtn" value="Back" id="btnBack" style="display:none;" />
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -337,6 +338,13 @@
 <script type="text/javascript">
     var fileName = '';
     $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        actiontype = urlParams.get('ActionType');
+        if (actiontype == "CHI") {
+            $("#btnBack").show();
+        }
+    });
+    $(document).ready(function () {
         fileName = "Case_History_@Model.CASE_NO";
     });
     $(document).ajaxSend(function () {
@@ -353,6 +361,11 @@
 
     $("#btnExportToPdf").click(function () {
         generatePdf(false);
+    });
+
+    $("#btnBack").click(function () {
+        var url = '@Url.Action("Index", "Dashboard")';
+        window.location.href = url;
     });
 
     $("#btnExportToExcel").click(function () {

@@ -26,6 +26,7 @@ namespace IBS.Models
         public const string CommonDateFormate1 = "dd/MM/yyyy";
         public static string AccessDeniedMessage = "You don't have permission to do this action.";
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
+        public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -1053,6 +1054,28 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> ClientWiseBPO()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Private";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "PSU";
+            single.Value = "U";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "State Govt";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> ReportStatus()
         {
@@ -1630,6 +1653,42 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "No Comments";
             single.Value = "X";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> GetBpoType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Railways";
+            single.Value = "R";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Non-Railways";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> AccCD()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All Account Heads (Fees,Advance & Testing Charges)";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Advance (2709)";
+            single.Value = "2709";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Testing Charges (2210,2212)";
+            single.Value = "2210";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Other then Advance & Testing Charges";
+            single.Value = "O";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -2387,6 +2446,24 @@ namespace IBS.Models
                       }).Distinct().ToList();
             return BpoRly;
         }
+        public static List<SelectListItem> GetBPO(string BpoType)
+        {
+            string searchText = BpoType.Trim().ToUpper();
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> BpoRly = new();
+
+            BpoRly = (from bpo in ModelContext.T12BillPayingOfficers
+                      where bpo.BpoCd.Trim().ToUpper() == searchText ||
+                  bpo.BpoName.Trim().ToUpper().StartsWith(searchText)
+                      orderby bpo.BpoName
+                      select new SelectListItem
+                      {
+                           Value= bpo.BpoCd,
+                          Text = bpo.BpoName + "/" + bpo.BpoAdd + "/" + bpo.BpoRly
+                      }).Distinct().ToList();
+            return BpoRly;
+        }
 
         public static List<SelectListItem> GetCOData(string GetRegionCode)
         {
@@ -2820,6 +2897,37 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "Calibration Records";
             single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> RlyBPOFee()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "0.522% (For PO Value between 5 Lakhs to 1 Crore)";
+            single.Value = ".522";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.116% (For PO Value between 1 Crore to 25 Crores)";
+            single.Value = ".116";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.053% (For PO Value between 25 Crores to 100 Crores)";
+            single.Value = ".053";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.035% (For PO Value between more then 100 Crores)";
+            single.Value = ".035";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.9% (For PO Date on or before 26-Nov-2022)";
+            single.Value = ".9";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.55% (For CR Billing)";
+            single.Value = ".55";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -3565,6 +3673,16 @@ namespace IBS.Models
                         }).Distinct().OrderBy(c => c.Text).ToList();
 
             }
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetCallsStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.CallsStatus)).ToList();
+        }
+
+        public static string ConvertDateTimeFormat(this DateTime dt)
+        {
+            return dt.ToString(Common.CommonDateTimeFormat);
         }
     }
 

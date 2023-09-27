@@ -162,6 +162,8 @@ builder.Services.AddScoped<ICallMarkedRepository, CallMarkedRepository>();
 builder.Services.AddScoped<ICalls_Marked_ReportRepository, Calls_Marked_ReportRepository>();
 builder.Services.AddScoped<ICall_Cancellation_FormRepository, Call_Cancellation_FormRepository>();
 builder.Services.AddScoped<ICalls_Marked_For_Specific_PORepository, Calls_Marked_For_Specific_PORepository>();
+builder.Services.AddScoped<ICallsReportRepository, CallsReportRepository>();
+builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 
 
 
@@ -216,6 +218,9 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
+builder.Services.AddScoped<IIEICPhotoEnclosedReportRepository, IEICPhotoEnclosedReportRepository>();
+builder.Services.AddScoped<IDailyIEWorkPlanReportRepository, DailyIEWorkPlanReportRepository>();
+builder.Services.AddScoped<IPeriodWiseTechnicalReportRepository, PeriodWiseTechnicalReportRepository>();
 builder.Services.AddScoped<IPeriodWiseChecksheetReportRepository, PeriodWiseChecksheetReportRepository>();
 builder.Services.AddScoped<IVendorPerformanceReportRepository, VendorPerformanceReportRepository>();
 builder.Services.AddScoped<IIEWiseTrainingReportRepository, IEWiseTrainingReportRepository>();
@@ -237,6 +242,9 @@ builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepo
 builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 builder.Services.AddScoped<ILabReportsRepository, LabReportsRRepository>();
 builder.Services.AddScoped<IOtherReportsRepository, OtherReportsRepository>();
+builder.Services.AddScoped<IReceiptsRemitanceRepository, ReceiptsRemitanceRRepository>();
+builder.Services.AddScoped<IBillingRepository, BillingRRepository>();
+builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 builder.Services.AddScoped<IMonthlyReportsRepository, MonthlyReportsRepository>();
 
 var app = builder.Build();

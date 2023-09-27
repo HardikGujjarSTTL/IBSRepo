@@ -14,30 +14,30 @@
         <input type="hidden" asp-for="ActionType" />
         <div class="accordion-body" style="overflow-x: auto;">
             <table>
-                <col style="width: 20%;" />
-                <col style="width: 80%;" />
+                @*<col style="width: 20%;" />
+                <col style="width: 80%;" />*@
                 <tr>
                     <td>
                         <label for="Reference">Vendor : </label>
                     </td>
 
-                    <td>
-                        <input type="text" class="input" asp-for="VendName" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    <td colspan="4">
+                        <input type="text" class="input" asp-for="VendName" maxlength="100" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">Purchaser : </label>
                     </td>
-                    <td>
-                        <input type="text" class="input" asp-for="Consignee" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    <td colspan="4">
+                        <input type="text" class="input" asp-for="Consignee" maxlength="100" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">Item : </label>
                     </td>
-                    <td>
+                    <td colspan="4">
                         <textarea rows="4" asp-for="ItemDescPo" style="color:red;text-transform: uppercase;" readonly="readonly"></textarea>
                     </td>
                 </tr>
@@ -48,36 +48,48 @@
                     <td>
                         <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
+                    <td colspan="2">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Inpection Desire Date : </label>
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="DesireDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    </td>
+                    <td colspan="2">
+                    </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">Engineer Name : </label>
                     </td>
-                    <td>
-                        <input type="text" class="input" asp-for="IeName" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    <td colspan="4">
+                        <input type="text" class="input" asp-for="IeName" maxlength="100" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">Engineer Contact No. : </label>
                     </td>
-                    <td>
-                        <input type="text" class="input" asp-for="IePhoneNo" maxlength="10" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    <td colspan="4">
+                        <input type="text" class="input" asp-for="IePhoneNo" maxlength="12" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">PO No. : </label>
                     </td>
-                    <td>
-                        <input type="text" class="input" asp-for="PoNo" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                    <td colspan="4">
+                        <input type="text" class="input" asp-for="PoNo" maxlength="50" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">PO Date : </label>
                     </td>
-                    <td>
+                    <td colspan="4">
                         <input type="text" class="input" asp-for="PoDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
@@ -85,7 +97,7 @@
                     <td>
                         <label for="Reference">Case No. : </label>
                     </td>
-                    <td>
+                    <td colspan="4">
                         <input type="text" class="input" asp-for="CaseNo" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
@@ -93,7 +105,7 @@
                     <td>
                         <label for="Reference">Contact Person : </label>
                     </td>
-                    <td>
+                    <td colspan="4">
                         <input type="text" class="input" asp-for="MfgPers" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
@@ -101,7 +113,7 @@
                     <td>
                         <label for="Reference">Contact Person Tel No. : </label>
                     </td>
-                    <td>
+                    <td colspan="4">
                         <input type="text" class="input" asp-for="MfgPhone" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
@@ -109,26 +121,52 @@
                     <td>
                         <label for="Reference">Call Serial No. : </label>
                     </td>
-                    <td>
+                    <td colspan="4">
                         <input type="text" class="input" asp-for="CallSno" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Reference">Call Status : </label>
+                        <label for="Reference">Case Status : </label>
                     </td>
                     <td>
                         @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"), "--Select--")
                     </td>
-                </tr>
-                <tr>
                     <td>
-                        <label for="Reference">Allow Updation of Call(Y/N) : </label>
+                        @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--")
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.UpdateAllowed, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"), "--Select--")
+                        <input type="text" class="input" asp-for="BkNo" style="color:red;text-transform: uppercase;">
+                    </td>
+                    <td>
+                        <input type="text" class="input" asp-for="SetNo" style="color:red;text-transform: uppercase;">
                     </td>
                 </tr>
+                @if (Model.ActionType != "C")
+                {
+                    <tr>
+                        <td>
+                            <label for="Reference">Allow Updation of Call(Y/N) : </label>
+                        </td>
+                        <td colspan="4">
+                            @Html.DropDownListFor(model => model.UpdateAllowed, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"), "--Select--")
+                        </td>
+                    </tr>
+                }
+                @if (Model.ActionType == "C")
+                {
+                    <tr>
+                        <td>
+                            <label for="Reference">Case Status Date : </label>
+                        </td>
+                        <td>
+                            <input type="text" class="datepicker" asp-for="CallStatusDt" style="color:red;text-transform: uppercase;" readonly="readonly" placeholder="DD/MM/YYYY">
+                        </td>
+                        <td colspan="2">
+                            <span style="color:red;">(Current Date Will be the Case Status Date i.e Date of Cancellation/Acceptance..etc)</span>
+                        </td>
+                    </tr>
+                }
             </table>
         </div>
         <div class="savenext-btn">
@@ -144,9 +182,16 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         function Save() {
-            if ($("#frmCallStatus").valid()) {
+            if ($("#ActionType").val() == "C") {
+                debugger
                 $("#frmCallStatus").submit();
             }
+            else {
+                if ($("#frmCallStatus").valid()) {
+                    $("#frmCallStatus").submit();
+                }
+            }
+
 
         }
 

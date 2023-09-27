@@ -67,6 +67,16 @@ public partial class T20Ic
 
     public string? IrfcBpoCd { get; set; }
 
+    public string? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public string? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public decimal? Isdeleted { get; set; }
+
     public virtual T22Bill? BillNoNavigation { get; set; }
 
     public virtual T12BillPayingOfficer? BpoCdNavigation { get; set; }

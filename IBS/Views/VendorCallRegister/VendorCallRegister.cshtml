@@ -3,119 +3,132 @@
     ViewData["Title"] = "VENDOR CALL REGISTRATION";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>VENDOR CALL REGISTRATION</h2>
-        </div>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>VENDOR CALL REGISTRATION</h2>
     </div>
-    <div class="accordion-body">
-        <P style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Verdana; TEXT-ALIGN: left; TEXT-DECORATION: underline">Attention:</P>
-        <P style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">
-            1.&nbsp;Please note that calls submitted on Sundays and
-            on&nbsp;National&nbsp;Holidays shall be&nbsp;Registered only on next working
-            day.
-        </P>
-        <P style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">
-            2.&nbsp;Calls
-            recieved upto 3 P.M. shall be marked on same day and calls recieved after 3
-            P.M. shall be marked on next working day except Saturday.
-        </P>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">Case No.</label>
-                    <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
-                    @*<span asp-validation-for="CaseNo" class="text-danger"></span>*@
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">PO No.</label>
-                    <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="PoNo" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">Call Date</label>
-                    @*<label id="CallRecvDt" name="CallRecvDt" asp-for=@Model.CallRecvDt runat="server"></label>*@
-                    <input type="text" class="input" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                </div>
-            </div>
-            <div class="col-md-4 mb-3" style="display:none;">
-                <div class="reference">
-                    <label for="Reference">Call SNo.</label>
-                    <input type="text" class="input" asp-for="CallSno" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CallSno" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-12 mb-3">
-                <div class="reference">
-                    <div for="Reference">State whether the Call is for Final Or Stage Inspection <label id="lblInspStage" name="lblInspStage" asp-for=CallRecvDt></label></div>
+</div>
+<div class="task-listinput">
+    <form asp-controller="VendorCallRegister" asp-action="VendorCallRegister" id="frmVendor">
+        <div class="accordion-body">
+            <span class="text-danger">
+                <b>Attention :</b>
+                <br />
+                * Please note that calls submitted on Sundays and on National Holidays shall be Registered only on next working day.
+                <br />
+                * Calls recieved upto 3 P.M. shall be marked on same day and calls recieved after 3 P.M. shall be marked on next working day except Saturday.
+            </span>
 
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Case No.</label>
+                        <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
+                        @*<span asp-validation-for="CaseNo" class="text-danger"></span>*@
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">PO No.</label>
+                        <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
+                        <span asp-validation-for="PoNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Call Date</label>
+                        <input type="text" class="input" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" style="display:none;">
+                    <div class="reference">
+                        <label for="Reference">Call SNo.</label>
+                        <input type="text" class="input" asp-for="CallSno" maxlength="100" style="text-transform: uppercase;">
+                        <span asp-validation-for="CallSno" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
 
             <div class="row my-0">
-                <div class="col-md-1 mb-2">
-                    <input type="radio" id="huey" name="drone" checked>
-                    <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
+                @*<div class="col-md-1 mb-2">
+                <input type="radio" id="huey" name="drone" checked>
+                <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
                 </div>
                 <div class="col-md-1 mb-2">
-                    <input type="radio" id="dewey" name="drone">
-                    <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>
+                <input type="radio" id="dewey" name="drone">
+                <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>
+                </div>
+                *@
+
+                <div class="col-md-4 mb-3">
+                    <div class="custom-readio">
+                        <label for="Reference">State whether the Call is for Final Or Stage Inspection</label>
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" asp-for="CallStage" value="F" id="CallStage_F" checked />
+                                    <label for="CallStage_F">Final</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" asp-for="CallStage" value="S" id="CallStage_S" />
+                                    <label for="CallStage_S">Stage</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-12 mb-3">
-                    <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">* Select Stage in case of Stage Inspection/Raw Material Inspection.</label>
-
-                    <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">To Search a Call-> Enter Case No. Or PO No. and Click on [Search] Button</label>
-                    <label id="lblInps" style="FONT-SIZE: 8pt; COLOR: DarkMagenta; FONT-FAMILY: Verdana; TEXT-ALIGN: justify">To Register New Call --> Enter Case No then Click on [New Call] Button, Kindly Search Before Registering Your Call.</label>
+                <div class="alert alert-warning center">
+                    <span style="color:DarkMagenta;">
+                        * Select Stage in case of Stage Inspection/Raw Material Inspection.
+                    </span>
+                    <br />
+                    <span style="color:DarkMagenta;">
+                        To Search a Call-> Enter Case No. Or PO No. and Click on [Search] Button
+                        To Register New Call --> Enter Case No then Click on [New Call] Button, Kindly Search Before Registering Your Call.
+                    </span>
                 </div>
             </div>
 
 
             <div class="savenext-btn">
-                <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">New Call</a>
-                <button type="button" class="save-btn active" onclick="Search();">Search</button>
+                @*<a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">New Call</a>*@
+                <button type="button" class="save-btn active" onclick="NewCall();">New Call</button>
+                <button type="button" class="save-btn" onclick="Search();">Search</button>
             </div>
 
         </div>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Case No.</th>
-                            <th>PO No.</th>
-                            <th>PO Date</th>
-                            <th>Call Date</th>
-                            <th>Call SNo.</th>
-                            <th>Call Install No.</th>
-                            <th>IE SName</th>
-                            <th>Vendor</th>
-                            <th>Status</th>
-                            <th>Call Letter No/Dispatch Ref No.</th>
-                            <th>Remarks</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+        <section class="table-section">
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtList" class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Case No.</th>
+                                <th>PO No.</th>
+                                <th>PO Date</th>
+                                <th>Call Date</th>
+                                <th>Call SNo.</th>
+                                <th>Call Install No.</th>
+                                <th>IE SName</th>
+                                <th>Vendor</th>
+                                <th>Status</th>
+                                <th>Call Letter No/Dispatch Ref No.</th>
+                                <th>Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </section>
-</form>
+        </section>
+    </form>
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -126,11 +139,22 @@
             //InitializeDatatable();
         });
 
-        function Search() {
-            debugger
-            if ($("#frmDetails").valid()) {
-                $("#frmDetails").submit();
+        function NewCall() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var CallSno = $("#CallSno").val();
+            var Action = "A";
+            var CallStage = $('input[name="CallStage"]:checked').val();
+
+            if ($("#CaseNo").val() == "") {
+                ShowHideMsgNew(false, "Please select Case No.");
+                return;
             }
+
+            $("#frmVendor").submit();
+        }
+
+        function Search() {
             InitializeDatatable();
         }
 
@@ -145,6 +169,7 @@
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val();
             var PoNo = $("#PoNo").val();
+            var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY/MM/DD");
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -209,11 +234,17 @@
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
                             var CallSno = data.CallSno;
-                            var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
+                            var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
+
                             var editUrl = '@Url.Action("VendorCallRegisterDetail", "VendorCallRegister")?Action=M' + "&CaseNo=" + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = "";
+
+                            html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
+
+
+
                         }
                     },
 
@@ -221,12 +252,5 @@
                 "order": [[0, "asc"]]
             });
         }
-
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/VendorCallRegister/VendorCallRegister";
-            window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
-        };
     </script>
     }

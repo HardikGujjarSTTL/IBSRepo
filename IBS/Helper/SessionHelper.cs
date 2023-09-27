@@ -72,5 +72,25 @@ namespace IBS.Helper
                 httpContextAccessor.HttpContext.Session.SetString("MenuModelDTO", JsonSerializer.Serialize(value));
             }
         }
+
+        public List<InspectionEngineersListModel> lstInspectionEClusterModel
+        {
+            get
+            {
+                string IECluster = httpContextAccessor.HttpContext.Session.GetString("sessionInspectionEClusterModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(IECluster))
+                {
+                    List<InspectionEngineersListModel> IEClusterModels = JsonSerializer.Deserialize<List<InspectionEngineersListModel>>(IECluster);
+
+                    if (IEClusterModels != null)
+                        return IEClusterModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionInspectionEClusterModel", JsonSerializer.Serialize(value));
+            }
+        }
     }
 }

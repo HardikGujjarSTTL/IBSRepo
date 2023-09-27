@@ -1,6 +1,10 @@
-﻿using IBS.Interfaces;
+﻿using IBS.DataAccess;
+using IBS.Interfaces;
 using IBS.Models;
+using IBS.Models.Reports;
+using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
+using static IBS.Helper.Enums;
 
 namespace IBS.Controllers.IE
 {
@@ -8,7 +12,7 @@ namespace IBS.Controllers.IE
     {
         #region Variables
         private readonly ICallMarkedToIERepository callmarksRepository;
-        public string PType="";
+        public string PType = "";
         #endregion
 
         public CallsMarkedToIEController(ICallMarkedToIERepository _callmarksRepository)
@@ -18,8 +22,9 @@ namespace IBS.Controllers.IE
         public IActionResult CallsMarkedToIE(string type)
         {
             CallsMarkedToIEModel model = new();
+            model = callmarksRepository.GetReport(GetIeCd, Convert.ToString(UserId), type);
             model.PType = type;
-            model.IeName = UserName;
+            model.IeName = IeName;
 
             return View(model);
         }

@@ -1,10 +1,13 @@
-﻿@model IBS.Models.Reports.ManagementReportsModel
+﻿@using System.Web;
+
+@model IBS.Models.Reports.ManagementReportsModel
 
 @{
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
+    string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "ManagementReports");
 }
 
 <html>
@@ -13,6 +16,7 @@
 </head>
 <body>
     <p align="right">
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -78,6 +82,30 @@
         else if ('@ReportType' == 'CLIENTWISEREJ') {
             loadClientWiseRejection();
             fileName = 'Client_Wise_Rejection';
+        }
+        else if ('@ReportType' == 'NON_CONFORMITY') {
+            loadNonConformity();
+            fileName = 'Non_Conformity';
+        }
+        else if ('@ReportType' == 'PENDING_CALLS') {
+            loadPendingCalls();
+            fileName = 'Pending_Calls';
+        }
+        else if ('@ReportType' == 'COUNTIC') {
+            loadICIssuedNotReceived();
+            fileName = 'IC_Issued_Not_Received';
+        }
+        else if ('@ReportType' == 'HIGHVALUE') {
+            loadTentativeInspectionFeeWisePendingCalls();
+            fileName = 'Inspection_Fee_Wise_Pending_Calls';
+        }
+        else if ('@ReportType' == 'REMARKING') {
+            loadCallRemarking();
+            fileName = 'Call_Remarking';
+        }
+        else if ('@ReportType' == 'CALL_DETAILS') {
+            loadCallDetailsDashborad();
+            fileName = 'Call_Details_Dashborad';
         }
     });
 
@@ -153,6 +181,48 @@
 
     function loadClientWiseRejection() {
         $("#dvReportViewer").load("@Url.Action("ClientWiseRejection")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', ClientType: '@Model.ClientType', BPORailway: '@Model.BPORailway' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadNonConformity() {
+        $("#dvReportViewer").load("@Url.Action("NonConformity")", { FromYearMonth: '@Model.FromYearMonth', ToYearMonth: '@Model.ToYearMonth', IeCd: '@Model.IeCd' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadPendingCalls() {
+        $("#dvReportViewer").load("@Url.Action("PendingCalls")", {}, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadICIssuedNotReceived() {
+        $("#dvReportViewer").load("@Url.Action("ICIssuedNotReceived")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadTentativeInspectionFeeWisePendingCalls() {
+        $("#dvReportViewer").load("@Url.Action("TentativeInspectionFeeWisePendingCalls", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', ParticularCM: '@Model.ParticularCM', SortedOn: '@Model.SortedOn' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadCallRemarking() {
+        $("#dvReportViewer").load("@Url.Action("CallRemarking", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', CallRemarkingDate: '@Model.CallRemarkingDate', CallsStatus: '@Model.CallsStatus' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadCallDetailsDashborad() {
+        $("#dvReportViewer").load("@Url.Action("CallDetailsDashborad")", {}, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

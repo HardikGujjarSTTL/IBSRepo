@@ -48,6 +48,7 @@ namespace IBS.Repositories.Vendor
                 model.VendEmail = vendor.VendEmail;
                 model.VendInspStopped = vendor.VendInspStopped;
                 model.OnlineCallStatus = vendor.OnlineCallStatus;
+                model.OfflineCallStatus = vendor.OfflineCallStatus;
             }
 
             return model;
@@ -140,6 +141,7 @@ namespace IBS.Repositories.Vendor
                     VendEmail = model.VendEmail,
                     VendInspStopped = model.VendInspStopped,
                     OnlineCallStatus = model.OnlineCallStatus,
+                    OfflineCallStatus = model.OfflineCallStatus,
                     VendPwd = model.VendCd.ToString(),
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
@@ -174,6 +176,7 @@ namespace IBS.Repositories.Vendor
                     vendor.VendEmail = model.VendEmail;
                     vendor.VendInspStopped = model.VendInspStopped;
                     vendor.OnlineCallStatus = model.OnlineCallStatus;
+                    vendor.OfflineCallStatus = model.OfflineCallStatus;
                     vendor.VendRemarks = model.VendRemarks;
                     vendor.UserId = model.UserId;
                     vendor.Datetime = DateTime.Now.Date;

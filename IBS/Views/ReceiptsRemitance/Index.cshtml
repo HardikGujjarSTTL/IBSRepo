@@ -1,0 +1,72 @@
+﻿
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Client Wise Un-Posted / Partly Posted Cheque</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3">
+                <label for="PropertyId">Client Wise Un-Posted/Partly Posted Cheque/EFT/DD Details for</label>
+                @Html.DropDownList("BPOType", Common.GetBpoType(), new { @id="ddlbpo"})
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-5">
+                <label for="PropertyId">For The Account Head</label>
+                @Html.DropDownList("AccCD", Common.AccCD(), new { @id="ddlAccCD"})
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 30px;">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+                <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function ClearControls() {
+            location.reload(true);
+        }
+        function ViewReport() {
+            var BPOType = $("#ddlbpo").val();
+            var AccCD = $("#ddlAccCD").val();
+            var FromDate = $("#dtfrom").val();
+            var ToDate = $("#dtto").val();
+        
+        var QueryString = "RptFlag=6" +
+                "&BPOType=" + encodeURIComponent(BPOType) +
+                "&AccCD=" + encodeURIComponent(AccCD) +
+                "&FromDate=" + encodeURIComponent(FromDate) +
+                "&ToDate=" + encodeURIComponent(ToDate);
+
+        
+
+        var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+        if (oWin === null || typeof (oWin) === 'undefined') {
+            alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+        }
+        window.opener = 'x';
+        window.close();
+      
+    }
+</script>
+}

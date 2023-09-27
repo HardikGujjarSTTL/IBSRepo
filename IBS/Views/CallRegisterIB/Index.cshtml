@@ -216,7 +216,7 @@
                             var CallSno = data.CallSno;
 
                             var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -328,17 +328,23 @@
                 $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
                     debugger
                     if (response.status) {
-                        if (response.w_itemBlocked == "Y") {
-                            var msg = response.responseText;
-                            var d = confirm(msg);
-                            if (d === false) {
-                                window.location.href = '@Url.Action("Index", "CallRegisterIB")';
-                            } else {
+                        if(response.Client == "Y"){
+                            if (response.w_itemBlocked == "Y") {
+                                var msg = response.responseText;
+                                var d = confirm(msg);
+                                if (d === false) {
+                                    window.location.href = '@Url.Action("Index", "CallRegisterIB")';
+                                } else {
+                                    window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                                }
+                            }
+                            else {
                                 window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
                             }
                         }
-                        else {
-                            window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&CallSno=" + response.CallSno + "&ActionType=A";
+                        else
+                        {
+                            ShowHideMsgNew(false, "Please Your Call are Register in Offline.");
                         }
                     }
                 });
