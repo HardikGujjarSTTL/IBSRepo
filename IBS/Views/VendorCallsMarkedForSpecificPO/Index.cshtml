@@ -29,12 +29,10 @@
                     <span asp-validation-for="RlyCd" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
-                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly" placeholder="DD/MM/YYYY">
                     <span asp-validation-for="PoDt" class="text-danger"></span>
                 </div>
             </div>
@@ -43,8 +41,6 @@
             <div class="col-md-6 mb-3">
                 <div class="savenext-btn">
                     <a asp-controller="VendorCallsMarkedForSpecificPO" asp-action="Index" class="reset-btn">Cancel</a>
-                    @*<a asp-controller="Modified" asp-action="Manage" class="reset-btn">Cancel</a>*@
-                    @*<button type="button" class="save-btn" id="btnModifyLOA">Modify LOA</button>*@
                     <button type="button" class="save-btn active" id="btnSearchLOA">Search PO No.</button>
                 </div>
             </div>

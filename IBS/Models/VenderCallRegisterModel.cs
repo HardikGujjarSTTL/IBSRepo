@@ -16,7 +16,7 @@ namespace IBS.Models
 
         public byte? CallInstallNo { get; set; }
 
-        public short? CallSno { get; set; }
+        public int? CallSno { get; set; }
 
         public string? CallStatus { get; set; }
 
@@ -90,8 +90,12 @@ namespace IBS.Models
 
         public string? VendRdso { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? VendApprovalFr { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? VendApprovalTo { get; set; }
 
         public string? StaggeredDp { get; set; }
@@ -102,6 +106,8 @@ namespace IBS.Models
 
         public string? Hologram { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? ExpInspDt { get; set; }
 
         public string? RejCanCall { get; set; }
@@ -231,7 +237,27 @@ namespace IBS.Models
 
         public string VendRemarks { get; set; }
 
+        public string CallStage { get; set; }
 
+        public string PoOrLetter { get; set; }
+
+        public string PoSource { get; set; }
+
+        public string ImmsRlyCd { get; set; }
+
+        public int PendingCharges { get; set; }
+
+        public int MaxCount { get; set; }
+
+        public string dp { get; set; }
+
+        public string OnlineCallStatus { get; set; }
+
+        public string OfflineCallStatus { get; set; }
+
+        public string Region { get; set; }
+
+        public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
 
     }
 
@@ -257,7 +283,7 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? CallRecvDt { get; set; }
 
-        public short CallSno { get; set; }
+        public int CallSno { get; set; }
 
         public string? CallLetterNo { get; set; }
 
@@ -454,9 +480,21 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? PoDt { get; set; }
 
+        public string? BkNo { get; set; }
+
+        public string? SetNo { get; set; }
+
         public string? CallStatus1 { get; set; }
 
         public string? CallStatus { get; set; }
+
+        public string? CallCancelStatus { get; set; }
+
+        public DateTime? CallStatusDt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? DesireDt { get; set; }
 
         public string? UpdateAllowed { get; set; }
 
@@ -477,6 +515,8 @@ namespace IBS.Models
         public DateTime? UpdatedDate { get; set; }
 
         public string ActionType { get; set; }
+
+        public string? IeCd { get; set; }
 
         public string UserId { get; set; }
 
@@ -552,5 +592,26 @@ namespace IBS.Models
         public string Updatedby { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+
+    }
+
+    public class UnInspectedQtylstModel
+    {
+        public string CASE_NO { get; set; }
+
+        public string ITEM_SRNO { get; set; }
+
+        public string ITEM_DESC { get;set; }
+
+        public decimal QTY { get; set; }
+
+        public DateTime DELV_DATE { get; set; }
+
+        public decimal? PASSED { get; set; }
+
+        public decimal? REJECTED { get; set; }
+
+
     }
 }

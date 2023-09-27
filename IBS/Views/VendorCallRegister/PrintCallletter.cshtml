@@ -84,7 +84,7 @@
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> CO QA Division <br> RITES BHAWAN, 1, SECTOR-29, GURGAON <br> HARYANA -122001 </p></span> </Font></td>
                     }
-                    <td align=right width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><B> CALL DATED:</B> @Model.CallRecvDt  <B> CALL SNO. </B> @Model.CallSno <br><B>CASE NO. </B> @Model.CaseNo </span> <span>(PO SOURCE: @Model.Source)</span></Font></td>
+                    <td align=right width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><B> CALL DATED:</B> @Convert.ToDateTime(@Model.CallRecvDt).ToString("dd/MM/yyyy")  <B> CALL SNO. </B> @Model.CallSno <br><B>CASE NO. </B> @Model.CaseNo </span> <span>(PO SOURCE: @Model.Source)</span></Font></td>
                 </tr>
                 <tr>
                     <td colspan=2></td>
@@ -103,7 +103,7 @@
                 </tr>
                 <tr>
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">1. Purchase Order No. and Date </span></Font></td>
-                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.PoNo Dated:@Model.PoDt </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.PoNo Dated:@Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy") </span></Font></td>
                 </tr>
                 <tr>
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">2. Purchaser </span></Font></td>
@@ -386,7 +386,7 @@ newWin.print();*@
         }
 
         $("#btnPrint").click(function () {
-            
+             window.print(); 
         });
 
         completed = function (response) {

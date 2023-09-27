@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -118,7 +119,7 @@ namespace IBS.Repositories.InspectionBilling
                         CaseNo = l.CaseNo,
                         CallRecvDt = l.CallRecvDt,
                         CallInstallNo = l.CallInstallNo,
-                        CallSno = l.CallSno,
+                        CallSno = Convert.ToInt16(l.CallSno),
                         CallStatus = l.CallStatus,
                         CallLetterNo = l.CallLetterNo,
                         Remarks = l.Remarks,
@@ -161,7 +162,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.CaseNo = CallData.CaseNo;
                 model.PoNo = CallData.PoNo;
                 model.PoDt = CallData.PoDt;
-                model.CallSno = CallData.CallSno;
+                model.CallSno = Convert.ToInt16(CallData.CallSno);
                 model.CallRecvDt = CallData.CallRecvDt;
                 model.Vendor = CallData.Vendor;
                 model.CallLetterNo = CallData.CallLetterNo;
@@ -1742,7 +1743,9 @@ namespace IBS.Repositories.InspectionBilling
                                 Remarks = l.Remarks,
                                 VendInspStopped = v.VendInspStopped,
                                 VendRemarks = v.VendRemarks,
-                                RlyNonrly = l.RlyNonrly
+                                RlyNonrly = l.RlyNonrly,
+                                OnlineCallStatus = v.OnlineCallStatus,
+                                OfflineCallStatus = v.OfflineCallStatus
                             }).FirstOrDefault();
 
             if (POMaster == null)
@@ -1754,7 +1757,8 @@ namespace IBS.Repositories.InspectionBilling
                 model.VendInspStopped = POMaster.VendInspStopped;
                 model.VendRemarks = POMaster.VendRemarks;
                 model.RlyNonrly = POMaster.RlyNonrly;
-
+                model.OnlineCallStatus = POMaster.OnlineCallStatus;
+                model.OfflineCallStatus = POMaster.OfflineCallStatus;
                 return model;
             }
         }
@@ -2454,6 +2458,7 @@ namespace IBS.Repositories.InspectionBilling
 
             var Status = context.ViewGetCallStatusDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
 
+            DateTime CallStatusDt = DateTime.Now.Date;
             if (Status == null)
                 return model;
             else
@@ -2469,10 +2474,15 @@ namespace IBS.Repositories.InspectionBilling
                 model.CaseNo = Status.CaseNo;
                 model.MfgPers = Status.MfgPers;
                 model.MfgPhone = Status.MfgPhone;
-                model.CallSno = Status.CallSno;
+                model.CallSno = Convert.ToInt16(Status.CallSno);
                 model.CallStatus1 = Status.CallStatus1;
                 model.CallStatus = Status.CallStatus;
                 model.UpdateAllowed = Status.UpdateAllowed;
+                model.CallCancelStatus = Status.CallCancelStatus;
+                model.BkNo = Status.BkNo;
+                model.SetNo = Status.SetNo;
+                model.DesireDt = Status.DesireDt;
+                model.CallStatusDt = Status.CallStatusDt != null ? Status.CallStatusDt : CallStatusDt;
             }
             return model;
         }
@@ -2486,6 +2496,14 @@ namespace IBS.Repositories.InspectionBilling
                 if (t17 != null)
                 {
                     t17.CallStatus = model.CallStatus;
+                    if (model.ActionType == "C")
+                    {
+                        t17.CallStatusDt = model.CallStatusDt != null ? model.CallStatusDt : DateTime.Now.Date;
+                        t17.DtInspDesire = model.DesireDt;
+                        t17.BkNo = model.BkNo;
+                        t17.SetNo = model.SetNo;
+                    }
+
                     t17.UpdateAllowed = model.UpdateAllowed == "Y" ? "" : model.UpdateAllowed;
                     t17.Updatedby = model.Updatedby;
                     t17.Updateddate = DateTime.Now;
@@ -2743,5 +2761,7 @@ namespace IBS.Repositories.InspectionBilling
             context.SaveChanges();
             return true;
         }
+
+        
     }
 }

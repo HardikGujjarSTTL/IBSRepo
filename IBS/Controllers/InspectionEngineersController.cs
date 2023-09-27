@@ -14,6 +14,7 @@ namespace IBS.Controllers
         private readonly IDocument iDocument;
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration _config;
+        SessionHelper objSessionHelper = new SessionHelper();
 
         public InspectionEngineersController(IInspectionEngineers _inspectionEngineers, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
@@ -35,6 +36,13 @@ namespace IBS.Controllers
             if (Id > 0)
             {
                 model = inspectionEngineers.FindManageByID(Id);
+                objSessionHelper.lstInspectionEClusterModel = model.lstInspectionEClusterModel;
+                model.ID = Id;
+            }
+            else
+            {
+                model.ID = 0;
+                objSessionHelper.lstInspectionEClusterModel = null;
             }
 
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.IEFullSignature, Convert.ToString(Id));
@@ -79,6 +87,11 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                     model.UserId = Convert.ToString(UserId);
                 }
+                if (objSessionHelper.lstInspectionEClusterModel != null)
+                {
+                    model.lstInspectionEClusterModel = objSessionHelper.lstInspectionEClusterModel;
+                }
+
                 model.Createdby = UserId;
                 model.UserId = Convert.ToString(UserId);
                 string i = inspectionEngineers.DetailsInsertUpdate(model);
@@ -113,6 +126,77 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "DetailsSave", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult SaveIECluster(InspectionEngineersListModel model)
+        {
+            try
+            {
+                List<InspectionEngineersListModel> lstInspectionEClusterModel = objSessionHelper.lstInspectionEClusterModel == null ? new List<InspectionEngineersListModel>() : objSessionHelper.lstInspectionEClusterModel;
+                lstInspectionEClusterModel.RemoveAll(x => x.In_ID == Convert.ToInt32(model.In_ID));
+                if (model.In_ID > 0)
+                {
+                    model.In_ID = model.In_ID;
+                }
+                else
+                {
+                    model.In_ID = lstInspectionEClusterModel.Count > 0 ? (lstInspectionEClusterModel.OrderByDescending(a => a.In_ID).FirstOrDefault().In_ID) + 1 : 1;
+                }
+                lstInspectionEClusterModel.Add(model);
+                objSessionHelper.lstInspectionEClusterModel = lstInspectionEClusterModel;
+                return Json(new { status = true, responseText = "Cluster Added Successfully." });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers ", "SaveIECluster", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult LoadClusterTable([FromBody] DTParameters dtParameters)
+        {
+            List<InspectionEngineersListModel> lstInspectionEClusterModel = new List<InspectionEngineersListModel>();
+            if (objSessionHelper.lstInspectionEClusterModel != null)
+            {
+                lstInspectionEClusterModel = objSessionHelper.lstInspectionEClusterModel;
+            }
+
+            DTResult<InspectionEngineersListModel> dTResult = inspectionEngineers.GetClusterValueList(dtParameters, lstInspectionEClusterModel);
+            return Json(dTResult);
+        }
+
+        [HttpGet]
+        public IActionResult EditIECluster(string id)
+        {
+            try
+            {
+                InspectionEngineersListModel Clster = objSessionHelper.lstInspectionEClusterModel.Where(x => x.In_ID == Convert.ToInt32(id)).FirstOrDefault();
+                return Json(new { status = true, list = Clster });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "EditIECluster", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteIECluster(string id)
+        {
+            try
+            {
+                List<InspectionEngineersListModel> lstInspectionEClusterModel = objSessionHelper.lstInspectionEClusterModel == null ? new List<InspectionEngineersListModel>() : objSessionHelper.lstInspectionEClusterModel;
+                lstInspectionEClusterModel.RemoveAll(x => x.In_ID == Convert.ToInt32(id));
+                objSessionHelper.lstInspectionEClusterModel = lstInspectionEClusterModel;
+                return Json(new { status = true, responseText = "Cluster Deleted Successfully" });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "DeleteIECluster", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

@@ -59,6 +59,8 @@ namespace IBS.Helper
             COMPLAINTSREPORT = 17,
             [Description("/ReadWriteData/Files/Complaints_Tech_Ref")]
             ComplaintTechRef = 17,
+            [Description("/ReadWriteData/Files/INVOICE_SUPP_DOCS")]
+            ICDocument = 20,
         }
 
         public enum DocumentCategory : int
@@ -78,6 +80,7 @@ namespace IBS.Helper
             IEFullSignature = 14,
             IEInitials = 15,
             ContractEntryDoc=16,
+            ICDocument = 20,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -106,7 +109,8 @@ namespace IBS.Helper
             Browse_the_Document_to_Upload = 7,
             CallRegistrationDoc = 13,
             IEFullSignature = 14,
-            IEInitials = 15
+            IEInitials = 15,
+            ICDocument = 2
         }
 
         public enum DocumentCategory_VendorMADoc : int
@@ -533,6 +537,8 @@ namespace IBS.Helper
             [Description("Others")]
             O,
         }
+
+        
 
     }
 

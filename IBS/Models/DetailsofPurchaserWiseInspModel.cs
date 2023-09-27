@@ -43,7 +43,6 @@ namespace IBS.Models
         public string TextPurchase { get; set; }
         public string ForParticular { get; set; }
         public string lstParticular { get; set; }
-        public string MaterialValue { get; set; }
         public List<DetailsofPurchaserWiseInspModel> lstdetailspinsp { get; set; }
     }
 }

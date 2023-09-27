@@ -1,13 +1,12 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Dynamic;
-using System.Globalization;
+using System.Drawing;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -783,6 +782,7 @@ namespace IBS.Repositories.InspectionBilling
 
             }
         }
+
         public string GetConsigneeID(string CaseNo, DateTime? CallRecvDt, int CallSno)
         {
             string Cd = "";
@@ -1045,7 +1045,7 @@ namespace IBS.Repositories.InspectionBilling
                         GetCall.IrfcBpoCd = model.IrfcBpo;
 
                         context.SaveChanges();
-                        //ID = model.Caseno;
+                        msg = model.Caseno;
                     }
                     #endregion
                     Cstatus = setCallStatus(model);
@@ -1061,7 +1061,7 @@ namespace IBS.Repositories.InspectionBilling
                         T17.Updateddate = DateTime.Now.Date;
 
                         context.SaveChanges();
-                        //ID = model.Caseno;
+                        msg = model.Caseno;
                     }
                     #endregion
                 }
@@ -1125,11 +1125,15 @@ namespace IBS.Repositories.InspectionBilling
 
         public string ReturnBillSubmit(InspectionCertModel model, string GetRegionCode)
         {
-            string msg = "";
+            string msg = "N";
 
             var return_bill = context.RitesBillDtls.Where(x => x.BillNo == model.BillNo).FirstOrDefault();
 
-            var return_bill_resent_cris = context.RitesBillDtls.Where(x => x.BillNo == model.BillNo && x.ReturnDate != null && x.Co6Status == "R").Max(x => x.BillResentCount);
+            //var return_bill_resent_cris = context.RitesBillDtls.Where(x => x.BillNo == model.BillNo && x.ReturnDate != null && x.Co6Status == "R").Max(x => x.BillResentCount);
+
+            var query = context.RitesBillDtls.Where(b => b.BillNo == model.BillNo && b.Co6Status == "R");
+
+            int? return_bill_resent_cris = query.Any() ? query.Max(b => (int?)Convert.ToInt32(b.BillResentCount)) : 0;
 
             var return_bill_resent_ibs = context.V22Bills.Where(x => x.BillNo == model.BillNo).Select(x => (int?)Convert.ToInt32(x.BillResentCount) ?? 0).FirstOrDefault();
 
@@ -1144,6 +1148,7 @@ namespace IBS.Repositories.InspectionBilling
                     SetBill.Datetime = DateTime.Now.Date;
                     context.SaveChanges();
                 }
+                msg = "U";
             }
 
             return msg;
@@ -1181,7 +1186,7 @@ namespace IBS.Repositories.InspectionBilling
                 msg = "Book No. and Set No. specified is being Cancelled or Missed!!!";
                 return msg;
             }
-            else if (bscheck2 != null)
+            else if (bscheck2 != "")
             {
                 msg = "Recipient GST No. State Code Does not match with the State Code of the Recipient!!!";
                 return msg;
@@ -1325,11 +1330,11 @@ namespace IBS.Repositories.InspectionBilling
         public int financial_year_check(InspectionCertModel model)
         {
             int Id = 0;
-            var IcData = context.T20Ics.Where(ic => ic.BkNo.Trim() == model.Bkno && ic.SetNo == model.Setno && ic.CaseNo.Substring(0, 1) == model.Regioncode).Select(ic => ic.IcDt);
+            var IcData = context.T20Ics.Where(ic => ic.BkNo.Trim() == model.Bkno && ic.SetNo == model.Setno && ic.CaseNo.Substring(0, 1) == model.Regioncode).Select(ic => ic.IcDt).FirstOrDefault();
             string myYear, myMonth;
             int fin_year_IC = 0;
-            myYear = Convert.ToString(IcData).Substring(0, 4);
-            myMonth = Convert.ToString(IcData).Substring(4, 2);
+            myYear = Convert.ToString(IcData).Substring(6, 4);
+            myMonth = Convert.ToString(IcData).Substring(3, 2);
 
             if (Convert.ToInt16(myMonth) >= 4 && Convert.ToInt16(myMonth) <= 12)
             {
@@ -1374,21 +1379,77 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         gen_credit_note(model);
                     }
+                    else
+                    {
+                        gen_bill(model);
+                    }
                 }
             }
             else if (model.BillNo != null)
             {
+                if (model.IcTypeId == 9)
+                {
+                    gen_credit_note(model);
+                }
+                else
+                {
+                    gen_bill(model);
+                }
             }
+            str = model.BillNo;
             return str;
         }
 
+        public string BillDateUpdate(InspectionCertModel model, string Region)
+        {
+            string str = "";
+            int oldMonth = Convert.ToInt32(Convert.ToString(model.BillDt).Substring(3, 2));
+            string frm = "", to = "";
+            if (oldMonth >= 4)
+            {
+                frm = Convert.ToString(model.BillDt).Substring(6, 4) + "04";
+                to = Convert.ToString(Convert.ToInt32(Convert.ToString(model.BillDt).Substring(6, 4)) + 1) + "03";
+            }
+            else
+            {
+                frm = Convert.ToString(Convert.ToInt32(Convert.ToString(model.BillDt).Substring(6, 4)) - 1) + "04";
+                to = Convert.ToString(model.BillDt).Substring(6, 4) + "03";
+
+            }
+            string newdt = Convert.ToString(model.BillDt).Substring(6, 4) + Convert.ToString(model.BillDt).Substring(3, 2);
+            if (chk_bill_dt(Convert.ToString(model.BillDt), Region) == 1)
+            {
+                if (Convert.ToInt32(newdt) >= Convert.ToInt32(frm) && Convert.ToInt32(newdt) <= Convert.ToInt32(to))
+                {
+                    var BillDtUpdate = context.T22Bills.Where(x => x.BillNo == model.BillNo).First();
+                    if (BillDtUpdate != null)
+                    {
+                        BillDtUpdate.BillDt = model.BillDt;
+                        BillDtUpdate.Updatedby = model.UserId;
+                        BillDtUpdate.Updateddate = DateTime.Now.Date;
+
+                        context.SaveChanges();
+                        str = "1";
+                    }
+                }
+                else
+                {
+                    str = "2";
+                }
+            }
+            else
+            {
+                str = "3";
+            }
+            return str;
+        }
 
         int chk_bill_dt(string BillDt, string GetRegionCode)
         {
             if (GetRegionCode != "Q")
             {
                 var allowstatus = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.AllowOldBillDt).FirstOrDefault();
-                var min_bill_dt = context.T87BillControls.FirstOrDefault();
+                var min_bill_dt = context.T87BillControls.Select(x => x.MinBillDt).FirstOrDefault();
 
                 string myYear, myMonth, myDay;
                 myYear = Convert.ToString(BillDt).Substring(6, 4);
@@ -1399,14 +1460,16 @@ namespace IBS.Repositories.InspectionBilling
                 if (allowstatus == "N")
                 {
                     //Bhavesh changes pending datetime.now.add - GraceDays
-                    int? grace_days = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.GraceDays).FirstOrDefault();
+                    int? gDays = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.GraceDays).FirstOrDefault();
+                    string cDt = DateTime.Now.Date.ToString("yyyyMMdd");
 
+                    int? grace_days = Convert.ToInt32(cDt) - Convert.ToInt32(gDays);
 
                     if (grace_days != null)
                     {
                         if (dt1.CompareTo(grace_days) > 0 || dt1.CompareTo(grace_days) == 0)
                         {
-                            if (dt1.CompareTo(min_bill_dt) > 0)
+                            if (Convert.ToDateTime(BillDt).ToString("dd/MM/yyyy").CompareTo(Convert.ToDateTime(min_bill_dt).ToString("dd/MM/yyyy")) > 0)
                             {
                                 return (1);
                             }
@@ -1428,7 +1491,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
                 else
                 {
-                    if (dt1.CompareTo(min_bill_dt) > 0)
+                    if (Convert.ToDateTime(BillDt).ToString("dd/MM/yyyy").CompareTo(Convert.ToDateTime(min_bill_dt).ToString("dd/MM/yyyy")) > 0)
                     {
                         return (1);
                     }
@@ -1470,6 +1533,278 @@ namespace IBS.Repositories.InspectionBilling
                 string certdt = myYear1 + myMonth1 + myDay1;
             }
 
+        }
+
+        void gen_bill(InspectionCertModel model)
+        {
+            if (model.BpoCd != model.Bpo)
+            {
+                var T20 = context.T20Ics.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                if (T20 != null)
+                {
+                    T20.BpoCd = model.BpoCd;
+                    T20.Updatedby = model.UserId;
+                    T20.Updateddate = DateTime.Now.Date;
+                    context.SaveChanges();
+                }
+            }
+            string myYear1, myMonth1, myDay1;
+            myYear1 = Convert.ToString(model.CertDt).Substring(6, 4);
+            myMonth1 = Convert.ToString(model.CertDt).Substring(3, 2);
+            myDay1 = Convert.ToString(model.CertDt).Substring(0, 2);
+            string certdt = myYear1 + myMonth1 + myDay1;
+
+            decimal in_fee;
+            if (model.BpoType == "R" && model.IcTypeId == 1)
+            {
+                in_fee = model.RlyBpoFee;
+            }
+            else
+            {
+                in_fee = Convert.ToDecimal(model.BpoFee);
+            }
+            string TaxType;
+            if (Convert.ToInt32(certdt) >= 20170701)
+            {
+                TaxType = model.TaxType;
+            }
+            else
+            {
+                TaxType = model.BpoTaxType;
+            }
+            int NoOfInsp;
+            if (model.NoOfInsp == null)
+            {
+                NoOfInsp = 1;
+            }
+            else
+            {
+                NoOfInsp = model.NoOfInsp;
+            }
+            string InvoiceNo = null;
+            if (Convert.ToInt32(certdt) >= 20170701)
+            {
+                if (model.InvoiceNo == "" || model.InvoiceNo.Length < 13)
+                {
+                    if (model.Regioncode == "N")
+                    {
+                        InvoiceNo = "0708";
+                    }
+                    else if (model.Regioncode == "W")
+                    {
+                        InvoiceNo = "2705";
+                    }
+                    else if (model.Regioncode == "E")
+                    {
+                        InvoiceNo = "1906";
+                    }
+                    else if (model.Regioncode == "S")
+                    {
+                        InvoiceNo = "3307";
+                    }
+                    else if (model.Regioncode == "C")
+                    {
+                        InvoiceNo = "2210";
+                    }
+                    else if (model.Regioncode == "Q")
+                    {
+                        InvoiceNo = "0708";
+                    }
+                }
+                else
+                {
+                    InvoiceNo = model.InvoiceNo;
+                }
+            }
+            int MaxFee;
+            if (model.MaxFee == null || model.MaxFee == 0)
+            {
+                MaxFee = -1;
+            }
+            else
+            {
+                MaxFee = Convert.ToInt32(model.MaxFee);
+            }
+            int MinFee;
+            if (model.MinFee == null || model.MinFee == 0)
+            {
+                MinFee = 0;
+            }
+            else
+            {
+                MinFee = Convert.ToInt32(model.MinFee);
+            }
+
+            DataSet ds = new DataSet();
+            if (Convert.ToInt32(certdt) >= 20170701)
+            {
+                OracleParameter[] parameter = new OracleParameter[18];
+                parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Char, model.Regioncode, ParameterDirection.Input);
+                parameter[1] = new OracleParameter("in_case_no", OracleDbType.Char, model.Caseno, ParameterDirection.Input);
+                parameter[2] = new OracleParameter("in_call_recv_dt", OracleDbType.Char, model.Callrecvdt, ParameterDirection.Input);
+                parameter[3] = new OracleParameter("in_call_sno", OracleDbType.Int32, model.Callsno, ParameterDirection.Input);
+                parameter[4] = new OracleParameter("in_consignee_cd", OracleDbType.Int32, model.Consignee, ParameterDirection.Input);
+                parameter[5] = new OracleParameter("in_bill", OracleDbType.Varchar2, model.BillNo, ParameterDirection.Input);
+                parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Char, model.BpoFeeType, ParameterDirection.Input);
+                parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, in_fee, ParameterDirection.Input);
+                parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Char, TaxType, ParameterDirection.Input);
+                parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
+                parameter[10] = new OracleParameter("in_invoice", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);
+                parameter[11] = new OracleParameter("in_max_fee", OracleDbType.Int32, MaxFee, ParameterDirection.Input);
+                parameter[12] = new OracleParameter("in_min_fee", OracleDbType.Int32, MinFee, ParameterDirection.Input);
+                parameter[13] = new OracleParameter("in_bill_dt", OracleDbType.Char, Convert.ToDateTime(model.BillDt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
+                parameter[14] = new OracleParameter("in_adv_bill", OracleDbType.Char, model.chkABill, ParameterDirection.Input);
+                parameter[15] = new OracleParameter("out_err_cd", OracleDbType.Int32, 1, ParameterDirection.Output);
+                parameter[16] = new OracleParameter("out_bill", OracleDbType.Varchar2, 20, ParameterDirection.Output);
+                parameter[17] = new OracleParameter("out_fee", OracleDbType.Int32, 15, ParameterDirection.Output);
+
+                ds = DataAccessDB.GetDataSet("GENERATE_BILL_GST", parameter);
+            }
+            else
+            {
+                OracleParameter[] parameter = new OracleParameter[15];
+                parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Char, model.Regioncode, ParameterDirection.Input);
+                parameter[1] = new OracleParameter("in_case_no", OracleDbType.Varchar2, model.Caseno, ParameterDirection.Input);
+                parameter[2] = new OracleParameter("in_call_recv_dt", OracleDbType.Varchar2, Convert.ToDateTime(model.Callrecvdt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
+                parameter[3] = new OracleParameter("in_call_sno", OracleDbType.Int32, model.Callsno, ParameterDirection.Input);
+                parameter[4] = new OracleParameter("in_consignee_cd", OracleDbType.Int32, model.Consignee, ParameterDirection.Input);
+                parameter[5] = new OracleParameter("in_bill", OracleDbType.Varchar2, model.BillNo, ParameterDirection.Input);
+                parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Varchar2, model.BpoFeeType, ParameterDirection.Input);
+                parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, in_fee, ParameterDirection.Input);
+                parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Varchar2, TaxType, ParameterDirection.Input);
+                parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
+                parameter[10] = new OracleParameter("in_max_fee", OracleDbType.Int32, MaxFee, ParameterDirection.Input);
+                parameter[11] = new OracleParameter("in_min_fee", OracleDbType.Int32, MinFee, ParameterDirection.Input);
+                parameter[12] = new OracleParameter("in_bill_dt", OracleDbType.Varchar2, Convert.ToDateTime(model.BillDt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
+                parameter[13] = new OracleParameter("in_adv_bill", OracleDbType.Varchar2, model.chkABill, ParameterDirection.Input);
+                parameter[14] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                //parameter[15] = new OracleParameter("out_err_cd", OracleDbType.Int32, ParameterDirection.Output);
+                //parameter[16] = new OracleParameter("out_bill", OracleDbType.Varchar2, ParameterDirection.Output);
+                //parameter[17] = new OracleParameter("out_fee", OracleDbType.Int32, ParameterDirection.Output);
+
+
+                ds = DataAccessDB.GetDataSet("SP_GENERATE_BILL_NEW", parameter);
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    model.UpdateStatus = Convert.ToString(ds.Tables[0].Rows[0]["OUT_ERR_CD"]);
+                }
+                if (model.UpdateStatus == "0")
+                {
+                    var str3 = context.T22Bills.Where(x => x.BillNo == model.BillNo).FirstOrDefault();
+                    if (str3 != null)
+                    {
+                        model.TMValue = Convert.ToDecimal(str3.MaterialValue);
+                        model.TIFee = str3.InspFee;
+                        model.NetFee = str3.BillAmount;
+                        model.InvoiceNo = str3.InvoiceNo;
+                    }
+                    var str = context.T22Bills.Where(x => x.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
+                    if (str != null)
+                    {
+                        str.Remarks = model.Remarks;
+                        str.UserId = model.UserId;
+                        str.Datetime = DateTime.Now.Date;
+
+                        context.SaveChanges();
+                    }
+                    var str_ic = context.T30IcReceiveds.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.IeCd == model.IeCd && x.Region == model.Regioncode).FirstOrDefault();
+                    if (str_ic != null)
+                    {
+                        str_ic.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
+
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    model.UpdateStatus = Convert.ToString(ds.Tables[0].Rows[0]["OUT_ERR_CD"]);
+                }
+            }
+        }
+
+        public InspectionCertModel FindByItemID(string CaseNo, DateTime CallRecvDt, int CallSno, int ItemSrnoPo, string Region)
+        {
+            InspectionCertModel model = new();
+            T18CallDetail CDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+
+            if (CDetails == null)
+                throw new Exception("Call Record Not found");
+            else
+            {
+                model.Caseno = CDetails.CaseNo;
+                model.Callrecvdt = CDetails.CallRecvDt;
+                model.Callsno = CDetails.CallSno;
+
+                model.ItemSrnoPo = CDetails.ItemSrnoPo;
+                model.ItemDescPo = CDetails.ItemDescPo;
+                model.QtyPassed = CDetails.QtyPassed;
+                model.QtyToInsp = CDetails.QtyToInsp;
+                model.QtyPassed = CDetails.QtyPassed;
+                model.QtyRejected = CDetails.QtyRejected;
+                model.QtyDue = CDetails.QtyDue;
+
+                return model;
+            }
+        }
+
+        public ICPopUpModel FindByBillDetails(string BillNo, string Region)
+        {
+            ICPopUpModel model = new();
+            T22Bill Bill = context.T22Bills.Where(x => x.BillNo == BillNo).FirstOrDefault();
+
+            if (Bill == null)
+                throw new Exception("Call Record Not found");
+            else
+            {
+                model.Caseno = Bill.CaseNo;
+                model.BillNo = Bill.BillNo;
+                model.TMValue = Convert.ToDecimal(Bill.MaterialValue);
+                model.TIFee = Bill.InspFee;
+                model.BillDt = Bill.BillDt;
+
+                return model;
+            }
+        }
+
+        public string UpdateCallDetails(InspectionCertModel model, int ItemSrnoPo, string CaseNo, DateTime CallRecvDt, int CallSno)
+        {
+            string ID = "";
+            var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+            if (CallDetails != null)
+            {
+                CallDetails.ItemDescPo = model.ItemDescPo;
+                CallDetails.QtyToInsp = model.QtyToInsp;
+                CallDetails.QtyPassed = model.QtyPassed;
+                CallDetails.QtyRejected = model.QtyRejected;
+                CallDetails.QtyDue = model.QtyDue;
+
+                CallDetails.Updatedby = model.UserId;
+                CallDetails.Updateddate = DateTime.Now.Date;
+
+                context.SaveChanges();
+                ID = Convert.ToString(CallDetails.ItemSrnoPo);
+            }
+            return ID;
+        }
+
+        public string DocUpdate(string BillNo, string UserId)
+        {
+            InspectionCertModel model = new();
+            T22Bill Bill = context.T22Bills.Where(x => x.BillNo == BillNo).FirstOrDefault();
+
+            if (Bill == null)
+                throw new Exception("Bill Record Not found");
+            else
+            {
+                Bill.InvoiceSuppDocs = "Y";
+                Bill.Updatedby = UserId;
+                Bill.Updateddate = DateTime.Now.Date;
+
+                context.SaveChanges();
+
+            }
+            return BillNo;
         }
     }
 }

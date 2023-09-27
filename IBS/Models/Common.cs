@@ -2706,6 +2706,37 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> RlyBPOFee()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "0.522% (For PO Value between 5 Lakhs to 1 Crore)";
+            single.Value = ".522";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.116% (For PO Value between 1 Crore to 25 Crores)";
+            single.Value = ".116";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.053% (For PO Value between 25 Crores to 100 Crores)";
+            single.Value = ".053";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.035% (For PO Value between more then 100 Crores)";
+            single.Value = ".035";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.9% (For PO Date on or before 26-Nov-2022)";
+            single.Value = ".9";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.55% (For CR Billing)";
+            single.Value = ".55";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> GetClient()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -3384,6 +3415,15 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ScopeOfsector)).ToList();
         }
+
+        //public static int GetMAXCALL(string CaseNo, string CallStage)
+        //{
+        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+        //    var count = context.T17CallRegisters.Where(call => call.CaseNo == CaseNo && call.CallStatus == "M" && call.FinalOrStage == CallStage).Select(call => call.CaseNo).Count();
+
+        //    int result = count != null ? count : 0;
+        //    return result;
+        //}
     }
 
     public static class DbContextHelper

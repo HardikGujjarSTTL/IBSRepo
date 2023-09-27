@@ -113,6 +113,11 @@
                         @Html.DropDownListFor(model => model.OnlineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
                         <span asp-validation-for="OnlineCallStatus" class="text-danger"></span>
                     </div>
+                    <div class="col-md-4">
+                        <label for="OnlineCallStatus">Vendor Offline Call Registration Status (Y/N)</label>
+                        @Html.DropDownListFor(model => model.OfflineCallStatus, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
+                        <span asp-validation-for="OfflineCallStatus" class="text-danger"></span>
+                    </div>
                     <div class="col-md-12 mb-3">
                     <span class="text-danger">* Select Yes in case the given Vendor Name & Address is given Vendor ID and Password for online Call Registration.</span>
                     </div>

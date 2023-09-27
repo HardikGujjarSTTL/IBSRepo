@@ -74,8 +74,26 @@ namespace IBS.Repositories
                          CallMarkingStartDt = t09.CallMarkingStartDt,
                          InspectionStartDt = t09.InspectionStartDt,
                          RepatriationDt = t09.RepatriationDt,
-                         Cluster = context.T101IeClusters.Where(x => x.IeCode == Id).Select(x => x.ClusterCode).SingleOrDefault(),
+                         //Cluster = context.T101IeClusters.Where(x => x.IeCode == Convert.ToInt32(Id)).Select(x => x.ClusterCode).SingleOrDefault(),
                      }).FirstOrDefault();
+
+            List<InspectionEngineersListModel> clst = (from T101 in context.T101IeClusters
+                                                       join T09 in context.T09Ies on T101.IeCode equals T09.IeCd
+                                                       join T99 in context.T99ClusterMasters on T101.ClusterCode equals T99.ClusterCode
+                                                              where T101.IeCode == Id
+                                                              select new
+                                                              InspectionEngineersListModel
+                                                              {
+                                                                  In_ID = Convert.ToInt32(T101.IeCode),
+                                                                  IeCd = Convert.ToInt32(T101.IeCode),
+                                                                  IeName = T09.IeName,
+                                                                  IeDepartment = T101.DepartmentCode,
+                                                                  Cluster = Convert.ToInt32(T101.ClusterCode),
+                                                                  ClusterID = Convert.ToString(T101.ClusterCode),
+                                                                  lstCluster = Convert.ToString(T99.ClusterName),
+                                                              }
+                                                 ).ToList();
+            model.lstInspectionEClusterModel = clst;
 
             return model;
         }
@@ -158,8 +176,6 @@ namespace IBS.Repositories
             string status = "";
             int code = new int();
 
-            var ClusterDetails = context.T101IeClusters.Where(x => x.ClusterCode == Convert.ToByte(model.Cluster) && x.DepartmentCode == model.IeDepartment).FirstOrDefault();
-
             if (model.IeCd == 0)
             {
                 int count = context.T09Ies.Where(t09 => t09.IeRegion == model.IeRegion && (t09.IeSname == model.IeSname || t09.IeEmpNo == model.IeEmpNo)).Count();
@@ -176,7 +192,7 @@ namespace IBS.Repositories
                     obj.IeDesig = model.IeDesig;
                     obj.IeSealNo = model.IeSealNo;
                     obj.IeDepartment = model.IeDepartment;
-                    obj.IeCityCd = Convert.ToInt32(model.IeCityCd);
+                    obj.IeCityCd = Convert.ToInt32(model.IeCityId);
                     obj.IePhoneNo = model.IePhoneNo;
                     obj.IeEmail = model.IeEmail;
                     obj.IeCoCd = model.IeCoCd;
@@ -225,7 +241,7 @@ namespace IBS.Repositories
                     IE.IeDesig = model.IeDesig;
                     IE.IeSealNo = model.IeSealNo;
                     IE.IeDepartment = model.IeDepartment;
-                    IE.IeCityCd = Convert.ToInt32(model.IeCityCd);
+                    IE.IeCityCd = Convert.ToInt32(model.IeCityId);
                     IE.IePhoneNo = model.IePhoneNo;
                     IE.IeCoCd = model.IeCoCd;
                     IE.IeStatus = model.IeStatus;
@@ -258,24 +274,48 @@ namespace IBS.Repositories
                     return status;
                 }
             }
+            //var ClusterDetails = context.T101IeClusters.Where(x => x.ClusterCode == Convert.ToByte(model.Cluster) && x.DepartmentCode == model.IeDepartment).FirstOrDefault();
+            //if (ClusterDetails == null)
+            //{
+            //    T101IeCluster Cster = new T101IeCluster();
+            //    Cster.IeCode = model.IeCd;
+            //    Cster.ClusterCode = model.Cluster;
+            //    Cster.DepartmentCode = model.IeDepartment;
+            //    Cster.UserId = model.UserId;
+            //    Cster.Datetime = DateTime.Now.Date;
+            //    context.T101IeClusters.Add(Cster);
+            //    context.SaveChanges();
+            //}
+            //else
+            //{
+            //    ClusterDetails.IeCode = model.IeCd;
+            //    ClusterDetails.UserId = model.UserId;
+            //    ClusterDetails.Datetime = DateTime.Now.Date;
+            //    context.SaveChanges();
+            //}
 
-            if (ClusterDetails == null)
+            var T101IeClusters = (from T101 in context.T101IeClusters where T101.IeCode == model.IeCd select T101).ToList();
+            if (T101IeClusters.Count > 0 && T101IeClusters != null)
             {
-                T101IeCluster Cster = new T101IeCluster();
-                Cster.IeCode = model.IeCd;
-                Cster.ClusterCode = model.Cluster;
-                Cster.DepartmentCode = model.IeDepartment;
-                Cster.UserId = model.UserId;
-                Cster.Datetime = DateTime.Now.Date;
-                context.T101IeClusters.Add(Cster);
+                context.T101IeClusters.RemoveRange(T101IeClusters);
                 context.SaveChanges();
             }
-            else
+            if (model.lstInspectionEClusterModel != null)
             {
-                ClusterDetails.IeCode = model.IeCd;
-                ClusterDetails.UserId = model.UserId;
-                ClusterDetails.Datetime = DateTime.Now.Date;
-                context.SaveChanges();
+                foreach (var item in model.lstInspectionEClusterModel)
+                {
+                    T101IeCluster Clst = new T101IeCluster();
+                    {
+                        Clst.IeCode = item.IeCd;
+                        Clst.DepartmentCode = item.IeDepartment;
+                        Clst.ClusterCode = Convert.ToInt32(item.ClusterID);
+                        Clst.UserId = model.UserId;
+                        Clst.Datetime = DateTime.Now.Date;
+                    }
+                    context.T101IeClusters.Add(Clst);
+                    context.SaveChanges();
+                }
+                
             }
 
             return status;
@@ -305,6 +345,61 @@ namespace IBS.Repositories
             msg = Convert.ToString(itemDelete.IeCd);
             return msg;
         }
+
+        public DTResult<InspectionEngineersListModel> GetClusterValueList(DTParameters dtParameters, List<InspectionEngineersListModel> ClusterModels)
+        {
+            DTResult<InspectionEngineersListModel> dTResult = new() { draw = 0 };
+            IQueryable<InspectionEngineersListModel>? query = null;
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "IeCd";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "IeCd";
+                orderAscendingDirection = true;
+            }
+
+            query = (from u in ClusterModels.OrderBy(x => x.IeCd)
+                     select new InspectionEngineersListModel
+                     {
+                         In_ID = u.In_ID,
+                         IeCd = Convert.ToInt32(u.IeCd),
+                         IeName = u.IeName,
+                         IeDepartment = u.IeDepartment == "M" ? "Mechanical" : u.IeDepartment == "E" ? "Electrical" : u.IeDepartment == "C" ? "Civil" : u.IeDepartment == "L" ? "Metallurgy" : u.IeDepartment == "T" ? "Textiles" : "Power Engineering",
+                         Cluster = u.Cluster,
+                         lstCluster = u.lstCluster,
+                         ClusterID = u.ClusterID
+                     }).AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => w.IeDepartment.ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+
+        }
+
     }
 
 }

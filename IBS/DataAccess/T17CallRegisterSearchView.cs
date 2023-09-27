@@ -13,7 +13,7 @@ public partial class T17CallRegisterSearchView
 
     public byte? CallInstallNo { get; set; }
 
-    public short? CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public string? CallStatus { get; set; }
 
@@ -28,4 +28,8 @@ public partial class T17CallRegisterSearchView
     public string? IeSname { get; set; }
 
     public string? Vendor { get; set; }
+
+    public string? OnlineCallStatus { get; set; }
+
+    public string? OfflineCallStatus { get; set; }
 }
