@@ -6,6 +6,8 @@ using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using IBS.Helper;
 using IBS.Models;
+using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace IBS.Controllers.Reports
 {
@@ -27,7 +29,18 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
+        public IActionResult Manage(string ReportType)
+        {
+            ManagementReportsModel model = new();
+
+            if (TempData.ContainsKey(ReportType))
+            {
+                model = JsonConvert.DeserializeObject<ManagementReportsModel>(TempData.Peek(ReportType).ToString());
+            }
+            return View(model);
+        }
+
+        public IActionResult Manage1(string ReportType, DateTime FromDate, DateTime ToDate)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
             if (ReportType == "IE_X") model.ReportTitle = "IE Performance";
@@ -39,70 +52,80 @@ namespace IBS.Controllers.Reports
             else if (ReportType == "COUNTIC") model.ReportTitle = "CM and IE wise IC issued but not recieved";
             else if (ReportType == "CALL_DETAILS") model.ReportTitle = "Call Details Dashborad";
 
-            return View(model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageRWB(string ReportType, string FromYearMonth, string ToYearMonth)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromYearMonth = FromYearMonth, ToYearMonth = ToYearMonth };
             if (ReportType == "RWB") model.ReportTitle = "Region Wise Billing Summary";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageRWCO(string ReportType, DateTime FromDate, string Outstanding)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, Outstanding = Outstanding };
             if (ReportType == "R") model.ReportTitle = "Region Wise Comparison of Outstanding";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageSuperSurprise(string ReportType, DateTime FromDate, DateTime ToDate, string ParticularCM, string ParticularSector)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ParticularCM = ParticularCM, ParticularSector = ParticularSector };
             if (ReportType == "SUPSUR") model.ReportTitle = "Super Surprise Details";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageConsignReject(string ReportType, DateTime FromDate, DateTime ToDate, string Region, string Status)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, Region = Region, Status = Status };
             if (ReportType == "CONSIGN_REJECT") model.ReportTitle = "Online Consignee Rejection Report";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageOutstandingOverRegion(string ReportType, DateTime FromDate)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, Region = Region };
             if (ReportType == "X") model.ReportTitle = "Outstanding of One Region Over Other";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageClientWiseRejection(string ReportType, DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ClientType = ClientType, BPORailway = BPORailway };
             if (ReportType == "CLIENTWISEREJ") model.ReportTitle = "Rejection Details Client Wise";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageNonConformity(string ReportType, string FromYearMonth, string ToYearMonth, int IeCd)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromYearMonth = FromYearMonth, ToYearMonth = ToYearMonth, IeCd = IeCd };
             if (ReportType == "NON_CONFORMITY") model.ReportTitle = "Format for Monthly Non Conformity Report";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageTentativeInspection(string ReportType, DateTime FromDate, DateTime ToDate, string ParticularCM, string SortedOn)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ParticularCM = ParticularCM, SortedOn = SortedOn };
             if (ReportType == "HIGHVALUE") model.ReportTitle = "Tentative Inspection Fee Wise Pending Call";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult ManageCallRemarking(string ReportType, DateTime FromDate, DateTime ToDate, string CallRemarkingDate, string CallsStatus)
         {
             ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, CallRemarkingDate = CallRemarkingDate, CallsStatus = CallsStatus };
             if (ReportType == "REMARKING") model.ReportTitle = "Call Remarking Detail";
-            return View("Manage", model);
+            TempData[ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { ReportType });
         }
 
         public IActionResult IEPerformance(DateTime FromDate, DateTime ToDate)
