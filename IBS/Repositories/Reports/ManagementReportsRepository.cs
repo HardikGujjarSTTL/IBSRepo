@@ -2,10 +2,13 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models.Reports;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Reports
 {
@@ -396,6 +399,161 @@ namespace IBS.Repositories.Reports
                 SUP_SUR_NO = x.SUP_SUR_NO,
 
             }).ToList();
+
+            return model;
+        }
+
+        public ConsignRejectModel GetConsignRejectData(DateTime FromDate, DateTime ToDate, string Region, string InspRegion, string Status)
+        {
+            ConsignRejectModel model = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            var query = from t in context.TempOnlineComplaints
+                        join v in context.V05Vendors on t.VendCd equals v.VendCd
+                        join c in context.T40ConsigneeComplaints on t.ComplaintId equals c.ComplaintId into cc
+                        from c in cc.DefaultIfEmpty()
+                        where t.TempComplaintDt >= FromDate && t.TempComplaintDt <= ToDate
+                        && (!string.IsNullOrEmpty(InspRegion) ? t.InspRegion == InspRegion : true)
+                        && (Status == "P" ? t.Status == null : (Status == "A" || Status == "R") ? t.Status == Status : true)
+                        orderby t.TempComplaintDt
+                        select new
+                        {
+                            t.TempComplaintId,
+                            t.TempComplaintDt,
+                            t.ConsigneeName,
+                            t.ConsigneeDesig,
+                            t.ConsigneeEmail,
+                            t.ConsigneeMobile,
+                            t.RejMemoNo,
+                            t.RejMemoDt,
+                            t.CaseNo,
+                            t.BkNo,
+                            t.SetNo,
+                            t.InspRegion,
+                            t.IeCd,
+                            t.CoCd,
+                            t.ConsigneeCd,
+                            t.ItemDesc,
+                            v.Vendor,
+                            t.QtyRejected,
+                            t.RejectionValue,
+                            t.RejectionReason,
+                            Status = t.Status == "A" ? "Accepted"
+                                    : t.Status == "R" ? "Rejected" : "Pending",
+                            t.TempCompRejReason,
+                            t.ComplaintId,
+                            JiRequired = c.JiRequired == "Y" ? "YES"
+                                    : c.JiRequired == "N" ? "NO" : "NOT DECIDED",
+                            c.JiSno
+                        };
+
+            model.lstConsignReject = query.AsEnumerable().Select((item, index) => new ConsignRejectModel.ConsignRejectListModel
+            {
+                ID = index + 1,
+                TempComplaintId = item.TempComplaintId,
+                TempComplaintDt = item.TempComplaintDt,
+                ConsigneeName = item.ConsigneeName,
+                ConsigneeDesig = item.ConsigneeDesig,
+                ConsigneeEmail = item.ConsigneeEmail,
+                ConsigneeMobile = item.ConsigneeMobile,
+                RejMemoNo = item.RejMemoNo,
+                RejMemoDt = item.RejMemoDt,
+                CaseNo = item.CaseNo,
+                BkNo = item.BkNo,
+                SetNo = item.SetNo,
+                InspRegion = item.InspRegion,
+                IeCd = item.IeCd,
+                CoCd = item.CoCd,
+                ConsigneeCd = item.ConsigneeCd,
+                ItemDesc = item.ItemDesc,
+                Vendor = item.Vendor,
+                QtyRejected = item.QtyRejected,
+                RejectionValue = item.RejectionValue,
+                RejectionReason = item.RejectionReason,
+                Status = item.Status,
+                TempCompRejReason = item.TempCompRejReason,
+                ComplaintId = item.ComplaintId,
+                JiRequired = item.JiRequired,
+                JiSno = item.JiSno,
+            }).ToList();
+
+            return model;
+        }
+
+        public OutstandingOverRegionModel GetOutstandingOverRegion(DateTime FromDate)
+        {
+            OutstandingOverRegionModel model = new();
+
+            model.FromDate = FromDate;
+
+            model.lstOutstandingOverRegion = (from b in context.V22bOutstandingBills
+                                              where b.AmountOutstanding > 0 && b.BillDt <= FromDate
+                                              group b by new { b.BpoRegion, b.RegionCode } into g
+                                              select new OutstandingOverRegionModel.OutstandingOverRegionListModel
+                                              {
+                                                  Count = g.Count(),
+                                                  BpoRegion = g.Key.BpoRegion,
+                                                  RegionCode = g.Key.RegionCode,
+                                                  Total = g.Sum(b => b.AmountOutstanding) ?? 0
+                                              }).ToList();
+
+            return model;
+        }
+
+        public ClientWiseRejectionModel GetClientWiseRejection(DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway)
+        {
+            ClientWiseRejectionModel model = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+
+            
+
+            model.lstClientWiseRejection = (from t13 in context.T13PoMasters
+                                            join t20 in context.T20Ics on t13.CaseNo equals t20.CaseNo
+                                            join t22 in context.T22Bills on t20.BillNo equals t22.BillNo
+                                            join t09 in context.T09Ies on t20.IeCd equals t09.IeCd
+                                            join v05 in context.V05Vendors on t13.VendCd equals v05.VendCd
+                                            join t23 in context.T23BillItems on t22.BillNo equals t23.BillNo
+                                            join t18 in context.T18CallDetails on new { t20.CaseNo, t20.CallRecvDt, t20.CallSno, ItemSrnoPo = t23.ItemSrno ?? 0 } equals new { t18.CaseNo, t18.CallRecvDt, t18.CallSno, t18.ItemSrnoPo }
+                                            where t20.IcTypeId == 2 && t13.RlyNonrly == ClientType && t13.RlyCd.ToUpper() == BPORailway && t20.IcDt >= FromDate && t20.IcDt <= ToDate
+                                            orderby v05.Vendor, t20.IcDt, t18.QtyRejected descending
+                                            select new ClientWiseRejectionModel.ClientWiseRejectionListModel
+                                            {
+                                                BillNo = t22.BillNo,
+                                                BillDt = t22.BillDt,
+                                                PoNo = t13.PoNo,
+                                                PoDt = t13.PoDt,
+                                                RlyCd = t13.RlyCd,
+                                                BkNo = t20.BkNo,
+                                                SetNo = t20.SetNo,
+                                                ReasonReject = t20.ReasonReject,
+                                                IeName = t09.IeName,
+                                                Vendor = v05.Vendor,
+                                                IcDt = t20.IcDt,
+                                                BillAmount = t22.BillAmount,
+                                                ItemDesc = t23.ItemDesc,
+                                                QtyToInsp = t18.QtyToInsp,
+                                                QtyRejected = t18.QtyRejected
+                                            }).ToList();
+
+            int index = 0;
+            model.lstClientWiseRejection.ToList().ForEach(i =>
+            {
+                i.ID = index + 1;
+            });
+
+            if (ClientType == "R")
+            {
+                model.BPORailway = context.T91Railways.Where(x => x.RlyCd.ToUpper() == BPORailway).Select(x => x.Railway).FirstOrDefault();
+            }
+            else
+            {
+                model.BPORailway = context.T12BillPayingOfficers.Where(x => x.BpoRly.ToUpper() == BPORailway).Select(x => x.BpoOrgn).FirstOrDefault();
+            }
 
             return model;
         }

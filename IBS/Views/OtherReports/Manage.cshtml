@@ -38,7 +38,11 @@
         if ('@ReportType' == 'COWISEIE') {
             loadCOWISEIE();
             fileName = 'Controlling_Office_Wise_IE';
-        }        
+        } 
+        else if ('@ReportType' == 'COIEWiseCalls'){
+            loadCOIEWiseCalls();
+            fileName = 'Co_Ie_Wise_Calls';
+        }
     });
 
     function loadCOWISEIE() {
@@ -47,6 +51,13 @@
             $("#dvReportViewer").html(response);
         });
     }
+
+    function loadCOIEWiseCalls(){
+        $("#dvReportViewer").load("@Url.Action("CoIeWiseCalls")", { Case_No: '@Model.Case_No', Call_Recv_Date: '@Model.Call_Recv_Date', Call_SNo: '@Model.Call_SNo' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });        
+    }   
     
     $("#btnPrint").click(function () {
         generatePdf(true);
