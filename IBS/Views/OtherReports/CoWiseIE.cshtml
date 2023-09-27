@@ -1,0 +1,57 @@
+﻿@model IBS.Models.Reports.ControllingOfficerIEModel
+<div>
+    <h3 class="center">@Model.Region, RITES Ltd. <br />Controlling Officer's Wise Inspection Engineers </h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Controlling Officer</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Cluster Name (IE Name)</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Local IE</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">OutStation IE</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstControllingOfficer != null && Model.lstControllingOfficer.Count > 0)
+                {
+                    @foreach (var item in Model.lstControllingOfficer)
+                    {
+                        var listCluster = Model.lstCluster.Where(x => x.CO_CD == item.CO_CD);
+                        var lstLocalIE = Model.lstLocalIE.Where(x => x.IE_CO_CD == item.CO_CD);
+                        var lstOutstation = Model.lstOutstationIE.Where(x => x.IE_CO_CD == item.CO_CD);
+                        <tr>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="1%" valign="top" align="left">
+                                @foreach (var cls in listCluster)
+                                {
+                                    <font size="1" face="Verdana">@cls.cluster_name</font>
+                                    <br />
+                                }
+                            </td>
+                            <td width="1%" valign="top" align="left">
+                                @foreach (var loc in lstLocalIE)
+                                {
+                                    <font size="1" face="Verdana">@loc.IE_NAME</font>
+                                    <br />
+                                }
+                            </td>
+                            <td width="1%" valign="top" align="left">
+                                @foreach (var outs in lstOutstation)
+                                {
+                                    <font size="1" face="Verdana">@outs.IE_NAME</font>
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

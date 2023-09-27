@@ -67,6 +67,10 @@ public partial class T15PoDetail
 
     public decimal? Isdeleted { get; set; }
 
+    public string? DrawingNo { get; set; }
+
+    public string? SpecificationNo { get; set; }
+
     public virtual T14PoBpo? C { get; set; }
 
     public virtual T13PoMaster CaseNoNavigation { get; set; } = null!;

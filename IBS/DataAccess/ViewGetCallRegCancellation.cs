@@ -11,7 +11,7 @@ public partial class ViewGetCallRegCancellation
 
     public byte? CallInstallNo { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public string? CallStatus { get; set; }
 

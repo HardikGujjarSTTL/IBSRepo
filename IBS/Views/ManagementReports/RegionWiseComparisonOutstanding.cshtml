@@ -5,11 +5,11 @@
 }
 
 <div>
-    <h3 class="heading3">Region & Client Wise Comparison of Outstanding (for the Billing Period <span class="orangeText"> 01/04/2008 to @Model.Display_FromDate </span> and Cleared Till Date) & Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
+    <h3 class="center">Region & Client Wise Comparison of Outstanding (for the Billing Period <span class="orangeText"> 01/04/2008 to @Model.Display_FromDate </span> and Cleared Till Date) & Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
 
     @if (Model.Outstanding == "2")
     {
-        <h3 class="heading3">(For the Client where Total Outstanding is greater then zero or Total Suspense is greater then zero) Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
+        <h3 class="center">(For the Client where Total Outstanding is greater then zero or Total Suspense is greater then zero) Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
     }
 
     <div class="tableOuter">

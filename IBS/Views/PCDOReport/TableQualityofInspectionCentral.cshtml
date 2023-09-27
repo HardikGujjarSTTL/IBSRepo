@@ -1,0 +1,361 @@
+﻿@model IBS.Models.Reports.QualityofInspectionCentralMainModel
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Quality of Inspection(Central)</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="center">Quality of Inspection(Central)</h3>
+        <ul class="reportLabelList center">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+            <br />
+            <br />
+            <li><span class="labelName">(i) Quality of Inspection</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width='2%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>S.No.</font></b></th>
+                <th width='18%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>Client Name</font></b></th>
+                <th width='30%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>IC Issued(Nos.)</font></b></th>
+                <th width='30%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Total Quantity Dispatched in tonnes (IC Issued Quanitity in MT)</font></b></th>
+            </tr>
+            <tr>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>DTM</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>CTM</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>DTM</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>CTM</font></b></td>
+            </tr>
+            @if (Model.qualityofInspectionCentralModels != null && Model.qualityofInspectionCentralModels.Count > 0)
+            {
+                foreach (var item in Model.qualityofInspectionCentralModels)
+                {
+                    <tr>
+                        <td width='2%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Serial_cd</font></b></td>
+                        <td width='18%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Client_name</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.IC_Issued</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.IC_Issued_cum</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.TQY_Dis</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.TQY_Dis_cum</font></b></td>
+                    </tr>
+                }
+            }
+        </table>
+        <ul class="reportLabelList center">
+            <br />
+            <br />
+            <li><span class="labelName">(ii) Quality of Inspection(RSM),BSP</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width='2%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>S.No.</font></b></th>
+                <th width='18%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>Length</font></b></th>
+                <th width='30%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>52kg</font></b></th>
+                <th width='30%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>60kg</font></b></th>
+            </tr>
+            <tr>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Accepted Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Rejected Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Accepted Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Rejected Qty(MT)</font></b></td>
+            </tr>
+            @{
+                Int64 count = 1;
+                Int64 tg_acc52 = 0, tg_rej52 = 0, tg_acc60 = 0, tg_rej60 = 0;
+                Decimal per_acc52, per_rej52, per_acc60, per_rej60;
+                Int64 tg_allacc = 0, tg_allrej = 0;
+                Decimal per_allacc, per_allrej;
+            }
+            @if (Model.qualityofInspectionCentral_RSMModels != null && Model.qualityofInspectionCentral_RSMModels.Count > 0)
+            {
+                foreach (var item in Model.qualityofInspectionCentral_RSMModels)
+                {
+                    <tr>
+                        <td width='2%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
+                        <td width='18%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.QOI_LEN</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.ACC52</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.REJ52</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.ACC60</font></b></td>
+                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.REJ60</font></b></td>
+                    </tr>
+                    count = count + 1;
+
+                    tg_acc52 = tg_acc52 + Convert.ToInt32(@item.ACC52);
+                    tg_rej52 = tg_rej52 + Convert.ToInt32(@item.REJ52);
+                    tg_acc60 = tg_acc60 + Convert.ToInt32(@item.ACC60);
+                    tg_rej60 = tg_rej60 + Convert.ToInt32(@item.REJ60);
+
+                }
+            }
+            <tr>
+                <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Month Total(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg_acc52</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg_rej52</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg_acc60</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg_rej60</font></b></td>
+            </tr>
+            @if (Convert.ToDecimal(tg_acc52) + Convert.ToDecimal(tg_rej52) != 0)
+            {
+                per_acc52 = @Math.Round(((Convert.ToDecimal(tg_acc52) / (Convert.ToDecimal(tg_acc52) + Convert.ToDecimal(tg_rej52))) * 100), 2);
+                per_rej52 = @Math.Round(((Convert.ToDecimal(tg_rej52) / (Convert.ToDecimal(tg_acc52) + Convert.ToDecimal(tg_rej52))) * 100), 2);
+            }
+            else
+            {
+                per_acc52 = 0;
+                per_rej52 = 0;
+            }
+            @if (Convert.ToDecimal(tg_acc60) + Convert.ToDecimal(tg_rej60) != 0)
+            {
+                per_acc60 = @Math.Round(((Convert.ToDecimal(tg_acc60) / (Convert.ToDecimal(tg_acc60) + Convert.ToDecimal(tg_rej60))) * 100), 2);
+                per_rej60 = @Math.Round(((Convert.ToDecimal(tg_rej60) / (Convert.ToDecimal(tg_acc60) + Convert.ToDecimal(tg_rej60))) * 100), 2);
+            }
+            else
+            {
+                per_acc60 = 0;
+                per_rej60 = 0;
+            }
+            tg_allacc=tg_allacc+tg_acc52+tg_acc60;
+            tg_allrej=tg_allrej+tg_rej52+tg_rej60;
+            <tr>
+                <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>(%)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_acc52</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_rej52</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_acc60</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_rej60</font></b></td>
+            </tr>
+            <tr>
+                <td width='80%' valign='top' align='center' colspan='6'><b><font size='1' face='Verdana'>52kg & 60kg</font></b></td>
+            </tr>
+            <tr>
+                <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Month Overall MT</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Accepted Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg_allacc</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Rejected Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg_allrej</font></b></td>
+            </tr>
+            @if (Convert.ToDecimal(tg_allacc) + Convert.ToDecimal(tg_allrej) != 0)
+            {
+                per_allacc = Math.Round(((Convert.ToDecimal(tg_allacc) / (Convert.ToDecimal(tg_allacc) + Convert.ToDecimal(tg_allrej))) * 100), 2);
+                per_allrej = Math.Round(((Convert.ToDecimal(tg_allrej) / (Convert.ToDecimal(tg_allacc) + Convert.ToDecimal(tg_allrej))) * 100), 2);
+            }
+            else
+            {
+                per_allacc = 0;
+                per_allrej = 0;
+            }
+            <tr>
+                <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Month Overall %</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Accepted Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_allacc</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Rejected Qty(MT)</font></b></td>
+                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_allrej</font></b></td>
+            </tr>
+        </table>
+        <ul class="reportLabelList center">
+            <br />
+            <br />
+            <li><span class="labelName">(iii) Quality of Inspection(URM),BSP</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width='2%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>S.No.</font></b></th>
+                <th width='18%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>Length</font></b></th>
+                <th width='60%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>60kg</font></b></th>
+            </tr>
+            <tr>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>Accepted Qty(MT)</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>Rejected Qty(MT)</font></b></td>
+            </tr>
+
+            @{
+                Int64 count1 = 1;
+                Decimal tg1 = 0, tg2 = 0;
+                Decimal per1, per2;
+            }
+            @if (Model.qualityofInspectionCentral_URMModels != null && Model.qualityofInspectionCentral_URMModels.Count > 0)
+            {
+
+                foreach (var item in Model.qualityofInspectionCentral_URMModels)
+                {
+                    <tr>
+                        <td width='2%' valign='top' align='center'><b><font size='1' face='Verdana'>@count1</font></b></td>
+                        <td width='18%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.QOI_LEN</font></b></td>
+                        <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.acc_urm</font></b></td>
+                        <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.rej_urm</font></b></td>
+                    </tr>
+                    count1 = count1 + 1;
+                    tg1 = tg1 + Convert.ToDecimal(@item.acc_urm);
+                    tg2 = tg2 + Convert.ToDecimal(@item.rej_urm);
+                }
+            }
+            <tr>
+                <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Month Total(MT)</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>"+@tg1+"</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>"+@tg2+"</font></b></td>
+            </tr>
+            @if ((tg1 + tg2) != 0)
+            {
+                per1 = @Math.Round(((tg1 / (tg1 + tg2)) * 100), 2);
+                per2 = @Math.Round(((tg2 / (tg1 + tg2)) * 100), 2);
+            }
+            else
+            {
+                per1 = 0;
+                per2 = 0;
+            }
+            <tr>
+                <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>(%)</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>@per1</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>@per2</font></b></td>
+            </tr>
+        </table>
+        <ul class="reportLabelList center">
+            <br />
+            <br />
+            <li><span class="labelName">(iv) Quality of Inspection(JSPL)</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width="2%" valign="top" align="center" rowspan="2"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                <th width="18%" valign="top" align="center" rowspan="2"><b><font size="1" face="Verdana">Length</font></b></th>
+                <th width="60%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">60kg</font></b></th>
+            </tr>
+            <tr>
+                <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">Accepted Qty(MT)</font></b></td>
+                <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">Rejected Qty(MT)</font></b></td>
+            </tr>
+            @{
+                Int64 count2 = 1;
+                Decimal tg11 = 0, tg12 = 0;
+                Decimal per11, per12;
+            }
+            @if (Model.qualityofInspectionCentral_JINDALModels != null && Model.qualityofInspectionCentral_JINDALModels.Count > 0)
+            {
+                foreach (var item in Model.qualityofInspectionCentral_JINDALModels)
+                {
+                    <tr>
+                        <td width="2%" valign="top" align="center"><b><font size="1" face="Verdana">@count2</font></b></td>
+                        <td width="18%" valign="top" align="center"><b><font size="1" face="Verdana">@item.QOI_LEN</font></b></td>
+                        <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">@item.acc_urm</font></b></td>
+                        <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">@item.rej_urm</font></b></td>
+                    </tr>
+                    count2 = count2 + 1;
+                    tg11 = tg11 + Convert.ToDecimal(@item.acc_urm);
+                    tg12 = tg12 + Convert.ToDecimal(@item.rej_urm);
+                }
+            }
+            <tr>
+                <td width="18%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Month Total(MT)</font></b></td>
+                <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">@tg11</font></b></td>
+                <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">@tg12</font></b></td>
+            </tr>
+            @if ((tg11 + tg12) != 0)
+            {
+                per11 = @Math.Round(((tg11 / (tg11 + tg12)) * 100), 2);
+                per12 = @Math.Round(((tg12 / (tg11 + tg12)) * 100), 2);
+            }
+            else
+            {
+                per11 = 0;
+                per12 = 0;
+            }
+            <tr>
+                <td width="18%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">(%)</font></b></td>
+                <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">@per11</font></b></td>
+                <td width="30%" valign="top" align="center"><b><font size="1" face="Verdana">@per12</font></b></td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    var fileName = 'QualityofInspectionCentral';
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var HTML = $('#dvReportViewer').html();
+
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "PCDOReport")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

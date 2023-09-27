@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Cheaque Posting";
+    string clsView = "";
+    //if (Model.CHQ_NO != "0")
+    //{
+    //    clsView = "Permission_View";
+    //}
 }
 
 <style>
@@ -24,8 +29,11 @@
     <div class="tast-list">
         <h2>Cheaque Posting</h2>
     </div>
+  @*  <div class="list-btn">
+        <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn Permission_Add">Add New Voucher</a>
+    </div>*@
 </div>
-<section>
+<section class="@clsView">
     <div class="task-listinput">
     <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingForm" asp-action="search" data-ajax-method="post" data-ajax-complete="completed" id="frmchqposting">
                 <div class="accordion-body">
@@ -149,109 +157,110 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Cheque Information</h5>
                        
-                </div>
-                <div class="modal-body">
+                    </div>
                     <div class="modal-body">
-                        <form id="editForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="Reference">Bill/Invoice No.</label>
-                                    <input type="text" id="billNo" class="form-control" placeholder="Bill No" readonly>
+                        <div class="modal-body">
+                            <form id="editForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="Reference">Bill/Invoice No.</label>
+                                        <input type="text" id="billNo" class="form-control" placeholder="Bill No" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Reference">Bill Date</label>
+                                        <input type="text" id="billDate" class="form-control" placeholder="Bill Date" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Reference">Bill Amount</label>
+                                        <input type="text" id="BillAmount" class="form-control" placeholder="Bill Amount" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="Reference">Bill Date</label>
-                                    <input type="text" id="billDate" class="form-control" placeholder="Bill Date" readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Reference">Bill Amount</label>
-                                    <input type="text" id="BillAmount" class="form-control" placeholder="Bill Amount" readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label for="Reference">Amount Already Recieved Thru Cheque/EFT</label>
-                                    <input type="text" id="AmountRecieved" class="form-control" placeholder="Amount Recieved" readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Reference">Total Amount Cleared (B)	</label>
-                                    <input type="text" id="totalAmount" class="form-control" placeholder="Total Amount Cleared" readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Amount To Recover (A-B)</label>
-                                    <input type="text" id="AmountRecover" class="form-control" placeholder="Amount Recover" readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Total TDS</label>
-                                    <input type="text" id="totalTDS" class="form-control" placeholder="Total TDS" readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Retention Money</label>
-                                    <input type="text" id="RetentionMoney" class="form-control" placeholder="Retention Money" readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Amount To Thru Credit Note</label>
-                                    <input type="number" id="AmountCreditNote" class="form-control" placeholder="Amount Through Credit Note" readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Write off Amt / Amt Adjusted	</label>
-                                    <input type="text" id="AmountAdjusted" class="form-control" placeholder="Amount Adjusted">
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Posting Date		</label>
-                                    <input type="text" id="PostingDate" class="form-control" placeholder=" Posting Date ">
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Amount To be Cleared by this Cheque</label>
-                                    <input type="text" id="AmountClearedByCheque" class="form-control" placeholder=" Amount Cleared by cheque ">
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">Case No</label>
-                                    <input type="text" id="caseNo" class="form-control" placeholder=" Case No " readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">BK NO</label>
-                                    <input type="text" id="BKNO" class="form-control" placeholder=" Bk No " readonly>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <label for="Reference">SET NO</label>
-                                    <input type="text" id="SetNo" class="form-control" placeholder=" Set No " readonly>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label for="Reference">Amount Already Recieved Thru Cheque/EFT</label>
+                                        <input type="text" id="AmountRecieved" class="form-control" placeholder="Amount Recieved" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Reference">Total Amount Cleared (B)	</label>
+                                        <input type="text" id="totalAmount" class="form-control" placeholder="Total Amount Cleared" readonly>
+                                    </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
-                                        <label for="Reference">BPO</label>
-                                        <input type="text" id="BPO" class="form-control" placeholder=" BPO " readonly>
+                                        <label for="Reference">Amount To Recover (A-B)</label>
+                                        <input type="text" id="AmountRecover" class="form-control" placeholder="Amount Recover" readonly>
                                     </div>
-                            </div>
-                        </form>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Total TDS</label>
+                                        <input type="text" id="totalTDS" class="form-control" placeholder="Total TDS" readonly>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Retention Money</label>
+                                        <input type="text" id="RetentionMoney" class="form-control" placeholder="Retention Money" readonly>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Amount To Thru Credit Note</label>
+                                        <input type="number" id="AmountCreditNote" class="form-control" placeholder="Amount Through Credit Note" readonly>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Write off Amt / Amt Adjusted	</label>
+                                        <input type="text" id="AmountAdjusted" class="form-control" placeholder="Amount Adjusted">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Posting Date		</label>
+                                        <input type="text" id="PostingDate" class="form-control" placeholder=" Posting Date ">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Amount To be Cleared by this Cheque</label>
+                                        <input type="text" id="AmountClearedByCheque" class="form-control" placeholder=" Amount Cleared by cheque ">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">Case No</label>
+                                        <input type="text" id="caseNo" class="form-control" placeholder=" Case No " readonly>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">BK NO</label>
+                                        <input type="text" id="BKNO" class="form-control" placeholder=" Bk No " readonly>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="Reference">SET NO</label>
+                                        <input type="text" id="SetNo" class="form-control" placeholder=" Set No " readonly>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <label for="Reference">BPO</label>
+                                            <input type="text" id="BPO" class="form-control" placeholder=" BPO " readonly>
+                                        </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-group">
-                        <button type="button" id="cancelChanges" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" id="saveChanges" class="btn btn-primary" onclick="savedata();">Save</button>
-                        <button type="button" id="TDSentry" class="btn btn-primary">TDS Entry</button>
+                    <div class="modal-footer">
+                        <div class="btn-group">
+                            <button type="button" id="cancelChanges" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id="saveChanges" class="btn btn-primary Permission_Save" onclick="savedata();">Save</button>
+                            <button type="button" id="TDSentry" class="btn btn-primary">TDS Entry</button>
+                        </div>
                     </div>
-                </div>
+                    </div>
                 </div>
             </div>
         </div>

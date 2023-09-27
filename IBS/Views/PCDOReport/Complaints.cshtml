@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Complaints";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Complaints</h2>
+        </div>
+    </div>
+    @Html.Partial("_PCDOReportHeader")
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function Search() {
+            GetData();
+        }
+        function GetData() {
+            var month = $("#ddlMonth").val();
+            var Monthtext = $("#ddlMonth option:selected").text();
+            var Year = $("#ddlYear").val();
+            let myObject = { month, Year, Monthtext };
+            var url = '@Url.Action("TableComplaints", "PCDOReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}

@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("SearchPayments", "SearchPayment", "view")]
+
         public IActionResult PaymentList(string AMOUNT , string CASE_NO , string CHQ_NO , string BankNameDropdown , string NARRATION, string VCHR_DT, string ACC_CD)
             {
             DTParameters dtParameters = new DTParameters();
@@ -24,10 +27,15 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("SearchPayments", "SearchPayment", "view")]
+
         public IActionResult UpdatePayment()
         {
             return View();
         }
+
+        [Authorization("SearchPayments", "SearchPayment", "view")]
+
         public IActionResult SearchPayment()
         {
             return View();

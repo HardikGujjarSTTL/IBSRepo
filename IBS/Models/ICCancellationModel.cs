@@ -33,6 +33,7 @@ namespace IBS.Models
 
         public bool Status { get; set; }
         public bool IsAdmin { get; set; }
+        public int? Id { get; set; }
     }
 
     public class ICCancellationListModel

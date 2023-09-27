@@ -1,0 +1,56 @@
+﻿@model IBS.Models.IEDairyModel
+<div>
+    <h3 class="center">IE Dairy Report <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate (IE Wise)</span> <br /> @Model.Region, RITES Ltd</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">PO No. & Date Rly/Non Rly</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">RITES Case No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call No. & Date</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Name of the Vendor/Mfgr</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Date of Visit</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Brief Disc of Stores</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Qty. Insp</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Installment No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Book No./Set No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">A. IC Issued, B. Rejection C.Cancellation issue Date</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee and Rly/Non Rly</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Value of Stores</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Date of submission of papers for Billing</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection Fee</font></b></th>                    
+                </tr>
+                @if (Model != null && Model.lstIEDairy != null && Model.lstIEDairy.Count > 0)
+                {                    
+                    @foreach (var item in Model.lstIEDairy)
+                    {                                               
+                        <tr>                            
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.PO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL</font></td>
+                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.DT_OF_VISIT</font></td>
+                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_TO_INSP</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_INSTALL_NO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.BK_NO/@item.SET_NO</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_ISSUE_DT</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.SUBMIT_DT</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="15" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -45,25 +45,26 @@ namespace IBS.Controllers
         {
             try
             {
-                string msg = "Client Inserted Successfully.";
-
                 if (model.Id > 0)
                 {
-                    msg = "Client Updated Successfully.";
                     model.Updatedby = UserId;
+                    clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    AlertAddSuccess("Record Updated Successfully.");
                 }
-                model.Createdby = UserId;
-                int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
-                if (i > 0)
+                else
                 {
-                    return Json(new { status = true, responseText = msg });
+                    model.Createdby = UserId;
+                    clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    AlertAddSuccess("Record Added Successfully.");
                 }
+
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "ClientDetailsave", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
         }
 
         [Authorization("ClientMaster", "Index", "delete")]

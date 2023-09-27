@@ -1,0 +1,199 @@
+﻿@model IBS.Models.Reports.TrainingMainModel
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Training</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="center">Training</h3>
+        <ul class="reportLabelList center">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+            <br />
+            <br />
+            <li><span class="labelName">9. (a)Mandays spent on training of IEs</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width="6%" valign="top" align="center" rowspan="3"><b><font size='1' face="Verdana">Region</font></b></th>
+                <th width="42%" valign="top" align="center" colspan="4"><b><font size='1' face="Verdana">Inside</font></b></th>
+                <th width="42%" valign="top" align="center" colspan="4"><b><font size='1' face="Verdana">Outside</font></b></th>
+            </tr>
+            <tr>
+                <th width="21%" valign="top" align="center" colspan="2"><b><font size='1' face="Verdana">For The Month</font></b></th>
+                <th width="21%" valign="top" align="center" colspan="2"><b><font size='1' face="Verdana">Cumulative</font></b></th>
+                <th width="21%" valign="top" align="center" colspan="2"><b><font size='1' face="Verdana">For The Month</font></b></th>
+                <th width="21%" valign="top" align="center" colspan="2"><b><font size='1' face="Verdana">Cumulative</font></b></th>
+            </tr>
+            <tr>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Mandays</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Trainees</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Mandays</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Trainees</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Mandays</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Trainees</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Mandays</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">Trainees</font></b></td>
+            </tr>
+            @{
+                decimal t_gt1 = 0, t_gt2 = 0, t_gt3 = 0, t_gt4 = 0, t_gt5 = 0, t_gt6 = 0, t_gt7 = 0, t_gt8 = 0;
+            }
+            @if (Model.trainingModels != null && Model.trainingModels.Count > 0)
+            {
+                foreach (var item in Model.trainingModels)
+                {
+                    <tr>
+                        <td width="7%" valign="top" align="center"><b><font size='1' face="Verdana">@item.region_code</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.IMan_days</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.ITrainee</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.Icum_Mandays </font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.Icum_Trainee</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.Man_days</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.Trainee</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.Cum_Mandays</font></b></td>
+                        <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@item.Cum_Trainee</font></b></td>
+                    </tr>
+                    t_gt1 = t_gt1 + Convert.ToDecimal(item.Man_days);
+                    t_gt2 = t_gt2 + Convert.ToDecimal(item.Trainee);
+                    t_gt3 = t_gt3 + Convert.ToDecimal(item.Cum_Mandays);
+                    t_gt4 = t_gt4 + Convert.ToDecimal(item.Cum_Trainee);
+                    t_gt5 = t_gt5 + Convert.ToDecimal(item.IMan_days);
+                    t_gt6 = t_gt6 + Convert.ToDecimal(item.ITrainee);
+                    t_gt7 = t_gt7 + Convert.ToDecimal(item.Icum_Mandays);
+                    t_gt8 = t_gt8 + Convert.ToDecimal(item.Icum_Trainee);
+                }
+            }
+            <tr>
+                <td width="7%" valign="top" align="center"><b><font size='1' face="Verdana">Total</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt5</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt6</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt7</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt8</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt1</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt2</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt3</font></b></td>
+                <td width="10.5%" valign="top" align="center"><b><font size='1' face="Verdana">@t_gt4</font></b></td>
+            </tr>
+        </table>
+        <br>
+        <ul class="reportLabelList center">
+            <br />
+            <br />
+            <li><span class="labelName">9. (b)Training Details (For the Month)</span></li>
+        </ul>
+        <table class="borderTable">
+            <tr>
+                <th width="7%" valign="top" align="center"><b><font size='1' face="Verdana">Region</font></b></th>
+                <th width="20%" valign="top" align="center"><b><font size='1' face="Verdana">Course Name</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size='1' face="Verdana">From</font></b></th>
+                <th width="15%" valign="top" align="center"><b><font size='1' face="Verdana">To</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size='1' face="Verdana">Category</font></b></th>
+                <th width="20%" valign="top" align="center"><b><font size='1' face="Verdana">Name of Participant</font></b></th>
+            </tr>
+            @if (Model.training1Models != null && Model.training1Models.Count > 0)
+            {
+                foreach (var item in Model.training1Models)
+                {
+                    <tr>
+                        <td width="7%" valign="top" align="center"><b><font size="1.5" face="Verdana">@item.region</font></b></td>
+                        <td width="20%" valign="top" align="center"><b><font size="1" face="Verdana">@item.course_name</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.course_dur_fr</font></b></td>
+                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.course_dur_to</font></b></td>
+                        <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@item.category</font></b></td>
+                        <td width="20%" valign="top" align="center"><b><font size="1" face="Verdana">@item.name</font></b></td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    var fileName = 'Training';
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var HTML = $('#dvReportViewer').html();
+
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "PCDOReport")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

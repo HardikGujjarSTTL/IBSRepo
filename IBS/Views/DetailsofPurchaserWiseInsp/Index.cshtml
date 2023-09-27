@@ -25,18 +25,21 @@
     <div class="accordion-body">
         
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-8 mb-3">
                 <label for="Reference" style="width: 100%;">
                     Select Purchaser
                </label>
                 <input type="text" class="input" asp-for="SearchPurchaser" id="txtSPur" style="width: 46%;">
                 <button type="button" class="save-btn active" onclick="SearchPurchaser();">Search Purchaser</button>
             </div>
-            <div class="col-md-3 mb-3" style="display:none;" id="hdnPDropdown">
-                <label for="Reference"></label>
-                <input class="input" asp-for="PurchaserCD" style="width: 46%;" />
-            </div>
+           
         </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3" style="display:none;" id="hdnPDropdown">
+                <label for="Reference"></label>
+                <select asp-for="PurchaserCD"></select>
+            </div>
+            </div>
         <div class="row my-0">
             <div class="col-md-5 mb-3" style="margin-top:auto;">
                 <label for="PropertyId">All Purchasers</label>
@@ -95,19 +98,7 @@
                 <span class="text-danger"></span>
             </div>
         </div>
-        <div class="row my-0">
-            <label>Report to be Sorted on </label>
-            <div class="col-md-3 mb-3">
-                <label for="PropertyId">Vendor Name</label>
-                <input type="radio" name="radioGroup4" id="rb7" />
-                <span class="text-danger"></span>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="PropertyId">Material Value</label>
-                <input type="radio" name="radioGroup4" id="rb8" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
+        
 
     </div>
     <div class="savenext-btn" style="margin-left:50%;">
@@ -125,6 +116,7 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
         function FillPurchaserCd(ids) {
             var txtSPur = $("#txtSPur").val();
             $.ajax({
@@ -140,7 +132,7 @@
                     $("#PurchaserCD").append("<option value=''>--Select--</option>");
                     var id = 0;
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCD").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        $("#PurchaserCD").append("<option value=" + value.Value + ">" + value.Text + "</option>");
                         if (value.Selected == true) {
                             id = value.Value;
                         }
@@ -171,15 +163,15 @@
                 sessionStorage.removeItem("rbb1");
                 sessionStorage.removeItem("rbb2");
                 sessionStorage.setItem("rbb1", true);
-                $("#ddlc").css("display", "none");
+                
             }
             else 
             {
                 sessionStorage.removeItem("rbb1");
                 sessionStorage.removeItem("rbb2");
                 sessionStorage.setItem("rbb2", true);
-                sessionStorage.setItem("con", $("#ddlcon").val());
-                $("#ddlc").css("display", "block");
+                
+                
             }            
 
         });
@@ -224,21 +216,6 @@
                 $("#dd2").css("display", "none");
             }
         });
-        $('input[name="radioGroup4"]').change(function () {
-            var selectedId = $(this).attr('id');
-            if (selectedId == "rb7") {
-                sessionStorage.removeItem("rbb7");
-                sessionStorage.removeItem("rbb8");
-                sessionStorage.setItem("rbb7", true);
-                //$("#dd1").css("display", "none");
-            }
-            else {
-                sessionStorage.removeItem("rbb8");
-                sessionStorage.removeItem("rbb7");
-                sessionStorage.setItem("rbb8", true);
-                //$("#dd1").css("display", "block");
-            }
-        });
         
         $(function () {
             $("#rb1").prop("checked", true);
@@ -246,7 +223,7 @@
             $("#rb5").prop("checked", true);
             sessionStorage.setItem("rbb5", true);
             sessionStorage.setItem("rbb4", false);
-            $("#rb7").prop("checked", true);
+            
         });
         function ViewReport() {
 
@@ -254,7 +231,7 @@
            
             var ForGiven = sessionStorage.getItem("rbb4");
             var ReportBasedon = sessionStorage.getItem("rbb5");
-            var MaterialValue = sessionStorage.getItem("rbb8");
+            var TextPurchaser = $("#txtSPur").val();
             if (sessionStorage.getItem("rbb4") == "false"){
                 var Month = $("#ddlmonth").val();
                 var Year = $("#ddlyear").val();
@@ -270,7 +247,7 @@
             
             var ForParticular = sessionStorage.getItem("rbb2");
             var lstParticular = sessionStorage.getItem("con");
-            let myObject = { ForGiven, ReportBasedon,MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular };
+            let myObject = { ForGiven, ReportBasedon, FromDate, ToDate, Month, Year, ForParticular, lstParticular, TextPurchaser };
 
             var url = '@Url.Action("Manage", "DetailsofPurchaserWiseInsp")?' + $.param(myObject);
             window.open(url, '_blank');

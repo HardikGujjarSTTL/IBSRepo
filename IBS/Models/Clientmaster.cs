@@ -21,5 +21,8 @@
         public int? Createdby { get; set; }
 
         public byte? Isdeleted { get; set; }
+
+        public string ShortCode { get; set; }
+        public string ContactName { get; set; }
     }
 }

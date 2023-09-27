@@ -19,13 +19,15 @@ namespace IBS.Controllers.InspectionBilling
         private readonly IPOMasterRepository pOMasterRepository;
         private readonly IDocument iDocument;
         private readonly IWebHostEnvironment env;
+        private readonly IMasterItemsPLFormRepository masterItemsPLFormRepository;
         #endregion
-        public AdministratorPurchaseOrderController(IAdministratorPurchaseOrderRepository _pIAdministratorPurchaseOrderRepository, IPOMasterRepository _pOMasterRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment)
+        public AdministratorPurchaseOrderController(IAdministratorPurchaseOrderRepository _pIAdministratorPurchaseOrderRepository, IPOMasterRepository _pOMasterRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IMasterItemsPLFormRepository _masterItemsPLFormRepository)
         {
             pIAdministratorPurchaseOrderRepository = _pIAdministratorPurchaseOrderRepository;
             pOMasterRepository = _pOMasterRepository;
             iDocument = _iDocumentRepository;
             env = _environment;
+            masterItemsPLFormRepository = _masterItemsPLFormRepository;
         }
 
         [Authorization("AdministratorPurchaseOrder", "Index", "view")]
@@ -67,14 +69,41 @@ namespace IBS.Controllers.InspectionBilling
                 model.RlyCd = RLY_CD;
             }
 
-            List<IBS_DocumentDTO> lstDocumentUpload_a_scanned_copy = iDocument.GetRecordsList((int)Enums.DocumentCategory.AdministratorPurchaseOrder, Convert.ToString(CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_a_scanned_copy = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, Convert.ToString(CaseNo));
             FileUploaderDTO FileUploaderUpload_a_scanned_copy = new FileUploaderDTO();
             FileUploaderUpload_a_scanned_copy.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-            FileUploaderUpload_a_scanned_copy.IBS_DocumentList = lstDocumentUpload_a_scanned_copy.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_a_scanned_copy_of_Purchase_Order).ToList();
+            FileUploaderUpload_a_scanned_copy.IBS_DocumentList = lstDocumentUpload_a_scanned_copy.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList();
             FileUploaderUpload_a_scanned_copy.OthersSection = false;
             FileUploaderUpload_a_scanned_copy.MaxUploaderinOthers = 5;
             FileUploaderUpload_a_scanned_copy.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.Upload_a_scanned_copy = FileUploaderUpload_a_scanned_copy;
+
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+            FileUploaderDTO FileUploaderDrawingSpecification = new FileUploaderDTO();
+            FileUploaderDrawingSpecification.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderDrawingSpecification.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification).ToList();
+            FileUploaderDrawingSpecification.OthersSection = false;
+            FileUploaderDrawingSpecification.MaxUploaderinOthers = 5;
+            FileUploaderDrawingSpecification.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.DrawingSpecification = FileUploaderDrawingSpecification;
+
+            List<IBS_DocumentDTO> lstAmendmentDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+            FileUploaderDTO FileUploaderAmendment = new FileUploaderDTO();
+            FileUploaderAmendment.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderAmendment.IBS_DocumentList = lstAmendmentDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.Amendment).ToList();
+            FileUploaderAmendment.OthersSection = false;
+            FileUploaderAmendment.MaxUploaderinOthers = 5;
+            FileUploaderAmendment.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Amendment = FileUploaderAmendment;
+
+            List<IBS_DocumentDTO> lstParentLOADocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+            FileUploaderDTO FileUploaderParentLOA = new FileUploaderDTO();
+            FileUploaderParentLOA.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderParentLOA.IBS_DocumentList = lstParentLOADocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.ParentLOA).ToList();
+            FileUploaderParentLOA.OthersSection = false;
+            FileUploaderParentLOA.MaxUploaderinOthers = 5;
+            FileUploaderParentLOA.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.ParentLOA = FileUploaderParentLOA;
 
             return View(model);
         }
@@ -238,9 +267,10 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
-                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_a_scanned_copy_of_Purchase_Order };
+                        int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order, (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification,
+                        (int)Enums.DocumentPurchaseOrderForm.Amendment,(int)Enums.DocumentPurchaseOrderForm.ParentLOA};
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
                     }
                     return Json(new { status = true, responseText = msg });
                 }
@@ -516,6 +546,25 @@ namespace IBS.Controllers.InspectionBilling
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "UpdatePODate", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetPODetails(string PlNo)
+        {
+            try
+            {
+                MasterItemsPLFormModel model = new();
+                if (!string.IsNullOrEmpty(PlNo))
+                {
+                    model = masterItemsPLFormRepository.FindByID(PlNo);
+                }
+                return Json(new { status = true, model = model });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetPODetails", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

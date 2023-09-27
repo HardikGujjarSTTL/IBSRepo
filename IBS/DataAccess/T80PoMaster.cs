@@ -51,6 +51,10 @@ public partial class T80PoMaster
 
     public string? UserId { get; set; }
 
+    public byte? Ispricevariation { get; set; }
+
+    public byte? Isstageinspection { get; set; }
+
     public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
     public virtual T01Region? RegionCodeNavigation { get; set; }

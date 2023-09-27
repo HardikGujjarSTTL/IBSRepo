@@ -268,7 +268,7 @@
             processData: false, // Prevent jQuery from converting the data to a string
             contentType: false,
             success: function (response) {
-                debugger
+                
                 if (response) {
                     ShowHideMsgNew(response, "Successful");
                 } else {
@@ -289,7 +289,7 @@
             processData: false, // Prevent jQuery from converting the data to a string
             contentType: false,
             success: function (response) {
-                debugger
+                
                 if (response) {
                     ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
                     setTimeout(function () {
@@ -312,7 +312,7 @@
             processData: false, // Prevent jQuery from converting the data to a string
             contentType: false,
             success: function (response) {
-                debugger
+                
                 if (response == 1) {
                     ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
                     setTimeout(function () {
@@ -330,7 +330,7 @@
     }
 
     function FillClusterIE() {
-        debugger
+        
         var dept = $("#DEPT_DROPDOWN").val();
         $.ajax({
             url: '@Url.Action("BindClusterIE", "CallMarkedOnline")',

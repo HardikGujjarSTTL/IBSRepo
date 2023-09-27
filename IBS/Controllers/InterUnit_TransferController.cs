@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,14 @@ namespace IBS.Controllers
         {
             interunittransferrepository = _interunittransferrepository;
         }
+
+        [Authorization("InterUnit_Transfer", "Index", "view")]
+
         public IActionResult Index()
         {
             return View();
         }
+
 
         public IActionResult GetValue(int BankNameDropdown, string CHQ_NO, string CHQ_DATE)
         {
@@ -34,6 +39,8 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("InterUnit_Transfer", "LoadGrid", "view")]
+
         public IActionResult LoadGrid([FromBody] DTParameters dtParameters)
         {
             DTResult<InterUnit_TransferModel> dTResult = interunittransferrepository.BillList(dtParameters);
@@ -44,6 +51,8 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("InterUnit_Transfer", "Insert_InterUnit", "edit")]
+
         public JsonResult Insert_InterUnit()
         {
             try
@@ -91,6 +100,9 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+
+        [Authorization("InterUnit_Transfer", "Delete_InterUnit", "edit")]
 
         public JsonResult Delete_InterUnit()
         {

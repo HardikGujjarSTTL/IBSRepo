@@ -73,6 +73,10 @@ public partial class T82PoDetail
 
     public byte? Isdeleted { get; set; }
 
+    public string? DrawingNo { get; set; }
+
+    public string? SpecificationNo { get; set; }
+
     public virtual T80PoMaster CaseNoNavigation { get; set; } = null!;
 
     public virtual T04Uom? UomCdNavigation { get; set; }

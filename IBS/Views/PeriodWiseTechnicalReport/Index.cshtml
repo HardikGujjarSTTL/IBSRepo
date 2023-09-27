@@ -1,0 +1,81 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>Technical References</h2>
+    </div>
+</div>
+
+
+<div class="accordion-body">
+
+    <div class="row my-0" id="divdate">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" style="margin-top: 30px;">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function ViewReport1() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+
+            var IsValid = true;
+
+            if ($("#FromDate").val() == "") {
+                $("#spnErrorFromDate").html("Enter From Date.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() == "") {
+                $("#spnErrorToDate").html("Enter To Date.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
+
+            let myObject = {
+                FromDate, ToDate
+            };
+
+            var url = '@Url.Action("Manage", "PeriodWiseTechnicalReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls1() {
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            $('#FromDate').val("");
+            $('#ToDate').val("");
+        }
+    </script>
+}

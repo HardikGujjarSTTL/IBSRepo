@@ -1,0 +1,80 @@
+﻿@model IBS.Models.Calls_Marked_ReportModel
+@{
+
+     @if (ViewBag.Uname != null)
+    {
+        Layout = null; // Assuming you don't want to use a layout page
+        string wmar_msg = "Note: Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period, otherwise Call shall not be accepted. Inspection call format is now revised from 5th March 2013. Henceforth all requests for inspection should be submitted in the new format only with all entries filled up. Any incomplete inspection call not be considered and summarily rejected. <font color='blue'>For quick response from RITES LTD, Kindly mention Email-ID and Contact Person's Mobile No. in the Call Format.</font><font color='OrangeRed'>As per the latest Railway Board order, the offered material value should be a minimum of 1.5 Lakh for RITES Inspection.</font><font color='green'> Some Vendors are directly depositing payments through DD/NEFT to RITES Account without informing payment details & Case particulars. All Vendors are kindly requested to always inform the concerned regional office immediately through E-Mail, Such payments details indicating Case No. for proper accounting of their credits.</font>";
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calls Status Report</title>
+    <!-- Add your CSS styles or include external stylesheets here -->
+</head>
+<body>
+    <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="130%">
+        <tr>
+            <td width="100%" bgcolor="#FFFFCC" colspan="16">
+                <p align="center">
+                    <font face="Verdana" color="#3333FF"><b><font size="4">CALLS STATUS FOR THE PERIOD @ViewBag.pDtFr TO @ViewBag.pTTo </b></font><br>
+                 
+                    <font size="2">(STATUS OF <b></b> AS ON DATE) - @ViewBag.sortHeader</font>
+                </p>
+            </td>
+        </tr>
+        <tr bgcolor="#FFCCCC">
+            <th width="4%" valign="top"><b><font size="1" face="Verdana">SNO</font></b></th>
+            <th width="7%" valign="top"><b><font size="1" face="Verdana">VENDOR NAME</font></b></th>
+            @if (ViewBag.Uname != null)
+            {
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">PURCHASER</font></b></th>
+                <th width="13%" valign="top"><b><font size="1" face="Verdana">ITEM</font></b></th>
+            }
+            <th width="6%" valign="top"><b><font size="1" face="Verdana">QTY OFF</font></b></th>
+            <th width="6%" valign="top"><b><font size="1" face="Verdana">DELV DATE</font></b></th>
+            <th width="6%" valign="top"><b><font size="1" face="Verdana">CALL DATE</font></b></th>
+            <th width="7%" valign="top"><b><font size="1" face="Verdana">ENGINEER DEPUTED</font></b></th>
+            <th width="7%" valign="top"><b><font size="1" face="Verdana">ENGINEER CONTACT NO.</font></b></th>
+            <th width="8%" valign="top"><b><font size="1" face="Verdana">PONO</font></b></th>
+            <th width="6%" valign="top"><b><font size="1" face="Verdana">PO DATE</font></b></th>
+            <th width="6%" valign="top"><b><font size="1" face="Verdana">CASE NO</font></b></th>
+            <th width="5%" valign="top"><b><font size="1" face="Verdana">STATUS</font></b></th>
+            <th width="7%" valign="top"><b><font size="1" face="Verdana">CONTACT PERSON</font></b></th>
+            <th width="7%" valign="top"><b><font size="1" face="Verdana">CONTACT PERSON PHONE NO.</font></b></th>
+            <th width="5%" valign="top"><b><font size="1" face="Verdana">CALL SERIAL NO.</font></b></th>
+            <th width="5%" valign="top"><b><font size="1" face="Verdana">CONTROLLING MANAGER</font></b></th>
+            <th width="5%" valign="top"><b><font size="1" face="Verdana">REMARKS</font></b></th>
+        </tr>
+       @* @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SNO</td>
+                <td>@item.VENDOR</td>
+                @if (item.Uname != null)
+                {
+                    <td>@item.PURCHASER</td>
+                    <td>@item.ITEM</td>
+                }
+                <td>@item.QTY_OFF</td>
+                <td>@item.DELV_DATE</td>
+                <td>@item.CALL_DATE</td>
+                <td>@item.ENGINEER_DEPUTED</td>
+                <td>@item.ENGINEER_CONTACT_NO</td>
+                <td>@item.PONO</td>
+                <td>@item.PO_DATE</td>
+                <td>@item.CASE_NO</td>
+                <td>@item.STATUS</td>
+                <td>@item.CONTACT_PERSON</td>
+                <td>@item.CONTACT_PERSON_PHONE_NO</td>
+                <td>@item.CALL_SERIAL_NO</td>
+                <td>@item.CONTROLLING_MANAGER</td>
+                <td>@item.REMARKS</td>
+            </tr>
+        }*@
+        <a href="javascript:history.back();">Go Back</a>
+    </table>
+</body>
+</html>

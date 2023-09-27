@@ -7,7 +7,7 @@ public partial class VenderCallRegisterItemView1
 {
     public string? Status { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 
@@ -33,5 +33,5 @@ public partial class VenderCallRegisterItemView1
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 }

@@ -1,0 +1,207 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>IE TRAINING DETAILS</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="col-md-12">
+        <h3 class="heading3 mb-4">Discipline</h3>
+        <div class="col-md-12">
+            <ul class="radioListForm m-0">
+                <li>
+                    <input type="radio" id="Alldescipline" name="Discipline" value="Alldescipline">
+                    <label for="Alldescipline">All</label>
+                </li>
+                <li>
+                    <input type="radio" id="Mechanical" name="Discipline" value="Mechanical">
+                    <label for="Mechanical">Mechanical</label>
+                </li>
+                <li>
+                    <input type="radio" id="Electrical" name="Discipline" value="Electrical">
+                    <label for="Electrical">Electrical</label>
+                </li>
+                <li>
+                    <input type="radio" id="Civil" name="Discipline" value="Civil">
+                    <label for="Civil">Civil</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 class="heading3 mb-4">IE Category</h3>
+        <div class="col-md-12" id="detaileds">
+            <ul class="radioListForm m-0">
+                <li>
+                    <input type="radio" id="AllIeCat" name="IECategory" value="AllIeCat">
+                    <label for="AllIeCat">All</label>
+                </li>
+                <li>
+                    <input type="radio" id="Regular" name="IECategory" value="Regular">
+                    <label for="Regular">Regular</label>
+                </li>
+                <li>
+                    <input type="radio" id="Deputaion" name="IECategory" value="Deputaion">
+                    <label for="Deputaion">Deputaion</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 class="heading3 mb-4">IE</h3>
+        <div class="col-md-12">
+            <ul class="radioListForm m-0">
+                <li>
+                    <input type="radio" id="AllIe" name="AllIe" value="AllIe">
+                    <label for="AllIe">All IE</label>
+                </li>
+                <li>
+                    <input type="radio" id="Particularie" name="AllIe" value="Particularie">
+                    <label for="Particularie">Particular IE</label>
+                </li>
+                <li>
+                    @Html.DropDownList("IENAME", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 class="heading3 mb-4">Training Area</h3>
+        <div class="col-md-12">
+            <ul class="radioListForm m-0">
+                <li>
+                    <input type="radio" id="AllArea" name="AllArea" value="AllArea">
+                    <label for="AllArea">All</label>
+                </li>
+                <li>
+                    <input type="radio" id="ParticularArea" name="AllArea" value="ParticularArea">
+                    <label for="ParticularArea">Particular Area</label>
+                </li>
+                <li>
+                    @Html.DropDownList("TrainingArea", new SelectList(IBS.Models.Common.TrainingArea(), "Value", "Text"), "--Select--", new { id = "TrainingArea" })
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+        <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#IENAME").hide();
+            $("#TrainingArea").hide();
+            $("#Alldescipline").prop("checked", true);
+            $("#AllIeCat").prop("checked", true);
+            $("#AllIe").prop("checked", true);
+            $("#AllArea").prop("checked", true);
+        });
+
+        $('#Particularie').change(function () {
+            $("#IENAME").show();
+        });
+
+        $('#ParticularArea').change(function () {
+            $("#TrainingArea").show();
+        });
+
+        $('#AllIe').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#AllArea').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#AllIeCat').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#Regular').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#Deputaion').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#Alldescipline').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#Mechanical').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#Electrical').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        $('#Civil').change(function () {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+        });
+
+        function ClearControls1() {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+            $("#Alldescipline").prop("checked", true);
+            $("#AllIeCat").prop("checked", true);
+            $("#AllIe").prop("checked", true);
+            $("#AllArea").prop("checked", true);
+        }
+
+        function ViewReport1() {
+
+            var IENAME = $('#IENAME').val();
+            var TrainingArea = $('#TrainingArea').val();
+            //var StatusOffertxt = $('#StatusOffer option:selected').text();
+            //var Regiontxt = $('#Region option:selected').text();
+            var Mechanical = $("#Mechanical").is(":checked") == true ? "true" : "false";
+            var Electrical = $("#Electrical").is(":checked") == true ? "true" : "false";
+            var Civil = $("#Civil").is(":checked") == true ? "true" : "false";
+            var Regular = $("#Regular").is(":checked") == true ? "true" : "false";
+            var Deputaion = $("#Deputaion").is(":checked") == true ? "true" : "false";
+            var Particularie = $("#Particularie").is(":checked") == true ? "true" : "false";
+            var ParticularArea = $("#ParticularArea").is(":checked") == true ? "true" : "false";
+
+            let myObject = { IENAME, TrainingArea, Mechanical, Electrical, Civil, Regular, Deputaion, Particularie, ParticularArea };
+
+            var url = '@Url.Action("Manage", "IEWiseTrainingReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}

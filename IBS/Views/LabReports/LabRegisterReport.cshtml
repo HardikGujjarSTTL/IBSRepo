@@ -1,0 +1,186 @@
+﻿@model IBS.Models.LabReportsModel
+
+<div>
+    <h3 class="center">(@ViewBag.Region)</h3>
+
+
+    <h3 class="center">Lab Register Report For The Period: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
+    
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">S.No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Reg No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Reg Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Case No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Call Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Call Sno</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Testing Type</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Code No</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Code Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Vendor</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">IE</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Lab</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Item</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Test</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Dispatch to Lab Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Test Report Receipt Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Testing Result</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Remarks</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Testing Charges</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Service Tax</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Handling Charges</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Amount Cleared By DD</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">TDS</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">TDS Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Due</font></b></th>
+
+                </tr>
+                @if (Model != null && Model.lstLabReport.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstLabReport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.SAMPLE_REG_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.SAMPLE_REG_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CASE_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_RECV_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_SNO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.T_TYPE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CODE_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CODE_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.VENDOR
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IE_NAME
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.LAB
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.ITEM_DESC
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TEST
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.SAMPLE_DISPATCH_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TEST_REPORT_REC_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TEST_STATUS
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.REMARKS
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TESTING_FEE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.SERVICE_TAX
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.HANDLING_CHARGES
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.AMOUNT_RECIEVED
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TDS_AMT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TDS_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.AMT_DUE
+                                </font>
+                            </td>
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -12,14 +12,14 @@
 <section class="table-section">
     <div class="task-listinput">
         <div class="task-inner row">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="input-search">
                     <label for="VendorCode">For The Period From</label>
                     <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY">
                     <span class="text-danger" id="spnErrorFromDate"></span>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="input-search">
                     <label for="VendorCode">To</label>
                     <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY">
@@ -32,7 +32,9 @@
                     @Html.DropDownList("ddlSector", new SelectList(Common.GetSector() , "Value", "Text"))
                 </div>
             </div>
-            <div class="col-md-5" style="margin-top: 30px;">
+            </div>
+            <div class="row">
+            <div class="col-md-12">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
                     <button type="button" class="save-btn active" id="btnUpdateBillsFinalisationStatus">Update Bills Finalisation Status & Date</button>

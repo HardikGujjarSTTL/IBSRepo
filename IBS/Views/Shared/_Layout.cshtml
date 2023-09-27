@@ -386,10 +386,11 @@
     </div>
     <!--mainContainer-->
     <!--Wrapper-->
-    <!-- <div class="overlay">
-        <div class="spinner"></div>
-    </div>-->
-
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
 
     <script src="~/js/highcharts.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -407,22 +408,22 @@
             HideShowByPermission();
         });
 
+        $(document).ajaxSend(function () {
+            $(".overlayLoader").show();
+        });
+
+        $(document).ajaxComplete(function () {
+            HideShowByPermission();
+            $(".overlayLoader").hide();
+        });
+
         function HideShowByPermission() {
         @if (SessionHelper.CurrentAccess != null)
         {
-            //@if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
-            //{
-            //    @:$(".Permission_Add").css("display", "none");
-            //}
-            //@if (Convert.ToBoolean(SessionHelper.CurrentAccess.AddAccess) == false)
-            //{
-            //    @:$(".Permission_Save").css("display", "none");
-            //}
             @if (Convert.ToBoolean(SessionHelper.CurrentAccess.EditAccess) == false)
             {
                 @:$(".Permission_Add").css("display", "none");
                 @:$(".Permission_EditView").removeClass("fa-pencil").addClass("fa-eye");
-                //@:$(".Permission_Update").css("display", "none");
                 @:$(".Permission_Save").css("display", "none");
                 @:$(".Permission_View").addClass("disableform");
             }
@@ -431,11 +432,7 @@
                 @:$(".Permission_Delete").css("display", "none");
             }
         }
-                                                                                            }
-
-        $(document).ajaxComplete(function () {
-            HideShowByPermission();
-        });
+                                }
 
     </script>
 

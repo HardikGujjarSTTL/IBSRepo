@@ -14,7 +14,7 @@
     <input type="hidden" asp-for="ActionType" />
     <div class="task-listinput">
         <div class="accordion-body">
-            <table id="Table2" border="1" cellSpacing="1" borderColor="#b0c4de" cellPadding="1" width="80%" bgColor="#f0f8ff">
+            <table id="Table2">
                 @if (Model.ActionType == "CWBills" || Model.ActionType == "SWBills")
                 {
                     <tr>
@@ -24,11 +24,16 @@
                                 <div class="company-checkbox">
                                     <div class="remember">
                                         <div class="remecheckbox">
+                                            <ul class="radioListForm">
+                                                <li>
                                             <input type="radio" asp-for="BillSummary" value="M" id="BillSummary_M" checked="checked" />
                                             <label for="BillSummary_M">Summary Report For the Month</label>
-                                            &nbsp;&nbsp;
+                                            </li>
+                                            <li>
                                             <input type="radio" asp-for="BillSummary" value="P" id="BillSummary_P" />
                                             <label for="BillSummary_P">Summary Report For the Given Period</label>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -36,30 +41,30 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="WIDTH: 411px;display:none;" id="tdmonth"></td>
+                        <td style="display:none;" id="tdmonth"></td>
                         <td>
-                            <label id="lblMonth" runat="server" Width="40%" Font-Names="Verdana" Font-Size="8pt" ForeColor="DarkBlue" Font-Bold="True">Month</label>
+                            <label id="lblMonth" runat="server">Month</label>
                         </td>
                         <td>
-                            <label id="lblYear" runat="server" Width="40%" Font-Names="Verdana" Font-Size="8pt" ForeColor="DarkBlue" Font-Bold="True">Year</label>
+                            <label id="lblYear" runat="server">Year</label>
                         </td>
                     </tr>
                     <tr>
-                        <td style="WIDTH: 411px; HEIGHT: 22px;display:none;" id="tdFrom">
-                            <label id="lblFrom" runat="server" Width="40%" Font-Names="Verdana" Font-Size="8pt" ForeColor="DarkBlue" Font-Bold="True">From</label>
+                        <td style="display:none; width:150px;" id="tdFrom">
+                            <label id="lblFrom" runat="server">From</label>
                         </td>
-                        <td style="HEIGHT: 22px">
+                        <td style="width:45%;">
                             @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
                             <span asp-validation-for="FromMn" class="text-danger"></span>
                         </td>
-                        <td style="HEIGHT: 22px">
+                        <td>
                             @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
                             <span asp-validation-for="FromYr" class="text-danger"></span>
                         </td>
                     </tr>
                     <tr id="trTo" style="display:none;">
-                        <td style="WIDTH: 411px">
-                            <label id="lblTo" runat="server" Width="40%" Font-Names="Verdana" Font-Size="8pt" ForeColor="DarkBlue" Font-Bold="True">To</label>
+                        <td>
+                            <label id="lblTo" runat="server">To</label>
                         </td>
                         <td>
                             @Html.DropDownListFor(model => model.ToMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
@@ -70,8 +75,8 @@
                     @if (Model.ActionType == "SWBills")
                     {
                         <tr>
-                            <td style="WIDTH: 411px">
-                                <label id="Label2" runat="server" Width="192px" Font-Names="Verdana" Font-Size="8pt" ForeColor="DarkBlue" Font-Bold="True">Include RITES Billing (Y/N)</label>
+                            <td>
+                                <label id="Label2" runat="server">Include RITES Billing (Y/N)</label>
                             </td>
                             <td>
                                 @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
@@ -84,14 +89,14 @@
                 @if (Model.ActionType == "RlyBills")
                 {
                     <tr>
-                        <td style="width: 40%;">
+                        <td>
                             <label for="Reference" style="color:red;">Client Type</label>
                         </td>
-                        <td style="width: 30%;">
+                        <td>
                             @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailType() , "Value", "Text"),"--Select--")
                             <span asp-validation-for="ClientType" class="text-danger"></span>
                         </td>
-                        <td style="width: 30%;">
+                        <td>
                         </td>
                     </tr>
                     <tr>
@@ -100,11 +105,16 @@
                                 <div class="company-checkbox">
                                     <div class="remember">
                                         <div class="remecheckbox">
-                                            <input type="radio" asp-for="BpoType" value="A" id="BPO_A" checked="checked" />
-                                            <label for="BPO_A">All BPO</label>
-                                            &nbsp;&nbsp;
-                                            <input type="radio" asp-for="BpoType" value="P" id="BPO_P" />
-                                            <label for="BPO_P">Particular BPO</label>
+                                            <ul class="radioListForm">
+                                                <li>
+                                                    <input type="radio" asp-for="BpoType" value="A" id="BPO_A" checked="checked" />
+                                                    <label for="BPO_A">All BPO</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" asp-for="BpoType" value="P" id="BPO_P" />
+                                                    <label for="BPO_P">Particular BPO</label>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +129,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="width:30%">
                             <div class="custom-readio">
                                 <div class="company-checkbox">
                                     <div class="remember">
@@ -134,7 +144,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td style="height: 22px">
+                        <td>
                             <div id="RMonth">
                                 <label for="Reference">Month</label>
                                 @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
@@ -146,7 +156,7 @@
                                 <span asp-validation-for="FromDt" class="text-danger"></span>
                             </div>
                         </td>
-                        <td style="height: 22px">
+                        <td>
                             <div id="RYear">
                                 <label for="Reference">Year</label>
                                 @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
@@ -166,8 +176,7 @@
                                 <div class="company-checkbox">
                                     <div class="remember">
                                         <div class="remecheckbox">
-                                            <input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" />
-                                            <label for="Region_A">All Regions</label>
+                                            <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
                                         </div>
                                     </div>
                                 </div>
@@ -182,23 +191,22 @@
                     @if (Model.ActionType == "NSC")
                     {
                         <tr>
-                            <td style="width: 30%;">
+                            <td>
                                 <label for="FromDate">For The Period From</label>
                                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
                             </td>
-                            <td style="width: 30%;">
+                            <td>
                                 <label for="ToDate">To</label>
                                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
                             </td>
-                            <td style="width: 40%;">
+                            <td>
                             </td>
                         </tr>
                     }
 
                     <tr>
-                        <td style="width: 30%;">
-                            <input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" />
-                            <label for="Region_A">All Regions</label>
+                        <td>                            
+                            <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
                         </td>
                     </tr>
                     <tr>
@@ -218,11 +226,11 @@
                                 </div>
                             </div>
                         </td>
-                        <td style="width: 30%; display:none;" id="tdClientType">
+                        <td style="display:none;" id="tdClientType">
                             <label for="ClientType">Particular Railway Types</label>
                             @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"),"--Select--", new { @class = "", @onchange = "BindlstAU();" })
                         </td>
-                        <td style="width: 40%;">
+                        <td>
                         </td>
                     </tr>
                     <tr style="display:none;" id="trAU">
@@ -242,11 +250,11 @@
                                 </div>
                             </div>
                         </td>
-                        <td style="width: 30%; display:none;" id="tdAU">
+                        <td style="display:none;" id="tdAU">
                             <label for="lstAU">Particular AU Types</label>
                             @Html.DropDownListFor(model => model.lstAU, new SelectList(IBS.Models.Common.GetAUCrisByRlyCd(Model.ClientType) , "Value", "Text"),"--Select--")
                         </td>
-                        <td style="width: 40%;">
+                        <td>
                         </td>
                     </tr>
 

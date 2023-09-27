@@ -60,6 +60,8 @@ namespace IBS.Models
 
         public string? VendorName { get; set; }
         public string? ConsigneeSName { get; set; }
+        public bool Ispricevariation { get; set; }
+        public bool Isstageinspection { get; set; }
 
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 

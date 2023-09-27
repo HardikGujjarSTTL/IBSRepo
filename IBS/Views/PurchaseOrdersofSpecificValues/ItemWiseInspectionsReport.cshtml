@@ -42,24 +42,25 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <div class="col-md-12 mb-12 center" style="margin-top: 30px;">
-                    <b>Data to be Collected From </b>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3" style="margin-top: 30px;">
-                <input type="radio" class="billInvoiceClass" id="rdbNorthernRegion" name="Region" checked="checked" value="Bill_No">
+            <div class="col-md-12">
+                    <h3 class="heading3">Data to be Collected From </h3>
+           
+           <ul class="radioListForm">
+               <li>
+               <input type="radio" class="billInvoiceClass" id="rdbNorthernRegion" name="Region" checked="checked" value="Bill_No">
                 <label for="Reference" class="billInvoiceClass">Northern Region</label><br>
-            </div>
-            <div class="col-md-4 mb-3" style="margin-top: 30px;">
+                </li>
+                <li>
                 <input type="radio" class="billInvoiceClass" id="rdbAllRegions" name="Region" value="Invoice_No">
                 <label for="Reference" class="billInvoiceClass">All Regions (except Central Region)</label><br>
+                </li>
+           </ul>
             </div>
-            <div class="col-md-2 mb-3">
-                <div class="savenext-btn" style="margin-top: 18px;">
+           </div>
+                <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="Search();">Submit</button>
                 </div>
-            </div>
+           
         </div>
     </div>
 

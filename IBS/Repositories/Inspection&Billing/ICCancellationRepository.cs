@@ -29,6 +29,7 @@ namespace IBS.Repositories.Inspection_Billing
                 return model;
             else
             {
+                model.Id = t16IcCancel.Id;
                 model.BkNo = t16IcCancel.BkNo;
                 model.SetNo = t16IcCancel.SetNo;
                 model.IssueToIecd = t16IcCancel.IssueToIecd;
@@ -41,7 +42,7 @@ namespace IBS.Repositories.Inspection_Billing
             }
         }
 
-        public DTResult<ICCancellationListModel> GetCancellationList(DTParameters dtParameters,string Region)
+        public DTResult<ICCancellationListModel> GetCancellationList(DTParameters dtParameters, string Region)
         {
 
             DTResult<ICCancellationListModel> dTResult = new() { draw = 0 };
@@ -123,13 +124,15 @@ namespace IBS.Repositories.Inspection_Billing
             return true;
         }
 
-        public string ICCancellationSave(ICCancellationModel model)
+        public int ICCancellationSave(ICCancellationModel model)
         {
-            string BkNo = "";
+            int Id = 0;
             T16IcCancel t16IcCancel = context.T16IcCancels.Where(x => x.Region == model.Region && x.BkNo == model.BkNo && x.SetNo == model.SetNo).FirstOrDefault();
             if (t16IcCancel == null)
             {
+                int maxID = Convert.ToInt32(context.T16IcCancels.Max(x => x.Id)) + 1;
                 T16IcCancel obj = new T16IcCancel();
+                obj.Id = maxID;
                 obj.BkNo = model.BkNo;
                 obj.SetNo = model.SetNo;
                 obj.IssueToIecd = model.IssueToIecd;
@@ -143,7 +146,7 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.Status = Convert.ToByte(model.Status);
                 context.T16IcCancels.Add(obj);
                 context.SaveChanges();
-                BkNo = obj.BkNo;
+                Id = Convert.ToInt32(obj.Id);
             }
             else
             {
@@ -152,13 +155,14 @@ namespace IBS.Repositories.Inspection_Billing
                 t16IcCancel.Remarks = model.Remarks;
                 t16IcCancel.Updatedby = model.Updatedby;
                 t16IcCancel.Updateddate = DateTime.Now;
-                if (model.IsAdmin == true) {
+                if (model.IsAdmin == true)
+                {
                     t16IcCancel.Status = Convert.ToByte(model.Status);
                 }
                 context.SaveChanges();
-                BkNo = t16IcCancel.BkNo;
+                Id = Convert.ToInt32(t16IcCancel.Id);
             }
-            return BkNo;
+            return Id;
         }
 
     }

@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Mobile</label>
-                        <input type="number" class="input" ASP-FOR="MOBILE" maxlength="10" required />
+                    <input type="text" class="input" ASP-FOR="MOBILE" onkeypress="return isNumber(event)" maxlength="10" required />
                         <span asp-validation-for="MOBILE" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">

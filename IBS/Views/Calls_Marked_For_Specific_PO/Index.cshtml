@@ -1,0 +1,216 @@
+﻿@model IBS.Models.Calls_Marked_For_Specific_POModel
+
+@*@{
+    ViewData["Title"] = "Generate Voucher";
+    string clsView = "";
+    if (Model.SNO > 0)
+    {
+        clsView = "Permission_View";
+    }
+}*@
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Call Detail For Specific PO</h2>
+    </div>
+    <div>
+        @*<a asp-action="AddRecieptVoucher" asp-controller="AddRecieptVoucher" class="formBtn viewall-btn">View List</a>*@
+    </div>
+</div>
+<section>
+    <div class="task-listinput">
+        <div class="accordion-body">
+            @*<form data-ajax="true" asp-antiforgery="true" asp-controller="AddRecieptVoucher" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmVoucherDetails">*@
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Client Type</label>
+                            @Html.DropDownListFor(model => model.CLIENT_TYPE, Common.RailwaysTypes(), new { id = "railwaytypes" })
+                        </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Select Client</label>
+                        @Html.DropDownListFor(model => model.SelectedRailway, Enumerable.Empty<SelectListItem>(), new { id = "railwaytypes1" })
+                    </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">PO Date</label>
+                            <input type="text" id="podt" class="input datepicker" asp-for="PO_DT">
+
+                        </div>
+
+                       
+                    </div>
+
+                    <div class="savenext-btn">
+
+                        <button type="button" class="save-btn active " onclick="Search();">Search</button>
+                    </div>
+
+
+                        <table id="table1" class="table-responsive">
+                            <thead>
+                                <tr>
+
+                                    @*<th>S NO</th>*@
+
+                                    <th>#</th>
+                                    <th>PO No.</th>
+                                    <th>Action</th>
+
+
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                </div>
+            @*</form>*@
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            $('#railwaytypes').change(function () {
+               
+                var selectedValue = $(this).val();
+
+                $('#railwaytypes1').select2({
+                    // Optional: You can customize Select2 options here
+                    placeholder: 'Select a client type',
+                    allowClear: true, // Adds a clear button
+                    minimumResultsForSearch: 5 // Show search input only if there are 5 or more options
+                });
+                
+                $.ajax({
+                    url: '@Url.Action("dropdown", "Calls_Marked_For_Specific_PO")',
+                    type: 'POST', 
+                    data: { selectedValue: selectedValue },
+                    dataType: 'json',
+                    success: function (data) {
+                        var dropdown = $("#railwaytypes1");
+
+                        // Clear existing options (if any)
+                        dropdown.empty();
+
+                        // Add a default option if needed
+                        dropdown.append($("<option>").val("").text("Select Railway"));
+
+                        // Loop through the data and add options to the dropdown
+                        $.each(data, function (index, item) {
+                            dropdown.append($("<option>").val(item.RLY_CD).text(item.RAILWAY_ORGN));
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+           
+
+        });
+        function Search() {
+            debugger;
+            var railwaytypes = $("#railwaytypes").val();
+            var railwaytypes1 = $("#railwaytypes1").val();
+            var podt = $("#podt").val();
+            InitializeDatatable(railwaytypes, railwaytypes1, podt);
+          
+        
+
+        }
+        completed = function (response) {
+           
+        }
+
+
+        function InitializeDatatable(railwaytypes, railwaytypes1, podt) {
+            //$("#dtchequepost").css("display", "block");
+            $("#table1").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("gridData")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            railwaytypes: railwaytypes,
+                            railwaytypes1: railwaytypes1,
+                            podt: podt,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+
+                        }
+                    },
+
+                    { data: "PO_NO" },
+
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+
+                            var editButtonHtml = '<button class="custom-edit-button btn-sm btn-primary"><i class="fa fa-pencil" title="Edit"></i></button>';
+                            return editButtonHtml;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+
+
+        }
+
+
+        $('#table1').on('click', '.custom-edit-button', function () {
+            debugger;
+            // Get the data for the clicked row
+            var table1 = $("#table1").DataTable();
+            var rowData = table1.row($(this).closest('tr')).data();
+
+            // Construct the URL for your controller action
+            var url = '/Calls_Marked_For_Specific_PO/edit?PO_NO=' + rowData.PO_NO +
+                '&PO_DT=' + rowData.PO_DT +
+                '&RLY_NONRLY=' + rowData.RLY_NONRLY +
+                '&RLY_CD=' + rowData.RLY_CD;
+
+            // Redirect to the URL
+            window.location.href = url;
+        });
+
+       
+
+
+        
+
+
+
+    </script>
+    }

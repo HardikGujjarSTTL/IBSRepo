@@ -1,0 +1,152 @@
+﻿@model List<IBS.Models.Reports.PCDOSummaryModel>
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <title>Summary</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="center">Summary</h3>
+        <ul class="reportLabelList center">
+            <li><span class="labelName">@ViewBag.Title</span></li>
+        </ul>
+
+        @{
+            string region_cd = "";
+        }
+        <table class="borderTable">
+            <tr>
+                <th width='6%' valign='top' align='center' rowspan='2'><b><font size='1' face='Verdana'>Region</font></b></th>
+                <th width='30%' valign='top' align='center' colspan='3'><b><font size='1' face='Verdana'>Financial</font></b></th>
+                <th width='20%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Business Development</font></b></th>
+                <th width='30%' valign='top' align='center' colspan='3'><b><font size='1' face='Verdana'>System Improvement</font></b></th>
+            </tr>
+            <tr>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Turnover for the month in(Lakhs)</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Turnover for Fy 2021-22 upto the month(Target) in(Lakhs)</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Operating Ratio for FY 2021-22 upto the month (Target)</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>New Contracts secured during the month</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>New Contracts secured for FY 2021-22 up to the month</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Super Check/Surprise Checks for FY 2021-22 up to the month</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Technical Reference sent for FY 2021-22 up to the month</font></b></td>
+                <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Number of Check sheets prepared for FY 2021-22 up to the month</font></b></td>
+            </tr>
+            @{
+                decimal f1 = 0;
+            }
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    f1 = Convert.ToDecimal(item.TURN_MONTH) + Convert.ToDecimal(item.TURN_LAB_MONTH) - Convert.ToDecimal(item.ADJ_MONTH);
+                    <tr>
+                        <td width='6%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Region_Code</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@f1</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.B_TARGET</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.OR_Actual</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.CONT_MONTH</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.CONT_UPTO</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.SUPER_UPTO</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.TECH_UPTO</font></b></td>
+                        <td width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.CHECK_UPTO</font></b></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td align='left' colspan='9'><b><font color='red'>*</font></b><font size='1' face='Verdana'> Indicates (Turnover for the month = Billing - Adjustments)</font></td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+    var fileName = 'Summary';
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        let file = new Blob([$('#dvReportViewer').html()], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var HTML = $('#dvReportViewer').html();
+
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "PCDOReport")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { htmlContent: HTML },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

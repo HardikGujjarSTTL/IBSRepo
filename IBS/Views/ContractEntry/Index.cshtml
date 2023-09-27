@@ -5,27 +5,29 @@
     <div class="tast-list">
         <h2>Contract Entry</h2>
     </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="ContractEntry" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Contract</a>
+    </div>
 </div>
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="ContractEntry" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmContrcatEntry">
     <div class="accordion-body">
         <div class="row my-0 d-flex align-items-end">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3">
                 <label for="Reference">Client Name</label>
                 @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="ClientName" })
                 <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3">
                 <label for="Reference">Client Type</label>
                 @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control", @id="Clienttype" })
                 <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-4 alignBtn">
+            <div class="col-md-6">
                 <div class="savenext-btn">
-                    <button type="button" class="reset-btn" id="btnSearch">Search</button>
-                    <a asp-area="" asp-controller="ContractEntry" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Contract</a>
+                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
                 </div>
             </div>
         </div>

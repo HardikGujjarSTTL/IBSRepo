@@ -1,23 +1,20 @@
 ﻿<div class="accordion-body" style="margin-bottom: 11px !important;">
-    <div class="row my-0">
-        <div class="col-md-2 mb-3">
-            <div class="col-md-12 mb-12 center">
-                <b>For The Period  </b>
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+             <h3 class="heading3">For The Period</h3>
         </div>
-        <div class="col-md-4 mb-3">
+        </div>
+    <div class="row d-flex align-items-end">
+        <div class="col-md-4">
             <label for="reference">Month</label>
             @Html.DropDownList("ddlMonth", new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),"--Select--")
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-4">
             <label for="reference">Year</label>
             @Html.DropDownList("ddlYear", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
         </div>
-
-    </div>
-    <div class="row my-0">
-        <div class="col-md-3 mb-3">
-            <div class="savenext-btn" style="margin-top: 31px;">
+        <div class="col-md-3">
+            <div class="savenext-btn">
                 <button type="button" class="save-btn active" onclick="Search();">Submit</button>
             </div>
         </div>

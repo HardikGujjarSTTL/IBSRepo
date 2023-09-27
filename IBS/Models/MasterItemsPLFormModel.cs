@@ -14,6 +14,10 @@ namespace IBS.Models
         [Required]
         public string PlNo { get; set; } = null!;
 
+        public string? DrawingNo { get; set; }
+
+        public string? SpecificationNo { get; set; }
+
         public string? UserId { get; set; }
 
         public DateTime? Datetime { get; set; }

@@ -154,7 +154,7 @@ namespace IBS.Repositories
             return query;
 
         }
-        public string UpdateData(CheckPostingFormModel model )
+        public string UpdateData(CheckPostingFormModel model )  
         {
            
             var GetValue = context.T26ChequePostings.Find(model.BANK_CD,model.CHQ_NO,model.CHQ_DATE);

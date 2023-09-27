@@ -1,0 +1,70 @@
+﻿@model IBS.Models.Reports.SuperSurpriseSummaryModel
+
+<div>
+    <h3 class="center">CO Wise Super Surprise Registered during <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span> (@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">S.No</font></b></th>
+                    <th width="40%" valign="top" align="center"><b><font size="1" face="Verdana">CO Name</font></b></th>
+                    <th width="40%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">No. of Super Surprise</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstSuperSurpriseSummary != null && Model.lstSuperSurpriseSummary.Count > 0)
+                {
+                    int CO_CD = -1;
+                    int Sno = 0;
+                    @foreach (var item in Model.lstSuperSurpriseSummary)
+                    {
+                        if (CO_CD == item.CO_CD)
+                        {
+                            <tr>
+                                <td width="50%" valign="top" align="center" colspan="2"><font size="1" face="Verdana"></font></td>
+                                <td width="40%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                                <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.SUP_SUR_NO</font></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            if (Sno != 0)
+                            {
+                                <tr class="reportTotal">
+                                    <td width="90%" valign="top" align="right" colspan="3"><font size="1" face="Verdana"><b>Total</b></font></td>
+                                    <td width="40%" valign="top" align="center"><font size="1" face="Verdana">@Model.lstSuperSurpriseSummary.Where(x => x.CO_CD == CO_CD).Sum(x => x.SUP_SUR_NO)</font></td>
+                                </tr>
+                            }
+                            Sno = Sno + 1;
+                            <tr>
+                                <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@Sno</font></td>
+                                <td width="40%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                                <td width="40%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                                <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.SUP_SUR_NO</font></td>
+                            </tr>
+                            CO_CD = Convert.ToInt32(item.CO_CD);
+                        }
+                    }
+                    <tr class="reportTotal">
+                        <td width="90%" valign="top" align="right" colspan="3"><font size="1" face="Verdana"><b>Total</b></font></td>
+                        <td width="40%" valign="top" align="center"><font size="1" face="Verdana">@Model.lstSuperSurpriseSummary.Where(x => x.CO_CD == CO_CD).Sum(x => x.SUP_SUR_NO)</font></td>
+                    </tr>
+                    <tr class="reportTotal">
+                        <td width="90%" valign="top" align="right" colspan="3"><font size="1" face="Verdana"><b>Grand Total</b></font></td>
+                        <td width="40%" valign="top" align="center"><font size="1" face="Verdana">@Model.lstSuperSurpriseSummary.Sum(x => x.SUP_SUR_NO)</font></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

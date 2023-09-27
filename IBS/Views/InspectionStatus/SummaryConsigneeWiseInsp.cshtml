@@ -1,0 +1,60 @@
+﻿@model IBS.Models.InspectionStatusModel
+
+<div>
+    @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></font></p> *@
+    <h3 class="center">(@ViewBag.Region)</h3>
+
+    @{
+        if (ViewBag.ForGiven == "Yes")
+        {
+        // <p align="center"><font size="3" face="Verdana"><b><u>Summary of Consignee Wise Inspections For The Period  @ViewBag.From To @ViewBag.To (@ViewBag.ReportBase)</u></b></font></p>
+            <h3 class="center">Summary of Consignee Wise Inspections For The Period <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span> (@ViewBag.ReportBase)</h3>
+        }
+        else
+        {
+        // <p align="center"><font size="3" face="Verdana"><b><u>Summary of Consignee Wise Inspections For The Month of @ViewBag.month, @ViewBag.year (@ViewBag.ReportBase)</u></b></font></p>
+            <h3 class="center">Summary of Consignee Wise Inspections For The Month of <span class="orangeText"> @ViewBag.month </span>,<span class="orangeText">@ViewBag.year </span> (@ViewBag.ReportBase)</h3>
+        }
+
+    }
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">CONSIGNEE</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">NO. OF INSP.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">MATERIAL VALUE</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">INSP. FEE</font></b></th>
+
+                </tr>
+                @if (Model != null && Model.lstSummaryConreport != null && Model.lstSummaryConreport.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstSummaryConreport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.NO_OF_INSP</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MATERIAL_VALUE</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="17" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

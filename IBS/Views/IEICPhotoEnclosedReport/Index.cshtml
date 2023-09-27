@@ -1,0 +1,145 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>PHOTOS SUBMITTED BY IE OF INSPECTIONS</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+
+    <div class="row my-0" id="divdate">
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="FromDate">Case No.</label>
+                <input type="text" id="CaseNo" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="FromDate">Call Recieve Date</label>
+                <input type="text" id="CallRecDT" class="datepicker" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="FromDate">Call SNO.</label>
+                <input type="text" id="CallSno" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="FromDate">Book No.</label>
+                <input type="text" id="BKNO" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-search">
+                <label for="FromDate">Set No.</label>
+                <input type="text" id="SETNO" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-md-3" style="margin-top: 30px;">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport();">Search</button>
+            <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+        </div>
+    </div>
+</div>
+
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtphoto" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Case No.</th>
+                        <th>Call Date</th>
+                        <th>Call SNO.</th>
+                        <th>Book NO.</th>
+                        <th>Set NO.</th>
+                        <th>Photo 1</th>
+                        <th>Photo 2</th>
+                        <th>Photo 3</th>
+                        <th>Photo 4</th>
+                        <th>Photo 5</th>
+                        <th>Photo 6</th>
+                        <th>Photo 7</th>
+                        <th>Photo 8</th>
+                        <th>Photo 9</th>
+                        <th>Photo 10</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function ViewReport() {
+           
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecDT = $("#CallRecDT").val();
+            var CallSno = $("#CallSno").val();
+            var BKNO = $("#BKNO").val();
+            var SETNO = $("#SETNO").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable", "IEICPhotoEnclosedReport")";
+
+            $("#dtphoto").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "CallRecDT": CallRecDT,
+                            "CallSno": CallSno,
+                            "BKNO": BKNO,
+                            "SETNO": SETNO
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "CaseNo", width: "10%" },
+                    { data: "CallRecDT", width: "10%" },
+                    { data: "CallSno", width: "10%" },
+                    { data: "BKNO", width: "10%" },
+                    { data: "SETNO", width: "10%" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}

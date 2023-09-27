@@ -1,5 +1,13 @@
 ﻿@model IBS.Models.InterUnit_TransferModel
-<section>
+@{
+    ViewData["Title"] = "Inter Unit Transfer";
+        string clsView = "";
+    if (Model.BANK_CD > 0)
+        {
+            clsView = "Permission_View";
+        }
+}
+<section class="@clsView">
     <div class="task-listinput">
         
             <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnit_Transfer" asp-action="Index" data-ajax-method="post" data-ajax-complete="completed" id="frmUnitTransfer">
@@ -127,10 +135,10 @@
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" id="BtnSearch" onclick="Save();">Search</button>
                             <button type="button" class="hide1 save-btn active" id="BtnAdd" onclick="BtnAddNew();">Add New </button>
-                            <button type="button" class="hide1 save-btn active" onclick="Insert();">Save</button>
-                            <button type="button" class="hide1 save-btn active" onclick="BtnDelete();">Delete</button>
-                            <button type="button" class="hide1 save-btn active" onclick="">Cancel</button>
-
+                            <button type="button" class="hide1 save-btn active Permission_Save" onclick="Insert();">Save</button>
+                            <button type="button" class="hide1 save-btn active Permission_Save" onclick="BtnDelete();">Delete</button>
+@*                            <button type="button" class="hide1 save-btn active" onclick="">Cancel</button>
+*@
                             @*<button type="submit" onclick="find();">Search2</button>*@
                         </div>
 

@@ -1,0 +1,78 @@
+﻿@model IBS.Models.Reports.ConsignRejectModel
+
+<div>
+    <h3 class="center">(@Model.Region), RITES Ltd.</h3>
+    <h3 class="center">Details of Online Consignee Rejections for the Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></h3>
+
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Temp Rej No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Temp Rej Date</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Consiegnee Name</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee Desig</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee Email</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee Tel</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Memo No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Memo Dt.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Item Desc</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rej</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Value</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Reason</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Reason For Rejection</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">JI Required</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">JI SNO</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstConsignReject != null && Model.lstConsignReject.Count > 0)
+                {
+                    @foreach (var item in Model.lstConsignReject)
+                    {
+                        <tr>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.ID</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.TempComplaintId.</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_TempComplaintDt</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeName</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeDesig</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeEmail</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeMobile</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RejMemoNo</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_RejMemoDt</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CaseNo</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.BkNo</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.SetNo</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Vendor</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ItemDesc</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.QtyRejected</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RejectionValue</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RejectionReason</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Status</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ComplaintId</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.TempCompRejReason</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.JiRequired</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.JiSno</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="23" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

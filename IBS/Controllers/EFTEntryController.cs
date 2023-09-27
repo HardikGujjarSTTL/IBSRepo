@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,14 @@ namespace IBS.Controllers
             EFTEntryRepository = _EFTEntryRepository;
         }
 
+        [Authorization("EFTEntry", "EFTEntry", "view")]
         public IActionResult ListVoucher([FromBody] DTParameters dtParameters)
         {
             DTResult<EFTEntryModel> dTResult = EFTEntryRepository.GetVoucherList(dtParameters);
             return Json(dTResult);
         }
 
+        [Authorization("EFTEntry", "EFTEntry", "view")]
         public IActionResult AddEFTVoucher(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT)
         {
             EFTEntryModel model = new();
@@ -33,6 +36,8 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("EFTEntry", "EFTEntry", "edit")]
+
         public IActionResult VoucherDetailsSave(EFTEntryModel model)
         {
             try
@@ -59,6 +64,8 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        [Authorization("EFTEntry", "EFTEntry", "view")]
 
         public IActionResult EFTEntry()
         {

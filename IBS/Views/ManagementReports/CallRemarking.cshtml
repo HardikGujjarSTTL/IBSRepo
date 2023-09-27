@@ -1,0 +1,63 @@
+﻿@model IBS.Models.Reports.CallRemarkingModel
+
+<div>
+    <h3 class="center"><span class="orangeText"> @Model.Region </span></h3>
+    <h3 class="center">Call Remarking For the Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case no</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call recv dt</font></b></th>
+                    <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Call sno</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Remarking status</font></b></th>
+                    <th width="24%" valign="top" align="center"><b><font size="1" face="Verdana">Remark reason</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Ie name from</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Ie name to</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">From IE pending calls</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">To IE pending calls</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Initiated By</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Initiated Date</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Approved By</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Approved Date</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Call Remark</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstCallRemarking != null && Model.lstCallRemarking.Count > 0)
+                {
+                    @foreach (var item in Model.lstCallRemarking)
+                    {
+                        <tr>
+                            <td width="4%" valign="top" align="center"><font size="1" face="Verdana">@item.ID</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CaseNo</font></td>
+                            <td width="0%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_CallRecvDt</font></td>
+                            <td width="4%" valign="top" align="center"><font size="1" face="Verdana">@item.CallSno</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RemarkingStatus</font></td>
+                            <td width="24%" valign="top" align="center"><font size="1" face="Verdana">@item.RemarkReason</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_Name_From</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_Name_To</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.FrIePendingCalls</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.ToIePendingCalls</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.User_Name</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_RemInitDatetime</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.User_Name_App</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_RemAppDatetime</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.CallRemarkStatus</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="15" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

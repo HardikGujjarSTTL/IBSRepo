@@ -208,7 +208,7 @@ namespace IBS.Repositories.Vendor
                         CaseNo = l.CaseNo,
                         CallRecvDt = l.CallRecvDt,
                         CallInstallNo = l.CallInstallNo,
-                        CallSno = l.CallSno,
+                        CallSno = Convert.ToInt16(l.CallSno),
                         CallStatus = l.CallStatus == null ? string.Empty : l.CallStatus,
                         CallLetterNo = l.CallLetterNo,
                         Remarks = l.Remarks == null ? string.Empty : l.Remarks,
@@ -1643,7 +1643,7 @@ namespace IBS.Repositories.Vendor
                 orderCriteria = "CaseNo";
                 orderAscendingDirection = true;
             }
-            string CaseNo = "", CallRecvDt = "", CallSno="";
+            string CaseNo = "", CallRecvDt = "", CallSno = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
             {
                 CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);

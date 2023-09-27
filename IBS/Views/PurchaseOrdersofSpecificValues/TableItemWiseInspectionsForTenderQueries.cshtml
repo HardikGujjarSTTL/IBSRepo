@@ -58,7 +58,7 @@
         var HTML = $('#dvReportViewer').html();
 
         $.ajax({
-            url: "@Url.Action("GeneratePDF", "ManagementReports")",
+            url: "@Url.Action("GeneratePDF", "PurchaseOrdersofSpecificValues")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
             data: { htmlContent: HTML },

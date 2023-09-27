@@ -17,10 +17,12 @@
         <a asp-action="Index" asp-controller="ICCancellation" class="formBtn viewall-btn">View List</a>
     </div>
 </div>
-<section class="@clsView">
+<section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form role="form" asp-controller="ICCancellation" asp-action="ICCancellationSave" id="frmICCancellationDetails">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <input type="hidden" asp-for="IsEdit" />
+            <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Region" />
 
             <div class="accordion-body">
@@ -58,9 +60,12 @@
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
                 </div>
-                @if (SessionHelper.UserModelDTO.RoleName != "Inspection Engineer (IE)" && Model.IsEdit == 1)
-                {
-                    <div class="row my-0">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.FIR_Upload" />
+                    </div>
+                    @if (SessionHelper.UserModelDTO.RoleName != "Inspection Engineer (IE)" && Model.IsEdit == 1)
+                    {
                         <div class="col-md-4 mb-3">
                             <div class="company-checkbox">
                                 <div class="remember">
@@ -70,8 +75,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
+
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
@@ -84,6 +90,7 @@
     <script type="text/javascript">
         function Save() {
             if ($("#frmICCancellationDetails").valid()) {
+                SaveSingleDocuments("tab-1");
                 $("#frmICCancellationDetails").submit();
             }
         }

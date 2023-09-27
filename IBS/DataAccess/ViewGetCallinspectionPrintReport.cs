@@ -21,7 +21,7 @@ public partial class ViewGetCallinspectionPrintReport
 
     public DateTime CallRecvDt { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public string? CallLetterNo { get; set; }
 

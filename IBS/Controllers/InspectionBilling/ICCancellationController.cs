@@ -1,9 +1,13 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
+using IBS.Helpers;
 using IBS.Interfaces;
+using IBS.Interfaces.Administration;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -12,10 +16,16 @@ namespace IBS.Controllers.InspectionBilling
     {
         #region Variables
         private readonly IICCancellationRepository iCCancellationRepository;
+        private readonly IUploadDocRepository uploaddocRepository;
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public ICCancellationController(IICCancellationRepository _iCCancellationRepository)
+        public ICCancellationController(IICCancellationRepository _iCCancellationRepository, IUploadDocRepository _uploaddocRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment)
         {
             iCCancellationRepository = _iCCancellationRepository;
+            uploaddocRepository = _uploaddocRepository;
+            iDocument = _iDocumentRepository;
+            env = _environment;
         }
         [Authorization("ICCancellation", "Index", "view")]
         public IActionResult Index()
@@ -49,6 +59,14 @@ namespace IBS.Controllers.InspectionBilling
                 model.IsEdit = 0;
                 model.Region = Region;
             }
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICCancellation, model.Id.ToString());
+            FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
+            FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentICCancellation.FIR_Upload).ToList();
+            FileUploaderCOI.OthersSection = false;
+            FileUploaderCOI.MaxUploaderinOthers = 5;
+            FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.FIR_Upload = FileUploaderCOI;
             return View(model);
         }
 
@@ -73,10 +91,11 @@ namespace IBS.Controllers.InspectionBilling
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorization("ICCancellation", "Index", "edit")]
-        public IActionResult ICCancellationSave(ICCancellationModel model)
+        public IActionResult ICCancellationSave(ICCancellationModel model, IFormCollection FrmCollection)
         {
             try
             {
+                int id = 0;
                 if (model.IsEdit > 0)
                 {
                     model.Updatedby = UserId;
@@ -84,7 +103,7 @@ namespace IBS.Controllers.InspectionBilling
                     {
                         model.IsAdmin = true;
                     }
-                    iCCancellationRepository.ICCancellationSave(model);
+                    id = iCCancellationRepository.ICCancellationSave(model);
                     AlertAddSuccess("IC Cancellation Updated Successfully.");
                 }
                 else
@@ -98,9 +117,19 @@ namespace IBS.Controllers.InspectionBilling
                     {
                         model.Status = true;
                     }
-                    iCCancellationRepository.ICCancellationSave(model);
+                    id = iCCancellationRepository.ICCancellationSave(model);
                     AlertAddSuccess("IC Cancellation Inserted Successfully.");
                 }
+                if (id >0)
+                {
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+                        int[] DocumentIds = { (int)Enums.DocumentICCancellation.FIR_Upload };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICCancellation), env, iDocument, "ICCancellation", string.Empty, DocumentIds);
+                    }
+                }
+
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

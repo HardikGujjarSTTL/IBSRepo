@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -17,6 +18,8 @@ namespace IBS.Controllers
             interunitrecieptrepository = _interunitrecieptrepository;
         }
 
+
+        [Authorization("InterUnitReciept", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -24,6 +27,8 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorization("InterUnitReciept", "InterUnitRecieptSave", "view")]
+
         public IActionResult InterUnitRecieptSave(InterUnitRecieptModel model)
         {
             string VCHR_NO = "";
@@ -54,6 +59,7 @@ namespace IBS.Controllers
             return Json(new { status = false, VCHR_NO = VCHR_NO , responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        [Authorization("InterUnitReciept", "Manage", "view")]
 
         public IActionResult Manage(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT, string VCHR_DT)
         {
@@ -67,6 +73,9 @@ namespace IBS.Controllers
 
             
         }
+
+
+        [Authorization("InterUnitReciept", "RecieptList", "view")]
 
         public IActionResult RecieptList([FromBody] DTParameters dtParameters)
         {

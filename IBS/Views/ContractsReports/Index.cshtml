@@ -1,0 +1,98 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>CONTRACTS</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="Region">Region</label>
+                @Html.DropDownList("Region", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--" ,new { id = "Region" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="clientname">Client Wise</label>
+                <input type="text" id="clientname"/>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 30px;">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
+                <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+       
+        function ClearControls1() {
+            $("#Region").val('');
+            $("#clientname").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+        }
+
+        function ViewReport1() {
+
+            $("#spnErrorToDate").html("");
+            $("#spnErrorFromDate").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+           
+            if ($("#FromDate").val() == "") {
+                $("#spnErrorFromDate").html("Enter From Date.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() == "") {
+                $("#spnErrorToDate").html("Enter To Date.");
+                IsValid = false;
+            }
+            if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+           
+
+            if (!IsValid) return;
+            var IsValid = true;
+
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var Region = $('#Region').val();
+            var clientname = $('#clientname').val();
+
+            let myObject = { FromDate, ToDate, Region, clientname };
+
+            var url = '@Url.Action("Manage", "ContractsReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

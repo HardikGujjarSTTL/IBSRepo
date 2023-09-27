@@ -63,6 +63,46 @@
             loadSuperSurpriseDetails();
             fileName = 'Super_Surprise_Details';
         }
+        else if ('@ReportType' == 'SUPSURPSUMM') {
+            loadSuperSurpriseSummary();
+            fileName = 'Super_Surprise_Summary';
+        }
+        else if ('@ReportType' == 'CONSIGN_REJECT') {
+            loadSuperConsignReject();
+            fileName = 'Consign_Reject';
+        }
+        else if ('@ReportType' == 'X') {
+            loadOutstandingOverRegion();
+            fileName = 'Outstanding_Over_Region';
+        }
+        else if ('@ReportType' == 'CLIENTWISEREJ') {
+            loadClientWiseRejection();
+            fileName = 'Client_Wise_Rejection';
+        }
+        else if ('@ReportType' == 'NON_CONFORMITY') {
+            loadNonConformity();
+            fileName = 'Non_Conformity';
+        }
+        else if ('@ReportType' == 'PENDING_CALLS') {
+            loadPendingCalls();
+            fileName = 'Pending_Calls';
+        }
+        else if ('@ReportType' == 'COUNTIC') {
+            loadICIssuedNotReceived();
+            fileName = 'IC_Issued_Not_Received';
+        }
+        else if ('@ReportType' == 'HIGHVALUE') {
+            loadTentativeInspectionFeeWisePendingCalls();
+            fileName = 'Inspection_Fee_Wise_Pending_Calls';
+        }
+        else if ('@ReportType' == 'REMARKING') {
+            loadCallRemarking();
+            fileName = 'Call_Remarking';
+        }
+        else if ('@ReportType' == 'CALL_DETAILS') {
+            loadCallDetailsDashborad();
+            fileName = 'Call_Details_Dashborad';
+        }
     });
 
     function loadIEPerformance() {
@@ -114,6 +154,76 @@
         });
     }
 
+    function loadSuperSurpriseSummary() {
+        $("#dvReportViewer").load("@Url.Action("SuperSurpriseSummary", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadSuperConsignReject() {
+        $("#dvReportViewer").load("@Url.Action("ConsignReject", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', InspRegion: '@Model.Region', Status: '@Model.Status' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadOutstandingOverRegion() {
+        $("#dvReportViewer").load("@Url.Action("OutstandingOverRegion")", { FromDate: '@Model.FromDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadClientWiseRejection() {
+        $("#dvReportViewer").load("@Url.Action("ClientWiseRejection")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', ClientType: '@Model.ClientType', BPORailway: '@Model.BPORailway' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadNonConformity() {
+        $("#dvReportViewer").load("@Url.Action("NonConformity")", { FromYearMonth: '@Model.FromYearMonth', ToYearMonth: '@Model.ToYearMonth', IeCd: '@Model.IeCd' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadPendingCalls() {
+        $("#dvReportViewer").load("@Url.Action("PendingCalls")", { }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadICIssuedNotReceived() {
+        $("#dvReportViewer").load("@Url.Action("ICIssuedNotReceived")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadTentativeInspectionFeeWisePendingCalls() {
+        $("#dvReportViewer").load("@Url.Action("TentativeInspectionFeeWisePendingCalls", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', ParticularCM: '@Model.ParticularCM', SortedOn: '@Model.SortedOn' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadCallRemarking() {
+        $("#dvReportViewer").load("@Url.Action("CallRemarking", "ManagementReports")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', CallRemarkingDate: '@Model.CallRemarkingDate', CallsStatus: '@Model.CallsStatus' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadCallDetailsDashborad() {
+        $("#dvReportViewer").load("@Url.Action("CallDetailsDashborad")", {}, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
     $("#btnPrint").click(function () {
         generatePdf(true);
     });
@@ -142,13 +252,11 @@
     });
 
     function generatePdf(isPrint) {
-        var HTML = $('#dvReportViewer').html();
-
         $.ajax({
             url: "@Url.Action("GeneratePDF", "ManagementReports")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
+            data: { ReportType: '@ReportType' },
             xhrFields: {
                 responseType: 'blob'
             },

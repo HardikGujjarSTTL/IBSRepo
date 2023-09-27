@@ -21,7 +21,7 @@ namespace IBS.Repositories.Inspection_Billing
         public AdministratorPurchaseOrderModel FindByID(string CaseNo)
         {
             AdministratorPurchaseOrderModel model = new();
-            T13PoMaster POMaster = context.T13PoMasters.Where(x=>x.CaseNo == CaseNo).FirstOrDefault();
+            T13PoMaster POMaster = context.T13PoMasters.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
 
             if (POMaster == null)
                 throw new Exception("PO Record Not found");
@@ -42,7 +42,7 @@ namespace IBS.Repositories.Inspection_Billing
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
-                model.L5noPo= POMaster.L5noPo;
+                model.L5noPo = POMaster.L5noPo;
                 model.InspectingAgency = POMaster.InspectingAgency;
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
@@ -103,7 +103,7 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 vend_name = Convert.ToString(dtParameters.AdditionalValues["vend_name"]);
             }
-           
+
             OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("p_cs_no", OracleDbType.Varchar2, CaseNo.ToString() == "" ? DBNull.Value : CaseNo.ToString(), ParameterDirection.Input);
             par[1] = new OracleParameter("p_po_no", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
@@ -199,7 +199,7 @@ namespace IBS.Repositories.Inspection_Billing
                 context.T13PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
-                if (model.RlyNonrly !="R")
+                if (model.RlyNonrly != "R")
                 {
                     var T14 = context.T14aPoNonrlies.Where(x => x.CaseNo == obj.CaseNo).FirstOrDefault();
                     if (T14 == null)
@@ -376,9 +376,14 @@ namespace IBS.Repositories.Inspection_Billing
         }
         public int GenerateITEM_SRNO(string CaseNo)
         {
-            int maxSrNo = (from pm in context.T15PoDetails
-                           where pm.CaseNo == CaseNo
-                           select pm.ItemSrno).Max() + 1;
+            int maxSrNo = 1;
+            int count = context.T15PoDetails.Where(x => x.CaseNo == CaseNo).Count();
+            if (count > 0)
+            {
+                maxSrNo = (from pm in context.T15PoDetails
+                               where pm.CaseNo == CaseNo
+                               select pm.ItemSrno).Max() + 1;
+            }
             return maxSrNo;
         }
         public PO_MasterDetailsModel FindPODetailsByID(string CASE_NO, string ITEM_SRNO)
@@ -416,6 +421,8 @@ namespace IBS.Repositories.Inspection_Billing
                 model.Value = POMastersDetails.Value;
                 model.DelvDt = POMastersDetails.DelvDt;
                 model.ExtDelvDt = POMastersDetails.ExtDelvDt;
+                model.DrawingNo = POMastersDetails.DrawingNo;
+                model.SpecificationNo = POMastersDetails.SpecificationNo;
                 return model;
             }
         }
@@ -480,6 +487,8 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 T15PoDetail obj = new T15PoDetail();
                 obj.CaseNo = model.CaseNo;
+                obj.DrawingNo = model.DrawingNo;
+                obj.SpecificationNo = model.SpecificationNo;
                 obj.ItemSrno = model.ItemSrno;
                 obj.PlNo = model.PlNo;
                 //obj.BpoCd = model.BpoCd;
@@ -517,6 +526,8 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 t15PoDetail.ItemDesc = model.ItemDesc;
                 t15PoDetail.PlNo = model.PlNo;
+                t15PoDetail.DrawingNo = model.DrawingNo;
+                t15PoDetail.SpecificationNo = model.SpecificationNo;
                 //t15PoDetail.BpoCd = model.BpoCd;
                 t15PoDetail.Qty = model.Qty;
                 t15PoDetail.ConsigneeCd = model.ConsigneeCd;
@@ -583,7 +594,7 @@ namespace IBS.Repositories.Inspection_Billing
             return vendorEmail;
         }
 
-        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO,string USER_ID)
+        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO, string USER_ID)
         {
             string[] result = new string[2];
             OracleParameter[] par = new OracleParameter[4];
@@ -661,11 +672,11 @@ namespace IBS.Repositories.Inspection_Billing
             return dTResult;
         }
 
-        public bool ConsigneeDelete(string CASE_NO, string CONSIGNEE_CD,string BPO_CD)
+        public bool ConsigneeDelete(string CASE_NO, string CONSIGNEE_CD, string BPO_CD)
         {
             T14PoBpo t14PoBpo = (from pm in context.T14PoBpos
-                                            where pm.CaseNo == CASE_NO && pm.ConsigneeCd == Convert.ToInt32(CONSIGNEE_CD) && pm.BpoCd == BPO_CD
-                                            select pm).FirstOrDefault();
+                                 where pm.CaseNo == CASE_NO && pm.ConsigneeCd == Convert.ToInt32(CONSIGNEE_CD) && pm.BpoCd == BPO_CD
+                                 select pm).FirstOrDefault();
             if (t14PoBpo == null) { return false; }
 
             context.T14PoBpos.Remove(t14PoBpo);

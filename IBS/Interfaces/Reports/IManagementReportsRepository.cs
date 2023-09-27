@@ -17,5 +17,25 @@ namespace IBS.Interfaces.Reports
         public PendingICAgainstCallsModel GetPendingICAgainstCallsData(DateTime FromDate, DateTime ToDate, string Region);
 
         public SuperSurpriseDetailsModel GetSuperSurpriseDetailsData(DateTime FromDate, DateTime ToDate, string Region, string ParticularCM, string ParticularSector);
+
+        public SuperSurpriseSummaryModel GetSuperSurpriseSummaryData(DateTime FromDate, DateTime ToDate, string Region);
+
+        public ConsignRejectModel GetConsignRejectData(DateTime FromDate, DateTime ToDate, string Region, string InspRegion, string Status);
+
+        public OutstandingOverRegionModel GetOutstandingOverRegion(DateTime FromDate);
+
+        public ClientWiseRejectionModel GetClientWiseRejection(DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway);
+
+        public NonConformityModel GetNonConformityData(string FromYearMonth, string ToYearMonth, int IeCd);
+
+        public PendingCallsModel GetPendingCallsData();
+
+        public ICIssuedNotReceivedModel GetICIssuedNotReceived(DateTime FromDate, DateTime ToDate, string Region);
+
+        public TentativeInspectionFeeWisePendingCallsModel GetTentativeInspectionFeeWisePendingCalls(DateTime FromDate, DateTime ToDate, string Region, string ParticularCM, string SortedOn);
+
+        public CallRemarkingModel GetCallRemarkingData(DateTime FromDate, DateTime ToDate, string Region, string CallRemarkingDate, string CallsStatus);
+
+        public CallDetailsDashboradModel GetCallDetailsDashborad(string Region);
     }
 }

@@ -61,7 +61,7 @@ public partial class CallsmarkedtoieView
 
     public string? MfgPhone { get; set; }
 
-    public short CallSno { get; set; }
+    public int CallSno { get; set; }
 
     public string? DocsSubmitted { get; set; }
 
