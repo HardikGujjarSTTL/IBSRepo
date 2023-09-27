@@ -14,10 +14,9 @@ namespace IBS.Interfaces
 
         public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO);
 
+        public string Insert(AddRecieptVoucherModel model, string VoucherDate, string Bank_Code, string VoucherType, string Region);
 
 
 
-
-
-        }
+    }
 }

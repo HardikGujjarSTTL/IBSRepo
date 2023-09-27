@@ -1,0 +1,248 @@
+﻿@model IBS.Models.Reports.CoIeWiseCallsModel
+<div>
+    <h3 class="center"></h3>
+    <div class="tableOuter">
+        <table width="90%" align="center" style="Z-INDEX: 101; LEFT: 8px; WIDTH: 90%; POSITION: absolute; TOP: 8px;" height="100" border="0">
+            <tbody>
+            @{
+                <tr>
+                    @if (Model.coIeWiseCallsList1[0].ONLINE_CALL == "Y")
+                    {
+                        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>ONLINE INSPECTION CALL</b></span></font></td>
+                    }
+                    else
+                    {
+                        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>INSPECTION CALL</b></span></font></td>
+                    }
+                </tr>
+                @if (Model.coIeWiseCallsList1[0].FINAL_OR_STAGE == "S")
+                {
+                    <tr>
+                        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>STAGE CALL</b></span></font></td>
+                    </tr>
+                }
+                <tr><td colspan="2"><font Face="Verdana" size="1"><span style="font-size: 12;"><b>From.</b><br> @Model.coIeWiseCallsList2[0].VEND_NAME <br> @Model.coIeWiseCallsList2[0].VEND_ADDRESS </span></font></td></tr>
+                <tr><td colspan="2"><font Face="Verdana" size="1"><span style="font-size: 12;"><b>Ref No.</b> @Model.coIeWiseCallsList1[0].CALL_LETTER_NO</span></font></td></tr>
+                <tr>
+                    <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12;"><b>Date:</b> @Model.coIeWiseCallsList1[0].CALL_LETTER_DT</span></font></td>
+                    @if (Model.coIeWiseCallsList1[0].IE_NAME != "")
+                    {
+                        <td align=right width="50%"><font Face="Verdana" size="1"><span style="font-size: 12;"><b>Call Marked to: </b> @Model.coIeWiseCallsList1[0].IE_NAME</span></font></td>
+                    }
+                </tr>
+                <tr><td colspan=2></td></tr>
+
+                <tr>
+                    @if (Model.coIeWiseCallsList1[0].CASE_NO.Substring(0, 1) == "N")
+                    {
+                        <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><p> To <br><br> Group General Manager (Inspection) <br> RITES LTD.,<br> Northern Region <br> 12th Floor, Core-II, <br> Scope Minar, Laxmi Nagar, <br> Delhi-110092</p></span></font></td>
+                    }
+                    else if (Model.coIeWiseCallsList1[0].CASE_NO.Substring(0, 1) == "E")
+                    {
+                        <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><p> To <br><br> Group General Manager (Inspection) <br> RITES LTD.,<br> Eastern Region <br> CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE, 3rd FLOOR, <br> KOLKATA-700 012</p></span></font></td>
+                    }
+                    else if (Model.coIeWiseCallsList1[0].CASE_NO.Substring(0, 1) == "W")
+                    {
+                        <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><p> To <br><br> Group General Manager (Inspection) <br> RITES LTD.,<br> Western Region <br> 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT, NARIMAN POINT, MUMBAI-400021 </p></span></font></td>
+                    }
+                    else if (Model.coIeWiseCallsList1[0].CASE_NO.Substring(0, 1) == "S")
+                    {
+                        <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><p> To <br><br> Group General Manager (Inspection) <br> RITES LTD.,<br> Southern Region <br> CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD, <br> CHENNAI - 600 006</p></span></font></td>
+                    }
+                    else if (Model.coIeWiseCallsList1[0].CASE_NO.Substring(0, 1) == "C")
+                    {
+                        <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><p> To <br><br> Group General Manager (Inspection) <br> RITES LTD.,<br> Central Region <br> 50, EXPANSION BUIDING,BHILAI STEEL PLANT AREA <br> BHILAI -490001 </p></span></font></td>
+                    }
+                    else if (Model.coIeWiseCallsList1[0].CASE_NO.Substring(0, 1) == "Q")
+                    {
+                        <td align="left" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><p> To <br><br> Group General Manager (Inspection) <br> RITES LTD.,<br> CO QA Division <br> RITES BHAWAN, 1, SECTOR-29, GURGAON <br> HARYANA -122001</p></span></font></td>
+                    }
+
+                    <td align="right" width="50%"><font Face="Verdana" size="1"><span style="font-size: 12px;"><b> CALL DATED:</b> @Model.coIeWiseCallsList1[0].CALL_RECV_DATE <b> CALL SNO. </b>@Model.coIeWiseCallsList1[0].CALL_SNO <br><b>CASE NO. </b>@Model.coIeWiseCallsList1[0].CASE_NO (PO SOURCE: @Model.coIeWiseCallsList2[0].SOURCE)</span></font></td>
+                </tr>
+                <tr><td colspan="2"></td></tr>
+                <tr>
+                    <td colspan=2 align=left><font Face="Verdana" size="1"><span style="font-size: 12px;"><br>Dear Sir,<br></span></font></td>
+                </tr>
+                <tr><td colspan="2"></td></tr>
+                <tr>
+                    <td colspan=2 align=left><font Face="Verdana" size="1"><span style="font-size: 12px;">Please arrange to inspect following goods lying ready with us. It is certified that the stores offered have been inspected by us and found to conform to the governing specifications.<br></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">1. Purchase Order No. and Date</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].PO_NO Dated: @Model.coIeWiseCallsList1[0].PO_DT </span> </font></td>
+                </tr>
+
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">2. Purchaser</font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].PURCHASER </span> </font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">3. Consignee</font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;"> As Per Annexure-1</span> </font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">4. Manufacturer's Name</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].MFG_NAME </span> </font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">5. Place of Inspection with address</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].MFG_ADD </span> </font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">6. Person to be contacted, Phone No. with E-mail id </span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].VEND_CONTACT_PER_1 </span> </font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">7. Description of Stores </span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">As Per Annexure-1 </span></font></td>
+                </tr>
+
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">8. State whether the items is on RDSO Vendor Directory</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].ITEM_RDSO </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">9. If Yes, whether the vendor is RDSO Aprroved. Indicate validity of approval</span> </font></td>
+                    @if (Model.coIeWiseCallsList1[0].VEND_RDSO == "Yes")
+                    {
+                        <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].VEND_RDSO, From: @Model.coIeWiseCallsList1[0].VEND_APP_FR TO : @Model.coIeWiseCallsList1[0].VEND_APP_TO </span></font></td>
+                    }
+                    else
+                    {
+                        <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].VEND_RDSO </span></font></td>
+                    }
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">10. Quantity on Order</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">As Per Annexure-1</span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">11. Quantity Now Offered</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">As Per Annexure-1 </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">12. Installmant Number</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].CALL_INSTALL_NO </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">13. Quantity already inspected and passed </span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">As Per Annexure-1 </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">14. Delivery period as per P.O./Amendment</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">As Per Annexure-1 </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a. Does PO specified staggered DP: </span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList1[0].STAG_DP </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b. If yes, details of lot size and staggered DP</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">1. Lot Size & DP: @Model.coIeWiseCallsList1[0].LOT_DP_1 </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;"></span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">2. Lot Size & DP2: @Model.coIeWiseCallsList1[0].LOT_DP_2 </span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">15. Bill Paying authority</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">As Per Annexure-1</span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">16. IRFC Funded Project</span> </font></td>
+                    @if (Model.coIeWiseCallsList1[0].IRFC_FUNDED == "Y")
+                    {
+                        <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Yes</span></font></td>
+                    }
+                    else
+                    {
+                        <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">No</span></font></td>
+                    }
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">17. Inspection Fee Payment details for cases</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;"></span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Where advance inspection fee is to be paid</span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;"></span></font></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="left"><Font Face="Verdana" size="1"><span style="font-size: 12px;">I hereby accept all the <a href="javascript: void(0)" onclick="window.open('@Url.Action("TermsAndConditions","OtherReports")', '_blank');">Terms and Conditions</a>. </Font></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Thanking you,<br></span></font></td>
+                </tr>
+
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Name<br></span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList2[0].VEND_CONTACT_PER_1</span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Mobile<br></span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList2[0].VEND_CONTACT_TEL_1</span></font></td>
+                </tr>
+                <tr>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Vend Email<br></span> </font></td>
+                    <td align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">@Model.coIeWiseCallsList2[0].VEND_EMAIL</span></font></td>
+                </tr>
+                <tr><td colspan="2"></td></tr>
+                <tr>
+                    <td colspan="2" align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Designation</span></font></td>
+                </tr>
+                <tr><td colspan="2"></td></tr>
+                <tr>
+                    <td colspan="2" align="left"><font Face="Verdana" size="1"><span style="font-size: 12px;">Authorised Signatory</span></font></td>
+                </tr>
+                <tr>
+                    <td width="100%" colspan="2">
+                        <table class="borderTable" cellpadding="0" cellspacing="0">
+                            <tr><td colspan="9" align="center"><font Face="Verdana" size="2"><span style='font-size: 14px;'><B>Annexure-1 (INSPECTION CALL ITEM DETAILS)</B></span></Font></td></tr>
+                            <tr>
+                            <th width='2%' valign='top' align='center'><font size='1' face='Verdana'>Sno.</Font></th>
+				            <th width='15%' valign='top' align='center'><font size='1' face='Verdana'>Consignee</Font></th>
+				            <th width='35%' valign='top' align='center'><font size='1' face='Verdana'>Description of Stores</Font></th>
+				            <th width='5%' valign='top' align='center'><font size='1' face='Verdana'>Quantity on Order</Font></th>
+				            <th width='5%' valign='top' align='center'><font size='1' face='Verdana'>Quantity Now Offered</Font></th>
+				            <th width='5%' valign='top' align='center'><font size='1' face='Verdana'>Quantity already inspected and passed</Font></th>
+				            <th width='5%' valign='top' align='center'><font size='1' face='Verdana'>Delivery period as per P.O./Amendment</Font></th>
+				            <th width='15%' valign='top' align='center'><font size='1' face='Verdana'>Bill Paying authority</Font></th>
+				            <th width='5%' valign='top' align='center'><font size='1' face='Verdana'>Master Item Checksheet</Font></th>
+                            </tr>
+                            @if(Model.coIeWiseCallsList1.Count() >0)
+                            {                                
+                                var SrNo = 0;
+                                @foreach (var item in Model.coIeWiseCallsList1)
+                                {
+                                    SrNo = SrNo + 1;
+                                    var url = "http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item.ITEM_CD + ".RAR";
+                                    <tr>
+                                        <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                                        <td width="15%" valign="top" align="left"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                                        <td width="35%" valign="top" align="left"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
+                                        <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@Math.Round(Convert.ToDecimal(item.QTY_ORDERED),0)</font></td>
+                                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@Math.Round(Convert.ToDecimal(item.QTY_TO_INSP),0)</font></td>
+                                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@Math.Round(Convert.ToDecimal(item.CUM_QTY_PREV_OFFERED),0)  & @Math.Round(Convert.ToDecimal(@item.CUM_QTY_PREV_PASSED),0)</font></td>
+                                        <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.DELV_DT</font></td>
+                                        <td width="15%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO</font></td>
+                                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana"><a href="@url">@item.ITEM_CD</a></font></td>
+                                    </tr>
+                                }                                
+                            }
+                            else
+                            {
+                                <tr><td colspan="9" align="center"><font Face="Verdana" size="2"><span style='font-size: 14px;'>No Data Found</span></Font></td></tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+                @if (Model.coIeWiseCallsList1[0].REMARKS != "")
+                {
+                    <tr><td colspan="2" align="center"><font Face="Verdana" size="2"><span style='font-size: 12px;'><b>REMARKS: @Model.coIeWiseCallsList1[0].REMARKS</b></span></Font></td></tr>
+                }
+            }
+            </tbody>
+        </table>        
+    </div>
+</div>

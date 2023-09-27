@@ -1,0 +1,130 @@
+﻿@model IBS.Models.InspectionStatusModel
+
+<div>
+   
+    
+            <h3 class="center">IC DETAILS FOR SPECIFIC PO</h3>
+    <h5 class="center">(* IC Issued after 1st March 2013 by Northern Region can also be viewed by Clicking VIEW IC hyperlink in last column)</h5>
+       
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.  </font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR  </font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">PURCHASER  </font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">PO NO. </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">PO DT.  </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IC NO.  </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IC DT.  </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.  </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO.  </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IE </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">ITEM DESCRITION </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">QTY OFF  </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">QTY PASS/REJ </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">HOLOGRAM OR OTHER </font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">VIEW IC </font></b></th>
+
+                </tr>
+                @if (Model != null && Model.lstSummaryConreport != null && Model.lstSummaryConreport.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstSummaryConreport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.PURCHASER</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_DT</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_NO</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.BK_NO</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.SET_NO</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_TO_INSP</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.QTY_PASSED</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.HOLOGRAM</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_PHOTO</font></td>
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="17" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h3 class="center">CALLS DETAILS FOR SPECIFIC PO WHERE IC IS NOT ENTERED INTO THE SYSTEM</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="45%" valign="top" align="center"><b><font size="1" face="Verdana">SNO</font></b></th>
+                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR NAME</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">PURCHASER</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">ITEM</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">CALL DATE</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">ENGINEER DEPUTED</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">ENGINEER CONTACT NO.</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">PONO</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">PO DATE</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">STATUS</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">HOLOGRAM OR OTHER</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">VIEW IC</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">CONTACT PERSON</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">CONTACT PERSON PHONE NO.</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">CALL SERIAL NO.</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">CONTROLLING MANAGER</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font size="1" face="Verdana">REMARKS</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstCallDetails != null && Model.lstCallDetails.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstCallDetails)
+                    {
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="45%" valign="top" align="Left"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                            <td width="20%" valign="top" align="right"><font size="1" face="Verdana">@item.MANUFACTURER</font></td>
+                            <td width="20%" valign="top" align="right"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.CALL_MARK_DT</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.PO_DATE</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.HOLOGRAM</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.IC_PHOTO</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.MFG_PERS</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.MFG_PHONE</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="35%" valign="top" align="right"><font size="1" face="Verdana">@item.REMARKS</font></td>
+                        </tr>
+                        serialNumber++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="18" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

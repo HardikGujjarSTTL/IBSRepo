@@ -1810,7 +1810,6 @@ namespace IBS.Repositories.InspectionBilling
             return val;
         }
 
-
         public int show2(string CaseNo, string CallRecvDt, int CallSno)
         {
             int val = 0;
@@ -2034,7 +2033,6 @@ namespace IBS.Repositories.InspectionBilling
 
             return model;
         }
-
 
         int[] reasons(VenderCallCancellationModel model)
         {

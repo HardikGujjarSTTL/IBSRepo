@@ -42,6 +42,8 @@ namespace IBS.Repositories
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
+                model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
+                model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 return model;
             }
         }
@@ -198,6 +200,8 @@ namespace IBS.Repositories
                 obj.Remarks = model.Remarks;
                 obj.Datetime = DateTime.Now;
                 obj.PoiCd = model.PoiCd;
+                obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
+                obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 context.T80PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -218,6 +222,8 @@ namespace IBS.Repositories
                 POMaster.Remarks = model.Remarks;
                 POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
+                POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
+                POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }
@@ -342,6 +348,8 @@ namespace IBS.Repositories
             else
             {
                 model.CaseNo = POMastersDetails.CaseNo;
+                model.DrawingNo = POMastersDetails.DrawingNo;
+                model.SpecificationNo = POMastersDetails.SpecificationNo;
                 model.ItemSrno = POMastersDetails.ItemSrno;
                 model.PlNo = POMastersDetails.PlNo;
                 model.BpoCd = POMastersDetails.BpoCd;
@@ -393,6 +401,8 @@ namespace IBS.Repositories
             {
                 T82PoDetail obj = new T82PoDetail();
                 obj.CaseNo = model.CaseNo;
+                obj.DrawingNo = model.DrawingNo;
+                obj.SpecificationNo = model.SpecificationNo;
                 obj.ItemSrno = (byte)model.ItemSrno;
                 obj.PlNo = model.PlNo;
                 obj.BpoCd = model.BpoCd;
@@ -430,6 +440,8 @@ namespace IBS.Repositories
             {
                 t82PoDetail.ItemDesc = model.ItemDesc;
                 t82PoDetail.PlNo = model.PlNo;
+                t82PoDetail.DrawingNo = model.DrawingNo;
+                t82PoDetail.SpecificationNo = model.SpecificationNo;
                 t82PoDetail.BpoCd = model.BpoCd;
                 t82PoDetail.Qty = model.Qty;
                 t82PoDetail.ConsigneeCd = model.ConsigneeCd;

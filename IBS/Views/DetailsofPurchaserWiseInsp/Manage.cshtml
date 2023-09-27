@@ -49,7 +49,7 @@
     });
 
     function loadSummartReport() {
-        $("#dvReportViewer").load("@Url.Action("DetailsofPurchaserWiseInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', MaterialValue: '@Model.MaterialValue', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("SummaryofInsp")", { Month: '@Model.Month', Year: '@Model.Year', FromDate: '@Model.FromDt', ToDate: '@Model.ToDt', ForGiven: '@Model.ForGiven', ReportBasedon: '@Model.ReportBasedon', ForParticular: '@Model.ForParticular', lstParticular: '@Model.lstParticular', TextPurchaser: '@Model.TextPurchase' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

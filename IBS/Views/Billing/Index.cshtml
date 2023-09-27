@@ -1,0 +1,238 @@
+﻿
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>BPO WISE BILL DETAILS</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-12">
+                <ul class="radioListForm">
+                    <li>
+                        <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> For Particular BPO</label>
+                        <span class="text-danger"></span>
+                    </li>
+                    <li>
+                        <label for="rb2"><input type="radio" name="radioGroup" id="rb2" /> For Particular Sector</label>
+
+                        <span class="text-danger"></span>
+                    </li>
+                    <li>
+                        <label for="rb3"><input type="radio" name="radioGroup" id="rb3" /> For Partcular Client.</label>
+
+                        <span class="text-danger"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-8 mb-3" style="display:none" id="hdnPDropdown">                
+                <input type="text" class="input" id="txtbpo" style="width: 46%;">
+                <button type="button" class="save-btn active" onclick="Search();">Select BPO</button>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3" style="display:none" id="hdnbpo">
+                <label for="Reference"></label>
+                <select id="bpoid"></select>
+            </div>
+        </div>
+        <div class="col-md-3" style="display:none" id="hdnclient">
+            
+            @Html.DropDownList("AccCD", Common.ClientWiseBPO(), new { @id="ddlclientbpo"})
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-5" style="display:none" id="hdnbpocode">
+            <select id="bpo"></select>
+            <span class="text-danger"></span>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <ul class="radioListForm my-0">
+                    <li>
+                        <label for="rb3" class="py-0"><input type="radio" name="radioGroup2" id="rb4" /> For the Month</label>
+                        <span class="text-danger"></span>
+                    </li>
+                    <li>
+                        <label for="rb4" class="py-0"><input type="radio" name="radioGroup2" id="rb5" /> For Given Period</label>
+                        <span class="text-danger"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2" style="display:none" id="dtf">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2" style="display:none" id="dtt">
+                <label for="PropertyId">To Date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2" id="dd1" style="display:none">
+                <label for="PropertyId">Month</label>
+                @Html.DropDownList("Month", Common.GetMonth(), new { @id="ddlmonth"})
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-2" id="dd2" style="display:none">
+                <label for="PropertyId">Year</label>
+                @Html.DropDownList("Year", Common.GetYear(), new { @id="ddlyear"})
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">          
+            
+        </div>
+        <div class="col-md-3" style="margin-top: 30px;">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+                <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function Search() {
+            FillBPO();
+           
+        }
+        function FillBPO(ids) {
+            var BpoType = $("#txtbpo").val();
+            $.ajax({
+                url: '@Url.Action("GetBPO", "Billing")?BpoType=' + BpoType,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#bpoid").html("");
+                    $("#bpoid").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#bpoid").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#bpoid").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#bpoid").val(ids);
+                    }
+                    //$("#hdnRCD").val($("#RlyCd").val());
+                    //$("#hdnRailway").val($("#RlyCd option:selected").text());
+                }
+            });
+        }
+        function FillBPOCode(ids) {
+            var BpoType = $("#ddlclientbpo").val();
+            $.ajax({
+                url: '@Url.Action("GetBPOCode", "Billing")?BpoType=' + BpoType,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#bpo").html("");
+                    // $("#bpo").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#bpo").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#bpo").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#bpo").val(ids);
+                    }
+                    //$("#hdnRCD").val($("#RlyCd").val());
+                    //$("#hdnRailway").val($("#RlyCd option:selected").text());
+                }
+            });
+        }
+
+        function ClearControls() {
+            location.reload(true);
+        }
+        $("#ddlclientbpo").change(function(){
+            FillBPOCode();
+        })
+        $('input[name="radioGroup"]').change(function () {
+
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb1") {
+
+                $("#hdnPDropdown").css("display", "block");
+                $("#hdnbpo").css("display", "block");
+                $("#hdnclient").css("display", "none");
+                $("#hdnbpocode").css("display", "none");
+            }
+            else if (selectedId == "rb2") {
+
+                $("#hdnPDropdown").css("display", "none");
+                $("#hdnbpo").css("display", "none");
+                $("#hdnclient").css("display", "block");
+                $("#hdnbpocode").css("display", "none");
+            }
+            else
+            {                
+                FillBPOCode();
+                $("#hdnclient").css("display", "block");
+                $("#hdnbpocode").css("display", "block");
+            }
+
+        });
+        $('input[name="radioGroup2"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rb4") {
+                $("#dd1").css("display", "block");
+                $("#dd2").css("display", "block");
+                $("#dtf").css("display", "none");
+                $("#dtt").css("display", "none");
+            }
+            else {
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dtf").css("display", "block");
+                $("#dtt").css("display", "block");
+            }
+        });
+        function ViewReport() {
+            var BPOType = $("#ddlbpo").val();
+            var AccCD = $("#ddlAccCD").val();
+            var FromDate = $("#dtfrom").val();
+            var ToDate = $("#dtto").val();
+
+            var QueryString = "RptFlag=5" +
+                "&BPOType=" + encodeURIComponent(BPOType) +
+                "&AccCD=" + encodeURIComponent(AccCD) +
+                "&FromDate=" + encodeURIComponent(FromDate) +
+                "&ToDate=" + encodeURIComponent(ToDate);
+
+
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
+
+        }
+    </script>
+}

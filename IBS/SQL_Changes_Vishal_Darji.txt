@@ -85,7 +85,6 @@ INSERT INTO MENU_MASTER VALUES(447, 14, 'ManagementReports', 'Index?ReportType=R
 
 INSERT INTO MENUROLEMAPPING VALUES(1892, 1, 447, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-
 INSERT INTO MENU_MASTER VALUES(467, 14, 'ManagementReports', 'Index?ReportType=ICSUBMIT', 'IC Submission Report', null, null, null, 1, 27, null, 1);
 
 INSERT INTO MENUROLEMAPPING VALUES(1907, 1, 467, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
@@ -125,3 +124,55 @@ ALTER TABLE IE_CALL_LOCATION_ENTRYEXIT MODIFY CALL_SNO NUMBER(6,0);
 ALTER TABLE T18_CALL_DETAILS MODIFY CALL_SNO NUMBER(6,0);
 
 ALTER TABLE T108_REMARKED_CALLS MODIFY CALL_SNO NUMBER(6,0);
+
+ALTER TABLE T62_MASTER_ITEM_PLNO ADD DRAWING_NO  VARCHAR2(30)
+
+ALTER TABLE T62_MASTER_ITEM_PLNO ADD SPECIFICATION_NO  VARCHAR2(30)
+
+INSERT INTO MENU_MASTER VALUES(522, 487, 'ManagementReports', 'Index?ReportType=CONSIGN_REJECT', 'Online Consignee Rejection Report', null, null, null, 1, 7, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2783, 1, 522, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+INSERT INTO MENU_MASTER VALUES(529, 487, 'ManagementReports', 'Index?ReportType=X', 'Outstanding of One Region Over Other', null, null, null, 1, 8, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2784, 1, 529, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+INSERT INTO MENU_MASTER VALUES(530, 487, 'ManagementReports', 'Index?ReportType=CLIENTWISEREJ', 'Client wise Rejection IC''s (All Regions)', null, null, null, 1, 9, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2785, 1, 530, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+ALTER TABLE T23_BILL_ITEMS MODIFY ITEM_SRNO NUMBER(6,0);
+
+INSERT INTO MENU_MASTER VALUES(531, 487, 'ManagementReports', 'Index?ReportType=NON_CONFORMITY', 'Format for Non Conformity Report (IE WISE)', null, null, null, 1, 10, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2786, 1, 531, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==> SP_GET_NON_CONFORMITY_DATA
+
+INSERT INTO MENU_MASTER VALUES(532, 487, 'ManagementReports', 'Index?ReportType=PENDING_CALLS', 'Overdue/Pending Calls', null, null, null, 1, 11, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2787, 1, 532, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==> SP_GET_PENDING_CALLS_DATA
+
+INSERT INTO MENU_MASTER VALUES(533, 487, 'ManagementReports', 'Index?ReportType=COUNTIC', 'CM and IE wise IC issued but not recieved', null, null, null, 1, 12, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2788, 1, 533, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==>SP_GET_IC_ISSUED_NOT_RECEIVED_DATA
+
+INSERT INTO MENU_MASTER VALUES(534, 487, 'ManagementReports', 'Index?ReportType=HIGHVALUE', 'Tentative Inspection Fee Wise Pending Call', null, null, null, 1, 13, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2789, 1, 534, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==> SP_GET_INSPECTION_FEE_WISE_PENDING_CALLS_DATA
+
+INSERT INTO MENU_MASTER VALUES(535, 487, 'ManagementReports', 'Index?ReportType=REMARKING', 'Call Remarking', null, null, null, 1, 14, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2790, 1, 535, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+INSERT INTO MENU_MASTER VALUES(536, 487, 'ManagementReports', 'Index?ReportType=CALL_DETAILS', 'Call Details Dashborad', null, null, null, 1, 15, null, 1);
+
+INSERT INTO MENUROLEMAPPING VALUES(2791, 1, 536, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+Create new Procedure ==> SP_GET_CALLS_DETAILS_DATA
