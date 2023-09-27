@@ -1638,27 +1638,28 @@ namespace IBS.Repositories.InspectionBilling
             DataSet ds = new DataSet();
             if (Convert.ToInt32(certdt) >= 20170701)
             {
-                OracleParameter[] parameter = new OracleParameter[18];
+                OracleParameter[] parameter = new OracleParameter[16];
                 parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Char, model.Regioncode, ParameterDirection.Input);
-                parameter[1] = new OracleParameter("in_case_no", OracleDbType.Char, model.Caseno, ParameterDirection.Input);
-                parameter[2] = new OracleParameter("in_call_recv_dt", OracleDbType.Char, model.Callrecvdt, ParameterDirection.Input);
+                parameter[1] = new OracleParameter("in_case_no", OracleDbType.Varchar2, model.Caseno, ParameterDirection.Input);
+                parameter[2] = new OracleParameter("in_call_recv_dt", OracleDbType.Varchar2, Convert.ToDateTime(model.Callrecvdt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
                 parameter[3] = new OracleParameter("in_call_sno", OracleDbType.Int32, model.Callsno, ParameterDirection.Input);
                 parameter[4] = new OracleParameter("in_consignee_cd", OracleDbType.Int32, model.Consignee, ParameterDirection.Input);
                 parameter[5] = new OracleParameter("in_bill", OracleDbType.Varchar2, model.BillNo, ParameterDirection.Input);
-                parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Char, model.BpoFeeType, ParameterDirection.Input);
+                parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Varchar2, model.BpoFeeType, ParameterDirection.Input);
                 parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, in_fee, ParameterDirection.Input);
-                parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Char, TaxType, ParameterDirection.Input);
+                parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Varchar2, TaxType, ParameterDirection.Input);
                 parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
                 parameter[10] = new OracleParameter("in_invoice", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);
                 parameter[11] = new OracleParameter("in_max_fee", OracleDbType.Int32, MaxFee, ParameterDirection.Input);
                 parameter[12] = new OracleParameter("in_min_fee", OracleDbType.Int32, MinFee, ParameterDirection.Input);
-                parameter[13] = new OracleParameter("in_bill_dt", OracleDbType.Char, Convert.ToDateTime(model.BillDt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
-                parameter[14] = new OracleParameter("in_adv_bill", OracleDbType.Char, model.chkABill, ParameterDirection.Input);
-                parameter[15] = new OracleParameter("out_err_cd", OracleDbType.Int32, 1, ParameterDirection.Output);
-                parameter[16] = new OracleParameter("out_bill", OracleDbType.Varchar2, 20, ParameterDirection.Output);
-                parameter[17] = new OracleParameter("out_fee", OracleDbType.Int32, 15, ParameterDirection.Output);
+                parameter[13] = new OracleParameter("in_bill_dt", OracleDbType.Varchar2, Convert.ToDateTime(model.BillDt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
+                parameter[14] = new OracleParameter("in_adv_bill", OracleDbType.Varchar2, model.chkABill, ParameterDirection.Input);
+                parameter[15] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                //parameter[15] = new OracleParameter("out_err_cd", OracleDbType.Int32, 1, ParameterDirection.Output);
+                //parameter[16] = new OracleParameter("out_bill", OracleDbType.Varchar2, 20, ParameterDirection.Output);
+                //parameter[17] = new OracleParameter("out_fee", OracleDbType.Int32, 15, ParameterDirection.Output);
 
-                ds = DataAccessDB.GetDataSet("GENERATE_BILL_GST", parameter);
+                ds = DataAccessDB.GetDataSet("SP_GENERATE_BILL_GST_NEW", parameter);
             }
             else
             {
