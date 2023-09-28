@@ -47,7 +47,7 @@
                         SrNo++;
                         _Amount += @item.AMT_CLEARED;
                     }
-                    <tr style="background:#d4d0c8;">
+                    <tr class="reportTotal">
                         <td width='5%' valign='top' align='right' colspan='12'> <font size='1' face='Verdana'><b>Total Amount Posted During The Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></b></font></td>
                         <td width='7%' valign='top' align='right'><font size='1' face='Verdana'>@_Amount</font></td>
                         <td width='5%' valign='top' align='center' colspan='2'><font size='1' face='Verdana'></font></td>

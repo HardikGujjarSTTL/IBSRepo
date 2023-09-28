@@ -1,28 +1,13 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@using System.Web;
+@using IBS.Helper;
+
 @{
     string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = string.Empty;
-
-    if (ReportType == "IE_X") ReportTitle = "IE Performance";
-    else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
-    else if (ReportType == "RWB") ReportTitle = "Region Wise Billing Summary";
-    else if (ReportType == "R") ReportTitle = "Region Wise Comparison of Outstanding";
-    else if (ReportType == "ICSUBMIT") ReportTitle = "IC Submission Report";
-    else if (ReportType == "CALLSWITHOUTIC") ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
-    else if (ReportType == "SUPSUR") ReportTitle = "Super Surprise Details";
-    else if (ReportType == "SUPSURPSUMM") ReportTitle = "CO Wise Super Surprise Summary";
-    else if (ReportType == "CONSIGN_REJECT") ReportTitle = "Online Consignee Rejection Report";
-    else if (ReportType == "X") ReportTitle = "Outstanding of One Region Over Other";
-    else if (ReportType == "CLIENTWISEREJ") ReportTitle = "Rejection Details Client Wise";
-    else if (ReportType == "NON_CONFORMITY") ReportTitle = "Format for Monthly Non Conformity Report";
-    else if (ReportType == "PENDING_CALLS") ReportTitle = "Overdue/Pending Calls";
-    else if (ReportType == "COUNTIC") ReportTitle = "CM and IE wise IC issued but not recieved";
-    else if (ReportType == "HIGHVALUE") ReportTitle = "Tentative Inspection Fee Wise Pending Call";
-    else if (ReportType == "REMARKING") ReportTitle = "Call Remarking Detail";
-    else if (ReportType == "CALL_DETAILS") ReportTitle = "Call Details Dashborad";
-
+    string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
     ViewData["Title"] = ReportTitle;
+    string cancelUrl = Url.Action("Index?ReportType=" + ReportType, "ManagementReports");
 }
 
 <div class="list-inner">
@@ -32,406 +17,496 @@
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
-        <div class="task-inner row report1" style="display: none">
-            <div class="col-md-3">
-                <div class="input-search">
-                    <label for="FromDate">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-search">
-                    <label for="ToDate">To</label>
-                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
-                </div>
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="task-inner row RWB" style="display: none">
-            <div class="col-md-12 mb-3">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="SummaryReport1" name="RWBSummaryReport" value="SummaryReport1" checked>
-                                <label for="SummaryReport1">Summary Report For the Month</label>
-                            </div>
+        <div class="report1" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmReport1">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <div class="task-inner row">
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
                         </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="SummaryReport2" name="RWBSummaryReport" value="SummaryReport2">
-                                <label for="SummaryReport2">Summary Report For the Given Period</label>
-                            </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="ToDate">To</label>
+                            <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataReport1();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="FromMonth" id="lblFromMonth">Month</label> <br />
-                @Html.DropDownList("FromMonth", Common.GetMonths())
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="FromYear" id="lblFromYear">Year</label> <br />
-                @Html.DropDownList("FromYear", Common.GetYears())
-            </div>
-            <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
-                <label for="ToMonth">To Month</label> <br />
-                @Html.DropDownList("ToMonth", Common.GetMonths())
-            </div>
-            <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
-                <label for="ToYear">To Year</label> <br />
-                @Html.DropDownList("ToYear", Common.GetYears())
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportRWB();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsRWB();">Clear</button>
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="task-inner row RWCO" style="display: none">
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="FromDate_RWCO">Client wise Outstanding Statement as on</label>
-                    <input type="text" class="datepicker" id="FromDate_RWCO" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDate_RWCO"></span>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="ClientWiseOutstanding1" name="ClientWiseOutstanding" value="1" checked>
-                                <label for="ClientWiseOutstanding1">Client Wise</label>
-                            </div>
-                        </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="ClientWiseOutstanding2" name="ClientWiseOutstanding" value="2">
-                                <label for="ClientWiseOutstanding2">Sorted on Outstanding(Outstanding amount is greater then zero OR Total Suspense is greater then zero)</label>
+        <div class="RWB" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmRWB">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromYearMonth" name="hdnFromYearMonth" />
+                <input type="hidden" id="hdnToYearMonth" name="hdnToYearMonth" />
+                <div class="task-inner row">
+                    <div class="col-md-12 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="SummaryReport1" name="RWBSummaryReport" value="SummaryReport1" checked>
+                                        <label for="SummaryReport1">Summary Report For the Month</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="SummaryReport2" name="RWBSummaryReport" value="SummaryReport2">
+                                        <label for="SummaryReport2">Summary Report For the Given Period</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportRWCO();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsRWCO();">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="task-inner row SuperSurprise" style="display: none">
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="FromDateSuperSurprise">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDateSuperSurprise" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDateSuperSurprise"></span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="ToDateSuperSurprise">To</label>
-                    <input type="text" class="datepicker" id="ToDateSuperSurprise" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDateSuperSurprise"></span>
-                </div>
-            </div>
-            <div class="col-md-12 mb-3">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="CM1" name="CM" value="CM1" checked>
-                                <label for="CM1">All CM</label>
-                            </div>
-                        </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="CM2" name="CM" value="CM2">
-                                <label for="CM2">Particular CM</label>
-                            </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="FromMonth" id="lblFromMonth">Month</label> <br />
+                        @Html.DropDownList("FromMonth", Common.GetMonths())
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="FromYear" id="lblFromYear">Year</label> <br />
+                        @Html.DropDownList("FromYear", Common.GetYears())
+                    </div>
+                    <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
+                        <label for="ToMonth">To Month</label> <br />
+                        @Html.DropDownList("ToMonth", Common.GetMonths())
+                    </div>
+                    <div class="col-md-2 mb-3 RWBSummaryReportTo" style="display: none">
+                        <label for="ToYear">To Year</label> <br />
+                        @Html.DropDownList("ToYear", Common.GetYears())
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataRWB();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3 mb-3 CM" style="display: none;">
-                @Html.DropDownList("ParticularCM", Common.GetControllingOfficers(Region))
-            </div>
-            <div class="col-md-12 mb-3">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="Sector1" name="Sector" value="Sector1" checked>
-                                <label for="Sector1">All scope of sector where Item is covered</label>
-                            </div>
+            </form>
+        </div>
+        <div class="RWCO" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmRWCO">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnOutstanding" name="hdnOutstanding" />
+                <div class="task-inner row">
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="FromDate_RWCO">Client wise Outstanding Statement as on</label>
+                            <input type="text" class="datepicker" id="FromDate_RWCO" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDate_RWCO"></span>
                         </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="Sector2" name="Sector" value="Sector2">
-                                <label for="Sector2">Particular scope of sector where Item is covered</label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="ClientWiseOutstanding1" name="ClientWiseOutstanding" value="1" checked>
+                                        <label for="ClientWiseOutstanding1">Client Wise</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="ClientWiseOutstanding2" name="ClientWiseOutstanding" value="2">
+                                        <label for="ClientWiseOutstanding2">Sorted on Outstanding(Outstanding amount is greater then zero OR Total Suspense is greater then zero)</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3 Sector" style="display: none;">
-                @Html.DropDownList("ParticularSector",  new SelectList(Common.GetScopeOfsector() , "Value", "Text"))
-            </div>
-            <div class="col-md-12" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportSuperSurprise();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsSuperSurprise();">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="task-inner row ConsignReject" style="display: none">
-            <div class="col-md-3">
-                <label for="RegionConsignReject">For The Region</label>
-                @Html.DropDownList("RegionConsignReject", new SelectList(Common.GetRegion() , "Value", "Text"), "--All--")
-            </div>
-            <div class="col-md-3">
-                <label for="RegionStatus">Status</label>
-                @Html.DropDownList("RegionStatus", new SelectList(Common.GetOnlineStatus() , "Value", "Text"), "--All--")
-            </div>
-            <div class="col-md-3">
-                <div class="input-search">
-                    <label for="FromDateConsignReject">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDateConsignReject" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDateConsignReject"></span>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="input-search">
-                    <label for="ToDateConsignReject">To</label>
-                    <input type="text" class="datepicker" id="ToDateConsignReject" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDateConsignReject"></span>
-                </div>
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportConsignReject();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsConsignReject();">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="task-inner row OutstandingOverRegion" style="display: none">
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="FromDateOutstandingOverRegion">Client wise Outstanding Statement as on</label>
-                    <input type="text" class="datepicker" id="FromDateOutstandingOverRegion" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDateOutstandingOverRegion"></span>
-                </div>
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportOutstandingOverRegion();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsOutstandingOverRegion();">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="task-inner row ClientWiseRejection" style="display: none">
-            <div class="col-md-3 mb-3">
-                <label for="ClientType_ClientWiseRejection">Client</label>
-                @Html.DropDownList("ClientType_ClientWiseRejection", new SelectList(Common.ClientType() , "Value", "Text"), "--Select--", new { @onchange = "BindBPORailway();" })
-                <span class="text-danger field-validation-error" id="spnErrorClientTypeClientWiseRejection"></span>
-            </div>
-            <div class="col-md-3 mb-3" style="margin-top: 34px;">
-                @Html.DropDownList("BPORailway_ClientWiseRejection", Common.GetBPORailway(""),  "--Select--")
-                <span class="text-danger field-validation-error" id="spnErrorBPORailwayClientWiseRejection"></span>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="FromDateClientWiseRejection">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDateClientWiseRejection" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDateClientWiseRejection"></span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="ToDateClientWiseRejection">To</label>
-                    <input type="text" class="datepicker" id="ToDateClientWiseRejection" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDateClientWiseRejection"></span>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportClientWiseRejection();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsClientWiseRejection();">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="task-inner row NonConformity" style="display: none">
-            <div class="col-md-12 mb-3">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="SummaryReport3" name="NonConformitySummaryReport" value="SummaryReport3" checked>
-                                <label for="SummaryReport3">Summary Report For the Month</label>
-                            </div>
-                        </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="SummaryReport4" name="NonConformitySummaryReport" value="SummaryReport4">
-                                <label for="SummaryReport4">Summary Report For the Given Period</label>
-                            </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataRWCO();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <label for="FromMonthNonConformity" id="lblFromMonthNonConformity">Month</label> <br />
-                @Html.DropDownList("FromMonthNonConformity", Common.GetMonths())
-            </div>
-            <div class="col-md-2">
-                <label for="FromYearNonConformity" id="lblFromYearNonConformity">Year</label> <br />
-                @Html.DropDownList("FromYearNonConformity", Common.GetYears())
-            </div>
-            <div class="col-md-2 NonConformitySummaryReportTo" style="display: none">
-                <label for="ToMonthNonConformity">To Month</label> <br />
-                @Html.DropDownList("ToMonthNonConformity", Common.GetMonths())
-            </div>
-            <div class="col-md-2 NonConformitySummaryReportTo" style="display: none">
-                <label for="ToYearNonConformity">To Year</label> <br />
-                @Html.DropDownList("ToYearNonConformity", Common.GetYears())
-            </div>
-            <div class="col-md-4">
-                <label for="IecdNonConformity">IE</label> <br />
-                @Html.DropDownList("IecdNonConformity", Common.GetIEIEToWhomIssued(Region), new { @class = "" })
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportNonConformity();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsNonConformity();">Clear</button>
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="task-inner row TentativeInspection" style="display: none">
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="FromDateTentativeInspection">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDateTentativeInspection" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDateTentativeInspection"></span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="ToDateTentativeInspection">To</label>
-                    <input type="text" class="datepicker" id="ToDateTentativeInspection" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDateTentativeInspection"></span>
-                </div>
-            </div>
-            <div class="col-md-12 mb-3">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="CM3" name="TentativeInspectionCM" value="CM3" checked>
-                                <label for="CM3">All CM</label>
-                            </div>
+        <div class="SuperSurprise" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmSuperSurprise">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnParticularCM" name="hdnParticularCM" />
+                <input type="hidden" id="hdnParticularSector" name="hdnParticularSector" />
+                <div class="task-inner row">
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="FromDateSuperSurprise">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDateSuperSurprise" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateSuperSurprise"></span>
                         </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="CM4" name="TentativeInspectionCM" value="CM4">
-                                <label for="CM4">Particular CM</label>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="ToDateSuperSurprise">To</label>
+                            <input type="text" class="datepicker" id="ToDateSuperSurprise" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDateSuperSurprise"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="CM1" name="CM" value="CM1" checked>
+                                        <label for="CM1">All CM</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="CM2" name="CM" value="CM2">
+                                        <label for="CM2">Particular CM</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3 TentativeInspectionCM" style="display: none;">
-                @Html.DropDownList("ParticularCM2", Common.GetControllingOfficers(Region))
-            </div>
-            <div class="col-md-12">
-                <div class="custom-readio">
-                    <label>Report To be Sorted On</label>
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="InspFee" name="SortedOn" value="InspFee" checked>
-                                <label for="InspFee">Insp Fee</label>
-                            </div>
-                        </div>
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="DeliveryPeriod" name="SortedOn" value="DeliveryPeriod">
-                                <label for="DeliveryPeriod">Delivery Period</label>
-                            </div>
-                        </div>
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="DesireDate" name="SortedOn" value="DesireDate">
-                                <label for="DesireDate">Desire Date</label>
-                            </div>
-                        </div>
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="PendingSince" name="SortedOn" value="PendingSince">
-                                <label for="PendingSince">Pending Since</label>
+                    <div class="col-md-3 mb-3 CM" style="display: none;">
+                        @Html.DropDownList("ParticularCM", Common.GetControllingOfficers(Region))
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="Sector1" name="Sector" value="Sector1" checked>
+                                        <label for="Sector1">All scope of sector where Item is covered</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="Sector2" name="Sector" value="Sector2">
+                                        <label for="Sector2">Particular scope of sector where Item is covered</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3 mb-3 Sector" style="display: none;">
+                        @Html.DropDownList("ParticularSector",  new SelectList(Common.GetScopeOfsector() , "Value", "Text"))
+                    </div>
+                    <div class="col-md-12" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataSuperSurprise();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportTentativeInspection();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsTentativeInspection();">Clear</button>
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="task-inner row CallRemarking" style="display: none">
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="FromDateCallRemarking">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDateCallRemarking" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorFromDateCallRemarking"></span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="input-search">
-                    <label for="ToDateCallRemarking">To</label>
-                    <input type="text" class="datepicker" id="ToDateCallRemarking" placeholder="DD/MM/YYYY" />
-                    <span class="text-danger field-validation-error" id="spnErrorToDateCallRemarking"></span>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3" style="margin-top: 30px;">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="InitiatedDate" name="CallRemarkingDate" value="InitiatedDate" checked>
-                                <label for="InitiatedDate">By Remark Initiated Date</label>
-                            </div>
+        <div class="ConsignReject" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmConsignReject">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnRegion" name="hdnRegion" />
+                <input type="hidden" id="hdnStatus" name="hdnStatus" />
+                <div class="task-inner row">
+                    <div class="col-md-3">
+                        <label for="RegionConsignReject">For The Region</label>
+                        @Html.DropDownList("RegionConsignReject", new SelectList(Common.GetRegion() , "Value", "Text"), "--All--")
+                    </div>
+                    <div class="col-md-3">
+                        <label for="RegionStatus">Status</label>
+                        @Html.DropDownList("RegionStatus", new SelectList(Common.GetOnlineStatus() , "Value", "Text"), "--All--")
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDateConsignReject">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDateConsignReject" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateConsignReject"></span>
                         </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="ApprovedDate" name="CallRemarkingDate" value="ApprovedDate">
-                                <label for="ApprovedDate">By Remark Approved Date</label>
-                            </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="ToDateConsignReject">To</label>
+                            <input type="text" class="datepicker" id="ToDateConsignReject" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDateConsignReject"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataConsignReject();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3 mb-3" >
-                <label for="CallsStatus">Status of Calls</label>
-                @Html.DropDownList("CallsStatus", new SelectList(Common.GetCallsStatus() , "Value", "Text"), "--All--")
-            </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReportCallRemarking();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControlsCallRemarking();">Clear</button>
+            </form>
+        </div>
+        <div class="OutstandingOverRegion" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmOutstandingOverRegion">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <div class="task-inner row">
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="FromDateOutstandingOverRegion">Client wise Outstanding Statement as on</label>
+                            <input type="text" class="datepicker" id="FromDateOutstandingOverRegion" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateOutstandingOverRegion"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataOutstandingOverRegion();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
+        </div>
+        <div class="ClientWiseRejection" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmClientWiseRejection">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnClientType" name="hdnClientType" />
+                <input type="hidden" id="hdnBPORailway" name="hdnBPORailway" />
+                <div class="task-inner row">
+                    <div class="col-md-3 mb-3">
+                        <label for="ClientType_ClientWiseRejection">Client</label>
+                        @Html.DropDownList("ClientType_ClientWiseRejection", new SelectList(Common.ClientType() , "Value", "Text"), "--Select--", new { @onchange = "BindBPORailway();" })
+                        <span class="text-danger field-validation-error" id="spnErrorClientTypeClientWiseRejection"></span>
+                    </div>
+                    <div class="col-md-3 mb-3" style="margin-top: 34px;">
+                        @Html.DropDownList("BPORailway_ClientWiseRejection", Common.GetBPORailway(""),  "--Select--")
+                        <span class="text-danger field-validation-error" id="spnErrorBPORailwayClientWiseRejection"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="FromDateClientWiseRejection">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDateClientWiseRejection" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateClientWiseRejection"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="ToDateClientWiseRejection">To</label>
+                            <input type="text" class="datepicker" id="ToDateClientWiseRejection" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDateClientWiseRejection"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataClientWiseRejection();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="NonConformity" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmNonConformity">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromYearMonth" name="hdnFromYearMonth" />
+                <input type="hidden" id="hdnToYearMonth" name="hdnToYearMonth" />
+                <input type="hidden" id="hdnIecd" name="hdnIecd" />
+                <div class="task-inner row">
+                    <div class="col-md-12 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="SummaryReport3" name="NonConformitySummaryReport" value="SummaryReport3" checked>
+                                        <label for="SummaryReport3">Summary Report For the Month</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="SummaryReport4" name="NonConformitySummaryReport" value="SummaryReport4">
+                                        <label for="SummaryReport4">Summary Report For the Given Period</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="FromMonthNonConformity" id="lblFromMonthNonConformity">Month</label> <br />
+                        @Html.DropDownList("FromMonthNonConformity", Common.GetMonths())
+                    </div>
+                    <div class="col-md-2">
+                        <label for="FromYearNonConformity" id="lblFromYearNonConformity">Year</label> <br />
+                        @Html.DropDownList("FromYearNonConformity", Common.GetYears())
+                    </div>
+                    <div class="col-md-2 NonConformitySummaryReportTo" style="display: none">
+                        <label for="ToMonthNonConformity">To Month</label> <br />
+                        @Html.DropDownList("ToMonthNonConformity", Common.GetMonths())
+                    </div>
+                    <div class="col-md-2 NonConformitySummaryReportTo" style="display: none">
+                        <label for="ToYearNonConformity">To Year</label> <br />
+                        @Html.DropDownList("ToYearNonConformity", Common.GetYears())
+                    </div>
+                    <div class="col-md-4">
+                        <label for="IecdNonConformity">IE</label> <br />
+                        @Html.DropDownList("IecdNonConformity", Common.GetIEIEToWhomIssued(Region), new { @class = "" })
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataNonConformity();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="TentativeInspection" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmTentativeInspection">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnParticularCM" name="hdnParticularCM" />
+                <input type="hidden" id="hdnSortedOn" name="hdnSortedOn" />
+                <div class="task-inner row">
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="FromDateTentativeInspection">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDateTentativeInspection" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateTentativeInspection"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="ToDateTentativeInspection">To</label>
+                            <input type="text" class="datepicker" id="ToDateTentativeInspection" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDateTentativeInspection"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="CM3" name="TentativeInspectionCM" value="CM3" checked>
+                                        <label for="CM3">All CM</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="CM4" name="TentativeInspectionCM" value="CM4">
+                                        <label for="CM4">Particular CM</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 TentativeInspectionCM" style="display: none;">
+                        @Html.DropDownList("ParticularCM2", Common.GetControllingOfficers(Region))
+                    </div>
+                    <div class="col-md-12">
+                        <div class="custom-readio">
+                            <label>Report To be Sorted On</label>
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="InspFee" name="SortedOn" value="InspFee" checked>
+                                        <label for="InspFee">Insp Fee</label>
+                                    </div>
+                                </div>
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="DeliveryPeriod" name="SortedOn" value="DeliveryPeriod">
+                                        <label for="DeliveryPeriod">Delivery Period</label>
+                                    </div>
+                                </div>
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="DesireDate" name="SortedOn" value="DesireDate">
+                                        <label for="DesireDate">Desire Date</label>
+                                    </div>
+                                </div>
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="PendingSince" name="SortedOn" value="PendingSince">
+                                        <label for="PendingSince">Pending Since</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataTentativeInspection();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="CallRemarking" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmCallRemarking">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnCallRemarkingDate" name="hdnCallRemarkingDate" />
+                <input type="hidden" id="hdnCallsStatus" name="hdnCallsStatus" />
+                <div class="task-inner row">
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="FromDateCallRemarking">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDateCallRemarking" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateCallRemarking"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="input-search">
+                            <label for="ToDateCallRemarking">To</label>
+                            <input type="text" class="datepicker" id="ToDateCallRemarking" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDateCallRemarking"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3" style="margin-top: 30px;">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="InitiatedDate" name="CallRemarkingDate" value="InitiatedDate" checked>
+                                        <label for="InitiatedDate">By Remark Initiated Date</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="ApprovedDate" name="CallRemarkingDate" value="ApprovedDate">
+                                        <label for="ApprovedDate">By Remark Approved Date</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="CallsStatus">Status of Calls</label>
+                        @Html.DropDownList("CallsStatus", new SelectList(Common.GetCallsStatus() , "Value", "Text"), "--All--")
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitDataCallRemarking();">Submit</button>
+                            <button type="button" class="reset-btn" onclick="location.href='@Html.Raw(@HttpUtility.UrlDecode(cancelUrl))'">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="PendingCalls" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmPendingCalls">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+            </form>
+        </div>
+        <div class="CallDetailsDashborad" style="display: none">
+            <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmCallDetailsDashborad">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+            </form>
         </div>
     </div>
 </div>
@@ -470,9 +545,8 @@
             }
             else if ('@ReportType' == 'PENDING_CALLS') {
                 var ReportType = '@ReportType';
-                let myObject = { ReportType };
-                var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
-                window.open(url, '_blank');
+                $('#frmPendingCalls').find("#hdnReportType").val(ReportType);
+                $("#frmPendingCalls").submit();
             }
             else if ('@ReportType' == 'HIGHVALUE') {
                 $(".TentativeInspection").css("display", "");
@@ -482,14 +556,12 @@
             }
             else if ('@ReportType' == 'CALL_DETAILS') {
                 var ReportType = '@ReportType';
-                let myObject = { ReportType };
-                var url = '@Url.Action("Manage", "ManagementReports")?' + $.param(myObject);
-                window.open(url, '_blank');
+                $('#frmCallDetailsDashborad').find("#hdnReportType").val(ReportType);
+                $("#frmCallDetailsDashborad").submit();
             }
         });
 
-        function ViewReport1() {
-
+        function SubmitDataReport1() {
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
 
@@ -518,17 +590,12 @@
             var ReportType = '@ReportType';
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
-            let myObject = { ReportType, FromDate, ToDate };
 
-            var url = '@Url.Action("Manage1", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
-        }
+            $('#frmReport1').find("#hdnReportType").val(ReportType);
+            $('#frmReport1').find("#hdnFromDate").val(FromDate);
+            $('#frmReport1').find("#hdnToDate").val(ToDate);
 
-        function ClearControls1() {
-            $("#FromDate").val("");
-            $("#ToDate").val("");
-            $("#spnErrorFromDate").html("");
-            $("#spnErrorToDate").html("");
+            $("#frmReport1").submit();
         }
 
         $('input[type=radio][name="RWBSummaryReport"]').change(function () {
@@ -562,8 +629,7 @@
             }
         });
 
-        function ViewReportRWB() {
-
+        function SubmitDataRWB() {
             var ReportType = '@ReportType', FromYearMonth = '', ToYearMonth = '';
 
             var _RWBSummaryReport = $('input[name="RWBSummaryReport"]:checked').val();
@@ -574,29 +640,15 @@
                 ToYearMonth = $("#ToYear").val() + ('0'.repeat(2) + $("#ToMonth").val()).slice(-2);
             }
 
-            let myObject = { ReportType, FromYearMonth, ToYearMonth };
+            $('#frmRWB').find("#hdnReportType").val(ReportType);
+            $('#frmRWB').find("#hdnFromYearMonth").val(FromYearMonth);
+            $('#frmRWB').find("#hdnToYearMonth").val(ToYearMonth);
 
-            var url = '@Url.Action("ManageRWB", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $("#frmRWB").submit();
+
         }
 
-        function ClearControlsRWB() {
-
-            $("input[type=radio][name=RWBSummaryReport][value=SummaryReport1]").prop('checked', true);
-            $('input[type=radio][name="RWBSummaryReport"]').change();
-
-            $("#lblFromMonth").text("Month");
-            $("#lblFromYear").text("Year");
-            $(".RWBSummaryReportTo").css("display", "none");
-
-            $("#FromMonth").get(0).selectedIndex = 0;
-            $("#FromYear").get(0).selectedIndex = 0;
-            $("#ToMonth").get(0).selectedIndex = 0;
-            $("#ToYear").get(0).selectedIndex = 0;
-        }
-
-        function ViewReportRWCO() {
-
+        function SubmitDataRWCO() {
             $("#spnErrorFromDate_RWCO").html("");
 
             var IsValid = true;
@@ -615,18 +667,16 @@
             var ReportType = '@ReportType';
             var FromDate = moment($('#FromDate_RWCO').datepicker('getDate')).format("YYYY-MM-DD");
             var Outstanding = $('input[name="ClientWiseOutstanding"]:checked').val();
-            let myObject = { ReportType, FromDate, Outstanding };
 
-            var url = '@Url.Action("ManageRWCO", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $('#frmRWCO').find("#hdnReportType").val(ReportType);
+            $('#frmRWCO').find("#hdnFromDate").val(FromDate);
+            $('#frmRWCO').find("#hdnOutstanding").val(Outstanding);
+
+            $("#frmRWCO").submit();
+
         }
 
-        function ClearControlsRWCO() {
-            $("#FromDate_RWCO").val("");
-            $("#spnErrorFromDate_RWCO").html("");
-        }
-
-        function ViewReportSuperSurprise() {
+        function SubmitDataSuperSurprise() {
 
             $("#spnErrorFromDateSuperSurprise").html("");
             $("#spnErrorToDateSuperSurprise").html("");
@@ -665,28 +715,17 @@
             if (_CM == "CM2") ParticularCM = $("#ParticularCM").val();
             if (_Sector == "Sector2") ParticularSector = $("#ParticularSector").val();
 
-            let myObject = { ReportType, FromDate, ToDate, ParticularCM, ParticularSector };
+            $('#frmSuperSurprise').find("#hdnReportType").val(ReportType);
+            $('#frmSuperSurprise').find("#hdnFromDate").val(FromDate);
+            $('#frmSuperSurprise').find("#hdnToDate").val(ToDate);
+            $('#frmSuperSurprise').find("#hdnParticularCM").val(ParticularCM);
+            $('#frmSuperSurprise').find("#hdnParticularSector").val(ParticularSector);
 
-            var url = '@Url.Action("ManageSuperSurprise", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $("#frmSuperSurprise").submit();
+
         }
 
-        function ClearControlsSuperSurprise() {
-            $("#FromDateSuperSurprise").val("");
-            $("#ToDateSuperSurprise").val("");
-            $("input[type=radio][name=CM][value=CM1]").prop('checked', true);
-            $(".CM").css("display", "none");
-            $("#ParticularCM").get(0).selectedIndex = 0;
-
-            $("input[type=radio][name=Sector][value=Sector1]").prop('checked', true);
-            $(".Sector").css("display", "none");
-            $("#ParticularSector").get(0).selectedIndex = 0;
-
-            $("#spnErrorFromDateSuperSurprise").html("");
-            $("#spnErrorToDateSuperSurprise").html("");
-        }
-
-        function ViewReportConsignReject() {
+        function SubmitDataConsignReject() {
 
             $("#spnErrorFromDateConsignReject").html("");
             $("#spnErrorToDateConsignReject").html("");
@@ -719,22 +758,16 @@
             var FromDate = moment($('#FromDateConsignReject').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDateConsignReject').datepicker('getDate')).format("YYYY-MM-DD");
 
-            let myObject = { ReportType, FromDate, ToDate, Region, Status };
+            $('#frmConsignReject').find("#hdnReportType").val(ReportType);
+            $('#frmConsignReject').find("#hdnFromDate").val(FromDate);
+            $('#frmConsignReject').find("#hdnToDate").val(ToDate);
+            $('#frmConsignReject').find("#hdnRegion").val(Region);
+            $('#frmConsignReject').find("#hdnStatus").val(Status);
 
-            var url = '@Url.Action("ManageConsignReject", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $("#frmConsignReject").submit();
         }
 
-        function ClearControlsConsignReject() {
-            $("#RegionConsignReject").get(0).selectedIndex = 0;
-            $("#RegionStatus").get(0).selectedIndex = 0;
-            $("#FromDateConsignReject").val("");
-            $("#ToDateConsignReject").val("");
-            $("#spnErrorFromDateConsignReject").html("");
-            $("#spnErrorToDateConsignReject").html("");
-        }
-
-        function ViewReportOutstandingOverRegion() {
+        function SubmitDataOutstandingOverRegion() {
 
             $("#spnErrorFromDateOutstandingOverRegion").html("");
 
@@ -753,15 +786,11 @@
 
             var ReportType = '@ReportType';
             var FromDate = moment($('#FromDateOutstandingOverRegion').datepicker('getDate')).format("YYYY-MM-DD");
-            let myObject = { ReportType, FromDate };
 
-            var url = '@Url.Action("ManageOutstandingOverRegion", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
-        }
+            $('#frmOutstandingOverRegion').find("#hdnReportType").val(ReportType);
+            $('#frmOutstandingOverRegion').find("#hdnFromDate").val(FromDate);
 
-        function ClearControlsOutstandingOverRegion() {
-            $("#FromDateOutstandingOverRegion").val("");
-            $("#spnErrorFromDateOutstandingOverRegion").html("");
+            $("#frmOutstandingOverRegion").submit();
         }
 
         function BindBPORailway() {
@@ -783,7 +812,7 @@
             }
         }
 
-        function ViewReportClientWiseRejection() {
+        function SubmitDataClientWiseRejection() {
 
             $("#spnErrorClientTypeClientWiseRejection").html("");
             $("#spnErrorBPORailwayClientWiseRejection").html("");
@@ -826,21 +855,13 @@
             var ClientType = $("#ClientType_ClientWiseRejection").val();
             var BPORailway = $("#BPORailway_ClientWiseRejection").val();
 
-            let myObject = { ReportType, FromDate, ToDate, ClientType, BPORailway };
+            $('#frmClientWiseRejection').find("#hdnReportType").val(ReportType);
+            $('#frmClientWiseRejection').find("#hdnFromDate").val(FromDate);
+            $('#frmClientWiseRejection').find("#hdnToDate").val(ToDate);
+            $('#frmClientWiseRejection').find("#hdnClientType").val(ClientType);
+            $('#frmClientWiseRejection').find("#hdnBPORailway").val(BPORailway);
 
-            var url = '@Url.Action("ManageClientWiseRejection", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
-        }
-
-        function ClearControlsClientWiseRejection() {
-            $("#ClientType_ClientWiseRejection").get(0).selectedIndex = 0;
-            BindBPORailway();
-            $("#FromDateClientWiseRejection").val("");
-            $("#ToDateClientWiseRejection").val("");
-            $("#spnErrorClientTypeClientWiseRejection").html("");
-            $("#spnErrorBPORailwayClientWiseRejection").html("");
-            $("#spnErrorFromDateClientWiseRejection").html("");
-            $("#spnErrorToDateClientWiseRejection").html("");
+            $("#frmClientWiseRejection").submit();
         }
 
         $('input[type=radio][name="NonConformitySummaryReport"]').change(function () {
@@ -856,7 +877,7 @@
             }
         });
 
-        function ViewReportNonConformity() {
+        function SubmitDataNonConformity() {
 
             var ReportType = '@ReportType', FromYearMonth = '', ToYearMonth = '', Iecd = '';
 
@@ -870,25 +891,12 @@
 
             Iecd = $("#IecdNonConformity").val();
 
-            let myObject = { ReportType, FromYearMonth, ToYearMonth, Iecd };
+            $('#frmNonConformity').find("#hdnReportType").val(ReportType);
+            $('#frmNonConformity').find("#hdnFromYearMonth").val(FromYearMonth);
+            $('#frmNonConformity').find("#hdnToYearMonth").val(ToYearMonth);
+            $('#frmNonConformity').find("#hdnIecd").val(Iecd);
 
-            var url = '@Url.Action("ManageNonConformity", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
-        }
-
-        function ClearControlsNonConformity() {
-
-            $("input[type=radio][name=NonConformitySummaryReport][value=SummaryReport3]").prop('checked', true);
-            $('input[type=radio][name="NonConformitySummaryReport"]').change();
-
-            $("#lblFromMonthNonConformity").text("Month");
-            $("#lblFromYearNonConformity").text("Year");
-            $(".NonConformitySummaryReportTo").css("display", "none");
-
-            $("#FromMonthNonConformity").get(0).selectedIndex = 0;
-            $("#FromYearNonConformity").get(0).selectedIndex = 0;
-            $("#ToMonthNonConformity").get(0).selectedIndex = 0;
-            $("#ToYearNonConformity").get(0).selectedIndex = 0;
+            $("#frmNonConformity").submit();
         }
 
         $('input[type=radio][name="TentativeInspectionCM"]').change(function () {
@@ -900,7 +908,7 @@
             }
         });
 
-        function ViewReportTentativeInspection() {
+        function SubmitDataTentativeInspection() {
 
             $("#spnErrorFromDateTentativeInspection").html("");
             $("#spnErrorToDateTentativeInspection").html("");
@@ -938,25 +946,16 @@
 
             if (_CM == "CM4") ParticularCM = $("#ParticularCM2").val();
 
-            let myObject = { ReportType, FromDate, ToDate, ParticularCM, SortedOn };
+            $('#frmTentativeInspection').find("#hdnReportType").val(ReportType);
+            $('#frmTentativeInspection').find("#hdnFromDate").val(FromDate);
+            $('#frmTentativeInspection').find("#hdnToDate").val(ToDate);
+            $('#frmTentativeInspection').find("#hdnParticularCM").val(ParticularCM);
+            $('#frmTentativeInspection').find("#hdnSortedOn").val(SortedOn);
 
-            var url = '@Url.Action("ManageTentativeInspection", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $("#frmTentativeInspection").submit();
         }
 
-        function ClearControlsTentativeInspection() {
-            $("#FromDateTentativeInspection").val("");
-            $("#ToDateTentativeInspection").val("");
-            $("input[type=radio][name=TentativeInspectionCM][value=CM3]").prop('checked', true);
-            $(".TentativeInspectionCM").css("display", "none");
-            $("#ParticularCM2").get(0).selectedIndex = 0;
-            $("input[type=radio][name=SortedOn][value=InspFee]").prop('checked', true);
-
-            $("#spnErrorFromDateTentativeInspection").html("");
-            $("#spnErrorToDateTentativeInspection").html("");
-        }
-
-        function ViewReportCallRemarking() {
+        function SubmitDataCallRemarking() {
 
             $("#spnErrorFromDateCallRemarking").html("");
             $("#spnErrorToDateCallRemarking").html("");
@@ -991,17 +990,13 @@
 
             let myObject = { ReportType, FromDate, ToDate, CallRemarkingDate, CallsStatus };
 
-            var url = '@Url.Action("ManageCallRemarking", "ManagementReports")?' + $.param(myObject);
-            window.open(url, '_blank');
-        }
+            $('#frmCallRemarking').find("#hdnReportType").val(ReportType);
+            $('#frmCallRemarking').find("#hdnFromDate").val(FromDate);
+            $('#frmCallRemarking').find("#hdnToDate").val(ToDate);
+            $('#frmCallRemarking').find("#hdnCallRemarkingDate").val(CallRemarkingDate);
+            $('#frmCallRemarking').find("#hdnCallsStatus").val(CallsStatus);
 
-        function ClearControlsCallRemarking() {
-            $("#FromDateCallRemarking").val("");
-            $("#ToDateCallRemarking").val("");
-            $("input[type=radio][name=CallRemarkingDate][value=InitiatedDate]").prop('checked', true);
-            $("#CallsStatus").get(0).selectedIndex = 0;
-            $("#spnErrorFromDateCallRemarking").html("");
-            $("#spnErrorToDateCallRemarking").html("");
+            $("#frmCallRemarking").submit();
         }
 
     </script>

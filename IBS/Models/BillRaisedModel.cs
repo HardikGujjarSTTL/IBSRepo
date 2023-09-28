@@ -11,7 +11,9 @@ namespace IBS.Models
         public string Region { get; set; } = null!;
 
         public string? BillSummary { get; set; }
-        
+
+        public string? RlyBillSummary { get; set; }
+
         public int FromMn { get; set; }
         
         public int FromYr { get; set; }
