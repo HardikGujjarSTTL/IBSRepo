@@ -28,10 +28,12 @@ namespace IBS.Repositories.Reports
             DailyIECMWorkPlanReportModel model = new();
             List<DailyIECMWorkPlanReporttbl1> lstDailyIECMWorkPlanReporttbl1 = new();
             List<DailyIECMWorkPlanReporttbl2> lstDailyIECMWorkPlanReporttbl2 = new();
+            List<DailyIECMWorkPlanReporttbl3> lstDailyIECMWorkPlanReporttbl3 = new();
             List<DailyIEWorklanExcepReport> lstDailyIEWorklanExcepReport = new();
 
             DataSet ds = null;
             DataSet ds1 = null;
+            DataSet ds2 = null;
             DataTable dt = new DataTable();
 
            
@@ -116,9 +118,41 @@ namespace IBS.Repositories.Reports
                     }).ToList();
                     model.lstDailyIECMWorkPlanReporttbl2 = listcong;
                 }
+
+                var dates = Enumerable.Range(0, (int)(Convert.ToDateTime(ToDate) - Convert.ToDateTime(FromDate)).TotalDays + 1)
+                        .Select(offset => Convert.ToDateTime(FromDate).AddDays(offset).ToString("dd/MM/yyyy"));
+                foreach (var date in dates)
+                {
+                    OracleParameter[] par2 = new OracleParameter[11];
+                    par2[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+                    par2[1] = new OracleParameter("p_IEWise", OracleDbType.Varchar2, IEWise, ParameterDirection.Input);
+                    par2[2] = new OracleParameter("p_AllIE", OracleDbType.Varchar2, AllIEs, ParameterDirection.Input);
+                    par2[3] = new OracleParameter("p_PartIE", OracleDbType.Varchar2, ParticularIEs, ParameterDirection.Input);
+                    par2[4] = new OracleParameter("p_COWise", OracleDbType.Varchar2, CMWise, ParameterDirection.Input);
+                    par2[5] = new OracleParameter("p_AllCM", OracleDbType.Varchar2, AllCM, ParameterDirection.Input);
+                    par2[6] = new OracleParameter("p_PartCM", OracleDbType.Varchar2, ParticularCMs, ParameterDirection.Input);
+                    par2[7] = new OracleParameter("p_lst_IE", OracleDbType.Varchar2, lstIE, ParameterDirection.Input);
+                    par2[8] = new OracleParameter("p_lst_CO", OracleDbType.Varchar2, lstCM, ParameterDirection.Input);
+                    par2[9] = new OracleParameter("p_date", OracleDbType.Varchar2, date, ParameterDirection.Input);
+                    par2[10] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                    ds2 = DataAccessDB.GetDataSet("GetIEWorkPlan", par2, 1);
+
+                    if (ds2 != null && ds2.Tables.Count > 0)
+                    {
+                        dt = ds2.Tables[0];
+                        List<DailyIECMWorkPlanReporttbl3> listcong = dt.AsEnumerable().Select(row => new DailyIECMWorkPlanReporttbl3
+                        {
+                            IE_NAME = Convert.ToString(row["IE_NAME"]),
+                            CO_NAME = Convert.ToString(row["CO_NAME"]),
+                        }).ToList();
+                        model.lstDailyIECMWorkPlanReporttbl3 = listcong;
+                    }
+                }
+
             }
 
-            if(ReportType == "E")
+            if (ReportType == "E")
             {
 
                 OracleParameter[] par = new OracleParameter[11];
