@@ -1253,3 +1253,23 @@ BEGIN
         ) group by CONSIGNEE order by CONSIGNEE;
      END IF;
 END compliants_statement_AllConsignee_Report;
+
+=========================================================================================================================
+create or replace PROCEDURE GetWriteOffEntryDetails(
+    p_frm_dt IN VARCHAR2,
+    p_to_dt IN VARCHAR2,
+    p_bpo_CD IN VARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+
+        SELECT T22.BILL_NO, T22.BILL_DT, T22.BILL_AMOUNT, T22.AMOUNT_RECEIVED, T22.BILL_AMT_CLEARED, T26.CHQ_DT, T26.BPO_CD
+        FROM T26_CHEQUE_POSTING T26
+        JOIN T22_BILL T22 ON T26.BILL_NO = T22.BILL_NO
+        WHERE (p_bpo_CD IS NULL OR T26.BPO_CD=p_bpo_CD)
+                --AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'dd-MM-yy'));
+            AND (p_frm_dt IS NULL OR T26.CHQ_DT between to_date(p_frm_dt,'dd/mm/yyyy') and to_date(p_to_dt,'dd/mm/yyyy'));
+
+END;

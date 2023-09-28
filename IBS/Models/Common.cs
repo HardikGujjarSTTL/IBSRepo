@@ -994,6 +994,18 @@ namespace IBS.Models
                     }).OrderBy(c => c.Text).ToList();
         }
 
+        public static List<SelectListItem> GetBPOByRegion(string BpoRegion)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T12BillPayingOfficers
+                    where a.BpoRegion == BpoRegion
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.BpoName),
+                        Value = Convert.ToString(a.BpoCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
         public static List<SelectListItem> MAStatus()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
