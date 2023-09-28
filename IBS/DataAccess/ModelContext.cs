@@ -91,6 +91,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<IbsToSapInvoiceExt01> IbsToSapInvoiceExt01s { get; set; }
 
+    public virtual DbSet<IbsUsersOtp> IbsUsersOtps { get; set; }
+
     public virtual DbSet<IbslabToSapInvoice> IbslabToSapInvoices { get; set; }
 
     public virtual DbSet<IbslabToSapInvoiceExt> IbslabToSapInvoiceExts { get; set; }
@@ -3473,6 +3475,37 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("WBS");
+        });
+
+        modelBuilder.Entity<IbsUsersOtp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("IBS_USERS_OTP_PK");
+
+            entity.ToTable("IBS_USERS_OTP");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IBS_USERS_OTP_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.Status)
+                .HasPrecision(2)
+                .HasColumnName("STATUS");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
         });
 
         modelBuilder.Entity<IbslabToSapInvoice>(entity =>
@@ -7601,6 +7634,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("MIGTYPE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
             entity.Property(e => e.Password)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -16740,7 +16777,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.OtChargePer)
                 .HasColumnType("NUMBER(10,2)")
@@ -19501,6 +19538,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
+        modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
         modelBuilder.HasSequence("REGIONALHRDATAOFIE_SEQ");
