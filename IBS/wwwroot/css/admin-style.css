@@ -419,7 +419,7 @@ th, .tableData th { /* background: #363e98; */color: #000; }
 
 /*.navigation li a:hover:before, .navigation li.active a.activeLink.selectLink:before, .navigation li.active a:before{opacity:1;}*/
 .navigation li.active .nav-second-level li a:hover:before { opacity: 1; }
-.menuText { font-size: 16px; margin-left: 0; font-weight: 400; }
+.menuText { font-size: 14px; margin-left: 0; font-weight: 400; }
 .navigation li a i { font-size: 20px; float: left; }
 .navigation li .menuText { display: inline-block; width: 85%; line-height: 18px; }
 .menuCollepase .userInformation { padding: 20px 5px; }
@@ -625,7 +625,7 @@ margin-top: 0; overflow: hidden }
 .regisFiedSectionLeft { width: 170px; float: left; margin-top: 30px; }
 .regiFieldNumber { text-align: center; position: relative; margin-bottom: 9px; padding-bottom: 20px; }
 .regiFieldNumber::after { background: #cfcfcf; bottom: 0; content: ""; height: 15px; left: 0; margin: 0 auto; position: absolute; right: 0; width: 1px; }
-.regiFieldNumber a { outline: 0 none; text-decoration: none; color: #444444; font-size: 16px; display: block; }
+.regiFieldNumber a { outline: 0 none; text-decoration: none; color: #444444; font-size: 14px; display: block; }
 .regiFieldNumber span { background: #ffffff; border: 3px solid #919191; border-radius: 100%; -webkit-border-radius: 100%; display: block; height: 40px; line-height: 34px; text-align: center; width: 40px; margin: 0 auto 7px; font-size: 1.090em; font-family: 'Poppins', sans-serif; }
 .regiFieldNumber:last-child::after { display: none }
 .regisFiedSectionRight { float: right; margin-left: -170px; padding-left: 180px; width: 100%; }
@@ -989,7 +989,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 font-size: 30px;
 font-weight: 600;}
 .loginForm label { color: #323232; font-weight: 500; font-size: 1em; }
-.loginForm .inputIcon input { border: none; border-radius: 0; height: 50px; background: #F3F4F9; font-size: 16px; line-height: 26px; padding: 7px 10px; width: 100%; color: #848484; }
+.loginForm .inputIcon input { border: none; border-radius: 0; height: 50px; background: #F3F4F9; font-size: 14px; line-height: 26px; padding: 7px 10px; width: 100%; color: #848484; }
 .loginForm .fa { font-size: 20px; color: #575D63; }
 .remember .input { color: #C8CBD8; height: 20px; width: 20px; border-radius: 5px; }
 .remember { display: flex; align-items: center; font-weight: 500; font-family: 'Poppins'; justify-content: space-between;margin-right: 20px; }
@@ -1032,7 +1032,7 @@ font-weight: 600;}
 .search input { background: #EBEEF3; border-radius: 20px; width: 100%; padding: 0 20px; height: 40px; border: none; }
 .search button { color: #333; background: transparent; border: 0; position: absolute; right: 0px; top: 50%; transform: translateY(-50%); line-height: 20px; }
 .search .fa { font-size: 20px; margin-right: 5px;color: #0E2753; }
-.btn { background-color: #066597; height: 40px; width: 40px; font-size: 16px; }
+.btn { background-color: #066597; height: 40px; width: 40px; font-size: 14px; }
 .btn:hover { background-color: #00B471; }
 
 /*listing page*/
@@ -1058,7 +1058,7 @@ font-weight: 600;}
 .information-tittle h2:after { content: ''; position: absolute; width: 100px; height: 2px; background-color: #00b471; bottom: -20px; left: 0 }
 .cost-para { margin: 10px 0 -10px 0; font-weight: bold; }
 .cost-para-1 { margin: 10px 0 -10px 0; font-weight: bold; }
-.formBtn { border-radius: 10px; border: 0px; padding: 12px 20px; transition: all 0.3s; background: #515CB2; font-size: 16px; font-weight: 400; color:#fff; text-decoration:none; }
+.formBtn { border-radius: 10px; border: 0px; padding: 12px 20px; transition: all 0.3s; background: #515CB2; font-size: 14px; font-weight: 400; color:#fff; text-decoration:none; }
 .formBtn:hover { background-color:#F66A2F; color:#fff; }
 .greenBg { background: #00B471; }
 .blueBg { background: #066597; }
@@ -1132,12 +1132,12 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .customSelectOuter:last-child { margin-right: 0; }
 .customSelectOuter { width: 50%; margin-right: 15px; }
 .task-select .customSelectOuter .customSelect, .input-search input { border-radius: 8px; }
-.search-btn { transition: all 0.4s; border-radius: 8px; padding: 12px 20px; margin-left: 15px; font-weight: 400; font-size: 16px; transition: all 0.3s; background: #999; border-color:#999; color: #fff; }
+.search-btn { transition: all 0.4s; border-radius: 8px; padding: 12px 20px; margin-left: 15px; font-weight: 400; font-size: 14px; transition: all 0.3s; background: #999; border-color:#999; color: #fff; }
 .search-btn:hover { background: #F66A2F; border: 1px solid #F66A2F; color: #fff; }
 @media (max-width:991px) {
 	.tab-content>.tab-pane { display: block; opacity: 1; }
 }
-.custom-tab .nav-tabs .nav-link { width: 100%; background: #e9ebf0; border-radius: 0; padding: 20px 10px; color: #646464; border: none; font-size: 16px; position: relative; text-align: center; display: inline; }
+.custom-tab .nav-tabs .nav-link { width: 100%; background: #e9ebf0; border-radius: 0; padding: 20px 10px; color: #646464; border: none; font-size: 14px; position: relative; text-align: center; display: inline; }
 .custom-tab ul li { position: relative; width: 12.5%; text-align: center; }
 .custom-tab ul li:after { background: #cfd0d1; height: 100%; position: absolute; right: 0; content: ""; top: 0; width: 1px; }
 .custom-tab ul li:last-child:after { display: none; }
@@ -1166,7 +1166,7 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .otherdetails .from-celender { width: 100%; max-width: 100%; }
 .otherdetails .from-celender input { border-radius: 5px; }
 .savenext-btn { display: flex; align-items: center; }
-.savenext-btn button { border: 1px solid #848484; background: transparent; color: #646464; border-radius: 8px; padding: 10px 30px; margin-right: 15px; transition: all 0.4s; font-size: 16px; font-weight: 400; }
+.savenext-btn button { border: 1px solid #848484; background: transparent; color: #646464; border-radius: 8px; padding: 10px 30px; margin-right: 15px; transition: all 0.4s; font-size: 14px; font-weight: 400; }
 .savenext-btn button:last-child { margin-right: 0; }
 .savenext-btn button.active { color: #fff; background: #F66A2F; border: 1px solid #F66A2F; line-height:inherit; }
 .savenext-btn button:hover{background: #008B29; color:#fff; border: 1px solid #008B29;}
@@ -1191,7 +1191,7 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .navbar-static-side ul li.active a { outline: none; }
 .navbar-static-side ul li a { padding: 15px; text-decoration:none; color: #fff; }
 .navbar-static-side ul li a span.menu-title { margin-left: 10px; }
-.navbar-static-side ul li a i { font-size: 16px; }
+.navbar-static-side ul li a i { font-size: 14px; }
 .navbar-static-side ul li a:hover { transition: 0.2s all ease-in-out; outline: none; }
 .navbar-static-side ul li a .badge, .navbar-static-side ul li a .label { float: right; margin-right: 10px; }
 .navbar-static-side ul li a.menu-title { margin-left: 10px; }
@@ -1313,7 +1313,7 @@ animation: show-bar-one 1.2s 0.1s forwards;}
 
 /*21/07/2023 PCDO Entry Form Style Start*/
 
-.button { border-radius: 5px; font-size: 16px; color: #fff; background-color:#F66A2F; font-weight: 400; margin-right: 10px; border:0; padding:15px 40px; }
+.button { border-radius: 5px; font-size: 14px; color: #fff; background-color:#F66A2F; font-weight: 400; margin-right: 10px; border:0; padding:15px 40px; }
 .button:hover { background-color: #2B368B; color: #fff; border-color: #2B304E; }
 .button.resetBtn { background-color:#AEAEAE !important; color: #fff; border:0; }
 .button.resetBtn:hover { background: #777 !important; }
@@ -1351,7 +1351,7 @@ body table.dataTable thead .sorting_asc:before, body table.dataTable thead .sort
 body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorting_desc:after{ transform: translateY(-50%); top: 50%; bottom: 0;}
 .reportIcon a .fa-trash{ color:#f00;}
 .reportIcon a:hover .fa-trash{ color:#008B29;}
-.reset-btn{ border: 1px solid #AEAEAE;  background: #AEAEAE; color: #fff; border-radius: 8px; padding: 10px 30px; margin-right: 15px; transition: all 0.4s; font-size: 16px; font-weight:400; text-decoration:none;}
+.reset-btn{ border: 1px solid #AEAEAE;  background: #AEAEAE; color: #fff; border-radius: 8px; padding: 10px 30px; margin-right: 15px; transition: all 0.4s; font-size: 14px; font-weight:400; text-decoration:none;}
 .reset-btn:hover{ background:#333; color:#fff;}
 .left-side-collapsed .navbar-static-side ul li .nav-second-level.show{ display:none;}
 
