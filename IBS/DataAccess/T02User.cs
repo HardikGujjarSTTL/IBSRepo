@@ -46,4 +46,6 @@ public partial class T02User
     public int? Id { get; set; }
 
     public string? Migtype { get; set; }
+
+    public string? Mobile { get; set; }
 }
