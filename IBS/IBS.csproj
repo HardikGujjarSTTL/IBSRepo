@@ -6,10 +6,14 @@
 		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Content Remove="Views\Home\OTPVerification.cshtml" />
+	</ItemGroup>
+	<ItemGroup>
 	  <None Remove="Repositories\AccountCodesDirectoryRepository.cs~RF1034cdb0.TMP" />
 	</ItemGroup>
 	
 	<ItemGroup>
+		<None Include="Views\Home\OTPVerification.cshtml" />
 		<None Include="Views\Home\Index.cshtml" />
 		<None Include="Views\Home\Privacy.cshtml" />
 		<None Include="wwwroot\css\fonts\fontawesome-webfont.svg" />

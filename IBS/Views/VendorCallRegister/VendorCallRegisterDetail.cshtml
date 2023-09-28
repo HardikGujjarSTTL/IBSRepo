@@ -18,74 +18,71 @@
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-2 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Case No.</label>
                 <input type="text" class="input" asp-for="CaseNo" maxlength="100" style="color:orangered" readonly="readonly">
                 <span asp-validation-for="CaseNo" class="text-danger"></span>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Call Date</label>
                 <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
                 <span asp-validation-for="CallRecvDt" class="text-danger"></span>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Call SNo.</label>
                 <input type="text" class="input" asp-for="CallSno" maxlength="30" style="color:orangered" readonly="readonly">
                 <span asp-validation-for="CallSno" class="text-danger"></span>
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Purchaser</label>
                 <input type="text" class="input" asp-for="PoNo" maxlength="100" style="color:orangered" readonly="readonly">
                 <span asp-validation-for="PoNo" class="text-danger"></span>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Vendor</label>
                 <input type="text" class="input" asp-for="VendCd" maxlength="30" style="color:orangered" readonly="readonly">
                 <span asp-validation-for="VendCd" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="Reference">Purchase Order Date</label>
                 <input type="text" class="input" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
                 <span asp-validation-for="PoDt" class="text-danger"></span>
             </div>
-
-            <div class="col-md-6 mb-3">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Purchase Order No.</label>
                     <input type="text" class="input" asp-for="PoNo" maxlength="30" style="color:orangered" readonly="readonly">
                     <span asp-validation-for="PoNo" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-8 mb-3">
                 <div class="reference">
                     <label for="Name">Call Status</label>
                     <textarea rows="4" asp-for="CallStatus" style="color:orangered" readonly="readonly"></textarea>
                     <span asp-validation-for="CallStatus" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Region</label>
                     <input type="text" class="input" asp-for="RegionCode" style="color:orangered" readonly="readonly">
                     <span asp-validation-for="RegionCode" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Date of Mark of call to IE</label>
                     <input type="text" class="input" asp-for="CallMarkDt" readonly="readonly">
                     <span asp-validation-for="CallMarkDt" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Call Status date</label>
                     <input type="text" class="input" asp-for="CallStatusDt" readonly="readonly">
@@ -93,6 +90,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -148,14 +146,14 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
                     @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
                     <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">State whether the Call is for Final Or Stage Inspection</label>
                     <div class="company-checkbox">
@@ -247,7 +245,7 @@
                 </div>
             </div>
             <div class="row my-0" id="divDPDetails">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-6 mb-3">
                     <div class="reference">
                         <label for="Name">If yes, details of lot size and staggered DP</label>
                     </div>
@@ -289,7 +287,7 @@
         </div>
     </div>
     <div class="accordion-body">
-        <div class="row my-0">
+        <di class="row my-0">
             <div class="col-md-6 mb-3">
                 <div class="reference">
                     <label for="Name">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
@@ -297,17 +295,12 @@
                     @*<span asp-validation-for="MfgCd" class="text-danger"></span>*@
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
-                <div class="reference">
-                    <label for="Name"> </label>
-                    <div class="savenext-btn">
-                        @*<button type="button" class="search-btn" id="SearchDetailsM" onclick="location.href='@Url.Action("VendorCallRegisterDetail", "VendorCallRegister",new { Action = "M",CaseNo = @Model.CaseNo,CallRecvDt = Convert.ToDateTime(@Model.CallRecvDt).ToString("dd-MM-yyyy"), CallSno = @Model.CallSno })'">Select Manufacturer</button>*@
-                        <button type="button" class="search-btn" id="SearchDetailsM">Select Manufacturer</button>
-                    </div>
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+            <div class="col-md-6" style="margin-top: 30px;">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" id="SearchDetailsM">Select Manufacturer</button>
                 </div>
             </div>
-        </div>
+        </di    v>
         <div class="row my-0">
             <div class="col-md-12 mb-3">
                 <label for="Name">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
@@ -347,9 +340,9 @@
                     <span asp-validation-for="VendContactTel1" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-md-4 mb-3" style="margin-top: 30px;">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn" id="btnUpdateMDetails">Update Manufacturer's Contact Details.</button>
+                    <button type="button" class="save-btn active" id="btnUpdateMDetails">Update Manufacturer's Contact Details.</button>
                 </div>
             </div>
         </div>
@@ -486,12 +479,12 @@
             $('#VendApprovalFr').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd-mm-yy',
+                dateFormat: 'dd/mm/yy',
             });
             $('#VendApprovalTo').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd-mm-yy',
+                dateFormat: 'dd/mm/yy',
             });
         }
 
@@ -512,6 +505,14 @@
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
+
+            var IsValid = true;
+            debugger
+            if (CaseNo == null || (CallRecvDt == "Invalid date" || CallRecvDt == null) || (CallSno == "null" || CallSno == null || CallSno == "")) {
+                 ShowHideMsgNew(false, "Case Not Registered!!!");
+                IsValid = false;
+            }
+            if (!IsValid) return;
 
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -782,7 +783,7 @@
             var CallRecvDt = $("#CallRecvDt").val();
             const urlParams = new URLSearchParams(window.location.search);
             var CallSno = urlParams.get('CallSno');
-            
+
             window.location.href = '@Url.Action("PrintCallletter", "VendorCallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSno;
         });
     </script>

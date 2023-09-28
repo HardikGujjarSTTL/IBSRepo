@@ -1,4 +1,5 @@
 ﻿using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace IBS.Interfaces.InspectionBilling
@@ -54,5 +55,7 @@ namespace IBS.Interfaces.InspectionBilling
         int CallDetailsSave(VendrorCallDetailsModel model, string UserName);
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);
+
+        
     }
 }

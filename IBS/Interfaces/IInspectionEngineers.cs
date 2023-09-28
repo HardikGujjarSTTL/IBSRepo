@@ -17,5 +17,7 @@ namespace IBS.Interfaces
         string GetMatch(int IeCd,string GetRegionCode);
 
         string DeleteIe(int IeCd);
+
+        public DTResult<InspectionEngineersListModel> GetClusterValueList(DTParameters dtParameters, List<InspectionEngineersListModel> ClusterModels);
     }
 }

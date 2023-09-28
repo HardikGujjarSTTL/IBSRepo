@@ -1,204 +1,354 @@
 ﻿@model IBS.Models.CallsMarkedToIEModel
 @{
     ViewData["Title"] = "RITES INSPECTION & BILLING SYSTEM";
+    Layout = null;
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>RITES INSPECTION & BILLING SYSTEM</h2>
-        </div>
-        <input type="hidden" asp-for="@Model.PType" />
-        <input type="hidden" asp-for="@Model.IeName" />
-    </div>
-    <div class="row my-0">
-        <div class="col-md-6 mb-4">
-            <span style="color:red;">Welcome :</span>
-            <label id="UserName" name="UserName" runat="server" style="color:red;"></label>
-        </div>
-        <div class="col-md-6 mb-4">
-            @if (Model.PType == "C")
-            {
-                <b>
-                    <span style="color:#3333FF;">CALLS STATUS FOR THE PERIOD</span>
-                    <label id="ToDate" name="ToDate" runat="server" style="color:#3333FF;"></label>
-                    <span style="color:#3333FF;">TO</span>
-                    <label id="FromDate" name="FromDate" runat="server" style="color:#3333FF;"></label>
-                    <span style="color:#3333FF;">AND ALL PENDING CALLS</span>
+<html>
+<head>
+    <title>Reports</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Back" id="btnBack" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        @if (@Model.PType == "C")
+        {
+            <h3 class="center"><b><u>Report Sorted on Call Date</u></b></h3>
+        }
+        else if (@Model.PType == "V")
+        {
+            <h3 class="center">Report Sorted on Vendor Name</h3>
+        }
+        else
+        {
+            <h3 class="center">Report Sorted on Inspection Desire Date</h3>
+        }
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                @if (Model.PType == "C")
+                {
+                    <h2>Calls status for the period : <span class="orangeText"> <label id="ToDate" name="ToDate" runat="server" style="color:orange;"></label> </span> To <span> <label id="FromDate" name="FromDate" runat="server" style="color:orange;"></label> </span> And all pending calls <br /><span>(Status as on date)- Report Sorted on  Call Date</span></h2>
+                }
+                else if (Model.PType == "V")
+                {
+                    <h2>Calls status for the period : <span class="orangeText"> <label id="ToDate" name="ToDate" runat="server" style="color:orange;"></label> </span> To <span> <label id="FromDate" name="FromDate" runat="server" style="color:orange;"></label> </span> And all pending calls <br /><span>(Status as on date)- Report Sorted on  Call Vendor</span></h2>
+                }
+                else
+                {
+                    <h2>Calls status for the period : <span class="orangeText"> <label id="ToDate" name="ToDate" runat="server" style="color:orange;"></label> </span> To <span> <label id="FromDate" name="FromDate" runat="server" style="color:orange;"></label> </span> And all pending calls <br /><span>(Status as on date)- Report Sorted on  Inspection Desire Date</span></h2>
+                }
 
-                </b>
-                <label for="Reference" style="color:#3333FF;">(STATUS AS ON DATE)- Report Sorted on Call Date</label>
-            }
-            else
-            {
-
-                <b>
-                    <span style="color:#3333FF;">CALLS STATUS FOR THE PERIOD</span>
-                    <label id="ToDate" name="ToDate" runat="server" style="color:#3333FF;"></label>
-                    <span style="color:#3333FF;">TO</span>
-                    <label id="FromDate" name="FromDate" runat="server" style="color:#3333FF;"></label>
-                    <span style="color:#3333FF;">AND ALL PENDING CALLS</span>
-
-                </b>
-                <label for="Reference" style="color:#3333FF;">(STATUS AS ON DATE)- Report Sorted on Vendor Name</label>
-            }
-        </div>
-    </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtUser" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>VENDOR NAME</th>
-                            <th>NEW VENDOR</th>
-                            <th>PURCHASER</th>
-                            <th>ITEM</th>
-                            <th>DELV DATE</th>
-
-                            <th>INSP DESIRE DATE</th>
-                            <th>CALL DATE</th>
-                            <th>CALL SERIAL NO.</th>
-                            <th>CALL DOCUMENT(IF ANY).</th>
-                            <th>CASE NO/VIEW PO</th>
-
-                            <th>PO SOURCE</th>
-                            <th>STATUS</th>
-                            <th>REMARKS</th>
-                            <th>PONO</th>
-                            <th>PO DATE</th>
-
-                            <th>CONTACT PERSON</th>
-                            <th>CONTACT PERSON PHONE NO.</th>
-                            <th>USER(Other Then IE)</th>
-                            <th>LAST UPDATION DATE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
             </div>
         </div>
-    </section>
-</div>
+        <br />
+        <div class="tableOuter">
+            <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" style="font-size: smaller;">
+                <tbody>
+                    <tr>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor Name</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">New Vendor</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Purchaser</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Delv Date</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Insp Desire Date</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Serial no.</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Document(if any).</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No./View PO</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po source</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po No.</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po Date</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person Phone No.</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">User(other then ie)</font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Last Updation Date</font></b></th>
+                    </tr>
+                    @if (Model != null && Model.ReportLst != null && Model.ReportLst.Count > 0)
+                    {
+                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "";
+                        int Cnt = 0;
+                        @foreach (var item in Model.ReportLst)
+                        {
+                            //wSelect = "/CallRegisterIB/CallStatus?CaseNo=" + @item.CaseNo + "&CallRecvDt=" + @item.CallRecvDt + "&CallSno=" + @item.CallSno;
+                            wSelect = $"/CallRegisterIB/CallStatus?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("yyyy-MM-dd")}&IeCd={@item.IeCd}&ActionType=C";
 
-@section scripts{
+                            wPrint = $"/VendorCallRegister/PrintCallletter?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("dd/MM/yyyy")}";
 
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
+                            wHistory = $"/CallMarkedOnline/CaseHistory?CASE_NO={@item.CaseNo}&ActionType=CHI";
+                            @if (@item.NewVendor == "Y")
+                            {
+                                NewVendor = "Yes";
+                            }
+                            else
+                            {
+                                NewVendor = "";
+                            }
+                            @if (@item.cnt > 0)
+                            {
+                                ItemDescPo = @item.ItemDescPo + "<span color='#FF00CC'> and more items as per call</span>";
+                            }
+                            else
+                            {
+                                ItemDescPo = @item.ItemDescPo;
+                            }
+                            @if (@item.VendCd == @item.MfgCd)
+                            {
+                                wVendor = @item.Vendor;
+                            }
+                            else
+                            {
+                                wVendor = @item.Vendor + "At" + @item.Manufacturer;
+                            }
+                            <tr>
 
-    <script type="text/javascript">
+                                <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wSelect>Select</a></font></td>
+                                <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wPrint>Print</a></font></td>
+                                <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wHistory>History</a></font></td>
+                                <td align="center"><font size="1" face="Verdana">@wVendor</font></td>
+                                <td align="center"><font size="1" face="Verdana">@NewVendor</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.Consignee</font></td>
+                                <td align="center">
 
-        $(function () {
-            InitializeDatatable();
-            setDefaultDate();
-        });
+                                    @if (@item.cnt > 0)
+                                    {
+                                        <font size="1" face="Verdana">
+                                            @item.ItemDescPo
+                                        </font>
+                                        <font size="1" face="Verdana" color='#FF00CC'>and more items as per call</font>
+                                    }
+                                    else
+                                    {
+                                        <font size="1" face="Verdana">
+                                            @item.ItemDescPo
+                                        </font>
+                                    }
+                                </td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.ExtDelvDt).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.DtInspDesire).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CallMarkDt).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CallSno</font></td>
+                                <td align="center"><font size="2" face="Verdana"><a href=@item.callDocAny>Call Documents</a></font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CaseNo</font></td>
+                                @if (@item.PoSource == "C")
+                                {
+                                    <td align="center"><font size="1" face="Verdana"><a href=@item.PoSource>PO Source</a></font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.Source</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CallStatusFull</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.Remarks</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.PoNo</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PoDt).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.MfgPers</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.MfgPhone</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.UserId</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.Datetime).ToString("dd/MM/yyyy")</font></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+</body>
+</html>
 
-        function setDefaultDate() {
-            var fromdate = new Date();
-            var todate = new Date();
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
 
-            $("#UserName").text($("#IeName").val());
 
-            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
-            $('#ToDate').text(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
-        }
+<script type="text/javascript">
 
-        function InitializeDatatable() {
-            var PType = $("#PType").val();
-            $("#dtUser").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            PType: PType
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
+    $(function () {
+        //InitializeDatatable();
+        setDefaultDate();
+    });
+
+    function setDefaultDate() {
+        var fromdate = new Date();
+        var todate = new Date();
+        $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
+        $('#ToDate').text(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
+    }
+
+    function InitializeDatatable() {
+        var PType = $("#PType").val();
+        $("#dtUser").DataTable({
+            stateSave: false,// Design Assets
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, // ServerSide Setups
+            serverSide: true,
+            destroy: true,
+            paging: true,// Paging Setups
+            searching: true,// Searching Setups
+            ajax: {// Ajax Filter
+                url: "@Url.Action("LoadTable")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                        PType: PType
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
                 },
+                { data: "Vendor" },
+                { data: "NewVendor" },
+                { data: "Consignee" },
+                { data: "ItemDescPo" },
+                {
+                    data: "ExtDelvDt",
+                    render: function (data, type, row) {
+                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "InspDesireDt",
+                    render: function (data, type, row) {
+                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "CallMarkDt",
+                    render: function (data, type, row) {
+                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                        }
+                        return data;
+                    }
+                },
+                { data: "CallSno" },
+                { data: "callDocAny" },
+                { data: "PoSource" },
+                { data: "PoSource" },
+                { data: "CallStatus" },
+                { data: "Remarks" },
+                { data: "PoNo" },
+                { data: "PoDate" },
+                { data: "MfgPers" },
+                { data: "MfgPhone" },
+                { data: "UserId" },
+                { data: "Datetime" },
+                //{
+                //    data: null, orderable: false,
+                //    render: function (data, type, row) {
+                //        var CaseNo = data.CaseNo;
+                //        var MaNo = data.MaNo;
+                //        var MaDtc = data.MaDtc;
+                //        var MaSno = data.MaSno;
+                //        var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
+                //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                //        html += '</div>';
+                //        return html;
+                //    }
+                //},
+                //{ data: "MaStatus" },
+            ],
+            "order": [[0, "asc"]]
+        });
+    }
 
-                columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "Vendor" },
-                    { data: "NewVendor" },
-                    { data: "Consignee" },
-                    { data: "ItemDescPo" },
-                    {
-                        data: "ExtDelvDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: "InspDesireDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: "CallMarkDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "CallSno" },
-                    { data: "callDocAny" },
-                    { data: "PoSource" },
-                    { data: "PoSource" },
-                    { data: "CallStatus" },
-                    { data: "Remarks" },
-                    { data: "PoNo" },
-                    { data: "PoDate" },
-                    { data: "MfgPers" },
-                    { data: "MfgPhone" },
-                    { data: "UserId" },
-                    { data: "Datetime" },
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var CaseNo = data.CaseNo;
-                    //        var MaNo = data.MaNo;
-                    //        var MaDtc = data.MaDtc;
-                    //        var MaSno = data.MaSno;
-                    //        var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                    //        html += '</div>';
-                    //        return html;
-                    //    }
-                    //},
-                    //{ data: "MaStatus" },
-                ],
-                "order": [[0, "asc"]]
+    var fileName = '';
+    $(document).ready(function () {
+        fileName = "SortedReport@Model.CASE_NO";
+    });
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+    $("#btnBack").click(function () {
+        var url = '@Url.Action("Index", "Dashboard")';
+        window.location.href = url;
+    });
+
+
+    $("#btnExportToExcel").click(function () {
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var element = document.getElementById('dvReportViewer');
+
+        element.style.width = "1100px";
+
+        const options = {
+            margin: 0,
+            filename: getExportFileName(fileName) + '.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        if (isPrint) {
+            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+                pdfObj.autoPrint();
+                window.open(pdfObj.output('bloburl'), '_blank');
             });
         }
+        else {
+            html2pdf().set(options).from(element).save();
+        }
 
-    </script>
-}
+        setTimeout(function () {
+            element.style.width = "100%";
+        }, 1000);
+    }
+
+</script>

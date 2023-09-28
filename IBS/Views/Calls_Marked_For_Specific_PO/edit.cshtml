@@ -1,1 +1,145 @@
-﻿
+﻿@model IBS.Models.Calls_Marked_For_Specific_POModel
+@{
+    Layout = null;
+    @using System.IO
+    int serialNumber = 1;
+    @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
+    string wBillNo = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #111111;
+            padding: 0;
+            text-align: center;
+        }
+
+        th {
+            background-color: #FFFFCC;
+        }
+
+        tr.bgColor {
+            background-color: #ccccff;
+        }
+
+        th, td {
+            font-size: 1em;
+            font-family: Verdana;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="goBack()">Go Back</button>
+    <table border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse;' bordercolor='#111111' width='100%'>
+        
+                <tr>
+                    <td width='100%' bgcolor='#FFFFCC' colspan='15'>
+                        <p align='center'>
+                            <font face='Verdana' color='#3333FF'>
+                                <b>
+                                    <font size='4'>IC DETAILS FOR SPECIFIC PO
+                                </b>
+                            </font><br>
+                            <font size='2' color=red>(* IC Issued after 1st March 2013 by Northern Region can also be viewed by Clicking VIEW IC hyperlink in last column)</font>
+                            </font>
+                    </td>
+                </tr>
+            <tr class="bgColor">
+                <th width="4%" valign="top"><b><font size="1" face="Verdana">SNO</font></b></th>
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">VENDOR NAME</font></b></th>
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">PURCHASER</font></b></th>
+                <th width="13%" valign="top"><b><font size="1" face="Verdana">ITEM</font></b></th>
+                <th width="6%" valign="top"><b><font size="1" face="Verdana">CALL DATE</font></b></th>
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">ENGINEER DEPUTED</font></b></th>
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">ENGINEER CONTACT NO.</font></b></th>
+                <th width="8%" valign="top"><b><font size="1" face="Verdana">PONO</font></b></th>
+                <th width="6%" valign="top"><b><font size="1" face="Verdana">PO DATE</font></b></th>
+                <th width="6%" valign="top"><b><font size="1" face="Verdana">CASE NO</font></b></th>
+                <th width="5%" valign="top"><b><font size="1" face="Verdana">STATUS</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">HOLOGRAM OR OTHER</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">VIEW IC <font color="red">*</font></font></b></th>
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">CONTACT PERSON</font></b></th>
+                <th width="7%" valign="top"><b><font size="1" face="Verdana">CONTACT PERSON PHONE NO.</font></b></th>
+                <th width="5%" valign="top"><b><font size="1" face="Verdana">CALL SERIAL NO.</font></b></th>
+                <th width="5%" valign="top"><b><font size="1" face="Verdana">CONTROLLING MANAGER</font></b></th>
+                <th width="5%" valign="top"><b><font size="1" face="Verdana">REMARKS</font></b></th>
+            </tr>
+            @foreach (var item in Model.lstSpecificPOs)
+            {
+                wBillNo = item.BillNo;   
+                <tr>
+                <td width="4%" valign="top"><b><font size="1" face="Verdana">@serialNumber</font></b></td>
+                <td width="7%" valign="top"><b><font size="1" face="Verdana">@item.VENDOR</font></b></td>
+                <td width="7%" valign="top"><b><font size="1" face="Verdana">@item.CONSIGNEE</font></b></td>
+                <td width="13%" valign="top"><b><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></b></td>
+                <td width="6%" valign="top"><b><font size="1" face="Verdana">@item.CALL_MARK_DT</font></b></td>
+                <td width="7%" valign="top"><b><font size="1" face="Verdana">@item.IeName</font></b></td>
+                <td width="7%" valign="top"><b><font size="1" face="Verdana">@item.IE_PHONE_NO</font></b></td>
+                <td width="8%" valign="top"><b><font size="1" face="Verdana">@item.PO_NO</font></b></td>
+                <td width="6%" valign="top"><b><font size="1" face="Verdana">@item.PO_DT</font></b></td>
+                <td width="6%" valign="top"><b><font size="1" face="Verdana">@item.CASE_NO</font></b></td>
+                <td width="5%" valign="top"><b><font size="1" face="Verdana">@item.CALL_STATUS</font></b></td>
+                <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Hologram</font></b></td>
+                <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">VIEW IC <font color="red">*</font></font></b></td>
+                <td width="7%" valign="top"><b><font size="1" face="Verdana">@item.MFG_PERS</font></b></td>
+                <td width="7%" valign="top"><b><font size="1" face="Verdana">@item.MFG_PHONE</font></b></td>
+                <td width="5%" valign="top"><b><font size="1" face="Verdana">@item.CALL_SNO</font></b></td>
+                <td width="5%" valign="top"><b><font size="1" face="Verdana">@item.CO_NAME</font></b></td>
+                <td width="5%" valign="top"><b><font size="1" face="Verdana">@item.REMARK</font></b></td>
+                </tr>
+                serialNumber++;
+
+              @*  string webRootPath = Environment.WebRootPath;
+                string virtualPath = "/RBS/BILL_IC/" + item.ICPhoto.ToString();
+                string physicalPath = Path.Combine(webRootPath, virtualPath);
+                if (!File.Exists(virtualPath))
+                {
+                <td width='10%' valign='top' align='left'><b><font size='1' face='Verdana'> </font></b></td>
+                }
+                else
+                {
+                <td width='10%' valign='top' align='center'>
+                    <a href='/RBS/BILL_IC/@item.ICPhoto.ToString()' Font-Names='Verdana' Font-Size='8pt'>IC</a>
+
+                    string fpath1 = Server.MapPath("/RBS/BILL_IC/" + item.IC_PHOTO_A1.ToString());
+                    string fpath2 = Server.MapPath("/RBS/BILL_IC/" + item.IC_PHOTO_A2.ToString());
+                    string fpath3 = Server.MapPath("/RBS/TESTPLAN/" + item.IC_PHOTO.ToString());
+
+                    if (File.Exists(fpath3))
+                    {
+                    <br /><a href='/RBS/TESTPLAN/@item.ICPhoto.ToString()'>Testplan/Lab Test Reports</a>
+                    }
+                    if (File.Exists(fpath1))
+                    {
+                    <br /><a href='/RBS/BILL_IC/@item.ICPhotoA1.ToString()'>IC Annex 1</a>
+                    }
+
+                    if (File.Exists(fpath2))
+                    {
+                    <br /><a href='/RBS/BILL_IC/@item.ICPhotoA2.ToString()'>IC Annex 2</a>
+                    }
+
+                </td>*@
+            }
+           
+                        
+                   
+            
+       
+    </table>
+    <script>
+        function goBack() {
+            window.history.back(); // This JavaScript function navigates back to the previous page.
+        }
+    </script>
+</body>
+</html>

@@ -91,6 +91,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<IbsToSapInvoiceExt01> IbsToSapInvoiceExt01s { get; set; }
 
+    public virtual DbSet<IbsUsersOtp> IbsUsersOtps { get; set; }
+
     public virtual DbSet<IbslabToSapInvoice> IbslabToSapInvoices { get; set; }
 
     public virtual DbSet<IbslabToSapInvoiceExt> IbslabToSapInvoiceExts { get; set; }
@@ -3473,6 +3475,37 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("WBS");
+        });
+
+        modelBuilder.Entity<IbsUsersOtp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("IBS_USERS_OTP_PK");
+
+            entity.ToTable("IBS_USERS_OTP");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IBS_USERS_OTP_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.Status)
+                .HasPrecision(2)
+                .HasColumnName("STATUS");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
         });
 
         modelBuilder.Entity<IbslabToSapInvoice>(entity =>
@@ -7601,6 +7634,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("MIGTYPE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
             entity.Property(e => e.Password)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -10178,6 +10215,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CoCd)
                 .HasPrecision(6)
                 .HasColumnName("CO_CD");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
@@ -10214,6 +10258,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("IRFC_FUNDED");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.LastInspDt)
                 .HasColumnType("DATE")
                 .HasColumnName("LAST_INSP_DT");
@@ -10251,6 +10298,13 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("STAMP_PATTERN_CD");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -19484,6 +19538,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
+        modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
         modelBuilder.HasSequence("REGIONALHRDATAOFIE_SEQ");

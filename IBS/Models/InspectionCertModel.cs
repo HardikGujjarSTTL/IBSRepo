@@ -94,6 +94,8 @@ namespace IBS.Models
 
         public string BpoRly { get; set; }
 
+        public decimal RlyBpoFee { get; set; }
+
         public decimal? BpoFee { get; set; }
 
         public string BpoFeeType { get; set; }
@@ -145,6 +147,8 @@ namespace IBS.Models
 
         public string Photo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? BillDt { get; set; }
 
         public int MinFee { get; set; }
@@ -193,5 +197,28 @@ namespace IBS.Models
         public decimal? Discount { get; set; }
         public decimal? OtherCharges { get; set; }
 
+        public string chkABill { get; set; }
+
+        public string UpdateStatus { get; set; }
+
+    }
+
+    public class ICPopUpModel
+    {
+        public string Caseno { get; set; }
+
+        public string BillNo { get; set; }
+
+        public decimal TMValue { get; set; }
+
+        public decimal? TIFee { get; set; }
+
+        public decimal? NetFee { get; set; }
+
+        public string InvoiceNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? BillDt { get; set; }
     }
 }

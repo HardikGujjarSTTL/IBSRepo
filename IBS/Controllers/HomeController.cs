@@ -8,11 +8,8 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 using IBS.Helper;
 using IBS.DataAccess;
-
 using IBS.Repositories;
 using Microsoft.AspNetCore.Hosting;
-
-using System.Data;
 
 namespace IBS.Controllers
 {
@@ -30,10 +27,10 @@ namespace IBS.Controllers
             _env = env;
             Configuration = configuration;
             LabInvoiceDownloadRepository = _LabInvoiceDownloadRepository;
-            
+
         }
 
-        public IActionResult Index(string type = "admin")
+        public IActionResult Index()
         {
             //HttpContext.Session.SetString("LoginType", type);
             return View();
@@ -75,122 +72,114 @@ namespace IBS.Controllers
         //    return File(stream, "application/pdf", "CustomerList.pdf");
         //}
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         //[ValidateDNTCaptcha(ErrorMessage = "Invalid security code.", CaptchaGeneratorLanguage = Language.English, CaptchaGeneratorDisplayMode = DisplayMode.ShowDigits)]
-        public ActionResult Index(LoginModel loginModel)
+        public ActionResult Login(LoginModel loginModel)
         {
-            //return RedirectToAction("Download");
-            if (ModelState.IsValid)
+            UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
+            if (userMaster != null)
             {
-                // username = anet
-                //string LoginType = HttpContext.Session.GetString("LoginType").ToString();
-                //if (LoginType.ToLower() == "admin") 
-                //{
-                    UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
-                    if (userMaster != null)
+                //// temporary Commited - for local
+                //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
+                if (1==1)
+                {
+                    string sender = "RITES/QA";
+                    Random random = new Random();
+                    string otp = Convert.ToString(random.Next(1000, 9999));
+                    string message = otp + " is the One Time Password for verification of your login with RITES LTD- QA Division. Valid for 10 minutes. Please do not share with anyone." + "-" + sender;
+                    //// temporary Commited - for local 
+                    //string responce = Models.Common.SendOTP(userMaster.MOBILE, message);
+                    //loginModel.OTP = otp;
+                    loginModel.OTP = "123";
+                    loginModel.MOBILE = userMaster.MOBILE;
+                    userRepository.SaveOTPDetails(loginModel);
+                    string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
+                    return RedirectToAction("OTPVerification",new { UserName = EncryptUserName });
+                }
+                else
+                {
+                    AlertDanger("Mobile no. does not exist");
+                }
+            }
+            else
+            {
+                AlertDanger("Invalid Username or Password.");
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult OTPVerification(string UserName)
+        {
+            string DecryptUserName = Common.DecryptQueryString(UserName);
+            LoginModel loginModel1 =new LoginModel();
+            loginModel1.DecryptUserName = DecryptUserName;
+            return View(loginModel1);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult OTPProceed(LoginModel loginModel)
+        {
+            loginModel.UserName = loginModel.DecryptUserName;
+            if (userRepository.VerifyOTP(loginModel))
+            {
+                UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
+                if (userMaster != null)
+                {
+                    SetUserInfo = userMaster;
+                    var userClaims = new List<Claim>()
                     {
-                        //UserSessionModel userSessionModel = new UserSessionModel();
-                        //userSessionModel.UserID = Convert.ToInt32(userMaster.UserID);
-                        //userSessionModel.Name = Convert.ToString(userMaster.UserName);
-                        //userSessionModel.UserName = Convert.ToString(userMaster.UserName);
-                        //userSessionModel.Region = Convert.ToString(userMaster.Region);
-                        //userSessionModel.AuthLevl = Convert.ToString(userMaster.AuthLevl);
-                        //userSessionModel.LoginType = Convert.ToString(LoginType);
-                        //userSessionModel.LoginType = Convert.ToString(LoginType);
+                        new Claim("Name", Convert.ToString(userMaster.Name)),
+                        new Claim("UserName", Convert.ToString(userMaster.UserName)),
+                        new Claim("UserID", userMaster.UserID.ToString()),
+                        //new Claim("LoginType", userMaster.LoginType.ToString()),
+                        new Claim("Region", userMaster.Region != null ? userMaster.Region.ToString() : ""),
+                        new Claim("AuthLevl", userMaster.AuthLevl != null ? userMaster.AuthLevl.ToString() : ""),
+                        new Claim("RoleId", Convert.ToString(userMaster.RoleId)),
+                        new Claim("RoleName", userMaster.RoleName != null ? Convert.ToString(userMaster.RoleName) : ""),
+                        new Claim("OrgnTypeL", (userMaster.OrgnTypeL != null && userMaster.OrgnTypeL != "") ? Convert.ToString(userMaster.OrgnTypeL) : ""),
+                        new Claim("OrganisationL", (userMaster.OrganisationL != null && userMaster.OrganisationL != "") ? Convert.ToString(userMaster.OrganisationL) : ""),
+                        new Claim("OrgnType", (userMaster.OrgnType != null && userMaster.OrgnType != "") ? Convert.ToString(userMaster.OrgnType) : ""),
+                        new Claim("Organisation", (userMaster.Organisation != null && userMaster.Organisation != "") ? Convert.ToString(userMaster.Organisation) : ""),
+                    };
+                    var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                    var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+                    HttpContext.SignInAsync(userPrincipal);
 
-                        SetUserInfo = userMaster;
-                        var userClaims = new List<Claim>()
-                        {
-                            new Claim("Name", Convert.ToString(userMaster.Name)),
-                            new Claim("UserName", Convert.ToString(userMaster.UserName)),
-                            new Claim("UserID", userMaster.UserID.ToString()),
-                            //new Claim("LoginType", userMaster.LoginType.ToString()),
-                            new Claim("Region", userMaster.Region != null ? userMaster.Region.ToString() : ""),
-                            new Claim("AuthLevl", userMaster.AuthLevl != null ? userMaster.AuthLevl.ToString() : ""),
-                            new Claim("RoleId", Convert.ToString(userMaster.RoleId)),
-                            new Claim("RoleName", userMaster.RoleName != null ? Convert.ToString(userMaster.RoleName) : ""),
-                            new Claim("OrgnTypeL", userMaster.OrgnTypeL != null ? Convert.ToString(userMaster.OrgnTypeL) : ""),
-                            new Claim("OrganisationL", userMaster.OrganisationL != null ? Convert.ToString(userMaster.OrganisationL) : ""),
-                            new Claim("OrgnType", userMaster.OrgnType != null ? Convert.ToString(userMaster.OrgnTypeL) : ""),
-                            new Claim("Organisation", userMaster.Organisation != null ? Convert.ToString(userMaster.OrganisationL) : ""),
-                         };
-                        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                        HttpContext.SignInAsync(userPrincipal);
-
-                        SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(userMaster.RoleId);
-                        return RedirectToAction("Index", "Dashboard");
-                    }
-                    else
-                    {
-                        AlertDanger("Invalid Username or Password");
-                    }
-                //}
-                //else if (LoginType.ToLower() == "vendor")
-                //{
-                //    VendorModel userMaster = userRepository.FindVendorLoginDetail(loginModel);
-                //    if (userMaster != null)
-                //    {
-                //        UserSessionModel userSessionModel = new UserSessionModel();
-                //        userSessionModel.UserID = Convert.ToInt32(userMaster.UserId);
-                //        userSessionModel.Name = Convert.ToString(userMaster.VendName);
-                //        userSessionModel.UserName = Convert.ToString(userMaster.VendCd);
-                //        userSessionModel.LoginType = Convert.ToString(LoginType);
-
-                //        SetUserInfo = userSessionModel;
-                //        var userClaims = new List<Claim>()
-                //        {
-                //            new Claim("UserName", Convert.ToString(userMaster.VendCd)),
-                //            new Claim("UserID", userSessionModel.UserID.ToString()),
-                //            new Claim("LoginType", userSessionModel.LoginType.ToString()),
-                //         };
-                //        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                //        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                //        HttpContext.SignInAsync(userPrincipal);
-                //        return RedirectToAction("Index", "Dashboard");
-                //    }
-                //    else
-                //    {
-                //        AlertDanger("Invalid Username or Password");
-                //    }
-                //}
-                //else if (LoginType.ToLower() == "ielogin")
-                //{
-                //    IELoginModel userMaster = userRepository.FindIELoginDetail(loginModel);
-                //    if (userMaster != null)
-                //    {
-                //        UserSessionModel userSessionModel = new UserSessionModel();
-                //        userSessionModel.UserID = Convert.ToInt32(userMaster.IeEmpNo);
-                //        userSessionModel.Name = Convert.ToString(userMaster.IeName);
-                //        userSessionModel.UserName = Convert.ToString(userMaster.IeName);
-                //        userSessionModel.LoginType = Convert.ToString(LoginType);
-
-                //        userSessionModel.IeCd = Convert.ToInt32(userMaster.IeCd);
-                //        userSessionModel.Region = Convert.ToString(userMaster.IeRegion);
-
-                //        SetUserInfo = userSessionModel;
-                //        var userClaims = new List<Claim>()
-                //        {
-                //            new Claim("UserName", Convert.ToString(userMaster.IeName)),
-                //            new Claim("UserID", userSessionModel.UserID.ToString()),
-                //            new Claim("LoginType", userSessionModel.LoginType.ToString()),
-                //            new Claim("Region", userSessionModel.Region.ToString()),
-                //            new Claim("IeCd", userSessionModel.IeCd.ToString()),
-                //         };
-                //        var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                //        var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-                //        HttpContext.SignInAsync(userPrincipal);
-                //        return RedirectToAction("IE_Instructions", "Dashboard");
-                //    }
-                //    else
-                //    {
-                //        AlertDanger("Invalid Username or Password");
-                //    }
-                //} 
+                    SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(userMaster.RoleId);
+                    return Json(new { status = true, responseText = "" });
+                    //return RedirectToAction("Index", "Dashboard");
+                }
+            }
+            else
+            {
+                //AlertDanger("Invalid OTP/OTP Expired");
+                //string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
+                //return RedirectToAction("OTPVerification", new { UserName = EncryptUserName });
+                return Json(new { status = false, responseText = "Invalid OTP/OTP Expired" });
             }
             return View(loginModel);
         }
 
+        public IActionResult RegenerateOTP(string UserName)
+        {
+            LoginModel loginModel = new LoginModel();
+            loginModel.UserName = UserName;
+            UserSessionModel userMaster = userRepository.LoginByUserName(loginModel);
+            loginModel.MOBILE =userMaster.MOBILE;
+
+            string sender = "RITES/QA";
+            Random random = new Random();
+            string otp = Convert.ToString(random.Next(1000, 9999));
+            string message = otp + " is the One Time Password for verification of your login with RITES LTD- QA Division. Valid for 10 minutes. Please do not share with anyone." + "-" + sender;
+            //// temporary Commited - for local 
+            //string responce = Common.SendOTP(loginModel.MOBILE, message);
+            //loginModel.OTP = otp;
+            loginModel.OTP = "123";
+            userRepository.SaveOTPDetails(loginModel);
+            string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
+            return RedirectToAction("OTPVerification", new { UserName = EncryptUserName });
+        }
         public IActionResult Privacy()
         {
             return View();

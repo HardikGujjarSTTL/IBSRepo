@@ -70,6 +70,14 @@ namespace IBS.Controllers
             }
         }
 
+        public string IeName
+        {
+            get
+            {
+                return (GetUserInfo.Name);
+            }
+        }
+
         public string Region
         {
             get

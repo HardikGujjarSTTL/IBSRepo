@@ -96,47 +96,72 @@ namespace IBS.Repositories
 
         public Calls_Marked_For_Specific_POModel edit(string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD)
         {
-            //var query = from t13 in context.T13PoMasters
-            //            join t06 in context.T06Consignees on t13.PurchaserCd equals t06.ConsigneeCd
-            //            join t20 in context.T20Ics on t13.CaseNo equals t20.CaseNo
-            //            join t18 in context.T18CallDetails on new { t20.CaseNo, t20.CallRecvDt, t20.CallSno } equals new { t18.CaseNo, t18.CallRecvDt, t18.CallSno }
-            //            join t09 in context.T09Ies on t20.IeCd equals t09.IeCd
-            //            join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
-            //            join t17 in context.T17CallRegisters on new { t18.CaseNo, t18.CallRecvDt, t18.CallSno } equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
-            //          //  join t49 in context.T49IcPhotoEncloseds on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t49.CaseNo, t49.CallRecvDt, t49.CallSno } into t49Group
-            //           // from t49 in t49Group.DefaultIfEmpty()
-            //            where t13.L5noPo.Trim().ToUpper() == PO_NO.Trim().ToUpper() &&
-            //                  t13.PoDt == PDT &&
-            //                  t13.RlyNonrly == CLT &&
-            //                  t13.RlyCd == RLYCD
-            //            orderby t20.IcDt, t18.ItemSrnoPo
-            //            select new Calls_Marked_For_Specific_POModel
-            //            {
-            //                PURCHASER = t06.ConsigneeFirm + "/" + t06.ConsigneeDesig + "/" + t06.ConsigneeDept,
-            //               PO_NO =  t13.PO_NO,
-            //                PO_DT = t13.PoDt.ToString("dd/MM/yyyy"),
-            //              IC_NO =  t20.IC_NO,
-            //                IC_DATE = t20.IcDt.ToString("dd/MM/yyyy"),
-            //               BkNo =  t20.BkNo,
-            //               SetNo =  t20.SetNo,
-            //               BillNo =  t20.BillNo,
-            //               IeName =  t09.IeName,
-            //                VENDOR = t05.VendName,
-            //               ItemDescPo =  t18.ItemDescPo,
-            //               QtyToInsp =  t18.QtyToInsp,
-            //                QtyPassed =  t18.QtyPassed,
-            //              QtyRejected =  t18.QtyRejected,
-            //                Hologram = t17.Hologram,
-            //             // ICPhoto =  t49.ICPhoto,
-            //             // ICPhotoA1 = t49.ICPhotoA1,
-            //             //  ICPhotoA2 = t49.ICPhotoA2
-            //            };
+            Calls_Marked_For_Specific_POModel model = new();
+            string trimmedPO_NO = PO_NO.Substring(PO_NO.Length - 5);
 
-            //// Execute the query and retrieve the results
-            //var result = query.ToList();
+            var query = from t051 in context.T05Vendors
+                        join t13 in context.T13PoMasters on t051.VendCd equals t13.VendCd
+                        join t06 in context.T06Consignees on t13.PurchaserCd equals t06.ConsigneeCd into consigneeGroup
+                        from t06 in consigneeGroup.DefaultIfEmpty()
+                        join t17 in context.T17CallRegisters on t13.CaseNo equals t17.CaseNo
+                        join t21 in context.T21CallStatusCodes on t17.CallStatus equals t21.CallStatusCd
+                        join t18 in context.T18CallDetails on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t18.CaseNo, t18.CallRecvDt, t18.CallSno }
+                        join t09 in context.T09Ies on t17.IeCd equals t09.IeCd
+                        join t052 in context.T05Vendors on t17.MfgCd equals t052.VendCd into manufacturerGroup
+                        from t052 in manufacturerGroup.DefaultIfEmpty()
+                        join t03 in context.T03Cities on t051.VendCityCd equals t03.CityCd
+                        join t032 in context.T03Cities on t052.VendCityCd equals t032.CityCd into manufacturerCityGroup
+                        from t032 in manufacturerCityGroup.DefaultIfEmpty()
+                        join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd into officerGroup
+                        from t08 in officerGroup.DefaultIfEmpty()
+                        where
+                            t13.L5noPo.Trim().ToUpper() == trimmedPO_NO.Trim().ToUpper() &&
+                            t13.PoDt == Convert.ToDateTime(PO_DT) &&
+                            t13.RlyNonrly == RLY_NONRLY &&
+                            t13.RlyCd == RLY_CD
+                        orderby t17.CallMarkDt descending, t051.VendName
+                        select new lstSpecificPO
+                        {
+                            VENDOR = t051.VendName.Trim() + (t03 != null ? ", " + t03.City : ""),
+                            MANUFACTURER = (t052 != null ? t052.VendName.Trim() + (t032 != null ? ", " + t032.City : "") : ""),
+                            VEND_CD = t051.VendCd,
+                            MFG_CD = t052.VendCd,
+                            CONSIGNEE = t06.ConsigneeDesig + " " + t06.ConsigneeFirm,
+                            ITEM_DESC_PO = t18.ItemDescPo,
+                            QTY_TO_INSP = Convert.ToDecimal(t18.QtyToInsp),
+                            CALL_MARK_DT = Convert.ToString(t17.CallMarkDt),
+                            IeName = t09.IeName,
+                            IE_PHONE_NO = t09.IePhoneNo,
+                            PO_NO = t13.PoNo,
+                            PO_DT = Convert.ToString(t13.PoDt),
+                            CASE_NO = t17.CaseNo,
+                            REMARK = t17.Remarks,
+                            COLOUR = t21.CallStatusColor,
+                            MFG_PERS = t052.VendContactPer1,
+                            MFG_PHONE = t052.VendContactTel1,
+                            CALL_SNO = Convert.ToString(t17.CallSno),
+                            Hologram = t17.Hologram,
+                            ICPhoto = t17.CaseNo + "-" + t17.BkNo + "-" + t17.SetNo,
+                            ICPhotoA1 = t17.CaseNo + "-" + t17.BkNo + "-" + t17.SetNo + "-A1",
+                            ICPhotoA2 = t17.CaseNo + "-" + t17.BkNo + "-" + t17.SetNo + "-A2",
+                            COUNT = context.T18CallDetails.Count(a => a.CaseNo == t18.CaseNo && a.CallRecvDt == t18.CallRecvDt && a.CallSno == t18.CallSno),
+                            CO_NAME = (t08 != null ? (t08.CoPhoneNo != null ? t08.CoName.Trim() + " (Mob: " + t08.CoPhoneNo + ")" : t08.CoName) : null),
+                            CALL_STATUS = (
+                                t21.CallStatusCd == "A" ? (t17.BkNo != null ? " (BookSet-" + t17.BkNo + "/" + t17.SetNo + ") Dt: " + t17.CallStatusDt : "")
+                                : (t21.CallStatusCd == "B" ? " (Accepted on Dt:" + t17.CallStatusDt + ")"
+                                : (t21.CallStatusCd == "R" ? (t17.BkNo != null ? " (BookSet-" + t17.BkNo + "/" + t17.SetNo + ")" : "")
+                                : (t21.CallStatusCd == "G" ? " Dt: " + t17.CallStatusDt
+                                : (t21.CallStatusCd == "C" ? " on " + t17.CallStatusDt : ""))))
+                                + (t17.CallCancelStatus == "N" ? " (Non Chargeable)" : (t17.CallCancelStatus == "C" ? " (Chargeable)" : "")))
+                           
+                        };
 
+            // Execute the query and retrieve the results
+            var result = query.ToList();
 
-            return null;
+            model.lstSpecificPOs = result;
+            return model;
+            
         }
     }
 }

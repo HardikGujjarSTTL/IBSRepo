@@ -15,6 +15,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace IBS.Models
 {
@@ -26,6 +27,20 @@ namespace IBS.Models
         public const string CommonDateFormate1 = "dd/MM/yyyy";
         public static string AccessDeniedMessage = "You don't have permission to do this action.";
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
+        public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
+        public static int RegenerateOtpButtonShowMinute = 10;
+        public static string SendOTP(string mobile,string message)
+        {
+            WebClient client = new WebClient();
+            string baseurl = "http://apin.onex-aura.com/api/sms?key=QtPr681q&to=" + mobile + "&from=RITESI&body=" + message + "&entityid=1501628520000011823&templateid=1707168743061977502";
+            //string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={mobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+            Stream data = client.OpenRead(baseurl);
+            StreamReader smsreader = new StreamReader(data);
+            string s = smsreader.ReadToEnd();
+            data.Close();
+            smsreader.Close();
+            return s;
+        }
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -2900,6 +2915,37 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> RlyBPOFee()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "0.522% (For PO Value between 5 Lakhs to 1 Crore)";
+            single.Value = ".522";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.116% (For PO Value between 1 Crore to 25 Crores)";
+            single.Value = ".116";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.053% (For PO Value between 25 Crores to 100 Crores)";
+            single.Value = ".053";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.035% (For PO Value between more then 100 Crores)";
+            single.Value = ".035";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.9% (For PO Date on or before 26-Nov-2022)";
+            single.Value = ".9";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "0.55% (For CR Billing)";
+            single.Value = ".55";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> GetClient()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -3641,6 +3687,16 @@ namespace IBS.Models
                         }).Distinct().OrderBy(c => c.Text).ToList();
 
             }
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetCallsStatus()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.CallsStatus)).ToList();
+        }
+
+        public static string ConvertDateTimeFormat(this DateTime dt)
+        {
+            return dt.ToString(Common.CommonDateTimeFormat);
         }
     }
 

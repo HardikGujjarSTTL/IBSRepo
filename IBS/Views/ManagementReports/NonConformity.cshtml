@@ -1,0 +1,191 @@
+﻿@model IBS.Models.Reports.NonConformityModel
+
+<div>
+    <h3 class="center">MONTHLY NON CONFORMITY REPORT</h3>
+    <ul class="reportLabelList">
+        <li><span class="labelName">Name of Inspecting Engineer : </span> @Model.IEName</li>
+    </ul>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Month</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Year</font></b></th>
+                    <th width="75%" valign="top" align="center" colspan="3"><b><font size="1" face="Verdana">Non-Conformities</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks</font></b></th>
+                </tr>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">MINOR(A)</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">MAJOR(B)</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">CRITICAL(C)</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">(NCR NO)</font></b></th>
+                </tr>
+                <tr>
+                    <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></td>
+                    <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></td>
+                    <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></td>
+                    <td width="25%" valign="top" align="center">
+                        <br>
+                        <table class="borderTable" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A1</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A2</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A3</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A4</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A5</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A6</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A7</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A8</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A9</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A10</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A11</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A12</font></b></th>
+                                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">A99</font></b></th>
+                                    <th width="9%" valign="top" align="center"><b><font size="1" face="Verdana">Total</font></b></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td width="25%" valign="top" align="center">
+                        <br>
+                        <table class="borderTable" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B1</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B2</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B3</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B4</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B5</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B6</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B7</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B8</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B9</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B10</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B11</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B12</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B13</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B14</font></b></th>
+                                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">B99</font></b></th>
+                                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Total</font></b></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td width="25%" valign="top" align="center">
+                        <br>
+                        <table class="borderTable" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C1</font></b></th>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C2</font></b></th>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C3</font></b></th>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C4</font></b></th>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C5</font></b></th>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C6</font></b></th>
+                                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">C99</font></b></th>
+                                    <th width="16%" valign="top" align="center"><b><font size="1" face="Verdana">Total</font></b></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></td>
+                </tr>
+                @if (Model != null && Model.lstNonConformity != null && Model.lstNonConformity.Count > 0)
+                {
+                    @foreach (var item in Model.lstNonConformity)
+                    {
+                        decimal tot_a = item.A01 + item.A02 + item.A03 + item.A04 + item.A05 + item.A06 + item.A07 + item.A08 + item.A09 + item.A10 + item.A11 + item.A12 + item.A99;
+                        decimal tot_b = item.B01 + item.B02 + item.B03 + item.B04 + item.B05 + item.B06 + item.B07 + item.B08 + item.B09 + item.B10 + item.B11 + item.B12 + item.B13 + item.B14 + item.B99;
+                        decimal tot_c = item.C01 + item.C02 + item.C03 + item.C04 + item.C05 + item.C06 + item.C99;
+                        decimal tot_marks = (tot_a * 1) + (tot_b * 2) + (tot_c * 4);
+
+                        <tr>
+                            <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana">@item.ID</font></b></td>
+                            <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana">@item.NCR_MON.Substring(4, 3)</font></b></td>
+                            <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana">@item.NCR_MON.Substring(0, 4)</font></b></td>
+                            <td width="25%" valign="top" align="center">
+                                <table class="borderTable" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                        <tr>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A01)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A02)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A03)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A04)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A05)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A06)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A07)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A08)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A09)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A10)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A11)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A12)</font></td>
+                                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.A99)</font></td>
+                                            <td width="9%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(tot_a)</font></b></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <table class="borderTable" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                        <tr>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B01)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B02)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B03)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B04)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B05)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B06)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B07)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B08)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B09)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B10)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B11)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B12)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B13)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B14)</font></td>
+                                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.B99)</font></td>
+                                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(tot_b)</font></b></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <table class="borderTable" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                        <tr>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C01)</font></td>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C02)</font></td>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C03)</font></td>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C04)</font></td>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C05)</font></td>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C06)</font></td>
+                                            <td width="12%" valign="top" align="center"><font size="1" face="Verdana">@decimal.Truncate(item.C99)</font></td>
+                                            <td width="16%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(tot_c)</font></b></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td width="10%" valign="top" align="center"><b><font size="1" face="Verdana">@decimal.Truncate(tot_marks)</font></b></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

@@ -10,12 +10,13 @@
 </head>
 <body>
     <p align="right">
+        <input type="button" class="commonBtn" value="Back" id="btnBack" style="display:none;" />
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
     <div id="dvReportViewer">
-        <h3 class="center"><b><u>History for Case No. - <span class="orangeText">@Model.CASE_NO</span> (@ViewBag.RegionName)</u></b></h3>
+        <h3 class="center">History for Case No. - <span class="orangeText">@Model.CASE_NO</span> (@ViewBag.RegionName)</h3>
         <h3 class="heading3">PO DETAILS</h3>
         <ul class="reportLabelList">
             <li><span class="labelName">Case No:</span> @Model.CASE_NO</li>
@@ -337,6 +338,13 @@
 <script type="text/javascript">
     var fileName = '';
     $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        actiontype = urlParams.get('ActionType');
+        if (actiontype == "CHI") {
+            $("#btnBack").show();
+        }
+    });
+    $(document).ready(function () {
         fileName = "Case_History_@Model.CASE_NO";
     });
     $(document).ajaxSend(function () {
@@ -353,6 +361,11 @@
 
     $("#btnExportToPdf").click(function () {
         generatePdf(false);
+    });
+
+    $("#btnBack").click(function () {
+        var url = '@Url.Action("Index", "Dashboard")';
+        window.location.href = url;
     });
 
     $("#btnExportToExcel").click(function () {
