@@ -191,7 +191,11 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <div class="reference">
+                        <label for="Reference">Contract</label>
+                        @Html.DropDownListFor(model => model.Contractid, new SelectList(IBS.Models.Common.GetContract() , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="reference" style="margin-top: 42px;">
                             <div class="custom-control custom-checkbox">
                                 <label class="custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" asp-for="Ispricevariation" />
@@ -201,7 +205,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <div class="reference">
+                        <div class="reference" style="margin-top: 42px;">
                             <div class="custom-control custom-checkbox">
                                 <label class="custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" asp-for="Isstageinspection" />
