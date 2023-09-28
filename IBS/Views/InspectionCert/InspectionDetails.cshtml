@@ -286,7 +286,7 @@
                 </div>
                 <div class="col-md-2 mb-3">
                     <div class="reference">
-                        <label for="Reference">Call/Material Readiness Date</label>
+                        <label for="Reference"><a onclick="lnkbtnMRDT();" style="color:dodgerblue;" title="Click here to refresh Call / Material Rediness Date from [Call Registration] Form">Call/Material Readiness Date</a></label>
                         <input type="text" class="datepicker" asp-for="CallDt" maxlength="100" style="text-transform: uppercase;">
                     </div>
                 </div>
@@ -1015,8 +1015,17 @@
             var formData = $("#frmDetails").serialize();
             $.post("@Url.Action("BillUpdate", "InspectionCert")", formData, function (response) {
                 if (response.status) {
-                    PopUp();
-                    //ShowHideMsgNew(response.status, response.responseText);
+                    if (response.responseText == "Update Successfully.") {
+                        PopUp();
+                    }
+                    else
+                    {
+                        ShowHideMsgNew(false, response.responseText);
+                    }
+                }
+                else
+                {
+                    ShowHideMsgNew(response.status, response.responseText);
                 }
             });
         });
@@ -1079,6 +1088,23 @@
                 }
             });
 
+        }
+
+        function lnkbtnMRDT()
+        {
+            var CaseNo = $("#Caseno").val();
+            var CallRecvDt = $("#Callrecvdt").val();
+            var CallSno = $("#Callsno").val();
+            var FirstInspDt = $("#FirstInspDt").val();
+
+
+
+            let myObject = { CaseNo, CallRecvDt, CallSno, FirstInspDt };
+            $.post("@Url.Action("BillDateUpdate", "InspectionCert")", $.param(myObject), function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
         }
 
     </script>

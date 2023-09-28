@@ -88,7 +88,7 @@ namespace IBS.Helper
             ContractEntryDoc = 16,
             ICCancellation = 17,
             PurchaseOrderForm = 18,
-            ICDocument = 20,
+            ICDocument = 21,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
