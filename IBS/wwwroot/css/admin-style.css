@@ -1472,3 +1472,9 @@ overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; wi
         transform: rotate(360deg);
     }
 }
+.borderTable{ margin-bottom:0; padding-bottom:0;}
+.borderTable td{ vertical-align:top;}
+.borderTable td label{ padding-bottom:0;}
+.lineBreak{ line-break:anywhere;}
+.darkRedBoldText{text-transform: uppercase; color:#d52127;}
+.darkGreenBoldText{text-transform: uppercase; color:green;}
