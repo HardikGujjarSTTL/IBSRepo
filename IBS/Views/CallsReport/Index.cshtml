@@ -1,0 +1,391 @@
+﻿@model IBS.Models.Statement_IeVendorWiseModel
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "IeVendorWise") ReportTitle = "STATEMENT OF IE AND VENDOR WISE CALLS CANCELLED";
+    else if (ReportType == "OverdueCalls") ReportTitle = "STATEMENT OF OVERDUE CALLS";
+    else if (ReportType == "ApprovalReport") ReportTitle = "CALL CANCELLATION APPROVAL REPORT ";
+    else if (ReportType == "SpecificPO") ReportTitle = "Call Detail For Specific PO";
+   
+    //else if (ReportType == "VenInsp") ReportTitle = "Summary of Vendor Wise Inspections";
+   
+    ViewData["Title"] = ReportTitle;
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+   
+</div>
+<section>
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="task-inner row report1" style="display: none">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">From the Period</label>
+                    </div>  
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">From</label>
+                        <input type="text" id="frmDate" class="input datepicker">
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">To</label>
+                        <input type="text" id="toDate" class="input datepicker">
+
+                    </div>
+
+
+                </div>
+
+                <div class="savenext-btn">
+
+                    <button type="button" class="save-btn active " onclick="Search();">Submit</button>
+                </div>
+
+
+               
+            </div>
+            <div class="task-inner row report2" style="display: none">
+                <!-- Row 1: Radio Buttons -->
+                <div class="row my-0">
+                    <div class="col-md-5 mb-3">
+                        <input class="form-check-input" type="radio" name="radioOptions" id="radio1" value="callwise" checked>
+                        <label class="form-check-label" for="radio1">
+                            CALL DATE WISE
+                        </label>
+                        <input class="form-check-input" type="radio" name="radioOptions" id="radio2" value="iewise">
+                        <label class="form-check-label" for="radio2">
+                            IE WISE
+                        </label>
+                        <input class="form-check-input" type="radio" name="radioOptions" id="radio3" value="cmwise">
+                        <label class="form-check-label" for="radio3">
+                            CM WISE
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Row 2: Checkboxes -->
+                <div class="row my-0">
+                    <div class="col-md-7 mb-3" id="ddlc">
+                        <input class="form-check-input" type="checkbox" id="nsicCalls">
+                        <label class="form-check-label" for="checkbox1">
+                            INCLUDE NSIC CALLS
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="pendingCalls">
+                        <label class="form-check-label" for="checkbox2">
+                            PENDING CALLS ONLY
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Row 3: Status of IE Radio Buttons -->
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        <label for="PropertyId">Status of IE :</label>
+                        <input class="form-check-input" type="radio" name="radioOptions1" id="radio4" value="allIe" checked>
+                        <label class="form-check-label" for="radio4">
+                            ALL IE's
+                        </label>
+                        <input class="form-check-input" type="radio" name="radioOptions1" id="radio5" value="perticularIe">
+                        <label class="form-check-label" for="radio5">
+                            For Particular IE
+                        </label>
+                        <br></br>
+                        <label for="PropertyId">Select Overdue Period (No. Of Days) :</label>
+
+                        <input type="number" id="numericField" name="numericField" value="30" min="0" step="1" pattern="[0-9]*" inputmode="numeric" />
+
+                        <button type="button" class="save-btn active" onclick="Submit();">Generate</button>
+                    </div>
+
+
+                    <!-- Row 3: Numeric Field and Generate Button -->
+                    <div class="col-md-2 mb-3" id="Vdd1">
+                      
+                    </div>
+
+                </div>
+            </div>
+            <div class="task-inner row report3" style="display: none">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">From the Period</label>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">From</label>
+                        <input type="text" id="fromDate" class="input datepicker">
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">To</label>
+                        <input type="text" id="ToDate" class="input datepicker">
+
+                    </div>
+
+
+                </div>
+
+                <div class="savenext-btn">
+
+                    <button type="button" class="save-btn active " onclick="btnSubmit();">Submit</button>
+                </div>
+
+
+
+            </div>
+            <div class="task-inner row report4" style="display: none">
+                <div class="row my-0">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Client Type</label>
+                            @Html.DropDownListFor(model => model.CLIENT_TYPE, Common.RailwaysTypes(), new { id = "railwaytypes" })
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">Select Client</label>
+                            @Html.DropDownListFor(model => model.SelectedRailway, Enumerable.Empty<SelectListItem>(), new { id = "railwaytypes1" })
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">PO Date</label>
+                            <input type="text" id="podt" class="input datepicker">
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="savenext-btn">
+
+                        <button type="button" class="save-btn active " onclick="show();">Search</button>
+                    </div>
+
+
+                    <table id="table1" class="table-responsive" >
+                        <thead>
+                            <tr>
+
+                                @*<th>S NO</th>*@
+
+                                <th>#</th>
+                                <th>PO No.</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+
+             
+
+
+
+            </div>
+
+            @*</form>*@
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            if ('@ReportType' == "IeVendorWise")
+            {
+                $(".report1").css("display", "");
+            }
+            else if ('@ReportType' == "OverdueCalls") 
+            {
+                $(".report2").css("display", "");
+            }
+            else if ('@ReportType' == "ApprovalReport")
+            {
+                $(".report3").css("display","");
+            }
+            else if ('@ReportType' == "SpecificPO")
+            {
+                $(".report4").css("display", "");
+
+                $('#railwaytypes').change(function () {
+
+                    var selectedValue = $(this).val();
+
+                    $('#railwaytypes1').select2({
+                        // Optional: You can customize Select2 options here
+                        placeholder: 'Select a client type',
+                        allowClear: true, // Adds a clear button
+                        minimumResultsForSearch: 5 // Show search input only if there are 5 or more options
+                    });
+
+                    $.ajax({
+                        url: '@Url.Action("dropdown", "CallsReport")',
+                        type: 'POST',
+                        data: { selectedValue: selectedValue },
+                        dataType: 'json',
+                        success: function (data) {
+                            var dropdown = $("#railwaytypes1");
+
+                            // Clear existing options (if any)
+                            dropdown.empty();
+
+                            // Add a default option if needed
+                            dropdown.append($("<option>").val("").text("Select Railway"));
+
+                            // Loop through the data and add options to the dropdown
+                            $.each(data, function (index, item) {
+                                dropdown.append($("<option>").val(item.RLY_CD).text(item.RAILWAY_ORGN));
+                            });
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                });
+            }
+
+
+
+        });
+        function Search() {
+            debugger;
+
+            var ReportType = '@ReportType';
+            var frmDate = $("#frmDate").val();
+            var toDate = $("#toDate").val();
+            let myObject = { ReportType, frmDate, toDate };
+            var url = '@Url.Action("Manage", "CallsReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+
+        }
+        completed = function (response) {
+
+        }
+        function Submit() {
+            debugger;
+            var ReportType = '@ReportType';
+            var WiseRadio = $("input[name='radioOptions']:checked").val();
+            var IeStatus = $("input[name='radioOptions1']:checked").val();
+            var Days = $("#numericField").val();
+            var includeNSIC;
+            var pendingCallsOnly;
+            var includeNSIC = $("#nsicCalls").is(":checked");
+            var pendingCallsOnly = $("#pendingCalls").is(":checked");
+
+
+
+
+            let myObject = { ReportType, WiseRadio, IeStatus, Days, includeNSIC, pendingCallsOnly };
+            var url = '@Url.Action("Manage", "CallsReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+        completed = function (response) {
+
+        }
+
+        function btnSubmit(){
+            debugger;
+            var ReportType = '@ReportType';
+            var frmDate = $("#fromDate").val();
+            var toDate = $("#ToDate").val();
+            let myObject = { ReportType, frmDate, toDate };
+            var url = '@Url.Action("Manage", "CallsReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function show(){
+            var railwaytypes = $("#railwaytypes").val();
+            var railwaytypes1 = $("#railwaytypes1").val();
+            var podt = $("#podt").val();
+            InitializeDatatable(railwaytypes, railwaytypes1, podt);
+            $(".table1").css("display", "block");
+        }
+        function InitializeDatatable(railwaytypes, railwaytypes1, podt) {
+            //$("#dtchequepost").css("display", "block");
+            $("#table1").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("gridData")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            railwaytypes: railwaytypes,
+                            railwaytypes1: railwaytypes1,
+                            podt: podt,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+
+                        }
+                    },
+
+                    { data: "PO_NO" },
+
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+
+                            var editButtonHtml = '<button class="custom-edit-button btn-sm btn-primary"><i class="fa fa-pencil" title="Edit"></i></button>';
+                            return editButtonHtml;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+
+
+        }
+
+        $('#table1').on('click', '.custom-edit-button', function () {
+            debugger;
+            // Get the data for the clicked row
+            var ReportType = '@ReportType';
+            var table1 = $("#table1").DataTable();
+            var rowData = table1.row($(this).closest('tr')).data();
+
+            // Construct the URL for your controller action
+            var url = '/CallsReport/Manage?PO_NO=' + rowData.PO_NO +
+                '&PO_DT=' + rowData.PO_DT +
+                '&RLY_NONRLY=' + rowData.RLY_NONRLY +
+                '&RLY_CD=' + rowData.RLY_CD + '&ReportType=' + '@ReportType';
+
+            // Redirect to the URL
+            window.location.href = url;
+        });
+
+
+    </script>
+    }
