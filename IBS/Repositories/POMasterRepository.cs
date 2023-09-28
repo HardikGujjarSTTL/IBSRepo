@@ -44,6 +44,7 @@ namespace IBS.Repositories
                 model.PoiCd = POMaster.PoiCd;
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Contractid = POMaster.Contractid;
                 return model;
             }
         }
@@ -202,6 +203,7 @@ namespace IBS.Repositories
                 obj.PoiCd = model.PoiCd;
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
+                obj.Contractid = model.Contractid;
                 context.T80PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -224,6 +226,7 @@ namespace IBS.Repositories
                 POMaster.PoiCd = model.PoiCd;
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
+                POMaster.Contractid= model.Contractid;
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }

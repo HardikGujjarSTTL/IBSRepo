@@ -1012,13 +1012,16 @@ BEGIN
     OPEN p_cursor FOR
         SELECT
             mm.ROLEID,
-            LISTAGG(m.title, ',') WITHIN GROUP (ORDER BY m.title) AS titles
+            r.ROLENAME AS rolename,
+            --LISTAGG(m.title, ',') WITHIN GROUP (ORDER BY m.title) AS titles
+            '' AS titles
         FROM
             MenuRoleMapping mm 
             JOIN MENU_MASTER m ON mm.MENUID = m.ID
+            JOIN ROLES r ON mm.ROLEID = r.ROLE_ID
             WHERE (mm.ISDELETED =0 or mm.ISDELETED is null) 
         GROUP BY
-            mm.ROLEID;
+            mm.ROLEID,r.ROLENAME;
 END;
 
 ================
@@ -3768,3 +3771,8 @@ ALTER TABLE IBS_USERS_OTP
     MODIFY ID NUMBER(6,0) DEFAULT IBS_USERS_OTP_seq.nextval;
 
 ============
+
+ALTER TABLE T13_Po_Master ADD ContractID NUMBER(6,0)
+ALTER TABLE T80_Po_Master ADD ContractID NUMBER(6,0)
+
+==================
