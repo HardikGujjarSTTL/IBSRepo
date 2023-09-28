@@ -8,6 +8,7 @@ using IBS.Helper;
 using IBS.Models;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace IBS.Controllers.Reports
 {
@@ -46,8 +47,9 @@ namespace IBS.Controllers.Reports
             ManagementReportsModel model = new();
 
             if (formCollection.Keys.Contains("hdnReportType")) model.ReportType = formCollection["hdnReportType"];
+            model.ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(model.ReportType);
 
-            if(model.ReportType == "IE_X" || model.ReportType == "CLUSTER_X" || model.ReportType == "ICSUBMIT" || model.ReportType == "CALLSWITHOUTIC" || model.ReportType == "SUPSURPSUMM" || model.ReportType == "PENDING_CALLS" || model.ReportType == "COUNTIC" || model.ReportType == "CALL_DETAILS")
+            if (model.ReportType == "IE_X" || model.ReportType == "CLUSTER_X" || model.ReportType == "ICSUBMIT" || model.ReportType == "CALLSWITHOUTIC" || model.ReportType == "SUPSURPSUMM" || model.ReportType == "PENDING_CALLS" || model.ReportType == "COUNTIC" || model.ReportType == "CALL_DETAILS")
             {
                 if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
                 if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
@@ -108,24 +110,6 @@ namespace IBS.Controllers.Reports
                 if (formCollection.Keys.Contains("hdnCallRemarkingDate") && !string.IsNullOrEmpty(formCollection["hdnCallRemarkingDate"])) model.CallRemarkingDate = Convert.ToString(formCollection["hdnCallRemarkingDate"]);
                 if (formCollection.Keys.Contains("hdnCallsStatus") && !string.IsNullOrEmpty(formCollection["hdnCallsStatus"])) model.CallsStatus = Convert.ToString(formCollection["hdnCallsStatus"]);
             }
-
-            if (model.ReportType == "IE_X") model.ReportTitle = "IE Performance";
-            else if (model.ReportType == "CLUSTER_X") model.ReportTitle = "Cluster Wise Performance Report";
-            else if (model.ReportType == "ICSUBMIT") model.ReportTitle = "IC Submission Report";
-            else if (model.ReportType == "CALLSWITHOUTIC") model.ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
-            else if (model.ReportType == "SUPSURPSUMM") model.ReportTitle = "CO Wise Super Surprise Summary";
-            else if (model.ReportType == "PENDING_CALLS") model.ReportTitle = "Overdue/Pending Calls";
-            else if (model.ReportType == "COUNTIC") model.ReportTitle = "CM and IE wise IC issued but not recieved";
-            else if (model.ReportType == "CALL_DETAILS") model.ReportTitle = "Call Details Dashborad";
-            else if (model.ReportType == "RWB") model.ReportTitle = "Region Wise Billing Summary";
-            else if (model.ReportType == "R") model.ReportTitle = "Region Wise Comparison of Outstanding";
-            else if (model.ReportType == "SUPSUR") model.ReportTitle = "Super Surprise Details";
-            else if (model.ReportType == "CONSIGN_REJECT") model.ReportTitle = "Online Consignee Rejection Report";
-            else if (model.ReportType == "X") model.ReportTitle = "Outstanding of One Region Over Other";
-            else if (model.ReportType == "CLIENTWISEREJ") model.ReportTitle = "Rejection Details Client Wise";
-            else if (model.ReportType == "NON_CONFORMITY") model.ReportTitle = "Format for Monthly Non Conformity Report";
-            else if (model.ReportType == "HIGHVALUE") model.ReportTitle = "Tentative Inspection Fee Wise Pending Call";
-            else if (model.ReportType == "REMARKING") model.ReportTitle = "Call Remarking Detail";
 
             TempData[model.ReportType] = JsonConvert.SerializeObject(model);
             return RedirectToAction("Manage", new { model.ReportType });

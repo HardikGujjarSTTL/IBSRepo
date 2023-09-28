@@ -1,31 +1,12 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @using System.Web;
+@using IBS.Helper;
 
 @{
     string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = string.Empty;
-
-    if (ReportType == "IE_X") ReportTitle = "IE Performance";
-    else if (ReportType == "CLUSTER_X") ReportTitle = "Cluster Wise Performance Report";
-    else if (ReportType == "RWB") ReportTitle = "Region Wise Billing Summary";
-    else if (ReportType == "R") ReportTitle = "Region Wise Comparison of Outstanding";
-    else if (ReportType == "ICSUBMIT") ReportTitle = "IC Submission Report";
-    else if (ReportType == "CALLSWITHOUTIC") ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
-    else if (ReportType == "SUPSUR") ReportTitle = "Super Surprise Details";
-    else if (ReportType == "SUPSURPSUMM") ReportTitle = "CO Wise Super Surprise Summary";
-    else if (ReportType == "CONSIGN_REJECT") ReportTitle = "Online Consignee Rejection Report";
-    else if (ReportType == "X") ReportTitle = "Outstanding of One Region Over Other";
-    else if (ReportType == "CLIENTWISEREJ") ReportTitle = "Rejection Details Client Wise";
-    else if (ReportType == "NON_CONFORMITY") ReportTitle = "Format for Monthly Non Conformity Report";
-    else if (ReportType == "PENDING_CALLS") ReportTitle = "Overdue/Pending Calls";
-    else if (ReportType == "COUNTIC") ReportTitle = "CM and IE wise IC issued but not recieved";
-    else if (ReportType == "HIGHVALUE") ReportTitle = "Tentative Inspection Fee Wise Pending Call";
-    else if (ReportType == "REMARKING") ReportTitle = "Call Remarking Detail";
-    else if (ReportType == "CALL_DETAILS") ReportTitle = "Call Details Dashborad";
-
+    string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
     ViewData["Title"] = ReportTitle;
-
     string cancelUrl = Url.Action("Index?ReportType=" + ReportType, "ManagementReports");
 }
 
