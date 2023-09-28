@@ -8,231 +8,288 @@
     <title>Client Wise Billing Summary</title>
 </head>
 <body>
-    <div class="savenext-btn">
-        <button type="button" class="save-btn active" onclick="ExportExcel('xlsx')">Export table to excel</button>
-        <button type="button" class="save-btn active" onclick="ExportPDF('pdf')">Export table to pdf</button>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Back" id="btnBack" style="display:none;" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        @if (Model.BillSummary == "M")
+        {
+            <h3 class="center">Client Wise Billing Summary For the Month : <span class="orangeText">@Model.FromMonthName - @Model.FromYr</span> @Model.Region</h3>
+        }
+        else
+        {
+            <h3 class="center">Client Wise Billing Summary For the Period : <span class="orangeText">@Model.FromMonthName - @Model.FromYr to @Model.ToMonthName - @Model.ToYr</span> @Model.Region</h3>
+        }
+        <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <th width="50%" valign="top" align="center"><b><font size="1" face="Verdana">Railway/Client</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Insp Fee</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Tax</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Billing Amount</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">No. Of Bills</font></b></th>
+                </tr>
+                <tr>
+                    <th class="actionCenter" colspan=5> <font size='1' face='Verdana'><b>Railways</b></font></th>
+                </tr>
+                @if (Model != null && Model.lstBill.Count > 0)
+                {
+                    int TotalINSP_FEE1 = 0;
+                    int TotalTAX1 = 0;
+                    int TotalBILL_AMOUNT1 = 0;
+                    int TotalNO_OF_BILLS1 = 0;
+                    @foreach (var item in Model.lstBill)
+                    {
+                        @if (item.BPO_TYPE == "Railways")
+                        {
+                            <tr>
+                                <td width="50%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.TAX</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.NO_OF_BILLS</font></td>
+                            </tr>
+
+                            TotalINSP_FEE1 += Convert.ToInt32(@item.INSP_FEE);
+                            TotalTAX1 += Convert.ToInt32(@item.TAX);
+                            TotalBILL_AMOUNT1 += Convert.ToInt32(@item.BILL_AMOUNT);
+                            TotalNO_OF_BILLS1 += Convert.ToInt32(@item.NO_OF_BILLS);
+                        }
+                    }
+                    <tr class="reportTotal">
+                        <td align="center"><b><font size="1" face="Verdana">Total For Railways:</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalINSP_FEE1</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalTAX1</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalBILL_AMOUNT1</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS1</font></b></td>
+                    </tr>
+                }
+                <tr>
+                    <th class="actionCenter" colspan=5> <font size='1' face='Verdana'><b>PSU</b></font></th>
+                </tr>
+                @if (Model != null && Model.lstBill.Count > 0)
+                {
+                    int TotalINSP_FEE2 = 0;
+                    int TotalTAX2 = 0;
+                    int TotalBILL_AMOUNT2 = 0;
+                    int TotalNO_OF_BILLS2 = 0;
+                    @foreach (var item in Model.lstBill)
+                    {
+                        @if (item.BPO_TYPE == "PSU")
+                        {
+                            <tr>
+                                <td width="50%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.TAX</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.NO_OF_BILLS</font></td>
+                            </tr>
+
+                            TotalINSP_FEE2 += Convert.ToInt32(item.INSP_FEE);
+                            TotalTAX2 += Convert.ToInt32(item.TAX);
+                            TotalBILL_AMOUNT2 += Convert.ToInt32(item.BILL_AMOUNT);
+                            TotalNO_OF_BILLS2 += Convert.ToInt32(item.NO_OF_BILLS);
+                        }
+                    }
+                    <tr class="reportTotal">
+                        <td align="center"><b><font size="1" face="Verdana">Total For PSU:</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalINSP_FEE2</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalTAX2</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalBILL_AMOUNT2</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS2</font></b></td>
+                    </tr>
+                }
+                <tr>
+                    <th class="actionCenter" colspan=5> <font size='1' face='Verdana'><b>Private</b></font></th>
+                </tr>
+                @if (Model != null && Model.lstBill.Count > 0)
+                {
+                    int TotalINSP_FEE3 = 0;
+                    int TotalTAX3 = 0;
+                    int TotalBILL_AMOUNT3 = 0;
+                    int TotalNO_OF_BILLS3 = 0;
+                    @foreach (var item in Model.lstBill)
+                    {
+                        @if (item.BPO_TYPE == "Private")
+                        {
+                            <tr>
+                                <td width="50%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.TAX</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.NO_OF_BILLS</font></td>
+                            </tr>
+
+                            TotalINSP_FEE3 += Convert.ToInt32(item.INSP_FEE);
+                            TotalTAX3 += Convert.ToInt32(item.TAX);
+                            TotalBILL_AMOUNT3 += Convert.ToInt32(item.BILL_AMOUNT);
+                            TotalNO_OF_BILLS3 += Convert.ToInt32(item.NO_OF_BILLS);
+                        }
+                    }
+                    <tr class="reportTotal">
+                        <td align="center"><b><font size="1" face="Verdana">Total For Private:</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalINSP_FEE3</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalTAX3</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalBILL_AMOUNT3</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS3</font></b></td>
+                    </tr>
+                }
+                <tr>
+                    <th class="actionCenter" colspan=5> <font size='1' face='Verdana'><b>State Government</b></font></th>
+                </tr>
+                @if (Model != null && Model.lstBill.Count > 0)
+                {
+                    int TotalINSP_FEE4 = 0;
+                    int TotalTAX4 = 0;
+                    int TotalBILL_AMOUNT4 = 0;
+                    int TotalNO_OF_BILLS4 = 0;
+                    @foreach (var item in Model.lstBill)
+                    {
+                        @if (item.BPO_TYPE == "State Government")
+                        {
+                            <tr>
+                                <td width="50%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.TAX</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.NO_OF_BILLS</font></td>
+                            </tr>
+
+                            TotalINSP_FEE4 += Convert.ToInt32(item.INSP_FEE);
+                            TotalTAX4 += Convert.ToInt32(item.TAX);
+                            TotalBILL_AMOUNT4 += Convert.ToInt32(item.BILL_AMOUNT);
+                            TotalNO_OF_BILLS4 += Convert.ToInt32(item.NO_OF_BILLS);
+                        }
+                    }
+                    <tr class="reportTotal">
+                        <td align="center"><b><font size="1" face="Verdana">Total For State Government:</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalINSP_FEE4</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalTAX4</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalBILL_AMOUNT4</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS4</font></b></td>
+                    </tr>
+                }
+                <tr>
+                    <th class="actionCenter" colspan=5> <font size='1' face='Verdana'><b>RITES</b></font></th>
+                </tr>
+                @if (Model != null && Model.lstBill.Count > 0)
+                {
+                    int TotalINSP_FEE5 = 0;
+                    int TotalTAX5 = 0;
+                    int TotalBILL_AMOUNT5 = 0;
+                    int TotalNO_OF_BILLS5 = 0;
+                    @foreach (var item in Model.lstBill)
+                    {
+                        @if (item.BPO_TYPE == "RITES")
+                        {
+                            <tr>
+                                <td width="50%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
+                                <td width="10%" valign="top" align="right"><font size="1" face="Verdana">@item.TAX</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                                <td width="15%" valign="top" align="right"><font size="1" face="Verdana">@item.NO_OF_BILLS</font></td>
+                            </tr>
+
+                            TotalINSP_FEE5 += Convert.ToInt32(item.INSP_FEE);
+                            TotalTAX5 += Convert.ToInt32(item.TAX);
+                            TotalBILL_AMOUNT5 += Convert.ToInt32(item.BILL_AMOUNT);
+                            TotalNO_OF_BILLS5 += Convert.ToInt32(item.NO_OF_BILLS);
+                        }
+                    }
+                    <tr class="reportTotal">
+                        <td align="center"><b><font size="1" face="Verdana">Total For RITES:</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalINSP_FEE5</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalTAX5</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalBILL_AMOUNT5</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS5</font></b></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-    <br />
-    <table id="dtList" border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" bordercolor="#111111" width="100%">
-        <tbody>
-            <tr>
-                <td width='100%' colspan='5'>
-                    <h5 align='center'><font face='Verdana'>@Model.Region</font></h5>
-                    @*<h5 align='center'><font face='Verdana'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</font></h5>*@
-                    @if (Model.BillSummary == "M")
-                    {
-                        <h5 align='center'><font face='Verdana'>Client Wise Billing Summary For the Month @Model.FromMonthName - @Model.FromYr</font></h5>
-                    }
-                    else
-                    {
-                        <h5 align='center'><font face='Verdana'>Client Wise Billing Summary For the Period @Model.FromMonthName - @Model.FromYr to @Model.ToMonthName - @Model.ToYr</font></h5>
-                    }
-                </td>
-            </tr>
-
-            <tr>
-                <th width="50%" valign="top" align="center"><b><font size="2" face="Verdana">Railway/Client</font></b></th>
-                <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">Insp Fee</font></b></th>
-                <th width="10%" valign="top" align="center"><b><font size="2" face="Verdana">Tax</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="2" face="Verdana">Billing Amount</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="2" face="Verdana">No. Of Bills</font></b></th>
-            </tr>
-            <tr>
-                <td class="actionCenter" style="background:#ccccff;" width='13%' valign='top' align='center' colspan=5 bgcolor=#ccccff> <font size='2' face='Verdana'><b>Railways</b></font></td>
-            </tr>
-            @if (Model != null && Model.lstBill.Count > 0)
-            {
-                int TotalINSP_FEE1 = 0;
-                int TotalTAX1 = 0;
-                int TotalBILL_AMOUNT1 = 0;
-                int TotalNO_OF_BILLS1 = 0;
-                @foreach (var item in Model.lstBill)
-                {
-                    @if (item.BPO_TYPE == "Railways")
-                    {
-                        <tr>
-                            <th width="50%" valign="top" align="left"><b><font size="2" face="Verdana">@item.BPO_ORGN</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.INSP_FEE</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.TAX</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.BILL_AMOUNT</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.NO_OF_BILLS</font></b></th>
-                        </tr>
-
-                        TotalINSP_FEE1 += Convert.ToInt32(@item.INSP_FEE);
-                        TotalTAX1 += Convert.ToInt32(@item.TAX);
-                        TotalBILL_AMOUNT1 += Convert.ToInt32(@item.BILL_AMOUNT);
-                        TotalNO_OF_BILLS1 += Convert.ToInt32(@item.NO_OF_BILLS);
-                    }
-                }
-                <tr style="background:#d4d0c8;">
-                    <th align="center"><b><font size="2" face="Verdana">Total For Railways:</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalINSP_FEE1</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalTAX1</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT1</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalNO_OF_BILLS1</font></b></th>
-                </tr>
-            }
-            <tr>
-                <td class="actionCenter" style="background:#ccccff;" width='13%' valign='top' align='center' colspan=5 bgcolor=#ccccff> <font size='2' face='Verdana'><b>PSU</b></font></td>
-            </tr>
-            @if (Model != null && Model.lstBill.Count > 0)
-            {
-                int TotalINSP_FEE2 = 0;
-                int TotalTAX2 = 0;
-                int TotalBILL_AMOUNT2 = 0;
-                int TotalNO_OF_BILLS2 = 0;
-                @foreach (var item in Model.lstBill)
-                {
-                    @if (item.BPO_TYPE == "PSU")
-                    {
-                        <tr>
-                            <th width="50%" valign="top" align="left"><b><font size="2" face="Verdana">@item.BPO_ORGN</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.INSP_FEE</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.TAX</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.BILL_AMOUNT</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.NO_OF_BILLS</font></b></th>
-                        </tr>
-
-                        TotalINSP_FEE2 += Convert.ToInt32(item.INSP_FEE);
-                        TotalTAX2 += Convert.ToInt32(item.TAX);
-                        TotalBILL_AMOUNT2 += Convert.ToInt32(item.BILL_AMOUNT);
-                        TotalNO_OF_BILLS2 += Convert.ToInt32(item.NO_OF_BILLS);
-                    }
-                }
-                <tr style="background:#d4d0c8;">
-                    <th align="center"><b><font size="2" face="Verdana">Total For PSU:</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalINSP_FEE2</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalTAX2</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT2</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalNO_OF_BILLS2</font></b></th>
-                </tr>
-            }
-            <tr>
-                <td class="actionCenter" style="background:#ccccff;" width='13%' valign='top' align='center' colspan=5 bgcolor=#ccccff> <font size='2' face='Verdana'><b>Private</b></font></td>
-            </tr>
-            @if (Model != null && Model.lstBill.Count > 0)
-            {
-                int TotalINSP_FEE3 = 0;
-                int TotalTAX3 = 0;
-                int TotalBILL_AMOUNT3 = 0;
-                int TotalNO_OF_BILLS3 = 0;
-                @foreach (var item in Model.lstBill)
-                {
-                    @if (item.BPO_TYPE == "Private")
-                    {
-                        <tr>
-                            <th width="50%" valign="top" align="left"><b><font size="2" face="Verdana">@item.BPO_ORGN</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.INSP_FEE</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.TAX</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.BILL_AMOUNT</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.NO_OF_BILLS</font></b></th>
-                        </tr>
-
-                        TotalINSP_FEE3 += Convert.ToInt32(item.INSP_FEE);
-                        TotalTAX3 += Convert.ToInt32(item.TAX);
-                        TotalBILL_AMOUNT3 += Convert.ToInt32(item.BILL_AMOUNT);
-                        TotalNO_OF_BILLS3 += Convert.ToInt32(item.NO_OF_BILLS);
-                    }
-                }
-                <tr style="background:#d4d0c8;">
-                    <th align="center"><b><font size="2" face="Verdana">Total For Private:</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalINSP_FEE3</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalTAX3</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT3</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalNO_OF_BILLS3</font></b></th>
-                </tr>
-            }
-            <tr>
-                <td class="actionCenter" style="background:#ccccff;" width='13%' valign='top' align='center' colspan=5 bgcolor=#ccccff> <font size='2' face='Verdana'><b>State Government</b></font></td>
-            </tr>
-            @if (Model != null && Model.lstBill.Count > 0)
-            {
-                int TotalINSP_FEE4 = 0;
-                int TotalTAX4 = 0;
-                int TotalBILL_AMOUNT4 = 0;
-                int TotalNO_OF_BILLS4 = 0;
-                @foreach (var item in Model.lstBill)
-                {
-                    @if (item.BPO_TYPE == "State Government")
-                    {
-                        <tr>
-                            <th width="50%" valign="top" align="left"><b><font size="2" face="Verdana">@item.BPO_ORGN</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.INSP_FEE</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.TAX</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.BILL_AMOUNT</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.NO_OF_BILLS</font></b></th>
-                        </tr>
-
-                        TotalINSP_FEE4 += Convert.ToInt32(item.INSP_FEE);
-                        TotalTAX4 += Convert.ToInt32(item.TAX);
-                        TotalBILL_AMOUNT4 += Convert.ToInt32(item.BILL_AMOUNT);
-                        TotalNO_OF_BILLS4 += Convert.ToInt32(item.NO_OF_BILLS);
-                    }
-                }
-                <tr style="background:#d4d0c8;">
-                    <th align="center"><b><font size="2" face="Verdana">Total For State Government:</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalINSP_FEE4</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalTAX4</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT4</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalNO_OF_BILLS4</font></b></th>
-                </tr>
-            }
-            <tr>
-                <td class="actionCenter" style="background:#ccccff;" width='13%' valign='top' align='center' colspan=5 bgcolor=#ccccff> <font size='2' face='Verdana'><b>RITES</b></font></td>
-            </tr>
-            @if (Model != null && Model.lstBill.Count > 0)
-            {
-                int TotalINSP_FEE5 = 0;
-                int TotalTAX5 = 0;
-                int TotalBILL_AMOUNT5 = 0;
-                int TotalNO_OF_BILLS5 = 0;
-                @foreach (var item in Model.lstBill)
-                {
-                    @if (item.BPO_TYPE == "RITES")
-                    {
-                        <tr>
-                            <th width="50%" valign="top" align="left"><b><font size="2" face="Verdana">@item.BPO_ORGN</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.INSP_FEE</font></b></th>
-                            <th width="10%" valign="top" align="right"><b><font size="2" face="Verdana">@item.TAX</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.BILL_AMOUNT</font></b></th>
-                            <th width="15%" valign="top" align="right"><b><font size="2" face="Verdana">@item.NO_OF_BILLS</font></b></th>
-                        </tr>
-
-                        TotalINSP_FEE5 += Convert.ToInt32(item.INSP_FEE);
-                        TotalTAX5 += Convert.ToInt32(item.TAX);
-                        TotalBILL_AMOUNT5 += Convert.ToInt32(item.BILL_AMOUNT);
-                        TotalNO_OF_BILLS5 += Convert.ToInt32(item.NO_OF_BILLS);
-                    }
-                }
-                <tr style="background:#d4d0c8;">
-                    <th align="center"><b><font size="2" face="Verdana">Total For RITES:</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalINSP_FEE5</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalTAX5</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalBILL_AMOUNT5</font></b></th>
-                    <th align="right"><b><font size="2" face="Verdana">@TotalNO_OF_BILLS5</font></b></th>
-                </tr>
-            }
-        </tbody>
-    </table>
 </body>
 </html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
-
+    var fileName = '';
     $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
         const actiontype = urlParams.get('ActionType');
     });
+    $(document).ready(function () {
+        fileName = "BillingClinetReport_1";
+    });
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
 
-    function ExportExcel(type, fn, dl) {
-        var elt = document.getElementById('dtList');
-        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-        return dl ?
-            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-            XLSX.writeFile(wb, fn || ('ClientBillExcel.' + (type || 'xlsx')));
-    }
-    function ExportPDF(type, fn, dl) {
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
 
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnBack").click(function () {
+        var url = '@Url.Action("Index", "Dashboard")';
+        window.location.href = url;
+    });
+
+    $("#btnExportToExcel").click(function () {
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        var element = document.getElementById('dvReportViewer');
+
+        element.style.width = "1100px";
+
+        const options = {
+            margin: 0,
+            filename: getExportFileName(fileName) + '.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        if (isPrint) {
+            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+                pdfObj.autoPrint();
+                window.open(pdfObj.output('bloburl'), '_blank');
+            });
+        }
+        else {
+            html2pdf().set(options).from(element).save();
+        }
+
+        setTimeout(function () {
+            element.style.width = "100%";
+        }, 1000);
     }
+    
 
 </script>

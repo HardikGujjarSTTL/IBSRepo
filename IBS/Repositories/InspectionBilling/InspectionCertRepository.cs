@@ -5,8 +5,10 @@ using IBS.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
 using System.Drawing;
+using System.Net;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -19,7 +21,7 @@ namespace IBS.Repositories.InspectionBilling
             this.context = context;
         }
 
-        public DTResult<InspectionCertModel> GetDataList(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<InspectionCertModel> GetDataList(DTParameters dtParameters, string Region)
         {
             DTResult<InspectionCertModel> dTResult = new() { draw = 0 };
             IQueryable<InspectionCertModel>? query = null;
@@ -65,7 +67,7 @@ namespace IBS.Repositories.InspectionBilling
             Callsno = Callsno.ToString() == "" ? string.Empty : Callsno.ToString();
 
             query = from l in context.ViewGetInspectionCertDetails
-                    where l.Regioncode == GetRegionCode
+                    where l.Regioncode == Region
                           && (Caseno == null || Caseno == "" || l.Caseno == Caseno)
                           && (Callrecvdt == null || Callrecvdt == "" || l.Callrecvdt == _CallRecvDt)
                           && (Callsno == null || Callsno == "" || l.Callsno == Convert.ToInt32(Callsno))
@@ -100,7 +102,7 @@ namespace IBS.Repositories.InspectionBilling
             return dTResult;
         }
 
-        public InspectionCertModel FindByID(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string GetRegionCode)
+        public InspectionCertModel FindByID(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string Region)
         {
             InspectionCertModel model = new();
             if (Bkno != "" || Setno != "")
@@ -134,7 +136,7 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public InspectionCertModel FindByInspDetailsID(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string ActionType, string GetRegionCode, int RoleId)
+        public InspectionCertModel FindByInspDetailsID(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string ActionType, string Region, int RoleId)
         {
             InspectionCertModel model = new();
             if (ActionType == "A")
@@ -240,7 +242,7 @@ namespace IBS.Repositories.InspectionBilling
                                (query1.c.Location != null ? (query1.c.City + "/" + query1.c.Location) : query1.c.City) + "/" + query1.b.BpoRly;
 
                 }
-                model.CertNo = GetRegionCode + "/" + model.BpoRly + "/" + model.Caseno + "/" + model.Iesname;
+                model.CertNo = Region + "/" + model.BpoRly + "/" + model.Caseno + "/" + model.Iesname;
                 model.CertDt = DateTime.Now.Date;
                 model.ICSubmitDt = DateTime.Now.Date;
 
@@ -297,7 +299,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
 
                 var icReceived = (from i in context.T30IcReceiveds
-                                  where i.BkNo.Trim() == model.Bkno && i.SetNo.Trim() == model.Setno && i.Region == GetRegionCode
+                                  where i.BkNo.Trim() == model.Bkno && i.SetNo.Trim() == model.Setno && i.Region == Region
                                   select new
                                   {
                                       SUBMIT_DT = i.IcSubmitDt != null ? i.IcSubmitDt.Value.ToString("dd/MM/yyyy") : DateTime.Now.ToString("dd/MM/yyyy")
@@ -318,11 +320,11 @@ namespace IBS.Repositories.InspectionBilling
             {
                 if (ActionType == "M")
                 {
-                    show(model, CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode, RoleId);
+                    show(model, CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, Region, RoleId);
                 }
                 else if (ActionType == "D")
                 {
-                    show(model, CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode, RoleId);
+                    show(model, CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, Region, RoleId);
                 }
 
             }
@@ -521,7 +523,7 @@ namespace IBS.Repositories.InspectionBilling
             }
         }
 
-        void show(InspectionCertModel model, string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string ActionType, string GetRegionCode, int RoleId)
+        void show(InspectionCertModel model, string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno, string ActionType, string Region, int RoleId)
         {
             if (Bkno != null && Setno != null && CaseNo != null)
             {
@@ -529,7 +531,7 @@ namespace IBS.Repositories.InspectionBilling
                                   join I in context.T09Ies on C.IeCd equals I.IeCd
                                   where C.BkNo == Bkno &&
                                         C.SetNo == Setno &&
-                                        C.CaseNo.Substring(0, 1) == GetRegionCode
+                                        C.CaseNo.Substring(0, 1) == Region
                                   select new
                                   {
                                       C,
@@ -582,27 +584,27 @@ namespace IBS.Repositories.InspectionBilling
                         {
                             if (GetDetails.C.RecipientGstinNo != "")
                             {
-                                if (GetRegionCode == "N" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "07")
+                                if (Region == "N" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "07")
                                 {
                                     model.BpoTaxType = "C";
                                 }
-                                else if (GetRegionCode == "S" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "33")
+                                else if (Region == "S" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "33")
                                 {
                                     model.BpoTaxType = "C";
                                 }
-                                else if (GetRegionCode == "E" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "19")
+                                else if (Region == "E" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "19")
                                 {
                                     model.BpoTaxType = "C";
                                 }
-                                else if (GetRegionCode == "W" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "27")
+                                else if (Region == "W" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "27")
                                 {
                                     model.BpoTaxType = "C";
                                 }
-                                else if (GetRegionCode == "C" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "22")
+                                else if (Region == "C" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "22")
                                 {
                                     model.BpoTaxType = "C";
                                 }
-                                else if (GetRegionCode == "Q" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "06")
+                                else if (Region == "Q" && GetDetails.C.RecipientGstinNo.Substring(0, 2) == "06")
                                 {
                                     model.BpoTaxType = "C";
                                 }
@@ -903,7 +905,7 @@ namespace IBS.Repositories.InspectionBilling
             return Id;
         }
 
-        public string InspectionCertSave(InspectionCertModel model, string GetRegionCode)
+        public string InspectionCertSave(InspectionCertModel model, string Region)
         {
             string msg = "";
             var bscheck = (context.T10IcBooksets.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
@@ -911,7 +913,7 @@ namespace IBS.Repositories.InspectionBilling
                         && x.IssueToIecd == model.IeCd).Select(x => x.IssueToIecd)).FirstOrDefault();
 
             var bscheck1 = (context.T16IcCancels.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
-                        && x.SetNo.Trim() == model.Setno && x.Region == GetRegionCode).Select(x => x.IssueToIecd)).FirstOrDefault();
+                        && x.SetNo.Trim() == model.Setno && x.Region == Region).Select(x => x.IssueToIecd)).FirstOrDefault();
             string bscheck2 = "";
             if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
             {
@@ -934,7 +936,7 @@ namespace IBS.Repositories.InspectionBilling
                     acc_group = "Z006";
                 }
 
-                var check1 = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.Substring(0, 1) == GetRegionCode).Select(x => x.BkNo).FirstOrDefault();
+                var check1 = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.Substring(0, 1) == Region).Select(x => x.BkNo).FirstOrDefault();
                 string Cstatus = "";
                 string upQuery = "";
                 string w_irfc_funded = "";
@@ -1075,27 +1077,27 @@ namespace IBS.Repositories.InspectionBilling
             string certdt = myYear1 + myMonth1 + myDay1;
             if (Convert.ToInt32(certdt) >= 20170701)
             {
-                if (GetRegionCode == "N" && model.GstinNo.Substring(0, 2) == "07")
+                if (Region == "N" && model.GstinNo.Substring(0, 2) == "07")
                 {
                     model.TaxType = "C";
                 }
-                else if (GetRegionCode == "S" && model.GstinNo.Substring(0, 2) == "33")
+                else if (Region == "S" && model.GstinNo.Substring(0, 2) == "33")
                 {
                     model.TaxType = "C";
                 }
-                else if (GetRegionCode == "E" && model.GstinNo.Substring(0, 2) == "19")
+                else if (Region == "E" && model.GstinNo.Substring(0, 2) == "19")
                 {
                     model.TaxType = "C";
                 }
-                else if (GetRegionCode == "W" && model.GstinNo.Substring(0, 2) == "27")
+                else if (Region == "W" && model.GstinNo.Substring(0, 2) == "27")
                 {
                     model.TaxType = "C";
                 }
-                else if (GetRegionCode == "C" && model.GstinNo.Substring(0, 2) == "22")
+                else if (Region == "C" && model.GstinNo.Substring(0, 2) == "22")
                 {
                     model.TaxType = "C";
                 }
-                else if (GetRegionCode == "Q" && model.GstinNo.Substring(0, 2) == "06")
+                else if (Region == "Q" && model.GstinNo.Substring(0, 2) == "06")
                 {
                     model.TaxType = "C";
                 }
@@ -1123,7 +1125,7 @@ namespace IBS.Repositories.InspectionBilling
             }
         }
 
-        public string ReturnBillSubmit(InspectionCertModel model, string GetRegionCode)
+        public string ReturnBillSubmit(InspectionCertModel model, string Region)
         {
             string msg = "N";
 
@@ -1154,7 +1156,7 @@ namespace IBS.Repositories.InspectionBilling
             return msg;
         }
 
-        public string Validation(InspectionCertModel model, string GetRegionCode)
+        public string Validation(InspectionCertModel model, string Region)
         {
             string msg = "";
             checkManDay(model);
@@ -1163,7 +1165,7 @@ namespace IBS.Repositories.InspectionBilling
                         && x.IssueToIecd == model.IeCd).Select(x => x.IssueToIecd)).FirstOrDefault();
 
             var bscheck1 = (context.T16IcCancels.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
-                        && x.SetNo.Trim() == model.Setno && x.Region == GetRegionCode).Select(x => x.IssueToIecd)).FirstOrDefault();
+                        && x.SetNo.Trim() == model.Setno && x.Region == Region).Select(x => x.IssueToIecd)).FirstOrDefault();
 
             string bscheck2 = "";
             if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
@@ -1233,7 +1235,7 @@ namespace IBS.Repositories.InspectionBilling
             return msg;
         }
 
-        public DTResult<InspectionCertModel> GetLoadTableDetails(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<InspectionCertModel> GetLoadTableDetails(DTParameters dtParameters, string Region)
         {
             DTResult<InspectionCertModel> dTResult = new() { draw = 0 };
             IQueryable<InspectionCertModel>? query = null;
@@ -1368,12 +1370,12 @@ namespace IBS.Repositories.InspectionBilling
 
         }
 
-        public string BillUpdate(InspectionCertModel model, string GetRegionCode)
+        public string BillUpdate(InspectionCertModel model, string Region)
         {
             string str = "";
             if (model.BillNo == null || model.BillNo == "")
             {
-                if (chk_bill_dt(Convert.ToString(model.BillDt), GetRegionCode) == 1)
+                if (chk_bill_dt(Convert.ToString(model.BillDt), Region) == 1)
                 {
                     if (model.IcTypeId == 9)
                     {
@@ -1382,6 +1384,16 @@ namespace IBS.Repositories.InspectionBilling
                     else
                     {
                         gen_bill(model);
+                    }
+                    if (model.CanOrRejctionFee == "Y" && model.BillNo == null)
+                    {
+                        var T13 = context.T13PoMasters.Where(x => x.CaseNo == model.Caseno && (x.PendingCharges == null || x.PendingCharges > 0)).FirstOrDefault();
+                        if (T13 != null)
+                        {
+                            T13.PendingCharges = Convert.ToByte(Convert.ToInt32(T13.PendingCharges) - 1);
+                            context.SaveChanges();
+                        }
+                        send_Vend_sms(model.Caseno, Region);
                     }
                 }
             }
@@ -1398,6 +1410,56 @@ namespace IBS.Repositories.InspectionBilling
             }
             str = model.BillNo;
             return str;
+        }
+
+        public async Task<string> send_Vend_sms(string CaseNo, string Region)
+        {
+            string sms = "";
+            string sender = "";
+            string wVendor = "", wVendMobile = "";
+            if (Region == "N")
+                sender = "RITES/NR";
+            else if (Region == "W")
+                sender = "RITES/WR";
+            else if (Region == "E")
+                sender = "RITES/ER";
+            else if (Region == "S")
+                sender = "RITES/SR";
+            else
+                sender = "RITES";
+            var query = from v in context.T05Vendors
+                        join c in context.T03Cities on v.VendCityCd equals c.CityCd
+                        join t13 in context.T13PoMasters on v.VendCd equals t13.VendCd
+                        where t13.CaseNo == CaseNo
+                        select new
+                        {
+                            VendName = (v.VendName.Substring(0, Math.Min(v.VendName.Length, 30)).Replace("&", "AND")) + "," + (c.City.Substring(0, Math.Min(c.City.Length, 12))),
+                            VendTel = (v.VendContactTel1.Substring(0, Math.Min(v.VendContactTel1.Length, 10))).Trim()
+                        };
+            var result = query.FirstOrDefault();
+            if (result != null)
+            {
+                wVendor = result.VendName;
+                wVendMobile = result.VendTel;
+            }
+            string message = "FIRM NAME-" + wVendor + ". The Billing has generated for the Case No." + CaseNo + ", against Call Cancellation/Rejection Charges Submitted by you. Kindly try to register new call now." + " - RITES LTD" + sender;
+            if (!string.IsNullOrEmpty(wVendMobile))
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    //string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wVendMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+                    string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wVendMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161648485350941";
+
+                    HttpResponseMessage response = await client.GetAsync(baseurl);
+                    response.EnsureSuccessStatusCode(); // Ensure a successful response
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(responseBody);
+
+                    sms = "success";
+                }
+            }
+            return sms;
         }
 
         public string BillDateUpdate(InspectionCertModel model, string Region)
@@ -1444,11 +1506,11 @@ namespace IBS.Repositories.InspectionBilling
             return str;
         }
 
-        int chk_bill_dt(string BillDt, string GetRegionCode)
+        int chk_bill_dt(string BillDt, string Region)
         {
-            if (GetRegionCode != "Q")
+            if (Region != "Q")
             {
-                var allowstatus = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.AllowOldBillDt).FirstOrDefault();
+                var allowstatus = context.T97ControlFiles.Where(x => x.Region == Region).Select(x => x.AllowOldBillDt).FirstOrDefault();
                 var min_bill_dt = context.T87BillControls.Select(x => x.MinBillDt).FirstOrDefault();
 
                 string myYear, myMonth, myDay;
@@ -1460,7 +1522,7 @@ namespace IBS.Repositories.InspectionBilling
                 if (allowstatus == "N")
                 {
                     //Bhavesh changes pending datetime.now.add - GraceDays
-                    int? gDays = context.T97ControlFiles.Where(x => x.Region == GetRegionCode).Select(x => x.GraceDays).FirstOrDefault();
+                    int? gDays = context.T97ControlFiles.Where(x => x.Region == Region).Select(x => x.GraceDays).FirstOrDefault();
                     string cDt = DateTime.Now.Date.ToString("yyyyMMdd");
 
                     int? grace_days = Convert.ToInt32(cDt) - Convert.ToInt32(gDays);
@@ -1807,5 +1869,22 @@ namespace IBS.Repositories.InspectionBilling
             }
             return BillNo;
         }
+
+        public InspectionCertModel FindByCallMaterialReadiness(string CaseNo, DateTime CallRecvDt, int CallSno, string Region)
+        {
+            InspectionCertModel model = new();
+            //T17CallRegister T17 = context.T17CallRegisters.Where(x => x.BillNo == BillNo).FirstOrDefault();
+
+            T17CallRegister T17 = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno).FirstOrDefault();
+
+            if (T17 == null)
+                throw new Exception("Call Record Not found");
+            else
+            {
+                model.DtInspDesire = T17.DtInspDesire;
+            }
+            return model;
+        }
+
     }
 }

@@ -10,6 +10,7 @@ using IBS.Filters;
 using IBS.Helpers;
 using IBS.Repositories.Administration;
 using Newtonsoft.Json;
+using IBS.DataAccess;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -43,7 +44,7 @@ namespace IBS.Controllers.InspectionBilling
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<InspectionCertModel> dTResult = inpsRepository.GetDataList(dtParameters, GetRegionCode);
+            DTResult<InspectionCertModel> dTResult = inpsRepository.GetDataList(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -52,7 +53,7 @@ namespace IBS.Controllers.InspectionBilling
             InspectionCertModel model = new();
             if (CaseNo != "" && CallRecvDt != null && CallSno > 0)
             {
-                model = inpsRepository.FindByInspDetailsID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, GetRegionCode, RoleId);
+                model = inpsRepository.FindByInspDetailsID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, Region, RoleId);
             }
 
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICDocument, model.BillNo);
@@ -142,7 +143,7 @@ namespace IBS.Controllers.InspectionBilling
                 string i = "";
                 string msg = "Save Successfully.";
 
-                if (GetRegionCode == "N")
+                if (Region == "N")
                 {
                     string mess = "";
                     int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
@@ -168,7 +169,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     model.UserId = Convert.ToString(UserId);
                     model.Createdby = UserName;
-                    i = inpsRepository.InspectionCertSave(model, GetRegionCode);
+                    i = inpsRepository.InspectionCertSave(model, Region);
                 }
                 if (i != "")
                 {
@@ -197,7 +198,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     model.UserId = UserName;
                     model.Createdby = UserName;
-                    str = inpsRepository.ReturnBillSubmit(model, GetRegionCode);
+                    str = inpsRepository.ReturnBillSubmit(model, Region);
                 }
                 if (str != "")
                 {
@@ -216,7 +217,7 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 string str = "";
-                str = inpsRepository.Validation(model, GetRegionCode);
+                str = inpsRepository.Validation(model, Region);
                 return Json(new { status = true, responseText = str });
             }
             catch (Exception ex)
@@ -229,7 +230,7 @@ namespace IBS.Controllers.InspectionBilling
         [HttpPost]
         public IActionResult LoadTableDetails([FromBody] DTParameters dtParameters)
         {
-            DTResult<InspectionCertModel> dTResult = inpsRepository.GetLoadTableDetails(dtParameters, GetRegionCode);
+            DTResult<InspectionCertModel> dTResult = inpsRepository.GetLoadTableDetails(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -239,7 +240,7 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 string i = "";
-                string msg = "Update Successfully.";
+                string msg = "";
 
                 string myYear, myMonth, myDay;
                 myYear = Convert.ToString(model.BillDt).Substring(6, 4);
@@ -251,87 +252,92 @@ namespace IBS.Controllers.InspectionBilling
                 string dt1 = Convert.ToDateTime(model.BillDt).ToString("dd/MM/yyyy");
                 int idt = dt1.CompareTo(DateTime.Now.Date.ToString("dd/MM/yyyy"));
 
-                model.Regioncode = GetRegionCode;
+                model.Regioncode = Region;
                 int fyr = inpsRepository.financial_year_check(model);
                 if (fyr == 1)
                 {
-                    AlertDanger("Bill must be generated within the same financial year in which IC was Issued!!!" + ". \\n(ie. Certificate Date & Bill Date shoud be in same financial year)");
+                    msg = "Bill must be generated within the same financial year in which IC was Issued!!!" + ". \\n(ie. Certificate Date & Bill Date shoud be in same financial year)";
                 }
                 else if (idt > 0)
                 {
-                    AlertDanger("Bill Date Cannot be greater then Current Date!!!");
+                    msg = "Bill Date Cannot be greater then Current Date!!!";
                 }
                 else if (model.BpoType == "R" && model.Au == "" && !(model.BpoRly == "RCF" || model.BpoRly == "ICF" || model.BpoRly == "RWF"))
                 {
-                    AlertDanger("AU Cannot be Blank For Railways Bills, Kindly Update the AU for the BPO and then Generate the Bill!!!");
+                    msg = "AU Cannot be Blank For Railways Bills, Kindly Update the AU for the BPO and then Generate the Bill!!!";
                 }
                 else
                 {
                     model.UserId = Convert.ToString(UserId);
-                    i = inpsRepository.BillUpdate(model, GetRegionCode);
+                    i = inpsRepository.BillUpdate(model, Region);
+                    msg = "Update Successfully.";
                 }
                 if (model.UpdateStatus == "-1")
                 {
-                    AlertDanger("Fee Details not available.");
+                    msg = "Fee Details not available.";
                 }
                 else if (model.UpdateStatus == "-2")
                 {
-                    AlertDanger("MINIMUM FEE PAYBLE IS GREATER THEN MAXIMUM FEE.");
+                    msg = "MINIMUM FEE PAYBLE IS GREATER THEN MAXIMUM FEE.";
                 }
                 else if (model.UpdateStatus == "-3")
                 {
-                    AlertDanger("Unable to access Bill Master.");
+                    msg = "Unable to access Bill Master.";
                 }
                 else if (model.UpdateStatus == "-4")
                 {
-                    AlertDanger("Unable to Insert New Bill No. in Bill Master.");
+                    msg = "Unable to Insert New Bill No. in Bill Master.";
                 }
                 else if (model.UpdateStatus == "-5")
                 {
-                    AlertDanger("Invalid Bill No. Passed as Parameter.");
+                    msg = "Invalid Bill No. Passed as Parameter.";
                 }
                 else if (model.UpdateStatus == "-6")
                 {
-                    AlertDanger("Unable to Insert Bill Details.");
+                    msg = "Unable to Insert Bill Details.";
                 }
                 else if (model.UpdateStatus == "-7")
                 {
-                    AlertDanger("Error occured during updating Fee Details in Bill Master.");
+                    msg = "Error occured during updating Fee Details in Bill Master.";
                 }
                 else if (model.UpdateStatus == "-8")
                 {
                     if (Convert.ToInt32(certdt) >= 20170701)
                     {
-                        AlertDanger("Unable to Select GST Tax Rates");
+                        msg = "Unable to Select GST Tax Rates";
                     }
                     else
                     {
-                        AlertDanger("Unable to Select Service Tax Rates");
+                        msg = "Unable to Select Service Tax Rates";
                     }
                 }
                 else
                 {
                     if (model.TIFee < 1)
                     {
-                        AlertDanger("Zero Value BILL!!!");
+                        msg = "Zero Value BILL!!!";
+                    }
+                }
+                if (msg != "")
+                {
+                    if (msg == "Update Successfully.")
+                    {
+                        if (i != "")
+                        {
+                            return Json(new { status = true, responseText = msg, Id = i });
+                        }
+                        else
+                        {
+                            msg = "This Call cannot be deleted. because IC is present for this call!!!";
+                            return Json(new { status = false, responseText = msg, Id = i });
+                        }
+                    }
+                    else
+                    {
+                        return Json(new { status = true, responseText = msg, Id = i });
                     }
                 }
 
-                //if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
-                //{
-                //    model.UserId = UserName;
-                //    model.Createdby = UserName;
-                //    i = inpsRepository.InspectionCertSave(model, GetRegionCode);
-                //}
-                if (i != "")
-                {
-                    return Json(new { status = true, responseText = msg, Id = i });
-                }
-                else
-                {
-                    msg = "This Call cannot be deleted. because IC is present for this call!!!";
-                    return Json(new { status = false, responseText = msg, Id = i });
-                }
             }
             catch (Exception ex)
             {
@@ -470,7 +476,7 @@ namespace IBS.Controllers.InspectionBilling
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection);
                         DocumentHelper.SaveFiles(BillNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICDocument), env, iDocument, string.Empty, BillNo + ".pdf", DocumentIds);
 
-                        msg = "The file has been uploaded."; 
+                        msg = "The file has been uploaded.";
                         string i = inpsRepository.DocUpdate(BillNo, Convert.ToString(UserId));
                     }
                     #endregion
@@ -480,6 +486,51 @@ namespace IBS.Controllers.InspectionBilling
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "ICDocument", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult CallMaterialReadiness(string CaseNo, DateTime CallRecvDt, int CallSno, string FirstInspDt)
+        {
+            InspectionCertModel model = new();
+            try
+            {
+                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+                {
+                    model = inpsRepository.FindByCallMaterialReadiness(CaseNo, CallRecvDt, CallSno, Region);
+                    if (model.DtInspDesire == null)
+                    {
+                        AlertDanger("Material Readiness Date in the Call is Missing, Kindly Update it in the Call before using this option!!!");
+                    }
+                    else
+                    {
+                        string myYear, myMonth, myDay;
+                        myYear = Convert.ToString(FirstInspDt).Substring(6, 4);
+                        myMonth = Convert.ToString(FirstInspDt).Substring(3, 2);
+                        myDay = Convert.ToString(FirstInspDt).Substring(0, 2);
+                        string dt = myYear + myMonth + myDay;
+
+                        string myYear1, myMonth1, myDay1;
+                        myYear1 = Convert.ToString(model.DtInspDesire).Substring(6, 4);
+                        myMonth1 = Convert.ToString(model.DtInspDesire).Substring(3, 2);
+                        myDay1 = Convert.ToString(model.DtInspDesire).Substring(0, 2);
+                        string dt1 = myYear1 + myMonth1 + myDay1;
+                        int i = dt1.CompareTo(dt);
+                        if (i > 0)
+                        {
+                            AlertDanger("Call/Material Readiness Date Cannot be greater then First Inspection Date!!!");
+                        }
+                        else
+                        {
+                            model.CallDt = model.DtInspDesire;
+                        }
+                    }
+                }
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "CallMaterialReadiness", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
