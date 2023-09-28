@@ -30,28 +30,35 @@ else
 
 
 <div class="accordion-body">
-    <div class="row my-0" id="divdate">
-        <div class="col-md-2">
+    <div class="row my-0">
+        <div class="col-md-12">
+        <h3 class="heading3">For The Period</h3>
+        </div>
+    </div>
+    <div class="row" id="divdate">
+        <div class="col-md-4">
             <div class="input-search">
-                <label for="FromDate">For The Period From</label>
+                <label for="FromDate">From</label>
                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
                 <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
             <div class="input-search">
                 <label for="ToDate">To</label>
                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
                 <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
         </div>
+        </div>
+
         <div class="row">
             <div class="col-md-4">
                 <input type="radio" id="IEWise" name="CMWises" value="IEWise">
                 <label for="IEWise">IE Wise</label>
-                <div class="row my-0">
-                    <div class="col-md-12" id="AllIE">
-                        <ul class="radioListForm m-0">
+                
+                    <div id="AllIE">
+                <ul class="radioListForm m-0">
                             <li>
                                 <input type="radio" id="AllIEs" name="IEWise" value="AllIE">
                                 <label for="AllIEs">All IE</label>
@@ -62,7 +69,7 @@ else
                             </li>
                         </ul>
                     </div>
-                </div>
+                
                 <div class="row my-0">
                     <div class="col-md-6" id="particularIE">
                         @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
@@ -72,8 +79,8 @@ else
             <div class="col-md-4">
                 <input type="radio" id="CMWise" name="CMWises" value="CMWise">
                 <label for="CMWise">Controlling Manager Wise</label>
-                <div class="row my-0">
-                    <div class="col-md-12" id="AllCMWise">
+                
+                    <div id="AllCMWise">
                         <ul class="radioListForm m-0">
                             <li>
                                 <input type="radio" id="AllCM" name="CMWise" value="AllCM">
@@ -85,20 +92,23 @@ else
                             </li>
                         </ul>
                     </div>
-                </div>
+                
                 <div class="row my-0">
                     <div class="col-md-6" id="particularCM">
                         @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
                     </div>
                 </div>
             </div>
+        </div>
             @if (ReportType == "E")
             {
+            <div class="row my-0">
+            <div class="col-md-12">
+            <h3 class="heading3">Sorted On</h3>
+            </div>
                 <div class="col-md-4">
-                    <div class="row my-0">
-                        <label for="CMWise">Sorted On</label>
-                        <div class="col-md-12">
-                            <ul class="radioListForm m-0">
+                    
+                            <ul class="radioListForm">
                                 <li>
                                     <input type="radio" id="SortedIE" name="visitdate" value="SortedIE">
                                     <label for="SortedIE">IE</label>
@@ -108,14 +118,18 @@ else
                                     <label for="visitdate">VISIT DATE</label>
                                 </li>
                             </ul>
-                        </div>
-                    </div>
+                       
                 </div>
+                 </div>
             }
-        </div>
+       
+        
+    <div class="row my-0">
+        <div class="col-md-12">
         <div class="savenext-btn">
             <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
             <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+        </div>
         </div>
     </div>
 </div>
