@@ -71,7 +71,7 @@ label { display: inline-block; padding-bottom: 10px; font-weight: 500; }
 /********* Common Classes *********/
 body, html { height: 100%; width: 100%; }
 hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 10px 0; padding: 0 }
-body, button, input, select, textarea { color: #171717; font-family: 'Poppins'; font-size: 15px; line-height: 1em; }
+body, button, input, select, textarea { color: #171717; font-family: 'Poppins'; font-size: 15px; line-height: 1.5; }
 body { background-color: #fff; line-height: 1.5; }
 h1 { font-size: 2.308em; }
 h2 { font-size: 32px; }
