@@ -1017,7 +1017,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .heading1 { color: #066597; font-size: 30px; }
 .bold { font-weight: 700; }
 .inputIcon { position: relative; }
-.inputIcon .fa { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); }
+.inputIcon .fa { position: absolute; right: 10px; top: 12px;}
 .link1 { color: #2A7CA6; transition: all 0.3s; text-decoration: underline; }
 .link1:hover { color: #000; text-decoration: none; }
 .btn { background-color: #ccc; color: #FFFFFF; font-size: 20px; text-decoration: none; border-radius: 8px; display: inline-flex; padding: 10px 15px; justify-content: center; }
