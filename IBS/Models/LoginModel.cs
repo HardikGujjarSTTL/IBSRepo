@@ -11,6 +11,11 @@ namespace IBS.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "OTP is required.")]
+        public string OTP { get; set; }
+        public string MOBILE { get; set; }
+        public string DecryptUserName { get; set; }
+
     }
 
     public class UserSessionModel
@@ -30,6 +35,7 @@ namespace IBS.Models
         public string OrgnType { get; set; }
         public string RoleName { get; set; }
         public string USER_ID { get; set; }
+        public string MOBILE { get; set; }
     }
 
     public class ForgotPasswordModel

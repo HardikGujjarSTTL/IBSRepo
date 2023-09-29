@@ -1,6 +1,9 @@
 ﻿@model IBS.Models.BillRaisedModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 
 @{
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ActionType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ActionType"]) : "";
+    string ReportTitle = string.Empty;
     ViewData["Title"] = "Reports Summary";
 }
 <div class="list-inner">
@@ -13,257 +16,228 @@
     <input type="hidden" asp-for="Region" />
     <input type="hidden" asp-for="ActionType" />
     <div class="task-listinput">
-        <div class="accordion-body">
-            <table id="Table2">
-                @if (Model.ActionType == "CWBills" || Model.ActionType == "SWBills")
-                {
-                    <tr>
-                        <td colSpan="3">
-                            <div class="custom-readio">
-                                @*<label for="Reference">Summary of Report</label>*@
-                                <div class="company-checkbox">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <ul class="radioListForm">
-                                                <li>
-                                            <input type="radio" asp-for="BillSummary" value="M" id="BillSummary_M" checked="checked" />
-                                            <label for="BillSummary_M">Summary Report For the Month</label>
-                                            </li>
-                                            <li>
-                                            <input type="radio" asp-for="BillSummary" value="P" id="BillSummary_P" />
-                                            <label for="BillSummary_P">Summary Report For the Given Period</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="task-inner row CWBills">
+            <div class="col-md-12 mb-3">
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="BillSummary_M" asp-for="BillSummary" name="BillSummary" value="M" checked>
+                                <label for="BillSummary_M">Summary Report For the Month</label>
                             </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="display:none;" id="tdmonth"></td>
-                        <td>
-                            <label id="lblMonth" runat="server">Month</label>
-                        </td>
-                        <td>
-                            <label id="lblYear" runat="server">Year</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="display:none; width:150px;" id="tdFrom">
-                            <label id="lblFrom" runat="server">From</label>
-                        </td>
-                        <td style="width:45%;">
-                            @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="FromMn" class="text-danger"></span>
-                        </td>
-                        <td>
-                            @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="FromYr" class="text-danger"></span>
-                        </td>
-                    </tr>
-                    <tr id="trTo" style="display:none;">
-                        <td>
-                            <label id="lblTo" runat="server">To</label>
-                        </td>
-                        <td>
-                            @Html.DropDownListFor(model => model.ToMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
-                        <td>
-                                @Html.DropDownListFor(model => model.ToYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
-                        </td>
-                    </tr>
-                    @if (Model.ActionType == "SWBills")
-                    {
-                        <tr>
-                            <td>
-                                <label id="Label2" runat="server">Include RITES Billing (Y/N)</label>
-                            </td>
-                            <td>
-                                @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
-                            </td>
-                            <td></td>
-                        </tr>
-                    }
-                }
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="BillSummary_P" asp-for="BillSummary" name="BillSummary" value="P">
+                                <label for="BillSummary_P">Summary Report For the Given Period</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="FromMn" id="lblMonth">Month</label> <br />
+                @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
+                <span class="text-danger field-validation-error" id="spnErrorFromMn"></span>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="FromYr" id="lblYear">Year</label> <br />
+                @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
+                <span class="text-danger field-validation-error" id="spnErrorFromYr"></span>
+            </div>
+            <div class="col-md-2 mb-3 trTo" style="display: none">
+                <label for="ToMn">To Month</label> <br />
+                @Html.DropDownListFor(model => model.ToMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
+                <span class="text-danger field-validation-error" id="spnErrorToMn"></span>
+            </div>
+            <div class="col-md-2 mb-3 trTo" style="display: none">
+                <label for="ToYr">To Year</label> <br />
+                @Html.DropDownListFor(model => model.ToYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
+                <span class="text-danger field-validation-error" id="spnErrorToYr"></span>
+            </div>
+            <div class="col-md-2 mb-3 SWBills" style="display: none">
+                <label for="IncRites">Include RITES Billing (Y/N)</label> <br />
+                @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"))
+                <span class="text-danger field-validation-error" id="spnErrorIncRites"></span>
+            </div>
+        </div>
 
-                @if (Model.ActionType == "RlyBills")
-                {
-                    <tr>
-                        <td>
-                            <label for="Reference" style="color:red;">Client Type</label>
-                        </td>
-                        <td>
-                            @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailType() , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="ClientType" class="text-danger"></span>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="custom-readio">
-                                <div class="company-checkbox">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <ul class="radioListForm">
-                                                <li>
-                                                    <input type="radio" asp-for="BpoType" value="A" id="BPO_A" checked="checked" />
-                                                    <label for="BPO_A">All BPO</label>
-                                                </li>
-                                                <li>
-                                                    <input type="radio" asp-for="BpoType" value="P" id="BPO_P" />
-                                                    <label for="BPO_P">Particular BPO</label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+        <div class="task-inner row RlyBills" style="display:none;">
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="ClientType" id="lblClientType">Client Type</label> <br />
+                    @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailType() , "Value", "Text"),"--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorClientType"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="BPO_A" asp-for="BpoType" name="BpoType" value="A" checked="checked">
+                                    <label for="BPO_A">All BPO</label>
                                 </div>
                             </div>
-                        </td>
-                        <td id="tdBpoRly1" style="display:none;">
-                            <label for="Reference" style="color:red;">For Particular Client</label>
-                        </td>
-                        <td id="tdBpoRly2" style="display:none;">
-                            @Html.DropDownListFor(model => model.BpoRly, new SelectList(IBS.Models.Common.GetBPORLY("R") , "Value", "Text"),"--Select--")
-                            <span asp-validation-for="BpoRly" class="text-danger"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width:30%">
-                            <div class="custom-readio">
-                                <div class="company-checkbox">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="BillSummary" value="M" id="BillSummary_M" checked="checked" />
-                                            <label for="BillSummary_M">For the Month</label>
-                                            &nbsp;&nbsp;
-                                            <input type="radio" asp-for="BillSummary" value="P" id="BillSummary_P" />
-                                            <label for="BillSummary_P">For Given Period</label>
-                                        </div>
-                                    </div>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="BPO_P" asp-for="BpoType" name="BpoType" value="P">
+                                    <label for="BPO_P">Particular BPO</label>
                                 </div>
                             </div>
-                        </td>
-                        <td>
-                            <div id="RMonth">
-                                <label for="Reference">Month</label>
-                                @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
-                                <span asp-validation-for="FromMn" class="text-danger"></span>
-                            </div>
-                            <div id="RFromDt" style="display:none;">
-                                <label for="Reference">From Date</label>
-                                <input type="text" class="datepicker" asp-for="FromDt" readonly>
-                                <span asp-validation-for="FromDt" class="text-danger"></span>
-                            </div>
-                        </td>
-                        <td>
-                            <div id="RYear">
-                                <label for="Reference">Year</label>
-                                @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
-                                <span asp-validation-for="FromYr" class="text-danger"></span>
-                            </div>
-                            <div id="RToDt" style="display:none;">
-                                <label for="Reference">To Date</label>
-                                <input type="text" class="datepicker" asp-for="ToDt" readonly>
-                                <span asp-validation-for="ToDt" class="text-danger"></span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <div class="custom-readio">
-                                <div class="company-checkbox">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3 BpoRly" style="display:none;">
+                    <label for="BpoRly" id="lblBpoRly">For Particular Client</label> <br />
+                    @Html.DropDownListFor(model => model.BpoRly, new SelectList(IBS.Models.Common.GetBPORLY("R") , "Value", "Text"),"--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorBpoRly"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="RlyBillSummary_M" asp-for="RlyBillSummary" name="RlyBillSummary" value="M" checked="checked">
+                                    <label for="RlyBillSummary_M">For the Month</label>
                                 </div>
                             </div>
-                        </td>
-                        <td></td>
-                    </tr>
-                }
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="RlyBillSummary_P" asp-for="RlyBillSummary" name="RlyBillSummary" value="P">
+                                    <label for="RlyBillSummary_P">For Given Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                @if (Model.ActionType == "NSC" || Model.ActionType == "RBNRS")
-                {
-                    @if (Model.ActionType == "NSC")
-                    {
-                        <tr>
-                            <td>
-                                <label for="FromDate">For The Period From</label>
-                                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
-                            </td>
-                            <td>
-                                <label for="ToDate">To</label>
-                                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                    }
+                <div class="col-md-2 mb-3 RlyFromMn">
+                    <label for="ToMonthRly" id="lblMonthRly">Month</label> <br />
+                    @*@Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")*@
+                    @Html.DropDownList("FromMnRly", Common.GetMonths(),"--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorFromMnRly"></span>
+                </div>
+                <div class="col-md-2 mb-3 RlyFromYr">
+                    <label for="FromYr" id="lblYear">Year</label> <br />
+                    @*@Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")*@
+                    @Html.DropDownList("FromYrRly", Common.GetYears(),"--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorFromYrRly"></span>
+                </div>
+                <div class="col-md-2 mb-3 RlyFromDt" style="display: none">
+                    <label for="FromDt">To Month</label> <br />
+                    <input type="text" class="datepicker" asp-for="FromDt" readonly placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorFromDt"></span>
+                </div>
+                <div class="col-md-2 mb-3 RlyToDt" style="display: none">
+                    <label for="ToDt">To Year</label> <br />
+                    <input type="text" class="datepicker" asp-for="ToDt" readonly placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorToDt"></span>
+                </div>
+            </div>
 
-                    <tr>
-                        <td>                            
-                            <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="RlyTypes">Type of Railway</label>
-                            <div class="custom-readio">
-                                <div class="company-checkbox">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="RlyTypes" value="A" id="Railways_A" checked="checked" />
-                                            <label for="Railways_A">All Railways</label>
-                                            &nbsp;&nbsp;
-                                            <input type="radio" asp-for="RlyTypes" value="P" id="Railways_P" />
-                                            <label for="Railways_P">Particular Railway</label>
-                                        </div>
-                                    </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
                                 </div>
                             </div>
-                        </td>
-                        <td style="display:none;" id="tdClientType">
-                            <label for="ClientType">Particular Railway Types</label>
-                            @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"),"--Select--", new { @class = "", @onchange = "BindlstAU();" })
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr style="display:none;" id="trAU">
-                        <td>
-                            <label for="AU">Type of AU</label>
-                            <div class="custom-readio">
-                                <div class="company-checkbox">
-                                    <div class="remember">
-                                        <div class="remecheckbox">
-                                            <input type="radio" asp-for="AU" value="A" id="AU_A" checked="checked" />
-                                            <label for="AU_A">All AU's</label>
-                                            &nbsp;&nbsp;
-                                            <input type="radio" asp-for="AU" value="P" id="AU_P" />
-                                            <label for="AU_P">Particular AU</label>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="task-inner row NSC" style="display:none;">
+            <div class="row my-0 NSCDt">
+                <div class="col-md-2 mb-3">
+                    <label for="FromDate" id="lblFromDate">For The Period From</label> <br />
+                    <input type="text" class="datepicker" id="FromDate" readonly placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="ToDate" id="lblToDate">For The Period To</label> <br />
+                    <input type="text" class="datepicker" id="ToDate" readonly placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <label for="NSCRegion_A"><input type="checkbox" asp-for="chkRegion" value="A" id="NSCRegion_A" checked="checked" /> All Regions</label>
                                 </div>
                             </div>
-                        </td>
-                        <td style="display:none;" id="tdAU">
-                            <label for="lstAU">Particular AU Types</label>
-                            @Html.DropDownListFor(model => model.lstAU, new SelectList(IBS.Models.Common.GetAUCrisByRlyCd(Model.ClientType) , "Value", "Text"),"--Select--")
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-
-                }
-            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="NSCRailways_A" asp-for="RlyTypes" name="RlyTypes" value="A" checked>
+                                    <label for="NSCRailways_A">All Railways</label>
+                                </div>
+                            </div>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="NSCRailways_P" asp-for="RlyTypes" name="RlyTypes" value="P">
+                                    <label for="NSCRailways_P">Particular Railway</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3" id="tdClientType" style="display:none;">
+                    <label for="ClientTypeNSC" id="lblClientTypeNSC">Particular Railway Types</label> <br />
+                    @*@Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"),"--Select--", new { @class = "", @onchange = "BindlstAU();" })*@
+                    @Html.DropDownList("ClientTypeNSC", Common.GetRailway(),"--Select--", new { @class = "", @onchange = "BindlstAU();" })
+                    <span class="text-danger field-validation-error" id="spnErrorClientTypeNSC"></span>
+                </div>
+            </div>
+            <div class="row my-0" style="display:none;" id="trAU">
+                <div class="col-md-3 mb-3">
+                    <label for="ClientType" id="lblClientTypeNSC">Type of AU</label>
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="AU_A" asp-for="AU" name="AU" value="A" checked>
+                                    <label for="AU_A">All AU's</label>
+                                </div>
+                            </div>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="AU_P" asp-for="AU" name="AU" value="P">
+                                    <label for="AU_P">Particular AU</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3" style="display:none;" id="tdAU">
+                    <label for="lstAU" id="lbllstAU">Particular AU Types</label> <br />
+                    @Html.DropDownListFor(model => model.lstAU, new SelectList(IBS.Models.Common.GetAUCrisByRlyCd(Model.ClientType) , "Value", "Text"),"--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorlstAU"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
             <div class="savenext-btn">
-                <button type="button" class="save-btn active" onclick="ViewReport();" style="display:none;">Report</button>
+                <button type="button" class="save-btn active" onclick="GetViewReport();">Submit</button>
                 <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
-                <button type="button" class="save-btn active" onclick="GetViewReport();">Get Report</button>
             </div>
         </div>
     </div>
@@ -274,6 +248,37 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            if ('@ReportType' == 'CWBills' || '@ReportType' == 'SWBills') {
+                $(".NSCDt").css("display", "none");
+                $(".CWBills").css("display", "");
+                $(".RlyBills").css("display", "none");
+                $(".NSC").css("display", "none");
+            }
+            if ('@ReportType' == 'SWBills') {
+                $(".NSCDt").css("display", "none");
+                $(".SWBills").css("display", "");
+                $(".RlyBills").css("display", "none");
+                $(".NSC").css("display", "none");
+            }
+            if ('@ReportType' == 'RlyBills') {
+                $(".NSCDt").css("display", "none");
+                $(".RlyBills").css("display", "");
+                $(".CWBills").css("display", "none");
+                $(".NSC").css("display", "none");
+            }
+            if ('@ReportType' == 'NSC' || '@ReportType' == 'RBNRS') {
+                $(".NSC").css("display", "");
+                $(".NSCDt").css("display", "");
+                $(".CWBills").css("display", "none");
+                $(".RlyBills").css("display", "none");
+            }
+            if ('@ReportType' == 'RBNRS') {
+                $(".NSCDt").css("display", "none");
+                $(".CWBills").css("display", "none");
+                $(".RlyBills").css("display", "none");
+            }
+
+
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
 
@@ -285,6 +290,8 @@
                 radioM.change(function () {
                     if (radioM.is(":checked")) {
                         $("#tdmonth").hide();
+                        $(".trTo").hide();
+
                         $("#tdFrom").hide();
                         $("#trTo").hide();
                     }
@@ -293,18 +300,58 @@
                 radioP.change(function () {
                     if (radioP.is(":checked")) {
                         $("#tdmonth").show();
+                        $(".tdFrom").show();
+                        $(".trTo").show();
+
                         $("#tdFrom").show();
                         $("#trTo").show();
                     }
                 });
             }
             else if (actiontype == "RlyBills") {
+                //var RReport = $('input[name="RlyBillSummary"]:checked').val();
+                $("#RlyBillSummary_M").change(function () {
+                    if ($("#RlyBillSummary_M").is(":checked")) {
+                        $(".RlyFromMn").show();
+                        $(".RlyFromYr").show();
+                        $(".RlyFromDt").hide();
+                        $(".RlyToDt").hide();
+
+
+                        $("#FromMnRly").val("");
+                        $("#FromYrRly").val("");
+                        $("#FromDt").val('');
+                        $("#ToDt").val('');
+                    }
+
+                });
+                $("#RlyBillSummary_P").change(function () {
+                    if ($("#RlyBillSummary_P").is(":checked")) {
+                        $(".RlyFromMn").hide();
+                        $(".RlyFromYr").hide();
+                        $(".RlyFromDt").show();
+                        $(".RlyToDt").show();
+
+                        $("#FromMnRly").val("");
+                        $("#FromYrRly").val("");
+                        $("#FromDt").val('');
+                        $("#ToDt").val('');
+
+
+                    }
+                });
+
                 $("#BillSummary_M").change(function () {
                     if ($("#BillSummary_M").is(":checked")) {
                         $("#RMonth").show();
                         $("#RYear").show();
                         $("#RFromDt").hide();
                         $("#RToDt").hide();
+
+                        $(".RlyFromMn").show();
+                        $(".RlyFromYr").show();
+                        $(".RlyFromDt").hide();
+                        $(".RlyToDt").hide();
                     }
                 });
                 $("#BillSummary_P").change(function () {
@@ -313,6 +360,11 @@
                         $("#RYear").hide();
                         $("#RFromDt").show();
                         $("#RToDt").show();
+
+                        $(".RlyFromMn").hide();
+                        $(".RlyFromYr").hide();
+                        $(".RlyFromDt").show();
+                        $(".RlyToDt").show();
                     }
                 });
 
@@ -320,26 +372,32 @@
                     if ($("#BPO_A").is(":checked")) {
                         $("#tdBpoRly1").hide();
                         $("#tdBpoRly2").hide();
+
+                        $(".BpoRly").hide();
+                        $("#BpoRly").val("");
                     }
                 });
                 $("#BPO_P").change(function () {
                     if ($("#BPO_P").is(":checked")) {
                         $("#tdBpoRly1").show();
                         $("#tdBpoRly2").show();
+
+                        $(".BpoRly").show();
+                        $("#BpoRly").val("");
                     }
                 });
             }
             else if (actiontype == "NSC" || actiontype == "RBNRS") {
-                $("#Railways_A").change(function () {
-                    if ($("#Railways_A").is(":checked")) {
+                $("#NSCRailways_A").change(function () {
+                    if ($("#NSCRailways_A").is(":checked")) {
                         $("#tdClientType").hide();
                         $("#trAU").hide();
-                        $("#ClientType").val("");
+                        $("#ClientTypeNSC").val("");
                         $("#lstAU").val("");
                     }
                 });
-                $("#Railways_P").change(function () {
-                    if ($("#Railways_P").is(":checked")) {
+                $("#NSCRailways_P").change(function () {
+                    if ($("#NSCRailways_P").is(":checked")) {
                         $("#tdClientType").show();
                         $("#trAU").show();
                         $("#AU_A").change(function () {
@@ -355,13 +413,14 @@
                             $("#lstAU").val("");
                         });
                     }
-                    $("#ClientType").val("");
+                    $("#ClientTypeNSC").val("");
                     $("#lstAU").val("");
                 });
             }
         });
 
         function validation() {
+
             $("#FromYr").change(function () {
                 var radioM = $("#BillSummary_M");
                 var radioP = $("#BillSummary_P");
@@ -428,29 +487,26 @@
             $("#FromYr").val("");
             $("#ToMn").val("");
             $("#ToYr").val("");
-        }
 
-        function ViewReport() {
-            var FromMn = $("#FromMn").val();
-            var FromYr = $("#FromYr").val();
-            var ToMn = $("#ToMn").val();
-            var ToYr = $("#ToYr").val();
-            var Region = $("#Region").val();
-            var ActionType = $("#ActionType").val();
+            $("#ClientType").val("");
+            $("#BpoRly").val("");
+            $("#FromMnRly").val("");
+            $("#FromYrRly").val("");
+            $("#FromDt").val("");
+            $("#ToDt").val("");
 
-            var radioM = $("#BillSummary_M");
-            var radioP = $("#BillSummary_P");
-            var rdo = "";
-            if (radioM.is(":checked")) {
-                rdo = "M";
-            }
-            else {
-                rdo = "P";
-            }
+            $("#BPO_A").prop('checked', true);
+            $("#RlyBillSummary_M").prop('checked', true);
 
-            let myObject = { FromMn, FromYr, ToMn, ToYr, Region, ActionType, rdo };
-            var url = '@Url.Action("BillRaisedReport", "BillingReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#ClientTypeNSC").val("");
+            $("#lstAU").val("");
+            $("#tdClientType").hide();
+            $("#tdAU").hide();
+            $("#Railways_A").prop('checked', true);
+            $("#AU_A").prop('checked', true);
+            BindlstAU();
         }
 
         function GetViewReport() {
@@ -461,22 +517,85 @@
             var Region = $("#Region").val();
             var ActionType = $("#ActionType").val();
 
+
+            var IsValid = true;
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
             if (actiontype == "CWBills" || actiontype == "SWBills") {
-                var rdo = "";
-                if ($("#BillSummary_M").is(":checked")) {
-                    rdo = "M";
-                }
-                else {
-                    rdo = "P";
-                }
+                var rdo = $('input[name="BillSummary"]:checked').val();
+                $("#spnErrorFromMn").html("");
+                $("#spnErrorFromYr").html("");
+
+                $("#spnErrorToMn").html("");
+                $("#spnErrorToYr").html("");
+
                 if (actiontype == "CWBills") {
+                    if (rdo == "M") {
+                        if ($("#FromMn").val() == "") {
+                            $("#spnErrorFromMn").html("The From Month field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#FromYr").val() == "") {
+                            $("#spnErrorFromYr").html("The From Year field is required.");
+                            IsValid = false;
+                        }
+
+
+                    }
+                    else {
+                        if ($("#FromMn").val() == "") {
+                            $("#spnErrorFromMn").html("The From Month field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#FromYr").val() == "") {
+                            $("#spnErrorFromYr").html("The From Year field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#ToMn").val() == "") {
+                            $("#spnErrorToMn").html("The From Month field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#ToYr").val() == "") {
+                            $("#spnErrorToYr").html("The From Year field is required.");
+                            IsValid = false;
+                        }
+                    }
+                    if (!IsValid) return;
+
                     let myObject = { FromMn, FromYr, ToMn, ToYr, Region, ActionType, rdo };
                     var url = '@Url.Action("BillingClientReport", "BillingReports")?' + $.param(myObject);
                     window.open(url, '_blank');
                 }
                 else if (actiontype == "SWBills") {
+                    if (rdo == "M") {
+                        if ($("#FromMn").val() == "") {
+                            $("#spnErrorFromMn").html("The From Month field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#FromYr").val() == "") {
+                            $("#spnErrorFromYr").html("The From Year field is required.");
+                            IsValid = false;
+                        }
+                    }
+                    else {
+                        if ($("#FromMn").val() == "") {
+                            $("#spnErrorFromMn").html("The From Month field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#FromYr").val() == "") {
+                            $("#spnErrorFromYr").html("The From Year field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#ToMn").val() == "") {
+                            $("#spnErrorToMn").html("The From Month field is required.");
+                            IsValid = false;
+                        }
+                        if ($("#ToYr").val() == "") {
+                            $("#spnErrorToYr").html("The From Year field is required.");
+                            IsValid = false;
+                        }
+                    }
+                    if (!IsValid) return;
                     var IncRites = $("#IncRites").val();
                     let myObject = { FromMn, FromYr, ToMn, ToYr, Region, ActionType, rdo, IncRites };
                     var url = '@Url.Action("BillingSectorReport", "BillingReports")?' + $.param(myObject);
@@ -484,12 +603,21 @@
                 }
             }
             if (actiontype == "RlyBills") {
+                $("#spnErrorClientType").html("");
+                $("#spnErrorBpoRly").html("");
+
+                $("#spnErrorFromMnRly").html("");
+                $("#spnErrorFromYrRly").html("");
+                $("#spnErrorFromDt").html("");
+                $("#spnErrorToDt").html("");
                 var rdoSummary = "";
                 if ($("#BillSummary_M").is(":checked")) {
                     rdoSummary = "M";
+                    $("BpoRly").val("");
                 }
                 else {
                     rdoSummary = "P";
+                    $("BpoRly").val("");
                 }
 
                 var rdoBpo = "";
@@ -507,53 +635,105 @@
 
                 var ClientType = $("#ClientType").val();
                 var BpoRly = $("#BpoRly").val();
-                var FromMn = $("#FromMn").val();
-                var FromYr = $("#FromYr").val();
-                var FromDt = moment($('#FromDt').datepicker('getDate')).format("YYYY-MM-DD");
-                var ToDt = moment($('#ToDt').datepicker('getDate')).format("YYYY-MM-DD");
+                var FromMn = $("#FromMnRly").val();
+                var FromYr = $("#FromYrRly").val();
+                var FromDt = moment($('#FromDtRly').datepicker('getDate')).format("YYYY-MM-DD");
+                var ToDt = moment($('#ToDtRly').datepicker('getDate')).format("YYYY-MM-DD");
+                var RlyBillSummary = $('input[name="RlyBillSummary"]:checked').val();
+                var RlyBpoType = $('input[name="BpoType"]:checked').val();
+                if ($("#ClientType").val() == "") {
+                    $("#spnErrorClientType").html("Client Type field is required.");
+                    IsValid = false;
+                }
+                if (RlyBillSummary == "M") {
+                    if ($("#FromMnRly").val() == "") {
+                        $("#spnErrorFromMnRly").html("From Month field is required.");
+                        IsValid = false;
+                    }
+                    if ($("#FromYrRly").val() == "") {
+                        $("#spnErrorFromYrRly").html("From Year field is required.");
+                        IsValid = false;
+                    }
+                    $("BpoRly").val("");
+                }
+                else {
+                    if ($("#FromDt").val() == "") {
+                        $("#spnErrorFromDt").html("From Date field is required.");
+                        IsValid = false;
+                    }
+                    if ($("#ToDt").val() == "") {
+                        $("#spnErrorToDt").html("To Date field is required.");
+                        IsValid = false;
+                    }
+                    $("BpoRly").val("");
+                }
+                if (RlyBpoType == "P") {
+                    if ($("#BpoRly").val() == "") {
+                        $("#spnErrorBpoRly").html("For Particular Client field is required.");
+                        IsValid = false;
+                    }
+                    $("BpoRly").val("");
+                }
 
+
+                if (!IsValid) return;
                 let myObject = { ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, actiontype, chkRegion };
                 var url = '@Url.Action("RailwayOnlineReport", "BillingReports")?' + $.param(myObject);
                 window.open(url, '_blank');
             }
             if (actiontype == "NSC" || actiontype == "RBNRS") {
+                $("#spnErrorFromDate").html("");
+                $("#spnErrorToDate").html("");
+                $("#spnErrorClientTypeNSC").html("");
+                $("#spnErrorlstAU").html("");
                 if (actiontype == "NSC") {
                     if ($('#FromDate').val() == null || $('#FromDate').val() == "") {
-                        ShowHideMsgNew(false, "Please add For The Period From");
-                        return;
+                        $("#spnErrorFromDate").html("For The Period From field is required.");
+                        IsValid = false;
                     }
                     if ($('#ToDate').val() == null || $('#ToDate').val() == "") {
-                        ShowHideMsgNew(false, "Please add For The Period To");
-                        return;
+                        $("#spnErrorToDate").html("For The Period To field is required.");
+                        IsValid = false;
                     }
                 }
 
                 var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
                 var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
                 var chkRegion = "";
-                if ($("#Region_A").is(":checked")) {
+                if ($("#NSCRegion_A").is(":checked")) {
                     chkRegion = "Y";
                 }
                 else {
                     chkRegion = "N";
                 }
-                var ClientType = $("#ClientType").val();
+                var ClientType = $("#ClientTypeNSC").val();
                 var lstAU = $("#lstAU").val();
-
+                debugger
                 var rdbPRly = "";
-                if ($("#Railways_P").is(":checked")) {
+                if ($("#NSCRailways_P").is(":checked")) {
                     rdbPRly = "P";
+                    if ($('#ClientTypeNSC').val() == null || $('#ClientTypeNSC').val() == "") {
+                        $("#spnErrorClientTypeNSC").html("Particular Railway Types field is required.");
+                        IsValid = false;
+                    }
                 }
                 else {
                     rdbPRly = "A";
+                    
                 }
                 var rdbPAU = "";
                 if ($("#AU_P").is(":checked")) {
                     rdbPAU = "P";
+                    if ($('#lstAU').val() == null || $('#lstAU').val() == "") {
+                        $("#spnErrorlstAU").html("Particular AU Types field is required.");
+                        IsValid = false;
+                    }
                 }
                 else {
                     rdbPAU = "A";
                 }
+
+                if (!IsValid) return;
 
                 let myObject = { FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, rdbPRly, rdbPAU };
                 var url = '@Url.Action("BillsNotCrisReport", "BillingReports")?' + $.param(myObject);
@@ -566,7 +746,7 @@
             $("#lstAU").empty();
             $("#lstAU").append($('<option value="">--Select--</option>'));
 
-            $.get("@Url.Action("GetAU", "BillingReports")", { RlyCd: $("#ClientType").val() }, function (response) {
+            $.get("@Url.Action("GetAU", "BillingReports")", { RlyCd: $("#ClientTypeNSC").val() }, function (response) {
                 if (response != null) {
                     $("#lstAU").empty();
                     $("#lstAU").append($('<option value="">--Select--</option>'));
@@ -577,4 +757,4 @@
             });
         }
     </script>
-}
+    }

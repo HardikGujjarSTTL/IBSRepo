@@ -7,7 +7,7 @@ public partial class V23BillItem
 {
     public string? BillNo { get; set; }
 
-    public byte? ItemSrno { get; set; }
+    public int? ItemSrno { get; set; }
 
     public string? ItemDesc { get; set; }
 

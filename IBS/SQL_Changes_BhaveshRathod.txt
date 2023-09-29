@@ -489,5 +489,12 @@ ALTER TABLE t20_ic ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
 ALTER TABLE t20_ic ADD UPDATEDBY VARCHAR2(50 BYTE)
 ALTER TABLE t20_ic ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
 ALTER TABLE t20_ic ADD ISDELETED NUMBER(38,0)
+
+
+Inspection Certificate Generate
+===============================
+SP_GENERATE_BILL_NEW
+
+SP_GENERATE_BILL_GST_NEW
 =============================================================================================================================================
 

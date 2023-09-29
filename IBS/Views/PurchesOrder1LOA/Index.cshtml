@@ -11,23 +11,21 @@
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Case Number</label>
                     <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
                     <span asp-validation-for="CaseNo" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Offer Letter No.</label>
                     <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
                     <span asp-validation-for="PoNo" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">LOA Date</label>
                     @*<label id="CallRecvDt" name="CallRecvDt" asp-for=@Model.CallRecvDt runat="server"></label>*@
@@ -35,7 +33,7 @@
                     <span asp-validation-for="PoDt" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Vendor Name</label>
                     <input type="text" class="input" asp-for="VendName" maxlength="100" style="text-transform: uppercase;">
@@ -43,14 +41,15 @@
                 </div>
             </div>
         </div>
-       
-                <div class="savenext-btn">
-                    <a asp-controller="PurchesOrder1LOA" asp-action="Index" class="reset-btn">Cancel</a>
-                    @*<a asp-controller="Modified" asp-action="Manage" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn" id="btnModifyLOA">Modify LOA</button>
-                    <button type="button" class="save-btn active" id="btnSearchLOA">Search LOA</button>
-                </div>
-   
+
+
+        <div class="savenext-btn">
+            <a asp-controller="PurchesOrder1LOA" asp-action="Index" class="reset-btn">Cancel</a>
+            @*<a asp-controller="Modified" asp-action="Manage" class="reset-btn">Cancel</a>*@
+            <button type="button" class="save-btn" id="btnModifyLOA">Modify LOA</button>
+            <button type="button" class="save-btn active" id="btnSearchLOA">Search LOA</button>
+        </div>
+
 
     </div>
     <section class="table-section">

@@ -88,7 +88,7 @@ namespace IBS.Helper
             ContractEntryDoc = 16,
             ICCancellation = 17,
             PurchaseOrderForm = 18,
-            ICDocument = 20,
+            ICDocument = 21,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -778,5 +778,6 @@ namespace IBS.Helper
 
         public static AllICStatusModel AllICStatus { get; set; }
         public static ReInspectionICsModel ReInspectionICs { get; set; }
+        public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
     }
 }

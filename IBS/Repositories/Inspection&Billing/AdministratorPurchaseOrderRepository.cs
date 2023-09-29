@@ -46,6 +46,7 @@ namespace IBS.Repositories.Inspection_Billing
                 model.InspectingAgency = POMaster.InspectingAgency;
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Contractid = POMaster.Contractid;
                 var T14 = context.T14aPoNonrlies.Where(x => x.CaseNo == POMaster.CaseNo).FirstOrDefault();
                 if (T14 != null)
                 {
@@ -196,6 +197,7 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.Createddate = DateTime.Now;
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
+                obj.Contractid=model.Contractid;
                 context.T13PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -239,6 +241,7 @@ namespace IBS.Repositories.Inspection_Billing
                 POMaster.Updateddate = DateTime.Now;
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
+                POMaster.Contractid = model.Contractid;
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
 

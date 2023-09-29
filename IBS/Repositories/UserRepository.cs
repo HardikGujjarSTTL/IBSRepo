@@ -5,8 +5,10 @@ using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
@@ -76,97 +78,74 @@ namespace IBS.Repositories
             }
         }
 
+        public UserSessionModel LoginByUserName(LoginModel model)
+        {
+            UserSessionModel userSessionModel = new UserSessionModel();
+
+            userSessionModel = (from u in context.T02Users
+                                where u.UserId.Trim() == model.UserName.Trim() 
+                                select new UserSessionModel
+                                {
+                                    MOBILE = u.Mobile
+                                }).FirstOrDefault();
+
+            return userSessionModel;
+
+        }
+        public UserSessionModel LoginByUserPass(LoginModel model)
+        {
+            UserSessionModel userSessionModel = new UserSessionModel();
+            
+            userSessionModel = (from u in context.T02Users
+                                where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
+                                select new UserSessionModel
+                                {
+                                    MOBILE = u.Mobile,
+                                    UserID = Convert.ToInt32(u.Id),
+                                    Name = Convert.ToString(u.UserName),
+                                    UserName = Convert.ToString(u.UserId)
+                                }).FirstOrDefault();
+
+
+            return userSessionModel;
+
+        }
         public UserSessionModel FindByLoginDetail(LoginModel model)
         {
             UserSessionModel userSessionModel = new UserSessionModel();
-            //userSessionModel = (from u in context.T02Users
-            //                    join ur in context.Userroles on u.Id equals ur.UserId into userRolesGroup
-            //                    from ur in userRolesGroup.DefaultIfEmpty()
-            //                    where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
-            //                    select new UserSessionModel
-            //                    {
-            //                        UserID = Convert.ToInt32(u.Id),
-            //                        Name = Convert.ToString(u.UserName),
-            //                        UserName = Convert.ToString(u.UserId),
-            //                        Region = Convert.ToString(u.Region),
-            //                        AuthLevl = Convert.ToString(u.AuthLevl),
-            //                        RoleId = Convert.ToInt32(ur.RoleId),
-            //                        RoleName = Convert.ToString((from r in context.Roles where r.RoleId == ur.RoleId select r.Rolename).FirstOrDefault())
-            //                        // Assign other properties of UserSessionModel here
-            //                    }).FirstOrDefault();
-             userSessionModel = (from u in context.T02Users
-                                                 where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
-                                                 join ur in context.Userroles on u.UserId equals ur.UserId into userRoles
-                                                 from ur in userRoles.DefaultIfEmpty()
-                                                 join r in context.Roles on ur.RoleId equals r.RoleId into roles
-                                                 from r in roles.DefaultIfEmpty()
-                                                 join t106 in context.T106LoOrgns on model.UserName.Trim() equals t106.Mobile into orgns
-                                                 from orgn in orgns.DefaultIfEmpty()
-                                                 join t32 in context.T32ClientLogins on model.UserName.Trim() equals t32.Mobile into clientLogins
-                                                 from clientLogin in clientLogins.DefaultIfEmpty()
-                                                 join t09 in context.T09Ies on model.UserName equals t09.IeEmpNo into ies
-                                                 from ie in ies.DefaultIfEmpty()
-                                                 select new UserSessionModel
-                                                 {
-                                                     UserID = Convert.ToInt32(u.Id),
-                                                     Name = Convert.ToString(u.UserName),
-                                                     UserName = Convert.ToString(u.UserId),
-                                                     Region = Convert.ToString(u.Region),
-                                                     AuthLevl = Convert.ToString(u.AuthLevl),
-                                                     RoleId = ur != null ? Convert.ToInt32(ur.RoleId) : 0,
-                                                     RoleName = r != null ? Convert.ToString(r.Rolename) : string.Empty,
-                                                     OrgnTypeL = orgn != null ? Convert.ToString(orgn.OrgnType) : string.Empty,
-                                                     OrganisationL = orgn != null ? Convert.ToString(orgn.OrgnChased) : string.Empty,
-                                                     OrgnType = clientLogin != null ? Convert.ToString(clientLogin.OrgnType) : string.Empty,
-                                                     Organisation = clientLogin != null ? Convert.ToString(clientLogin.Organisation) : string.Empty,
-                                                     IeCd = ie != null ? Convert.ToInt16(ie.IeCd) : 0
-                                                 }).FirstOrDefault();
+            
+            userSessionModel = (from u in context.T02Users
+                                where u.UserId.Trim() == model.UserName.Trim() 
+                                //&& u.Password.Trim() == model.Password.Trim()
+                                join ur in context.Userroles on u.UserId equals ur.UserId into userRoles
+                                from ur in userRoles.DefaultIfEmpty()
+                                join r in context.Roles on ur.RoleId equals r.RoleId into roles
+                                from r in roles.DefaultIfEmpty()
+                                join t106 in context.T106LoOrgns on model.UserName.Trim() equals t106.Mobile into orgns
+                                from orgn in orgns.DefaultIfEmpty()
+                                join t32 in context.T32ClientLogins on model.UserName.Trim() equals t32.Mobile into clientLogins
+                                from clientLogin in clientLogins.DefaultIfEmpty()
+                                join t09 in context.T09Ies on model.UserName equals t09.IeEmpNo into ies
+                                from ie in ies.DefaultIfEmpty()
+                                select new UserSessionModel
+                                {
+                                    MOBILE = u.Mobile,
+                                    UserID = Convert.ToInt32(u.Id),
+                                    Name = Convert.ToString(u.UserName),
+                                    UserName = Convert.ToString(u.UserId),
+                                    Region = Convert.ToString(u.Region),
+                                    AuthLevl = Convert.ToString(u.AuthLevl),
+                                    RoleId = ur != null ? Convert.ToInt32(ur.RoleId) : 0,
+                                    RoleName = r != null ? Convert.ToString(r.Rolename) : string.Empty,
+                                    OrgnTypeL = orgn != null ? Convert.ToString(orgn.OrgnType) : string.Empty,
+                                    OrganisationL = orgn != null ? Convert.ToString(orgn.OrgnChased) : string.Empty,
+                                    OrgnType = clientLogin != null ? Convert.ToString(clientLogin.OrgnType) : string.Empty,
+                                    Organisation = clientLogin != null ? Convert.ToString(clientLogin.Organisation) : string.Empty,
+                                    IeCd = ie != null ? Convert.ToInt16(ie.IeCd) : 0
+                                }).FirstOrDefault();
 
-
-            //userSessionModel = (from u in context.T02Users
-            //                    where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
-            //                    select new UserSessionModel
-            //                    {
-            //                        UserID = Convert.ToInt32(u.Id),
-            //                        Name = Convert.ToString(u.UserName),
-            //                        UserName = Convert.ToString(u.UserId),
-            //                        Region = Convert.ToString(u.Region),
-            //                        AuthLevl = Convert.ToString(u.AuthLevl),
-            //                        //RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select ur.RoleId).FirstOrDefault()),
-            //                        //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (ur.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
-            //                        RoleId = Convert.ToInt32((from ur in context.Userroles where (ur.UserId ?? "").ToString() == (u.UserId ?? "").ToString() select ur.RoleId).FirstOrDefault()),
-            //                        //RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where (u.UserId ?? "").ToString() == (u.Id ?? 0).ToString() select r.Rolename).FirstOrDefault()),
-            //                        RoleName = Convert.ToString((from ur in context.Userroles join r in context.Roles on ur.RoleId equals r.RoleId where ur.UserId == u.UserId select r.Rolename).FirstOrDefault()),
-            //                        OrgnTypeL = Convert.ToString((from t106 in context.T106LoOrgns
-            //                                                      join u1 in context.T02Users on t106.Mobile equals u1.UserId into userGroup
-            //                                                      from user in userGroup.DefaultIfEmpty()
-            //                                                      where t106.Mobile == model.UserName.Trim()
-            //                                                      select t106.OrgnType).FirstOrDefault()),
-            //                        OrganisationL = Convert.ToString((from t106 in context.T106LoOrgns
-            //                                                          join u1 in context.T02Users on t106.Mobile equals u1.UserId into userGroup
-            //                                                          from user in userGroup.DefaultIfEmpty()
-            //                                                          where t106.Mobile == model.UserName.Trim()
-            //                                                          select t106.OrgnChased).FirstOrDefault()),
-            //                        OrgnType = Convert.ToString((from t32 in context.T32ClientLogins
-            //                                                     join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
-            //                                                     from user in userGroup.DefaultIfEmpty()
-            //                                                     where t32.Mobile == model.UserName.Trim()
-            //                                                     select t32.OrgnType).FirstOrDefault()),
-            //                        Organisation = Convert.ToString((from t32 in context.T32ClientLogins
-            //                                                         join u1 in context.T02Users on t32.Mobile equals u1.UserId into userGroup
-            //                                                         from user in userGroup.DefaultIfEmpty()
-            //                                                         where t32.Mobile == model.UserName.Trim()
-            //                                                         select t32.Organisation).FirstOrDefault()),
-            //                        IeCd = (from t09 in context.T09Ies
-            //                                    //join ul in context.T02Users on t09.IeEmpNo equals ul.UserId
-            //                                where t09.IeEmpNo == model.UserName
-            //                                select t09.IeCd).FirstOrDefault()
-            //                    }).FirstOrDefault();
             return userSessionModel;
 
-            //return context.UserMasters.FirstOrDefault(p => p.UserName.Trim() == model.UserName.Trim() && p.Password.Trim() == model.Password.Trim() && p.IsActive.HasValue && p.IsActive.Value);
-            //return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == model.UserName.Trim() && p.Password.Trim() == model.Password.Trim());
-            //return new T02User();
         }
 
         public VendorModel FindVendorLoginDetail(LoginModel model)
@@ -442,6 +421,43 @@ namespace IBS.Repositories
                 }
             }
             return menuList;
+        }
+
+        public bool SaveOTPDetails(LoginModel model)
+        {
+            int Id = 0;
+            IbsUsersOtp obj = new IbsUsersOtp();
+            obj.UserId = model.UserName;
+            obj.Mobile = model.MOBILE;
+            obj.Otp = model.OTP;
+            obj.Createddate = DateTime.Now;
+            obj.Status = 0;
+            context.IbsUsersOtps.Add(obj);
+            context.SaveChanges();
+            Id = obj.Id;
+            if (Id != 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool VerifyOTP(LoginModel model)
+        {
+            var objOtp = (from o in context.IbsUsersOtps
+                          where o.UserId == model.UserName 
+                          select o).OrderByDescending(x=>x.Createddate).FirstOrDefault();
+            if (objOtp == null)
+            {
+                return false;
+            }
+            else
+            {
+                if(objOtp.Otp == model.OTP)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

@@ -30,7 +30,7 @@ namespace IBS.Repositories.Vendor
             string PoNo = "", PoDt = "", VendName = "", CallLetterNo = "", VendCd = "";
 
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
             PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
             DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
             VendName = VendName.ToString() == "" ? string.Empty : VendName.ToString();
@@ -221,9 +221,9 @@ namespace IBS.Repositories.Vendor
             }
 
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
+            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
             PoNo = PoNo.ToString() == "" ? string.Empty : PoNo.ToString();
-            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
+            DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd/MM/yyyy", null);
             VendName = VendName.ToString() == "" ? string.Empty : VendName.ToString();
             VendCd = VendCd.ToString() == "" ? string.Empty : VendCd.ToString();
             CallSNo = CallSNo.ToString() == "" ? string.Empty : CallSNo.ToString();

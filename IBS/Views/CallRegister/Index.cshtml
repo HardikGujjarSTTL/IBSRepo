@@ -1,54 +1,53 @@
 ﻿@model IBS.Models.CallRegisterModel
 @{
-    ViewData["Title"] = "REGISTERED PENDING CALLS OFFERED QUANTITY ENHANCEMENT FORM";
+    ViewData["Title"] = "Registered pending calls offered quantity enhancement form";
 }
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Registered pending calls offered quantity enhancement form</h2>
+    </div>
+</div>
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="CallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>REGISTERED PENDING CALLS OFFERED QUANTITY ENHANCEMENT FORM</h2>
-        </div>
-    </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-2 mb-3">
                 <div class="reference">
-                    <label for="Reference">Case No.</label>
-                    <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    <label for="CaseNo">Case No.</label>
+                    <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;" placeholder="N00000001">
+                    <span class="text-danger" id="spnErrorCaseNo"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
-                    <label for="Reference">PO No.</label>
+                    <label for="PoNo">PO No.</label>
                     <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-                    <span asp-validation-for="PoNo" class="text-danger"></span>
+                    <span class="text-danger" id="spnErrorPoNo"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
-                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    <span asp-validation-for="PoDt" class="text-danger"></span>
+                    <input type="text" class="datepicker" asp-for="PoDt" placeholder="DD/MM/YYYY" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <span class="text-danger" id="spnErrorPoDt"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Call SNo.</label>
                     <input type="text" class="input" asp-for="CallSNo" maxlength="100" style="text-transform: uppercase;">
-                    @*<span asp-validation-for="CallSNo" class="text-danger"></span>*@
+                    <span class="text-danger" id="spnErrorCallSNo"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Call Date</label>
-                    <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    @*<span asp-validation-for="CallRecvDt" class="text-danger"></span>*@
+                    <input type="text" class="datepicker" asp-for="CallRecvDt" placeholder="DD/MM/YYYY" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <span class="text-danger" id="spnErrorCallRecvDt"></span>
                 </div>
             </div>
         </div>
-        @*<div class="row my-0">
-        </div>*@
+
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -65,16 +64,11 @@
                 </div>
             </div>
         </div>
-        @*<div class="row my-0">
-        </div>*@
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <div class="savenext-btn">
-                    <a asp-controller="CallRegister" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn" id="btnModify">Modify</button>
-                    <button type="button" class="save-btn active" id="btnSearch">Search</button>
-                </div>
-            </div>
+
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" id="btnSearch">Search</button>
+            <button type="button" class="save-btn" id="btnModify">Modify</button>
+            <a asp-controller="CallRegister" asp-action="Index" class="reset-btn">Cancel</a>
         </div>
 
     </div>
@@ -113,7 +107,6 @@
 
     <script type="text/javascript">
         $(function () {
-            setDefaultDate();
             InitializeDatatable();
         });
 
@@ -124,21 +117,6 @@
         function Search() {
             //InitializeDatatable();
         }
-        function setDefaultDate() {
-            $('#PoDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-            $('#CallRecvDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd-mm-yy',
-            });
-
-
-        }
-
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val();
             var PoNo = $("#PoNo").val();
@@ -189,7 +167,7 @@
                         data: "PoDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -198,7 +176,7 @@
                         data: "CallRecvDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -214,10 +192,10 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var CallRecvDt = moment(data.CallRecvDt).format("DD-MM-YYYY");
+                            var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
                             var CallSNo = data.CallSNo;
                             var editUrl = '@Url.Action("Index", "CallRegister")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -228,25 +206,28 @@
             });
         }
 
-        //$("#btnModify").click(function () {
-        //    var CaseNo = $("#CaseNo").val();
-        //    var CallRecvDt = $("#CallRecvDt").val();
-        //    var CallSNo = $("#CallSNo").val();
-
-        //    if (CaseNo != "" && CallRecvDt != "" && CallSNo != "") {
-        //        window.location.href = '@Url.Action("Manage", "CallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo;
-        //    }
-        //    else {
-        //        ShowHideMsgNew("", "Please select Case no.");
-        //    }
-        //});
-
         $("#btnModify").click(function () {
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSNo = $("#CallSNo").val();
 
-            debugger
+            $("#spnErrorCaseNo").html("");
+            $("#spnErrorCallRecvDt").html("");
+            $("#spnErrorCallSNo").html("");
+            var IsValid = true;
+            if ($('#CaseNo').val() == "") {
+                $("#spnErrorCaseNo").html("Case No. field is required.");
+                IsValid = false;
+            }
+            if ($('#CallRecvDt').val() == "") {
+                $("#spnErrorCallRecvDt").html("CallRecvDt field is required.");
+                IsValid = false;
+            }
+            if ($('#CallSNo').val() == "") {
+                $("#spnErrorCallSNo").html("CallSNo field is required.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             var w_itemBlocked = "";
             var w_remarksVend = "";
             $.ajax({
@@ -293,7 +274,7 @@
                                     }
                                     if (Check == "2") {
                                         if (w_itemBlocked == "Y") {
-                                            var msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + w_remarksVend + "\\nDo You Still Want to Register/Update This Call?";
+                                            var msg = "Some Items of the Vendor have been blocked due to following reasons :\n" + w_remarksVend + "\nDo You Still Want to Register/Update This Call?";
                                             var d = confirm(msg);
                                             if (d === false) {
                                                 window.location.href = '@Url.Action("Index", "CallRegister")';

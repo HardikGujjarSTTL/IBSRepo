@@ -94,3 +94,44 @@
             </table>
         </div>
     </div>
+
+<div>
+
+    <h3 class="heading3">@ViewBag.Regions</h3>
+
+    <h3 class="heading3">IE Who Had Not Entered Daily Work Plan  @ViewBag.frmdt To @ViewBag.todt (IE Wise)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Reason</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstDailyIECMWorkPlanReporttbl3 != null && Model.lstDailyIECMWorkPlanReporttbl3.Count > 0)
+                {
+                    var SrNo = 0;
+                    foreach (var item in Model.lstDailyIECMWorkPlanReporttbl3)
+                    {
+                        SrNo = SrNo + 1;
+                        var dates = Enumerable.Range(0, (int)(Convert.ToDateTime(@ViewBag.todt) - Convert.ToDateTime(@ViewBag.frmdt)).TotalDays + 1)
+                        .Select(offset => Convert.ToDateTime(@ViewBag.frmdt).AddDays(offset).ToString("dd/MM/yyyy"));
+                        foreach (var date in dates)
+                        {
+                           <tr>
+                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@date</font></td>
+                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Reason</font></td>
+                            </tr>
+                        }
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -126,12 +126,15 @@ namespace IBS.Repositories.Reports.Billing
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 lstBill = JsonConvert.DeserializeObject<List<BillRaisedListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                if (ds.Tables.Count > 1)
+                {
+                    model.BPO_TYPE = Convert.ToString(ds.Tables[0].Rows[0]["BPO_TYPE"]);
+                    model.INSP_FEE = Convert.ToInt32(ds.Tables[0].Rows[0]["INSP_FEE"]);
+                    model.TAX = Convert.ToInt32(ds.Tables[0].Rows[0]["TAX"]);
+                    model.BILL_AMOUNT = Convert.ToInt32(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
+                    model.NO_OF_BILLS = Convert.ToInt32(ds.Tables[0].Rows[0]["NO_OF_BILLS"]);
+                }
 
-                model.BPO_TYPE = Convert.ToString(ds.Tables[0].Rows[0]["BPO_TYPE"]);
-                model.INSP_FEE = Convert.ToInt32(ds.Tables[0].Rows[0]["INSP_FEE"]);
-                model.TAX = Convert.ToInt32(ds.Tables[0].Rows[0]["TAX"]);
-                model.BILL_AMOUNT = Convert.ToInt32(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
-                model.NO_OF_BILLS = Convert.ToInt32(ds.Tables[0].Rows[0]["NO_OF_BILLS"]);
 
             }
 
@@ -290,29 +293,33 @@ namespace IBS.Repositories.Reports.Billing
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     lstBillRailway = JsonConvert.DeserializeObject<List<RailwayOnlineListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                    model.BPO_RLY = Convert.ToString(ds.Tables[0].Rows[0]["BPO_RLY"]);
-                    model.PO_NO = Convert.ToString(ds.Tables[0].Rows[0]["PO_NO"]);
-                    model.PO_DT = Convert.ToString(ds.Tables[0].Rows[0]["PO_DT"]);
-                    model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
-                    model.PO_OR_LETTER = Convert.ToString(ds.Tables[0].Rows[0]["PO_OR_LETTER"]);
-                    model.BPO_NAME = Convert.ToString(ds.Tables[0].Rows[0]["BPO_NAME"]);
-                    model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);
-                    model.BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_DT"]);
-                    model.INVOICE_NO = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_NO"]);
-                    model.AU_DESC = Convert.ToString(ds.Tables[0].Rows[0]["AU_DESC"]);
-                    model.IC_NO = Convert.ToString(ds.Tables[0].Rows[0]["IC_NO"]);
-                    model.IC_DT = Convert.ToString(ds.Tables[0].Rows[0]["IC_DT"]);
-                    model.BK_NO = Convert.ToString(ds.Tables[0].Rows[0]["BK_NO"]);
-                    model.SET_NO = Convert.ToString(ds.Tables[0].Rows[0]["SET_NO"]);
-                    model.BILL_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
-                    model.AMOUNT_OUTSTANDING = Convert.ToString(ds.Tables[0].Rows[0]["AMOUNT_OUTSTANDING"]);
-                    model.DIG_BILL_GEN_DATE = Convert.ToString(ds.Tables[0].Rows[0]["DIG_BILL_GEN_DATE"]);
-                    model.ONLINE_INVOICE = Convert.ToString(ds.Tables[0].Rows[0]["ONLINE_INVOICE"]);
-                    model.IC_PHOTO = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO"]);
-                    model.PO_SOURCE = Convert.ToString(ds.Tables[0].Rows[0]["PO_SOURCE"]);
-                    model.INVOICE_SUPP_DOCS = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_SUPP_DOCS"]);
-                    model.PO_YR = Convert.ToString(ds.Tables[0].Rows[0]["PO_YR"]);
-                    model.IMMS_RLY_CD = Convert.ToString(ds.Tables[0].Rows[0]["IMMS_RLY_CD"]);
+                    if(ds.Tables.Count > 1)
+                    {
+                        model.BPO_RLY = Convert.ToString(ds.Tables[0].Rows[0]["BPO_RLY"]);
+                        model.PO_NO = Convert.ToString(ds.Tables[0].Rows[0]["PO_NO"]);
+                        model.PO_DT = Convert.ToString(ds.Tables[0].Rows[0]["PO_DT"]);
+                        model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
+                        model.PO_OR_LETTER = Convert.ToString(ds.Tables[0].Rows[0]["PO_OR_LETTER"]);
+                        model.BPO_NAME = Convert.ToString(ds.Tables[0].Rows[0]["BPO_NAME"]);
+                        model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);
+                        model.BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_DT"]);
+                        model.INVOICE_NO = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_NO"]);
+                        model.AU_DESC = Convert.ToString(ds.Tables[0].Rows[0]["AU_DESC"]);
+                        model.IC_NO = Convert.ToString(ds.Tables[0].Rows[0]["IC_NO"]);
+                        model.IC_DT = Convert.ToString(ds.Tables[0].Rows[0]["IC_DT"]);
+                        model.BK_NO = Convert.ToString(ds.Tables[0].Rows[0]["BK_NO"]);
+                        model.SET_NO = Convert.ToString(ds.Tables[0].Rows[0]["SET_NO"]);
+                        model.BILL_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
+                        model.AMOUNT_OUTSTANDING = Convert.ToString(ds.Tables[0].Rows[0]["AMOUNT_OUTSTANDING"]);
+                        model.DIG_BILL_GEN_DATE = Convert.ToString(ds.Tables[0].Rows[0]["DIG_BILL_GEN_DATE"]);
+                        model.ONLINE_INVOICE = Convert.ToString(ds.Tables[0].Rows[0]["ONLINE_INVOICE"]);
+                        model.IC_PHOTO = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO"]);
+                        model.PO_SOURCE = Convert.ToString(ds.Tables[0].Rows[0]["PO_SOURCE"]);
+                        model.INVOICE_SUPP_DOCS = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_SUPP_DOCS"]);
+                        model.PO_YR = Convert.ToString(ds.Tables[0].Rows[0]["PO_YR"]);
+                        model.IMMS_RLY_CD = Convert.ToString(ds.Tables[0].Rows[0]["IMMS_RLY_CD"]);
+                    }
+                    
                 }
             }
             model.lstBillRailway = lstBillRailway;
@@ -348,17 +355,21 @@ namespace IBS.Repositories.Reports.Billing
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     lstBillCris = JsonConvert.DeserializeObject<List<BillsNotCrisListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                    model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);
-                    model.BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_DT"]);
-                    model.BPO_RLY = Convert.ToString(ds.Tables[0].Rows[0]["BPO_RLY"]);
-                    model.BILL_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
-                    model.AMT_CLEARED = Convert.ToInt32(ds.Tables[0].Rows[0]["AMT_CLEARED"]);
-                    model.AMT_RECEIVED = Convert.ToInt32(ds.Tables[0].Rows[0]["AMT_RECEIVED"]);
-                    model.AU = Convert.ToString(ds.Tables[0].Rows[0]["AU"]);
-                    model.BILL_GEN_DATE = Convert.ToString(ds.Tables[0].Rows[0]["BILL_GEN_DATE"]);
-                    model.INVOICE_NO = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_NO"]);
-                    model.PO_OR_LETTER = Convert.ToString(ds.Tables[0].Rows[0]["PO_OR_LETTER"]);
-                    model.IRN_NO = Convert.ToString(ds.Tables[0].Rows[0]["IRN_NO"]);
+                    if(ds.Tables.Count > 1)
+                    {
+                        model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);
+                        model.BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_DT"]);
+                        model.BPO_RLY = Convert.ToString(ds.Tables[0].Rows[0]["BPO_RLY"]);
+                        model.BILL_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
+                        model.AMT_CLEARED = Convert.ToInt32(ds.Tables[0].Rows[0]["AMT_CLEARED"]);
+                        model.AMT_RECEIVED = Convert.ToInt32(ds.Tables[0].Rows[0]["AMT_RECEIVED"]);
+                        model.AU = Convert.ToString(ds.Tables[0].Rows[0]["AU"]);
+                        model.BILL_GEN_DATE = Convert.ToString(ds.Tables[0].Rows[0]["BILL_GEN_DATE"]);
+                        model.INVOICE_NO = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_NO"]);
+                        model.PO_OR_LETTER = Convert.ToString(ds.Tables[0].Rows[0]["PO_OR_LETTER"]);
+                        model.IRN_NO = Convert.ToString(ds.Tables[0].Rows[0]["IRN_NO"]);
+                    }
+                    
                 }
                 model.lstBillCris = lstBillCris;
             }
@@ -380,7 +391,7 @@ namespace IBS.Repositories.Reports.Billing
                 {
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     lstBillCrisSubmitted = JsonConvert.DeserializeObject<List<BillSubmittedCrisModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                    if (dt != null && dt.Rows.Count > 0)
+                    if (dt != null && dt.Rows.Count > 1)
                     {
                         model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);
                         model.BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_DT"]);

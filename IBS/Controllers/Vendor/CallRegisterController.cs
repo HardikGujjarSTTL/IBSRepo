@@ -20,7 +20,7 @@ namespace IBS.Controllers.Vendor
         {
             CallRegisterModel model = new();
 
-            if (CaseNo != null)
+            if (CaseNo != null && CallRecvDt != null && CallSNo != null)
             {
                 model = callregisterRepository.FindByID(CaseNo, CallRecvDt, CallSNo, UserName);
             }

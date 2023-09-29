@@ -129,13 +129,13 @@ namespace IBS.Repositories
             return true;
         }
 
-        public int MessageDetailsInsertUpdate(IE_Instructions_AdminModel model, string GetRegionCode)
+        public int SaveDetails(IE_Instructions_AdminModel model, string Region)
         {
             int MESSAGE_ID = 0;
-            var G_Message = context.T72IeMessages.Find(model.MessageId, GetRegionCode);
+            var G_Message = context.T72IeMessages.Find(model.MessageId, Region);
 
             IE_Instructions_AdminModel objCount = new ();
-            int MessageId = (from l in context.T72IeMessages where l.RegionCode == GetRegionCode && (l.Isdeleted == 0 || l.Isdeleted == null) select l).Count();
+            int MessageId = (from l in context.T72IeMessages where l.RegionCode == Region select l).Count();
 
             #region User save
             if (G_Message == null)
@@ -145,7 +145,7 @@ namespace IBS.Repositories
                 obj.LetterNo = model.LetterNo;
                 obj.LetterDt = model.LetterDt;
                 obj.Message = model.Message;
-                obj.RegionCode = GetRegionCode;
+                obj.RegionCode = Region;
                 obj.Datetime = DateTime.Now;
                 obj.MessageDt = DateTime.Now;
                 obj.UserId = model.Createdby;

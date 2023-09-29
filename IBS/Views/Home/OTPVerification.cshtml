@@ -1,0 +1,87 @@
+﻿@model IBS.Models.LoginModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+<div class="loginForm">
+    <h2 class="heading1 bold">OTP Verification</h2>
+    <form data-ajax="true" asp-antiforgery="true" asp-controller="Home" asp-action="OTPProceed" data-ajax-method="post" data-ajax-complete="completed" id="frmOTP">
+
+        <input type="hidden" asp-for="UserName" />
+        <input type="hidden" asp-for="DecryptUserName" />
+        <div class="row">
+            <div class="col-md-12">
+                    <label for="email">OTP</label>
+                    <input type="text" class="input" asp-for="OTP" maxlength="4" autocomplete="off">
+                    <span asp-validation-for="OTP" class="text-danger"></span>
+                    <br />
+                    <span id="timeSpan" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-12">
+                <button type="button" id="btnSubmit" class="btn btnGreen" onclick="Loginsubmit()">Submit OTP</button>
+            </div>
+        </div>
+        <div class="row m-0">
+            <div class="col-md-12 text-center">
+                <p class="m-0 dividerLine">
+                    <a id="btnRegenerateOTP" class="registerLink" asp-controller="Home" asp-action="RegenerateOTP" asp-route-UserName="@Model.DecryptUserName" style="display: none">Regenerate OTP</a>
+                    <br />
+                    <a class="registerLink" asp-controller="Home" asp-action="Index">Back to Login</a>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Loginsubmit() {
+            if ($("#frmOTP").valid()) {
+                $("#frmOTP").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "Dashboard")';
+            }
+            else
+            {
+                ShowHideMsgNew(res.status, res.responseText);
+            }
+        };
+        var countdown = 0;
+        $(document).ready(function () {
+            TimeInterval();
+        });
+
+        function TimeInterval() {
+            clearInterval(countdown);
+            var minutes = parseInt('@Common.RegenerateOtpButtonShowMinute');
+            var seconds = minutes * 60;
+
+            function convertIntToTime(num) {
+                var mins = Math.floor(num / 60);
+                var secs = num % 60;
+                var timerOutput = (mins < 10 ? "0" : "") + mins + ":" + (secs < 10 ? "0" : "") + secs;
+                return (timerOutput);
+            }
+
+            countdown = setInterval(function () {
+                var current = convertIntToTime(seconds);
+                $("#timeSpan").show();
+                $("#timeSpan").html(current);
+                if (seconds == 0) {
+                    clearInterval(countdown); // stop the time if seconds = 0SetNewPassword
+                    $("#timeSpan").hide();
+                    $("#OTP").val("");
+                    $("#btnRegenerateOTP").show();
+                    $("#btnSubmit").hide();
+                } seconds--;
+            }, 1000);
+        }
+
+    </script>
+}

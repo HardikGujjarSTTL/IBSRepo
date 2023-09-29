@@ -19,6 +19,7 @@
 
         public List<DailyIECMWorkPlanReporttbl1> lstDailyIECMWorkPlanReporttbl1 { get; set; }
         public List<DailyIECMWorkPlanReporttbl2> lstDailyIECMWorkPlanReporttbl2 { get; set; }
+        public List<DailyIECMWorkPlanReporttbl3> lstDailyIECMWorkPlanReporttbl3 { get; set; }
         public List<DailyIEWorklanExcepReport> lstDailyIEWorklanExcepReport { get; set; }
     }
 
@@ -48,6 +49,14 @@
         public string LOGIN_TIME { get; set;}
         public string WORK_DATE { get; set;}
         public string NI_WORK_PLAN_CD { get; set;}
+    }
+
+    public class DailyIECMWorkPlanReporttbl3
+    {
+        public string CO_NAME { get; set; }
+        public string IE_NAME { get; set; }
+        public string Date { get; set; }
+        public string Reason { get; set; }
     }
 
     public class DailyIEWorklanExcepReport
