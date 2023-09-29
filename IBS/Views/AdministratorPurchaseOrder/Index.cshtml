@@ -34,7 +34,7 @@
                         <label for="Reference" class="billInvoiceClass">PSU</label><br>
                     </li>
                     <li>
-                        <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                        <input type="radio" class="rdbSGovt" id="rdbStateGovernment" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
                         <label for="Reference" class="billInvoiceClass">State Government</label><br>
                     </li>
 
@@ -212,7 +212,7 @@
             else if ($("#rdbPSU").is(":checked")) {
                 type = 'U';
             }
-            else if ($("#rdbPrivate").is(":checked")) {
+            else if ($("#rdbStateGovernment").is(":checked")) {
                 type = 'S';
             }
 
@@ -241,7 +241,7 @@
             var type = false;
             if ($("#rdbRailway").is(":checked") ||
                 $("#rdbPrivate").is(":checked") ||
-                $("#rdbFRailway").is(":checked") ||
+                $("#rdbStateGovernment").is(":checked") ||
                 $("#rdbPSU").is(":checked") ||
                 $("#rdbSGovt").is(":checked")) {
                 type = true;
@@ -272,7 +272,7 @@
             else if ($("#rdbPSU").is(":checked")) {
                 type = 'U';
             }
-            else if ($("#rdbPrivate").is(":checked")) {
+            else if ($("#rdbStateGovernment").is(":checked")) {
                 type = 'S';
             }
             var RLY_CD = $("#dllRCode").val();
