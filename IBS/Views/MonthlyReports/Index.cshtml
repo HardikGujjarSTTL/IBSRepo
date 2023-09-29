@@ -6,6 +6,7 @@
 
     if (ReportType == "ICStatus") ReportTitle = "IC ACCOUNTAL STATEMENT";
     else if (ReportType == "ReInspectionICs") ReportTitle = "RE-INSPECTION IC's";
+    else if (ReportType == "ICSAccountal") ReportTitle = "IC ACCOUNTAL STATEMENT";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -102,6 +103,17 @@
             else if ('@ReportType' == 'ReInspectionICs'){
                 $(".ReInspectionICs").css("display", "");
             }
+            else if ('@ReportType' == 'ICSAccountal') {
+                $(".ICStatus").css("display", "");
+                $('input[type=radio][id=rdType]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllIES") {
+                        $("#IEStatus").css("display", "none");
+                    } else {
+                        $("#IEStatus").css("display", "block");
+                    }
+                });
+            }
         });
 
         //Clear Functions
@@ -119,31 +131,60 @@
         }
 
         function ViewReportICStatus() {
+            if ('@ReportType' == 'ICSAccountal') {
+                var FromDate = $("#FromDate").val();
+                var ToDate = $("#ToDate").val();
+                var Region = '@ViewBag.Region';
+                var lstYesNo = "true";
+                var rdbGIE = $('input[name="rdType"]:checked').val();
+                var lstIE = $("#IE").val();
+                var rdbCancelYes = "true";
+                var QueryString = "RptFlag=7" +
+                    "&FromDate=" + encodeURIComponent(FromDate) +
+                    "&ToDate=" + encodeURIComponent(ToDate) +
+                    "&Region=" + encodeURIComponent(Region) +
+                    "&lstYesNo=" + encodeURIComponent(lstYesNo) +
+                    "&rdbGIE=" + encodeURIComponent(rdbGIE) +
+                    "&lstIE=" + encodeURIComponent(lstIE) +
+                    "&rdbCancelYes=" + encodeURIComponent(rdbCancelYes);
 
-            $("#spnErrorFromDate").html("");
-            $("#spnErrorToDate").html("");
+                var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
 
-            var IsValid = true;
+                if (oWin === null || typeof oWin === 'undefined') {
+                    alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+                }
 
-            IsValid = FromToDateValidate(IsValid, "FromDate", "ToDate", "spnErrorFromDate", "spnErrorToDate");
-
-            if (!IsValid) return;
-
-            $("#spnErrorFromDate").html("");
-            $("#spnErrorToDate").html("");
-
-            var ReportType = '@ReportType';
-            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
-            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
-            var Type = $('input[name="rdType"]:checked').val();
-            var IE_CD = $("#IE").val();
-            if (Type == "AllIES") {
-                IE_CD = null;
+                window.opener = 'x';
+                window.close();
             }
-            let myObject = { ReportType, FromDate, ToDate, IE_CD };
+            else
+            {
+                $("#spnErrorFromDate").html("");
+                $("#spnErrorToDate").html("");
 
-            var url = '@Url.Action("ManageICStatus", "MonthlyReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+                var IsValid = true;
+
+                IsValid = FromToDateValidate(IsValid, "FromDate", "ToDate", "spnErrorFromDate", "spnErrorToDate");
+
+                if (!IsValid) return;
+
+                $("#spnErrorFromDate").html("");
+                $("#spnErrorToDate").html("");
+
+                var ReportType = '@ReportType';
+                var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+                var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+                var Type = $('input[name="rdType"]:checked').val();
+                var IE_CD = $("#IE").val();
+                if (Type == "AllIES") {
+                    IE_CD = null;
+                }
+                let myObject = { ReportType, FromDate, ToDate, IE_CD };
+
+                var url = '@Url.Action("ManageICStatus", "MonthlyReports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            }
+            
         }
 
         function ViewReportReInspectionICs() {
@@ -168,6 +209,8 @@
             var url = '@Url.Action("Manage", "MonthlyReports")?' + $.param(myObject);
             window.open(url, '_blank');
         }
+
+       
 
         function FromToDateValidate(IsValid, FDateID, TDateID, EFDateID, ETDateID) {
             FDateID = "#" + FDateID;
