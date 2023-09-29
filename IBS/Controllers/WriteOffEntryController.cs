@@ -47,10 +47,6 @@ namespace IBS.Controllers
                     AlertAddSuccess("Record Updated Successfully.");
                     return Json(new { success = true });
                 }
-                else
-                {
-                    AlertDanger("Enter Write Off Amount To Update Record..");
-                }
             }
             catch (Exception ex)
             {
