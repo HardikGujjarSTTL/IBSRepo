@@ -8,6 +8,7 @@
     </div>
     @*<a asp-action="Index" asp-controller="TransactionQAVideos" class="formBtn viewall-btn">View All</a>*@
 </div>
+<div class="accordion-body">
 <div class="custom-tab">
     <ul class="nav nav-tabs d-none d-lg-flex" id="myTab" role="tablist">
         <li class="nav-item" role="presentation" style="pointer-events: unset;">
@@ -20,63 +21,46 @@
             <button class="nav-link" id="tab-3-tab" data-bs-toggle="tab" data-bs-target="#tab-3" type="button" role="tab" aria-controls="tab-3" aria-selected="false">Glued Insulated Rail Joint</button>
         </li>
     </ul>
-
-    <div class="tab-content accordion" id="myTabContent">
+        <div class="tab-content accordion  mb-0" id="myTabContent">
         <!-- Instructional Video-1 on Points and Crossings -->
         <div class="tab-pane fade show active accordion-item" id="tab-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
             <h2 class="accordion-header d-lg-none" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Instructional Video-1 on Points and Crossings</button>
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapseOne">Instructional Video-1 on Points and Crossings</button>
             </h2>
-            <div class="accordion-body">
-                <div class="tast-list">
-                    <h4>Instructional Video-1 on Points and Crossings</h4>
-                </div>
-                <td style="WIDTH: 675px">
-                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
-                        <SOURCE SRC="/Videos/V21.mp4" TYPE="VIDEO/MP4" />
-                    </VIDEO>
-                </td>
-            </div>
-            <div id="collapseOne" class="accordion-collapse collapse show  d-lg-block" aria-labelledby="headingOne" data-bs-parent="#myTabContent">
+            <div id="collapse1" class="accordion-collapse collapse show  d-lg-block" aria-labelledby="heading1" data-bs-parent="#myTabContent">
+                <h3 class="heading3 my-4">Instructional Video-1 on Points and Crossings</h3>
+                <VIDEO WIDTH="100%" HEIGHT="auto" CONTROLS controlsList="nodownload">
+                    <SOURCE SRC="/Videos/V21.mp4" TYPE="VIDEO/MP4" />
+                </VIDEO>
             </div>
         </div>
         <!-- Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners -->
         <div class="tab-pane fade accordion-item" id="tab-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
             <h2 class="accordion-header d-lg-none" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners </button>
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseTwo"> Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners </button>
             </h2>
-            <div class="accordion-body">
-                <div class="tast-list">
-                    <h4>Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners</h4>
-                </div>
-                <td style="WIDTH: 675px">
-                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
-                        <SOURCE SRC="/Videos/V25.mp4" TYPE="VIDEO/MP4" />
-                    </VIDEO>
-                </td>
-            </div>
-            <div id="collapseTwo" class="accordion-collapse collapse d-lg-block" aria-labelledby="headingTwo" data-bs-parent="#myTabContent">
+            <div id="collapse2" class="accordion-collapse collapse d-lg-block" aria-labelledby="heading2" data-bs-parent="#myTabContent">
+                <h3 class="heading3 my-4">Manufacturing and inspection of Glass filled NYLON-66 Insulating Liners</h3>
+                <VIDEO WIDTH="100%" HEIGHT="auto" CONTROLS controlsList="nodownload">
+                    <SOURCE SRC="/Videos/V25.mp4" TYPE="VIDEO/MP4" />
+                </VIDEO>
             </div>
         </div>
         <!-- Glued Insulated Rail Joint -->
         <div class="tab-pane fade accordion-item" id="tab-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
             <h2 class="accordion-header d-lg-none" id="headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Glued Insulated Rail Joint </button>
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseThree"> Glued Insulated Rail Joint </button>
             </h2>
-            <div class="accordion-body">
-                <div class="tast-list">
-                    <h4>Glued Insulated Rail Joint</h4>
-                </div>
-                <td style="WIDTH: 675px">
-                    <VIDEO WIDTH="540" HEIGHT="310" CONTROLS controlsList="nodownload">
-                        <SOURCE SRC="/Videos/V65.mp4" TYPE="VIDEO/MP4" />
-                    </VIDEO>
-                </td>
+            <div id="collapse3" class="accordion-collapse collapse d-lg-block" aria-labelledby="heading3" data-bs-parent="#myTabContent">
+                <h3 class="heading3 my-4">Glued Insulated Rail Joint</h3>
+                <VIDEO WIDTH="100%" HEIGHT="auto" CONTROLS controlsList="nodownload">
+                    <SOURCE SRC="/Videos/V65.mp4" TYPE="VIDEO/MP4" />
+                </VIDEO>
             </div>
         </div>
     </div>
 </div>
-
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
