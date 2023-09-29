@@ -1477,4 +1477,4 @@ overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; wi
 .darkGreenBoldText{text-transform: uppercase; color:green;}
 .nav-wrapper{ width:100%; overflow-x:auto; overflow-y:hidden; background:#e9ebf0;}
 .nav-wrapper ul{display:flex; flex-wrap:nowrap!important; align-items:center;}
-.nav-wrapper ul li{ min-width:200px; display:flex; height:100px;}
+.nav-wrapper ul li{ min-width:200px; display:flex; height:120px;}
