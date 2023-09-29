@@ -18,4 +18,10 @@
 
         public Decimal WRITE_OFF_AMT { get; set; }
     }
+
+    public class UpdateDataModel
+    {
+        public string Bill_No { get; set; }
+        public decimal Write_Off_Amt { get; set; }
+    }
 }

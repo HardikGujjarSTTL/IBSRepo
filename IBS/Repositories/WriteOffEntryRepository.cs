@@ -106,7 +106,6 @@ namespace IBS.Repositories
                         );
 
                     dTResult.recordsFiltered = query.Count();
-
                     dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
                     dTResult.draw = dtParameters.Draw;
@@ -124,6 +123,27 @@ namespace IBS.Repositories
             }
 
             return dTResult;
+        }
+
+        public int UpdateWriteAmtDetails(List<UpdateDataModel> dataArr)
+        {
+            int BillNO = 0;
+            var billNos = dataArr.Select(d => d.Bill_No).ToList();
+
+            var existingData = context.T22Bills.Where(x => billNos.Contains(x.BillNo)).ToList();
+
+            foreach (var updateData in dataArr)
+            {
+                var existingRecord = existingData.FirstOrDefault(x => x.BillNo == updateData.Bill_No);
+                if (existingRecord != null)
+                {
+                    existingRecord.WriteOffAmt = updateData.Write_Off_Amt;
+                }
+            }
+
+            context.SaveChanges();
+
+            return BillNO;
         }
     }
 }

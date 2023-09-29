@@ -17,7 +17,7 @@ namespace IBS.Controllers
             writeOffEntryRepository = _writeOffEntryRepository;
         }
 
-        [Authorization("IEICPhotoEnclosedReport", "Index", "view")]
+        [Authorization("WriteOffEntry", "Index", "view")]
         public IActionResult Index()
         {
             ViewBag.Region = Region;
@@ -27,9 +27,32 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string Region = SessionHelper.UserModelDTO.Region;
             DTResult<WriteOffEntryModel> dTResult = writeOffEntryRepository.GetWriteOfEntryList(dtParameters);
             return Json(dTResult);
+        }
+
+        [HttpPost]
+        [Authorization("WriteOffEntry", "Index", "edit")]
+        public IActionResult UpdateWriteAmt([FromForm] List<UpdateDataModel> dataArr)
+        {
+            try
+            {
+                if(dataArr != null || dataArr.Count != 0)
+                {
+                    writeOffEntryRepository.UpdateWriteAmtDetails(dataArr);
+                    AlertAddSuccess("Record Updated Successfully.");
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    AlertDanger("Something Is Wrong..");
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "WriteOffEntry", "UpdateWriteAmt", 1, GetIPAddress());
+            }
+            return Json(new { success = false });
         }
     }
 }

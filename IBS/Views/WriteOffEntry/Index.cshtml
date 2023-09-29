@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<form data-ajax="true" asp-antiforgery="false" asp-controller="" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmsearch">
+<form data-ajax="true" asp-antiforgery="false" asp-controller="WriteOffEntry" asp-action="UpdateWriteAmt" data-ajax-method="post" data-ajax-complete="completed" id="frmsearch">
     <div class="accordion-body">
         <div class="row my-0 d-flex align-items-end">
             <div class="col-md-2 mb-4">
@@ -48,7 +48,11 @@
         </div>
     </div>
 </section>
-
+<div class="col-md-3 mb-4">
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active Permission_Save" onclick="btnsubmit()">Submit</button>
+    </div>
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -57,6 +61,51 @@
 
         function btnsearch(){
             InitializeDatatable();
+        }
+
+        function btnsubmit() {
+            event.preventDefault();
+            var formData = new FormData();
+            const dataArr = [];
+
+            $('#dtWriteoffam tbody tr').each(function () {
+                const billNo = $(this).find('td:eq(0)').text(); 
+                const writeOffAmtValue = $(this).find('input.txtwriteofamt').val();
+
+                if (writeOffAmtValue.trim() !== '') {
+                    const billNo = $(this).find('td:eq(0)').text();
+
+                    const UpdateDataModel = {
+                        Bill_No: billNo,
+                        Write_Off_Amt: parseFloat(writeOffAmtValue)
+                    };
+                    dataArr.push(UpdateDataModel);
+                }
+                dataArr.forEach((dataModel, index) => {
+                    formData.append(`dataArr[${index}].Bill_No`, dataModel.Bill_No);
+                    formData.append(`dataArr[${index}].Write_Off_Amt`, dataModel.Write_Off_Amt);
+                });
+            });
+
+            var url = '/WriteOffEntry/UpdateWriteAmt';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        setTimeout(function () {
+                            window.location.href = '/WriteOffEntry/Index';
+                        }, 2000);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error:', textStatus, errorThrown);
+                }
+            });
+
         }
 
         function InitializeDatatable() {
@@ -110,13 +159,49 @@
                         data: "WRITE_OFF_AMT",
                         "targets": [1, 2],
                         render: function (data, type, row, meta) {
-                            return '<input type="text" name="txtwriteofamt" onkeypress="return isNumber(event)" class="textbox1"  value="">';
+                            debugger;
+                            const writeOffAmt = data || 0;
+
+                            return '<input type="text"  name="txtwriteofamt" onkeypress="return validateInput(event)" class="txtwriteofamt" value="' + writeOffAmt + '">' +
+                                '<div id="error-message" style="color: red;"></div>';
                         }
-                    },
+                    }
+
                 ],
                 "order": [[0, "asc"]]
             });
         }
+        function validateInput(event) {
+            const inputValue = event.key;
+            const validValues = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
+
+            // Check if the entered key is valid
+            if (!validValues.includes(inputValue)) {
+                event.preventDefault();
+                displayErrorMessage('Please enter numbers only.');
+                return;
+            }
+
+            const currentValue = event.target.value + inputValue;
+            const intValue = parseInt(currentValue, 10);
+
+            // Check if the entered value is between 1 and 13
+            if (isNaN(intValue) || intValue < 1 || intValue > 13) {
+                event.preventDefault();
+                displayErrorMessage('Please enter a number between 1 and 13.');
+            } else {
+                clearErrorMessage();
+            }
+        }
+
+        function displayErrorMessage(message) {
+            $('#error-message').text(message).show();
+        }
+
+        function clearErrorMessage() {
+            $('#error-message').text('').hide();
+        }
+
 
     </script>
 }
