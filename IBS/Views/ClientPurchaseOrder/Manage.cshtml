@@ -66,10 +66,10 @@
                         @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="PoOrLetter" class="text-danger"></span>
                     </div>
-                    <div class="col-md-5 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference" style="font-size: 13px;"><span class="astric">*</span> Select Purchase Order in case of normal Stores Purchase order and Letter of offer in case of LOA/Contract Agreement/Works Order/Other Contracts Order.</label>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Stock / Non-Stock</label>
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="StockNonstock" class="text-danger"></span>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="savenext-btn">
-                            <button type="button" class="save-btn active" onclick="SearchPurchaser();" style="margin-top: 33px;">Search Purchaser</button>
+                            <button type="button" class="save-btn active" onclick="SearchPurchaser();" style="margin-top: 33px;font-size: 13px;">Search Purchaser</button>
                             <label for="Reference" style="font-size: 13px;"><i class="text-danger">*</i>In Case Of other Client</label>
                         </div>
                     </div>
@@ -217,7 +217,11 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <div class="reference">
+                        <label for="Reference">Contract</label>
+                        @Html.DropDownListFor(model => model.Contractid, new SelectList(IBS.Models.Common.GetContract() , "Value", "Text"),"--Select--")
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="reference" style="margin-top: 42px;">
                             <div class="custom-control custom-checkbox">
                                 <label class="custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" asp-for="Ispricevariation" />
@@ -227,7 +231,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <div class="reference">
+                        <div class="reference" style="margin-top: 42px;">
                             <div class="custom-control custom-checkbox">
                                 <label class="custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" asp-for="Isstageinspection" />
