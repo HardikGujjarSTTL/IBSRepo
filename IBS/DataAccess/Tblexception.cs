@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class Tblexception
 {
-    public decimal Id { get; set; }
+    public int Id { get; set; }
 
     public string? Controllername { get; set; }
 
@@ -15,7 +15,7 @@ public partial class Tblexception
 
     public string? Exception { get; set; }
 
-    public DateTime? Createddate { get; set; }
+    public DateTimeOffset? Createddate { get; set; }
 
     public decimal? Createdby { get; set; }
 

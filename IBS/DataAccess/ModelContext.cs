@@ -15363,8 +15363,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("TBLEXCEPTION");
 
             entity.Property(e => e.Id)
+                .HasPrecision(6)
                 .HasDefaultValueSql("\"IBSDEV\".\"TBLEXCEPTION_SEQ\".\"NEXTVAL\"")
-                .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
             entity.Property(e => e.Actionname)
                 .HasMaxLength(50)
@@ -15378,7 +15378,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
-                .HasColumnType("DATE")
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Createip)
                 .HasMaxLength(50)

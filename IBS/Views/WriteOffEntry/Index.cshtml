@@ -1,0 +1,216 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>Write Off Entry</h2>
+    </div>
+</div>
+
+<form data-ajax="true" asp-antiforgery="false" asp-controller="WriteOffEntry" asp-action="UpdateWriteAmt" data-ajax-method="post" data-ajax-complete="completed" id="frmsearch">
+    <div class="accordion-body">
+        <div class="row my-0 d-flex align-items-end">
+            <div class="col-md-2 mb-4">
+                <label for="Reference">From Date</label>
+                <input type="text" id="FrmDt" class="datepicker"  maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">To Date</label>
+                <input type="text" id="ToDt" class="datepicker"  maxlength="200" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">BPO Name</label>
+                @Html.DropDownList("BPOName", new SelectList(IBS.Models.Common.GetBPOByRegion(@ViewBag.Region), "Value", "Text"),"--Select--" , new { id = "BPOName" })
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="btnsearch()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtWriteoffam" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Bill No.</th>
+                        <th>Bill Date</th>
+                        <th>Bill Amount(A)</th>
+                        <th>Amount Already Recieved Thru Cheque/EFT</th>
+                        <th>Total Amount Cleared(B)</th>
+                        <th>Write-off Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="col-md-3 mb-4">
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active Permission_Save" onclick="btnsubmit()">Submit</button>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function btnsearch(){
+            InitializeDatatable();
+        }
+
+        function btnsubmit() {
+            event.preventDefault();
+            var formData = new FormData();
+            const dataArr = [];
+            debugger
+            $('#dtWriteoffam tbody tr').each(function () {
+                const billNo = $(this).find('td:eq(0)').text(); 
+                const writeOffAmtValue = $(this).find('input.txtwriteofamt').val();
+
+                if (writeOffAmtValue.trim() !== '' && parseFloat(writeOffAmtValue) !== 0) {
+                    const billNo = $(this).find('td:eq(0)').text();
+
+                    const UpdateDataModel = {
+                        Bill_No: billNo,
+                        Write_Off_Amt: parseFloat(writeOffAmtValue)
+                    };
+                    dataArr.push(UpdateDataModel);
+                }
+                dataArr.forEach((dataModel, index) => {
+                    formData.append(`dataArr[${index}].Bill_No`, dataModel.Bill_No);
+                    formData.append(`dataArr[${index}].Write_Off_Amt`, dataModel.Write_Off_Amt);
+                });
+            });
+
+            var url = '/WriteOffEntry/UpdateWriteAmt';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        setTimeout(function () {
+                            window.location.href = '/WriteOffEntry/Index';
+                        }, 2000);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error:', textStatus, errorThrown);
+                }
+            });
+
+        }
+
+        function InitializeDatatable() {
+
+            var FrmDt = $("#FrmDt").val();
+            var ToDt = $("#ToDt").val();
+            var BPOName = $("#BPOName").val();
+            
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            $("#dtWriteoffam").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FrmDt": FrmDt,
+                            "ToDt": ToDt,
+                            "BPOName": BPOName,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "Bill_No" },
+                    {
+                        data: "BillDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "BillAmt" },
+                    { data: "BillAmtRec" },
+                    { data: "BillAmtClr" },
+                    {
+                        data: "WRITE_OFF_AMT",
+                        "targets": [1, 2],
+                        render: function (data, type, row, meta) {
+                            debugger
+                            return generateRowHtml(meta);
+                        }
+                    }
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        let errorMessageCounter = 1;
+
+        function generateUniqueId() {
+            return 'error-message_' + errorMessageCounter++;
+        }
+
+        function generateRowHtml(meta) {
+            const writeOffAmt = meta.data || 0;
+            const errorId = generateUniqueId();
+
+            return '<input type="text" name="txtwriteofamt" onkeypress="return validateInput(event, \'' + errorId + '\')" class="txtwriteofamt" value="' + writeOffAmt + '">' +
+                '<div id="' + errorId + '" style="color: red;"></div>';
+        }
+
+        function validateInput(event, inputId) {
+            const inputValue = event.key;
+            const validValues = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
+
+            if (!validValues.includes(inputValue)) {
+                event.preventDefault();
+                displayErrorMessage('Please enter numbers only.', inputId);
+                return;
+            }
+
+            const currentValue = event.target.value + inputValue;
+            const intValue = parseInt(currentValue, 10);
+
+            if (isNaN(intValue) || intValue < 1 || intValue > 13) {
+                event.preventDefault();
+                displayErrorMessage('Please enter a number between 1 and 13.', inputId);
+            } else {
+                clearErrorMessage(inputId);
+            }
+        }
+
+        function displayErrorMessage(message, inputId) {
+            $(`#${inputId}`).text(message).show();
+        }
+
+        function clearErrorMessage(inputId) {
+            $(`#${inputId}`).text('').hide();
+        }
+
+    </script>
+}
