@@ -5,7 +5,7 @@ namespace IBS.Interfaces
     public interface IWriteOffEntryRepository
     {
         DTResult<WriteOffEntryModel> GetWriteOfEntryList(DTParameters dtParameters);
-        int UpdateWriteAmtDetails(List<UpdateDataModel> dataArr);
+        int UpdateWriteAmtDetails(List<UpdateDataModel> dataArr, WriteOfMaster model);
 
     }
 }

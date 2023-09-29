@@ -125,7 +125,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public int UpdateWriteAmtDetails(List<UpdateDataModel> dataArr)
+        public int UpdateWriteAmtDetails(List<UpdateDataModel> dataArr, WriteOfMaster model)
         {
             int BillNO = 0;
             var billNos = dataArr.Select(d => d.Bill_No).ToList();
@@ -140,8 +140,56 @@ namespace IBS.Repositories
                     existingRecord.WriteOffAmt = updateData.Write_Off_Amt;
                 }
             }
-
             context.SaveChanges();
+
+            int maxID = 0;
+            if (model != null)
+            {
+                var WritemAster = (from r in context.WriteOffMasters where r.Id == Convert.ToInt32(model.ID) select r).FirstOrDefault();
+                if (WritemAster == null)
+                {
+                    if (context.WriteOffMasters.Any())
+                    {
+                        maxID = context.WriteOffMasters.Max(x => x.Id) + 1;
+                    }
+                    else
+                    {
+                        maxID = 1;
+                    }
+                    WriteOffMaster obj = new WriteOffMaster();
+                    obj.Id = maxID;
+                    obj.Createdby = model.CreatedBy;
+                    obj.Createddate = model.CreatedDT;
+                    context.WriteOffMasters.Add(obj);
+                    context.SaveChanges();
+                }
+            }
+
+            WriteOfMasterDetails modeldetails = new WriteOfMasterDetails();
+            var WritemAsterdetails = (from r in context.WriteOffDetails where r.Id == Convert.ToInt32(modeldetails.ID) select r).FirstOrDefault();
+            int? WriteID = 0;
+
+            if(WritemAsterdetails == null)
+            {
+                foreach (var updateData in dataArr)
+                {
+                    if (context.WriteOffDetails.Any())
+                    {
+                        WriteID = context.WriteOffDetails.Max(x => x.Id) + 1;
+                    }
+                    else
+                    {
+                        WriteID = 1;
+                    }
+                    WriteOffDetail obj = new WriteOffDetail();
+                    obj.Id = WriteID;
+                    obj.WriteOffMasterId = maxID;
+                    obj.BillNo = updateData.Bill_No;
+                    obj.WriteOffAmount = updateData.Write_Off_Amt;
+                    context.WriteOffDetails.Add(obj);
+                    context.SaveChanges();
+                }
+            }
 
             return BillNO;
         }

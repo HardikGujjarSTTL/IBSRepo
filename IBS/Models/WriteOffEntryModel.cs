@@ -24,4 +24,18 @@
         public string Bill_No { get; set; }
         public decimal Write_Off_Amt { get; set; }
     }
+
+    public class WriteOfMaster
+    {
+        public int ID { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDT { get; set; }
+    }
+
+    public class WriteOfMasterDetails
+    {
+        public int ID { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDT { get; set; }
+    }
 }

@@ -67,12 +67,12 @@
             event.preventDefault();
             var formData = new FormData();
             const dataArr = [];
-
+            debugger
             $('#dtWriteoffam tbody tr').each(function () {
                 const billNo = $(this).find('td:eq(0)').text(); 
                 const writeOffAmtValue = $(this).find('input.txtwriteofamt').val();
 
-                if (writeOffAmtValue.trim() !== '') {
+                if (writeOffAmtValue.trim() !== '' && parseFloat(writeOffAmtValue) !== 0) {
                     const billNo = $(this).find('td:eq(0)').text();
 
                     const UpdateDataModel = {
@@ -125,7 +125,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,
-                searching: true,
+                searching: false,
                 ajax: {
                     url: ajaxUrl,
                     type: "POST",
@@ -159,11 +159,8 @@
                         data: "WRITE_OFF_AMT",
                         "targets": [1, 2],
                         render: function (data, type, row, meta) {
-                            debugger;
-                            const writeOffAmt = data || 0;
-
-                            return '<input type="text"  name="txtwriteofamt" onkeypress="return validateInput(event)" class="txtwriteofamt" value="' + writeOffAmt + '">' +
-                                '<div id="error-message" style="color: red;"></div>';
+                            debugger
+                            return generateRowHtml(meta);
                         }
                     }
 
@@ -171,37 +168,49 @@
                 "order": [[0, "asc"]]
             });
         }
-        function validateInput(event) {
+
+        let errorMessageCounter = 1;
+
+        function generateUniqueId() {
+            return 'error-message_' + errorMessageCounter++;
+        }
+
+        function generateRowHtml(meta) {
+            const writeOffAmt = meta.data || 0;
+            const errorId = generateUniqueId();
+
+            return '<input type="text" name="txtwriteofamt" onkeypress="return validateInput(event, \'' + errorId + '\')" class="txtwriteofamt" value="' + writeOffAmt + '">' +
+                '<div id="' + errorId + '" style="color: red;"></div>';
+        }
+
+        function validateInput(event, inputId) {
             const inputValue = event.key;
             const validValues = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
 
-            // Check if the entered key is valid
             if (!validValues.includes(inputValue)) {
                 event.preventDefault();
-                displayErrorMessage('Please enter numbers only.');
+                displayErrorMessage('Please enter numbers only.', inputId);
                 return;
             }
 
             const currentValue = event.target.value + inputValue;
             const intValue = parseInt(currentValue, 10);
 
-            // Check if the entered value is between 1 and 13
             if (isNaN(intValue) || intValue < 1 || intValue > 13) {
                 event.preventDefault();
-                displayErrorMessage('Please enter a number between 1 and 13.');
+                displayErrorMessage('Please enter a number between 1 and 13.', inputId);
             } else {
-                clearErrorMessage();
+                clearErrorMessage(inputId);
             }
         }
 
-        function displayErrorMessage(message) {
-            $('#error-message').text(message).show();
+        function displayErrorMessage(message, inputId) {
+            $(`#${inputId}`).text(message).show();
         }
 
-        function clearErrorMessage() {
-            $('#error-message').text('').hide();
+        function clearErrorMessage(inputId) {
+            $(`#${inputId}`).text('').hide();
         }
-
 
     </script>
 }

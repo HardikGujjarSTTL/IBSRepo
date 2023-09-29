@@ -39,7 +39,11 @@ namespace IBS.Controllers
             {
                 if(dataArr != null || dataArr.Count != 0)
                 {
-                    writeOffEntryRepository.UpdateWriteAmtDetails(dataArr);
+                    WriteOfMaster model = new WriteOfMaster();
+                    model.CreatedBy = UserId;
+                    model.CreatedDT = DateTime.Now;
+
+                    writeOffEntryRepository.UpdateWriteAmtDetails(dataArr,model);
                     AlertAddSuccess("Record Updated Successfully.");
                     return Json(new { success = true });
                 }
