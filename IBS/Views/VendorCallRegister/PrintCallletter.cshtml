@@ -267,7 +267,7 @@
             <section class="table-section">
                 <div class="task-listinput">
                     <div class="dash-table">
-                        <table id="dtListPrint">
+                        <table id="dtListPrint" class="awardWrap">
                             <thead>
                                 <tr>
                                     <th>Sno.</th>
@@ -314,11 +314,11 @@ newWin.print();*@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
-    <style>
+    @*<style>
         #dtListPrint td {
             word-wrap: anywhere;
         }
-    </style>
+    </style>*@
     <script type="text/javascript">
         $(function () {
             InitializeDatatable();
@@ -338,7 +338,7 @@ newWin.print();*@
                 destroy: true,
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
-                dom:"r",
+                dom:"rt",
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTableReport", "VendorCallRegister")",
                     type: "POST",
@@ -372,7 +372,7 @@ newWin.print();*@
                         data: "DelvDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -381,7 +381,10 @@ newWin.print();*@
                     { data: "ItemCd" },
 
                 ],
-                "order": [[1, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 

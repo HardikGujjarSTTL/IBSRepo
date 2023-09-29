@@ -119,10 +119,13 @@
                                     <div class="userImg"> <img src="~/images/user-icon.png" width="51" height="51" alt="Admin" title="admin" /> </div>
                                 </div>
                                 <!--userImg-->
-                                <div class="user">
-                                    <h4> Rishi Haria <i class="fa-solid fa-chevron-down"></i> </h4>
-                                    <p>Admin</p>
-                                </div>
+                                @if (IBS.Helper.SessionHelper.UserModelDTO != null)
+                                {
+                                    <div class="user">
+                                        <h4>@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Name) <i class="fa-solid fa-chevron-down"></i> </h4>
+                                        <p>@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.RoleName)</p>
+                                    </div>
+                                }
                             </a>
                             <div class="dropPopup messagePopup">
                                 <ul>
@@ -132,7 +135,7 @@
                                     <li>
                                         @if (IBS.Helper.SessionHelper.UserModelDTO != null)
                                         {
-                                            <a asp-action="ChangePassword" asp-controller="Home" asp-route-id="@IBS.Models.Common.EncryptQueryString(Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.UserID))">
+                                            <a asp-action="ChangePassword" asp-controller="Home" asp-route-id="@IBS.Models.Common.EncryptQueryString(Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.UserName))">
                                                 <i class="fa fa-key" aria-hidden="true"></i>
                                                 Change Password
                                             </a>
@@ -432,7 +435,7 @@
                 @:$(".Permission_Delete").css("display", "none");
             }
         }
-                                }
+                                        }
 
     </script>
 

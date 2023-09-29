@@ -129,15 +129,15 @@ namespace IBS.Models
 
         public DateTime? CallDt { get; set; }
 
-        public DateTime FirstInspDt { get; set; }
+        public DateTime? FirstInspDt { get; set; }
 
-        public DateTime LastInspDt { get; set; }
+        public DateTime? LastInspDt { get; set; }
 
-        public DateTime LabTstRectDt { get; set; }
+        public DateTime? LabTstRectDt { get; set; }
 
-        public DateTime OtherInspDt { get; set; }
+        public DateTime? OtherInspDt { get; set; }
 
-        public DateTime ICSubmitDt { get; set; }
+        public DateTime? ICSubmitDt { get; set; }
 
         public string StampPatternCd { get; set; }
 

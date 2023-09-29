@@ -1,6 +1,7 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 
@@ -11,11 +12,11 @@ namespace IBS.Controllers
     {
 
         #region Variables
-        private readonly IIE_Instructions_AdminRepository ie_instructions_adminRepository;
+        private readonly IIE_Instructions_AdminRepository instructionsRepository;
         #endregion
-        public IE_Instructions_AdminController(IIE_Instructions_AdminRepository _ie_instructions_adminRepository)
+        public IE_Instructions_AdminController(IIE_Instructions_AdminRepository _instructionsRepository)
         {
-            ie_instructions_adminRepository = _ie_instructions_adminRepository;
+            instructionsRepository = _instructionsRepository;
         }
 
         [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "view")]
@@ -27,7 +28,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<IE_Instructions_AdminModel> dTResult = ie_instructions_adminRepository.GetMessageList(dtParameters, GetRegionCode);
+            DTResult<IE_Instructions_AdminModel> dTResult = instructionsRepository.GetMessageList(dtParameters, GetRegionCode);
             return Json(dTResult);
         }
 
@@ -36,7 +37,7 @@ namespace IBS.Controllers
         {
             try
             {
-                if (ie_instructions_adminRepository.Remove(MessageID, GetRegionCode))
+                if (instructionsRepository.Remove(MessageID, GetRegionCode))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -52,31 +53,32 @@ namespace IBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "edit")]
-        public IActionResult DetailsSave(IE_Instructions_AdminModel model)
+        public IActionResult IE_InstructionsManage(IE_Instructions_AdminModel model)
         {
             try
             {
-                string msg = "Message Inserted Successfully.";
-
-                if (model.MessageId > 0)
+                if (model.MessageId == 0)
                 {
-                    msg = "Message Updated Successfully.";
-                    model.Updatedby = Convert.ToString(UserId);
+                    model.Createdby = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Substring(0, 8);
+                    instructionsRepository.SaveDetails(model, Region);
+                    AlertAddSuccess("Record Added Successfully.");
                 }
-                model.Createdby = Convert.ToString(UserId);
-                //model.MessageId = setMessageID;
-
-                int i = ie_instructions_adminRepository.MessageDetailsInsertUpdate(model, GetRegionCode);
-                if (i > 0)
+                else
                 {
-                    return Json(new { status = true, responseText = msg, Id = i });
+                    model.Updatedby = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Substring(0, 8);
+                    instructionsRepository.SaveDetails(model, Region);
+                    AlertAddSuccess("Record Updated Successfully.");
                 }
+                return RedirectToAction("IE_InstructionsMaster");
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IE Instruction Message", "UserDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IE_Instructions_Admin", "UserDetailsSave", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
+
         }
 
         [Authorization("IE_Instructions_Admin", "IE_InstructionsMaster", "view")]
@@ -86,13 +88,9 @@ namespace IBS.Controllers
 
             if (MessageID > 0)
             {
-                model = ie_instructions_adminRepository.FindByID(MessageID, RegionCode);
+                model = instructionsRepository.FindByID(MessageID, RegionCode);
 
             }
-            //else
-            //{
-            //    setMessageID = ie_instructions_adminRepository.FindByMaxID(MessageID, GetRegionCode);
-            //}
             return View(model);
         }
     }

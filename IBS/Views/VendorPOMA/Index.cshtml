@@ -1,12 +1,12 @@
 ﻿@model IBS.Models.VendorPOMAModel
 @{
-    ViewData["Title"] = "AMMENDMENT FORM";
+    ViewData["Title"] = "Ammendment Form";
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorPOMA" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>AMMENDMENT FORM</h2>
+            <h2>@ViewData["Title"]</h2>
         </div>
         <input type="hidden" asp-for="MA_SNO" />
     </div>
@@ -49,12 +49,13 @@
             </div>
         </div>
         <div class="savenext-btn">
-            <a asp-controller="VendorPOMA" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" id="btnSearch">Search MA</button>
             <button type="button" class="save-btn" id="btnAddMA" style="display:none;">Add New MA</button>
             <button type="button" class="save-btn" id="btnModifyPO" style="display:none;">Add in Existing MA</button>
             <button type="button" class="save-btn" id="btnDeletePO" style="display:none;">Modify for Return MA</button>
-            <button type="button" class="save-btn active" id="btnSearch">Search MA</button>
             <button type="button" class="save-btn" id="btnCaseHistory">Case History</button>
+            <a asp-controller="VendorPOMA" asp-action="Index" class="reset-btn">Cancel</a>
+            
         </div>
     </div>
 
