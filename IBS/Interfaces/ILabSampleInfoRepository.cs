@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     public interface ILabSampleInfoRepository
     {
 
-        List<LabSampleInfoModel> LapSampleIndex(string CaseNo, string CallRdt, string CallSno,string Regin);
+        DTResult<LabSampleInfoModel> LapSampleIndex(DTParameters dtParameters, string Regin);
         LabSampleInfoModel SampleDtlData(string CaseNo, string CallRdt, string CallSno, string Regin);
         string CheckExist(string CaseNo, string CallRdt, string CallSno, string Regin);
         bool SaveDataDetails(LabSampleInfoModel LabSampleInfoModel);

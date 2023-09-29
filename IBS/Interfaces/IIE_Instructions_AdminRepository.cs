@@ -12,6 +12,6 @@ namespace IBS.Interfaces
 
         bool Remove(int MessageId, string GetRegionCode);
 
-        int MessageDetailsInsertUpdate(IE_Instructions_AdminModel model, string GetRegionCode);
+        int SaveDetails(IE_Instructions_AdminModel model, string Region);
     }
 }

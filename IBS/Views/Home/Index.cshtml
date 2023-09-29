@@ -8,15 +8,13 @@
         <form role="form" asp-controller="Home" asp-action="Login" id="frmLogin">
         <div class="row">
             <div class="col-md-12">
-                <div class="inputIcon">
-                    <label for="email">User Name</label>
-                    <input type="text" class="input" asp-for="UserName" maxlength="50" placeholder="User Name" autocomplete="off">
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
+                <label for="email">User Name</label>
+                <input type="text" class="input" asp-for="UserName" maxlength="50" placeholder="User Name" autocomplete="off">
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" id="eyeShowHide">
                 <label for="password">Password</label>
                 <div class="inputIcon">
                     <input type="password" asp-for="Password" class="input" data-toggle="password" autocomplete="off" placeholder="••••••••">
@@ -51,6 +49,21 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+        $(document).ready(function(){
+            $("#eyeShowHide i").on('click', function (event) {
+                event.preventDefault();
+                if ($('#eyeShowHide input').attr("type") == "text") {
+                    $('#eyeShowHide input').attr('type', 'password');
+                    $('#eyeShowHide i').addClass("fa-eye");
+                    $('#eyeShowHide i').removeClass("fa-eye-slash");
+                } else if ($('#eyeShowHide input').attr("type") == "password") {
+                    $('#eyeShowHide input').attr('type', 'text');
+                    $('#eyeShowHide i').removeClass("fa-eye");
+                    $('#eyeShowHide i').addClass("fa-eye-slash");
+                }
+            });
+        });
+
         function Loginsubmit() {
             if ($("#frmLogin").valid()) {
                 $("#frmLogin").submit();

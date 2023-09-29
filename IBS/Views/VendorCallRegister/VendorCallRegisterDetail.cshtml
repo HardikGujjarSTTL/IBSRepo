@@ -1,11 +1,10 @@
 ﻿@model IBS.Models.VenderCallRegisterModel
 
 @{
-    ViewData["Title"] = "VENDOR CALL REGISTRATION";
+    ViewData["Title"] = "Vendor Call Registration";
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-
     <div class="list-inner">
         <div class="tast-list">
             <h2>@ViewData["Title"] </h2>
@@ -213,14 +212,14 @@
             <div class="col-md-3 mb-3" id="divVendApprovalFr">
                 <div class="reference">
                     <label for="Name">From</label>
-                    <input type="text" class="datepicker" asp-for="VendApprovalFr" id="VendApprovalFr">
+                    <input type="text" class="datepicker" asp-for="VendApprovalFr" id="VendApprovalFr" placeholder="DD/MM/YYYY">
                     <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3" id="divVendApprovalTo">
                 <div class="reference">
                     <label for="Name">To</label>
-                    <input type="text" class="datepicker" asp-for="VendApprovalTo" id="VendApprovalTo">
+                    <input type="text" class="datepicker" asp-for="VendApprovalTo" id="VendApprovalTo" placeholder="DD/MM/YYYY">
                     <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
                 </div>
             </div>
@@ -444,7 +443,7 @@
                     <button type="button" class="save-btn active" id="btnRegiserCallSave">Register Call</button>
                     <button type="button" class="save-btn" id="btnDelete">Delete</button>
                     <button type="button" class="save-btn" id="btnPrint">Print Call Letter</button>
-                    <a asp-controller="VendorCallRegisterDetail" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
+                    <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
                 </div>
             </div>
         </div>

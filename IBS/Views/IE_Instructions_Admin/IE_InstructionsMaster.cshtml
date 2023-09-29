@@ -5,7 +5,7 @@
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>INSTRUCTIONS FOR IE List</h2>
+            <h2>Instructions for IE list</h2>
         </div>
         <div class="list-btn">
             <a asp-area="" asp-controller="IE_Instructions_Admin" asp-action="IE_InstructionsManage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Instruction</a>
@@ -84,7 +84,7 @@
                         data: "LetterDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }

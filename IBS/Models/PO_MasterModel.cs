@@ -63,6 +63,8 @@ namespace IBS.Models
         public bool Ispricevariation { get; set; }
         public bool Isstageinspection { get; set; }
 
+        public int? Contractid { get; set; }
+
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
         public virtual T01Region? RegionCodeNavigation { get; set; }

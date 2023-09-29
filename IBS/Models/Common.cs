@@ -144,7 +144,6 @@ namespace IBS.Models
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
 
             Tblexception objexception = new Tblexception();
-
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
@@ -3709,6 +3708,19 @@ namespace IBS.Models
         public static string ConvertDateTimeFormat(this DateTime dt)
         {
             return dt.ToString(Common.CommonDateTimeFormat);
+        }
+
+        public static List<SelectListItem> GetContract()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.T100Contracts
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.Clientname,
+                                        Value = Convert.ToString(a.Id)
+                                    }).ToList();
+            return city;
         }
     }
 

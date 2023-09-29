@@ -69,6 +69,7 @@
 
         public bool Ispricevariation { get; set; }
         public bool Isstageinspection { get; set; }
+        public int? Contractid { get; set; }
 
     }
 
