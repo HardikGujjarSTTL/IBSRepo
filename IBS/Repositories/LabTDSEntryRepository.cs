@@ -73,7 +73,7 @@ namespace IBS.Repositories
                     using (var cmd = new OracleCommand(query, (OracleConnection)conn))
                     {
                         cmd.Parameters.Add(new OracleParameter("TDS", OracleDbType.NVarchar2)).Value = TDSAmt;
-                        cmd.Parameters.Add(new OracleParameter("TDS_DT", OracleDbType.NVarchar2)).Value = TDSDate;
+                        cmd.Parameters.Add(new OracleParameter("TDS_DT", OracleDbType.Date)).Value = TDSDate;
                         cmd.Parameters.Add(new OracleParameter("SAMPLE_REG_NO", OracleDbType.NVarchar2)).Value = RegNo;
 
                         cmd.ExecuteNonQuery();

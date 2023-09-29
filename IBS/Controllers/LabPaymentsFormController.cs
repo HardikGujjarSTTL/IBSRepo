@@ -40,10 +40,10 @@ namespace IBS.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult LoadTableEdit(string PaymentID)
+        public IActionResult LoadTableEdit([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            List<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPaymentsEdit(PaymentID);
+            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPaymentsEdit(dtParameters);
             return Json(dTResult);
         }
         [HttpPost]

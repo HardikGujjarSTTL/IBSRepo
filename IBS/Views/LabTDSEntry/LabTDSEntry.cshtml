@@ -1,13 +1,13 @@
 ﻿@model IBS.Models.LabTDSEntryModel
 @{
     ViewData["Title"] = "LAB TDS ENTRY FORM";
-    
+
     string clsView = "";
-    if (Model.SampleRegNo != "0")
-    {
-       
-        clsView = "Permission_View";
-    }
+    // if (Model.SampleRegNo != "0")
+    // {
+
+    //     clsView = "Permission_View";
+    // }
 }
 
 <div class="list-inner">
@@ -16,126 +16,142 @@
     </div>
 </div>
 <section class="@clsView">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Sample Reg No.</label>
+                    <input type="text" class="input" asp-for="SampleRegNo" id="txtSRNO">
+                    <span class="text-danger field-validation-error" id="spnErrorsRegNo"></span>
+                </div>
+                <div class="col-md-4 mb-3 savenext-btn" style="margin-top:auto;">
+                    <button type="button" class="save-btn active" onclick="SearchRegNo();">Search</button>
+                </div>
+            </div>
+            
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">CaseNo</label>
+                    <input type="text" class="input" asp-for="CaseNo" id="lblCNo" readonly="readonly">
+                </div>
 
-    <table style="width: 90%; height: 40px; border-color: #b0c4de; cellspacing: 0; cellpadding: 1;"
-           width="625" align="center" bgcolor="#f0f8ff" border="1">
-        <tr align="center">
-            <td align="center" style="width: 25%"><label class="control-label">Sample Reg No.</label></td>
-            <td style="width: 25%">
-                <input asp-for="SampleRegNo" class="form-control" id="txtSRNO" />
-                <br />
-            <button type="submit" class="btn btn-primary" style="width:auto;" onclick="SearchRegNo();">Search</button>
-            </td>
-            <td style="width: 25%"><label asp-for="CaseNo" class="control-label"></label></td>
-            <td style="width: 25%">
-                <label class="control-label" id="lblCNo"></label>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 25%; height: 22px" align="center">
-                <label asp-for="AmountReceived" class="control-label"></label>
-            </td>
-            <td style="width: 25%; height: 22px" align="center">
-                <label  class="control-label">TDS Amount</label>
-            </td>
-            <td style="width: 25%; height: 22px" align="center">
-                <label asp-for="TDSDate" class="control-label"></label>
-            </td>
-            <td align="center" style="width: 25%; height: 22px">
-                <label asp-for="TotalLabCharges" class="control-label"></label>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 25%" align="center">
-                <label  class="control-label" id="lblAmtRec"></label>
-            </td>
-            <td style="width: 25%" align="center">
-                <input asp-for="TDSAmount" class="form-control" id="lbltsdamt" />
-            </td>
-            <td style="width: 25%" align="center">
-                <input asp-for="TDSDate" class="form-control" id="lbltdsdate" />
-            </td>
-            <td align="center" style="width: 25%">
-                <label class="control-label" id="lblTotLabCharges"></label>
-            </td>
-        </tr>
-    </table>
-    <label style="padding-left:6%;"> * To Add New Record Fill Values and Click on Save </label>
-    <tr>
-        <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;" onclick="Save();">Save</button>
-    <button type="button" class="btn btn-secondary" style="width:auto;" onclick="resetFields()">Reset</button>
-    </tr>
- </section>  
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amount Received</label>
+                    <input type="text" class="input" asp-for="AmountReceived" id="lblAmtRec" readonly="readonly">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">TDS Amount</label>
+                    <input type="text" class="input" asp-for="TDSAmount" id="lbltsdamt">
+                    <span class="text-danger field-validation-error" id="spnErrorsTdsAmt"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">TDS Date</label>
+                    <input class="input datepicker" asp-for="TDSDate" id="lbltdsdate">
+                    <span class="text-danger field-validation-error" id="spnErrorsTdsDt"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Total Lab Charges</label>
+                    <input type="text" class="input" asp-for="TotalLabCharges" id="lblTotLabCharges" readonly="readonly">
+                </div>
+
+            </div>
+            <div class="savenext-btn" style="margin-left:47%;">
+                <button type="submit" class="save-btn active Permission_Save" style="width:auto;" onclick="Save();">Save</button>
+                <button type="button" class="save-btn active" style="width:auto;" onclick="resetFields()">Reset</button>
+            </div>
+        </div>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
-    //function Validation(){
-    //    if ("#txtSRNO").val() == ""){
-    //        alert("Please Enter Sample Registration No.");
-    //        return false;
-    //    }
-    //    SearchRegNo();
-    //}
-        function resetFields(){
+        //function Validation(){
+        //    if ("#txtSRNO").val() == ""){
+        //        alert("Please Enter Sample Registration No.");
+        //        return false;
+        //    }
+        //    SearchRegNo();
+        //}
+        function resetFields() {
             location.reload();
         }
-    function SearchRegNo() {
-        var RegNo = $("#txtSRNO").val();
+        function SearchRegNo() {
+            var RegNo = $("#txtSRNO").val();
             var TDSAmt = $("#lbltsdamt").val();
             var TDSDate = $("#lbltdsdate").val();
-        $.ajax({
-                url: '/LabTDSEntry/SearchRegNo',
-            type: "POST",
-            dataType: "JSON",
-            data: { RegNo: RegNo },
-
-            success: function (success) {
-                if (success.SampleRegNo == null){
-                        $("#lblCNo").text('');
-                        $("#lblAmtRec").text('');
-                        $("#lblTotLabCharges").text('');
-                        $("#lbltsdamt").val('');
-                        $("#lbltdsdate").val('');
-                    alert("InValid Sample Registration No.");
-                    return false;
-                }
-                else
-                {
-                    $("#lblCNo").text(success.CaseNo).css("color", "red");
-                    $("#lblAmtRec").text(success.AmountReceived).css("color", "red");
-                    $("#lblTotLabCharges").text(success.TotalLabCharges).css("color", "red");
-                    $("#lbltsdamt").val(success.TDSAmount);
-                    $("#lbltdsdate").val(success.TDSDate);
-                }
-               
-            }
-
-        });
-
-    }
-        function Save() {
-            var RegNo = $("#txtSRNO").val();
             $.ajax({
-                url: '/LabTDSEntry/SaveTDSEntry',
+                url: '/LabTDSEntry/SearchRegNo',
                 type: "POST",
                 dataType: "JSON",
                 data: { RegNo: RegNo },
 
                 success: function (success) {
-                  if(success == true){
-                        alert("YOUR RECORD IS SAVED");
-                        location.reload();
-                  }
-                  else
-                  {
-                        alert("An unexpected error occurred while saving. Please try again later or contact the system administrator.");
-                  }
+                    if (success.SampleRegNo == null) {
+                        $("#lblCNo").val('');
+                        $("#lblAmtRec").val('');
+                        $("#lblTotLabCharges").val('');
+                        $("#lbltsdamt").val('');
+                        $("#lbltdsdate").val('');
+                        alert("InValid Sample Registration No.");
+                        return false;
+                    }
+                    else {
+                        $("#lblCNo").val(success.CaseNo);
+                        $("#lblAmtRec").val(success.AmountReceived);
+                        $("#lblTotLabCharges").val(success.TotalLabCharges);
+                        $("#lbltsdamt").val(success.TDSAmount);
+                        $("#lbltdsdate").val(success.TDSDate);
+                    }
 
                 }
 
             });
 
         }
-</script>
+        function Save() {
+            $("#spnErrorsRegNo").html("");
+            $("#spnErrorsTdsAmt").html("");
+            $("#spnErrorsTdsDt").html("");
+            var IsValid = true;
+            if ($("#txtSRNO").val() == "") {
+                $("#spnErrorsRegNo").html("Please Enter Sample Register No.");
+                IsValid = false;
+            }
+            if ($("#lbltsdamt").val() == "") {
+                $("#spnErrorsTdsAmt").html("Please Enter TDS Amount");
+                IsValid = false;
+            }
+            if ($("#lbltdsdate").val() == "") {
+                $("#spnErrorsTdsDt").html("Please Enter TDS Date");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            var RegNo = $("#txtSRNO").val();
+            var TDSAmt = $("#lbltsdamt").val();
+            var parts = $("#lbltdsdate").val().split('/');
+            var TDSDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+            $.ajax({
+                url: '/LabTDSEntry/SaveTDSEntry',
+                type: "POST",
+                dataType: "JSON",
+                data: { RegNo: RegNo, TDSAmt: TDSAmt, TDSDate: TDSDate },
+
+                success: function (success) {
+                    if (success == true) {
+                        alert("YOUR RECORD IS SAVED");
+                        location.reload();
+                    }
+                    else {
+                        alert("An unexpected error occurred while saving. Please try again later or contact the system administrator.");
+                    }
+
+                }
+
+            });
+
+        }
+    </script>
 }
