@@ -6,9 +6,7 @@ using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using IBS.Helper;
 using IBS.Models;
-using System.Xml.Linq;
 using Newtonsoft.Json;
-using System.ComponentModel;
 
 namespace IBS.Controllers.Reports
 {

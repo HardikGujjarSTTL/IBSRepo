@@ -597,7 +597,6 @@ namespace IBS.Helper
             [Description("Tentative Inspection Fee Wise Pending Call")] HIGHVALUE,
             [Description("Call Remarking Detail")] REMARKING,
         }
-
     }
 
     public class EnumUtility<T>
