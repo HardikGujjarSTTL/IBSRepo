@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-8 mb-3" style="display:none" id="hdnPDropdown">                
+            <div class="col-md-8 mb-3" style="display:none" id="hdnPDropdown">
                 <input type="text" class="input" id="txtbpo" style="width: 46%;">
                 <button type="button" class="save-btn active" onclick="Search();">Select BPO</button>
             </div>
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="col-md-3" style="display:none" id="hdnclient">
-            
+
             @Html.DropDownList("AccCD", Common.ClientWiseBPO(), new { @id="ddlclientbpo"})
             <span class="text-danger"></span>
         </div>
@@ -81,8 +81,7 @@
                 <span class="text-danger"></span>
             </div>
         </div>
-        <div class="row my-0">          
-            
+        <div class="row my-0">
         </div>
         <div class="col-md-3" style="margin-top: 30px;">
             <div class="savenext-btn">
@@ -101,7 +100,7 @@
 
         function Search() {
             FillBPO();
-           
+
         }
         function FillBPO(ids) {
             var BpoType = $("#txtbpo").val();
@@ -169,7 +168,7 @@
         function ClearControls() {
             location.reload(true);
         }
-        $("#ddlclientbpo").change(function(){
+        $("#ddlclientbpo").change(function () {
             FillBPOCode();
         })
         $('input[name="radioGroup"]').change(function () {
@@ -181,6 +180,9 @@
                 $("#hdnbpo").css("display", "block");
                 $("#hdnclient").css("display", "none");
                 $("#hdnbpocode").css("display", "none");
+                sessionStorage.removeItem("rb2");
+                sessionStorage.removeItem("rb3");
+                sessionStorage.setItem("rb1", true);
             }
             else if (selectedId == "rb2") {
 
@@ -188,12 +190,17 @@
                 $("#hdnbpo").css("display", "none");
                 $("#hdnclient").css("display", "block");
                 $("#hdnbpocode").css("display", "none");
+                sessionStorage.removeItem("rb1");
+                sessionStorage.removeItem("rb3");
+                sessionStorage.setItem("rb2", true);
             }
-            else
-            {                
+            else {
                 FillBPOCode();
                 $("#hdnclient").css("display", "block");
                 $("#hdnbpocode").css("display", "block");
+                sessionStorage.removeItem("rb1");
+                sessionStorage.removeItem("rb2");
+                sessionStorage.setItem("rb3", true);
             }
 
         });
@@ -204,25 +211,54 @@
                 $("#dd2").css("display", "block");
                 $("#dtf").css("display", "none");
                 $("#dtt").css("display", "none");
+                sessionStorage.removeItem("rb5");
+                sessionStorage.setItem("rb4", true);
             }
             else {
                 $("#dd1").css("display", "none");
                 $("#dd2").css("display", "none");
                 $("#dtf").css("display", "block");
                 $("#dtt").css("display", "block");
+                sessionStorage.removeItem("rb4");
+                sessionStorage.setItem("rb5", true);
             }
         });
         function ViewReport() {
-            var BPOType = $("#ddlbpo").val();
-            var AccCD = $("#ddlAccCD").val();
+            var lstbpo = "";
+            if (sessionStorage.getItem("rb3") == "true") {
+                lstbpo = $("#bpo").val();
+            }
+            else {
+                lstbpo = $("#bpoid").val();
+            }
+            var Month = $("#ddlmonth").val();
+            var Year = $("#ddlyear").val();
+            var Region = '@ViewBag.Region';
+            var ReportType = "P";
             var FromDate = $("#dtfrom").val();
             var ToDate = $("#dtto").val();
+            var Rb1 = sessionStorage.getItem("rb1");
+            var Rb2 = sessionStorage.getItem("rb2");
+            var Rb5 = sessionStorage.getItem("rb3");
+            var lstBpo = lstbpo;
+            var ClientType = $("#ddlclientbpo").val();
+            var Rb3 = sessionStorage.getItem("rb4");
+            var Rb4 = sessionStorage.getItem("rb5");
 
             var QueryString = "RptFlag=5" +
-                "&BPOType=" + encodeURIComponent(BPOType) +
-                "&AccCD=" + encodeURIComponent(AccCD) +
+                "&Month=" + encodeURIComponent(Month) +
+                "&Year=" + encodeURIComponent(Year) +
+                "&Region=" + encodeURIComponent(Region) +
+                "&ReportType=" + encodeURIComponent(ReportType) +
                 "&FromDate=" + encodeURIComponent(FromDate) +
-                "&ToDate=" + encodeURIComponent(ToDate);
+                "&ToDate=" + encodeURIComponent(ToDate) +
+                "&Rb1=" + encodeURIComponent(Rb1) +
+                "&Rb2=" + encodeURIComponent(Rb2) +
+                "&Rb5=" + encodeURIComponent(Rb5) +
+                "&lstBpo=" + encodeURIComponent(lstBpo) +
+                "&ClientType=" + encodeURIComponent(ClientType) +
+                "&Rb3=" + encodeURIComponent(Rb3) +
+                "&Rb4=" + encodeURIComponent(Rb4);
 
 
 

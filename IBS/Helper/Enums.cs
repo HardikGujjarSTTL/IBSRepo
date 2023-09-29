@@ -2,6 +2,7 @@
 using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 
 namespace IBS.Helper
@@ -87,7 +88,7 @@ namespace IBS.Helper
             ContractEntryDoc = 16,
             ICCancellation = 17,
             PurchaseOrderForm = 18,
-            ICDocument = 20,
+            ICDocument = 21,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -576,6 +577,26 @@ namespace IBS.Helper
             R,
         }
 
+        public enum ManagementReportsTitle
+        {
+            [Description("IE Performance")] IE_X,
+            [Description("Cluster Wise Performance Report")] CLUSTER_X,
+            [Description("IC Submission Report")] ICSUBMIT,
+            [Description("Pending IC's Against Calls where Material has been Sccepted or Rejected")] CALLSWITHOUTIC,
+            [Description("CO Wise Super Surprise Summary")] SUPSURPSUMM,
+            [Description("Overdue/Pending Calls")] PENDING_CALLS,
+            [Description("CM and IE wise IC issued but not recieved")] COUNTIC,
+            [Description("Call Details Dashborad")] CALL_DETAILS,
+            [Description("Region Wise Billing Summary")] RWB,
+            [Description("Region Wise Comparison of Outstanding")] R,
+            [Description("Super Surprise Details")] SUPSUR,
+            [Description("Online Consignee Rejection Report")] CONSIGN_REJECT,
+            [Description("Outstanding of One Region Over Other")] X,
+            [Description("Rejection Details Client Wise")] CLIENTWISEREJ,
+            [Description("Format for Monthly Non Conformity Report")] NON_CONFORMITY,
+            [Description("Tentative Inspection Fee Wise Pending Call")] HIGHVALUE,
+            [Description("Call Remarking Detail")] REMARKING,
+        }
     }
 
     public class EnumUtility<T>
@@ -755,5 +776,8 @@ namespace IBS.Helper
 
         public static CallDetailsDashboradModel CallDetailsDashborad { get; set; }
 
+        public static AllICStatusModel AllICStatus { get; set; }
+        public static ReInspectionICsModel ReInspectionICs { get; set; }
+        public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
     }
 }

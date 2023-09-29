@@ -1,254 +1,116 @@
 ﻿@model IBS.Models.LabSampleInfoModel
 
 @{
-    ViewData["Title"] = "LAB SAMPLE INFORMATION DETAIL";
-   
+    ViewData["Title"] = "";
+
     string clsView = "";
-    if (Model.CaseNo != "0")
-    {
-        
-        clsView = "Permission_View";
-    }
+    // if (Model.CaseNo != null)
+    // {
+
+    //     clsView = "Permission_View";
+    // }
 }
 
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>LAB SAMPLE INFORMATION DETAIL</h2>
+    </div>
+    <div>
+        <a asp-action="LabSampleInfo" asp-controller="LabSampleInfo" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
 
-<style>
-    tr:nth-child(even) {
-    background-color: #f0f8ff; /* Light Blue */
-}
-
-/* Style for table cells */
-td {
-    height: 50px;
-    padding: 10px;
-    border: 1px solid #b0c4de;
-    vertical-align: top;
-}
-    table {
-  width: 100%;
-  border-collapse: collapse;
-  border-top: 2px solid #b0c4de; /* Add top border */
-  background-color: #f0f8ff;
-  margin-bottom: 20px; /* Add margin at the bottom for spacing */
-}
-
-/* Style for table cells */
-td {
-  height: 50px; /* Adjust the height of table cells */
-  padding: 5px;
-  vertical-align: top;
-}
-
-/* Style for labels */
-label {
-  display: block; /* Make labels block-level to occupy the whole cell width */
-  font-weight: bold;
-}
-
-/* Style for input fields */
-input[type="text"],
-input[type="date"] {
-  width: 100%;
-  height: 42px;
-  border: 1px solid #cccccc;
-  border-radius: 6px;
-  padding: 5px;
-  box-sizing: border-box; /* Ensure the padding is included in the width */
-}
-
-/* Style for error message */
-.text-danger {
-  color: red;
-  margin-left: 6%;
-}
-
-/* Style for left-aligned button */
-.left-button {
-  float: left;
-  margin-right: 10px;
-}
-
-/* Style for right-aligned button */
-.right-button {
-  float: right;
-  margin-left: 10px;
-}
-
-/* Clear floating elements */
-.clearfix::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-    .table-responsive {
-    overflow-x: auto;
-    height:190px;
-}
-    .custom-textarea {
-    width: 400px;
-    height:auto; 
-}
-.table-section {
-        width: 100%;
-        /*height: 400px;*/ /* Set the desired height */
-        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
-    }
-
-    /* Set table width to 100% and disable horizontal scrollbar */
-    #dtlabregdtl {
-        width: 100%;
-        table-layout: fixed;
-    }
-
-    /* Style table header cells */
-    #dtlabregdtl th {
-        background-color: #f2f2f2;
-        border: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    /* Style table body cells */
-    #dtlabregdtl td {
-        border: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    /* Add custom scrollbar style for the table section */
-    .table-section::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .table-section::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 4px;
-    }
-
-    .table-section::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
-</style>
-<h2>@ViewData["Title"]</h2>
 <section class="@clsView">
-@*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
-    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
-           bgColor="#f0f8ff" border="1">
-        <tr>
-           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Case No.</label>
-            </td>
-           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label  class="control-label" id="lblcno"></label>
-            </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Call Date & Sno</label>
-        </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label" id="lblCallDT"></label>&nbsp;&amp;
-            <label class="control-label" id="lblCallSno"></label>
-        </td>
-        </tr>
-        
-        <tr>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label asp-for="Vendor" class="control-label"></label>
-            </td>
-           <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
-                <label  class="control-label" id="lblVend"></label>
-                <label  class="control-label" id="lblVENDCD" style="display:none;"></label>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label asp-for="IE" class="control-label"></label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label" id="lblIE"></label>
-                <label  class="control-label" id="lblIECD" style="display:none;"></label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Date of Receipt of Sample</label>
-            </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <input class="input datepicker" id="dtrecsam" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span  class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Total Testing Fee (incl of Taxes)</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <input type="text" class="input" id="txttesfee"  />
-                <span  class="text-danger"></span>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Likely Date of Test Report	</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <input class="input datepicker" id="dtlike" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span  class="text-danger"></span>
-            </td>
-        </tr>
-        
-        <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
-           
-            <label>Status</label>
-            
-            @Html.DropDownListFor(model => model.Status, new SelectList(IBS.Models.Common.LabSmapleStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
-            <span class="fa fa-caret-down" style="position: absolute; right: 35px; top: 952px; transform: translateY(-50%); pointer-events: none;"></span>
-        </td>
-        </tr>
-    <tr>
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Case No.</label>
+                    <input type="text" class="input" readonly="readonly" id="lblcno">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Call Date & Sno</label>
+                    <input type="text" class="input" readonly="readonly" id="lblCallDT">
+                    
+                </div>
+                <div class="col-md-4 mb-3"style="margin-top:auto;">
+                   
+                    <input type="text" class="input" readonly="readonly" id="lblCallSno">
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Vendor</label>
+                    <input type="text" class="input" readonly="readonly" id="lblVend">
+                    <input type="text" class="input" readonly="readonly" style="display:none;" id="lblVENDCD">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">IE</label>
+                    <input type="text" class="input" readonly="readonly" id="lblIE">
+                    <input type="text" class="input" readonly="readonly" style="display:none;" id="lblIECD">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Date of Receipt of Sample</label>
+                    <input type="text" class="input datepicker" id="dtrecsam">
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Total Testing Fee (incl of Taxes)</label>
+                    <input type="text" class="input"  id="txttesfee">
+                   
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Likely Date of Test Report</label>
+                    <input type="text" class="input datepicker" id="dtlike">
+                    
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Status</label>
+                    @Html.DropDownListFor(model => model.Status, new SelectList(IBS.Models.Common.LabSmapleStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-8 mb-3">
+                    <label for="Reference">Remarks</label>
+                    <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremark"></textarea>
 
-        
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="5">
-            <label>Remarks</label>
-            <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremark"></textarea>
-        </td>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Payment Slip Uploaded By Vendor</label>
+                    <input type="text" class="input" id="lblpslip" readonly="readonly">
 
-    </tr>
-    <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Payment Slip Uploaded By Vendor</label>
-        </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
-            <label class="control-label" id="lblpslip"></label>            
-        </td>
-    </tr>
-    <tr>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Payment Status By Finance (RITES)</label>
-        </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
-            <label class="control-label" id="lblps"></label>
-        </td>
-    </tr>
-    <tr id="showfill">
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-            <label class="control-label">Upload Lab Report <a style="color:red;">(In PDF Only)</a></label>
-        </td>
-        <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top" colspan="3">
-            <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
-            @*<input type="file" class="control-label" id="upload"></input>*@
-        </td>
-    </tr>
-        
-      
-    </table>
-    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
-    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:48%;display:none;" onclick="UpdateDetails()" id="btnupdate">Update</button>
-    <br />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Payment Status By Finance (RITES)</label>
+                    <input type="text" class="input" id="lblps" readonly="readonly">
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3" id="showfill">
+                    <label for="Reference">Upload Lab Report</label>
+                    <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
+                </div>
+               
+            </div>
+            <div class="savenext-btn"  style="margin-left:47%;">
+                <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
+                <button type="button" class="save-btn active Permission_Save" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
+            </div>
+        </div>
+        @*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
+
+    </div>
 </section>
 @*</form>*@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
-         function InitializeDatatable() {
-        
+        function InitializeDatatable() {
+
             $("#dtlabregdtl").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -266,7 +128,7 @@ input[type="date"] {
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                           
+
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -287,7 +149,7 @@ input[type="date"] {
                     { data: "LAB_ID" },
                     { data: "TESTING_FEE" },
                     { data: "REMARKS" },
-                    
+
                     //{
                     //    data: null, orderable: false,
                     //    render: function (data, type, row) {
@@ -305,7 +167,7 @@ input[type="date"] {
                             return html;
                         }
                     },
-                    
+
                 ],
                 "order": [[0, "asc"]]
             });
@@ -330,41 +192,40 @@ input[type="date"] {
         });
         $(function () {
 
-            $("#lblpslip").text("Not Uploaded").css("color", "red");
-            $("#lblps").text("Not Approved").css("color", "red");
+            $("#lblpslip").val("Not Uploaded").css("color", "red");
+            $("#lblps").val("Not Approved").css("color", "red");
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
             });
             var today = new Date();
-             //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+            //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
             $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
             LoadSampleDtl();
-                         
+
         });
-        $("#ddlitem").change(function(){
-           
+        $("#ddlitem").change(function () {
+
             var name = $("#ddlitem option:selected").text();
-              $("#txtitemnm").val(name);
-          })
+            $("#txtitemnm").val(name);
+        })
         $("#ddlstatus").change(function () {
 
-          
-            if ($("#ddlstatus").val() != "U"){
+
+            if ($("#ddlstatus").val() != "U") {
                 $("#showfill").css("display", "none");
             }
-            else
-            {
+            else {
                 $("#showfill").css("display", "");
             }
         })
-        
+
 
         function LoadSampleDtl() {
-            
-           var CaseNo = '@ViewBag.CaseNo';
+
+            var CaseNo = '@ViewBag.CaseNo';
             var CallRdt = '@ViewBag.CallRdt';
             var CallSno = '@ViewBag.Sno';
-            
+
             $.ajax({
                 url: '/LabSampleInfo/SampleDtlData',
                 type: "POST",
@@ -372,41 +233,41 @@ input[type="date"] {
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
 
                 success: function (success) {
-                    
+
                     if (success.DateofRecSample != null && success.LikelyDt != null && success.DateofRecSample != "" && success.LikelyDt != "") {
-                    var originalDateString = success.DateofRecSample;
-                    var dateTimeParts = originalDateString.split(' ');
-                    var originalDateString1 = success.LikelyDt;
-                    var dateTimeParts1 = originalDateString1.split(' ');
+                        var originalDateString = success.DateofRecSample;
+                        var dateTimeParts = originalDateString.split(' ');
+                        var originalDateString1 = success.LikelyDt;
+                        var dateTimeParts1 = originalDateString1.split(' ');
 
-                    var dateParts = dateTimeParts[0].split('-');
-                    var dateParts1 = dateTimeParts1[0].split('-');
-                    
-                    var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-                    var dateObject1 = new Date(dateParts1[2], dateParts1[1] - 1, dateParts1[0]);
-                   
-                    var newMonth = dateObject.getMonth() + 1; 
-                    var newDay = dateObject.getDate();
-                    var newYear = dateObject.getFullYear();
-                    var newMonth1 = dateObject1.getMonth() + 1;
-                    var newDay1 = dateObject1.getDate();
-                    var newYear1= dateObject1.getFullYear();
+                        var dateParts = dateTimeParts[0].split('-');
+                        var dateParts1 = dateTimeParts1[0].split('-');
 
-                   
-                    var formattedMonth = (newMonth < 10 ? '0' : '') + newMonth;
-                    var formattedDay = (newDay < 10 ? '0' : '') + newDay;
-                    var formattedMonth1 = (newMonth1 < 10 ? '0' : '') + newMonth1;
-                    var formattedDay1 = (newDay1 < 10 ? '0' : '') + newDay1;
+                        var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+                        var dateObject1 = new Date(dateParts1[2], dateParts1[1] - 1, dateParts1[0]);
 
-                   
-                    var formattedDateString = formattedMonth + '/' + formattedDay + '/' + newYear ;
-                    var formattedDateString1 = formattedMonth1 + '/' + formattedDay1 + '/' + newYear1 ;
-                        $("#dtrecsam").val(formattedDateString);                        
+                        var newMonth = dateObject.getMonth() + 1;
+                        var newDay = dateObject.getDate();
+                        var newYear = dateObject.getFullYear();
+                        var newMonth1 = dateObject1.getMonth() + 1;
+                        var newDay1 = dateObject1.getDate();
+                        var newYear1 = dateObject1.getFullYear();
+
+
+                        var formattedMonth = (newMonth < 10 ? '0' : '') + newMonth;
+                        var formattedDay = (newDay < 10 ? '0' : '') + newDay;
+                        var formattedMonth1 = (newMonth1 < 10 ? '0' : '') + newMonth1;
+                        var formattedDay1 = (newDay1 < 10 ? '0' : '') + newDay1;
+
+
+                        var formattedDateString = formattedMonth + '/' + formattedDay + '/' + newYear;
+                        var formattedDateString1 = formattedMonth1 + '/' + formattedDay1 + '/' + newYear1;
+                        $("#dtrecsam").val(formattedDateString);
                         $("#dtlike").val(formattedDateString1);
                         $("#ddlstatus").val(success.Status);
-                        $("#btnsave").css("display","none");
+                        $("#btnsave").css("display", "none");
                         $("#btnupdate").css("display", "");
-                        
+
                         if ($("#ddlstatus").val(success.Status).val() != "U") {
                             $("#showfill").css("display", "none");
                         }
@@ -414,23 +275,22 @@ input[type="date"] {
                             $("#showfill").css("display", "");
                         }
                     }
-                    else
-                    {
+                    else {
                         $("#dtrecsam").val('');
                         $("#dtlike").val('');
                     }
-                    
-                    $("#lblcno").text(success.CaseNo).css("color", "red");
-                    $("#lblCallDT").text(success.CallRecDt).css("color", "red");
-                    $("#lblCallSno").text(success.CallSNO).css("color", "red");
-                    $("#lblVend").text(success.VendorName).css("color", "red");
-                    $("#lblIE").text(success.IEName).css("color", "red");
+
+                    $("#lblcno").val(success.CaseNo);
+                    $("#lblCallDT").val(success.CallRecDt);
+                    $("#lblCallSno").val(success.CallSNO);
+                    $("#lblVend").val(success.VendorName);
+                    $("#lblIE").val(success.IEName);
                     $("#txttesfee").val(success.TotalTFee);
-                   
+
                     $("#txtremark").val(success.Remarks);
-                    
+
                     sessionStorage.setItem("IEcode", success.IE);
-                    
+
                 }
 
             });
@@ -438,17 +298,17 @@ input[type="date"] {
 
 
         function SaveDetails() {
-            
+
             if ($("#ddlstatus").val() == "U") {
-                if ($("#upload").val() == ""){
+                if ($("#upload").val() == "") {
                     alert("please Upload File");
                     return false;
                 }
-                
-            }
-            
 
-            var parts = $("#lblCallDT").text().split('/');
+            }
+
+
+            var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
             var iecd = sessionStorage.getItem("IEcode");
             //var LabSampleInfoModel = {
@@ -464,9 +324,9 @@ input[type="date"] {
             //};
             var formData = new FormData();
             formData.append("UploadLab", $("#upload")[0].files[0]);
-            formData.append("CaseNo", $("#lblcno").text());
+            formData.append("CaseNo", $("#lblcno").val());
             formData.append("CallRecDt", convertedDate);
-            formData.append("CallSNO", $("#lblCallSno").text());
+            formData.append("CallSNO", $("#lblCallSno").val());
             formData.append("IE", iecd);
             formData.append("Status", $("#ddlstatus").val());
             formData.append("DateofRecSample", $("#dtrecsam").val());
@@ -521,7 +381,7 @@ input[type="date"] {
 
         }
         function UpdateDetails() {
-          
+
             if ($("#ddlstatus").val() == "U") {
                 if ($("#upload").val() == "") {
                     alert("please Upload File");
@@ -529,16 +389,16 @@ input[type="date"] {
                 }
 
             }
-            var parts = $("#lblCallDT").text().split('/');
+            var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
 
             //var files = [];
             //files.push($('input[type=file]').val());
             var formData = new FormData();
             formData.append("UploadLab", $("#upload")[0].files[0]);
-            formData.append("CaseNo", $("#lblcno").text());
+            formData.append("CaseNo", $("#lblcno").val());
             formData.append("CallRecDt", convertedDate);
-            formData.append("CallSNO", $("#lblCallSno").text());
+            formData.append("CallSNO", $("#lblCallSno").val());
             formData.append("Status", $("#ddlstatus").val());
             formData.append("DateofRecSample", $("#dtrecsam").val());
             formData.append("TotalTFee", $("#txttesfee").val());

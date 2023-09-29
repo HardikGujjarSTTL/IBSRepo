@@ -55,6 +55,8 @@ public partial class T80PoMaster
 
     public byte? Isstageinspection { get; set; }
 
+    public int? Contractid { get; set; }
+
     public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
     public virtual T01Region? RegionCodeNavigation { get; set; }

@@ -1,11 +1,11 @@
 ﻿@model IBS.Models.VenderCallRegisterModel
 @{
-    ViewData["Title"] = "VENDOR CALL REGISTRATION";
+    ViewData["Title"] = "Vendor Call Registration";
 }
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>VENDOR CALL REGISTRATION</h2>
+        <h2>Vendor Call Registration</h2>
     </div>
 </div>
 <div class="task-listinput">
@@ -20,21 +20,21 @@
             </span>
 
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Case No.</label>
                         <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
                         @*<span asp-validation-for="CaseNo" class="text-danger"></span>*@
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">PO No.</label>
                         <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
                         <span asp-validation-for="PoNo" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Call Date</label>
                         <input type="text" class="input" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">

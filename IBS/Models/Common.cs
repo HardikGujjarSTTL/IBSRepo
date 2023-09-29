@@ -15,6 +15,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace IBS.Models
 {
@@ -27,6 +28,19 @@ namespace IBS.Models
         public static string AccessDeniedMessage = "You don't have permission to do this action.";
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
         public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
+        public static int RegenerateOtpButtonShowMinute = 10;
+        public static string SendOTP(string mobile,string message)
+        {
+            WebClient client = new WebClient();
+            string baseurl = "http://apin.onex-aura.com/api/sms?key=QtPr681q&to=" + mobile + "&from=RITESI&body=" + message + "&entityid=1501628520000011823&templateid=1707168743061977502";
+            //string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={mobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+            Stream data = client.OpenRead(baseurl);
+            StreamReader smsreader = new StreamReader(data);
+            string s = smsreader.ReadToEnd();
+            data.Close();
+            smsreader.Close();
+            return s;
+        }
 
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
@@ -130,7 +144,6 @@ namespace IBS.Models
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
 
             Tblexception objexception = new Tblexception();
-
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
@@ -3683,6 +3696,19 @@ namespace IBS.Models
         public static string ConvertDateTimeFormat(this DateTime dt)
         {
             return dt.ToString(Common.CommonDateTimeFormat);
+        }
+
+        public static List<SelectListItem> GetContract()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.T100Contracts
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.Clientname,
+                                        Value = Convert.ToString(a.Id)
+                                    }).ToList();
+            return city;
         }
     }
 

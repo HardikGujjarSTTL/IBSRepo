@@ -20,6 +20,24 @@ namespace IBS.Controllers
             return View();
         }
 
+        public IActionResult Client()
+        {
+            return View();
+        }
+
+        public IActionResult Vendor()
+        {
+            return View();
+        }
+        public IActionResult IE()
+        {
+            return View();
+        }
+        public IActionResult CM()
+        {
+            return View();
+        }
+
         public IActionResult IE_Instructions()
         {
             return View();

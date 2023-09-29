@@ -91,6 +91,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<IbsToSapInvoiceExt01> IbsToSapInvoiceExt01s { get; set; }
 
+    public virtual DbSet<IbsUsersOtp> IbsUsersOtps { get; set; }
+
     public virtual DbSet<IbslabToSapInvoice> IbslabToSapInvoices { get; set; }
 
     public virtual DbSet<IbslabToSapInvoiceExt> IbslabToSapInvoiceExts { get; set; }
@@ -576,6 +578,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<ViewVendorCallsMarkedForSpecificPo> ViewVendorCallsMarkedForSpecificPos { get; set; }
 
     public virtual DbSet<ViewVoucherList> ViewVoucherLists { get; set; }
+
+    public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
+
+    public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -3473,6 +3479,37 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("WBS");
+        });
+
+        modelBuilder.Entity<IbsUsersOtp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("IBS_USERS_OTP_PK");
+
+            entity.ToTable("IBS_USERS_OTP");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IBS_USERS_OTP_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.Status)
+                .HasPrecision(2)
+                .HasColumnName("STATUS");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
         });
 
         modelBuilder.Entity<IbslabToSapInvoice>(entity =>
@@ -7601,6 +7638,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("MIGTYPE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
             entity.Property(e => e.Password)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -9261,6 +9302,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.Contractid)
+                .HasPrecision(6)
+                .HasColumnName("CONTRACTID");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
@@ -14376,6 +14420,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.Contractid)
+                .HasPrecision(6)
+                .HasColumnName("CONTRACTID");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
@@ -16740,7 +16787,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.OtChargePer)
                 .HasColumnType("NUMBER(10,2)")
@@ -19495,12 +19542,53 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VCHR_NO");
         });
+
+        modelBuilder.Entity<WriteOffDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.WriteOffMasterId, e.BillNo, e.WriteOffAmount }).HasName("WRITE_OFF_DETAILS_PK");
+
+            entity.ToTable("WRITE_OFF_DETAILS");
+
+            entity.Property(e => e.WriteOffMasterId)
+                .HasPrecision(6)
+                .HasColumnName("WRITE_OFF_MASTER_ID");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.WriteOffAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("WRITE_OFF_AMOUNT");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"WRITE_OFF_DETAILS_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+        });
+
+        modelBuilder.Entity<WriteOffMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("WRITE_OFF_MASTER_PK");
+
+            entity.ToTable("WRITE_OFF_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"WRITE_OFF_MASTER_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+        });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("CLIENT_FEEDBACK_SEQ");
         modelBuilder.HasSequence("EMAILCONFIGURATIONSEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
+        modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
         modelBuilder.HasSequence("REGIONALHRDATAOFIE_SEQ");
@@ -19547,6 +19635,8 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("USERROLESSEQ");
         modelBuilder.HasSequence("VENDOR_FEEDBACK_SEQ");
         modelBuilder.HasSequence("VENDORDOCUMENT_SEQ");
+        modelBuilder.HasSequence("WRITE_OFF_DETAILS_SEQ");
+        modelBuilder.HasSequence("WRITE_OFF_MASTER_SEQ");
 
         OnModelCreatingPartial(modelBuilder);
     }

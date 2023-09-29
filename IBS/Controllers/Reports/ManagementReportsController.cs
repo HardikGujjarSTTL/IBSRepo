@@ -6,6 +6,7 @@ using PuppeteerSharp.Media;
 using PuppeteerSharp;
 using IBS.Helper;
 using IBS.Models;
+using Newtonsoft.Json;
 
 namespace IBS.Controllers.Reports
 {
@@ -27,82 +28,90 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
+        public IActionResult Manage(string ReportType)
         {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
-            if (ReportType == "IE_X") model.ReportTitle = "IE Performance";
-            else if (ReportType == "CLUSTER_X") model.ReportTitle = "Cluster Wise Performance Report";
-            else if (ReportType == "ICSUBMIT") model.ReportTitle = "IC Submission Report";
-            else if (ReportType == "CALLSWITHOUTIC") model.ReportTitle = "Pending IC's Against Calls where Material has been Sccepted or Rejected";
-            else if (ReportType == "SUPSURPSUMM") model.ReportTitle = "CO Wise Super Surprise Summary";
-            else if (ReportType == "PENDING_CALLS") model.ReportTitle = "Overdue/Pending Calls";
-            else if (ReportType == "COUNTIC") model.ReportTitle = "CM and IE wise IC issued but not recieved";
-            else if (ReportType == "CALL_DETAILS") model.ReportTitle = "Call Details Dashborad";
+            ManagementReportsModel model = new();
 
+            if (TempData.ContainsKey(ReportType))
+            {
+                model = JsonConvert.DeserializeObject<ManagementReportsModel>(TempData.Peek(ReportType).ToString());
+            }
             return View(model);
         }
 
-        public IActionResult ManageRWB(string ReportType, string FromYearMonth, string ToYearMonth)
+        [HttpPost]
+        public IActionResult ManageReportData(IFormCollection formCollection)
         {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromYearMonth = FromYearMonth, ToYearMonth = ToYearMonth };
-            if (ReportType == "RWB") model.ReportTitle = "Region Wise Billing Summary";
-            return View("Manage", model);
-        }
+            ManagementReportsModel model = new();
 
-        public IActionResult ManageRWCO(string ReportType, DateTime FromDate, string Outstanding)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, Outstanding = Outstanding };
-            if (ReportType == "R") model.ReportTitle = "Region Wise Comparison of Outstanding";
-            return View("Manage", model);
-        }
+            if (formCollection.Keys.Contains("hdnReportType")) model.ReportType = formCollection["hdnReportType"];
+            model.ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(model.ReportType);
 
-        public IActionResult ManageSuperSurprise(string ReportType, DateTime FromDate, DateTime ToDate, string ParticularCM, string ParticularSector)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ParticularCM = ParticularCM, ParticularSector = ParticularSector };
-            if (ReportType == "SUPSUR") model.ReportTitle = "Super Surprise Details";
-            return View("Manage", model);
-        }
+            if (model.ReportType == "IE_X" || model.ReportType == "CLUSTER_X" || model.ReportType == "ICSUBMIT" || model.ReportType == "CALLSWITHOUTIC" || model.ReportType == "SUPSURPSUMM" || model.ReportType == "PENDING_CALLS" || model.ReportType == "COUNTIC" || model.ReportType == "CALL_DETAILS")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
+            }
+            else if (model.ReportType == "RWB")
+            {
+                if (formCollection.Keys.Contains("hdnFromYearMonth") && !string.IsNullOrEmpty(formCollection["hdnFromYearMonth"])) model.FromYearMonth = Convert.ToString(formCollection["hdnFromYearMonth"]);
+                if (formCollection.Keys.Contains("hdnToYearMonth") && !string.IsNullOrEmpty(formCollection["hdnToYearMonth"])) model.ToYearMonth = Convert.ToString(formCollection["hdnToYearMonth"]);
+            }
+            else if (model.ReportType == "R")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnOutstanding") && !string.IsNullOrEmpty(formCollection["hdnOutstanding"])) model.Outstanding = Convert.ToString(formCollection["hdnOutstanding"]);
+            }
+            else if (model.ReportType == "SUPSUR")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
+                if (formCollection.Keys.Contains("hdnParticularCM") && !string.IsNullOrEmpty(formCollection["hdnParticularCM"])) model.ParticularCM = Convert.ToString(formCollection["hdnParticularCM"]);
+                if (formCollection.Keys.Contains("hdnParticularSector") && !string.IsNullOrEmpty(formCollection["hdnParticularSector"])) model.ParticularSector = Convert.ToString(formCollection["hdnParticularSector"]);
+            }
+            else if (model.ReportType == "CONSIGN_REJECT")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
+                if (formCollection.Keys.Contains("hdnRegion") && !string.IsNullOrEmpty(formCollection["hdnRegion"])) model.Region = Convert.ToString(formCollection["hdnRegion"]);
+                if (formCollection.Keys.Contains("hdnStatus") && !string.IsNullOrEmpty(formCollection["hdnStatus"])) model.Status = Convert.ToString(formCollection["hdnStatus"]);
+            }
+            else if (model.ReportType == "X")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                model.Region = Region;
+            }
+            else if (model.ReportType == "CLIENTWISEREJ")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
+                if (formCollection.Keys.Contains("hdnClientType") && !string.IsNullOrEmpty(formCollection["hdnClientType"])) model.ClientType = Convert.ToString(formCollection["hdnClientType"]);
+                if (formCollection.Keys.Contains("hdnBPORailway") && !string.IsNullOrEmpty(formCollection["hdnBPORailway"])) model.BPORailway = Convert.ToString(formCollection["hdnBPORailway"]);
+            }
+            else if (model.ReportType == "NON_CONFORMITY")
+            {
+                if (formCollection.Keys.Contains("hdnFromYearMonth") && !string.IsNullOrEmpty(formCollection["hdnFromYearMonth"])) model.FromYearMonth = Convert.ToString(formCollection["hdnFromYearMonth"]);
+                if (formCollection.Keys.Contains("hdnToYearMonth") && !string.IsNullOrEmpty(formCollection["hdnToYearMonth"])) model.ToYearMonth = Convert.ToString(formCollection["hdnToYearMonth"]);
+                if (formCollection.Keys.Contains("hdnIeCd") && !string.IsNullOrEmpty(formCollection["hdnIeCd"])) model.IeCd = Convert.ToInt32(formCollection["hdnIeCd"]);
+            }
+            else if (model.ReportType == "HIGHVALUE")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
+                if (formCollection.Keys.Contains("hdnParticularCM") && !string.IsNullOrEmpty(formCollection["hdnParticularCM"])) model.ParticularCM = Convert.ToString(formCollection["hdnParticularCM"]);
+                if (formCollection.Keys.Contains("hdnSortedOn") && !string.IsNullOrEmpty(formCollection["hdnSortedOn"])) model.SortedOn = Convert.ToString(formCollection["hdnSortedOn"]);
+            }
+            else if (model.ReportType == "REMARKING")
+            {
+                if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
+                if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
+                if (formCollection.Keys.Contains("hdnCallRemarkingDate") && !string.IsNullOrEmpty(formCollection["hdnCallRemarkingDate"])) model.CallRemarkingDate = Convert.ToString(formCollection["hdnCallRemarkingDate"]);
+                if (formCollection.Keys.Contains("hdnCallsStatus") && !string.IsNullOrEmpty(formCollection["hdnCallsStatus"])) model.CallsStatus = Convert.ToString(formCollection["hdnCallsStatus"]);
+            }
 
-        public IActionResult ManageConsignReject(string ReportType, DateTime FromDate, DateTime ToDate, string Region, string Status)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, Region = Region, Status = Status };
-            if (ReportType == "CONSIGN_REJECT") model.ReportTitle = "Online Consignee Rejection Report";
-            return View("Manage", model);
-        }
+            TempData[model.ReportType] = JsonConvert.SerializeObject(model);
+            return RedirectToAction("Manage", new { model.ReportType });
 
-        public IActionResult ManageOutstandingOverRegion(string ReportType, DateTime FromDate)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, Region = Region };
-            if (ReportType == "X") model.ReportTitle = "Outstanding of One Region Over Other";
-            return View("Manage", model);
-        }
-
-        public IActionResult ManageClientWiseRejection(string ReportType, DateTime FromDate, DateTime ToDate, string ClientType, string BPORailway)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ClientType = ClientType, BPORailway = BPORailway };
-            if (ReportType == "CLIENTWISEREJ") model.ReportTitle = "Rejection Details Client Wise";
-            return View("Manage", model);
-        }
-
-        public IActionResult ManageNonConformity(string ReportType, string FromYearMonth, string ToYearMonth, int IeCd)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromYearMonth = FromYearMonth, ToYearMonth = ToYearMonth, IeCd = IeCd };
-            if (ReportType == "NON_CONFORMITY") model.ReportTitle = "Format for Monthly Non Conformity Report";
-            return View("Manage", model);
-        }
-
-        public IActionResult ManageTentativeInspection(string ReportType, DateTime FromDate, DateTime ToDate, string ParticularCM, string SortedOn)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, ParticularCM = ParticularCM, SortedOn = SortedOn };
-            if (ReportType == "HIGHVALUE") model.ReportTitle = "Tentative Inspection Fee Wise Pending Call";
-            return View("Manage", model);
-        }
-
-        public IActionResult ManageCallRemarking(string ReportType, DateTime FromDate, DateTime ToDate, string CallRemarkingDate, string CallsStatus)
-        {
-            ManagementReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, CallRemarkingDate = CallRemarkingDate, CallsStatus = CallsStatus };
-            if (ReportType == "REMARKING") model.ReportTitle = "Call Remarking Detail";
-            return View("Manage", model);
         }
 
         public IActionResult IEPerformance(DateTime FromDate, DateTime ToDate)

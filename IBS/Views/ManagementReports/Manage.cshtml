@@ -1,10 +1,13 @@
-﻿@model IBS.Models.Reports.ManagementReportsModel
+﻿@using System.Web;
+@model IBS.Models.Reports.ManagementReportsModel
 
 @{
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
+    string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "ManagementReports");
+    if (ReportType == "PENDING_CALLS" || ReportType == "CALL_DETAILS") gobackUrl = Url.Action("Index", "Dashboard");
 }
 
 <html>
@@ -13,6 +16,7 @@
 </head>
 <body>
     <p align="right">
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -190,7 +194,7 @@
     }
 
     function loadPendingCalls() {
-        $("#dvReportViewer").load("@Url.Action("PendingCalls")", { }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("PendingCalls")", {}, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

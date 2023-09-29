@@ -28,10 +28,10 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [Authorization("LabSampleInfo", "LabSampleInfo", "view")]
-        public IActionResult LapSampleIndex(string CaseNo, string CallRdt, string CallSno)
+        public IActionResult LapSampleIndex([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            List<LabSampleInfoModel> dTResult = LabSampleInfoRepository.LapSampleIndex(CaseNo, CallRdt, CallSno, Regin);
+            DTResult<LabSampleInfoModel> dTResult = LabSampleInfoRepository.LapSampleIndex(dtParameters, Regin);
             return Json(dTResult);
         }
         public IActionResult LabSampleDtl(string CaseNo, string CallRdt, string CallSno, string Flag)

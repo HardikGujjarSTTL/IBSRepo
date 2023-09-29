@@ -4,9 +4,9 @@
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
     string ReportTitle = string.Empty;
 
-    if (ReportType == "ICStatus") ReportTitle = "Summary ";
-    
-
+    if (ReportType == "ICStatus") ReportTitle = "IC ACCOUNTAL STATEMENT";
+    else if (ReportType == "ReInspectionICs") ReportTitle = "RE-INSPECTION IC's";
+    else if (ReportType == "ICSAccountal") ReportTitle = "IC ACCOUNTAL STATEMENT";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="task-listinput">
-    <div class="accordion-body">
+    <div class="accordion-body">        
         <div class="task-inner row ICStatus" style="display: none">
             <div class="col-md-3">
                 <div class="input-search">
@@ -32,13 +32,211 @@
                     <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                 </div>
             </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+            <div class="col-md-3 mb-3" style="font-weight: bold;">
+                <div class="reference">
+                    <label for="Name">Status of IE</label>
+                    @Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's
+                    &nbsp;&nbsp;
+                    @Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE
                 </div>
             </div>
-        </div>        
+            <div class="col-md-3 mb-3" id="IEStatus" style="display:none;">
+                <div class="reference">
+                    <label for="Name">IE</label>
+                    @Html.DropDownList("IE", new SelectList(IBS.Models.Common.GetIEName(ViewBag.Region) , "Value", "Text"),"--Select--")
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReportICStatus();">Submit</button>
+                        <button type="button" class="reset-btn" onclick="ClearControlsICStatus();">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="task-inner row ReInspectionICs" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">From</label>
+                    <input type="text" class="datepicker" id="FromDate_ReInspectionICs" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate_ReInspectionICs"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="ToDate_ReInspectionICs" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate_ReInspectionICs"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReportReInspectionICs();">Submit</button>
+                        <button type="button" class="reset-btn" onclick="ClearControlsReInspectionICs();">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            if ('@ReportType' == 'ICStatus') {
+                $(".ICStatus").css("display", "");
+                $('input[type=radio][id=rdType]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllIES") {
+                        $("#IEStatus").css("display", "none");
+                    } else {
+                        $("#IEStatus").css("display", "block");
+                    }
+                });
+            }
+            else if ('@ReportType' == 'ReInspectionICs'){
+                $(".ReInspectionICs").css("display", "");
+            }
+            else if ('@ReportType' == 'ICSAccountal') {
+                $(".ICStatus").css("display", "");
+                $('input[type=radio][id=rdType]').change(function () {
+                    var value = $(this).val();
+                    if (value == "AllIES") {
+                        $("#IEStatus").css("display", "none");
+                    } else {
+                        $("#IEStatus").css("display", "block");
+                    }
+                });
+            }
+        });
+
+        //Clear Functions
+        function ClearControlsICStatus(){
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+        }
+        function ClearControlsReInspectionICs(){
+            $("#FromDate_ReInspectionICs").val("");
+            $("#ToDate_ReInspectionICs").val("");
+            $("#spnErrorFromDate_ReInspectionICs").html("");
+            $("#spnErrorToDate_ReInspectionICs").html("");
+        }
+
+        function ViewReportICStatus() {
+            if ('@ReportType' == 'ICSAccountal') {
+                var FromDate = $("#FromDate").val();
+                var ToDate = $("#ToDate").val();
+                var Region = '@ViewBag.Region';
+                var lstYesNo = "true";
+                var rdbGIE = $('input[name="rdType"]:checked').val();
+                var lstIE = $("#IE").val();
+                var rdbCancelYes = "true";
+                var QueryString = "RptFlag=7" +
+                    "&FromDate=" + encodeURIComponent(FromDate) +
+                    "&ToDate=" + encodeURIComponent(ToDate) +
+                    "&Region=" + encodeURIComponent(Region) +
+                    "&lstYesNo=" + encodeURIComponent(lstYesNo) +
+                    "&rdbGIE=" + encodeURIComponent(rdbGIE) +
+                    "&lstIE=" + encodeURIComponent(lstIE) +
+                    "&rdbCancelYes=" + encodeURIComponent(rdbCancelYes);
+
+                var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+                if (oWin === null || typeof oWin === 'undefined') {
+                    alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+                }
+
+                window.opener = 'x';
+                window.close();
+            }
+            else
+            {
+                $("#spnErrorFromDate").html("");
+                $("#spnErrorToDate").html("");
+
+                var IsValid = true;
+
+                IsValid = FromToDateValidate(IsValid, "FromDate", "ToDate", "spnErrorFromDate", "spnErrorToDate");
+
+                if (!IsValid) return;
+
+                $("#spnErrorFromDate").html("");
+                $("#spnErrorToDate").html("");
+
+                var ReportType = '@ReportType';
+                var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+                var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+                var Type = $('input[name="rdType"]:checked').val();
+                var IE_CD = $("#IE").val();
+                if (Type == "AllIES") {
+                    IE_CD = null;
+                }
+                let myObject = { ReportType, FromDate, ToDate, IE_CD };
+
+                var url = '@Url.Action("ManageICStatus", "MonthlyReports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            }
+            
+        }
+
+        function ViewReportReInspectionICs() {
+
+            $("#spnErrorFromDate_ReInspectionICs").html("");
+            $("#spnErrorToDate_ReInspectionICs").html("");
+
+            var IsValid = true;
+
+            IsValid = FromToDateValidate(IsValid, "FromDate_ReInspectionICs", "ToDate_ReInspectionICs", "spnErrorFromDate_ReInspectionICs", "spnErrorToDate_ReInspectionICs");
+
+            if (!IsValid) return;
+
+            $("#spnErrorFromDate_ReInspectionICs").html("");
+            $("#spnErrorToDate_ReInspectionICs").html("");
+
+            var ReportType = '@ReportType';
+            var FromDate = moment($('#FromDate_ReInspectionICs').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate_ReInspectionICs').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = { ReportType, FromDate, ToDate };
+
+            var url = '@Url.Action("Manage", "MonthlyReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+       
+
+        function FromToDateValidate(IsValid, FDateID, TDateID, EFDateID, ETDateID) {
+            FDateID = "#" + FDateID;
+            TDateID = "#" + TDateID;
+            EFDateID = "#" + EFDateID;
+            ETDateID = "#" + ETDateID;
+            if ($(FDateID).val() == "") {
+                $(EFDateID).html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($(TDateID).val() == "") {
+                $(ETDateID).html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($(FDateID).val() != "" && IsValidDate($(FDateID).val()) == false) {
+                $(EFDateID).html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($(TDateID).val() != "" && IsValidDate($(TDateID).val()) == false) {
+                $(ETDateID).html("Invalid date format.");
+                IsValid = false;
+            }
+            return IsValid;
+        }
+    </script>
+}
+
 
