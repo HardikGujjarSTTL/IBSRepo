@@ -11,6 +11,7 @@
     else if (ReportType == "ICStatus") ReportTitle = "IC Status";
     else if (ReportType == "PendingJICases") ReportTitle = "PENDING JI CASES";
     else if (ReportType == "IEDairy") ReportTitle = "IE DAIRY REPORT";
+    else if (ReportType == "IEWorkPlan") ReportTitle = "IE DAILY WORK PLAN REPORT";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -246,7 +247,7 @@
                 $(".report4").css("display", "none");
                 $(".report5").css("display", "none");
             }
-            else if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "PendingJICases") {
+            else if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "PendingJICases" || '@ReportType' == "IEWorkPlan") {
                 $(".report1").css("display", "");
                 $(".report2").css("display", "none");
                 $(".report3").css("display", "none");

@@ -60,6 +60,10 @@
             loadIEDairy();
             fileName = 'IE_Dairy';
         }
+        else if ('@ReportType' == "IEWorkPlan"){
+            loadIEWorkPlan();
+            fileName = 'IE_WorkPlan';
+        }
     });
 
     function loadUnBilledIC() {
@@ -103,6 +107,12 @@
         });
     }
 
+    function loadIEWorkPlan(){
+        $("#dvReportViewer").load("@Url.Action("IEWorkPlan")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
 
     $("#btnPrint").click(function () {
         generatePdf(true);

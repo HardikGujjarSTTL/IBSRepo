@@ -41,6 +41,7 @@ namespace IBS.Controllers.Reports
             ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
             else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
+            else if (ReportType == "IEWorkPlan") model.ReportTitle = "IE DAILY WORK PLAN REPORT";
             return View(model);
         }
         public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
@@ -175,7 +176,14 @@ namespace IBS.Controllers.Reports
             IEDairyModel model = new();
             model = reportsRepository.Get_IE_Dairy( FromDate,  ToDate,  "",  OrderByVisit,  "true", GetUserInfo);
             return PartialView(model);
-        }        
+        }   
+        
+        public IActionResult IEWorkPlan(DateTime FromDate, DateTime ToDate)
+        {
+            IEWorkPlanModel model = new();
+            model = reportsRepository.Get_IE_WorkPlan(FromDate, ToDate, Convert.ToString(GetUserInfo.IeCd),GetUserInfo.Region);
+            return PartialView(model);
+        }
 
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string htmlContent)
