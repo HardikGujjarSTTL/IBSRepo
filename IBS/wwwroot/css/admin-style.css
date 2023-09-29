@@ -1136,13 +1136,12 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 	.tab-content>.tab-pane { display: block; opacity: 1; }
 }
 .custom-tab .nav-tabs .nav-link { width: 100%; background: #e9ebf0; border-radius: 0; padding: 20px 10px; color: #646464; border: none; font-size: 14px; position: relative; text-align: center; display: inline; }
-.custom-tab ul li { position: relative; width: 12.5%; text-align: center; }
+.custom-tab ul li { position: relative; width: auto; text-align: center; }
 .custom-tab ul li:after { background: #cfd0d1; height: 100%; position: absolute; right: 0; content: ""; top: 0; width: 1px; }
 .custom-tab ul li:last-child:after { display: none; }
-.custom-tab ul { background: #e9ebf0; align-items: center; }
+.custom-tab ul { }
 .custom-tab .nav-tabs li.nav-link.active, .custom-tab .nav-tabs li:hover .nav-link, .custom-tab .nav-tabs li .active { background: #008CA6; color: #fff; border-radius: 0; }
 .custom-tab .nav-tabs .nav-link:hover:first-child { border-radius: 0; }
-.custom-tab .nav-tabs .nav-link:first-child { border-radius: 5px 0 0 0; }
 .custom-tab .tab-pane { border: none; }
 .company .customSelectOuter { width: 100%; }
 .reference label { color: #555555; }
@@ -1476,3 +1475,6 @@ overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; wi
 .lineBreak{ line-break:anywhere;}
 .darkRedBoldText{text-transform: uppercase; color:#d52127;}
 .darkGreenBoldText{text-transform: uppercase; color:green;}
+.nav-wrapper{ width:100%; overflow-x:auto; overflow-y:hidden; background:#e9ebf0;}
+.nav-wrapper ul{display:flex; flex-wrap:nowrap!important; align-items:center;}
+.nav-wrapper ul li{ min-width:200px; display:flex; height:100px;}
