@@ -37,7 +37,7 @@ namespace IBS.Controllers
         {
             try
             {
-                if(dataArr != null || dataArr.Count != 0)
+                if(dataArr != null && dataArr.Count > 0)
                 {
                     WriteOfMaster model = new WriteOfMaster();
                     model.CreatedBy = UserId;
@@ -49,7 +49,7 @@ namespace IBS.Controllers
                 }
                 else
                 {
-                    AlertDanger("Something Is Wrong..");
+                    AlertDanger("Enter Write Off Amount To Update Record..");
                 }
             }
             catch (Exception ex)
