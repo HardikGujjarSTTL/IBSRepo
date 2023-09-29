@@ -849,8 +849,8 @@ BEGIN
     INTO w_Purchaser, w_Rly_Cd
     FROM T80_PO_MASTER
     WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
-    
-    IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) = '') OR (TRIM(w_Rly_Cd) IS NULL) THEN
+
+    IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) IS NULL) THEN
         OUT_ERR_CD := 2;
         RAISE my_exception;
     END IF;
@@ -875,26 +875,34 @@ BEGIN
     ---
     OUT_ERR_CD := 4;
     OUT_CASE_NO := w_ctr || w_sno;
-    
-    INSERT INTO T13_PO_MASTER
-    SELECT OUT_CASE_NO, PURCHASER_CD, STOCK_NONSTOCK, RLY_NONRLY, PO_OR_LETTER, PO_NO, SUBSTR(PO_NO, LENGTH(PO_NO) - 4, 5),
-           PO_DT, RECV_DT, VEND_CD, RLY_CD, REGION_CODE, IN_TEMP_USER_ID, DATETIME, REMARKS, 'R', POI_CD, 'V', 0
-    FROM T80_PO_MASTER
-    WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
+
+    -- Explicitly list the columns in the INSERT INTO statements
+   Insert into T13_PO_MASTER(case_no,purchaser_cd,stock_nonstock,rly_nonrly,po_or_letter,po_no,l5no_po,po_dt,recv_dt,vend_cd,rly_cd,region_code,user_id,datetime,
+   remarks,inspecting_agency,poi_cd,po_source,pending_charges) 
+Select OUT_CASE_NO,PURCHASER_CD,STOCK_NONSTOCK,RLY_NONRLY,PO_OR_LETTER,PO_NO,
+substr(PO_NO,LENGTH(PO_NO)-4,5),
+PO_DT,RECV_DT,VEND_CD,RLY_CD,REGION_CODE,IN_TEMP_USER_ID,DATETIME,REMARKS,'R',POI_CD,'V',0 
+From T80_PO_MASTER Where  REGION_CODE =IN_REGION_CD and CASE_NO=IN_TEMP_CASE_NO;
+
+
     ---
     OUT_ERR_CD := 5;
     INSERT INTO T14_PO_BPO
+    (CASE_NO, CONSIGNEE_CD, BPO_CD)
     SELECT UNIQUE OUT_CASE_NO, CONSIGNEE_CD, BPO_CD
     FROM T82_PO_DETAIL
     WHERE CASE_NO = IN_TEMP_CASE_NO;
     ---
     OUT_ERR_CD := 6;
-    INSERT INTO T15_PO_DETAIL
-    SELECT OUT_CASE_NO, ITEM_SRNO, ITEM_DESC, CONSIGNEE_CD, QTY, RATE, UOM_CD, BASIC_VALUE, SALES_TAX_PER, SALES_TAX,
-           EXCISE_TYPE, EXCISE_PER, EXCISE, DISCOUNT_TYPE, DISCOUNT_PER, DISCOUNT, OTHER_CHARGES, VALUE, DELV_DT,
-           EXT_DELV_DT, IN_TEMP_USER_ID, DATETIME, OT_CHARGE_TYPE, OT_CHARGE_PER, ITEM_CD, PL_NO
-    FROM T82_PO_DETAIL
-    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    
+    Insert into T15_PO_DETAIL (case_no,item_srno,item_desc,consignee_cd,qty,rate,uom_cd,basic_value,sales_tax_per,
+    sales_tax,excise_type,excise_per,excise,discount_type,discount_per,discount,other_charges,value,
+    delv_dt,ext_delv_dt,user_id,datetime,ot_charge_type,ot_charge_per,item_cd,
+    pl_no)
+    Select OUT_CASE_NO,ITEM_SRNO,ITEM_DESC,CONSIGNEE_CD,QTY,RATE,UOM_CD,BASIC_VALUE,SALES_TAX_PER,SALES_TAX,EXCISE_TYPE,EXCISE_PER,EXCISE,DISCOUNT_TYPE,DISCOUNT_PER,DISCOUNT,OTHER_CHARGES,
+    VALUE,DELV_DT,EXT_DELV_DT,IN_TEMP_USER_ID,DATETIME,OT_CHARGE_TYPE,OT_CHARGE_PER, ITEM_CD,PL_NO 
+    From T82_PO_DETAIL Where CASE_NO=IN_TEMP_CASE_NO;
+
     ---
     OUT_ERR_CD := 7;
     UPDATE T80_PO_MASTER
@@ -909,7 +917,7 @@ BEGIN
     SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
     FROM DUAL;
     p_Result := p_Result_Cursor;
-    
+
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         ROLLBACK;
@@ -920,6 +928,8 @@ EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
 END;
+/
+
 
 
 =======================

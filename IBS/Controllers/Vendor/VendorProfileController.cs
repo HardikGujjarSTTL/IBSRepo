@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace IBS.Controllers.Vendor
 {
-    [Authorization]
+    //[Authorization]
     public class VendorProfileController : BaseController
     {
         #region Variables
@@ -30,7 +30,7 @@ namespace IBS.Controllers.Vendor
         {
             return View();
         }
-        [Authorization("VendorProfile", "Index", "view")]
+        [Authorization("VendorProfile", "Manage", "view")]
         public IActionResult Manage(int VEND_CD)
         {
             int VendCd = 0;
@@ -91,7 +91,7 @@ namespace IBS.Controllers.Vendor
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("VendorProfile", "Index", "edit")]
+        [Authorization("VendorProfile", "Manage", "edit")]
         public IActionResult VendorProfileDetailsSave(VendorModel model, IFormCollection FrmCollection)
         {
             try

@@ -236,8 +236,10 @@ namespace IBS.Repositories
         public PO_MasterModel FindCaseNo(string CaseNo, int VendCd)
         {
             PO_MasterModel model = new();
-            //T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
-            T80PoMaster POMaster = (from l in context.T80PoMasters
+            //T80PoMaster POMaster = (from l in context.T80PoMasters
+            //                        where l.CaseNo == CaseNo && l.VendCd == VendCd
+            //                        select l).FirstOrDefault();
+            T13PoMaster POMaster = (from l in context.T13PoMasters
                                     where l.CaseNo == CaseNo && l.VendCd == VendCd
                                     select l).FirstOrDefault();
 
