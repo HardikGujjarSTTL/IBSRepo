@@ -144,7 +144,6 @@ namespace IBS.Models
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
 
             Tblexception objexception = new Tblexception();
-
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
