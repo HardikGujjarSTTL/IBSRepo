@@ -11,13 +11,11 @@
         <input type="hidden" asp-for="DecryptUserName" />
         <div class="row">
             <div class="col-md-12">
-                <div class="inputIcon">
                     <label for="email">OTP</label>
                     <input type="text" class="input" asp-for="OTP" maxlength="4" autocomplete="off">
                     <span asp-validation-for="OTP" class="text-danger"></span>
                     <br />
                     <span id="timeSpan" class="text-danger"></span>
-                </div>
             </div>
         </div>
         <div class="row my-3">
