@@ -3,318 +3,329 @@
 *@
 @{
 }
-
-<div class="adminInnerContent">
-    <div class="dashHeader justify-content-between">
-        <h2 class="alignLeft">Client Dashboard</h2>
-        <div><a href="#" class="blueBtn">Register Inspection Call</a> <a href="#" class="addNew"><span class="fa fa-plus"></span> Add New Purchase Order</a></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="admindashboard-section">
-                <div class="admindashboard-wrap">
-                    <div class="vendor-dashboard">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="dashboard-box das1Client">
-                                    <div class="dash-total">
-                                        <div class="dash-count">
-                                            <div class="total-amount">35</div>
-                                            <div class="total-inner">Number of <br>Inspection Request</div>
+<div class="dashHeader justify-content-between">
+    <h2 class="alignLeft">Client Dashboard</h2>
+    <div><a href="#" class="blueBtn">Register Inspection Call</a> <a href="#" class="addNew"><span class="fa fa-plus"></span> Add New Purchase Order</a></div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="admindashboard-section">
+            <div class="admindashboard-wrap">
+                <div class="vendor-dashboard">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="dashboard-box das1Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">35</div>
+                                        <div class="total-inner">
+                                            Number of <br>
+                                            Inspection Request
                                         </div>
                                     </div>
-                                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="dashboard-box das2Client">
-                                    <div class="dash-total">
-                                        <div class="dash-count">
-                                            <div class="total-amount">15</div>
-                                        </div>
-                                        <div class="total-inner">Inspection<br> Ongoing</div>
-                                    </div>
-                                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-                                </div>
+                                <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="dashboard-box das3Client">
-                                    <div class="dash-total">
-                                        <div class="dash-count">
-                                            <div class="total-amount">12</div>
-                                        </div>
-                                        <div class="total-inner">Inspection <br>Completed</div>
+                        <div class="col-lg-6">
+                            <div class="dashboard-box das2Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">15</div>
                                     </div>
-                                    <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                                    <div class="total-inner">
+                                        Inspection<br>
+                                        Ongoing
+                                    </div>
                                 </div>
+                                <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="dashboard-box das4Client">
-                                    <div class="dash-total">
-                                        <div class="dash-count">
-                                            <div class="total-amount">07</div>
-                                        </div>
-                                        <div class="total-inner">Inspection<br> Pending</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="dashboard-box das3Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">12</div>
                                     </div>
-                                    <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
+                                    <div class="total-inner">
+                                        Inspection <br>
+                                        Completed
+                                    </div>
                                 </div>
+                                <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="dashboard-box das4Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">07</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Inspection<br>
+                                        Pending
+                                    </div>
+                                </div>
+                                <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="boxRadius">
-                <div class="table-title">
-                    <h3 class="headingh3">Inspection Request</h3>
-                    <div class="datefrom">
-
-                        <select class="dateSelect">
-                            <option>Date</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="region-wise-pie"></div>
             </div>
         </div>
     </div>
-    <section class="table-section">
-        <div class="table-title">
-            <h3 class="headingh3">Recent request status of inspection call</h3>
-        </div>
-        <div class="task-inner row">
-            <div class="col-md-4">
-                <div class="input-search">
-                    <label for="Search" class="d-none">Search</label>
-                    <input type="text" id="Search" placeholder="Search">
+    <div class="col-lg-6">
+        <div class="boxRadius">
+            <div class="table-title">
+                <h3 class="headingh3">Inspection Request</h3>
+                <div class="datefrom">
+                    <select class="dateSelect">
+                        <option>Date</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-md-4 p-0">
-                <div class="task-select">
-                    <div class="customSelectOuter">
-                        <label for="Status" class="d-none">Select Client</label>
-                        <select id="Status" name="selectcorporation" class="">
-                            <option>Select Client</option>
-                            <option>Option 1</option>
-                        </select>
-                    </div>
-                    <div class="customSelectOuter">
-                        <label for="ongoing" class="d-none">Select Status</label>
-                        <select id="ongoing" name="selectcorporation" class="">
-                            <option>Ongoing</option>
-                            <option>Option 1</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="tast-date">
-                    <div class="datefrom">
-                        <div class="from-celender">
-                            <label for="From" class="d-none">From</label>
-                            <input id="From" placeholder="From" type="text" class="datepicker hasDatepicker">
-                        </div>
-                        <div class="colwithbtn">
-                            <label for="To" class="d-none">To</label>
-                            <input id="To" placeholder="To" type="text" class="datepicker hasDatepicker">
-                        </div>
-                        <button class="search-btn"><span class="fa fa-search"></span></button>
-                    </div>
-                </div>
+            <div id="region-wise-pie"></div>
+        </div>
+    </div>
+</div>
+<section class="table-section">
+    <div class="table-title">
+        <h3 class="headingh3">Recent request status of inspection call</h3>
+    </div>
+    <div class="task-inner row">
+        <div class="col-md-4">
+            <div class="input-search">
+                <label for="Search" class="d-none">Search</label>
+                <input type="text" id="Search" placeholder="Search">
             </div>
         </div>
-        <div class="dash-table">
-            <table class="table-responsive">
-                <thead>
-                    <tr>
-                        <th scope="col">Sr. No</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Req. No.</th>
-                        <th scope="col">Vendor</th>
-                        <th scope="col">Details</th>
-                        <th scope="col">Inspection Engineers</th>
-                        <th scope="col">Status</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>01</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Express Global Logistics Pvt. Ltd, Mumbai</td>
-                        <td>Freight Forwarding activities for handling export & import...</td>
-                        <td>Mr. Manoj Vajpay</td>
-                        <td class="oranges">Rejected</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>02</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Becton Dickinson India Private Limited.</td>
-                        <td>CD4 Machine Reagents Kits for FACS Count Machines...</td>
-                        <td>Smt. Smita Patil</td>
-                        <td class="green-color">Approved</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>03</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Myrtle Project &amp; Consultancy Pvt. Ltd.</td>
-                        <td>Construction of RCC Boundary wall with Precast Panel &...</td>
-                        <td>Mr. Gaurang Dholera</td>
-                        <td class="blue-color">On Hold</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>04</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Micron Pharmaceuticals Ltd.</td>
-                        <td>Procurement of Nevirapine Oral Suspension & Syrup...</td>
-                        <td>Mr. Ajay Tomer</td>
-                        <td class="green-color">Approved</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>05</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Verve Human Care Laboratories, Dehradun</td>
-                        <td>Tablet Buprenorphine 0.4 mg Tablets QTY. 1,97,40,000</td>
-                        <td>Mr. Mayank Malegauker</td>
-                        <td class="oranges">Rejected</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="tableBottomLink">
-            <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div> <a class="viewall" href="#">View All</a>
-        </div>
-    </section>
-    <section class="table-section">
-        <div class="table-title">
-            <h3 class="headingh3">Recent purchase order</h3>
-        </div>
-        <div class="task-inner row">
-            <div class="col-md-4">
-                <div class="input-search">
-                    <label for="Search2" class="d-none">Search</label>
-                    <input type="text" id="Search2" placeholder="Search">
+        <div class="col-md-4 p-0">
+            <div class="task-select">
+                <div class="customSelectOuter">
+                    <label for="Status" class="d-none">Select Client</label>
+                    <select id="Status" name="selectcorporation" class="">
+                        <option>Select Client</option>
+                        <option>Option 1</option>
+                    </select>
                 </div>
-            </div>
-            <div class="col-md-4 p-0">
-                <div class="task-select">
-                    <div class="customSelectOuter">
-                        <label for="Vendor2" class="d-none">Select Vendor</label>
-                        <select id="Vendor2" name="selectcorporation" class="">
-                            <option>Select Vendor</option>
-                            <option>Option 1</option>
-                        </select>
-                    </div>
-                    <div class="customSelectOuter">
-                        <label for="ongoing" class="d-none">Select Status</label>
-                        <select id="ongoing" name="selectcorporation" class="">
-                            <option>Select Status</option>
-                            <option>Option 1</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="tast-date">
-                    <div class="datefrom">
-                        <div class="from-celender">
-                            <label for="From" class="d-none">From</label>
-                            <input id="From" placeholder="From" type="text" class="datepicker hasDatepicker">
-                        </div>
-                        <div class="colwithbtn">
-                            <label for="To" class="d-none">To</label>
-                            <input id="To" placeholder="To" type="text" class="datepicker hasDatepicker">
-                        </div>
-                        <button class="search-btn"><span class="fa fa-search"></span></button>
-                    </div>
+                <div class="customSelectOuter">
+                    <label for="ongoing" class="d-none">Select Status</label>
+                    <select id="ongoing" name="selectcorporation" class="">
+                        <option>Ongoing</option>
+                        <option>Option 1</option>
+                    </select>
                 </div>
             </div>
         </div>
-        <div class="dash-table">
-            <table class="table-responsive">
-                <thead>
-                    <tr>
-                        <th scope="col">Sr. No</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Req. No.</th>
-                        <th scope="col">Vendor</th>
-                        <th scope="col">Details</th>
-                        <th scope="col">Purchase Order</th>
-                        <th scope="col">Status</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>01</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Express Global Logistics Pvt. Ltd, Mumbai</td>
-                        <td>Freight Forwarding activities for handling export & import...</td>
-                        <td>₹1,61,39,424.00</td>
-                        <td class="oranges">Rejected</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>02</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Becton Dickinson India Private Limited.</td>
-                        <td>CD4 Machine Reagents Kits for FACS Count Machines...</td>
-                        <td>₹1,61,39,424.00</td>
-                        <td class="green-color">Issued</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>03</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Myrtle Project &amp; Consultancy Pvt. Ltd.</td>
-                        <td>Construction of RCC Boundary wall with Precast Panel &...</td>
-                        <td>₹1,523,544.13</td>
-                        <td class="blue-color">On Hold</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>04</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Micron Pharmaceuticals Ltd.</td>
-                        <td>Procurement of Nevirapine Oral Suspension & Syrup...</td>
-                        <td>₹391,096,944.00</td>
-                        <td class="green-color">Issued</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                    <tr>
-                        <td>05</td>
-                        <td>20-07-2023</td>
-                        <td>RITES/01/0203</td>
-                        <td>M/s Verve Human Care Laboratories, Dehradun</td>
-                        <td>Tablet Buprenorphine 0.4 mg Tablets QTY. 1,97,40,000</td>
-                        <td>₹53,82,69,239.50</td>
-                        <td class="oranges">Rejected</td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="col-md-4">
+            <div class="tast-date">
+                <div class="datefrom">
+                    <div class="from-celender">
+                        <label for="From" class="d-none">From</label>
+                        <input id="From" placeholder="From" type="text" class="datepicker">
+                    </div>
+                    <div class="colwithbtn">
+                        <label for="To" class="d-none">To</label>
+                        <input id="To" placeholder="To" type="text" class="datepicker">
+                    </div>
+                    <button class="search-btn"><span class="fa fa-search"></span></button>
+                </div>
+            </div>
         </div>
-        <div class="tableBottomLink">
-            <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div> <a class="viewall" href="#">View All</a>
+    </div>
+    <div class="dash-table">
+        <table class="table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">Sr. No</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Req. No.</th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Inspection Engineers</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Express Global Logistics Pvt. Ltd, Mumbai</td>
+                    <td>Freight Forwarding activities for handling export & import...</td>
+                    <td>Mr. Manoj Vajpay</td>
+                    <td class="oranges">Rejected</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Becton Dickinson India Private Limited.</td>
+                    <td>CD4 Machine Reagents Kits for FACS Count Machines...</td>
+                    <td>Smt. Smita Patil</td>
+                    <td class="green-color">Approved</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Myrtle Project &amp; Consultancy Pvt. Ltd.</td>
+                    <td>Construction of RCC Boundary wall with Precast Panel &...</td>
+                    <td>Mr. Gaurang Dholera</td>
+                    <td class="blue-color">On Hold</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Micron Pharmaceuticals Ltd.</td>
+                    <td>Procurement of Nevirapine Oral Suspension & Syrup...</td>
+                    <td>Mr. Ajay Tomer</td>
+                    <td class="green-color">Approved</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>05</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Verve Human Care Laboratories, Dehradun</td>
+                    <td>Tablet Buprenorphine 0.4 mg Tablets QTY. 1,97,40,000</td>
+                    <td>Mr. Mayank Malegauker</td>
+                    <td class="oranges">Rejected</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <a class="viewall" href="#">View All</a>
+    </div>
+</section>
+<section class="table-section">
+    <div class="table-title">
+        <h3 class="headingh3">Recent purchase order</h3>
+    </div>
+    <div class="task-inner row">
+        <div class="col-md-4">
+            <div class="input-search">
+                <label for="Search2" class="d-none">Search</label>
+                <input type="text" id="Search2" placeholder="Search">
+            </div>
         </div>
-    </section>
+        <div class="col-md-4 p-0">
+            <div class="task-select">
+                <div class="customSelectOuter">
+                    <label for="Vendor2" class="d-none">Select Vendor</label>
+                    <select id="Vendor2" name="selectcorporation" class="">
+                        <option>Select Vendor</option>
+                        <option>Option 1</option>
+                    </select>
+                </div>
+                <div class="customSelectOuter">
+                    <label for="ongoing" class="d-none">Select Status</label>
+                    <select id="ongoing" name="selectcorporation" class="">
+                        <option>Select Status</option>
+                        <option>Option 1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="tast-date">
+                <div class="datefrom">
+                    <div class="from-celender">
+                        <label for="From" class="d-none">From</label>
+                        <input id="From" placeholder="From" type="text" class="datepicker hasDatepicker">
+                    </div>
+                    <div class="colwithbtn">
+                        <label for="To" class="d-none">To</label>
+                        <input id="To" placeholder="To" type="text" class="datepicker hasDatepicker">
+                    </div>
+                    <button class="search-btn"><span class="fa fa-search"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dash-table">
+        <table class="table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">Sr. No</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Req. No.</th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Purchase Order</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Express Global Logistics Pvt. Ltd, Mumbai</td>
+                    <td>Freight Forwarding activities for handling export & import...</td>
+                    <td>₹1,61,39,424.00</td>
+                    <td class="oranges">Rejected</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Becton Dickinson India Private Limited.</td>
+                    <td>CD4 Machine Reagents Kits for FACS Count Machines...</td>
+                    <td>₹1,61,39,424.00</td>
+                    <td class="green-color">Issued</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Myrtle Project &amp; Consultancy Pvt. Ltd.</td>
+                    <td>Construction of RCC Boundary wall with Precast Panel &...</td>
+                    <td>₹1,523,544.13</td>
+                    <td class="blue-color">On Hold</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Micron Pharmaceuticals Ltd.</td>
+                    <td>Procurement of Nevirapine Oral Suspension & Syrup...</td>
+                    <td>₹391,096,944.00</td>
+                    <td class="green-color">Issued</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+                <tr>
+                    <td>05</td>
+                    <td>20-07-2023</td>
+                    <td>RITES/01/0203</td>
+                    <td>M/s Verve Human Care Laboratories, Dehradun</td>
+                    <td>Tablet Buprenorphine 0.4 mg Tablets QTY. 1,97,40,000</td>
+                    <td>₹53,82,69,239.50</td>
+                    <td class="oranges">Rejected</td>
+                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <a class="viewall" href="#">View All</a>
+    </div>
+</section>
 @section scripts{
     <script>
         // Pie Chart

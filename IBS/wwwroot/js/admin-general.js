@@ -431,7 +431,6 @@
 			changeYear: true,
 			dateFormat: 'dd/mm/yy',
 		}).mask("00/00/0000");
-
 	});
 
 	$(window).bind('resize orientationchange', function () {
