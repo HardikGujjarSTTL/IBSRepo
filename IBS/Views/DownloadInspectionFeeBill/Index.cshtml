@@ -36,7 +36,7 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">Call Date</label>
-                    <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="CallRecvDt" placeholder="DD/MM/YYYY" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                     @*<span asp-validation-for="CallRecvDt" class="text-danger"></span>*@
                 </div>
             </div>
@@ -50,16 +50,16 @@
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
-                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" placeholder="DD/MM/YYYY" style="text-transform: uppercase;" readonly="readonly">
                     @*<span asp-validation-for="PoDt" class="text-danger"></span>*@
                 </div>
             </div>
         </div>
 
         <div class="savenext-btn">
-            <a asp-controller="DownloadInspectionFeeBill" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" id="btnSearch">Search</button>
             <button type="button" class="save-btn" id="btnDownload" onclick="Download()">Download Inspection Fee Bill</button>
+            <a asp-controller="DownloadInspectionFeeBill" asp-action="Index" class="reset-btn">Clear</a>
         </div>
     </div>
     <section class="table-section">

@@ -1,0 +1,262 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+    <div class="dashHeader">
+        <h2 class="alignLeft">Inspection Engineer (IE) Dashboard</h2>
+    </div>
+    <div class="admindashboard-section">
+        <div class="admindashboard-wrap">
+            <div class="row ie-dashboard">
+                <div class="col-lg-3">
+                    <div class="dashboard-box das1Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">35</div>
+                                <div class="total-inner">Inspection <br>of Request</div>
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="dashboard-box das3Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">18</div>
+                            </div>
+                            <div class="total-inner">Request <br>Completed</div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="dashboard-box das2Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">15</div>
+                            </div>
+                            <div class="total-inner">Requests<br> Pending</div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="dashboard-box das4Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">02</div>
+                            </div>
+                            <div class="total-inner">Request<br> Cancelled</div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="graph-section">
+                    <div class="invoice">
+                        <h3 class="headingh3">Requests</h3>
+
+                        <div class="datefrom">
+
+                            <select class="dateSelect">
+                                <option>Date</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="graph">
+                        <div id="monthlychart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="boxRadius inlineCalendar">
+                    <div class="invoice">
+                        <h3 class="headingh3">Calendar</h3>
+
+                        <div class="datefrom">
+
+                            <select class="dateSelect">
+                                <option>Date</option>
+                            </select>
+
+                        </div>
+                    </div>
+                <div class="datepickerInline">
+                    </div>
+                    <div><hr></div>
+                    <div class="dateLabel">
+                        <div class="roundNumber inspect1">07</div> <span>Inspection at Mahabaleshwar, for Building material</span>
+                    </div>
+                    <div class="dateLabel">
+                        <div class="roundNumber inspect2">07</div> <span>Inspection at Mahabaleshwar, for Building material</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <div class="table-title">
+            <h3 class="headingh3">Inspection Requests</h3>
+        </div>
+
+        <div class="dash-table">
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <th scope="col">Sr. No</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Req. No.</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Work Type</th>
+                        <th scope="col">Inspection<br> Due Date</th>
+                        <th scope="col">Contact<br> Person</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01</td>
+                        <td>20-07-2023</td>
+                        <td>#3123</td>
+                        <td>S.G.Mandalik</td>
+                        <td>Rajat Co. Ltd.</td>
+                        <td>Railway bridge material testing</td>
+                        <td>10/12/2023</td>
+                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a></td>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>20-07-2023</td>
+                        <td>#3812</td>
+                        <td>Pawar R.V. &amp; Ors.</td>
+                        <td>Milan Facbrication</td>
+                        <td>Building Material Testing</td>
+                        <td>10/12/2023</td>
+                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a></td>
+                    </tr>
+                    <tr>
+                        <td>03</td>
+                        <td>20-07-2023</td>
+                        <td>#58014</td>
+                        <td>Marco Co. Ltd.</td>
+                        <td>India Con. Ltd.</td>
+                        <td>Furniture Material Testing</td>
+                        <td>10/12/2023</td>
+                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a></td>
+                    </tr>
+                    <tr>
+                        <td>04</td>
+                        <td>20-07-2023</td>
+                        <td>#2154</td>
+                        <td>Ajit Mfg. Pvt. Ltd</td>
+                        <td>Rajendra Co. Ltd.</td>
+                        <td>Metal Lab Testing</td>
+                        <td>10/12/2023</td>
+                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a></td>
+                    </tr>
+                    <tr>
+                        <td>05</td>
+                        <td>20-07-2023</td>
+                        <td>#4587</td>
+                        <td>Hares &amp; Co.</td>
+                        <td>Nitesh Machines</td>
+                        <td>Railway bridge material testing</td>
+                        <td>10/12/2023</td>
+                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+@section scripts{
+<script>
+    Highcharts.chart('monthlychart', {
+        colors: ['#815FE5', '#079871', '#1962C1'],
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Number of Requests'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
+            pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">{point.y:.1f} Lac' +
+                '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
+            footerFormat: '</tr></table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            spline: {
+                lineWidth: 2,
+                states: {
+                    hover: {
+                        lineWidth: 4
+                    }
+                },
+                marker: {
+                    enabled: false
+                },
+            }
+        },
+        exporting: {
+            enabled: false
+        },
+        series: [{
+            name: 'Total Requests',
+            data: [5, 10, 5, 20, 10, 15, 20, 10, 15, 20, 10, 5]
+        }, {
+            name: 'Completed',
+            data: [10, 15, 10, 20, 35, 20, 10, 35, 25, 35, 10, 35]
+        }, {
+            name: 'Pending',
+            data: [20, 10, 30, 10, 15, 20, 30, 10, 20, 30, 20, 15]
+
+        }]
+    });
+
+</script>
+<script>
+    $(document).ready(function(){
+        $(".datepickerInline").datepicker();
+    });
+</script>
+}

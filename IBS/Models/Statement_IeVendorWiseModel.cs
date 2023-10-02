@@ -13,6 +13,8 @@
         public string pendingCallsOnly { get; set; }
 
         public string RLY_CD { get; set; }
+        public string wSortkEy { get; set; }
+        public DateTime EXT_DELV_DT { get; set; }
         public string IE_NAME { get; set; }
         public string VENDOR { get; set; }
         public string CASE_NO { get; set; }

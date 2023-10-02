@@ -164,6 +164,7 @@ builder.Services.AddScoped<ICall_Cancellation_FormRepository, Call_Cancellation_
 builder.Services.AddScoped<ICalls_Marked_For_Specific_PORepository, Calls_Marked_For_Specific_PORepository>();
 builder.Services.AddScoped<ICallsReportRepository, CallsReportRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
+builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 
 
 

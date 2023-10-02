@@ -14,40 +14,42 @@
                 <h3 class="heading3">In Case Of New PO</h3>
             </div>
         </div>
-        <ul class="radioListForm">
-            <li>
-                <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
-                <label for="Reference" class="billInvoiceClass">Railway</label><br>
-            </li>
-            <li>
-                <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
-                <label for="Reference" class="billInvoiceClass">Private</label><br>
-            </li>
-            <li>
-                <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
-                <label for="Reference" class="billInvoiceClass">Foreign Railway</label><br>
-            </li>
-            <li>
-                <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
-                <label for="Reference" class="billInvoiceClass">PSU</label><br>
-            </li>
-            <li>
-                <input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
-                <label for="Reference" class="billInvoiceClass">State Government</label><br>
-            </li>
-           
-        </ul>
         <div class="row my-0">
-        <div class="col-md-3 mb-3">
-            @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="list-btn">
-                <a class="formBtn Permission_Add" onclick="Add()"><span class="fa fa-plus"></span> Add New PO</a>
+            <div class="col-md-8 mb-3">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
+                        <label for="Reference" class="billInvoiceClass">Railway</label><br>
+                    </li>
+                    <li>
+                        <input type="radio" class="billInvoiceClass" id="rdbPrivate" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                        <label for="Reference" class="billInvoiceClass">Private</label><br>
+                    </li>
+                    <li>
+                        <input type="radio" class="billInvoiceClass" id="rdbFRailway" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                        <label for="Reference" class="billInvoiceClass">Foreign Railway</label><br>
+                    </li>
+                    <li>
+                        <input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                        <label for="Reference" class="billInvoiceClass">PSU</label><br>
+                    </li>
+                    <li>
+                        <input type="radio" class="rdbSGovt" id="rdbStateGovernment" name="Railway" value="Invoice_No" onchange="FillRailwayCode()">
+                        <label for="Reference" class="billInvoiceClass">State Government</label><br>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-md-2 mb-3">
+                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="list-btn">
+                    <a class="formBtn Permission_Add" onclick="Add()"><span class="fa fa-plus"></span> Add New PO</a>
+                </div>
             </div>
         </div>
-        </div>
-        </div>
+    </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-2 mb-3">
@@ -113,8 +115,7 @@
             InitializePOMasterDatatable();
         });
 
-        function Search()
-        {
+        function Search() {
             InitializePOMasterDatatable();
         }
         function InitializePOMasterDatatable() {
@@ -139,7 +140,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            CaseNo: CaseNo, PoNo: PoNo, PoDt: PoDt, vend_name:vend_name
+                            CaseNo: CaseNo, PoNo: PoNo, PoDt: PoDt, vend_name: vend_name
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -196,9 +197,9 @@
             });
         }
 
-        
+
         function FillRailwayCode() {
-            var type='';
+            var type = '';
             if ($("#rdbRailway").is(":checked")) {
                 type = 'R';
             }
@@ -211,7 +212,7 @@
             else if ($("#rdbPSU").is(":checked")) {
                 type = 'U';
             }
-            else if ($("#rdbPrivate").is(":checked")) {
+            else if ($("#rdbStateGovernment").is(":checked")) {
                 type = 'S';
             }
 
@@ -227,7 +228,7 @@
                     $("#dllRCode").html("");
                     $("#dllRCode").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
-                        $("#dllRCode").append("<option value=" + value.Value +" >" + value.Text + "</option>");
+                        $("#dllRCode").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
                 }
                 else {
@@ -240,7 +241,7 @@
             var type = false;
             if ($("#rdbRailway").is(":checked") ||
                 $("#rdbPrivate").is(":checked") ||
-                $("#rdbFRailway").is(":checked") ||
+                $("#rdbStateGovernment").is(":checked") ||
                 $("#rdbPSU").is(":checked") ||
                 $("#rdbSGovt").is(":checked")) {
                 type = true;
@@ -248,20 +249,17 @@
             return type;
         }
 
-        function Add()
-        {
-            if (!Validation())
-            {
+        function Add() {
+            if (!Validation()) {
                 ShowHideMsgNew(false, "Please select PO Type.");
                 return;
             }
-            if ($("#dllRCode").val() == "")
-            {
+            if ($("#dllRCode").val() == "") {
                 ShowHideMsgNew(false, "Please select Railway Code.");
                 return;
             }
 
-            var type='';
+            var type = '';
             if ($("#rdbRailway").is(":checked")) {
                 type = 'R';
             }
@@ -274,10 +272,10 @@
             else if ($("#rdbPSU").is(":checked")) {
                 type = 'U';
             }
-            else if ($("#rdbPrivate").is(":checked")) {
+            else if ($("#rdbStateGovernment").is(":checked")) {
                 type = 'S';
             }
-            var RLY_CD=$("#dllRCode").val();
+            var RLY_CD = $("#dllRCode").val();
             window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?PO_TYPE=' + type + "&RLY_CD=" + RLY_CD;
         }
 

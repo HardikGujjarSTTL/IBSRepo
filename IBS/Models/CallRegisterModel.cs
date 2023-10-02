@@ -8,7 +8,7 @@ namespace IBS.Models
 
         public string PoNo { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? PoDt { get; set; }
 
@@ -24,6 +24,8 @@ namespace IBS.Models
 
         public decimal? Isdeleted { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? CallRecvDt { get; set; }
 
         public int? CallInstallNo { get; set; }

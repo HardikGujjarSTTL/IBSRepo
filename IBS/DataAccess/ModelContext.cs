@@ -579,6 +579,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewVoucherList> ViewVoucherLists { get; set; }
 
+    public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
+
+    public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
@@ -15359,8 +15363,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("TBLEXCEPTION");
 
             entity.Property(e => e.Id)
+                .HasPrecision(6)
                 .HasDefaultValueSql("\"IBSDEV\".\"TBLEXCEPTION_SEQ\".\"NEXTVAL\"")
-                .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
             entity.Property(e => e.Actionname)
                 .HasMaxLength(50)
@@ -15374,7 +15378,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
-                .HasColumnType("DATE")
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Createip)
                 .HasMaxLength(50)
@@ -19538,6 +19542,46 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VCHR_NO");
         });
+
+        modelBuilder.Entity<WriteOffDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.WriteOffMasterId, e.BillNo, e.WriteOffAmount }).HasName("WRITE_OFF_DETAILS_PK");
+
+            entity.ToTable("WRITE_OFF_DETAILS");
+
+            entity.Property(e => e.WriteOffMasterId)
+                .HasPrecision(6)
+                .HasColumnName("WRITE_OFF_MASTER_ID");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.WriteOffAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("WRITE_OFF_AMOUNT");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"WRITE_OFF_DETAILS_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+        });
+
+        modelBuilder.Entity<WriteOffMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("WRITE_OFF_MASTER_PK");
+
+            entity.ToTable("WRITE_OFF_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"WRITE_OFF_MASTER_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+        });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("CLIENT_FEEDBACK_SEQ");
         modelBuilder.HasSequence("EMAILCONFIGURATIONSEQ");
@@ -19591,6 +19635,8 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("USERROLESSEQ");
         modelBuilder.HasSequence("VENDOR_FEEDBACK_SEQ");
         modelBuilder.HasSequence("VENDORDOCUMENT_SEQ");
+        modelBuilder.HasSequence("WRITE_OFF_DETAILS_SEQ");
+        modelBuilder.HasSequence("WRITE_OFF_MASTER_SEQ");
 
         OnModelCreatingPartial(modelBuilder);
     }
