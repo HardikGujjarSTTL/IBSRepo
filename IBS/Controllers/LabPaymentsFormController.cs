@@ -4,6 +4,8 @@ using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 using System.Drawing;
 using System.Text.Json;
 
@@ -13,10 +15,12 @@ namespace IBS.Controllers
     {
         #region Variables
         private readonly ILabPaymentFormRepository LabPaymentRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public LabPaymentsFormController(ILabPaymentFormRepository _LabPaymentRepository)
+        public LabPaymentsFormController(ILabPaymentFormRepository _LabPaymentRepository, IWebHostEnvironment _env)
         {
             LabPaymentRepository = _LabPaymentRepository;
+            this.env = _env;
         }
 
         #region Lab Payments Form
@@ -113,7 +117,7 @@ namespace IBS.Controllers
 
         public IActionResult PrintLabPayment(LabPaymentFormModel paymentFormModel, string VOUCHER_NO, string Lab)
         {
-            //paymentFormModel.PaymentID = VOUCHER_NO;
+            ViewBag.PaymentID = VOUCHER_NO;
             //paymentFormModel.Lab = Lab;
             paymentFormModel.Regin = GetRegionCode;
             if (paymentFormModel.Regin == "N")
@@ -138,6 +142,38 @@ namespace IBS.Controllers
             paymentFormModel.Regin = GetRegionCode;
             LabPaymentFormModel dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
             return Json(dTResult);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        {
+            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
+            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
         #endregion
 

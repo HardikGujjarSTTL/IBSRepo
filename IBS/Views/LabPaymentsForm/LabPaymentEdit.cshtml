@@ -407,8 +407,8 @@
         }
 
         $("#btnprint").click(function () {
-
-            var PaymentID = sessionStorage.getItem("pytid");
+            
+            var PaymentID = $("#lblpyno").val();
             window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
         })
         function Edit(PaymentID) {

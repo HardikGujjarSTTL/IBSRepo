@@ -144,16 +144,16 @@
         <div class="col-md-2 mb-3">
             <label for="Reference">From</label>
             <input type="text" class="input datepicker" id="dtfrom" style="text-transform">
-            <span class="text-danger"></span>
+            <span class="text-danger field-validation-error" id="spnError1"></span>
         </div>
         <div class="col-md-2 mb-3">
             <label for="Reference">To</label>
             <input type="text" class="input datepicker" id="dtto" style="text-transform">
-            <span class="text-danger"></span>
+            <span class="text-danger field-validation-error" id="spnError2"></span>
         </div>
     </div>
 </div>
-<div class="savenext-btn" style="margin-right:50%;">
+<div class="savenext-btn" style="margin-left:40%;">
     <button type="button" class="save-btn active" onclick="GetLabBill();">Submit</button>
 </div>
 
@@ -185,7 +185,7 @@
     </section>
 </div>
 <br />
-<div class="savenext-btn" style="margin-right:46%;">
+<div class="savenext-btn" style="margin-left:40%;">
     <button type="button" class="save-btn active Permission_Save" style="display:none;" id="btnupdate" onclick="Update();">Update</button>
 </div>
 
@@ -263,7 +263,18 @@
 
 
         function Update() {
-            debugger;
+            $("#spnError1").html("");
+            $("#spnError2").html("")
+            var IsValid = true;
+            if ($("#dtfrom").val() == "") {
+                $("#spnError1").html("Please Enter From Date");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnError2").html("Please Enter To Date");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             var selectedsrno = [];
            
             $("input[type='checkbox'][data-sno]:checked").each(function () {
