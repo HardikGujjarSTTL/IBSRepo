@@ -343,6 +343,7 @@ namespace IBS.Repositories
                 }
                 catch (Exception ex)
                 {
+                    IETrainingDetailsModel.MSG = ex.InnerException.Message.ToString();
                     return false;
                 }
             }

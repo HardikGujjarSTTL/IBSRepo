@@ -1,0 +1,135 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+
+}
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>
+            LAB SAMPLE INFO DETAILS
+        </h2>
+    </div>
+
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="row mb-3">
+
+            <div class="col-md-12">
+                <h3 class="heading3">Complaints Recieved in The Period</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="PropertyId">From Date</label>
+                <input type="text" class="input datepicker" id="dtfrom" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+            <div class="col-md-3">
+                <label for="PropertyId">To date</label>
+                <input type="text" class="input datepicker" id="dtto" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="PropertyId">Report Status</label>
+                @Html.DropDownList("ReportStatus", new SelectList(IBS.Models.Common.ReportStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "" })
+            </div>
+            <div class="col-md-3" style="margin-top:3%">
+                <label for="rb1">
+                    <input type="radio" name="radioGroup" id="rb1" />
+                    Sample Receive Date Wise
+
+                </label>
+                <span class="text-danger"></span>
+            </div>
+            <div class="col-md-5" style="margin-top:3%">
+                <label for="rb2">
+                    <input type="radio" name="radioGroup" id="rb2" />
+                    Sample Approved By Finance Date Wise
+
+                </label>
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+            <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function ClearControls() {
+            location.reload(true);
+        }
+      
+        $(function () {
+            $("#rb1").prop("checked", true);
+            if ($("#rb1").val() == true) {
+
+                sessionStorage.setItem("rb", true);
+            }
+            else {
+
+                sessionStorage.setItem("rb", true);
+            }
+
+
+            $(".datepicker").datepicker({
+                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+            });
+            // InitializeDatatable();
+        });
+
+       
+        function ViewReport() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            wFrmDtO = $("#dtfrom").val();
+            wToDt = $("#dtto").val();
+            Status = $("#ddlstatus").val();
+            rbsrdt = sessionStorage.getItem("rb");
+
+            let myObject = { wFrmDtO, wToDt, Status, rbsrdt };
+
+            var url = '@Url.Action("Manage", "LabSamplePaymentReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

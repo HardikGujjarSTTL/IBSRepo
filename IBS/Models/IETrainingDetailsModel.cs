@@ -37,7 +37,8 @@ namespace IBS.Models
         public string Fees { get; set; }
         public string Validity { get; set; }
         public string Regin { get; set; }
-        
+        public string MSG { get; set; }
+
 
 
     }
