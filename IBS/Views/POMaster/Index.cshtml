@@ -14,7 +14,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtPOMaster" class="table-responsive">
+                <table id="dtPOMaster" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -26,8 +26,8 @@
                             <th>Purchaser Name</th>
                             <th>Remarks</th>
                             <th>Case No.</th>
-                            <th>View PO Details</th>
-                            <th>Action</th>
+                            <th class="px-0">View PO Details</th>
+                            <th class="center px-0">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
             $("#dtPOMaster").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+                //scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -93,7 +93,7 @@
                             var RlyNonrly = data.RlyNonrly;
                             var PoDtDate = data.PoDtDate;
                             var poDetsilsUrl = '@Url.Action("PODetails", "POMaster")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -103,14 +103,17 @@
                         render: function (data, type, row) {
                             var id = data.CaseNo;
                             var editUrl = '@Url.Action("Manage", "POMaster")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '<a onclick="POMasterDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtPOMaster").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 
