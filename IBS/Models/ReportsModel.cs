@@ -134,7 +134,7 @@
     {
         public string ReportType { get; set; }
         public string ReportTitle { get; set; }
-        public  DateTime? FromDate { get; set; }
+        public DateTime? FromDate { get; set; }
         public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
         public DateTime? ToDate { get; set; }
         public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
@@ -189,4 +189,56 @@
 
     }
     #endregion
+
+    public class IEWorkPlanModel
+    {
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public string Region { get; set; }
+
+        public List<IEWorkPlanList1Model> lstWorkPlan1 { get; set; }
+        public List<IEWorkPlanList2Model> lstWorkPlan2 { get; set; }
+        public List<IEWorkPlanList3Model> lstWorkPlan3 { get; set; }
+    }
+
+    public class IEWorkPlanList1Model
+    {
+        public string IE_NAME { get; set; }
+        public string CO_NAME { get; set; }
+        public string VISIT_DATE { get; set; }
+        public string LOGIN_TIME { get; set; }
+        public string CASE_NO { get; set; }
+        public string CALL_RECV_DATE { get; set; }
+        public string DESIRE_DT { get; set; }
+        public string CALL_SNO { get; set; }
+        public string CHK_COUNT { get; set; }
+        public string MFG_NAME { get; set; }
+        public string MFG_PLACE { get; set; }
+        public string MFG_CITY { get; set; }
+        public string ITEM_DESC_PO { get; set; }
+        public string VALUE { get; set; }
+        public string CALL_STATUS { get; set; }
+    }
+
+    public class IEWorkPlanList2Model
+    {
+        public string IE_NAME { get; set; }
+        public string CO_NAME { get; set; }
+        public string NI_WORK_PLAN_CD { get; set; }
+        public string WORK_DATE { get; set; }
+        public string LOGIN_TIME { get; set; }
+    }
+
+    public class IEWorkPlanList3Model
+    {
+        public int SrNo { get; set; }
+        public string IE_NAME { get; set; }
+        public string CO_NAME { get; set; }
+        public string IE_CD { get; set; }
+        public string Date { get; set; }
+        public string Reason { get; set; }
+
+    }
 }
