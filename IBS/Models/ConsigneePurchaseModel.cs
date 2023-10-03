@@ -28,6 +28,8 @@ namespace IBS.Models
         [Required]
         public int? ConsigneeCity { get; set; }
 
+        [Display(Name = "State")]
+        [Required]
         public string? ConsigneeState { get; set; }
 
         public string? UserId { get; set; }

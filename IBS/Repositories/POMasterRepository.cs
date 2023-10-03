@@ -226,7 +226,7 @@ namespace IBS.Repositories
                 POMaster.PoiCd = model.PoiCd;
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
-                POMaster.Contractid= model.Contractid;
+                POMaster.Contractid = model.Contractid;
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }
@@ -236,8 +236,10 @@ namespace IBS.Repositories
         public PO_MasterModel FindCaseNo(string CaseNo, int VendCd)
         {
             PO_MasterModel model = new();
-            //T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
-            T80PoMaster POMaster = (from l in context.T80PoMasters
+            //T80PoMaster POMaster = (from l in context.T80PoMasters
+            //                        where l.CaseNo == CaseNo && l.VendCd == VendCd
+            //                        select l).FirstOrDefault();
+            T13PoMaster POMaster = (from l in context.T13PoMasters
                                     where l.CaseNo == CaseNo && l.VendCd == VendCd
                                     select l).FirstOrDefault();
 
@@ -336,9 +338,14 @@ namespace IBS.Repositories
         }
         public int GenerateITEM_SRNO(string CaseNo)
         {
-            int maxSrNo = (from pm in context.T82PoDetails
+            int maxSrNo = 1;
+            int count = context.T82PoDetails.Where(x => x.CaseNo == CaseNo).Count();
+            if (count > 0)
+            {
+                maxSrNo = (from pm in context.T82PoDetails
                            where pm.CaseNo == CaseNo
                            select pm.ItemSrno).Max() + 1;
+            }
             return maxSrNo;
         }
         public PO_MasterDetailsModel FindPODetailsByID(string CASE_NO, string ITEM_SRNO)
@@ -511,7 +518,7 @@ namespace IBS.Repositories
             return vendorEmail;
         }
 
-        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO,string USER_ID)
+        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO, string USER_ID)
         {
             string[] result = new string[2];
             OracleParameter[] par = new OracleParameter[4];
@@ -523,7 +530,7 @@ namespace IBS.Repositories
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 result[0] = ds.Tables[0].Rows[0]["ERR_CD"].ToString();
-                result[1] = ds.Tables[0].Rows[1]["OUT_CASE_NO"].ToString();
+                result[1] = ds.Tables[0].Rows[0]["CASE_NO"].ToString();
             }
             return result;
         }

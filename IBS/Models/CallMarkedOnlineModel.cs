@@ -1,4 +1,6 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class CallMarkedOnlineModel
     {
@@ -13,6 +15,7 @@
         public string PO_NO { get; set; }
         public string PO_DT { get; set; }
         public string VENDOR { get; set; }
+        [Required(ErrorMessage ="Please select Inspectiong Er")]
         public string IE_NAME { get; set; }
         public int IE_CD { get; set; }
         public string RLY { get; set; }
