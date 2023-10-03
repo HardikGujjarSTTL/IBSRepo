@@ -155,7 +155,11 @@ namespace IBS.Controllers.Vendor
             {
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 var obj = pOMasterRepository.FindCaseNo(CaseNo, VendCd);
-                return Json(new { status = true, poMaster = obj });
+                if (obj != null)
+                {
+                    return Json(new { status = true, poMaster = obj, responseText = "" });
+                }
+                return Json(new { status = false, poMaster = obj, responseText = "Their is no record present for the given Case No." });
             }
             catch (Exception ex)
             {
@@ -200,7 +204,11 @@ namespace IBS.Controllers.Vendor
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetPurchaserCd(consignee);
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (consignee != null)
+                {
+                    agencyClient = Common.GetPurchaserCd(consignee);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
@@ -363,7 +371,7 @@ namespace IBS.Controllers.Vendor
                 }
                 model.Createdby = UserId;
                 int i = pOMasterRepository.POMasterSubDetailsInsertUpdate(model);
-                if (i >0)
+                if (i > 0)
                 {
                     return Json(new { status = true, responseText = msg });
                 }

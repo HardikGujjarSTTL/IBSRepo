@@ -2038,10 +2038,10 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
+            //SelectListItem drop = new SelectListItem();
+            //drop.Text = "Other";
+            //drop.Value = "0";
+            //dropDownDTOs.Add(drop);
             if (RlyNonrly == "R")
             {
                 List<SelectListItem> dropList = new List<SelectListItem>();
@@ -2215,7 +2215,7 @@ namespace IBS.Models
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.StartsWith(consignee)
+                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper())
                         orderby a.Consignee
                         select
                    new SelectListItem
