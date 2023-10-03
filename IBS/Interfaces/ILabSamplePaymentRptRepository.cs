@@ -6,6 +6,6 @@ namespace IBS.Interfaces
     public interface ILabSamplePaymentRptRepository
     {
 
-        DTResult<LabSamplePaymentRptModel> GetPaymentReport(DTParameters dtParameters, string Regin);
+        LabSamplePaymentRptModel GetPaymentReport(string ReportType, string wFrmDtO, string wToDt, string Status, string rbsrdt, string Regin);
     }
 }

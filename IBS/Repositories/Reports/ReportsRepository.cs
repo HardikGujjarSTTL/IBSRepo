@@ -6,6 +6,7 @@ using IBS.Models.Reports;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -386,6 +387,71 @@ namespace IBS.Repositories.Reports
             //    VALUE = Convert.ToString(row["VALUE"]),
             //    CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
             //}).ToList();
+            return model;
+        }
+
+        public ConsigneeComplaintsModel Get_Consignee_Complaints(DateTime FromDate, DateTime ToDate, string IECD, string Region)
+        {
+            ConsigneeComplaintsModel model = new();
+            List<ConsigneeComplaintsListModel> lstCons = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, IECD, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CONSIGNEE_COMPLAINTS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            lstCons = dt.AsEnumerable().Select(row => new ConsigneeComplaintsListModel
+            {
+                IN_REGION = Convert.ToString(row["IN_REGION"]),
+                COMPLAINT_ID = Convert.ToString(row["COMPLAINT_ID"]),
+                JI_SNO = Convert.ToString(row["JI_SNO"]),
+                VENDOR = Convert.ToString(row["VENDOR"]),
+                PO_NO = Convert.ToString(row["PO_NO"]),
+                PO_DATE = Convert.ToString(row["PO_DATE"]),
+                BK_SET = Convert.ToString(row["BK_SET"]),
+                IC_DATE = Convert.ToString(row["IC_DATE"]),
+                ITEM_DESC = Convert.ToString(row["ITEM_DESC"]),
+                CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                QTY_OFF = Convert.ToString(row["QTY_OFF"]),
+                QTY_REJECTED = Convert.ToString(row["QTY_REJECTED"]),
+                REJECTION_VALUE = Convert.ToString(row["REJECTION_VALUE"]),
+                DEPT = Convert.ToString(row["DEPT"]),
+                COMPLAINT_DATE = Convert.ToString(row["COMPLAINT_DATE"]),
+                //REJECTIONMEMOPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),// "/REJECTION_MEMO/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                REJECTION_REASON = Convert.ToString(row["REJECTION_REASON"]),
+                NO_JI_RES = Convert.ToString(row["NO_JI_RES"]),
+                JI_DATE = Convert.ToString(row["JI_DATE"]),
+                //COMPLAINTSCASESPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),//"/COMPLAINTS_CASES/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                STATUS = Convert.ToString(row["STATUS"]),
+                //COMPLAINTSREPORTPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),//"/COMPLAINTS_REPORT/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                DEFECT_DESC = Convert.ToString(row["DEFECT_DESC"]),
+                JI_STATUS_DESC = Convert.ToString(row["JI_STATUS_DESC"]),
+                CONCLUSION_DATE = Convert.ToString(row["CONCLUSION_DATE"]),
+                CO_NAME = Convert.ToString(row["CO_NAME"]),
+                JI_IE_NAME = Convert.ToString(row["JI_IE_NAME"]),
+                ROOT_CAUSE_ANALYSIS = Convert.ToString(row["ROOT_CAUSE_ANALYSIS"]),
+                CHK_STATUS = Convert.ToString(row["CHK_STATUS"]),
+
+                TECH_REF = Convert.ToString(row["TECH_REF"]),
+                ACTION_PROPOSED = Convert.ToString(row["ACTION_PROPOSED"]),
+                ANY_OTHER = Convert.ToString(row["ANY_OTHER"]),
+                CAPA_STATUS = Convert.ToString(row["CAPA_STATUS"]),
+                DANDAR_STATUS = Convert.ToString(row["DANDAR_STATUS"]),
+
+                CASE_NO = Convert.ToString(row["CASE_NO"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+
+            }).ToList();
+            model.lstConsigneeComplaints = lstCons;
             return model;
         }
     }

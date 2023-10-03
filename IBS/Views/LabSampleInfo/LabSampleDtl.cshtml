@@ -52,18 +52,20 @@
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Date of Receipt of Sample</label>
                     <input type="text" class="input datepicker" id="dtrecsam">
+                    <span class="text-danger field-validation-error" id="spnError1"></span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Total Testing Fee (incl of Taxes)</label>
                     <input type="text" class="input"  id="txttesfee">
+                    
                    
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Likely Date of Test Report</label>
                     <input type="text" class="input datepicker" id="dtlike">
-                    
+                    <span class="text-danger field-validation-error" id="spnError2"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Status</label>
@@ -97,7 +99,7 @@
             </div>
             <div class="savenext-btn"  style="margin-left:47%;">
                 <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
-                <button type="button" class="save-btn active Permission_Save" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
+                <button type="button" class="save-btn active Permission_EditView" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
             </div>
         </div>
         @*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
@@ -192,8 +194,8 @@
         });
         $(function () {
 
-            $("#lblpslip").val("Not Uploaded").css("color", "red");
-            $("#lblps").val("Not Approved").css("color", "red");
+            $("#lblpslip").val("Not Uploaded");
+            $("#lblps").val("Not Approved");
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
             });
@@ -233,37 +235,37 @@
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
 
                 success: function (success) {
-
+                    
                     if (success.DateofRecSample != null && success.LikelyDt != null && success.DateofRecSample != "" && success.LikelyDt != "") {
-                        var originalDateString = success.DateofRecSample;
-                        var dateTimeParts = originalDateString.split(' ');
-                        var originalDateString1 = success.LikelyDt;
-                        var dateTimeParts1 = originalDateString1.split(' ');
+                        var originalDateStr = success.DateofRecSample;
+                        
+                        var dateParts = originalDateStr.split(' ');
+                        var datePart = dateParts[0];
+                        var timePart = dateParts[1];
 
-                        var dateParts = dateTimeParts[0].split('-');
-                        var dateParts1 = dateTimeParts1[0].split('-');
+                        var dateComponents = datePart.split('/');
+                        var day = dateComponents[0];
+                        var month = dateComponents[1];
+                        var year = dateComponents[2];
 
-                        var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-                        var dateObject1 = new Date(dateParts1[2], dateParts1[1] - 1, dateParts1[0]);
+                        var convertedDateStr = day + "/" + month + "/" + year;
+                        
 
-                        var newMonth = dateObject.getMonth() + 1;
-                        var newDay = dateObject.getDate();
-                        var newYear = dateObject.getFullYear();
-                        var newMonth1 = dateObject1.getMonth() + 1;
-                        var newDay1 = dateObject1.getDate();
-                        var newYear1 = dateObject1.getFullYear();
+                        var originalDateStr1 = success.LikelyDt;
+                        var dateParts1 = originalDateStr1.split(' ');
+                        var datePart1 = dateParts1[0];
+                        var timePart1 = dateParts1[1];
 
+                        var dateComponents1 = datePart1.split('/');
+                        var day1 = dateComponents1[0];
+                        var month1 = dateComponents1[1];
+                        var year1 = dateComponents1[2];
 
-                        var formattedMonth = (newMonth < 10 ? '0' : '') + newMonth;
-                        var formattedDay = (newDay < 10 ? '0' : '') + newDay;
-                        var formattedMonth1 = (newMonth1 < 10 ? '0' : '') + newMonth1;
-                        var formattedDay1 = (newDay1 < 10 ? '0' : '') + newDay1;
-
-
-                        var formattedDateString = formattedMonth + '/' + formattedDay + '/' + newYear;
-                        var formattedDateString1 = formattedMonth1 + '/' + formattedDay1 + '/' + newYear1;
-                        $("#dtrecsam").val(formattedDateString);
-                        $("#dtlike").val(formattedDateString1);
+                        var convertedDateStr1 = day1 + "/" + month1 + "/" + year1;
+                        
+                        
+                        $("#dtrecsam").val(convertedDateStr);
+                        $("#dtlike").val(convertedDateStr1);
                         $("#ddlstatus").val(success.Status);
                         $("#btnsave").css("display", "none");
                         $("#btnupdate").css("display", "");
@@ -306,7 +308,18 @@
                 }
 
             }
-
+            $("#spnError1").html("");
+            $("#spnError2").html("")
+            var IsValid = true;
+            if ($("#dtrecsam").val() == "") {
+                $("#spnError1").html("Please Enter Date of Receipt of Sample");
+                IsValid = false;
+            }
+            if ($("#dtlike").val() == "") {
+                $("#spnError2").html("Please Enter Likely Date of Test Report");
+                IsValid = false;
+            }
+            if (!IsValid) return;
 
             var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
@@ -389,6 +402,18 @@
                 }
 
             }
+            $("#spnError1").html("");
+            $("#spnError2").html("")
+            var IsValid = true;
+            if ($("#dtrecsam").val() == "") {
+                $("#spnError1").html("Please Enter Date of Receipt of Sample");
+                IsValid = false;
+            }
+            if ($("#dtlike").val() == "") {
+                $("#spnError2").html("Please Enter Likely Date of Test Report");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
 

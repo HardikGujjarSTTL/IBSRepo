@@ -3,7 +3,7 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
-using IBS.Interfaces.IE_Reports;
+
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
@@ -14,7 +14,7 @@ using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
-using IBS.Repositories.IE_Report;
+
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
@@ -171,7 +171,7 @@ builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 
 
 #region IE Report
-builder.Services.AddScoped<IIE_PerfomanceRepository, IE_PerformanceRepository>();
+
 #endregion
 
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();

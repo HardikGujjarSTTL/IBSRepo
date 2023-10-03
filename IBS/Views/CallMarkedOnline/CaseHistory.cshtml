@@ -60,8 +60,10 @@
             }
             else
             {
-                var tifpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".tif");
-                var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");
+                @*var tifpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".tif");
+                var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");*@
+                var tifpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".tif");
+                var pdfpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".pdf");
                 if (System.IO.File.Exists(tifpath) == true)
                 {
                     <a href="@tifpath" target="_blank">VIEW PO</a>
@@ -139,7 +141,8 @@
                             foreach (var item in Model.poVendorList)
                             {
                                 var MADT = Common.DateConcate(item.MA_DT);
-                                var urlvendor = "/RBS/Vendor/MA/" + @item.CASE_NO + "_" + @item.MA_NO + "_" + MADT + ".pdf";
+                                //var urlvendor = "/RBS/Vendor/MA/" + @item.CASE_NO + "_" + @item.MA_NO + "_" + MADT + ".pdf";
+                                var urlvendor = "/ReadWriteData/Files/Vendor/MA/" + @item.CASE_NO + "_" + @item.MA_NO + "_" + MADT + ".pdf";
                                 <tr>
                                     <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_SNO</font></td>
                                     <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_NO</font></td>

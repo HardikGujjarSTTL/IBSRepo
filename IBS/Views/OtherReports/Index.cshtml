@@ -266,7 +266,7 @@
                     {
                         data: "", // Calls Documents pdf
                         render: function (data, type, row, meta) {
-                            var fpath = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Vendor)" + "/CALLS_DOCUMENTS" + row.CASE_NO + "-" + row.CALL_RECV_DT.toString().substring(6, 4) + row.CALL_RECV_DT.toString().substring(3, 2) + row.CALL_RECV_DT.toString().substring(0, 2) + row.CASE_NO + ".pdf";
+                            var fpath = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Vendor)" + "/CALLS_DOCUMENTS/" + row.CASE_NO + "-" + row.CALL_RECV_DT.toString().substring(6, 4) + row.CALL_RECV_DT.toString().substring(3, 2) + row.CALL_RECV_DT.toString().substring(0, 2) + row.CASE_NO + ".pdf";
                             var html = "";
                             if (row.IsCallDocument) {
                                 html = "<a href='" + fpath + "' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>Call Documents</font></a>";
@@ -277,19 +277,21 @@
                         }
                     },
                     {
-                        data: "", //Check PO_SOURCE == C and CaseNo tof and PDf
+                        data: "", //Check PO_SOURCE == C and CaseNo tif and PDf
                         render: function (data, type, row, meta) {
-                            var fpath = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Vendor)" + "/CALLS_DOCUMENTS" + row.CASE_NO + "-" + row.CALL_RECV_DT.toString().substring(6, 4) + row.CALL_RECV_DT.toString().substring(3, 2) + row.CALL_RECV_DT.toString().substring(0, 2) + row.CASE_NO + ".pdf";
+                            var fpath = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Vendor)" + "/CALLS_DOCUMENTS/" + row.CASE_NO + "-" + row.CALL_RECV_DT.toString().substring(6, 4) + row.CALL_RECV_DT.toString().substring(3, 2) + row.CALL_RECV_DT.toString().substring(0, 2) + row.CASE_NO + ".pdf";
                             var html = "";
+                            var tifCaseNo = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo)" + "/" + row.CASE_NO + ".TIF";
+                            var pdfCaseNo = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo)" + "/" + row.CASE_NO + ".PDF";
                             if (row.PO_SOURCE == "C") {
                                 html = "<a href='https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + row.PO_YR + "/" + row.SS + "/" + row.PO_NO + ".pdf' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
                             }
                             else {
                                 if (row.IsCaseNoTif == true) {
-                                    html = "<a href='/RBS/CASE_NO/" + row.CASE_NO + ".TIF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
+                                    html = "<a href='" + tifCaseNo + "' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
                                 }
                                 else if (row.IsCaseNoPdf == true) {
-                                    html = "<a href='/RBS/CASE_NO/" + row.CASE_NO + ".PDF' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
+                                    html = "<a href='" + pdfCaseNo + "' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana'>" + row.CASE_NO + "</font></a>";
                                 } else {
                                     html = "<font size='1' face='Verdana' >" + row.CASE_NO;
                                 }
@@ -302,7 +304,8 @@
                     {
                         data: "", // Call Status Full
                         render: function (data, type, row, meta) {
-                            
+                            debugger
+                            var pdfLab = "@IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.Lab)" + "/" + row.MyFile_ex + ".PDF";
                             var html = "<font size='1' face='Verdana' color=" + row.COLOUR + ">" + row.CALL_STATUS_FULL + "</font>";
                             if (row.CALL_STATUS == "U") {
                                 if (row.Lab_Status != "" && row.Lab_Status != null) {
@@ -313,7 +316,7 @@
                                 }
 
                                 if (row.IsLabPdf == true) {
-                                    html += "<a href='/RBS/LAB/" + row.MyFile_ex + ".PDF' Font-Names='Verdana' Font-Size='8pt'>Lab Report</a>"
+                                    html += "<a href='" + pdfLab + "' Font-Names='Verdana' Font-Size='8pt'>Lab Report</a>"
                                 }
                             }
                             return html;
