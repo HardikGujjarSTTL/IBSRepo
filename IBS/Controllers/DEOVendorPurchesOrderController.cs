@@ -477,7 +477,7 @@ namespace IBS.Controllers
                 {
                     if (result[1] != null)
                     {
-                        SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
+                        //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, responseText = msg });
                     }
                 }
@@ -590,7 +590,7 @@ namespace IBS.Controllers
             sender = "hardiksilvertouch007@outlook.com";
             sendMailModel.From = sender;
             sendMailModel.To = vendorEmail;
-            sendMailModel.Subject = "Test";
+            sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
             sendMailModel.Message = mail_body;
             bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
             return isSend;

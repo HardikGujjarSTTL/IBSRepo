@@ -6,6 +6,12 @@
 		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Controllers\IE Reports\**" />
+	  <Content Remove="Controllers\IE Reports\**" />
+	  <EmbeddedResource Remove="Controllers\IE Reports\**" />
+	  <None Remove="Controllers\IE Reports\**" />
+	</ItemGroup>
+	<ItemGroup>
 	  <None Remove="Repositories\AccountCodesDirectoryRepository.cs~RF1034cdb0.TMP" />
 	</ItemGroup>
 	

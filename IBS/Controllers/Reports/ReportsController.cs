@@ -41,6 +41,7 @@ namespace IBS.Controllers.Reports
             ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
             else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
+            else if (ReportType == "IEWorkPlan") model.ReportTitle = "IE DAILY WORK PLAN REPORT";
             return View(model);
         }
         public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
@@ -63,9 +64,9 @@ namespace IBS.Controllers.Reports
             return View("Manage", model);
         }
 
-        public IActionResult ManageIEDairy(string ReportType,DateTime FromDate, DateTime ToDate, string OrderByVisit)
+        public IActionResult ManageIEDairy(string ReportType, DateTime FromDate, DateTime ToDate, string OrderByVisit)
         {
-            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate , OrderByVisit= OrderByVisit };
+            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, OrderByVisit = OrderByVisit };
             if (ReportType == "IEDairy") model.ReportTitle = "IC Status";
             return View("Manage", model);
         }
@@ -83,6 +84,7 @@ namespace IBS.Controllers.Reports
             ICUnbilledModel model = new() { FromDate = FromDate, ToDate = ToDate };
             model.Region = wRegion;
             model.lstICUnBilledList = iC_ReceiptRepository.Get_UnBilled_IC(model.Display_FromDate, model.Display_ToDate, Region);
+            GlobalDeclaration.ICUnbilled = model;
             return PartialView(model);
         }
         #endregion
@@ -93,6 +95,7 @@ namespace IBS.Controllers.Reports
             var model = reportsRepository.GetIE7thCopyReport(Bk_No, Set_No, GetUserInfo);
             model.UserName = GetUserInfo.Name;
             model.UserID = Convert.ToString(GetUserInfo.UserName);
+            GlobalDeclaration.IE7thCopyList = model;
             return PartialView(model);
         }
 
@@ -122,6 +125,7 @@ namespace IBS.Controllers.Reports
                 row.IsTIF = System.IO.File.Exists(tifpath) == true ? true : false;
                 row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
             }
+            GlobalDeclaration.ICIssuedNotReceivedReport = model;
             return PartialView(model);
         }
         #endregion
@@ -140,6 +144,7 @@ namespace IBS.Controllers.Reports
             model.Region = wRegion;
             model.Type = Type;
             model.IE_Name = IE_Name;
+            GlobalDeclaration.ICStatus = model;
             return PartialView(model);
         }
         #endregion
@@ -152,7 +157,7 @@ namespace IBS.Controllers.Reports
             model = reportsRepository.Get_Pending_JI_Cases(FromDate, ToDate, IeCd);
 
             foreach (var row in model.lstPendingJI)
-            {             
+            {
                 var casetifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
                 var casepdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
 
@@ -165,23 +170,68 @@ namespace IBS.Controllers.Reports
                 row.IsReportTIF = System.IO.File.Exists(reporttifpath) == true ? true : false;
                 row.IsReportPDF = System.IO.File.Exists(reportpdfpath) == true ? true : false;
             }
+            GlobalDeclaration.PendingJICasesReport = model;
             return PartialView(model);
         }
         #endregion
-        
+
 
         public IActionResult IEDairy_Partial(DateTime FromDate, DateTime ToDate, string OrderByVisit)
         {
             IEDairyModel model = new();
-            model = reportsRepository.Get_IE_Dairy( FromDate,  ToDate,  "",  OrderByVisit,  "true", GetUserInfo);
+            model = reportsRepository.Get_IE_Dairy(FromDate, ToDate, "", OrderByVisit, "true", GetUserInfo);
+            GlobalDeclaration.IEDairy = model;
             return PartialView(model);
-        }        
+        }
+
+        public IActionResult IEWorkPlan(DateTime FromDate, DateTime ToDate)
+        {
+            IEWorkPlanModel model = new();
+            model = reportsRepository.Get_IE_WorkPlan(FromDate, ToDate, Convert.ToString(GetUserInfo.IeCd), GetUserInfo.Region);
+            GlobalDeclaration.IEWorkPlan = model;
+            return PartialView(model);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF(string ReportType)
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+
+            if (ReportType == "UNBILLEDIC")
+            {
+                ICUnbilledModel model = GlobalDeclaration.ICUnbilled;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/UnBilledIC.cshtml", model);
+            }
+            else if (ReportType == "IE7thCopy")
+            {
+                IE7thCopyListModel model = GlobalDeclaration.IE7thCopyList;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/IE7thCopyReport.cshtml", model);
+            }
+            else if (ReportType == "ICISSUEDNSUB")
+            {
+                ICIssuedNotReceivedReportModel model = GlobalDeclaration.ICIssuedNotReceivedReport;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/ICIssuedNotReceived.cshtml", model);
+            }
+            else if (ReportType == "ICStatus")
+            {
+                ICStatusModel model = GlobalDeclaration.ICStatus;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/ICStatus.cshtml", model);
+            }
+            else if (ReportType == "PendingJICases")
+            {
+                PendingJICasesReportModel model = GlobalDeclaration.PendingJICasesReport;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/Pending_JI_Cases_Partial.cshtml", model);
+            }
+            else if (ReportType == "IEDairy")
+            {
+                IEDairyModel model = GlobalDeclaration.IEDairy;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/IEDairy_Partial.cshtml", model);
+            }
+            else if(ReportType == "IEWorkPlan")
+            {
+                IEWorkPlanModel model = GlobalDeclaration.IEWorkPlan;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/IEWorkPlan.cshtml", model);
+            }
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

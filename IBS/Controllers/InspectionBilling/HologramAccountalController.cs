@@ -179,6 +179,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "HologramAccountal", "Manage", 1, GetIPAddress());
             }
+            detail.Region = region;
             return View(detail);
         }
 
