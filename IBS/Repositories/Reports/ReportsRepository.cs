@@ -326,43 +326,47 @@ namespace IBS.Repositories.Reports
                 model.lstWorkPlan2 = lst2;
             }
 
-            //var dateList = Enumerable.Range(0, (int)(Convert.ToDateTime(ToDate) - Convert.ToDateTime(FromDate)).TotalDays + 1)
-            //                .Select(offset => Convert.ToDateTime(FromDate).AddDays(offset).ToString("dd/MM/yyyy")).ToList();
+            var dateList = Enumerable.Range(0, (int)(Convert.ToDateTime(ToDate) - Convert.ToDateTime(FromDate)).TotalDays + 1)
+                            .Select(offset => Convert.ToDateTime(FromDate).AddDays(offset).ToString("dd/MM/yyyy")).ToList();
 
-            //foreach (var item in dateList)
-            //{
-            //    OracleParameter[] param = new OracleParameter[7];
-            //    par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
-            //    par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
-            //    par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, Convert.ToInt32(IECD), ParameterDirection.Input);
-            //    par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            //    par[4] = new OracleParameter("P_RESULT1_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            //    par[5] = new OracleParameter("P_RESULT2_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            //    par[6] = new OracleParameter("P_RESULT3_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            foreach (var item in dateList)
+            {
+                if(item == "08/09/2018")
+                {
 
-            //    var ds1 = DataAccessDB.GetDataSet("SP_GET_IE_WORKPLAN", par, 3);
-            //    if (ds1 != null && ds1.Tables.Count > 0)
-            //    {
-            //        string serializeddt3 = JsonConvert.SerializeObject(ds1.Tables[2], Formatting.Indented);
-            //        var data = JsonConvert.DeserializeObject<List<IEWorkPlanList3Model>>(serializeddt3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            //        var SrNo = 1;
-            //        foreach (var a in data)
-            //        {
-            //            IEWorkPlanList3Model obj = new();
-            //            obj.SrNo = SrNo;
-            //            obj.IE_NAME = a.IE_NAME;
-            //            obj.CO_NAME = a.CO_NAME;
-            //            var reason = (from row in context.NoIeWorkPlans
-            //                          where row.IeCd == Convert.ToInt32(IECD) &&
-            //                                row.NwpDt == DateTime.ParseExact(item, "dd/MM/yyyy", CultureInfo.InvariantCulture)
-            //                          select row.Reason).FirstOrDefault();
-            //            obj.Date = item;
-            //            obj.Reason = reason;
-            //            SrNo = SrNo + 1;
-            //            lst3.Add(obj);
-            //        }                                      
-            //    }
-            //}
+                }
+                OracleParameter[] param = new OracleParameter[7];
+                par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, item, ParameterDirection.Input);
+                par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, item, ParameterDirection.Input);
+                par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, Convert.ToInt32(IECD), ParameterDirection.Input);
+                par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+                par[4] = new OracleParameter("P_RESULT1_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[5] = new OracleParameter("P_RESULT2_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[6] = new OracleParameter("P_RESULT3_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds1 = DataAccessDB.GetDataSet("SP_GET_IE_WORKPLAN", par, 3);
+                if (ds1 != null && ds1.Tables[2].Rows.Count > 0)
+                {
+                    string serializeddt3 = JsonConvert.SerializeObject(ds1.Tables[2], Formatting.Indented);
+                    var data = JsonConvert.DeserializeObject<List<IEWorkPlanList3Model>>(serializeddt3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    var SrNo = 1;
+                    foreach (var a in data)
+                    {
+                        IEWorkPlanList3Model obj = new();
+                        obj.SrNo = SrNo;
+                        obj.IE_NAME = a.IE_NAME;
+                        obj.CO_NAME = a.CO_NAME;
+                        var reason = (from row in context.NoIeWorkPlans
+                                      where row.IeCd == Convert.ToInt32(IECD) &&
+                                            row.NwpDt == DateTime.ParseExact(item, "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                                      select row.Reason).FirstOrDefault();
+                        obj.Date = item;
+                        obj.Reason = reason;
+                        SrNo = SrNo + 1;
+                        lst3.Add(obj);
+                    }
+                }
+            }
             model.lstWorkPlan3 = lst3;
             //lst1 = dt1.AsEnumerable().Select(row => new IEWorkPlanList1Model
             //{

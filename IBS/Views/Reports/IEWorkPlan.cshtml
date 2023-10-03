@@ -1,12 +1,11 @@
 ﻿@model IBS.Models.IEWorkPlanModel
 <div>
+    <h3 style="text-align:right;">Run Date: <span class="orangeText"> @DateTime.Now.ToString("dd/MM/yyyy") </span></h3>
     <h3 class="center">IE Inspection Daily Work Plan Report <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate (IE Wise)</span> <br /> @Model.Region, RITES Ltd</h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
-                <tr>
-                    
-
+                <tr>                    
                     <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
                     <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>                    
                     <th width='8%' valign='top' align='center'><b><font size='1' face='Verdana'>CM Name</font></b></th>
@@ -61,6 +60,7 @@
     </div>
 </div>
 <div>
+    <h3 style="text-align:right;">Run Date: <span class="orangeText"> @DateTime.Now.ToString("dd/MM/yyyy") </span></h3>
     <h3 class="center">IE Non Inspection Daily Work Plan Report <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate (IE Wise)</span> <br /> @Model.Region, RITES Ltd</h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
@@ -102,6 +102,7 @@
     </div>
 </div>
 <div>
+    <h3 style="text-align:right;">Run Date: <span class="orangeText"> @DateTime.Now.ToString("dd/MM/yyyy") </span></h3>
     <h3 class="center">IE Who Had Not Entered Daily Work Plan <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate (IE Wise)</span> <br /> @Model.Region, RITES Ltd</h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
