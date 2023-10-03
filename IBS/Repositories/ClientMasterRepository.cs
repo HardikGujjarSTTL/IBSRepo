@@ -31,13 +31,13 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "USER_NAME";
+                    orderCriteria = "ClientName";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
-                orderCriteria = "USER_NAME";
+                orderCriteria = "ClientName";
                 orderAscendingDirection = true;
             }
 
@@ -61,9 +61,9 @@ namespace IBS.Repositories
 
                 List<Clientmaster> list = dt.AsEnumerable().Select(row => new Clientmaster
                 {
-                    USER_NAME = row.Field<string>("USER_NAME"),
+                    ClientName = row.Field<string>("USER_NAME"),
                     ORGANISATION = row.Field<string>("ORGANISATION"),
-                    DESIGNATION = row.Field<string>("DESIGNATION"),
+                    Client_DESIGNATION = row.Field<string>("DESIGNATION"),
                     MOBILE = row.Field<string>("MOBILE"),
                     EMAIL = row.Field<string>("EMAIL"),
                     UNIT = row.Field<string>("UNIT"),
@@ -75,7 +75,7 @@ namespace IBS.Repositories
                 dTResult.recordsTotal = ds.Tables[0].Rows.Count;
 
                 if (!string.IsNullOrEmpty(searchBy))
-                    query = query.Where(w => Convert.ToString(w.USER_NAME).ToLower().Contains(searchBy.ToLower())
+                    query = query.Where(w => Convert.ToString(w.ClientName).ToLower().Contains(searchBy.ToLower())
                     || Convert.ToString(w.ORGANISATION).ToLower().Contains(searchBy.ToLower())
                     );
 
@@ -103,14 +103,14 @@ namespace IBS.Repositories
                 int maxID = context.T32ClientLogins.Max(x => x.Id) + 1;
                 T32ClientLogin obj = new T32ClientLogin();
                 obj.Id = maxID;
-                obj.UserName = model.USER_NAME;
+                obj.UserName = model.ClientName;
                 obj.Organisation = model.ORGANISATION;
-                obj.Designation = model.DESIGNATION;
+                obj.Designation = model.Client_DESIGNATION;
                 obj.Email = model.EMAIL;
                 obj.Mobile = model.MOBILE;
                 obj.Unit = model.UNIT;
                 obj.OrgnType = model.Orgn_Type;
-                obj.Pwd = model.Pwd;
+                obj.Pwd = model.Password;
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = model.Createdby;
                 obj.Createddate = DateTime.Now;
@@ -120,14 +120,14 @@ namespace IBS.Repositories
             }
             else
             {
-                Client.UserName = model.USER_NAME;
+                Client.UserName = model.ClientName;
                 Client.Organisation = model.ORGANISATION;
-                Client.Designation = model.DESIGNATION;
+                Client.Designation = model.Client_DESIGNATION;
                 Client.Email = model.EMAIL;
                 Client.Unit = model.UNIT;
                 Client.Mobile = model.MOBILE;
                 Client.OrgnType = model.Orgn_Type;
-                Client.Pwd = model.Pwd;
+                Client.Pwd = model.Password;
                 Client.Isdeleted = Convert.ToByte(false);
                 Client.Updatedby = model.Updatedby;
                 Client.Updateddate = DateTime.Now;
@@ -147,14 +147,14 @@ namespace IBS.Repositories
                 throw new Exception("Client Not found");
             else
             {
-                model.USER_NAME = client.UserName;
+                model.ClientName = client.UserName;
                 model.ORGANISATION = client.Organisation;
-                model.DESIGNATION = client.Designation;
+                model.Client_DESIGNATION = client.Designation;
                 model.UNIT = client.Unit;
                 model.Orgn_Type = client.OrgnType;
                 model.MOBILE = client.Mobile;
                 model.EMAIL = client.Email;
-                model.Pwd = client.Pwd;
+                model.Password = client.Pwd;
                 model.ConfirmPassword = client.Pwd;
                 return model;
             }

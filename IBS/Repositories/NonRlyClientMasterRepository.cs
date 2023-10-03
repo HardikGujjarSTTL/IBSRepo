@@ -34,8 +34,8 @@ namespace IBS.Repositories
                 }
                 NonRlyClient obj = new NonRlyClient();
                 obj.Id = maxID;
-                obj.Clientname = model.USER_NAME;
-                obj.Contactdesignation = model.DESIGNATION;
+                obj.Clientname = model.ClientName;
+                obj.Contactdesignation = model.Client_DESIGNATION;
                 obj.Emailid = model.EMAIL;
                 obj.Mobileno = model.MOBILE;
                 obj.Orgntype = model.Orgn_Type;
@@ -50,8 +50,8 @@ namespace IBS.Repositories
             }
             else
             {
-                NonClient.Clientname = model.USER_NAME;
-                NonClient.Contactdesignation = model.DESIGNATION;
+                NonClient.Clientname = model.ClientName;
+                NonClient.Contactdesignation = model.Client_DESIGNATION;
                 NonClient.Emailid = model.EMAIL;
                 NonClient.Mobileno = model.MOBILE;
                 NonClient.Orgntype = model.Orgn_Type;
@@ -117,10 +117,10 @@ namespace IBS.Repositories
 
                 List<Clientmaster> list = dt.AsEnumerable().Select(row => new Clientmaster
                 {
-                    USER_NAME = row.Field<string>("CLIENTNAME"),
+                    ClientName = row.Field<string>("CLIENTNAME"),
                     ShortCode = row.Field<string>("SHORTCODE"),
                     ContactName = row.Field<string>("CONTACTNAME"),
-                    DESIGNATION = row.Field<string>("CONTACTDESIGNATION"),
+                    Client_DESIGNATION = row.Field<string>("CONTACTDESIGNATION"),
                     MOBILE = row.Field<string>("MOBILENO"),
                     EMAIL = row.Field<string>("EMAILID"),
                     Orgn_Type = row.Field<string>("ORGNTYPE"),
@@ -132,7 +132,7 @@ namespace IBS.Repositories
                 dTResult.recordsTotal = ds.Tables[0].Rows.Count;
 
                 if (!string.IsNullOrEmpty(searchBy))
-                    query = query.Where(w => Convert.ToString(w.USER_NAME).ToLower().Contains(searchBy.ToLower())
+                    query = query.Where(w => Convert.ToString(w.ClientName).ToLower().Contains(searchBy.ToLower())
                     || Convert.ToString(w.ShortCode).ToLower().Contains(searchBy.ToLower())
                     );
 
@@ -159,10 +159,10 @@ namespace IBS.Repositories
                 throw new Exception("Client Not found");
             else
             {
-                model.USER_NAME = client.Clientname;
+                model.ClientName = client.Clientname;
                 model.ContactName = client.Contactname;
                 model.ShortCode = client.Shortcode;
-                model.DESIGNATION = client.Contactdesignation;
+                model.Client_DESIGNATION = client.Contactdesignation;
                 model.Orgn_Type = client.Orgntype;
                 model.MOBILE = client.Mobileno;
                 model.EMAIL = client.Emailid;

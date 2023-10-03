@@ -19,38 +19,38 @@
             <div class="row my-0">
                 <input type="hidden" asp-for="Id" />
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Client Name</label>
-                    <input type="text" class="input" ASP-FOR="USER_NAME" maxlength="300" required />
-                    <span asp-validation-for="USER_NAME" class="text-danger"></span>
+                    <label for="Reference">Client Name</label><i class="text-danger">*</i>
+                    <input type="text" class="input" ASP-FOR="ClientName" maxlength="300" id="clientname" required />
+                    <span asp-validation-for="ClientName" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Short Code</label>
+                    <label for="Reference">Short Code</label><i class="text-danger">*</i>
                     <input type="text" class="input" ASP-FOR="ShortCode" maxlength="300" required />
                     <span asp-validation-for="ShortCode" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Orgn Type(Sector)</label>
+                    <label for="Reference">Orgn Type(Sector)</label><i class="text-danger">*</i>
                     @Html.DropDownListFor(model => model.Orgn_Type, new SelectList(IBS.Models.Common.Non_Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
                     <span asp-validation-for="Orgn_Type" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Contact Name</label>
-                    <input type="text" class="input" ASP-FOR="ContactName" maxlength="300" required />
+                    <label for="Reference">Contact Name</label><i class="text-danger">*</i>
+                    <input type="text" class="input" ASP-FOR="ContactName" maxlength="300" id="contactname" required />
                     <span asp-validation-for="ContactName" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Contact Designation</label>
-                    <input type="text" class="input" ASP-FOR="DESIGNATION" maxlength="10" required />
-                    <span asp-validation-for="DESIGNATION" class="text-danger"></span>
+                    <label for="Reference">Contact Designation</label><i class="text-danger">*</i>
+                    <input type="text" class="input" ASP-FOR="Client_DESIGNATION" maxlength="10" required />
+                    <span asp-validation-for="Client_DESIGNATION" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Mobile No</label>
-                    <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10" onkeypress="return isNumber(event)"  required />
+                    <label for="Reference">Mobile No</label><i class="text-danger">*</i>
+                    <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10" id="mobilenumber" onkeypress="return isNumber(event)" required />
                     <span asp-validation-for="MOBILE" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Email</label>
-                    <input type="email" class="input" ASP-FOR="EMAIL" maxlength="300" required />
+                    <label for="Reference">Email</label><i class="text-danger">*</i>
+                    <input type="email" class="input" ASP-FOR="EMAIL" id="emailval" maxlength="300" required />
                     <span asp-validation-for="EMAIL" class="text-danger"></span>
                 </div>
             </div>
@@ -65,9 +65,37 @@
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('#clientname').on('keypress', function (event) {
+                Validation();
+             });
+
+            $('#contactname').on('keypress', function (event) {
+                Validation();
+             });
+            $('#mobilenumber').on('keypress', function (event) {
+                var userInput = event.key;
+                var regex = /^[0-9]+$/;
+
+                if (!regex.test(userInput)) {
+                    event.preventDefault();
+                }
+            });
+        });
+
         function Save() {
             if ($("#frmNonClient").valid()) {
                 $("#frmNonClient").submit();
+            }
+        }
+
+        function Validation(){
+            var userInput = event.key;
+            var regex = /^[a-zA-Z\s]+$/;
+
+            if (!regex.test(userInput)) {
+                event.preventDefault();
             }
         }
     </script>

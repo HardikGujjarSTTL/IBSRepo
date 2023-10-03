@@ -18,45 +18,46 @@
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Client Name</label>
-                        <input type="text" class="input" ASP-FOR="USER_NAME" maxlength="300" required />
-                        <span asp-validation-for="USER_NAME" class="text-danger"></span>
+                    <label for="Reference">Client Name</label><i class="text-danger">*</i>
+                    <input type="text" class="input" ASP-FOR="ClientName" maxlength="300" id="clientname" required />
+                        <span asp-validation-for="ClientName" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Organisation</label>
+                    <label for="Reference">Organisation</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="ORGANISATION" maxlength="300" required />
                         <span asp-validation-for="ORGANISATION" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Client Designation</label>
-                        <input type="text" class="input" ASP-FOR="DESIGNATION" maxlength="300" required />
-                        <span asp-validation-for="DESIGNATION" class="text-danger"></span>
+                    <label for="Reference">Client Designation</label><i class="text-danger">*</i>
+                        <input type="text" class="input" ASP-FOR="Client_DESIGNATION" maxlength="300" required />
+                        <span asp-validation-for="Client_DESIGNATION" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Mobile</label>
-                    <input type="text" class="input" ASP-FOR="MOBILE" onkeypress="return isNumber(event)" maxlength="10" required />
-                        <span asp-validation-for="MOBILE" class="text-danger"></span>
-                    </div>
+                    <label for="Reference">Mobile</label><i class="text-danger">*</i>
+                    <input type="text" class="input" ASP-FOR="MOBILE" onkeypress="return isNumber(event)" id="mobilenumber" maxlength="10" required />
+                    <span asp-validation-for="MOBILE" class="text-danger"></span>
+                </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Email</label>
+                    <label for="Reference">Email</label><i class="text-danger">*</i>
                         <input type="email" class="input" ASP-FOR="EMAIL" maxlength="300" required />
                         <span asp-validation-for="EMAIL" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Unit</label>
+                    <label for="Reference">Unit</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="UNIT" maxlength="300" required />
                         <span asp-validation-for="UNIT" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Orgn Type</label>
+                    <label for="Reference">Orgn Type</label><i class="text-danger">*</i>
                         @Html.DropDownListFor(model => model.Orgn_Type, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
                         <span asp-validation-for="Orgn_Type" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <div class="form-group">
+                    <div class="form-group">
+                        <i class="text-danger">*</i>
                             <label for="Name">Password<i class="text-danger">*</i></label>
-                            <input id="password" class="form-control" asp-for="Pwd" maxlength="50" />
-                            <span asp-validation-for="Pwd" class="text-danger"></span>
+                            <input id="password" class="form-control" asp-for="Password" maxlength="50" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -79,6 +80,40 @@
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#clientname').on('keypress', function (event) {
+                Validation();
+            });
+
+            $('#mobilenumber').on('keypress', function (event) {
+                var userInput = event.key;
+                var regex = /^[0-9]+$/;
+
+                if (!regex.test(userInput)) {
+                    event.preventDefault();
+                }
+            });
+            $('#emailval').on('blur', function () {
+                var email = $(this).val();
+var re = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
+
+                if (!emailRegex.test(email)) {
+                    $('#email-error').text('Please enter a valid email address.');
+                } else {
+                    $('#email-error').text('');
+                }
+            });
+        });
+        function Validation() {
+            var userInput = event.key;
+            var regex = /^[a-zA-Z\s]+$/;
+
+            if (!regex.test(userInput)) {
+                event.preventDefault();
+            }
+        }
+
         function Save() {
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
