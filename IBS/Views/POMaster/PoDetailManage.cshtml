@@ -45,12 +45,12 @@
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">PL NO.</label>
                         <input type="text" class="input" asp-for="PlNo">
                         <span asp-validation-for="PlNo" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="SubmitPlNo();" style="margin-top: 30px;">Submit</button>
                         </div>
@@ -68,14 +68,18 @@
                 </div>
                 
                 <div class="row my-0">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Bill Paying Officer/Paying Authority</label>
-                        <input type="text" class="input" asp-for="SBPO" style="width: 61%;">
-                        <button type="button" class="save-btn active" onclick="SearchBPO();">Search BPO</button>
+                        <input type="text" class="input" asp-for="SBPO">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SearchBPO();" style="margin-top: 30px;">Search BPO</button>
+                        </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
-                        @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"))
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
@@ -83,14 +87,19 @@
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference" style="width: 100%;">Consignee</label>
-                        <input type="text" class="input" asp-for="ConsigneeSearch" style="width: 46%;">
-                        <button type="button" class="save-btn active" onclick="SearchConsignee();">Search Consignee</button>
+                        <input type="text" class="input" asp-for="ConsigneeSearch">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SearchConsignee();" style="margin-top: 30px;font-size: 10px;">Search Consignee</button>
+                        </div>
+                        
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
-                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"))
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
@@ -288,10 +297,11 @@
             }).done(function (response) {
                 if (response.status) {
                     $("#BpoCd").html("");
-                    $("#BpoCd").append("<option value=''>--Select--</option>");
+                    
                     $.each(response.list, function (index, value) {
                         $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
+                    $("#BpoCd").append("<option value=''>Other</option>");
                 }
             });
         }
@@ -307,10 +317,10 @@
             }).done(function (response) {
                 if (response.status) {
                     $("#ConsigneeCd").html("");
-                    $("#ConsigneeCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
                         $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
+                    $("#ConsigneeCd").append("<option value=''>Other</option>");
                 }
             });
         }
