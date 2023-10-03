@@ -3825,3 +3825,82 @@ ALTER TABLE T13_Po_Master ADD ContractID NUMBER(6,0)
 ALTER TABLE T80_Po_Master ADD ContractID NUMBER(6,0)
 
 ==================
+
+create or replace PROCEDURE Get_SP_DEO_CRIS_PurchesOrderList(
+    p_Region IN NVARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        RITES_CASE_NO AS CASE_NO,
+        IMMS_POKEY,
+        PO_NO,
+        TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        TO_CHAR(RECV_DATE, 'dd/mm/yyyy') AS RECV_DT,
+        H.IMMS_RLY_CD,
+        H.IMMS_RLY_SHORTNAME,
+        NVL2(R.RLY_CD, R.RLY_CD, H.IMMS_RLY_SHORTNAME) AS RLY_CD,
+        IMMS_VENDOR_NAME || ',' || IMMS_VENDOR_DETAIL AS VEND_NAME,
+        REMARKS,
+        'Vendor/PO/' || PO_NO || '.pdf' AS PO_DOC,
+        IMMS_POI_NAME || '/' || IMMS_POI_DETAIL AS POI,
+        DECODE(REGION_CODE, 'N', 'NORTHERN', 'S', 'SOUTHERN', 'E', 'EASTERN', 'W', 'WESTERN', 'C', 'CENTRAL', 'NA') AS REGION,
+        REGION_CODE
+    FROM 
+        IMMS_RITES_PO_HDR H
+    LEFT JOIN 
+        T91_RAILWAYS R ON H.IMMS_RLY_CD = R.IMMS_RLY_CD
+    WHERE 
+        (REGION_CODE = p_Region OR REGION_CODE IS NULL)
+        AND PO_DT > TO_DATE('2021-03-31', 'yyyy-mm-dd') -- Assuming your database uses this date format
+        AND RITES_CASE_NO IS NULL
+    ORDER BY 
+        REGION_CODE DESC, H.PO_DT DESC;
+END;
+
+
+=============
+
+create or replace PROCEDURE SP_Get_DEO_CRIS_PurchesOrderData (
+    p_POKey IN VARCHAR2,
+    p_RlyCode IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        RITES_CASE_NO,
+        IMMS_POKEY,
+        IMMS_RLY_CD,
+        RLY_CD,
+        PURCHASER_CD AS PURCHASER_CD,
+        IMMS_PURCHASER_CD,
+        IMMS_PURCHASER_DETAIL,
+        STOCK_NONSTOCK,
+        INSPECTING_AGENCY,
+        PO_OR_LETTER,
+        PO_NO,
+        TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        L5NO_PO,
+        VEND_CD AS VEND_CD,
+        IMMS_VENDOR_CD,
+        IMMS_VENDOR_NAME || ',' || IMMS_VENDOR_DETAIL AS VENDOR,
+        IMMS_RLY_SHORTNAME,
+        REGION_CODE AS REGION_CODE,
+        REMARKS,
+        BPO_CD AS BPO_CD,
+        IMMS_BPO_CD,
+        IMMS_BPO_NAME AS BPO,
+        POI_CD,
+        TO_CHAR(PO_DT, 'YYYY') AS PO_YR,
+        IMMS_POI_NAME || ',' || IMMS_POI_DETAIL AS MFG,
+        (select RAILWAY from T91_RAILWAYS where RLY_CD= (Select nvl(RLY_CD,'XX') RLY_CD from T91_RAILWAYS WHERE IMMS_RLY_CD=p_RlyCode)) As RAILWAY
+    FROM IMMS_RITES_PO_HDR
+    WHERE IMMS_POKEY = p_POKey AND IMMS_RLY_CD = p_RlyCode;
+END;
+
+==========
+
