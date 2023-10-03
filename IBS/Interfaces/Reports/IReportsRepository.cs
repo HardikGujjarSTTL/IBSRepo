@@ -14,6 +14,6 @@ namespace IBS.Interfaces.Reports
         ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate, string IE_CD, string Region);
 
         IEWorkPlanModel Get_IE_WorkPlan(DateTime FromDate, DateTime ToDate, string IECD, string Region);
-
+        ConsigneeComplaintsModel Get_Consignee_Complaints(DateTime FromDate, DateTime ToDate, string IECD, string Region);
     }
 }

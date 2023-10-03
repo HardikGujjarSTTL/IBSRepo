@@ -42,6 +42,7 @@ namespace IBS.Controllers.Reports
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
             else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
             else if (ReportType == "IEWorkPlan") model.ReportTitle = "IE DAILY WORK PLAN REPORT";
+            else if (ReportType == "ConsCompls") model.ReportTitle = "CONSIGNEE COMPLAINTS";
             return View(model);
         }
         public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
@@ -120,10 +121,10 @@ namespace IBS.Controllers.Reports
             model.ICIssuedNotReceivedList = iC_ReceiptRepository.Get_IC_Issue_Not_Receive(model.Display_FromDate, model.Display_ToDate, GetUserInfo);
             foreach (var row in model.ICIssuedNotReceivedList)
             {
-                var tifpath = Path.Combine("/IBS/CASE_NO/" + row.CASE_NO + ".TIF");
-                var pdfpath = Path.Combine("/IBS/CASE_NO/" + row.CASE_NO + ".PDF");
-                row.IsTIF = System.IO.File.Exists(tifpath) == true ? true : false;
-                row.IsPDF = System.IO.File.Exists(pdfpath) == true ? true : false;
+                var tifPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".TIF";
+                var pdfPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".PDF";                
+                row.IsTIF = System.IO.File.Exists(tifPath) == true ? true : false;
+                row.IsPDF = System.IO.File.Exists(pdfPath) == true ? true : false;
             }
             GlobalDeclaration.ICIssuedNotReceivedReport = model;
             return PartialView(model);
@@ -192,6 +193,33 @@ namespace IBS.Controllers.Reports
             return PartialView(model);
         }
 
+        public IActionResult ConsigneeComplaints(DateTime FromDate, DateTime ToDate)
+        {
+            ConsigneeComplaintsModel model = new();
+            model = reportsRepository.Get_Consignee_Complaints(FromDate, ToDate, Convert.ToString(GetUserInfo.IeCd),GetUserInfo.Region);
+            foreach (var row in model.lstConsigneeComplaints)
+            {
+                var rejecttif = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var rejectpdf = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+
+                var casetifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var casepdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+
+                var reporttifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var reportpdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+                
+                row.IsRejectionMemoTif = System.IO.File.Exists(rejecttif) == true ? true : false;
+                row.IsRejectionMemoPdf = System.IO.File.Exists(rejectpdf) == true ? true : false;
+
+                row.IsComplainCaseTif = System.IO.File.Exists(casetifpath) == true ? true : false;
+                row.IsComplainCasePdf = System.IO.File.Exists(casepdfpath) == true ? true : false;
+
+                row.IsComplainReportTif = System.IO.File.Exists(reporttifpath) == true ? true : false;
+                row.IsComplainReportPdf = System.IO.File.Exists(reportpdfpath) == true ? true : false;
+            }
+            return PartialView(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string ReportType)
         {
@@ -227,7 +255,7 @@ namespace IBS.Controllers.Reports
                 IEDairyModel model = GlobalDeclaration.IEDairy;
                 htmlContent = await this.RenderViewToStringAsync("/Views/Reports/IEDairy_Partial.cshtml", model);
             }
-            else if(ReportType == "IEWorkPlan")
+            else if (ReportType == "IEWorkPlan")
             {
                 IEWorkPlanModel model = GlobalDeclaration.IEWorkPlan;
                 htmlContent = await this.RenderViewToStringAsync("/Views/Reports/IEWorkPlan.cshtml", model);
