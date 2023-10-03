@@ -77,42 +77,9 @@ namespace IBS.Controllers
 
             ViewBag.Regions = region;
             ViewBag.JiRequiredStatus = jirequired;
-            GlobalDeclaration.ConsigneeCompPeriod = model;
+            //GlobalDeclaration.ConsigneeCompPeriod = model;
             return PartialView(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GeneratePDF()
-        {
-            string htmlContent = string.Empty;
-            ConsigneeCompPeriodReport model = GlobalDeclaration.ConsigneeCompPeriod;
-            htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
-
-            await new BrowserFetcher().DownloadAsync();
-            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-            {
-                Headless = true,
-                DefaultViewport = null
-            });
-            await using var page = await browser.NewPageAsync();
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-            await page.SetContentAsync(htmlContent);
-
-            string cssPath = env.WebRootPath + "/css/report.css";
-
-            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
-            await page.AddStyleTagAsync(bootstrapCSS);
-
-            var pdfContent = await page.PdfStreamAsync(new PdfOptions
-            {
-                Landscape = true,
-                Format = PaperFormat.Letter,
-                PrintBackground = true
-            });
-
-            await browser.CloseAsync();
-
-            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
-        }
     }
 }

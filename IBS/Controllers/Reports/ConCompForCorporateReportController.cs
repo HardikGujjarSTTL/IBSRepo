@@ -81,7 +81,7 @@ namespace IBS.Controllers.Reports
 
             ViewBag.Regions = region;
             ViewBag.JiRequiredStatus = jirequired;
-            GlobalDeclaration.ConsigneeCompPeriod = model;
+            //GlobalDeclaration.ConsigneeCompPeriod = model;
             return PartialView("~/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
         }
 
@@ -89,8 +89,8 @@ namespace IBS.Controllers.Reports
         public async Task<IActionResult> GeneratePDF()
         {
             string htmlContent = string.Empty;
-            ConsigneeCompPeriodReport model = GlobalDeclaration.ConsigneeCompPeriod;
-            htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
+           // ConsigneeCompPeriodReport model = GlobalDeclaration.ConsigneeCompPeriod;
+           // htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

@@ -1,4 +1,5 @@
 ﻿using IBS.Models;
+using IBS.Models.Reports;
 
 namespace IBS.Interfaces.Reports
 {

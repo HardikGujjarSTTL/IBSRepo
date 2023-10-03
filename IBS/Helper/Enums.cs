@@ -728,7 +728,7 @@ namespace IBS.Helper
 
         public static JIRequiredReport JIRequiredReports { get; set; }
 
-        public static ConsigneeCompPeriodReport ConsigneeCompPeriod { get; set; }
+        public static ConsigneeCompReports ConsigneeCompPeriod { get; set; }
 
         public static DefectCodeReport DefectCodeReports { get; set; }
 

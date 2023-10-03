@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Transaction;
 using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
