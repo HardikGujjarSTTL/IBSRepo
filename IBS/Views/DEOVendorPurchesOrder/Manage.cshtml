@@ -288,7 +288,7 @@
                 if (response != null) {
                     if (response.status) {
                         ShowHideMsgNew(response.status, response.responseText);
-                        window.location.href = "/DEOVendorPurchesOrder/Index";
+                        window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
                     }
                     else {
                         ShowHideMsgNew(response.status, response.responseText);
