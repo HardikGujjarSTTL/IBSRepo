@@ -79,43 +79,44 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Super Surprise Date</label>
                         <input type="text" class="input datepicker" asp-for="SuperSurpriseDt" style="font-size:inherit;">
-                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError1"></span>
                     </div>
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Name of scope of sector where Item is covered.</label>
                         @Html.DropDownListFor(model => model.NameofScope, Common.ItemScope(),"", new { @id="ddlscope"})
-                        @*<span asp-validation-for="TrainingType" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError2"></span>
                     </div>
                    
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Item</label>
                         @Html.DropDownListFor(model => model.Item, Common.GetItemSuperForm(Model.Case_No,Model.CallDt,Model.CallSNo),"", new { @id="ddlitem"})
+                        <span class="text-danger field-validation-error" id="spnError3"></span>
                         @*<span asp-validation-for="course_name" class="text-danger"></span>*@
                         <input type="hidden" class="input" asp-for="ItemDesc" readonly="true" id="txtitemdesc">
                     </div>
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Previous Internal/Consignee Rejection</label>
-                        <textarea id="textAreaInput" asp-for="PreviousInternal"></textarea>
-                        @*<span asp-validation-for="Category" class="text-danger"></span>*@
+                        <textarea id="textAreaInput1" asp-for="PreviousInternal"></textarea>
+                        <span class="text-danger field-validation-error" id="spnError4"></span>
                     </div>
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Discrepancy (If any)</label>
-                        <textarea id="textAreaInput" asp-for="Discrepancy"></textarea>
-                        @*<span asp-validation-for="Institue" class="text-danger"></span>*@
+                        <textarea id="textAreaInput2" asp-for="Discrepancy"></textarea>
+                        <span class="text-danger field-validation-error" id="spnError5"></span>
                     </div>
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Overall outcome of the visit</label>
-                        <textarea id="textAreaInput" asp-for="Overall"></textarea>
-                        @*<span asp-validation-for="From" class="text-danger"></span>*@
+                        <textarea id="textAreaInput3" asp-for="Overall"></textarea>
+                        <span class="text-danger field-validation-error" id="spnError6"></span>
                     </div>
 
                     <div class="col-md-8 mb-3">
                         <label for="Reference">SBU HEAD REMARKS/RECOMMENDATION</label>
-                        <textarea id="textAreaInput" asp-for="SBUHead"></textarea>
-                        @*<span asp-validation-for="To" class="text-danger"></span>*@
+                        <textarea id="textAreaInput4" asp-for="SBUHead"></textarea>
+                        <span class="text-danger field-validation-error" id="spnError7"></span>
                     </div>
                 </div>
-                <div class="savenext-btn">
+                <div class="savenext-btn" style="margin-left:40%">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
@@ -128,8 +129,8 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(function () {
-            
-            
+
+            $("#ContractNo").val("0");
             $(".datepicker").datepicker({
                 dateFormat: "dd-mm-yy" // Set the date format to "dd/mm/yy"
             });
@@ -138,9 +139,46 @@
             $("#txtitemdesc").val($("#ddlitem option:selected").text());
         })
         function Save() {
-            if ($("#frmtrainingDetails").valid()) {
-                $("#frmtrainingDetails").submit();
+            $("#spnError1").html("");
+            $("#spnError2").html("");
+            $("#spnError3").html("");
+            $("#spnError4").html("");
+            $("#spnError4").html("");
+            $("#spnError5").html("");
+            $("#spnError7").html("");
+            var IsValid = true;
+            if ($("#SuperSurpriseDt").val() == "") {
+                $("#spnError1").html("Please Enter Super Surprise Date");
+                IsValid = false;
             }
+            if ($("#ddlscope").val() == "") {
+                $("#spnError2").html("Please Select Name of Scope");
+                IsValid = false;
+            }
+            if ($("#ddlitem").val() == "") {
+                $("#spnError3").html("Please Select Item");
+                IsValid = false;
+            }
+            if ($("#textAreaInput1").val() == "") {
+                $("#spnError4").html("Please Enter Previous Internal");
+                IsValid = false;
+            }
+            if ($("#textAreaInput2").val() == "") {
+                $("#spnError5").html("Please Enter Discrepancy ");
+                IsValid = false;
+            }
+            if ($("#textAreaInput3").val() == "") {
+                $("#spnError6").html("Please Enter Overall outcome");
+                IsValid = false;
+            }
+            if ($("#textAreaInput4").val() == "") {
+                $("#spnError7").html("Please Enter SBU HEAD REMARKS");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            // if ($("#frmtrainingDetails").valid()) {
+                $("#frmtrainingDetails").submit();
+            // }
             
             completed = function (response) {
                 debugger;

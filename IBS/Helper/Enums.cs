@@ -67,6 +67,10 @@ namespace IBS.Helper
             PurchaseOrderForm = 20,
             [Description("/ReadWriteData/Files/INVOICE_SUPP_DOCS")]
             ICDocument = 21,
+            [Description("/ReadWriteData/CASE_NO")]
+            CaseNo = 22,
+            [Description("/ReadWriteData/LAB")]
+            Lab = 23,
         }
 
         public enum DocumentCategory : int

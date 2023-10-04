@@ -95,8 +95,8 @@ namespace IBS.Controllers.Reports.OtherReports
 
                 if (row.PO_SOURCE != "C")
                 {
-                    var tifPath = env.WebRootPath + "/CASE_NO/" + row.CASE_NO + ".TIF";
-                    var pdfPath = env.WebRootPath + "/CASE_NO/" + row.CASE_NO + ".PDF";
+                    var tifPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".TIF";
+                    var pdfPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".PDF";
                     row.IsCaseNoTif = System.IO.File.Exists(tifPath) == true ? true : false;
                     row.IsCaseNoPdf = System.IO.File.Exists(pdfPath) == true ? true : false;
                 }
@@ -107,7 +107,7 @@ namespace IBS.Controllers.Reports.OtherReports
                     var mdt_ex = Common.DateConcate(row.CALL_RECV_DT);
                     MyFile_ex = row.CASE_NO.Trim() + "_" + row.CALL_SNO.Trim() + "_" + mdt_ex;
                     row.MyFile_ex = MyFile_ex;
-                    string fpath = env.WebRootPath + "/RBS/LAB/" + MyFile_ex + ".PDF";
+                    string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.Lab) + "/" + MyFile_ex + ".PDF";
                     row.IsLabPdf = System.IO.File.Exists(fpath) == true ? true : false;
                 }
             }

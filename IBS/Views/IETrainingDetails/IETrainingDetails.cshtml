@@ -29,7 +29,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Name</label>
                         @Html.DropDownListFor(model => model.Name, Common.GetInspEngCd(Model.Regin.ToString()),"", new { @onchange = "IEFetchData()",@id="ddlname" })
-                        @*<span asp-validation-for="Name" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError1"></span>
                     </div>
                     <div class="col-md-4 mb-3" style="display:none;">
                         <label for="Reference"></label>
@@ -50,7 +50,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">DOB</label>
                         <input type="text" class="input datepicker" asp-for="DOB" id="txtdob">
-                        @*<span asp-validation-for="DOB" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError2"></span>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -99,12 +99,12 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Training Type</label>
                         @Html.DropDownListFor(model => model.TrainingType, Common.TrainingType(),"", new { @id="ddlTrType"})
-                        @*<span asp-validation-for="TrainingType" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError3"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Training Area</label>
                         @Html.DropDownListFor(model => model.TrainingArea, Common.TrainingArea(),"", new { @id="ddlTrArea",onChange="BindCourseName()"})
-                        @*<span asp-validation-for="TrainingArea" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError4"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Training Category</label>
@@ -120,7 +120,7 @@
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Course Name</label>
                         @Html.DropDownListFor(model => model.course_name, Common.CourseName(Model.Regin.ToString(),Model.TrainingType,Model.TrainingArea),"", new { @id="ddlcourse",onChange="TrainingDFetchData()"})
-                        @*<span asp-validation-for="course_name" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError5"></span>
                     </div>
                     <div class="col-md-8 mb-3">
                         <label for="Reference"></label>
@@ -130,7 +130,7 @@
                     <div class="col-md-8 mb-3">
                         <label for="Reference">Institue</label>
                         <input type="text" class="input" asp-for="Institue" id="txtinst">
-                        @*<span asp-validation-for="Institue" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError6"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">From</label>
@@ -146,7 +146,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Certificate</label>
                         <input type="text" class="input" asp-for="certificate" id="txtcert">
-                        @*<span asp-validation-for="certificate" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError7"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Fees</label>
@@ -156,10 +156,10 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Validity</label>
                         <input type="text" class="input" asp-for="Validity" id="txtvalidity">
-                        @*<span asp-validation-for="Validity" class="text-danger"></span>*@
+                        <span class="text-danger field-validation-error" id="spnError8"></span>
                     </div>
                 </div>
-                <div class="savenext-btn">
+                <div class="savenext-btn" style="margin-left:40%">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
@@ -180,14 +180,64 @@
             });
         });
         function Save() {
-            
+            $("#spnError1").html("");
+            $("#spnError2").html("");
+            $("#spnError3").html("");
+            $("#spnError4").html("");
+            $("#spnError5").html("");
+            $("#spnError6").html("");
+            $("#spnError7").html("");
+            $("#spnError8").html("");
+            var IsValid = true;
+            if ($("#ddlname").val() == "") {
+                $("#spnError1").html("Please Select Name");
+                IsValid = false;
+            }
+            if ($("#txtdob").val() == "") {
+                $("#spnError2").html("Please Enter DOB");
+                IsValid = false;
+            }
+            if ($("#ddlTrType").val() == "") {
+                $("#spnError3").html("Please Select Training Type");
+                IsValid = false;
+            }
+            if ($("#ddlTrArea").val() == "") {
+                $("#spnError4").html("Please Select Training Area");
+                IsValid = false;
+            }
+            if ($("#ddlcourse").val() == "") {
+                $("#spnError5").html("Please Select Course Name");
+                IsValid = false;
+            }
+            if ($("#txtinst").val() == "") {
+                $("#spnError6").html("Please Enter Institue");
+                IsValid = false;
+            }
+            if ($("#txtcert").val() == "") {
+                $("#spnError7").html("Please Enter Certificate");
+                IsValid = false;
+            }
+            if ($("#txtvalidity").val() == "") {
+                $("#spnError8").html("Please Enter Validity");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+
             
                 $("#frmtrainingDetails").submit();
             completed = function (response) {
                 var res = response.responseJSON;
                 ShowHideMsgNew(res.status, res.responseText);
+                if(res.status == false){
+                    alert(res.responseText);
+                    
+                }
+                else
+                {
+                    window.location.href = '@Url.Action("Index", "IETrainingDetails")';
+                }
                 //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
-                window.location.href = '@Url.Action("Index", "IETrainingDetails")';
+                
             };
         }
 

@@ -97,9 +97,9 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PoNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PoDtDate).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -235,16 +235,16 @@ namespace IBS.Repositories
         }
         public PO_MasterModel FindCaseNo(string CaseNo, int VendCd)
         {
-            PO_MasterModel model = new();
-            //T80PoMaster POMaster = (from l in context.T80PoMasters
-            //                        where l.CaseNo == CaseNo && l.VendCd == VendCd
-            //                        select l).FirstOrDefault();
+            PO_MasterModel model = new PO_MasterModel();
             T13PoMaster POMaster = (from l in context.T13PoMasters
                                     where l.CaseNo == CaseNo && l.VendCd == VendCd
                                     select l).FirstOrDefault();
 
             if (POMaster == null)
-                throw new Exception("Po Master Record Not found");
+            {
+                model = null;
+                return model;
+            }
             else
             {
                 model.CaseNo = POMaster.CaseNo;

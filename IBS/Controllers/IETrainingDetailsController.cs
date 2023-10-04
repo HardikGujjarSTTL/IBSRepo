@@ -87,6 +87,10 @@ namespace IBS.Controllers
                 {
                     return Json(new { status = true, responseText = msg, Id = dTResult });
                 }
+                else
+                {
+                    return Json(new { status = false, responseText = iETrainingDetailsModel.MSG, Id = dTResult });
+                }
             }
             catch (Exception ex)
             {

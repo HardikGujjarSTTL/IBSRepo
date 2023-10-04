@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = "EXTERNAL LABORATORY PAYMENT FORM";
-    
+
     string clsView = "";
     //if (Model.PaymentID != "0")
     //{
-        
+
     //    clsView = "Permission_View";
     //}
 }
@@ -155,10 +155,10 @@
     </div>
 
 </div>
-<div class="savenext-btn" style="margin-right:50%;">
+<div class="savenext-btn" style="margin-left:40%;">
     <button type="button" class="save-btn active" onclick="GetPayment();">Submit</button>
 </div>
-    </div>
+    <br />
 <div id="showPayment1" style="display:none;">
     <section class="table-section">
         <div class="task-listinput">
@@ -186,85 +186,60 @@
     </section>
 </div>
 <br />
-<div class="savenext-btn" style="margin-right:46%;">
+<div class="savenext-btn" style="margin-left:40%;">
     <button type="button" class="save-btn active" style="display:none;" id="btnp" onclick="Click();">Proceed For Payment</button>
 </div>
-<br />
-<br />
-<br />
-<br />
-<div class="accordion-body" style="display:none;" id="pytdtl">
 
-    <table style="width: 100%; height: 32px; border-color: #b0c4de; cellspacing: 1; cellpadding: 1;"
-           bgColor="#f0f8ff" border="1">
-        <tr>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">Payment No.</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label" id="lblpyno"></label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">Payment Date</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label" id="dtpydt"></label>
-                
-                <span class="text-danger" id="spnregdt" style="margin-left:6%;"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">
-                    Instrument No
 
-                </label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <input type="text" class="form-control" id="txtAno" />
-                <span asp-validation-for="CHQ_NO" class="text-danger"></span>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">Instrument Date</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <input class="input datepicker" id="dtAdt" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span asp-validation-for="CHQ_DT" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">
-                    Bank
+<div class="task-listinput" style="display:none;" id="pytdtl">
+    <div class="accordion-body">
 
-                </label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Payment No.</label>
+                <input type="text" class="input" id="lblpyno">
+                <span class="text-danger field-validation-error" id="spnError1"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Payment Date</label>
+                <input type="text" class="input datepicker" id="dtpydt">
+
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Instrument No</label>
+                <input type="text" class="input" id="txtAno">
+                <span class="text-danger field-validation-error" id="spnError2"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Instrument Date</label>
+                <input type="text" class="input datepicker" id="dtAdt">
+                <span class="text-danger field-validation-error" id="spnError3"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Bank</label>
                 @Html.DropDownListFor(model => model.Bank, Common.GetBankPayment(), new { @id="ddlbank"})
-                <span asp-validation-for="Bank" class="text-danger"></span>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">Amount</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <input type="text" id="txtamt" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Amount</label>
+                <input type="text" class="input" id="txtamt">
+                <span class="text-danger field-validation-error" id="spnError4"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Remarks</label>
+                <textarea class="input" asp-for="Remarks" id="txtremk"> </textarea>
 
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <label class="control-label">Remarks</label>
-            </td>
-            <td style="width: 25%; height: 50px; padding: 10px; border: 1px solid #b0c4de;" valign="top">
-                <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremk"></textarea>
-            </td>
-        </tr>
-    </table>
-    <div class="savenext-btn" style="margin-right:46%;">
-        <button type="button" class="save-btn active Permission_Save" onclick="Save();" id="btnsave">Save</button>
-        <button type="button" class="save-btn active"  id="btnprint">Print</button>
-       @* <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>*@
+            </div>
+        </div>
+        <div class="savenext-btn" style="margin-left:47%;">
+            <button type="button" class="save-btn active Permission_Save" onclick="Save();" id="btnsave">Save</button>
+            <button type="button" class="save-btn active" id="btnprint" style="display:none;">Print</button>
+        </div>
     </div>
 </div>
 @*</form>*@
@@ -278,7 +253,7 @@
             });
             var today = new Date();
             //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
-            $("#dtpydt").text(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear())).css("color", "red");
+            $("#dtpydt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
         });
         $("#btnp").click(function () {
             $('html, body').animate({
@@ -298,7 +273,7 @@
                 dataType: 'json',
                 data: { Lab: Lab },
                 success: function (data) {
-                    
+
                     if (data.length == 0) {
 
                     }
@@ -329,7 +304,7 @@
                             row.append($('<td>').text(data[i].CHQ_DT));
                             row.append($('<td>').text(data[i].IAMOUNT));
 
-                            
+
                             tableBody.append(row);
                             var sno = data[i].SNO;
                         }
@@ -350,13 +325,34 @@
         }
 
         function Click() {
-            
+
             var text = $("#ddlppylab option:selected").text();
             $("#pytdtl").css("display", "block");
             $("#txtremk").val(text);
         }
         function Save() {
-            
+            $("#spnError1").html("");
+            $("#spnError2").html("");
+            $("#spnError3").html("");
+            $("#spnError4").html("");
+            var IsValid = true;
+            if ($("#lblpyno").val() == "") {
+                $("#spnError1").html("Please Enter Payment No");
+                IsValid = false;
+            }
+            if ($("#txtAno").val() == "") {
+                $("#spnError2").html("Please Enter Instrument No");
+                IsValid = false;
+            }
+            if ($("#dtAdt").val() == "") {
+                $("#spnError3").html("Please Enter Instrument Date");
+                IsValid = false;
+            }
+            if ($("#txtamt").val() == "") {
+                $("#spnError4").html("Please Enter Amount");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             var selectedsrno = [];
             var selectedregno = [];
             $("input[type='checkbox'][data-sno]:checked").each(function () {
@@ -368,72 +364,71 @@
             var Srno = selectedsrno.join(',');
             var RegNo = selectedregno.join(',');
             if (selectedregno.length > 0) {
-            var LabPaymentFormModel = {
-                PaymentID: $("#lblpyno").text(),
-                PaymentDt: $("#dtpydt").text(),
-                CHQ_NO: $("#txtAno").val(),
-                CHQ_DT: $("#dtAdt").val(),
-                Bank: $("#ddlbank").val(),
-                IAMOUNT: $("#txtamt").val(),
-                Remarks: $("#txtremk").val(),
+                var LabPaymentFormModel = {
+                    PaymentID: $("#lblpyno").val(),
+                    PaymentDt: $("#dtpydt").val(),
+                    CHQ_NO: $("#txtAno").val(),
+                    CHQ_DT: $("#dtAdt").val(),
+                    Bank: $("#ddlbank").val(),
+                    IAMOUNT: $("#txtamt").val(),
+                    Remarks: $("#txtremk").val(),
                     LabCd: $("#ddlppylab").val(),
-                SNO: Srno,
-                SAMPLE_REG_NO:RegNo
-            };
-            $.ajax({
-                type: 'POST',
-                contentType: "application/json",
-                url: "/LabPaymentsForm/SavePayment",
-                dataType: "json",
-                data: JSON.stringify(LabPaymentFormModel),
+                    SNO: Srno,
+                    SAMPLE_REG_NO: RegNo
+                };
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/json",
+                    url: "/LabPaymentsForm/SavePayment",
+                    dataType: "json",
+                    data: JSON.stringify(LabPaymentFormModel),
                     success: function (result) {
-                   
-                        sessionStorage.setItem("pytid",result.message);
+
+                        sessionStorage.setItem("pytid", result.message);
                         if (result.success == true) {
 
-                        alert('Data Saved Successfully!');
-                            $("#lblpyno").text(result.message).css("color", "red");
-                            $("#btnsave").css("display","none");
-                            $("#btnprint").css("display", "block");
-                        //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
-                    }
-                    else {
-
-                        alert('Error Occurred. Contact Your admin!');
-                        //alert(error);
-                    }
-
-                },
-                error: function (result) {
-
-
-                        if (result.success == true) {
-
-                        alert('Data Saved Successfully!');
-                            $("#lblpyno").text(result.message).css("color", "red");
+                            alert('Data Saved Successfully!');
+                            $("#lblpyno").val(result.message);
                             $("#btnsave").css("display", "none");
                             $("#btnprint").css("display", "block");
-                        //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
-                    }
-                    else {
-                        alert('Error Occurred. Contact Your admin!');
-                        //alert(error);
-                    }
+                            //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                        }
+                        else {
 
-                }
-            });
+                            alert('Error Occurred. Contact Your admin!');
+                            //alert(error);
+                        }
+
+                    },
+                    error: function (result) {
+
+
+                        if (result.success == true) {
+
+                            alert('Data Saved Successfully!');
+                            $("#lblpyno").val(result.message);
+                            $("#btnsave").css("display", "none");
+                            $("#btnprint").css("display", "block");
+                            //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                        }
+                        else {
+                            alert('Error Occurred. Contact Your admin!');
+                            //alert(error);
+                        }
+
+                    }
+                });
             }
-            else
-            {
+            else {
                 alert("Select atleast One Sample Registration No. to process the Lab Payment.");
             }
         }
 
-        $("#btnprint").click(function (){
-           
-           var PaymentID  = sessionStorage.getItem("pytid");
+        $("#btnprint").click(function () {
+            
+            var PaymentID = $("#lblpyno").val();
             window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
         })
-        
+
     </script>
 }

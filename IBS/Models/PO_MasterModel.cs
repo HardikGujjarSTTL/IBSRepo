@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -12,6 +13,7 @@ namespace IBS.Models
 
         public string? StockNonstock { get; set; }
 
+        [Required]
         public string? RlyNonrly { get; set; }
 
         public string? PoNo { get; set; }
@@ -22,6 +24,7 @@ namespace IBS.Models
 
         public int? VendCd { get; set; }
 
+        [Required]
         public string? RlyCd { get; set; }
         public string? MainrlyCd { get; set; }
 
