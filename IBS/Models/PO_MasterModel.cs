@@ -7,6 +7,7 @@ namespace IBS.Models
     {
         public string CaseNo { get; set; } = null!;
 
+        [Required]
         public int? PurchaserCd { get; set; }
 
         public string? Purchaser { get; set; }

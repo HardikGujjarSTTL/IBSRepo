@@ -166,11 +166,6 @@ namespace IBS.Repositories
             #region POMaster save
             if (POMaster == null)
             {
-                //var w_ctr= model.RegionCode + model.PoDt.ToString().Substring(8,2) + model.PoDt.ToString().Substring(0, 2);
-                //var cn=(from m in context.T80PoMasters 
-                //        where m.RegionCode==model.RegionCode && m.CaseNo.Substring(0,4)== w_ctr
-                //        select m.CaseNo.Substring(6,4)).Max();
-
                 string date = model.PoDt.ToString().Substring(0, 10);
                 OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, model.RegionCode, ParameterDirection.Input);
@@ -204,6 +199,8 @@ namespace IBS.Repositories
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
+                obj.Createdby = model.Createdby;
+                obj.Createddate = DateTime.Now;
                 context.T80PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -227,6 +224,8 @@ namespace IBS.Repositories
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 POMaster.Contractid = model.Contractid;
+                POMaster.Updatedby = model.Updatedby;
+                POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }
