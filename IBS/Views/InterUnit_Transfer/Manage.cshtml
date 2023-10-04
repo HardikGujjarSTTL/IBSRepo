@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="Reference">RV Voucher No. & Date : </label>
-                    <label class="text-danger" id="lblVNo">@Model.VCHR_NO</label> & 
+                    <label class="text-danger" id="lblVNo">@Model.VCHR_NO</label> &
                     <label class="text-danger" id="lblVDT">@Model.VCHR_DT</label>
                     <label class="text-danger" id="lblSNO">@Model.SNO</label>
                 </div>
@@ -54,33 +54,140 @@
                     <label for="Reference">Paying Authority :</label>
                     <label class="text-danger" id="lblCBPO">@Model.BPO</label>
                 </div>
-            </div>            
+            </div>
         </div>
 
         <div class="accordion-body">
             <div class="row my-0">
-                <div class="col-md-2 mb-3">
+                <input type="hidden" id="hdnID" name="hdnID" />
+                <div class="col-md-3 mb-3">
                     <label for="Reference">Region to which Transferred</label>
-                    @Html.DropDownListFor(Model => Model.ACC_CD, new SelectList(IBS.Models.Common.GetIterUnitRegionList().Where(x => x.Value != Model.Region_ID) , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.Transfer.ACC_CD, new SelectList(IBS.Models.Common.GetIterUnitRegionList().Where(x => x.Value != Model.Region_ID) , "Value", "Text"))
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="Reference">Amount</label>
-                    <input type="text" class="input" asp-for="R_AMOUNT" maxlength="30" />
-                    @*<span asp-validation-for="BankName" class="text-danger"></span>*@
+                    <input type="text" class="input" asp-for="Transfer.R_AMOUNT" maxlength="30" />
+                    <span asp-validation-for="Transfer.R_AMOUNT" class="text-danger"></span>
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="Reference">Narration</label>
-                    <input type="text" class="input" asp-for="NARRATION" />
+                    <input type="text" class="input" asp-for="Transfer.NARRATION" />
                 </div>
                 <div class="col-md-2 mb-3">
-                    <label for="Reference">Inter Unit Advice No.</label> 
-                    <input type="text" class="input" asp-for="RNO" readonly />
+                    <label for="Reference">Inter Unit Advice No.</label>
+                    <input type="text" class="input" asp-for="Transfer.RNO" readonly />
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="Reference">Inter Unit Advice Date.</label>
-                    <input type="text" class="input" asp-for="RDT" readonly/>
-                </div>                
+                    <input type="text" class="input" asp-for="Transfer.RDT" readonly />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <button type="button" id="btnAdd" class="formBtn"><span class="fa fa-plus"></span> Add</button>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <section class="table-section">
+                        <div class="task-listinput">
+                            <div class="dash-table">
+                                <table id="dtList" class="table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Region to which Transferred</th>
+                                            <th>Amount</th>
+                                            <th>Narration</th>
+                                            <th>Inter Unit Advice No.</th>
+                                            <th>Inter Unit Advice Date.</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
     </form>
 </div>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function InitializeDataTable() {
+            $("#dtList").val($("#ClusterID option:selected").text());
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadUnitTransferTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups                    
+                    { data: "ACC_CD" },
+                    { data: "lstCluster" },
+                    { data: "R_AMOUNT" },
+                    { data: "NARRATION" },
+                    { data: "RNO" },
+                    { data: "RDT" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.ID;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="EditInterUnitTransfer(' + id + ');" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
+                            html += '<a onclick="DeleteCluster(' + id + ');"  href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+        function EditInterUnitTransfer(id) {
+            $.ajax({
+                url: '@Url.Action("EditInterUnitTransfer", "InterUnit_Transfer")?id=' + id,
+                type: 'GET',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#hdnID").val(response.list.ID)
+                    $("#Transfer_ACC_CD").val(response.list.ACC_CD)
+                    $("#Transfer_R_AMOUNT").val(response.list.R_AMOUNT);
+                    $("#Transfer_NARRATION").val(response.list.NARRATION);
+                    $("#Transfer_RNO").val(response.list.RNO);
+                    $("#Transfer_RDT").val(response.list.RDT);                    
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+    </script>
+}

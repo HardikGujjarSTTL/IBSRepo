@@ -1,4 +1,6 @@
-﻿    namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class InterUnit_TransferModel
     {
@@ -17,26 +19,23 @@
 
         public string JV_NO { get; set; }
         public string JV_DT { get; set; }
+        
+        public InterUnitTransferRegionModel Transfer { get; set; }
+        public string Region_ID { get; set; }       
+    }
 
-
+    public class InterUnitTransferRegionModel
+    {
+        public int ID { get; set; }
         public string ACC_CD { get; set; }
+
+        [MaxLength(12)]
+        [MinLength(1)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Invalid Amount")]
         public string R_AMOUNT { get; set; }
         public string NARRATION { get; set; }
         public string RNO { get; set; }
         public string RDT { get; set; }
-
-        public string Region_ID { get; set; }
-
-        //public string ACC_CD { get; set; }
-        //public string NARRATION { get; set; }                       
-        //public decimal CHQ_AMOUNT { get; set; }
-        //public decimal AVL_AMOUNTS { get; set; }
-        //public string PAYING_AUTHORITY { get; set; }
-        //public string REGION_TRANSFERRED { get; set; }        
-        //public string ACC_DESC { get; set; }
-        //public string IU_ADV_NO { get; set; }
-        //public string IU_ADV_DT { get; set; }
-        //public string Action { get; set; }
     }
 
     public class InterUnit_Transfer_JVModel
