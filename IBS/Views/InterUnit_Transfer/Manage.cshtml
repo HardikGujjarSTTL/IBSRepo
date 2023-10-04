@@ -1,0 +1,86 @@
+﻿@model IBS.Models.InterUnit_TransferModel
+
+@{
+    ViewData["Title"] = "INTER UNIT TRANSFERS MANAGE";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>INTER UNIT TRANSFERS MANAGE</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="InterUnit_Transfer" asp-action="SaveDetail" id="frmInterUnitTransfer">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Bank : </label>
+                    <label class="text-danger" id="lblBank">@Model.BANK_NAME</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Cheque No : </label>
+                    <label class="text-danger" id="lblChqNo">@Model.CHQ_NO</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Cheque Date : </label>
+                    <label class="text-danger" id="lblChqDate">@Model.CHQ_DT</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">RV Voucher No. & Date : </label>
+                    <label class="text-danger" id="lblVNo">@Model.VCHR_NO</label> & 
+                    <label class="text-danger" id="lblVDT">@Model.VCHR_DT</label>
+                    <label class="text-danger" id="lblSNO">@Model.SNO</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">JV NO :</label>
+                    <label class="text-danger" id="lblJVNO">@Model.JV_NO</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">JV Date :</label>
+                    <label class="text-danger" id="lblJVDT">@Model.JV_DT</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Cheque Amount :</label>
+                    <label class="text-danger" id="lblAmt">@Model.AMOUNT</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Amount Transferred To Other Units :</label>
+                    <label class="text-danger" id="lblAmtADJ">@Model.AMT_TRANSFERRED</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Available Amount :</label>
+                    <label class="text-danger" id="lblSAmt">@Model.SUSPENSE_AMT</label>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Paying Authority :</label>
+                    <label class="text-danger" id="lblCBPO">@Model.BPO</label>
+                </div>
+            </div>            
+        </div>
+
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Region to which Transferred</label>
+                    @Html.DropDownListFor(Model => Model.ACC_CD, new SelectList(IBS.Models.Common.GetIterUnitRegionList().Where(x => x.Value != Model.Region_ID) , "Value", "Text"))
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Amount</label>
+                    <input type="text" class="input" asp-for="R_AMOUNT" maxlength="30" />
+                    @*<span asp-validation-for="BankName" class="text-danger"></span>*@
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Narration</label>
+                    <input type="text" class="input" asp-for="NARRATION" />
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Inter Unit Advice No.</label> 
+                    <input type="text" class="input" asp-for="RNO" readonly />
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Inter Unit Advice Date.</label>
+                    <input type="text" class="input" asp-for="RDT" readonly/>
+                </div>                
+            </div>
+        </div>
+    </form>
+</div>

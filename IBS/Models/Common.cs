@@ -3799,6 +3799,19 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
+        public static List<SelectListItem> GetIterUnitRegionList()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Northern Region", Value = "3007" },
+                new SelectListItem() { Text = "Eastern Region", Value = "3008" },
+                new SelectListItem() { Text = "Southern Region", Value = "3009" },
+                new SelectListItem() { Text = "Western Region", Value = "3006" },
+                new SelectListItem() { Text = "Central Region", Value = "3066" },
+                new SelectListItem() { Text = "Bill Adjustment of Old System", Value = "9999" },
+                new SelectListItem() { Text = "Miscelleanous Adjustments", Value = "9998" }
+            };
+            return textValueDropDownDTO.ToList();
+        }
     }
 
     public static class DbContextHelper
