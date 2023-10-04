@@ -80,7 +80,7 @@
 <section class="table-section">
     <div class="task-listinput">
         <div class="dash-table">
-            <table id="dtsearch" class="table-responsive">
+            <table id="dtsearch" class="table-responsive nowrap">
                 <thead>
                     <tr>
                         <th>Case No.</th>
@@ -151,7 +151,7 @@
                 $("#dtsearch").DataTable({
                     stateSave: false,
                     autoWidth: true,
-                    scrollX: true,
+                    //scrollX: true,
                     scrollCollapse: true,
                     processing: true,
                     serverSide: true,
@@ -223,7 +223,10 @@
                         { data: "InspFee" },
                         { data: "BillAmount" },
                     ],
-                    "order": [[0, "asc"]]
+                    "order": [[0, "asc"]],
+                    "initComplete": function (settings, json) {
+                        $("#dtsearch").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                    },
                 });
             }
         });
