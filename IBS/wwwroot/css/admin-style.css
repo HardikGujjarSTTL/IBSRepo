@@ -537,7 +537,7 @@ h2.boxTitle.calendarBg { background: url(../images/calendar-icon-bg.png) right c
 .approved { color: #03953f; }
 .pending { color: #c85c1a; }
 .process { color: #0072bc; }
-.reportIcon { white-space: nowrap; text-align: right; font-size: 19px; color: #585858; }
+.reportIcon { white-space: nowrap; text-align: center; font-size: 16px; color: #585858; }
 .reportIcon a { color: #585858; display: inline-block; }
 .reportIcon a:hover { color: #008B29; }
 .btnRow input, .btnRow a.button { background: #78a51e; font-size: 15px; border: 0 none; padding: 4px 10px; height: 28px; line-height: 18px; margin-left: 10px; border-radius: 25px; text-transform: uppercase; font-weight: bold; font-size: 13px; }
@@ -1341,6 +1341,7 @@ animation: show-bar-one 1.2s 0.1s forwards;}
 .dataTable{border-top:1px solid #d1d1d1; border-left:1px solid #d1d1d1;}
 .dataTable th, .dataTable td{ border-bottom:1px solid #d1d1d1; border-right:1px solid #d1d1d1;}
 .dataTable td{ padding:0px 5px!important;}
+.dataTable td:first-child{ text-align:center;}
 .dataTable th{border-bottom:1px solid #d1d1d1; font-size:13px; background:#f3f4ff!important;}
 .dataTable tr:nth-child(even) td{ background:#f1f1f1;}
 .userDetail .dropPopup.messagePopup li form{ width:100%;}
