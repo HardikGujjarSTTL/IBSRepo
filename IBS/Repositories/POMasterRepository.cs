@@ -100,6 +100,7 @@ namespace IBS.Repositories
                 query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
