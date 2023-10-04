@@ -52,12 +52,25 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
+        $(document).ready(function () {
+            $('#clientname').on('keypress', function (event) {
+                Validation();
+            });
+        });
 
         $(function () {
             InitializeDatatable();
         });
         
+        function Validation() {
+            var userInput = event.key;
+            var regex = /^[a-zA-Z\s]+$/;
+
+            if (!regex.test(userInput)) {
+                event.preventDefault();
+            }
+        }
+
         function InitializeDatatable() {
             var clientname = $("#clientname").val();
 

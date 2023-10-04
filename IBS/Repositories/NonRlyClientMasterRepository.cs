@@ -21,49 +21,58 @@ namespace IBS.Repositories
             int maxID = 0;
             int NonClientId = 0;
             var NonClient = (from r in context.NonRlyClients where r.Id == Convert.ToInt32(model.Id) select r).FirstOrDefault();
-            #region Non Client save
-            if (NonClient == null)
+            var existingClient = context.NonRlyClients.FirstOrDefault(r => r.Mobileno == model.MOBILE);
+            if (existingClient == null || existingClient.Id == Convert.ToInt32(model.Id))
             {
-                if (context.NonRlyClients.Any())
+                #region Non Client save
+                if (NonClient == null)
                 {
-                    maxID = context.NonRlyClients.Max(x => x.Id) + 1;
+                    if (context.NonRlyClients.Any())
+                    {
+                        maxID = context.NonRlyClients.Max(x => x.Id) + 1;
+                    }
+                    else
+                    {
+                        maxID = 1;
+                    }
+                    NonRlyClient obj = new NonRlyClient();
+                    obj.Id = maxID;
+                    obj.Clientname = model.ClientName;
+                    obj.Contactdesignation = model.Client_DESIGNATION;
+                    obj.Emailid = model.EMAIL;
+                    obj.Mobileno = model.MOBILE;
+                    obj.Orgntype = model.Orgn_Type;
+                    obj.Shortcode = model.ShortCode;
+                    obj.Contactname = model.ContactName;
+                    obj.Isdeleted = Convert.ToByte(false);
+                    obj.Createdby = model.Createdby;
+                    obj.Createddate = DateTime.Now;
+                    context.NonRlyClients.Add(obj);
+                    context.SaveChanges();
+                    NonClientId = Convert.ToInt32(obj.Id);
                 }
                 else
                 {
-                    maxID = 1;
+                    NonClient.Clientname = model.ClientName;
+                    NonClient.Contactdesignation = model.Client_DESIGNATION;
+                    NonClient.Emailid = model.EMAIL;
+                    NonClient.Mobileno = model.MOBILE;
+                    NonClient.Orgntype = model.Orgn_Type;
+                    NonClient.Shortcode = model.ShortCode;
+                    NonClient.Contactname = model.ContactName;
+                    NonClient.Isdeleted = Convert.ToByte(false);
+                    NonClient.Updatedby = model.Updatedby;
+                    NonClient.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                    NonClientId = Convert.ToInt32(NonClient.Id);
                 }
-                NonRlyClient obj = new NonRlyClient();
-                obj.Id = maxID;
-                obj.Clientname = model.ClientName;
-                obj.Contactdesignation = model.Client_DESIGNATION;
-                obj.Emailid = model.EMAIL;
-                obj.Mobileno = model.MOBILE;
-                obj.Orgntype = model.Orgn_Type;
-                obj.Shortcode = model.ShortCode;
-                obj.Contactname = model.ContactName;
-                obj.Isdeleted = Convert.ToByte(false);
-                obj.Createdby = model.Createdby;
-                obj.Createddate = DateTime.Now;
-                context.NonRlyClients.Add(obj);
-                context.SaveChanges();
-                NonClientId = Convert.ToInt32(obj.Id);
+                #endregion
             }
             else
             {
-                NonClient.Clientname = model.ClientName;
-                NonClient.Contactdesignation = model.Client_DESIGNATION;
-                NonClient.Emailid = model.EMAIL;
-                NonClient.Mobileno = model.MOBILE;
-                NonClient.Orgntype = model.Orgn_Type;
-                NonClient.Shortcode = model.ShortCode;
-                NonClient.Contactname = model.ContactName;
-                NonClient.Isdeleted = Convert.ToByte(false);
-                NonClient.Updatedby = model.Updatedby;
-                NonClient.Updateddate = DateTime.Now;
-                context.SaveChanges();
-                NonClientId = Convert.ToInt32(NonClient.Id);
+                return NonClientId;
             }
-            #endregion
+
             return NonClientId;
         }
 

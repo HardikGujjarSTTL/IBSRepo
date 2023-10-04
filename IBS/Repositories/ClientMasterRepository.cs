@@ -97,44 +97,52 @@ namespace IBS.Repositories
         {
             int ClientId = 0;
             var Client = (from r in context.T32ClientLogins where r.Id == Convert.ToInt32(model.Id) select r).FirstOrDefault();
-            #region Client save
-            if (Client == null)
+            var existingClient = context.T32ClientLogins.FirstOrDefault(r => r.Mobile == model.MOBILE);
+            if (existingClient == null || existingClient.Id == Convert.ToInt32(model.Id))
             {
-                int maxID = context.T32ClientLogins.Max(x => x.Id) + 1;
-                T32ClientLogin obj = new T32ClientLogin();
-                obj.Id = maxID;
-                obj.UserName = model.ClientName;
-                obj.Organisation = model.ORGANISATION;
-                obj.Designation = model.Client_DESIGNATION;
-                obj.Email = model.EMAIL;
-                obj.Mobile = model.MOBILE;
-                obj.Unit = model.UNIT;
-                obj.OrgnType = model.Orgn_Type;
-                obj.Pwd = model.Password;
-                obj.Isdeleted = Convert.ToByte(false);
-                obj.Createdby = model.Createdby;
-                obj.Createddate = DateTime.Now;
-                context.T32ClientLogins.Add(obj);
-                context.SaveChanges();
-                ClientId = Convert.ToInt32(obj.Id);
+                #region Client save
+                if (Client == null)
+                {
+                    int maxID = context.T32ClientLogins.Max(x => x.Id) + 1;
+                    T32ClientLogin obj = new T32ClientLogin();
+                    obj.Id = maxID;
+                    obj.UserName = model.ClientName;
+                    obj.Organisation = model.ORGANISATION;
+                    obj.Designation = model.Client_DESIGNATION;
+                    obj.Email = model.EMAIL;
+                    obj.Mobile = model.MOBILE;
+                    obj.Unit = model.UNIT;
+                    obj.OrgnType = model.Orgn_Type;
+                    obj.Pwd = model.Password;
+                    obj.Isdeleted = Convert.ToByte(false);
+                    obj.Createdby = model.Createdby;
+                    obj.Createddate = DateTime.Now;
+                    context.T32ClientLogins.Add(obj);
+                    context.SaveChanges();
+                    ClientId = Convert.ToInt32(obj.Id);
+                }
+                else
+                {
+                    Client.UserName = model.ClientName;
+                    Client.Organisation = model.ORGANISATION;
+                    Client.Designation = model.Client_DESIGNATION;
+                    Client.Email = model.EMAIL;
+                    Client.Unit = model.UNIT;
+                    Client.Mobile = model.MOBILE;
+                    Client.OrgnType = model.Orgn_Type;
+                    Client.Pwd = model.Password;
+                    Client.Isdeleted = Convert.ToByte(false);
+                    Client.Updatedby = model.Updatedby;
+                    Client.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                    ClientId = Convert.ToInt32(Client.Id);
+                }
+                #endregion
             }
             else
             {
-                Client.UserName = model.ClientName;
-                Client.Organisation = model.ORGANISATION;
-                Client.Designation = model.Client_DESIGNATION;
-                Client.Email = model.EMAIL;
-                Client.Unit = model.UNIT;
-                Client.Mobile = model.MOBILE;
-                Client.OrgnType = model.Orgn_Type;
-                Client.Pwd = model.Password;
-                Client.Isdeleted = Convert.ToByte(false);
-                Client.Updatedby = model.Updatedby;
-                Client.Updateddate = DateTime.Now;
-                context.SaveChanges();
-                ClientId = Convert.ToInt32(Client.Id);
+                return ClientId;
             }
-            #endregion
             return ClientId;
         }
 
