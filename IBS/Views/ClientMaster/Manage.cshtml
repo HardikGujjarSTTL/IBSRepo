@@ -94,16 +94,15 @@
                     event.preventDefault();
                 }
             });
-            $('#emailval').on('blur', function () {
-                var email = $(this).val();
-var re = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
+            //$('#emailval').on('blur', function () {
+            //    var email = $(this).val();
 
-                if (!emailRegex.test(email)) {
-                    $('#email-error').text('Please enter a valid email address.');
-                } else {
-                    $('#email-error').text('');
-                }
-            });
+            //    if (!emailRegex.test(email)) {
+            //        $('#email-error').text('Please enter a valid email address.');
+            //    } else {
+            //        $('#email-error').text('');
+            //    }
+            //});
         });
         function Validation() {
             var userInput = event.key;
