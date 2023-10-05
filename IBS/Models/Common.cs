@@ -2525,6 +2525,26 @@ namespace IBS.Models
             return Sealing;
         }
 
+        public static List<SelectListItem> GetBPOList()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> BPOList = new();
+
+            BPOList = (from t12 in ModelContext.T12BillPayingOfficers
+                       join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                       where t12.BpoType == "R" && (t12.BpoRly.Trim().ToUpper() == "IRFC")
+                       orderby t12.BpoName
+                       select new SelectListItem
+                       {
+                           Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                           Value = Convert.ToString(t12.BpoCd)
+
+                       }).ToList();
+
+            return BPOList;
+        }
+
         public static List<SelectListItem> GetlstBPOType(string ClientType, string ClientName)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -2975,6 +2995,23 @@ namespace IBS.Models
                                        {
                                            Text = a.ConsigneeCd + "-" + a.Consignee,
                                            Value = Convert.ToString(a.ConsigneeCd)
+                                       }).ToList();
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetConsigneeList(string CaseNo)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> objdata = (from P in context.T14PoBpos
+                                            join C in context.T06Consignees on P.ConsigneeCd equals C.ConsigneeCd
+                                            join D in context.T03Cities on C.ConsigneeCity equals D.CityCd
+                                            where P.CaseNo == CaseNo
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = (C.ConsigneeCd + "-" + (string.IsNullOrEmpty(C.ConsigneeDesig) ? "" : C.ConsigneeDesig + "/") + (string.IsNullOrEmpty(C.ConsigneeDept) ? "" : C.ConsigneeDept + "/") + (string.IsNullOrEmpty(C.ConsigneeFirm) ? "" : C.ConsigneeFirm + "/") + (string.IsNullOrEmpty(C.ConsigneeAdd1) ? "" : C.ConsigneeAdd1 + "/") + (string.IsNullOrEmpty(D.Location) ? "" : D.Location + " : " + D.City)),
+                                           Value = Convert.ToString(P.ConsigneeCd)
                                        }).ToList();
             return objdata;
         }
@@ -3575,6 +3612,11 @@ namespace IBS.Models
         public static IEnumerable<TextValueDropDownDTO> GetBPOAdvFlag()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.BPOAdvFlag)).ToList();
+        }
+
+        public static IEnumerable<TextValueDropDownDTO> GetAdvanceBill()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.AdvanceBill)).ToList();
         }
 
         public static IEnumerable<SelectListItem> GetIEToWhomIssued(string Region)

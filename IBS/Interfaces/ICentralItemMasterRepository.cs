@@ -9,6 +9,8 @@ namespace IBS.Interfaces
         DTResult<CentralItemMasterModel> GetList(DTParameters dtParameters);
         bool Remove(int ID, int UserID);
         int InsertUpdate(CentralItemMasterModel model);
+
+        bool CheckAlreadyExist(CentralItemMasterModel model);
         #endregion
 
         #region Details

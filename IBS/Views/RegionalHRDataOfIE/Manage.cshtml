@@ -18,7 +18,7 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-            <form role="form" asp-controller="RegionalHRDataOfIE" asp-action="InsertUpdate" id="frmRegionalHRDataOfIE">
+        <form role="form" asp-controller="RegionalHRDataOfIE" asp-action="InsertUpdate" id="frmRegionalHRDataOfIE">
             <input type="hidden" id="Id" name="Id" value="@Model.Id" />
             <div class="accordion-body">
                 <div class="row my-0">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Disclipline</label>
-                        <input type="text" class="input" asp-for="Disclipline">
+                        <input type="text" class="input" asp-for="Disclipline" maxlength="50">
                         <span asp-validation-for="Disclipline" class="text-danger"></span>
                     </div>
                 </div>
@@ -49,46 +49,45 @@
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Retirement Date</label>
                         <input id="Retirementdate" asp-for="Retirementdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Retirementdate" class="text-danger"></span>
+                        @*<span asp-validation-for="Retirementdate" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Transfer Date</label>
                         <input id="Transferdate" asp-for="Transferdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Transferdate" class="text-danger"></span>
+                        @*<span asp-validation-for="Transferdate" class="text-danger"></span>*@
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Deputation From Date (For Contratual Employee)</label>
                         <input id="Deputationfromdate" asp-for="Deputationfromdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Deputationfromdate" class="text-danger"></span>
+                        @*<span asp-validation-for="Deputationfromdate" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Deputation To Date (For Contratual Employee)</label>
                         <input id="Deputationtodate" asp-for="Deputationtodate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Deputationtodate" class="text-danger"></span>
+                        @*<span asp-validation-for="Deputationtodate" class="text-danger"></span>*@
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">IE Tenure From Date</label>
                         <input id="Ietenurefromdate" asp-for="Ietenurefromdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Ietenurefromdate" class="text-danger"></span>
+                        @*<span asp-validation-for="Ietenurefromdate" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">IE Tenure To Date</label>
                         <input id="Ietenuretodate" asp-for="Ietenuretodate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Ietenuretodate" class="text-danger"></span>
+                        @*<span asp-validation-for="Ietenuretodate" class="text-danger"></span>*@
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Repetriation From Date (For Contratual Employee)</label>
                         <input id="Repetriationdate" asp-for="Repetriationdate" type="text" class="datepicker" placeholder="dd/MM/yyyy" readonly="readonly" />
-                        <span asp-validation-for="Repetriationdate" class="text-danger"></span>
+                        @*<span asp-validation-for="Repetriationdate" class="text-danger"></span>*@
                     </div>
                 </div>
-                
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
@@ -103,8 +102,7 @@
         $(".select2").select2();
         $(function () {
         });
-        function FillData()
-        {
+        function FillData() {
             var IeCd = $("#IeCd").val();
             $.ajax({
                 url: '@Url.Action("GetIEData", "RegionalHRDataOfIE")?IeCd=' + IeCd,
@@ -116,7 +114,9 @@
             }).done(function (response) {
                 if (response.status) {
                     $("#Joiningdate").val(moment(response.obj.Joiningdate).format("DD/MM/YYYY"));
-                    $("#Retirementdate").val(moment(response.obj.Retirementdate).format("DD/MM/YYYY"));
+                    if (response.obj.Retirementdate != null) {
+                        $("#Retirementdate").val(moment(response.obj.Retirementdate).format("DD/MM/YYYY"));
+                    }
                 }
             });
         }

@@ -1,0 +1,89 @@
+﻿@model IBS.Models.InspectionCertModel
+
+@{
+    ViewData["Title"] = "Change Consignee in IC";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="InspectionCert" asp-action="ChangeConsignee" id="frmDetails">
+        <input type="hidden" asp-for="UpdateStatus" />
+        <div class="accordion-body" style="overflow-x: auto;">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Case No.</label>
+                        <input type="text" class="input" asp-for="Caseno" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Bkno">BK No.</label>
+                        <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Setno">Set No.</label>
+                        <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="BpoName">Existing BPO In IC</label>
+                        <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Consignee">Exisiting Consignee In IC</label>
+                        <input type="text" class="input" asp-for="Consignee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="ConsigneeCd">Replace with Consignee <span class="darkRedBoldText">*</span></label>
+                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsigneeList(Model.Caseno) , "Value", "Text"),"--Select--")
+                        <span id="spnConsigneeCd" class="darkRedBoldText"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-warning center">
+                Plz Make Sure that you have choosen the correct Consignee Before Proceeding!!!
+            </div>
+            <div class="row my-0 center">
+                <div class="col-md-12">
+                    <button type="button" class="commonBtn" id="btnSave" onclick="UpdateDetails();">Update Consignee in IC</button>
+                    <button type="button" class="reset-btn" id="btnCancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($("#UpdateStatus").val() == "X") {
+                $("#btnSave").hide();
+            }
+        });
+
+        function UpdateDetails() {
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+
+        }
+
+    </script>
+}

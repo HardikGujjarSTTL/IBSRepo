@@ -1,0 +1,239 @@
+﻿@model IBS.Models.InspectionCertModel
+
+@{
+    ViewData["Title"] = "Bill Adjustments";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="BillAdjustments" asp-action="Index" id="frmDetails">
+        <input type="hidden" asp-for="UpdateStatus" />
+        <div class="accordion-body" style="overflow-x: auto;">
+            <div class="row my-0">
+                @*<div class="col-md-3 mb-3">
+                    <label for="Caseno">Bill Types</label>
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <ul class="radioListForm">
+                                        <li>
+                                            <input type="radio" asp-for="BillTypes" value="C" id="BillTypes_C" checked />
+                                            <label for="BillTypes_C">Credit Note</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" asp-for="BillTypes" value="D" id="BillTypes_D" />
+                                            <label for="BillTypes_D">Debit Note</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Bill No. <span class="darkRedBoldText">*</span></label>
+                        <input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;">
+                        <span id="spnBillNo" class="darkRedBoldText"></span>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="BillSearch();">Search</button>
+                        <button type="button" class="reset-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <section class="table-section" id="tblsection">
+        </section>
+    </form>
+</div>
+
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$("#Callrecvdt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+        });
+
+        function BillSearch() {
+            var BillNo = $("#BillNo").val();
+            $("#spnBillNo").html("");
+            if ($("#BillNo").val() == null || $("#BillNo").val() == "") {
+                $("#spnBillNo").html("Please add Bill No.");
+                return;
+            }
+            
+            let myObject = { BillNo };
+            $.get("@Url.Action("GetBillDetails", "BillAdjustments")", $.param(myObject), function (response) {
+                $("#tblsection").html(response);
+                InitializeDatatable();
+            });
+        }
+
+        function InitializeDatatable() {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
+            var Consignee = $("#Consignee").val();
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                //scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadTableDetails", "InspectionCert")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Caseno": Caseno,
+                            "Callrecvdt": Callrecvdt,
+                            "Callsno": Callsno,
+                            "Consignee": Consignee
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var _ItemSrnoPo = data.ItemSrnoPo;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    { data: "ItemSrnoPo" },
+                    { data: "ItemDescPo" },
+                    { data: "UomSDesc" },
+                    { data: "QtyOrdered" },
+                    { data: "CumQtyPrevOffered" },
+                    { data: "CumQtyPrevPassed" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassed" },
+                    { data: "QtyRejected" },
+                    { data: "QtyDue" },
+                    { data: "Rate" },
+                    { data: "SalesTaxPer" },
+                    { data: "SalesTax" },
+                    { data: "ExcisePer" },
+                    { data: "Excise" },
+                    { data: "DiscountPer" },
+                    { data: "Discount" },
+                    { data: "OtherCharges" },
+                ],
+                "order": [[0, "desc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+        }
+
+        function OpenEditCallDetailsModal(ItemSrnoPo) {
+            $("#ItemSrnoPo").val(ItemSrnoPo);
+            var _CaseNo = $("#Caseno").val();
+            var _CallRecvDt = $("#Callrecvdt").val();
+            var _CallSno = $("#Callsno").val();
+           
+            $.ajax({
+                url: '@Url.Action("EditListDetails", "BillAdjustments")?ItemSrnoPo=' + ItemSrnoPo + "&CaseNo=" + _CaseNo + "&CallRecvDt=" + _CallRecvDt + "&CallSno=" + _CallSno,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    alert(1);
+                    $("#EditCallDetailsModal").html("");
+                    $("#EditCallDetailsModal").html(response);
+                    $("#EditCallDetailsModal").modal('show');
+                }
+            });
+        }
+
+        function UpdateCallDetails() {
+            var CaseNo = $("#Caseno").val();
+            var CallRecvDt = $("#Callrecvdt").val();
+            var CallSno = $("#Callsno").val();
+            var ItemSrnoPo = $("#ItemSrnoPo").val();
+            var ItemDescPo = $("#ItemDescPo").val();
+            var QtyToInsp = $("#QtyToInsp").val();
+            var QtyPassed = $("#QtyPassed").val();
+            var QtyRejected = $("#QtyRejected").val();
+            var QtyDue = $("#QtyDue").val();
+
+            if (QtyToInsp == "") {
+                ShowHideMsgNew(false, "Please add Qty Off Now.");
+                return;
+            }
+            if (QtyPassed == "") {
+                ShowHideMsgNew(false, "Please add Qty Passed.");
+                return;
+            }
+            if (QtyRejected == "") {
+                ShowHideMsgNew(false, "Please add Qty Rejected.");
+                return;
+            }
+            if (QtyDue == "") {
+                ShowHideMsgNew(false, "Please add Qty Due.");
+                return;
+            }
+            if (ItemDescPo == "") {
+                ShowHideMsgNew(false, "Please add Description.");
+                return;
+            }
+            let myObject = { CaseNo, CallRecvDt, CallSno, ItemSrnoPo, ItemDescPo, QtyToInsp, QtyToInsp, QtyPassed, QtyRejected, QtyDue };
+            $.post("@Url.Action("UpdateCallDetails", "InspectionCert")", $.param(myObject), function (response) {
+                if (response.status) {
+                    $("#EditCallDetailsModal").modal('hide');
+                    ShowHideMsgNew(response.status, response.responseText);
+                    InitializeDatatable();
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+
+        function PopUp(BillNo) {
+            //var _BillNo = $("#BillNo").val();
+            $.ajax({
+                url: '@Url.Action("PopUp", "InspectionCert")?BillNo=' + BillNo,
+                type: 'GET',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#PopUp").html("");
+                    $("#PopUp").html(response);
+                    $("#PopUp").modal('show');
+                }
+            });
+        }
+
+        function PopUpOk() {
+            //location.reload();
+            $("#PopUp").modal('hide');
+        }
+    </script>
+}
