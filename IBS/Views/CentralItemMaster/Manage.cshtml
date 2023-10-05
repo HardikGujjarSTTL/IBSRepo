@@ -23,18 +23,18 @@
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Rail Cd</label>
-                        <input type="text" class="input" asp-for="RailCd" maxlength="30">
+                        <label for="Reference">Rail Cd<i class="text-danger">*</i></label>
+                        <input type="text" class="input" asp-for="RailCd" maxlength="50">
                         <span asp-validation-for="RailCd" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Rail Length Meter</label>
-                        <input type="text" class="input" asp-for="RailLengthMeter" maxlength="30">
+                        <label for="Reference">Rail Length Meter<i class="text-danger">*</i></label>
+                        <input type="number" min="1" class="input" asp-for="RailLengthMeter" maxlength="20">
                         <span asp-validation-for="RailLengthMeter" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Rail Description</label>
-                        <textarea class="input" asp-for="RailDesc" maxlength="30"> </textarea>
+                        <label for="Reference">Rail Description<i class="text-danger">*</i></label>
+                        <textarea class="input" asp-for="RailDesc" maxlength="100"> </textarea>
                         <span asp-validation-for="RailDesc" class="text-danger"></span>
                     </div>
                 </div>
