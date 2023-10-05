@@ -218,7 +218,7 @@ namespace IBS.Repositories
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
                 POMaster.RlyCdDesc = model.RlyCdDesc;
-                POMaster.RegionCode = model.RegionCode;
+                //POMaster.RegionCode = model.RegionCode;
                 POMaster.Remarks = model.Remarks;
                 POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
@@ -500,6 +500,10 @@ namespace IBS.Repositories
                 {
                     returnVal = "Not Match";
                 }
+            }
+            else
+            {
+                returnVal = "Not Match";
             }
             return returnVal;
         }

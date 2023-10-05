@@ -267,6 +267,12 @@
                     $('#txtSPur').val('@Model.RlyCd');
                 }
                 FillPurchaserCd('@Model.PurchaserCd');
+
+                setTimeout(function () {
+                    fill_consignee_purcher();
+                }, 2000);
+
+
             }
         });
 
@@ -415,6 +421,9 @@
                     $.each(response.list, function (index, value) {
                         $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
+                    if ('@Model.PurchaserCd' != null) {
+                        $("#PurchaserCd").val('@Model.PurchaserCd');
+                    }
                 }
             });
         }
