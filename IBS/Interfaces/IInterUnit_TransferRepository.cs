@@ -12,6 +12,8 @@ namespace IBS.Interfaces
         #region My Code
         InterUnit_TransferModel Get_Inter_Unit_Transfer(string Bank, string ChqNo, string ChqDate, string Region);
         DTResult<InterUnitTransferRegionModel> GetInterUnitTransferRegion(DTParameters dTParameters, List<InterUnitTransferRegionModel> UnitTransferModel);
+
+        bool DetailsInsertUpdate(InterUnit_TransferModel model, UserSessionModel user);
         #endregion
 
         //#region Old Code

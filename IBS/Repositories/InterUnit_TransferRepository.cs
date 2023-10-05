@@ -41,7 +41,7 @@ namespace IBS.Repositories
             {
                 BankName = context.T94Banks.Where(x => x.BankCd == Convert.ToInt32(ds.Tables[0].Rows[0]["BANK_CD"])).Select(x => x.BankName).FirstOrDefault();
                 model.BANK_NAME = BankName;
-                
+
                 model.VCHR_NO = Convert.ToString(ds.Tables[0].Rows[0]["VCHR_NO"]);
                 model.VCHR_DT = Convert.ToString(ds.Tables[0].Rows[0]["VCHR_DT"]);
                 model.SNO = Convert.ToInt32(ds.Tables[0].Rows[0]["SNO"]);
@@ -55,19 +55,49 @@ namespace IBS.Repositories
             }
 
             var query = (from jv in context.T27Jvs
-                        where jv.ChqNo == ChqNo
-                           && jv.ChqDt == DateTime.ParseExact(ChqDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
-                           && jv.BankCd == Convert.ToByte(Bank)
-                        select new
-                        {
-                            VCHR_NO = jv.VchrNo,
-                            VCHR_DT = Convert.ToDateTime(jv.VchrDt).ToString("dd/MM/yyyy")
-                        }).FirstOrDefault();
-            if(query != null)
+                         where jv.ChqNo == ChqNo
+                            && jv.ChqDt == DateTime.ParseExact(ChqDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                            && jv.BankCd == Convert.ToByte(Bank)
+                         select new
+                         {
+                             VCHR_NO = jv.VchrNo,
+                             VCHR_DT = Convert.ToDateTime(jv.VchrDt).ToString("dd/MM/yyyy")
+                         }).FirstOrDefault();
+            if (query != null)
             {
                 model.JV_NO = query.VCHR_NO;
                 model.JV_DT = query.VCHR_DT;
-            }            
+
+
+                OracleParameter[] param = new OracleParameter[2];
+                param[0] = new OracleParameter("P_VCHR_NO", OracleDbType.Varchar2, query.VCHR_NO, ParameterDirection.Input);
+                param[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds1 = DataAccessDB.GetDataSet("SP_GET_JV_DETAILS", param, 1);
+                DataTable dt = ds1.Tables[0];
+
+                List<InterUnitTransferRegionModel> lst = dt.AsEnumerable().Select(row => new InterUnitTransferRegionModel
+                {
+                    CHQ_NO = Convert.ToString(row["CHQ_NO"]),
+                    CHQ_DT = Convert.ToString(row["CHQ_DT"]),
+                    BANK_CD = Convert.ToString(row["BANK_CD"]),
+                    ACC_CD = Convert.ToString(row["ACC_CD"]),
+                    ACC_DESC = Convert.ToString(row["ACC_DESC"]),
+                    AMOUNT = Convert.ToString(row["AMOUNT"]),
+                    NARRATION = Convert.ToString(row["NARRATION"]),
+                    IU_ADV_NO = Convert.ToString(row["IU_ADV_NO"]),
+                    IU_ADV_DT = Convert.ToString(row["IU_ADV_DT"]),
+                    lblIUAMT = Convert.ToString(row["AMOUNT"]),
+                    ACTION = "M",
+                }).ToList();
+
+                var Srno = 1;
+                foreach (var item in lst)
+                {
+                    item.ID = Srno;
+                    Srno = Srno + 1;
+                }
+                model.lstUnitTransfer = lst;
+            }
             return model;
         }
 
@@ -99,17 +129,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = (from u in UnitTransferModel.OrderBy(x => x.ID)
-                     select new InterUnitTransferRegionModel
-                     {
-                         ID = u.ID,
-                         ACC_CD = u.ACC_CD,
-                         R_AMOUNT = u.R_AMOUNT,
-                         NARRATION = u.NARRATION,
-                         RNO = u.RNO,
-                         RDT = u.RDT
-                     }).AsQueryable();
-
+            query = UnitTransferModel.OrderBy(x => x.ID).AsQueryable();
             dTResult.recordsTotal = query.Count();
 
             //if (!string.IsNullOrEmpty(searchBy))
@@ -117,9 +137,202 @@ namespace IBS.Repositories
             //    );
 
             dTResult.recordsFiltered = query.Count();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public bool DetailsInsertUpdate(InterUnit_TransferModel model, UserSessionModel user)
+        {
+            using (var trans = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var item in model.lstUnitTransfer)
+                    {
+                        var query = (context.T25RvDetails
+                                        .Where(t => t.ChqNo == model.CHQ_NO &&
+                                                    t.ChqDt == DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null) &&
+                                                    t.BankCd == model.BANK_CD)
+                                        .Select(t => new
+                                        {
+                                            camt = t.Amount,
+                                            amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
+                                            susamt = t.SuspenseAmt
+                                        })).FirstOrDefault();
+                        if (model.JV_NO == "")
+                        {
+                            var ss = user.Region + model.TXTV_DT.Substring(8, 2) + model.TXTV_DT.Substring(3, 2);
+                            var res = GenerateJVNO(ss);
+                            model.JV_NO = ss + res;
+
+                            T27Jv Clst = new T27Jv();
+                            {
+                                Clst.VchrNo = model.JV_NO;
+                                Clst.VchrDt = DateTime.ParseExact(model.JV_DT, "dd/MM/yyyy", null);
+                                Clst.RvVchrNo = model.VCHR_NO;
+                                Clst.RvSno = Convert.ToByte(model.SNO);
+                                Clst.BankCd = Convert.ToByte(model.BANK_CD);
+                                Clst.ChqNo = model.CHQ_NO;
+                                Clst.ChqDt = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                                Clst.Createdby = user.UserID;
+                                Clst.Createddate = DateTime.Now;
+                            }
+                            context.T27Jvs.Add(Clst);
+                            context.SaveChanges();
+
+                            DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                            var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
+                            if (_data != null)
+                            {
+                                _data.AmtTransferred = query.amtadj + Convert.ToDecimal(item.AMOUNT);
+                                _data.SuspenseAmt = query.susamt - Convert.ToDecimal(item.AMOUNT);
+                                _data.Updatedby = user.UserID;
+                                _data.Updateddate = DateTime.Now;
+                                context.SaveChanges();
+                            }
+
+                            T29JvDetail t29Jv = new T29JvDetail();
+                            t29Jv.VchrNo = model.JV_NO;
+                            t29Jv.AccCd = Convert.ToInt32(item.ACC_CD);
+                            t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
+                            t29Jv.Narration = item.NARRATION;
+                            t29Jv.IuAdvNo = item.IU_ADV_NO;
+                            t29Jv.IuAdvDt = DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                            t29Jv.Createdby = user.UserID;
+                            t29Jv.Createddate = DateTime.Now;
+                            context.T29JvDetails.Add(t29Jv);
+                            context.SaveChanges();
+                        }
+                        else
+                        {
+                            DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                            if (string.IsNullOrEmpty(item.ACTION))
+                            {
+                                var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
+                                if (_data != null)
+                                {
+                                    _data.AmtTransferred = query.amtadj + Convert.ToDecimal(item.AMOUNT);
+                                    _data.SuspenseAmt = query.susamt - Convert.ToDecimal(item.AMOUNT);
+                                    _data.Updatedby = user.UserID;
+                                    _data.Updateddate = DateTime.Now;
+                                    context.SaveChanges();
+                                }
+
+                                T29JvDetail t29Jv = new T29JvDetail();
+                                t29Jv.VchrNo = model.JV_NO;
+                                t29Jv.AccCd = Convert.ToInt32(item.ACC_CD);
+                                t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
+                                t29Jv.Narration = item.NARRATION;
+                                t29Jv.IuAdvNo = item.IU_ADV_NO;
+                                t29Jv.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                                t29Jv.Createdby = user.UserID;
+                                t29Jv.Createddate = DateTime.Now;
+                                context.T29JvDetails.Add(t29Jv);
+                                context.SaveChanges();
+                            }
+                            else
+                            {
+                                var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
+                                if (_data != null)
+                                {
+                                    _data.AmtTransferred = query.amtadj - Convert.ToDecimal(item.lblIUAMT) + Convert.ToDecimal(item.AMOUNT);
+                                    _data.SuspenseAmt = query.susamt + Convert.ToDecimal(item.lblIUAMT) - Convert.ToDecimal(item.AMOUNT);
+                                    _data.Updatedby = user.UserID;
+                                    _data.Updateddate = DateTime.Now;
+                                    context.SaveChanges();
+                                }
+
+                                var jvDetail = (from m in context.T29JvDetails
+                                                where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD)
+                                                select m).FirstOrDefault();
+
+                                if (jvDetail != null)
+                                {
+                                    jvDetail.AccCd = Convert.ToInt32(item.ACC_CD);
+                                    jvDetail.Amount = Convert.ToDecimal(item.AMOUNT);
+                                    jvDetail.Narration = item.NARRATION;
+                                    jvDetail.IuAdvNo = item.IU_ADV_NO;
+                                    jvDetail.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                                    jvDetail.Updatedby = user.UserID;
+                                    jvDetail.Updateddate = DateTime.Now;
+                                    context.SaveChanges();
+                                }
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(model.DeletedJVID))
+                    {
+                        DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                        var query = (context.T25RvDetails
+                                            .Where(t => t.ChqNo == model.CHQ_NO &&
+                                                        t.ChqDt == DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null) &&
+                                                        t.BankCd == model.BANK_CD)
+                                            .Select(t => new
+                                            {
+                                                camt = t.Amount,
+                                                amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
+                                                susamt = t.SuspenseAmt
+                                            })).FirstOrDefault();
+
+                        var lstIds = model.DeletedJVID.Split(',');
+                        foreach (var str in lstIds)
+                        {                            
+                            var row = (from m in context.T29JvDetails
+                                            where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(str)
+                                            select m).FirstOrDefault();
+
+                            var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
+                            if (_data != null)
+                            {
+                                _data.AmtTransferred = query.amtadj - Convert.ToDecimal(row.Amount);
+                                _data.SuspenseAmt = query.susamt + Convert.ToDecimal(row.Amount);
+                                _data.Updatedby = user.UserID;
+                                _data.Updateddate = DateTime.Now;
+                                context.SaveChanges();
+                            }
+
+                            if(row != null)
+                            {
+                                row.Isdeleted = 1;
+                                row.Updatedby= user.UserID;
+                                row.Updateddate = DateTime.Now;
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public string GenerateJVNO(string ss)
+        {
+            var result = "";
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            using (var command = context.Database.GetDbConnection().CreateCommand())
+            {
+                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    command.CommandText = "Select lpad(nvl(max(to_number(nvl(substr(VCHR_NO,6,8),0))),0)+1,3,'0') from T27_JV where substr(VCHR_NO,1,5)='" + ss + "'";
+                    result = Convert.ToString(command.ExecuteScalar());
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+            return result;
         }
         #endregion        
     }

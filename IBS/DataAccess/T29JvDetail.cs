@@ -7,7 +7,7 @@ public partial class T29JvDetail
 {
     public string? VchrNo { get; set; }
 
-    public byte? AccCd { get; set; }
+    public int? AccCd { get; set; }
 
     public decimal? Amount { get; set; }
 
@@ -16,6 +16,18 @@ public partial class T29JvDetail
     public string? IuAdvNo { get; set; }
 
     public DateTime? IuAdvDt { get; set; }
+
+    public int Id { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
 
     public virtual T27Jv? VchrNoNavigation { get; set; }
 }
