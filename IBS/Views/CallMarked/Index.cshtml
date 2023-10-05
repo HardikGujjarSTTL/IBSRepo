@@ -23,17 +23,17 @@
                         <label for="Reference">To</label>
                         <input type="text" class=" datepicker" asp-for="toDate" id="toDate" maxlength="300" />
                         </div>
-                    <div>
-                        <label>Report to be Sorted on</label>
-                        <br></br>
-                        <label for="option1">   
-                            <input type="radio" id="vendor" name="options" value="option1" checked> Vendor
-                        </label>
-                        <br>
-                        <label for="option2">
-                            <input type="radio" id="callDate" name="options" value="option2"> Call Date
-                        </label>
-                    </div>
+                        <div>
+                            <label>Report to be Sorted on</label>
+                            <br></br>
+                            <label for="option1">   
+                                <input type="radio" id="vendor" name="options" value="option1" checked> Vendor
+                            </label>
+                            <br>
+                            <label for="option2">
+                                <input type="radio" id="callDate" name="options" value="option2"> Call Date
+                            </label>
+                        </div>
                      
                     </div>
 
@@ -74,8 +74,8 @@
 
             var txtDtFrValue = $("#fromDate").val();
             var txtDtToValue = $("#toDate").val();
-               // var regionValue = "<%= Session["Region"].ToString() %>";
-            var wSortKeyValue = wSortkEy; // Assuming you already have wSortKey defined.
+               
+            var wSortKeyValue = wSortkEy; 
 
                 // Construct the URL with query parameters
             var controllerName = "Calls_Marked_Report";

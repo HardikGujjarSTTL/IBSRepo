@@ -45,18 +45,19 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string ReportType , string frmDate , string toDate , string WiseRadio , string IeStatus , int Days , string includeNSIC , string pendingCallsOnly, string PO_NO , string PO_DT , string RLY_NONRLY , string RLY_CD)
+        public IActionResult Manage(string ReportType , string frmDate , string toDate , string WiseRadio , string IeStatus , int Days , string includeNSIC , string pendingCallsOnly, string PO_NO , string PO_DT , string RLY_NONRLY , string RLY_CD , string wSortkEy)
         {
-            if(ReportType != "IeVendorWise" || ReportType != "OverdueCalls" || ReportType != "ApprovalReport")
+            if(ReportType != "IeVendorWise" && ReportType != "OverdueCalls" && ReportType != "ApprovalReport" && ReportType != "CallMarked")
             {
                 ReportType = "SpecificPO";
             }    
 
-            Statement_IeVendorWiseModel model = new() {ReportType = ReportType , FromDate = frmDate , ToDate = toDate , WiseRadio = WiseRadio , IeStatus = IeStatus , Days = Days , includeNSIC = includeNSIC , pendingCallsOnly = pendingCallsOnly , PO_NO  = PO_NO , PO_DT  = Convert.ToDateTime(PO_DT), RLY_NONRLY = RLY_NONRLY , RLY_CD = RLY_CD };
+            Statement_IeVendorWiseModel model = new() {ReportType = ReportType , FromDate = frmDate , ToDate = toDate , WiseRadio = WiseRadio , IeStatus = IeStatus , Days = Days , includeNSIC = includeNSIC , pendingCallsOnly = pendingCallsOnly , PO_NO  = PO_NO , PO_DT  = Convert.ToDateTime(PO_DT), RLY_NONRLY = RLY_NONRLY , RLY_CD = RLY_CD , wSortkEy = wSortkEy };
             if (ReportType == "IeVendorWise") model.ReportTitle = "STATEMENT OF IE AND VENDOR WISE CALLS CANCELLED";
             else if (ReportType == "OverdueCalls") model.ReportTitle = "STATEMENT OF OVERDUE CALLS";
             else if (ReportType == "ApprovalReport") model.ReportTitle = "CALL CANCELLATION APPROVAL REPORT ";
             else if (ReportType == "SpecificPO") model.ReportTitle = "Call Detail For Specific PO";
+            else if (ReportType == "CallMarked") model.ReportTitle = "Call Marked Period Wise";
            
             return View(model);
         }
@@ -143,6 +144,36 @@ namespace IBS.Controllers
 
 
             Statement_IeVendorWiseModel model = CallsReportRepository.Statement_SpecificPO(ReportType, PO_NO, PO_DT , RLY_NONRLY , RLY_CD);
+
+            return PartialView(model);
+        }
+        public IActionResult Statement_CallMarked(string ReportType, string frmDate, string toDate , string wSortkEy)
+        {
+
+            ViewBag.Frm = frmDate;
+            ViewBag.To = toDate;
+            if(wSortkEy == "V")
+            {
+                ViewBag.Sort = "VENDOR";
+            }
+            else
+            {
+                ViewBag.Sort = "Call Date";
+            }
+            string Region = GetRegionCode;
+            if (Region == "N")
+            { ViewBag.Region = "NORTHERN REGION"; }
+            else if (Region == "S")
+            { ViewBag.Region = "SOUTHERN REGION"; }
+            else if (Region == "E")
+            { ViewBag.Region = "EASTERN REGION"; }
+            else if (Region == "W")
+            { ViewBag.Region = "WESTERN REGION"; }
+            else if (Region == "C")
+            { ViewBag.Region = "CENTRAL REGION"; }
+
+
+            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_CallMarked(ReportType, frmDate, toDate, wSortkEy, Region);
 
             return PartialView(model);
         }

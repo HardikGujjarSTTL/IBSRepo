@@ -134,7 +134,7 @@
     {
         public string ReportType { get; set; }
         public string ReportTitle { get; set; }
-        public  DateTime? FromDate { get; set; }
+        public DateTime? FromDate { get; set; }
         public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
         public DateTime? ToDate { get; set; }
         public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
@@ -189,4 +189,127 @@
 
     }
     #endregion
+
+    public class IEWorkPlanModel
+    {
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public string Region { get; set; }
+
+        public List<IEWorkPlanList1Model> lstWorkPlan1 { get; set; }
+        public List<IEWorkPlanList2Model> lstWorkPlan2 { get; set; }
+        public List<IEWorkPlanList3Model> lstWorkPlan3 { get; set; }
+    }
+
+    public class IEWorkPlanList1Model
+    {
+        public string IE_NAME { get; set; }
+        public string CO_NAME { get; set; }
+        public string VISIT_DATE { get; set; }
+        public string LOGIN_TIME { get; set; }
+        public string CASE_NO { get; set; }
+        public string CALL_RECV_DATE { get; set; }
+        public string DESIRE_DT { get; set; }
+        public string CALL_SNO { get; set; }
+        public string CHK_COUNT { get; set; }
+        public string MFG_NAME { get; set; }
+        public string MFG_PLACE { get; set; }
+        public string MFG_CITY { get; set; }
+        public string ITEM_DESC_PO { get; set; }
+        public string VALUE { get; set; }
+        public string CALL_STATUS { get; set; }
+    }
+
+    public class IEWorkPlanList2Model
+    {
+        public string IE_NAME { get; set; }
+        public string CO_NAME { get; set; }
+        public string NI_WORK_PLAN_CD { get; set; }
+        public string WORK_DATE { get; set; }
+        public string LOGIN_TIME { get; set; }
+    }
+
+    public class IEWorkPlanList3Model
+    {
+        public int SrNo { get; set; }
+        public string IE_NAME { get; set; }
+        public string CO_NAME { get; set; }
+        public string IE_CD { get; set; }
+        public string Date { get; set; }
+        public string Reason { get; set; }
+
+    }
+
+    public class ConsigneeComplaintsModel
+    {
+        public string ReportType { get; set; }
+
+        public string ReportTitle { get; set; }
+
+        public DateTime? FromDate { get; set; }
+        public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }
+
+        public DateTime? ToDate { get; set; }
+        public string Display_ToDate { get { return this.ToDate != null ? Common.ConvertDateFormat(this.ToDate.Value) : ""; } }
+        public string Region { get; set; }
+        public List<ConsigneeComplaintsListModel> lstConsigneeComplaints { get; set; }
+    }
+    public class ConsigneeComplaintsListModel
+    {
+        public string IN_REGION { get; set; }
+        public string COMPLAINT_ID { get; set; }
+        public string JI_SNO { get; set; }
+        public string VENDOR { get; set; }
+        public string PO_NO { get; set; }
+        public string PO_DATE { get; set; }
+        public string BK_SET { get; set; }
+        public string IC_DATE { get; set; }
+        public string ITEM_DESC { get; set; }
+        public string CONSIGNEE { get; set; }
+        public string IE_NAME { get; set; }
+        public string QTY_OFF { get; set; }
+        public string QTY_REJECTED { get; set; }
+        public string REJECTION_VALUE { get; set; }
+        public string DEPT { get; set; }
+        public string COMPLAINT_DATE { get; set; }
+        public string REJ_MEMO { get; set; }
+        public string REJECTION_REASON { get; set; }
+        public string NO_JI_RES { get; set; }
+        public string JI_DATE { get; set; }
+        public string STATUS { get; set; }
+        public string DEFECT_DESC { get; set; }
+        public string JI_STATUS_DESC { get; set; }
+        public string CONCLUSION_DATE { get; set; }
+        public string CO_NAME { get; set; }
+        public string JI_IE_NAME { get; set; }
+        public string ROOT_CAUSE_ANALYSIS { get; set; }
+        public string CHK_STATUS { get; set; }
+        public string TECH_REF { get; set; }
+        public string ACTION_PROPOSED { get; set; }
+        public string ANY_OTHER { get; set; }
+        public string CAPA_STATUS { get; set; }
+        public string DANDAR_STATUS { get; set; }
+
+        public string CASE_NO { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
+        public string IE_CO_NAME { get; set; }
+        public string COMP_RECV_REGION { get; set; }
+        public string JI_REQUIRED { get; set; }
+        public string ACTION { get; set; }
+        public string ACTION_PROPOSED_DATE { get; set; }
+        public string REMARKS { get; set; }
+
+        public bool IsRejectionMemoTif { get; set; }  // REJECTIONMEMOPATH=> "/REJECTION_MEMO/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
+        public bool IsRejectionMemoPdf { get; set; }
+        public bool IsComplainCaseTif { get; set; } //COMPLAINTSCASESPATH=> "/COMPLAINTS_CASES/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
+        public bool IsComplainCasePdf { get; set; }
+        public bool IsComplainReportTif { get; set; } //COMPLAINTSREPORTPATH=> "/COMPLAINTS_REPORT/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
+        public bool IsComplainReportPdf { get; set; }
+
+    }
+
+
 }

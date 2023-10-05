@@ -1253,3 +1253,163 @@ BEGIN
         ) group by CONSIGNEE order by CONSIGNEE;
      END IF;
 END compliants_statement_AllConsignee_Report;
+
+=========================================================================================================================
+create or replace PROCEDURE GetWriteOffEntryDetails(
+    p_frm_dt IN VARCHAR2,
+    p_to_dt IN VARCHAR2,
+    p_bpo_CD IN VARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+
+   SELECT T22.BILL_NO, T22.BILL_DT, T22.BILL_AMOUNT, T22.AMOUNT_RECEIVED, T22.BILL_AMT_CLEARED, T22.WRITE_OFF_AMT, T26.CHQ_DT, T26.BPO_CD
+    FROM T26_CHEQUE_POSTING T26
+    JOIN T22_BILL T22 ON T26.BILL_NO = T22.BILL_NO
+    WHERE NVL(WRITE_OFF_AMT, 0) = 0
+        AND (p_bpo_CD IS NULL OR T26.BPO_CD = p_bpo_CD)
+        AND (p_frm_dt IS NULL OR T26.CHQ_DT BETWEEN TO_DATE(p_frm_dt, 'dd/mm/yyyy') AND TO_DATE(p_to_dt, 'dd/mm/yyyy'))
+        --AND (T22.WRITE_OFF_AMT = 0 OR T22.WRITE_OFF_AMT IS NULL)
+        AND T22.AMOUNT_RECEIVED <> T22.BILL_AMOUNT;
+
+END;
+
+========================================================================================================================================
+
+create or replace PROCEDURE GetNonClientInfo(
+    p_clientname IN VARCHAR2,
+    p_shortcode IN VARCHAR2,
+    p_ResultSet OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+ OPEN p_ResultSet FOR
+        SELECT 
+            ID AS NonClientId,
+            CLIENTNAME,
+            SHORTCODE,
+            CONTACTNAME,
+            CONTACTDESIGNATION,
+            MOBILENO,
+            EMAILID,
+            CASE 
+                WHEN ORGNTYPE = 'P' THEN 'Private'
+                WHEN ORGNTYPE = 'U' THEN 'PSU'
+                WHEN ORGNTYPE = 'S' THEN 'State Government'
+                WHEN ORGNTYPE = 'F' THEN 'Foreing Railways'
+                WHEN ORGNTYPE = 'C' THEN 'Central Government'
+                ELSE ORGNTYPE
+            END AS ORGNTYPE
+        FROM 
+            Non_Rly_Client
+        WHERE 
+            (ISDELETED = 0 OR ISDELETED IS NULL)
+            AND (UPPER(TRIM(CLIENTNAME)) LIKE UPPER(TRIM(COALESCE(p_clientname, ''))) || '%' OR p_clientname IS NULL)
+            AND (UPPER(TRIM(SHORTCODE)) LIKE UPPER(TRIM(COALESCE(p_shortcode, ''))) || '%' OR p_shortcode IS NULL);
+END;
+
+================================================================================================================================================
+
+create or replace PROCEDURE compliants_statement_reporttypes_Report (
+    p_Frm_dt IN VARCHAR2,
+    p_To_dt IN VARCHAR2,
+    p_Co IN VARCHAR2,
+    p_Ie IN VARCHAR2,
+    p_Vend_cd IN VARCHAR2,
+    p_Consignee_cd IN VARCHAR2,
+    p_Today_dt IN VARCHAR2,
+    p_Fin_year IN VARCHAR2,
+    p_Bpo_rly IN VARCHAR2,
+    p_Client_type IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_Awaiting_ji IN VARCHAR2,
+    p_Awaiting_conclusion IN VARCHAR2,
+    p_Awaiting_action IN VARCHAR2,
+    p_Awaiting_finalaction IN VARCHAR2,
+    p_Cm_wise IN VARCHAR2,
+    p_Ie_wise IN VARCHAR2,
+    p_Vendor_wise IN VARCHAR2,
+    p_Client_wise IN VARCHAR2,
+    p_Consignee_wise IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) IS
+ v_query VARCHAR2(7000) := '';
+BEGIN
+        IF p_Frm_dt IS NOT NULL AND p_To_dt IS NOT NULL THEN
+            v_query := 'select DECODE(INSP_REGION,''N'',''NORTHERN'',''S'',''SOUTHERN'',''E'',''EASTERN'',''W'',''WESTERN'',''CENTRAL'') IN_REGION,COMPLAINT_ID,to_char(COMPLAINT_DT,''dd/mm/yyyy'')COMPLAINT_DATE,REJ_MEMO_NO||'' Dt. ''||to_char(REJ_MEMO_DT,''dd/mm/yyyy'') REJ_MEMO, CASE_NO,BK_NO||'' & ''||SET_NO BK_SET,T40.IE_NAME, IE_CO_NAME,decode(COMP_RECV_REGION,''N'',''Northern'',''S'',''Southern'',''W'',''Western'',''E'',''Eastern'',''C'',''Central'') COMP_RECV_REGION, CONSIGNEE_NAME||'', ''||CONSIGNEE_CITY CONSIGNEE, VENDOR, ITEM_DESC, QTY_OFFERED||'' ''||UOM_S_DESC QTY_OFF,QTY_REJECTED||'' ''||UOM_S_DESC QTY_REJECTED,REJECTION_VALUE, REJECTION_REASON, STATUS, DECODE(JI_REQUIRED,''Y'',''Yes'',''N'',''NO'',''Cancelled'')JI_REQUIRED, JI_SNO, to_char(JI_FIX_DT,''dd/mm/yyyy'')JI_DATE, T38.DEFECT_DESC, T39.JI_STATUS_DESC, ACTION, L5NO_PO PO_NO, to_char(PO_DT,''dd/mm/yyyy'')PO_DATE, to_char(IC_DT,''dd/mm/yyyy'')IC_DATE,T09.IE_NAME JI_IE_NAME,Decode(ACTION_PROPOSED,''W'',''Warning Letter'',''I'',''Minor Penalty'',''J'',''Major Penalty'',''O'',''Others'') ACTION_PROPOSED, to_char(ACTION_PROPOSED_DT,''dd/mm/yyyy'') ACTION_PROPOSED_DATE, CO_NAME, T40.CASE_NO, T40.BK_NO, T40.SET_NO, REMARKS, TO_CHAR(T40.CONCLUSION_DT,''DD/MM/YYYY'')CONCLUSION_DATE, DECODE(NO_JI_REASON,''A'',''DP Expired'',''B'',''Validity of IC Expired'',''C'',''Broken Condition'',''D'',''Rejection <5%'',''E'',''Rejection issued after 90 Days of reciept of material'',''F'',''Guarantee Claim'',''G'',''Wrong Dispatch'') NO_JI_RES,decode(T09.IE_DEPARTMENT,''C'',''Civil'',''E'',''Electrical'',''M'',''Mechanical'',''L'',''Metallergy'',''Others'') DEPT,ROOT_CAUSE_ANALYSIS,TECH_REF,DECODE(CHKSHEET_STATUS,''A'',''APPROVED'',''R'',''REVISION'',''P'',''PREPRATION'')CHK_STATUS,ANY_OTHER,CAPA_STATUS,DANDAR_STATUS from V40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38,T39_JI_STATUS_CODES T39,T09_IE T09, T08_IE_CONTROLL_OFFICER T08 where T40.DEFECT_CD=T38.DEFECT_CD(+) and T40.JI_STATUS_CD =T39.JI_STATUS_CD(+) and T40.JI_IE_CD=T09.IE_CD(+) and T40.IE_CO_CD=T08.CO_CD(+) and (JI_DT between to_date('''||p_Frm_dt||''',''dd/mm/yyyy'') and to_date('''||p_To_dt||''',''dd/mm/yyyy'')) and INSP_REGION='''||p_Region||''' and JI_REQUIRED=''Y''';
+        ELSIF p_Fin_year IS NOT NULL THEN
+           v_query := 'select DECODE(INSP_REGION,''N'',''NORTHERN'',''S'',''SOUTHERN'',''E'',''EASTERN'',''W'',''WESTERN'',''CENTRAL'') IN_REGION,COMPLAINT_ID,to_char(COMPLAINT_DT,''dd/mm/yyyy'')COMPLAINT_DATE,REJ_MEMO_NO||'' Dt. ''||to_char(REJ_MEMO_DT,''dd/mm/yyyy'') REJ_MEMO, CASE_NO,BK_NO||'' & ''||SET_NO BK_SET,T40.IE_NAME, IE_CO_NAME,decode(COMP_RECV_REGION,''N'',''Northern'',''S'',''Southern'',''W'',''Western'',''E'',''Eastern'',''C'',''Central'') COMP_RECV_REGION, CONSIGNEE_NAME||'', ''||CONSIGNEE_CITY CONSIGNEE, VENDOR, ITEM_DESC, QTY_OFFERED||'' ''||UOM_S_DESC QTY_OFF,QTY_REJECTED||'' ''||UOM_S_DESC QTY_REJECTED,REJECTION_VALUE, REJECTION_REASON, STATUS, DECODE(JI_REQUIRED,''Y'',''Yes'',''N'',''NO'',''Cancelled'')JI_REQUIRED, JI_SNO, to_char(JI_FIX_DT,''dd/mm/yyyy'')JI_DATE, T38.DEFECT_DESC, T39.JI_STATUS_DESC, ACTION, L5NO_PO PO_NO, to_char(PO_DT,''dd/mm/yyyy'')PO_DATE, to_char(IC_DT,''dd/mm/yyyy'')IC_DATE,T09.IE_NAME JI_IE_NAME,Decode(ACTION_PROPOSED,''W'',''Warning Letter'',''I'',''Minor Penalty'',''J'',''Major Penalty'',''O'',''Others'') ACTION_PROPOSED, to_char(ACTION_PROPOSED_DT,''dd/mm/yyyy'') ACTION_PROPOSED_DATE, CO_NAME, T40.CASE_NO, T40.BK_NO, T40.SET_NO, REMARKS, TO_CHAR(T40.CONCLUSION_DT,''DD/MM/YYYY'')CONCLUSION_DATE, DECODE(NO_JI_REASON,''A'',''DP Expired'',''B'',''Validity of IC Expired'',''C'',''Broken Condition'',''D'',''Rejection <5%'',''E'',''Rejection issued after 90 Days of reciept of material'',''F'',''Guarantee Claim'',''G'',''Wrong Dispatch'') NO_JI_RES,decode(T09.IE_DEPARTMENT,''C'',''Civil'',''E'',''Electrical'',''M'',''Mechanical'',''L'',''Metallergy'',''Others'') DEPT,ROOT_CAUSE_ANALYSIS,TECH_REF,DECODE(CHKSHEET_STATUS,''A'',''APPROVED'',''R'',''REVISION'',''P'',''PREPRATION'')CHK_STATUS,ANY_OTHER,CAPA_STATUS,DANDAR_STATUS from V40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38,T39_JI_STATUS_CODES T39,T09_IE T09, T08_IE_CONTROLL_OFFICER T08 where T40.DEFECT_CD=T38.DEFECT_CD(+) and T40.JI_STATUS_CD =T39.JI_STATUS_CD(+) and T40.JI_IE_CD=T09.IE_CD(+) and T40.IE_CO_CD=T08.CO_CD(+) and (substr(JI_SNO,4,5)=''' || p_Fin_year || ''') and INSP_REGION=''' || p_Region || ''' and JI_REQUIRED=''Y''';
+        END IF;
+
+      IF p_Awaiting_ji = 'true' THEN
+             v_query := v_query || ' AND (NVL(JI_DT,''01-JAN-00'')=''01-JAN-00'' OR JI_FIX_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy'')';
+      ELSIF p_Awaiting_conclusion = 'true' THEN
+         v_query := v_query ||  ' and (NVL(JI_DT,''01-JAN-00'')<>''01-JAN-00'') and (NVL(CONCLUSION_DT,''01-JAN-00'')=''01-JAN-00'' OR CONCLUSION_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy''))';
+      ELSIF p_Awaiting_action = 'true' THEN
+         v_query := v_query || ' and (NVL(JI_DT,''01-JAN-00'')<>''01-JAN-00'') and (NVL(CONCLUSION_DT,''01-JAN-00'')<>''01-JAN-00'') AND (NVL(ACTION_PROPOSED_DT,''01-JAN-00'')=''01-JAN-00'' OR ACTION_PROPOSED_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy''))';
+      ELSIF p_Awaiting_finalaction = 'true' THEN
+         v_query := v_query || ' and (NVL(JI_DT,''01-JAN-00'')<>''01-JAN-00'') and (NVL(CONCLUSION_DT,''01-JAN-00'')<>''01-JAN-00'') AND (NVL(ACTION_PROPOSED_DT,''01-JAN-00'')<>''01-JAN-00'') AND (NVL(PENALTY_DT,''01-JAN-00'')=''01-JAN-00'' OR PENALTY_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy''))';
+      END IF;
+      
+        IF p_Cm_wise = 'true' THEN
+
+            IF p_Co IS NOT NULL THEN        
+               v_query := v_query || ' and T40.IE_CO_CD=''' || p_Co || ''' order by JI_SNO,COMPLAINT_DT' ;
+            ELSE
+               v_query := v_query || ' order by IE_CO_NAME,JI_SNO,COMPLAINT_DT';
+            END IF;
+
+       ELSIF p_Ie_wise = 'true' THEN
+            IF p_Ie IS NOT NULL THEN
+             v_query := v_query || ' AND T40.IE_CD=''' || p_Ie || ''' order by JI_SNO,COMPLAINT_DT';
+            ELSE
+                v_query := v_query || ' order by IE_NAME,JI_SNO,COMPLAINT_DT';
+            END IF;
+       ELSIF p_Vendor_wise='true' THEN
+
+             IF p_Vend_cd IS NOT NULL THEN
+               v_query := v_query ||  ' and T40.VEND_CD=''' || p_Vend_cd || ''' order by JI_SNO,COMPLAINT_DT';
+            ELSE
+                v_query := v_query || ' order by VENDOR,JI_SNO,COMPLAINT_DT';
+            END IF;
+
+       ELSIF p_Client_wise = 'true' THEN
+
+            IF p_Bpo_rly IS NOT NULL and p_Client_type IS NOT NULL THEN
+                 v_query := v_query || ' and T40.BPO_TYPE=''' ||p_Client_type||''' and T40.RLY_CD=''' ||p_Bpo_rly|| ''' order by JI_SNO,COMPLAINT_DT';
+            ELSE
+                v_query := v_query || ' order by BPO_TYPE,RLY_CD,JI_SNO,COMPLAINT_DT';
+            END IF;
+
+       ELSIF p_Consignee_wise = 'true' THEN
+
+            IF p_Consignee_cd IS NOT NULL THEN
+              v_query := v_query || ' and T40.CONSIGNEE_CD=''' || p_Consignee_cd|| ''' order by JI_SNO,COMPLAINT_DT';
+           ELSE
+            v_query := v_query || ' order by CONSIGNEE_CD,RLY_CD,JI_SNO,COMPLAINT_DT';
+           END IF;
+
+       END IF;
+
+ OPEN p_result FOR v_query;
+END;
+
+=================================================================================================================================================
+
+create or replace PROCEDURE Defect_Code_Wise_Report (
+    p_From_date IN VARCHAR2,
+    p_To_date IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+ OPEN p_result FOR
+        select DEFECT_CD,DEFECT_DESC,SUM(UPHELD) UPHELD,SUM(SORTING) SORTING,SUM(RECTIFICATION) RECTIFICATION,SUM(PRICE_REDUCTION) PRICE_REDUCTION from 
+        (select T38.DEFECT_CD,T38.DEFECT_DESC,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=2 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        UNION ALL select T38.DEFECT_CD,T38.DEFECT_DESC,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=3 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        UNION ALL select T38.DEFECT_CD,T38.DEFECT_DESC,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=4 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        UNION ALL select T38.DEFECT_CD,T38.DEFECT_DESC,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=5 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        ) group by DEFECT_CD,DEFECT_DESC order by DEFECT_CD;
+END;

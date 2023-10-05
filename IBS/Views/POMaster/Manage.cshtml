@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.PO_MasterModel
 
 @{
-    ViewData["Title"] = "PO Master";
+    ViewData["Title"] = "VENDOR PURCHASE ORDER FORM";
     string clsView = "";
     if (Model.CaseNo != null)
     {
@@ -10,7 +10,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>PO Master</h2>
+        <h2>VENDOR PURCHASE ORDER FORM</h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="POMaster" class="formBtn viewall-btn">View List</a>
@@ -54,16 +54,13 @@
                             <div class="col-md-6">
                                 <label for="Reference">Agency/Client</label>
                                 @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                                <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
                                 <input type="text" class="input" id="txtBPO_RLY">
-                                <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                         </div>
-                        
-                        
-                       
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Case To Be Registered At</label>
@@ -106,7 +103,7 @@
                         <span asp-validation-for="PoNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
+                        <label for="Reference">PO/LOA Date </label>
                         @*<input type="text" class="datepicker" asp-for="PoDt" readonly="true">*@
                         <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                         <span asp-validation-for="PoDt" class="text-danger"></span>
@@ -285,9 +282,9 @@
 
         function LOASubmit() {
             $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
-                if (response != null && response != undefined) {
+                if (response.status) {
                     $('#PoNo').val(response.poMaster.PoNo);
-                    $('#PoDt').val(response.poMaster.PoDt);
+                    $('#PoDt').val(moment(response.poMaster.PoDt).format("DD-MM-YYYY"));
                     $('#Remarks').val(response.poMaster.Remarks);
                     $('#RecvDt').val(response.poMaster.RecvDt);
                     $('#StockNonstock').val(response.poMaster.StockNonstock);
@@ -309,6 +306,7 @@
                 }
                 else {
                     $('#PoNo').val('');
+                    ShowHideMsgNew(response.status, response.responseText);
                 }
             });
         }

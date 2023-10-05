@@ -41,14 +41,30 @@ namespace IBS.Controllers
                 if (model.Id > 0)
                 {
                     model.Updatedby = UserId;
-                    nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
-                    AlertAddSuccess("Record Updated Successfully.");
+                    int i=nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
+                    if (i > 0)
+                    {
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+                    else
+                    {
+                        AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
+                        return View("Manage", model);
+                    }
                 }
                 else
                 {
                     model.Createdby = UserId;
-                    nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
-                    AlertAddSuccess("Record Added Successfully.");
+                    int i=nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
+                    if (i > 0)
+                    {
+                        AlertAddSuccess("Record Add Successfully.");
+                    }
+                    else
+                    {
+                        AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
+                        return View("Manage", model);
+                    }
                 }
 
                 return RedirectToAction("Index");
@@ -57,7 +73,7 @@ namespace IBS.Controllers
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NonRlyClientMaster", "NonClientDetailsave", 1, GetIPAddress());
             }
-            return View(model);
+            return View("Manage", model);
         }
 
         [HttpPost]

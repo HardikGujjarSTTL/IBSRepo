@@ -287,11 +287,11 @@
             }).done(function (response) {
                 if (response != null) {
                     if (response.status) {
-                        ShowHideMsgNew(res.status, response.responseText);
-                        window.location.href = "/DEOVendorPurchesOrder/Index";
+                        ShowHideMsgNew(response.status, response.responseText);
+                        window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
                     }
                     else {
-                        ShowHideMsgNew(res.status, response.responseText);
+                        ShowHideMsgNew(response.status, response.responseText);
                     }
                 }
             });
@@ -299,7 +299,6 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/DEOVendorPurchesOrder/Index";
             window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
         };
 

@@ -1,6 +1,6 @@
 ﻿@model IBS.Models.CallMarkedOnlineModel
-@{    
-    ViewData["Title"] = "Call Marked Manage";    
+@{
+    ViewData["Title"] = "Call Marked Manage";
 }
 <div class="list-inner">
     <div class="tast-list">
@@ -11,8 +11,8 @@
     </div>
 </div>
 @*<div class="row">*@
-<form asp-action="Manage" asp-controller="" id="frmCallMarked">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form data-ajax="true" asp-antiforgery="true" asp-action="Manage" asp-controller="CallMarkedOnline" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+    @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
     <div class="accordion-body" id="body">
         <div class="row my-0">
             <div class="col-md-3 mb-3">
@@ -75,6 +75,7 @@
                 <div class="reference">
                     <label for="Reference">Inspecting Er.</label>
                     @Html.DropDownListFor(Model => Model.IE_NAME, new SelectList(@ViewBag.ClusterIEList , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IE_NAME" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -184,179 +185,185 @@
 </form>
 @*</div>*@
 
-<script>
-    $(document).ready(function () {
-        $("#viewList").css("display", "block");
-        $("#btnSave").click(function () {
-            SaveCallMarkedDetail();
-        });
-
-        $("#DEPT_DROPDOWN").change(function () {
-            FillClusterIE();
-        });
-
-        $("#btnRejectCall").click(function () {
-            $("#rejectCall").css("display", "block");
-        });
-
-        $("#btnCaseHistory").click(function () {
-            //window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();
-            window.open("@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html(), "_blank");
-        });
-
-        //$("#btnCancel").click(function () {
-        //    window.location.href = "@Url.Action("Index","CallMarkedOnline")";
-        //});
-        $("#btnSaveReject").click(function () {
-            RejectCall();
-        });
-
-        $("#btnSendMail").click(function () {
-            IncompleteCall()
-        })
-
-        $("#lblContractNo").html("@Model.PO_NO");
-        $("#lblDate").html("@Model.PO_DT");
-        $("#lblVendor").html("@Model.VEND_NAME");
-        if ("@Model.VEND_REMARKS" != "") {
-            $("#lblVendor").html("<br><font color='crimson'> Remarks: @Model.VEND_REMARKS");
-        }
-        $("#lblCaseNo").html("@Model.CASE_NO");
-        $("#lblCallDate").html("@Model.CALL_RECV_DT");
-        $("#REMARKS").val("@Model.REMARKS");
-        $("#lblRegTime").html("(@Model.REG_TIME)");
-        $("#lblSNo").html("@Model.CALL_SNO");
-        $("#lblQtyOrder").html("@Model.QTY_ORDERED");
-        $("#lblQtyOffer").html("@Model.QTY_TO_INSP");
-        $("#lblItem").html("@Model.ITEM_DESC_PO");
-        $("#lblMFG").html("@Model.MFG");
-        if ("@Model.MFG_REMARKS" != "") {
-            $("#lblMFG").html("<br><font color='crimson'> Remarks: @Model.MFG_REMARKS");
-        }
-        $("#lblRly").html("@Model.RLY");
-        $("#lblL5noPo").html("@Model.L5NO_PO");
-        $("#lblManuf").html("@Model.MFG_CD");
-        $("#txtCALLLETTERDT").val("@Model.LETTER_DT");
-        $("#lblStaggered").html("@Model.STAGG_DP");
-        $("#lblLotSize1").html("@Model.LOT_DP_1");
-        $("#lblLotSize2").html("@Model.LOT_DP_2");
-        $("#lblCallMaterialValue").html("@Model.CALL_MATERIAL_VALUE");
-        $("#lblDesireDate").html("@Model.INSP_DESIRE_DATE");
-        $("#DEPT_DROPDOWN").val("@Model.DEPARTMENT_CODE");
-        $("#lblDept_CD").html("@Model.DEPARTMENT_CODE");
-        $("#lblDepartment").html("@Model.DEPARTMENT");
-        $("#lblFinalStageInspection").html("@Model.FINAL_OR_STAGE");
-
-        $("#lblCall1").html("@Model.PREV_CALL_1");
-        $("#lblCall2").html("@Model.PREV_CALL_2");
-
-        if ($("#lblItem").html() == "" || $("#lblQtyOffer").html() == "" || $("#lblQtyOffer").html() == "0") {
-            $("#btnSendMail").css("display", "block");
-        }
-        else {
-            $("#btnSendMail").css("display", "none");
-        }
-    });
-
-    function SaveCallMarkedDetail() {
-        var formData = new FormData($("#frmCallMarked")[0]);
-        $.ajax({
-            url: '@Url.Action("Call_Marked_Online_Save", "CallMarkedOnline")',
-            type: "POST",
-            dataType: "JSON",
-            data: formData,
-            processData: false, // Prevent jQuery from converting the data to a string
-            contentType: false,
-            success: function (response) {
-                
-                if (response) {
-                    ShowHideMsgNew(response, "Successful");
-                } else {
-                    ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("#viewList").css("display", "block");
+            $("#btnSave").click(function () {
+                if ($("#frmDetails").valid()) {
+                    SaveCallMarkedDetail();
                 }
-                console.log("success");
+            });
+
+            $("#DEPT_DROPDOWN").change(function () {
+                FillClusterIE();
+            });
+
+            $("#btnRejectCall").click(function () {
+                $("#rejectCall").css("display", "block");
+            });
+
+            $("#btnCaseHistory").click(function () {
+                //window.location.href = "@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html();
+                window.open("@Url.Action("CaseHistory","CallMarkedOnline")" + "?CASE_NO=" + $("#lblCaseNo").html(), "_blank");
+            });
+
+            //$("#btnCancel").click(function () {
+            //    window.location.href = "@Url.Action("Index","CallMarkedOnline")";
+            //});
+            $("#btnSaveReject").click(function () {
+                RejectCall();
+            });
+
+            $("#btnSendMail").click(function () {
+                IncompleteCall()
+            })
+
+            $("#lblContractNo").html("@Model.PO_NO");
+            $("#lblDate").html("@Model.PO_DT");
+            $("#lblVendor").html("@Model.VEND_NAME");
+            if ("@Model.VEND_REMARKS" != "") {
+                $("#lblVendor").html("<br><font color='crimson'> Remarks: @Model.VEND_REMARKS");
+            }
+            $("#lblCaseNo").html("@Model.CASE_NO");
+            $("#lblCallDate").html("@Model.CALL_RECV_DT");
+            $("#REMARKS").val("@Model.REMARKS");
+            $("#lblRegTime").html("(@Model.REG_TIME)");
+            $("#lblSNo").html("@Model.CALL_SNO");
+            $("#lblQtyOrder").html("@Model.QTY_ORDERED");
+            $("#lblQtyOffer").html("@Model.QTY_TO_INSP");
+            $("#lblItem").html("@Model.ITEM_DESC_PO");
+            $("#lblMFG").html("@Model.MFG");
+            if ("@Model.MFG_REMARKS" != "") {
+                $("#lblMFG").html("<br><font color='crimson'> Remarks: @Model.MFG_REMARKS");
+            }
+            $("#lblRly").html("@Model.RLY");
+            $("#lblL5noPo").html("@Model.L5NO_PO");
+            $("#lblManuf").html("@Model.MFG_CD");
+            $("#txtCALLLETTERDT").val("@Model.LETTER_DT");
+            $("#lblStaggered").html("@Model.STAGG_DP");
+            $("#lblLotSize1").html("@Model.LOT_DP_1");
+            $("#lblLotSize2").html("@Model.LOT_DP_2");
+            $("#lblCallMaterialValue").html("@Model.CALL_MATERIAL_VALUE");
+            $("#lblDesireDate").html("@Model.INSP_DESIRE_DATE");
+            $("#DEPT_DROPDOWN").val("@Model.DEPARTMENT_CODE");
+            $("#lblDept_CD").html("@Model.DEPARTMENT_CODE");
+            $("#lblDepartment").html("@Model.DEPARTMENT");
+            $("#lblFinalStageInspection").html("@Model.FINAL_OR_STAGE");
+
+            $("#lblCall1").html("@Model.PREV_CALL_1");
+            $("#lblCall2").html("@Model.PREV_CALL_2");
+
+            if ($("#lblItem").html() == "" || $("#lblQtyOffer").html() == "" || $("#lblQtyOffer").html() == "0") {
+                $("#btnSendMail").css("display", "block");
+            }
+            else {
+                $("#btnSendMail").css("display", "none");
             }
         });
-    }
 
-    function RejectCall() {
-        var formData = new FormData($("#frmCallMarked")[0]);
-        $.ajax({
-            url: '@Url.Action("SendVendorMailForRejectedCall", "CallMarkedOnline")',
-            type: "POST",
-            dataType: "JSON",
-            data: formData,
-            processData: false, // Prevent jQuery from converting the data to a string
-            contentType: false,
-            success: function (response) {
-                
-                if (response) {
-                    ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
-                    setTimeout(function () {
-                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
-                    }, 1000);
-                } else {
-                    ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
-                }
-            }
-        });
-    }
+        function SaveCallMarkedDetail() {
+            var formData = new FormData($("#frmDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("Call_Marked_Online_Save", "CallMarkedOnline")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
 
-    function IncompleteCall() {
-        var formData = new FormData($("#frmCallMarked")[0]);
-        $.ajax({
-            url: '@Url.Action("SendVendorEmailForIncompleteCall", "CallMarkedOnline")',
-            type: "POST",
-            dataType: "JSON",
-            data: formData,
-            processData: false, // Prevent jQuery from converting the data to a string
-            contentType: false,
-            success: function (response) {
-                
-                if (response == 1) {
-                    ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
-                    setTimeout(function () {
-                        window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
-                    }, 1000);
+                    if (response) {
+                        ShowHideMsgNew(response, "Successful");
+                    } else {
+                        ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
+                    }
+                    console.log("success");
                 }
-                else if (response == 2) {
-                    ShowHideMsgNew(false, "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!");
-                }
-                else {
-                    ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
-                }
-            }
-        });
-    }
+            });
+        }
 
-    function FillClusterIE() {
-        
-        var dept = $("#DEPT_DROPDOWN").val();
-        $.ajax({
-            url: '@Url.Action("BindClusterIE", "CallMarkedOnline")',
-            type: "GET",
-            dataType: "JSON",
-            data: { DeptName: dept },
-            success: function (contacts) {
-                $("#IE_NAME").html(""); // clear before appending new list
-                $("#IE_NAME").append($('<option></option>').val(0).html("--Select--"));
-                if (contacts && contacts.length > 0) {
-                    $.each(contacts, function (i, cnt) {
-                        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
-                    });
-                    //if (MfgCd1 > 0) {
-                    //    $.each(contacts, function (i, cnt) {
-                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
-                    //    });
-                    //    $("#IE_NAME").val(MfgCd1);
-                    //} else {
-                    //    $.each(contacts, function (i, cnt) {
-                    //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
-                    //    });
-                    //}
+        function RejectCall() {
+            var formData = new FormData($("#frmDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("SendVendorMailForRejectedCall", "CallMarkedOnline")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+
+                    if (response) {
+                        ShowHideMsgNew(response, "This Call Has Been Deleted!!!");
+                        setTimeout(function () {
+                            window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                        }, 1000);
+                    } else {
+                        ShowHideMsgNew(response, "Oops Somthing Went Wrong !!");
+                    }
                 }
-            }
-        });
-    }
-</script>
+            });
+        }
+
+        function IncompleteCall() {
+            var formData = new FormData($("#frmDetails")[0]);
+            $.ajax({
+                url: '@Url.Action("SendVendorEmailForIncompleteCall", "CallMarkedOnline")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+
+                    if (response == 1) {
+                        ShowHideMsgNew(true, "This Call Has Been Deleted!!!");
+                        setTimeout(function () {
+                            window.location.href = "@Url.Action("Index", "CallMarkedOnline")";
+                        }, 1000);
+                    }
+                    else if (response == 2) {
+                        ShowHideMsgNew(false, "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!");
+                    }
+                    else {
+                        ShowHideMsgNew(false, "Oops Somthing Went Wrong !!");
+                    }
+                }
+            });
+        }
+
+        function FillClusterIE() {
+
+            var dept = $("#DEPT_DROPDOWN").val();
+            $.ajax({
+                url: '@Url.Action("BindClusterIE", "CallMarkedOnline")',
+                type: "GET",
+                dataType: "JSON",
+                data: { DeptName: dept },
+                success: function (contacts) {
+                    $("#IE_NAME").html(""); // clear before appending new list
+                    $("#IE_NAME").append($('<option></option>').val(0).html("--Select--"));
+                    if (contacts && contacts.length > 0) {
+                        $.each(contacts, function (i, cnt) {
+                            $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                        });
+                        //if (MfgCd1 > 0) {
+                        //    $.each(contacts, function (i, cnt) {
+                        //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                        //    });
+                        //    $("#IE_NAME").val(MfgCd1);
+                        //} else {
+                        //    $.each(contacts, function (i, cnt) {
+                        //        $("#IE_NAME").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                        //    });
+                        //}
+                    }
+                }
+            });
+        }
+    </script>
+}
 

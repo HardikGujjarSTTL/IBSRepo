@@ -1,0 +1,214 @@
+﻿<div class="list-inner">
+    <div class="tast-list">
+        <h2>Write Off Entry</h2>
+    </div>
+</div>
+
+<form data-ajax="true" asp-antiforgery="false" asp-controller="WriteOffEntry" asp-action="UpdateWriteAmt" data-ajax-method="post" data-ajax-complete="completed" id="frmsearch">
+    <div class="accordion-body">
+        <div class="row my-0 d-flex align-items-end">
+            <div class="col-md-2 mb-4">
+                <label for="Reference">From Date</label>
+                <input type="text" id="FrmDt" class="datepicker"  maxlength="200" placeholder="DD/MM/YYYY"/>
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">To Date</label>
+                <input type="text" id="ToDt" class="datepicker" maxlength="200" placeholder="DD/MM/YYYY" />
+            </div>
+            <div class="col-md-2 mb-4">
+                <label for="Reference">BPO Name</label>
+                @Html.DropDownList("BPOName", new SelectList(IBS.Models.Common.GetBPOByRegion(@ViewBag.Region), "Value", "Text"),"--Select--" , new { id = "BPOName" })
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="btnsearch()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtWriteoffam" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Bill No.</th>
+                        <th>Bill Date</th>
+                        <th>Bill Amount(A)</th>
+                        <th>Amount Already Recieved Thru Cheque/EFT</th>
+                        <th>Total Amount Cleared(B)</th>
+                        <th>Write-off Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="col-md-3 mb-4">
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active Permission_Save" onclick="btnsubmit()">Submit</button>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function btnsearch(){
+            InitializeDatatable();
+        }
+
+        function btnsubmit() {
+            event.preventDefault();
+            var formData = new FormData();
+            const dataArr = [];
+
+            $('#dtWriteoffam tbody tr').each(function () {
+                const billNo = $(this).find('td:eq(0)').text(); 
+                const inputId = $(this).find('input.txtwriteofamt').attr('data-errorId'); 
+                const writeOffAmtValue = parseFloat($(`#txtwriteofamt_${inputId}`).val()) || 0;
+
+                if (writeOffAmtValue !== '' && writeOffAmtValue !== 0) {
+                    const billNo = $(this).find('td:eq(0)').text();
+
+                    const UpdateDataModel = {
+                        Bill_No: billNo,
+                        Write_Off_Amt: parseFloat(writeOffAmtValue)
+                    };
+                    dataArr.push(UpdateDataModel);
+                }
+                dataArr.forEach((dataModel, index) => {
+                    formData.append(`dataArr[${index}].Bill_No`, dataModel.Bill_No);
+                    formData.append(`dataArr[${index}].Write_Off_Amt`, dataModel.Write_Off_Amt);
+                });
+            });
+
+            var url = '/WriteOffEntry/UpdateWriteAmt';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        setTimeout(function () {
+                            window.location.href = '/WriteOffEntry/Index';
+                        }, 2000);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error:', textStatus, errorThrown);
+                }
+            });
+
+        }
+
+        function InitializeDatatable() {
+
+            var FrmDt = $("#FrmDt").val();
+            var ToDt = $("#ToDt").val();
+            var BPOName = $("#BPOName").val();
+            
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            var table = $("#dtWriteoffam").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: false,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FrmDt": FrmDt,
+                            "ToDt": ToDt,
+                            "BPOName": BPOName,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "Bill_No" },
+                    {
+                        data: "BillDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "BillAmt" },
+                    { data: "BillAmtRec" },
+                    { data: "BillAmtClr" },
+                    {
+                        data: "WRITE_OFF_AMT",
+                        targets: [1, 2],
+                        render: function (data, type, row, meta) {
+                            return generateRowHtml(meta, row);
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
+
+            $('#dtWriteoffam').on('keypress', 'input.txtwriteofamt', function (event) {
+
+                const row = table.row($(this).closest('tr')).data();
+                const billAmt = parseFloat(row.BillAmt) || 0;
+                const billAmtRec = parseFloat(row.BillAmtRec) || 0;
+                const difference = Math.abs(billAmtRec - billAmt);
+                const inputId = $(this).attr('data-errorId');
+                const key = event.key;
+                const writeOffAmtElement = $(`#txtwriteofamt_${inputId}`);
+                let writeOffAmt = parseFloat(writeOffAmtElement.val()) || 0;
+                writeOffAmt = parseFloat(writeOffAmt + key) || 0;
+
+                if (writeOffAmt > difference) {
+                    event.preventDefault();
+                    displayErrorMessage(`Amount Should Not Be More Then (${difference}).`, $(this).attr('data-errorId'));
+                } else {
+                    clearErrorMessage($(this).attr('data-errorId'));
+                }
+            });
+        }
+
+        let errorMessageCounter = 1;
+
+        function generateUniqueId() {
+            return 'error-message_' + errorMessageCounter++;
+        }
+
+        function generateRowHtml(meta, row, index) {
+            const writeOffAmt = meta.data || 0;
+            const errorId = generateUniqueId();
+
+            return `<input type="text" id="txtwriteofamt_${errorId}" name="txtwriteofamt" onkeypress="return isNumberWithDot(event, '${errorId}')" class="txtwriteofamt" value="${writeOffAmt}" data-errorId="${errorId}">
+                    <div id="${errorId}" style="color: red;"></div>`;
+        }
+
+        function displayErrorMessage(message, inputId) {
+            $('#' + inputId).text(message).show();
+        }
+
+        function clearErrorMessage(inputId) {
+            $('#' + inputId).text('').hide();
+        }
+
+    </script>
+}

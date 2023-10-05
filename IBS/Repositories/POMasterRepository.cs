@@ -97,9 +97,9 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PoNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PoDtDate).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -166,11 +166,6 @@ namespace IBS.Repositories
             #region POMaster save
             if (POMaster == null)
             {
-                //var w_ctr= model.RegionCode + model.PoDt.ToString().Substring(8,2) + model.PoDt.ToString().Substring(0, 2);
-                //var cn=(from m in context.T80PoMasters 
-                //        where m.RegionCode==model.RegionCode && m.CaseNo.Substring(0,4)== w_ctr
-                //        select m.CaseNo.Substring(6,4)).Max();
-
                 string date = model.PoDt.ToString().Substring(0, 10);
                 OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, model.RegionCode, ParameterDirection.Input);
@@ -204,6 +199,8 @@ namespace IBS.Repositories
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
+                obj.Createdby = model.Createdby;
+                obj.Createddate = DateTime.Now;
                 context.T80PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -226,7 +223,9 @@ namespace IBS.Repositories
                 POMaster.PoiCd = model.PoiCd;
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
-                POMaster.Contractid= model.Contractid;
+                POMaster.Contractid = model.Contractid;
+                POMaster.Updatedby = model.Updatedby;
+                POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }
@@ -235,14 +234,16 @@ namespace IBS.Repositories
         }
         public PO_MasterModel FindCaseNo(string CaseNo, int VendCd)
         {
-            PO_MasterModel model = new();
-            //T13PoMaster POMaster = context.T13PoMasters.Find(CaseNo);
-            T80PoMaster POMaster = (from l in context.T80PoMasters
+            PO_MasterModel model = new PO_MasterModel();
+            T13PoMaster POMaster = (from l in context.T13PoMasters
                                     where l.CaseNo == CaseNo && l.VendCd == VendCd
                                     select l).FirstOrDefault();
 
             if (POMaster == null)
-                throw new Exception("Po Master Record Not found");
+            {
+                model = null;
+                return model;
+            }
             else
             {
                 model.CaseNo = POMaster.CaseNo;
@@ -336,9 +337,14 @@ namespace IBS.Repositories
         }
         public int GenerateITEM_SRNO(string CaseNo)
         {
-            int maxSrNo = (from pm in context.T82PoDetails
+            int maxSrNo = 1;
+            int count = context.T82PoDetails.Where(x => x.CaseNo == CaseNo).Count();
+            if (count > 0)
+            {
+                maxSrNo = (from pm in context.T82PoDetails
                            where pm.CaseNo == CaseNo
                            select pm.ItemSrno).Max() + 1;
+            }
             return maxSrNo;
         }
         public PO_MasterDetailsModel FindPODetailsByID(string CASE_NO, string ITEM_SRNO)
@@ -511,7 +517,7 @@ namespace IBS.Repositories
             return vendorEmail;
         }
 
-        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO,string USER_ID)
+        public string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO, string USER_ID)
         {
             string[] result = new string[2];
             OracleParameter[] par = new OracleParameter[4];
@@ -523,7 +529,7 @@ namespace IBS.Repositories
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 result[0] = ds.Tables[0].Rows[0]["ERR_CD"].ToString();
-                result[1] = ds.Tables[0].Rows[1]["OUT_CASE_NO"].ToString();
+                result[1] = ds.Tables[0].Rows[0]["CASE_NO"].ToString();
             }
             return result;
         }

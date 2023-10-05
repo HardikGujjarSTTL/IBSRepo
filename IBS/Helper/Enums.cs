@@ -67,6 +67,10 @@ namespace IBS.Helper
             PurchaseOrderForm = 20,
             [Description("/ReadWriteData/Files/INVOICE_SUPP_DOCS")]
             ICDocument = 21,
+            [Description("/ReadWriteData/CASE_NO")]
+            CaseNo = 22,
+            [Description("/ReadWriteData/LAB")]
+            Lab = 23,
         }
 
         public enum DocumentCategory : int
@@ -606,7 +610,6 @@ namespace IBS.Helper
             [Description("Tentative Inspection Fee Wise Pending Call")] HIGHVALUE,
             [Description("Call Remarking Detail")] REMARKING,
         }
-
     }
 
     public class EnumUtility<T>
@@ -738,7 +741,7 @@ namespace IBS.Helper
 
         public static JIRequiredReport JIRequiredReports { get; set; }
 
-        public static ConsigneeCompPeriodReport ConsigneeCompPeriod { get; set; }
+        public static ConsigneeCompReports ConsigneeCompPeriod { get; set; }
 
         public static DefectCodeReport DefectCodeReports { get; set; }
 
@@ -789,5 +792,12 @@ namespace IBS.Helper
         public static AllICStatusModel AllICStatus { get; set; }
         public static ReInspectionICsModel ReInspectionICs { get; set; }
         public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
+        public static ICUnbilledModel ICUnbilled { get; set; }
+        public static IE7thCopyListModel IE7thCopyList { get; set; }
+        public static ICIssuedNotReceivedReportModel ICIssuedNotReceivedReport{ get; set; }
+        public static ICStatusModel ICStatus { get; set; }
+        public static PendingJICasesReportModel PendingJICasesReport { get; set; }
+        public static IEDairyModel IEDairy { get;set; }
+        public static IEWorkPlanModel IEWorkPlan { get; set; }
     }
 }

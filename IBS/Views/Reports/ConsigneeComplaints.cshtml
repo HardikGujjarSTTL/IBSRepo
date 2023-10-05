@@ -1,0 +1,158 @@
+﻿@using IBS.Helper;
+@model IBS.Models.ConsigneeComplaintsModel;
+
+<div>
+    <table class="borderTable" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th colspan="29" width="15%" valign="top" align="center"><b><font size="2" face="Verdana">Compliant Recieved During the Period: @Model.Display_FromDate to @Model.Display_ToDate</font></b></th>
+                <th colspan="7" width="15%" valign="top" align="center"><b><font size="2" face="Verdana">Corrective & Preventive Action Identified</font></b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Unique SNO.</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Firm</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">PO No.</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO & Set NO</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of IC</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Offered</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rejected</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Value of Rejected Stores</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Discipline</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of 1st Reference</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">REJ MEMO</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of Rejection</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Reason of No JI</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Inspection Document</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Status (Decision taken by JI Committe)</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI REPORT</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Defect Code</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Classfication</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Conclusion Dt</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CM</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">JI Engineer</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Root Cause Analysis</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Checksheet Status</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Tech Ref</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">D&AR Proposed</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Any Other</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Status of CAPA</font></b></th>
+                <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">D&AR Status (if Any)</font></b></th>
+            </tr>
+            @{
+                var SrNo = 0;
+                foreach (var item in Model.lstConsigneeComplaints)
+                {
+                    SrNo = SrNo + 1;
+                    var pdfRejectPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                    var tifRejectPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                    var pdfCasePath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                    var tifCasePath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                    var pdfReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                    var tifReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                    <tr>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IN_REGION</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINT_ID</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_SNO</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_DATE</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.BK_SET</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IC_DATE</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.ITEM_DESC</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.QTY_OFF</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.QTY_REJECTED</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.REJECTION_VALUE</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.DEPT</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.COMPLAINT_DATE</font></td>
+                        <td width="1%" valign="top" align="Left">
+                            <font size="1" face="Verdana">                            
+                                @if (item.IsRejectionMemoTif == false && item.IsRejectionMemoPdf == false)
+                                {                                    
+                                    <div width='10%' valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
+                                }
+                                else if (item.IsRejectionMemoTif == false && item.IsRejectionMemoPdf == true)
+                                {
+
+                                    <div width='10%' valign='top' align='center'><a href='@pdfRejectPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+                                }
+                                else
+                                {
+
+                                    <div width='10%' valign='top' align='center'><a href='@tifRejectPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+
+                                }
+                            </font>
+                        </td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.REJECTION_REASON</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.NO_JI_RES</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_DATE</font></td>
+                        <td width="1%" valign="top" align="Left">
+                            <font size="1" face="Verdana">
+                                @if (item.IsComplainCaseTif == false && item.IsComplainCasePdf == false)
+                                {
+                                    <div width='10%' valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
+                                }
+                                else if (item.IsComplainCaseTif == false && item.IsComplainCasePdf == true)
+                                {
+
+                                    <div width='10%' valign='top' align='center'><a href='@pdfCasePath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+                                }
+                                else
+                                {
+
+                                    <div width='10%' valign='top' align='center'><a href='@tifCasePath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+
+                                }
+                            </font>
+                        </td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.STATUS</font></td>
+                        <td width="1%" valign="top" align="Left">
+                            <font size="1" face="Verdana">
+                                @if (item.IsComplainReportTif == false && item.IsComplainReportPdf == false)
+                                {
+                                    <div width='10%' valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
+                                }
+                                else if (item.IsComplainReportTif == false && item.IsComplainReportPdf == true)
+                                {
+
+                                    <div width='10%' valign='top' align='center'><a href='@pdfReportPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+                                }
+                                else
+                                {
+
+                                    <div width='10%' valign='top' align='center'><a href='@tifReportPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+
+                                }
+                            </font>
+                        </td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.DEFECT_DESC</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_STATUS_DESC</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.CONCLUSION_DATE</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.JI_IE_NAME</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.ROOT_CAUSE_ANALYSIS</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.CHK_STATUS</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.TECH_REF</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.ACTION_PROPOSED</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.ANY_OTHER</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.CAPA_STATUS</font></td>
+                        <td width="1" valign="top" align="Left"><font size="1" face="Verdana">@item.DANDAR_STATUS</font></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -94,7 +94,7 @@ namespace IBS.Controllers
                     loginModel.MOBILE = userMaster.MOBILE;
                     userRepository.SaveOTPDetails(loginModel);
                     string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-                    return RedirectToAction("OTPVerification",new { UserName = EncryptUserName });
+                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName });
                 }
                 else
                 {
@@ -178,7 +178,7 @@ namespace IBS.Controllers
             loginModel.OTP = "123";
             userRepository.SaveOTPDetails(loginModel);
             string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-            return RedirectToAction("OTPVerification", new { UserName = EncryptUserName });
+            return RedirectToAction("OTPVerification","Home", new { UserName = EncryptUserName });
         }
         public IActionResult Privacy()
         {

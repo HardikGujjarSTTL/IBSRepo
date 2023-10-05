@@ -144,7 +144,6 @@ namespace IBS.Models
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
 
             Tblexception objexception = new Tblexception();
-
             objexception.Controllername = ControllerName;
             objexception.Actionname = ActionName;
             objexception.Exceptionmessage = exception;
@@ -1005,6 +1004,18 @@ namespace IBS.Models
                     {
                         Text = Convert.ToString(a.IeName),
                         Value = Convert.ToString(a.IeCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetBPOByRegion(string BpoRegion)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            return (from a in ModelContext.T12BillPayingOfficers
+                    where a.BpoRegion == BpoRegion
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.BpoName),
+                        Value = Convert.ToString(a.BpoCd)
                     }).OrderBy(c => c.Text).ToList();
         }
 
@@ -2027,10 +2038,10 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
+            //SelectListItem drop = new SelectListItem();
+            //drop.Text = "Other";
+            //drop.Value = "0";
+            //dropDownDTOs.Add(drop);
             if (RlyNonrly == "R")
             {
                 List<SelectListItem> dropList = new List<SelectListItem>();
@@ -2058,6 +2069,22 @@ namespace IBS.Models
                 dropDownDTOs.AddRange(dropList);
             }
             return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetAgencyClientForDEOCris()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from a in ModelContext.T91Railways
+                        where a.RlyCd != "CORE"
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.Railway),
+                       Value = Convert.ToString(a.RlyCd)
+                   }).OrderBy(x => x.Value).ToList();
+
+            return dropList;
         }
 
         public static List<SelectListItem> GetRlyCd(string RlyNonrly)
@@ -2164,13 +2191,32 @@ namespace IBS.Models
             return dropDownDTOs;
         }
 
+        public static List<SelectListItem> GetPurchaserCdusingConsigneeCd(int ConsigneeCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from a in ModelContext.T06Consignees
+                        join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
+                        where a.ConsigneeCd == ConsigneeCd
+                        orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, b.City
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(a.ConsigneeCd + "-" + a.ConsigneeFirm + "/" + a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + b.City),
+                       Value = Convert.ToString(a.ConsigneeCd)
+                   }).ToList();
+            return dropList;
+        }
+
         public static List<SelectListItem> GetPurchaserCd(string? consignee)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.StartsWith(consignee)
+                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper())
+                        orderby a.Consignee
                         select
                    new SelectListItem
                    {
@@ -2233,6 +2279,48 @@ namespace IBS.Models
                 dropDownDTOs.AddRange(dropList);
             }
             return dropDownDTOs;
+        }
+
+        public static List<SelectListItem> GetVendorUsingText(string VENDOR)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from v in ModelContext.T05Vendors
+                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                        where v.VendCityCd == c.CityCd && v.VendName != null
+                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                        orderby v.VendName
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                       Value = Convert.ToString(v.VendCd),
+                   }).ToList();
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+
+        public static int? GetVEND_CD(string? IMMS_VENDOR_CD)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            int? VendCd = (from v in ModelContext.ImmsRitesPoHdrs
+                           where v.ImmsVendorCd == IMMS_VENDOR_CD && v.VendCd != null
+                           select v.VendCd).FirstOrDefault();
+            return VendCd;
+        }
+
+        public static int? GetVEND_CDusingRLY_CD(string RLY_CD, string IMMS_PURCHASER_CD)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            int? PurchaserCd = (from v in ModelContext.ImmsRitesPoHdrs
+                           where v.ImmsPurchaserCd == IMMS_PURCHASER_CD && v.ImmsRlyCd == RLY_CD && v.PurchaserCd != null
+                           select v.PurchaserCd).FirstOrDefault();
+            return PurchaserCd;
         }
 
         public static List<SelectListItem> GetIEData(string GetRegionCode)

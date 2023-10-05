@@ -2,343 +2,339 @@
     ViewData["Title"] = "Dashboard";
 }
 
-
-    
-    <div class="dashHeader cf">
-            <h2 class="alignLeft">Admin Dashboard</h2>
-        </div>
-        <div class="admindashboard-section">
-            <div class="admindashboard-wrap">
-                <div class="row admin-dashboard">
-                    <div class="col-lg-3">
-                        <div class="dashboard-box das1">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">92,000</div>
-                                    <div class="total-inner">Inspection<br> Requests</div>
-                                </div>
+<div class="dashHeader cf">
+    <h2 class="alignLeft">Admin Dashboard</h2>
+</div>
+<div class="admindashboard-section">
+    <div class="admindashboard-wrap">
+        <div class="row admin-dashboard">
+            <div class="col-lg-3">
+                <div class="dashboard-box das1">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">92,000</div>
+                            <div class="total-inner">
+                                Inspection<br>
+                                Requests
                             </div>
-                            <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="dashboard-box das2">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">68,140</div>
-                                </div>
-                                <div class="total-inner">Inspection<br> Assigned</div>
-                            </div>
-                            <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das2">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">68,140</div>
+                        </div>
+                        <div class="total-inner">
+                            Inspection<br>
+                            Assigned
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="dashboard-box das3">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">56,422</div>
-                                </div>
-                                <div class="total-inner">Inspection<br> Completed</div>
-                            </div>
-                            <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das3">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">56,422</div>
+                        </div>
+                        <div class="total-inner">
+                            Inspection<br>
+                            Completed
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="dashboard-box das4">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">11,718</div>
-                                </div>
-                                <div class="total-inner">Inspection<br> Pending</div>
-                            </div>
-                            <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das4">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">11,718</div>
+                        </div>
+                        <div class="total-inner">
+                            Inspection<br>
+                            Pending
                         </div>
                     </div>
+                    <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
                 </div>
             </div>
         </div>
-        <section class="graph-section">
-            <div class="invoice">
-                <h3 class="headingh3">Inspection Requests</h3>
-                <div class="datefrom">
-                    <div class="from-celender">
-                        <input placeholder="From" type="text" class="datepicker" />
-                    </div>
-                    <div class="colwithbtn">
-                        <input placeholder="To" type="text" class="datepicker" />
-                    </div>
-                </div>
+    </div>
+</div>
+<section class="graph-section">
+    <div class="invoice">
+        <h3 class="headingh3">Inspection Requests</h3>
+        <div class="datefrom">
+            <div class="from-celender">
+                <input placeholder="From" type="text" class="datepicker" />
             </div>
-            <div class="graph">
-                <div id="monthlychart"></div>
+            <div class="colwithbtn">
+                <input placeholder="To" type="text" class="datepicker" />
             </div>
-        </section>
-        <section>
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="countBlock boxRadius">
-                        <li>No. of Bills <span class="countValue">96,000</span></li>
-                        <li>No. of IEs/ CMs <span class="countValue">250/50</span></li>
-                        <li>No. of Vendor <span class="countValue">45,000</span></li>
-                        <li>No. of Consignee <span class="countValue">38,000</span></li>
-                        <li>No. of Clients <span class="countValue">5,500</span></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-        <section>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="boxRadius">
-                        <div class="row">
-                            <div class="col-lg-12 d-flex justify-content-between">
-                                <h3 class="headingh3">Region wise Inspection Requests</h3>
-                                <div class="dateDrop">
-                                    <select>
-                                        <option>2022</option>
-                                        <option>2023</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="region-wise-pie"></div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="boxRadius">
-                        <div class="row">
-                            <div class="col-lg-12 d-flex justify-content-between">
-                                <h3 class="headingh3">Region wise Clients</h3>
-                                <div class="dateDrop">
-                                    <select>
-                                        <option>2022</option>
-                                        <option>2023</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bar-graph bar-graph-horizontal bar-graph-one">
-                            <div class="bar-one">
-                                <span class="region">Northern Region (NR)</span>
-                                <div class="barHolder">
-                                    <div class="bar" style="width:90%"></div>
-                                </div>
-                                <span class="value">1240</span>
-                            </div>
-                            <div class="bar-two">
-                                <span class="region">Southern Region (SR)</span>
-                                <div class="barHolder">
-                                    <div class="bar" style="width:80%"></div>
-                                </div>
-                                <span class="value">1060</span>
-                            </div>
-                            <div class="bar-three">
-                                <span class="region">Western Region (WR)</span>
-                                <div class="barHolder">
-                                    <div class="bar" style="width:60%"></div>
-                                </div>
-                                <span class="value">920</span>
-                            </div>
-                            <div class="bar-four">
-                                <span class="region">Eastern Region (ER)</span>
-                                <div class="barHolder">
-                                    <div class="bar" style="width:40%"></div>
-                                </div>
-                                <span class="value">860</span>
-                            </div>
-                            <div class="bar-five">
-                                <span class="region">Central Region (CR)</span>
-                                <div class="barHolder">
-                                    <div class="bar" style="width:20%"></div>
-                                </div>
-                                <span class="value">740</span>
-                            </div>
-                            <div class="bar-six">
-                                <span class="region">QA Corporate</span>
-                                <div class="barHolder">
-                                    <div class="bar" style="width:10%"></div>
-                                </div>
-                                <span class="value">680</span>
-                            </div>
+        </div>
+    </div>
+    <div class="graph">
+        <div id="monthlychart"></div>
+    </div>
+</section>
+<section>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="countBlock boxRadius">
+                <li>No. of Bills <span class="countValue">96,000</span></li>
+                <li>No. of IEs/ CMs <span class="countValue">250/50</span></li>
+                <li>No. of Vendor <span class="countValue">45,000</span></li>
+                <li>No. of Consignee <span class="countValue">38,000</span></li>
+                <li>No. of Clients <span class="countValue">5,500</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="boxRadius">
+                <div class="row">
+                    <div class="col-lg-12 d-flex justify-content-between">
+                        <h3 class="headingh3">Region wise Inspection Requests</h3>
+                        <div class="dateDrop">
+                            <select>
+                                <option>2022</option>
+                                <option>2023</option>
+                            </select>
                         </div>
                     </div>
                 </div>
+                <div id="region-wise-pie"></div>
             </div>
-        </section>
-
-        <section class="table-section">
-            <div class="table-title">
-                <h3 class="headingh3">Recent Request for Inspection Vendor</h3>
-                <a class="viewall" href="#">View All</a>
+        </div>
+        <div class="col-lg-6">
+            <div class="boxRadius">
+                <div class="row">
+                    <div class="col-lg-12 d-flex justify-content-between">
+                        <h3 class="headingh3">Region wise Clients</h3>
+                        <div class="dateDrop">
+                            <select>
+                                <option>2022</option>
+                                <option>2023</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-graph bar-graph-horizontal bar-graph-one">
+                    <div class="bar-one">
+                        <span class="region">Northern Region (NR)</span>
+                        <div class="barHolder">
+                            <div class="bar" style="width:90%"></div>
+                        </div>
+                        <span class="value">1240</span>
+                    </div>
+                    <div class="bar-two">
+                        <span class="region">Southern Region (SR)</span>
+                        <div class="barHolder">
+                            <div class="bar" style="width:80%"></div>
+                        </div>
+                        <span class="value">1060</span>
+                    </div>
+                    <div class="bar-three">
+                        <span class="region">Western Region (WR)</span>
+                        <div class="barHolder">
+                            <div class="bar" style="width:60%"></div>
+                        </div>
+                        <span class="value">920</span>
+                    </div>
+                    <div class="bar-four">
+                        <span class="region">Eastern Region (ER)</span>
+                        <div class="barHolder">
+                            <div class="bar" style="width:40%"></div>
+                        </div>
+                        <span class="value">860</span>
+                    </div>
+                    <div class="bar-five">
+                        <span class="region">Central Region (CR)</span>
+                        <div class="barHolder">
+                            <div class="bar" style="width:20%"></div>
+                        </div>
+                        <span class="value">740</span>
+                    </div>
+                    <div class="bar-six">
+                        <span class="region">QA Corporate</span>
+                        <div class="barHolder">
+                            <div class="bar" style="width:10%"></div>
+                        </div>
+                        <span class="value">680</span>
+                    </div>
+                </div>
             </div>
-            <div class="dash-table">
-                <table class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th scope="col">Sr. No</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Req. No.</th>
-                            <th scope="col">Client</th>
-                            <th scope="col">Zone</th>
-                            <th scope="col">Work Type</th>
-                            <th scope="col">Inspection Engineers</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Payment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>01</td>
-                            <td>20-07-2023</td>
-                            <td>#15484</td>
-                            <td>Millennium Enterprises</td>
-                            <td>Northern Region</td>
-                            <td>Telecommunication</td>
-                            <td>Vishal Shah</td>
-                            <td>Ongoing</td>
-                            <td class="oranges">Overdue</td>
-
-                        </tr>
-                        <tr>
-                            <td>02</td>
-                            <td>20-07-2023</td>
-                            <td>#15881</td>
-                            <td>Krishana Enterprises</td>
-                            <td>Southern Region</td>
-                            <td>Work Construction of Road</td>
-                            <td>Manoj Kumar</td>
-                            <td>Not Assign</td>
-                            <td class="green-color">Resolve</td>
-
-                        </tr>
-                        <tr>
-                            <td>03</td>
-                            <td>20-07-2023</td>
-                            <td>#15841</td>
-                            <td>Shree Vighnaharta</td>
-                            <td>Western Region</td>
-                            <td>Drip Course Work</td>
-                            <td>-</td>
-                            <td>Ongoing</td>
-                            <td class="blue-color">Pending</td>
-
-                        </tr>
-                        <tr>
-                            <td>04</td>
-                            <td>20-07-2023</td>
-                            <td>#21548</td>
-                            <td>Zenith Enterprises</td>
-                            <td>Eastern Region</td>
-                            <td>Fencing Wall</td>
-                            <td>Ram Bhai</td>
-                            <td>Not Assign</td>
-                            <td class="green-color">Resolve</td>
-
-                        </tr>
-                        <tr>
-                            <td>05</td>
-                            <td>20-07-2023</td>
-                            <td>#14361</td>
-                            <td>Zenith Enterprises</td>
-                            <td>Central Region</td>
-                            <td>RCC Boundary Wall</td>
-                            <td>Ramesh</td>
-                            <td>Completed</td>
-                            <td class="oranges">Overdue</td>
-
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <section class="table-section">
-            <div class="table-title">
-                <h3 class="headingh3">Recent Purchase Order</h3>
-                <a class="viewall" href="#">View All</a>
-            </div>
-            <div class="dash-table">
-                <table class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th scope="col">Sr. No</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Req. No.</th>
-                            <th scope="col">Submitted By</th>
-                            <th scope="col">Zone</th>
-                            <th scope="col">Work Type</th>
-                            <th scope="col">Inspection by</th>
-                            <th scope="col">P.O. Amount</th>
-                            <th scope="col">Payment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>01</td>
-                            <td>20-07-2023</td>
-                            <td>#15484</td>
-                            <td>Client</td>
-                            <td>Northern Region</td>
-                            <td>Telecommunication</td>
-                            <td>Vishal Shah</td>
-                            <td>₹ 5,80,600</td>
-                            <td class="blue-color">In Progress</td>
-
-                        </tr>
-                        <tr>
-                            <td>02</td>
-                            <td>20-07-2023</td>
-                            <td>#15881</td>
-                            <td>Vendor</td>
-                            <td>Southern Region</td>
-                            <td>Work Construction of Road</td>
-                            <td>Manoj Kumar</td>
-                            <td>₹ 10,90,800</td>
-                            <td class="blue-color">In Progress</td>
-
-                        </tr>
-                        <tr>
-                            <td>03</td>
-                            <td>20-07-2023</td>
-                            <td>#15841</td>
-                            <td>Client</td>
-                            <td>Western Region</td>
-                            <td>Drip Course Work</td>
-                            <td>Akash</td>
-                            <td>₹ 25,50,200</td>
-                            <td class="blue-color">In Progress</td>
-
-                        </tr>
-                        <tr>
-                            <td>04</td>
-                            <td>20-07-2023</td>
-                            <td>#21548</td>
-                            <td>Client</td>
-                            <td>Eastern Region</td>
-                            <td>Fencing Wall</td>
-                            <td>Ram Bhai</td>
-                            <td>₹ 3,70,500</td>
-                            <td class="green-color">Completed</td>
-
-                        </tr>
-                        <tr>
-                            <td>05</td>
-                            <td>20-07-2023</td>
-                            <td>#14361</td>
-                            <td>Vendor</td>
-                            <td>Central Region</td>
-                            <td>RCC Boundary Wall</td>
-                            <td>Ramesh</td>
-                            <td>₹ 12,58,900</td>
-                            <td class="green-color">Completed</td>
-
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    
-
-
+        </div>
+    </div>
+</section>
+<section class="table-section">
+    <div class="table-title">
+        <h3 class="headingh3">Recent Request for Inspection Vendor</h3>
+        <a class="viewall" href="#">View All</a>
+    </div>
+    <div class="dash-table">
+        <table class="table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">Sr. No</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Req. No.</th>
+                    <th scope="col">Client</th>
+                    <th scope="col">Zone</th>
+                    <th scope="col">Work Type</th>
+                    <th scope="col">Inspection Engineers</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01</td>
+                    <td>20-07-2023</td>
+                    <td>#15484</td>
+                    <td>Millennium Enterprises</td>
+                    <td>Northern Region</td>
+                    <td>Telecommunication</td>
+                    <td>Vishal Shah</td>
+                    <td>Ongoing</td>
+                    <td class="oranges">Overdue</td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td>20-07-2023</td>
+                    <td>#15881</td>
+                    <td>Krishana Enterprises</td>
+                    <td>Southern Region</td>
+                    <td>Work Construction of Road</td>
+                    <td>Manoj Kumar</td>
+                    <td>Not Assign</td>
+                    <td class="green-color">Resolve</td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td>20-07-2023</td>
+                    <td>#15841</td>
+                    <td>Shree Vighnaharta</td>
+                    <td>Western Region</td>
+                    <td>Drip Course Work</td>
+                    <td>-</td>
+                    <td>Ongoing</td>
+                    <td class="blue-color">Pending</td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td>20-07-2023</td>
+                    <td>#21548</td>
+                    <td>Zenith Enterprises</td>
+                    <td>Eastern Region</td>
+                    <td>Fencing Wall</td>
+                    <td>Ram Bhai</td>
+                    <td>Not Assign</td>
+                    <td class="green-color">Resolve</td>
+                </tr>
+                <tr>
+                    <td>05</td>
+                    <td>20-07-2023</td>
+                    <td>#14361</td>
+                    <td>Zenith Enterprises</td>
+                    <td>Central Region</td>
+                    <td>RCC Boundary Wall</td>
+                    <td>Ramesh</td>
+                    <td>Completed</td>
+                    <td class="oranges">Overdue</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<section class="table-section">
+    <div class="table-title">
+        <h3 class="headingh3">Recent Purchase Order</h3>
+        <a class="viewall" href="#">View All</a>
+    </div>
+    <div class="dash-table">
+        <table class="table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">Sr. No</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Req. No.</th>
+                    <th scope="col">Submitted By</th>
+                    <th scope="col">Zone</th>
+                    <th scope="col">Work Type</th>
+                    <th scope="col">Inspection by</th>
+                    <th scope="col">P.O. Amount</th>
+                    <th scope="col">Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01</td>
+                    <td>20-07-2023</td>
+                    <td>#15484</td>
+                    <td>Client</td>
+                    <td>Northern Region</td>
+                    <td>Telecommunication</td>
+                    <td>Vishal Shah</td>
+                    <td>₹ 5,80,600</td>
+                    <td class="blue-color">In Progress</td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td>20-07-2023</td>
+                    <td>#15881</td>
+                    <td>Vendor</td>
+                    <td>Southern Region</td>
+                    <td>Work Construction of Road</td>
+                    <td>Manoj Kumar</td>
+                    <td>₹ 10,90,800</td>
+                    <td class="blue-color">In Progress</td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td>20-07-2023</td>
+                    <td>#15841</td>
+                    <td>Client</td>
+                    <td>Western Region</td>
+                    <td>Drip Course Work</td>
+                    <td>Akash</td>
+                    <td>₹ 25,50,200</td>
+                    <td class="blue-color">In Progress</td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td>20-07-2023</td>
+                    <td>#21548</td>
+                    <td>Client</td>
+                    <td>Eastern Region</td>
+                    <td>Fencing Wall</td>
+                    <td>Ram Bhai</td>
+                    <td>₹ 3,70,500</td>
+                    <td class="green-color">Completed</td>
+                </tr>
+                <tr>
+                    <td>05</td>
+                    <td>20-07-2023</td>
+                    <td>#14361</td>
+                    <td>Vendor</td>
+                    <td>Central Region</td>
+                    <td>RCC Boundary Wall</td>
+                    <td>Ramesh</td>
+                    <td>₹ 12,58,900</td>
+                    <td class="green-color">Completed</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 
 @section scripts{
     <script>

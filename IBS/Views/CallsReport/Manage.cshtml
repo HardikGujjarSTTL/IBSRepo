@@ -57,7 +57,10 @@
             loadSpecificPO();
             fileName = 'Summary_of_Specific_PO';
         }
-
+        else if ('@ReportType' == "CallMarked") {
+            loadcallMarked();
+            fileName = 'Summary_of_Call_Marked';
+        }
     });
 
     function loadIeVendorCalls() {
@@ -80,6 +83,12 @@
     }
     function loadSpecificPO() {
         $("#dvReportViewer").load("@Url.Action("Statement_SpecificPO")", { ReportType: '@Model.ReportType', PO_NO: '@Model.PO_NO', PO_DT: '@Model.PO_DT', RLY_NONRLY: '@Model.RLY_NONRLY', RLY_CD: '@Model.RLY_CD' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+    function loadcallMarked() {
+        $("#dvReportViewer").load("@Url.Action("Statement_CallMarked")", { ReportType: '@Model.ReportType', frmDate: '@Model.FromDate', toDate: '@Model.ToDate', wSortkEy: '@Model.wSortkEy' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

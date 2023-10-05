@@ -10,7 +10,8 @@
     else if (ReportType == "OverdueCalls") ReportTitle = "STATEMENT OF OVERDUE CALLS";
     else if (ReportType == "ApprovalReport") ReportTitle = "CALL CANCELLATION APPROVAL REPORT ";
     else if (ReportType == "SpecificPO") ReportTitle = "Call Detail For Specific PO";
-   
+    else if (ReportType == "CallMarked") ReportTitle = "Call Marked Period Wise";
+
     //else if (ReportType == "VenInsp") ReportTitle = "Summary of Vendor Wise Inspections";
    
     ViewData["Title"] = ReportTitle;
@@ -192,6 +193,35 @@
 
 
             </div>
+            <div class="task-inner row report5" style="display: none">
+                <div class="row my-0">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-4">
+                            <label for="Reference">View Calls Marked between the period</label>
+                            <label for="Reference">From</label>
+                            <input type="text" class=" datepicker"  id="FDate" maxlength="300" />
+                            <label for="Reference">To</label>
+                            <input type="text" class=" datepicker" id="TDate" maxlength="300" />
+                        </div>
+                        <div>
+                            <label>Report to be Sorted on</label>
+                            <br></br>
+                            <label for="option1">
+                                <input type="radio" id="vendor" name="options" value="option1" checked> Vendor
+                            </label>
+                            <br>
+                            <label for="option2">
+                                <input type="radio" id="callDate" name="options" value="option2"> Call Date
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="savenext-btn">
+
+                        <button type="button" class="save-btn active " onclick="CallMarked();">Search</button>
+                    </div>
+                </div>
+            </div>
 
             @*</form>*@
         </div>
@@ -256,7 +286,9 @@
                     });
                 });
             }
-
+            else if ('@ReportType' == "CallMarked") {
+                $(".report5").css("display", "");
+            }
 
 
         });
@@ -293,7 +325,7 @@
             window.open(url, '_blank');
         }
         completed = function (response) {
-
+          
         }
 
         function btnSubmit(){
@@ -304,6 +336,26 @@
             let myObject = { ReportType, frmDate, toDate };
             var url = '@Url.Action("Manage", "CallsReport")?' + $.param(myObject);
             window.open(url, '_blank');
+        }
+
+        function CallMarked(){
+
+            var wSortkEy = "";
+
+
+            if ($("#vendor").is(":checked")) {
+                wSortkEy = "V";
+            } else if ($("#callDate").is(":checked")) {
+                wSortkEy = "D";
+            }
+
+            var ReportType = '@ReportType';
+            var frmDate = $("#FDate").val();
+            var toDate = $("#TDate").val();
+            let myObject = { ReportType, frmDate, toDate, wSortkEy };
+            var url = '@Url.Action("Manage", "CallsReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+
         }
 
         function show(){

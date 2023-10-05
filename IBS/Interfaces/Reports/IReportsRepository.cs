@@ -12,5 +12,8 @@ namespace IBS.Interfaces.Reports
         IE7thCopyListModel GetIE7thCopyReport(string Bk_No, string Set_No, UserSessionModel model);
 
         ICStatusModel Get_IC_Status(DateTime FromDate, DateTime ToDate, string IE_CD, string Region);
+
+        IEWorkPlanModel Get_IE_WorkPlan(DateTime FromDate, DateTime ToDate, string IECD, string Region);
+        ConsigneeComplaintsModel Get_Consignee_Complaints(DateTime FromDate, DateTime ToDate, string IECD, string Region);
     }
 }

@@ -26,53 +26,54 @@
         <form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">
             <div class="accordion-body">
                 <div class="row my-0">
+                    <input type="hidden" class="input" asp-for="LabId" style="display:none;">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Lab Name</label>
                         <input type="text" class="input" asp-for="LabName" maxlength="30" style="text-transform: uppercase;">
-                        <span asp-validation-for="LabName" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorLabName"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Email</label>
                         <input type="text" class="input" asp-for="LabEmail" maxlength="30" style="text-transform: uppercase;">
-                        <span asp-validation-for="LabEmail" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorLabEmail"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="PropertyId">City</label>
                         @Html.DropDownListFor(model => model.LabCity, Common.GetCity(), new { })
-                        <span asp-validation-for="LabCity" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorCity"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="PropertyId">Lab Approval</label>
                         @Html.DropDownListFor(model => model.LabApproval, Common.GetLabApproval(), new { })
-                        <span asp-validation-for="LabApproval" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorLabApproval"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Approval Period(DD/MM/YYYY)</label>
                         <label for="Reference">From</label>
-                        <input type="text" class="input datepicker" asp-for="LabApprovalFr" readonly="true">
-                        <span asp-validation-for="LabApprovalFr" class="text-danger"></span>
+                        <input type="text" class="input datepicker" asp-for="LabApprovalFr">
+                        <span class="text-danger field-validation-error" id="spnErrorFrom"></span>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="Reference">To</label>
-                        <input type="text" class="input datepicker" asp-for="LabApprovalTo" readonly="true">
-                        <span asp-validation-for="LabApprovalTo" class="text-danger"></span>
+                        <input type="text" class="input datepicker" asp-for="LabApprovalTo">
+                        <span class="text-danger field-validation-error" id="spnErrorTo"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Contact Person1</label>
                         <input type="text" class="input" asp-for="LabContactPer" maxlength="30" style="text-transform: uppercase;">
-                        <span asp-validation-for="LabContactPer" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorConPer"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Tel No.</label>
                         <input type="text" class="input" asp-for="LabContactTel" maxlength="30" style="text-transform: uppercase;">
-                        <span asp-validation-for="LabContactTel" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorTelNo"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Lab Address</label>
                         @*<input type="text" class="input" asp-for="LAB_ADDRESS" maxlength="30" style="text-transform: uppercase;">*@
                         <textarea class="input" asp-for="LabAddress" maxlength="30"> </textarea>
-                        <span asp-validation-for="LabAddress" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorAddress"></span>
                     </div>
                 </div>
                 <div class="savenext-btn" style="margin-left:47%;">
@@ -94,9 +95,58 @@
             });
         });
         function Save() {
-            if ($("#frmLabDetails").valid()) {
-                $("#frmLabDetails").submit();
+            debugger;
+            $("#spnErrorLabName").html("");
+            $("#spnErrorLabEmail").html("");
+            $("#spnErrorCity").html("");
+            $("#spnErrorLabApproval").html("");
+            $("#spnErrorFrom").html("");
+            $("#spnErrorTo").html("");
+            $("#spnErrorConPer").html("");
+            $("#spnErrorTelNo").html("");
+            $("#spnErrorAddress").html("");
+            var IsValid = true;
+            if($("#LabName").val() == "") {
+                $("#spnErrorLabName").html("Please Enter Lab Name");
+                IsValid = false;
             }
+            if ($("#LabEmail").val() == "") {
+                $("#spnErrorLabEmail").html("Please Enter Lab Email");
+                IsValid = false;
+            }
+            if ($("#LabCity").val() == "") {
+                $("#spnErrorCity").html("Please Select City");
+                IsValid = false;
+            }
+            if ($("#LabApproval").val() == "") {
+                $("#spnErrorLabApproval").html("Please Select Lab Approval");
+                IsValid = false;
+            }
+            if ($("#LabApprovalFr").val() == "") {
+                $("#spnErrorFrom").html("Please Enter FromDate");
+                IsValid = false;
+            }
+            if ($("#LabApprovalTo").val() == "") {
+                $("#spnErrorTo").html("Please Enter ToDate");
+                IsValid = false;
+            }
+            if ($("#LabContactPer").val() == "") {
+                $("#spnErrorConPer").html("Please Enter Contact Number");
+                IsValid = false;
+            }
+            if ($("#LabContactTel").val() == "") {
+                $("#spnErrorTelNo").html("Please Enter Tel.No");
+                IsValid = false;
+            }
+            if ($("#LabAddress").val() == "") {
+                $("#spnErrorAddress").html("Please Enter Address");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            $("#frmLabDetails").submit();
+            // if ($("#frmLabDetails").valid()) {
+            //     $("#frmLabDetails").submit();
+            // }
         }
         completed = function (response) {
             var res = response.responseJSON;

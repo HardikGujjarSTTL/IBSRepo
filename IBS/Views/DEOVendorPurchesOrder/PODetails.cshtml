@@ -89,7 +89,7 @@
                             var ITEM_SRNO = data.ITEM_SRNO;
                             var editUrl = '@Url.Action("PoDetailManage", "DEOVendorPurchesOrder")?CASE_NO=' + CASE_NO + "&ITEM_SRNO=" + ITEM_SRNO;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="POMasterDetailsDelete(this.CASE_NO,this.ITEM_SRNO); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="POMasterDetailsDelete(\'' + CASE_NO + '\',\'' + ITEM_SRNO + '\'); return false; " href="javascript: void (\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

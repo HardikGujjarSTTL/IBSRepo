@@ -93,6 +93,21 @@
         setDefaultDate();
 
         $("#btnSubmit").click(function () {
+            var CurrDate = new Date(); // Current date as a Date object
+            var inputDate = $("#txtDate").val();
+
+            // Parse the input date string with the correct format
+            var parts = inputDate.split('/');
+            var inputYear = parseInt(parts[2], 10);
+            var inputMonth = parseInt(parts[1], 10) - 1; // Months are zero-based
+            var inputDay = parseInt(parts[0], 10);
+
+            var inputDateObj = new Date(inputYear, inputMonth, inputDay);
+
+            if (inputDateObj > CurrDate) {
+                ShowHideMsgNew(false, "The Call Date Cannot be greater than Current Date.");
+                return;
+            }
             InitializeDatatable();
         });        
     });
