@@ -48,14 +48,30 @@ namespace IBS.Controllers
                 if (model.Id > 0)
                 {
                     model.Updatedby = UserId;
-                    clientMasterRepository.ClientDetailsInsertUpdate(model);
-                    AlertAddSuccess("Record Updated Successfully.");
+                   int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    if(i > 0)
+                    {
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+                    else
+                    {
+                        AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
+                        return View("Manage",model);
+                    }
                 }
                 else
                 {
                     model.Createdby = UserId;
-                    clientMasterRepository.ClientDetailsInsertUpdate(model);
-                    AlertAddSuccess("Record Added Successfully.");
+                   int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    if (i > 0)
+                    {
+                        AlertAddSuccess("Record Add Successfully.");
+                    }
+                    else
+                    {
+                        AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
+                        return View("Manage", model);
+                    }
                 }
 
                 return RedirectToAction("Index");
@@ -64,7 +80,7 @@ namespace IBS.Controllers
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientMaster", "ClientDetailsave", 1, GetIPAddress());
             }
-            return View(model);
+            return View("Manage", model);
         }
 
         [Authorization("ClientMaster", "Index", "delete")]

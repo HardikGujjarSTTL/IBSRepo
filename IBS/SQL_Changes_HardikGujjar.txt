@@ -400,7 +400,7 @@ ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
 
 
     
-create View VIEW_POMASTERLIST
+create or replace View VIEW_POMASTERLIST
 AS
 select 
         m.VEND_CD,
@@ -412,7 +412,8 @@ select
         (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
         m.REMARKS ,
         m.Isdeleted,
-        m.RLY_NONRLY
+        m.RLY_NONRLY,
+        m.RLY_CD AS MAINRLY_CD
         from 
             T80_PO_MASTER m,
             T05_VENDOR v,
@@ -422,6 +423,7 @@ select
             m.VEND_CD=v.VEND_CD and 
             v.VEND_CITY_CD=t.CITY_CD And 
             m.PURCHASER_CD=c.CONSIGNEE_CD(+)
+        Order by m.datetime desc;
 
 
 Create VIEW view_GetVendor
@@ -559,6 +561,7 @@ BEGIN
     JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
     WHERE
         p.CASE_NO = p_case_no
+        AND NVL(p.IsDeleted ,0) =0
     ORDER BY
         p.ITEM_SRNO;
 END;
