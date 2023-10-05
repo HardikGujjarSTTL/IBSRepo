@@ -61,11 +61,14 @@
 
 
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="Reference">Case To Be Registered At</label>
-                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="RegionCode" class="text-danger"></span>
-                    </div>
+                    @if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() != "admin")
+                    {
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Case To Be Registered At</label>
+                            @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="RegionCode" class="text-danger"></span>
+                        </div>
+                    }
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
