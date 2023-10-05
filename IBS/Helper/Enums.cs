@@ -614,6 +614,10 @@ namespace IBS.Helper
             [Description("Daily IE Work Plan Report")] U,
             [Description("Daily IE Work Plan Exception Report")] E,
             [Description("Download / View Photo Uploaded")] IEICPHOTO,
+            [Description("Consignee Complaints For The Period")] CCU,
+            [Description("Summary Of Consignee Complaints where JI Required")] COMPJI,
+            [Description("JI CONSIGNEE COMPLAINTS")] CORP,
+            [Description("Top N HIGH VALUE INSPECTIONS")] TOPNHIGH,
         }
     }
 

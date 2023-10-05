@@ -320,39 +320,39 @@ namespace IBS.Controllers.Reports.OtherReports
             return PartialView(model);
         }
 
-        //public IActionResult DailyWorkIECMReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
-        //{
-        //    string wRegion = "";
-        //    if (Region == "N") { wRegion = "Northern Region"; }
-        //    else if (Region == "S") { wRegion = "Southern Region"; }
-        //    else if (Region == "E") { wRegion = "Eastern Region"; }
-        //    else if (Region == "W") { wRegion = "Western Region"; }
-        //    else if (Region == "C") { wRegion = "Central Region"; }
-        //    DailyIECMWorkPlanReportModel model = otherReportsRepository.GetDailyWorkData(FromDate, ToDate, lstIE, lstCM, AllIEs, ParticularIEs, AllCM, ParticularCMs, ReportType, IEWise, CMWise, Region, SortedIE, visitdate);
-        //    GlobalDeclaration.DailyIECMWorkPlanReport = model;
-        //    model.FromDate = Convert.ToDateTime(FromDate).ToString("dd/MM/yyyy");
-        //    model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
-        //    model.ReportType = ReportType;
-        //    model.Regions = wRegion;
-        //    return PartialView(model);
-        //}
+        public IActionResult DailyWorkIECMReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
+        {
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            DailyIECMWorkPlanReportModel model = otherReportsRepository.GetDailyWorkData(FromDate, ToDate, lstIE, lstCM, AllIEs, ParticularIEs, AllCM, ParticularCMs, ReportType, IEWise, CMWise, Region, SortedIE, visitdate);
+            GlobalDeclaration.DailyIECMWorkPlanReport = model;
+            model.FromDate = Convert.ToDateTime(FromDate).ToString("dd/MM/yyyy");
+            model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
+            model.ReportType = ReportType;
+            model.Regions = wRegion;
+            return PartialView(model);
+        }
 
-        //public IActionResult DailyWorkIEExcepReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
-        //{
-        //    string wRegion = "";
-        //    if (Region == "N") { wRegion = "Northern Region"; }
-        //    else if (Region == "S") { wRegion = "Southern Region"; }
-        //    else if (Region == "E") { wRegion = "Eastern Region"; }
-        //    else if (Region == "W") { wRegion = "Western Region"; }
-        //    else if (Region == "C") { wRegion = "Central Region"; }
-        //    DailyIECMWorkPlanReportModel model = otherReportsRepository.GetDailyWorkData(FromDate, ToDate, lstIE, lstCM, AllIEs, ParticularIEs, AllCM, ParticularCMs, ReportType, IEWise, CMWise, Region, SortedIE, visitdate);
-        //    GlobalDeclaration.DailyIECMWorkPlanReport = model;
-        //    model.FromDate = Convert.ToDateTime(FromDate).ToString("dd/MM/yyyy");
-        //    model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy"); 
-        //    model.ReportType = ReportType;
-        //    model.Regions = wRegion;
-        //    return PartialView(model);
-        //}
+        public IActionResult DailyWorkIEExcepReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
+        {
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            DailyIECMWorkPlanReportModel model = otherReportsRepository.GetDailyWorkData(FromDate, ToDate, lstIE, lstCM, AllIEs, ParticularIEs, AllCM, ParticularCMs, ReportType, IEWise, CMWise, Region, SortedIE, visitdate);
+            GlobalDeclaration.DailyIECMWorkPlanReport = model;
+            model.FromDate = Convert.ToDateTime(FromDate).ToString("dd/MM/yyyy");
+            model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
+            model.ReportType = ReportType;
+            model.Regions = wRegion;
+            return PartialView(model);
+        }
 
         public IActionResult PhotoSubmiteedByIE(string CaseNo, string CallRecDT, string CallSno, string BKNO, string SETNO)
         {

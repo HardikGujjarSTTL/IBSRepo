@@ -5,6 +5,7 @@
         public string ReportType { get; set; }
 
         public string ReportTitle { get; set; }
+        public string Regions { get; set; }
 
         public DateTime FromDate { get; set; }
 
