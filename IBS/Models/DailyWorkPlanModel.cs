@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -7,10 +8,17 @@ namespace IBS.Models
         public int IeCd { get; set; }
 
         public byte? CoCd { get; set; }
-
+        
+        [Required]
         public string? Reason { get; set; }
 
-        public DateTime NwpDt { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime ReasonDt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? NwpDt { get; set; }
 
         public string? RegionCode { get; set; }
 
@@ -18,6 +26,14 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
-        public virtual T09Ie IeCdNavigation { get; set; } = null!;
+        public string? Createdby { get; set; }
+
+        public string? Updatedby { get; set; }
+
+        public DateTimeOffset? Createddate { get; set; }
+
+        public DateTimeOffset? Updateddate { get; set; }
+
+        public decimal? Isdeleted { get; set; }
     }
 }

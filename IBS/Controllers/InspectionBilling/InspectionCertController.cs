@@ -55,7 +55,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 model = inpsRepository.FindByInspDetailsID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, ActionType, Region, RoleId);
             }
-
+            model.ActionType = ActionType;
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICDocument, model.BillNo);
             FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
             FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
@@ -269,6 +269,7 @@ namespace IBS.Controllers.InspectionBilling
                 else
                 {
                     model.UserId = Convert.ToString(UserId);
+                    
                     i = inpsRepository.BillUpdate(model, Region);
                     msg = "Update Successfully.";
                 }
@@ -341,7 +342,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "VenderCallRegisterModel", "DetailsDelete", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "BillUpdate", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
@@ -533,6 +534,57 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "CallMaterialReadiness", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult ChangeConsignee(string CaseNo, string Bkno, string Setno, string ActionType)
+        {
+            InspectionCertModel model = new InspectionCertModel();
+            if (CaseNo != null && Bkno != null && Setno != null && ActionType != null)
+            {
+                model = inpsRepository.GetChangeConsigneeDetails(CaseNo, Bkno, Setno, ActionType, Region);
+            }
+            return View(model);
+        }
+        //Save ChangeConsignee
+        [HttpPost]
+        public IActionResult ChangeConsignee(InspectionCertModel model)
+        {
+            try
+            {
+                if (model.Caseno != null && model.Bkno != null && model.Setno != null && model.ConsigneeCd > 0)
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    model.Regioncode = Region;
+                    inpsRepository.SaveChangeConsignee(model);
+                    if(model.UpdateStatus == "1")
+                    {
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+                    else
+                    {
+                        AlertAddSuccess("The IC For the Given Case No, Call Date, Call SNo. and Consignee CD Already Present.So You Cannot update the Consignee!!!");
+                    }
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "ChangeConsignee", 1, GetIPAddress());
+            }
+            return View(model);
+        }
+
+        public IActionResult Returned_Bills_BPO_Change_Form(string CaseNo, string Bkno, string Setno, string ActionType)
+        {
+            InspectionCertModel model = new InspectionCertModel();
+            if (CaseNo != null && Bkno != null && Setno != null && ActionType != null)
+            {
+                model = inpsRepository.GetReturned_Bills_ChangesDetails(CaseNo, Bkno, Setno, ActionType, Region);
+            }
+
+            return View(model);
         }
     }
 }

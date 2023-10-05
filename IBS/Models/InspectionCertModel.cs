@@ -28,6 +28,8 @@ namespace IBS.Models
 
         public string Consignee { get; set; }
 
+        public int ConsigneeCd { get; set; }
+
         public string? Callstatusdesc { get; set; }
 
         public string? Regioncode { get; set; }
@@ -104,6 +106,8 @@ namespace IBS.Models
 
         public string BillNo { get; set; }
 
+        public string CnoteBillNo { get; set; }
+
         public decimal TMValue { get; set; }
 
         public decimal? TIFee { get; set; }
@@ -151,9 +155,9 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? BillDt { get; set; }
 
-        public int MinFee { get; set; }
+        public int? MinFee { get; set; }
 
-        public int MaxFee { get; set; }
+        public int? MaxFee { get; set; }
 
         public string TaxType { get; set; }
 
@@ -197,9 +201,86 @@ namespace IBS.Models
         public decimal? Discount { get; set; }
         public decimal? OtherCharges { get; set; }
 
+        public decimal? ServiceTax { get; set; }
+
+        public decimal? EduCess { get; set; }
+
+        public decimal? SheCess { get; set; }
+
+        public decimal? AmountReceived { get; set; }
+
+        public decimal? Tds { get; set; }
+
+        public decimal? BillAmtCleared { get; set; }
+
+        public string BillStatus { get; set; }
+
+        public decimal? RetentionMoney { get; set; }
+
+        public decimal? WriteOffAmt { get; set; }
+
+        public decimal? ServTaxRate { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? TdsDt { get; set; }
+
+        public string ScannedStatus { get; set; }
+
+        public decimal? SwachhBharatCess { get; set; }
+
+        public decimal? KrishiKalyanCess { get; set; }
+
+        public decimal? Sgst { get; set; }
+
+        public decimal? Cgst { get; set; }
+
+        public decimal? Igst { get; set; }
+
+        public decimal? TdsSgst { get; set; }
+
+        public decimal? TdsCgst { get; set; }
+
+        public decimal? TdsIgst { get; set; }
+
+        public decimal? CnoteAmount { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? DigBillGenDt { get; set; }
+
+        public string? BillResentStatus { get; set; }
+
+        public int? BillResentCount { get; set; }
+
+        public string? IrnNo { get; set; }
+
+        public string? AckNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? AckDt { get; set; }
+
+        public string? QrCode { get; set; }
+
+        public string? SentToSap { get; set; }
+
+        public string? BillFinalised { get; set; }
+
+        public string? InvoiceSuppDocs { get; set; }
+
+        public string? CreditDocId { get; set; }
+
+        public string? LoRemarks { get; set; }
+
+        public string? SapStatus { get; set; }
+
+
         public string chkABill { get; set; }
 
         public string UpdateStatus { get; set; }
+
+        public string BillTypes { get; set; }
 
     }
 
