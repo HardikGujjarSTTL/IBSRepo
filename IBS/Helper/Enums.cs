@@ -600,6 +600,9 @@ namespace IBS.Helper
             [Description("Format for Monthly Non Conformity Report")] NON_CONFORMITY,
             [Description("Tentative Inspection Fee Wise Pending Call")] HIGHVALUE,
             [Description("Call Remarking Detail")] REMARKING,
+            [Description("NCR Controlling Wise Report")] C,
+            [Description("NCR IE Wise Report")] I,
+            [Description("IE Wise Training Details")] IEWISET,
         }
     }
 

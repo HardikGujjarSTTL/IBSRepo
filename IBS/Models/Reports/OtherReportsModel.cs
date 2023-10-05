@@ -18,6 +18,28 @@
         public string Case_No { get; set; }
         public string Call_Recv_Date { get; set; }
         public string Call_SNo { get; set; }
+        public string month { get; set; }
+        public string year { get; set; }
+        public string AllCM { get; set; }
+        public string forCM { get; set; }
+        public string All { get; set; }
+        public string Outstanding { get; set; }
+        public string formonth { get; set; }
+        public string monthChar { get; set; }
+        public string forperiod { get; set; }
+        public string iecmname { get; set; }
+        public string reporttype { get; set; }
+        public string COName { get; set; }
+        public string IEName { get; set; }
+        public string IENametext { get; set; }
+        public string TrainingArea { get; set; }
+        public string Mechanical { get; set; }
+        public string Electrical { get; set; }
+        public string Civil { get; set; }
+        public string Regular { get; set; }
+        public string Deputaion { get; set; }
+        public string Particularie { get; set; }
+        public string ParticularArea { get; set; }
     }
 
     public class ControllingOfficerIEModel

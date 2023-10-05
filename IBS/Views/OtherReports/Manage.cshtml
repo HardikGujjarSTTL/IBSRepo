@@ -1,10 +1,13 @@
-﻿@model IBS.Models.Reports.OtherReportsModel
+﻿@using System.Web;
+@model IBS.Models.Reports.OtherReportsModel
 
 @{
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
+    string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "OtherReports");
+
 }
 
 <html>
@@ -13,6 +16,7 @@
 </head>
 <body>
     <p align="right">
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -42,8 +46,36 @@
         else if ('@ReportType' == 'COIEWiseCalls'){
             loadCOIEWiseCalls();
             fileName = 'Co_Ie_Wise_Calls';
+        } else if ('@ReportType' == 'C' || '@ReportType' == 'I') {
+            loadNCRCReport();
+            fileName = 'NCR_Controlling_Wise';
+        } else if ('@ReportType' == 'IEWISET') {
+            loadIEWISE();
+            fileName = 'IE Wise Training Report';
         }
     });
+
+    function loadIEWISE() {
+        $("#dvReportViewer").load("@Url.Action("IEWiseTrainingReport")", {
+            IENAME: '@Model.IEName', TrainingArea: '@Model.TrainingArea', Mechanical: '@Model.Mechanical', Electrical: '@Model.Electrical', Civil: '@Model.Civil'
+            , Regular: '@Model.Regular', Deputaion: '@Model.Deputaion', Particularie: '@Model.Particularie', ParticularArea: '@Model.ParticularArea'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadNCRCReport() {
+        $("#dvReportViewer").load("@Url.Action("NCRCWiseReport")", {
+            month: '@Model.month', year: '@Model.year', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', forCM: '@Model.forCM',
+            All: '@Model.All', Outstanding: '@Model.Outstanding', formonth: '@Model.formonth', monthChar: '@Model.monthChar', iecmname: '@Model.iecmname',
+            forperiod: '@Model.forperiod', ReportType: '@Model.ReportType', IENametext: '@Model.IENametext', COName: '@Model.COName'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
 
     function loadCOWISEIE() {
         $("#dvReportViewer").load("@Url.Action("CoWiseIE")", function (response) {

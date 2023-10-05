@@ -1,9 +1,10 @@
-﻿@using IBS.Helper;
+﻿@using System.Web;
+@using IBS.Helper;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
     string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = string.Empty;
+    string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
     if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
     else if (ReportType == "COIEWiseCalls") ReportTitle = "CONTROLLING WISE CALLS MARKED";
@@ -66,6 +67,236 @@
                 </div>
             </div>
         </div>
+
+        <div class="task-inner row C" style="display: none">
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmC">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnformonth" name="hdnformonth" />
+                <input type="hidden" id="hdnforperiod" name="hdnforperiod" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnmonth" name="hdnmonth" />
+                <input type="hidden" id="hdnyear" name="hdnyear" />
+                <input type="hidden" id="hdnAllCM" name="hdnAllCM" />
+                <input type="hidden" id="hdnforCM" name="hdnforCM" />
+                <input type="hidden" id="hdniecmname" name="hdniecmname" />
+                <input type="hidden" id="hdnAll" name="hdnAll" />
+                <input type="hidden" id="hdnOutstanding" name="hdnOutstanding" />
+                <input type="hidden" id="hdnmonthtxt" name="hdnmonthtxt" />
+                <input type="hidden" id="hdnIENametext" name="hdnIENametext" />
+                <div class="col-md-6">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="formonth" name="formonth" value="formonth" checked>
+                                    <label for="formonth">For The Month</label>
+                                </div>
+                            </div>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="forperiod" name="formonth" value="forperiod">
+                                    <label for="forperiod">For Given Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-end my-0" id="divdate">
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="input-search">
+                            <label for="ToDate">To</label>
+                            <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitNCRC();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-end my-0" id="divmonth">
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">Month</label>
+                            @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                            <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="input-search">
+                            <label for="ToDate">Year</label>
+                            @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                            <span class="text-danger field-validation-error" id="spnErroryear"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitNCRC();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                @if (ReportType == "I")
+                {
+                    <div class="col-md-12 custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                <div class="remecheckbox">
+                                    <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
+                                    <label for="AllCM">All IE</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" value="forCM" id="forCM" name="AllCM" />
+                                    <label for="forCM">For Given IE</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <br />
+                @if (ReportType == "C")
+                {
+                    <div class="col-md-12 custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                <div class="remecheckbox">
+                                    <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
+                                    <label for="AllCM">All CM</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" value="forCM" id="forCM" name="AllCM" />
+                                    <label for="forCM">For Given CM</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="col-md-3">
+                    @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetCOData(@ViewBag.Region) , "Value", "Text"),"--Select--", new { id = "iecmname" })
+                </div>
+                <br />
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <label for="year">Report Type</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                            <div class="remecheckbox">
+                                <input type="radio" value="All" id="All" name="All" checked="checked" />
+                                <label for="All">All</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" value="Outstanding" id="Outstanding" name="All" />
+                                <label for="Outstanding">Outstanding</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </form>
+        </div>
+
+        <div class="task-inner row IEWISET" style="display: none">
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmIEWISET">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnIENAME" name="hdnIENAME" />
+                    <input type="hidden" id="hdnMechanical" name="hdnMechanical" />
+                    <input type="hidden" id="hdnElectrical" name="hdnElectrical" />
+                    <input type="hidden" id="hdnCivil" name="hdnCivil" />
+                    <input type="hidden" id="hdnRegular" name="hdnRegular" />
+                    <input type="hidden" id="hdnDeputaion" name="hdnDeputaion" />
+                    <input type="hidden" id="hdnParticularie" name="hdnParticularie" />
+                    <input type="hidden" id="hdnParticularArea" name="hdnParticularArea" />
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">Discipline</h3>
+                    <div class="col-md-12">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="Alldescipline" name="Discipline" checked="checked" value="Alldescipline">
+                                <label for="Alldescipline">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Mechanical" name="Discipline" value="Mechanical">
+                                <label for="Mechanical">Mechanical</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Electrical" name="Discipline" value="Electrical">
+                                <label for="Electrical">Electrical</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Civil" name="Discipline" value="Civil">
+                                <label for="Civil">Civil</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">IE Category</h3>
+                    <div class="col-md-12" id="detaileds">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllIeCat" name="IECategory" checked="checked" value="AllIeCat">
+                                <label for="AllIeCat">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Regular" name="IECategory" value="Regular">
+                                <label for="Regular">Regular</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Deputaion" name="IECategory" value="Deputaion">
+                                <label for="Deputaion">Deputaion</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">IE</h3>
+                    <div class="col-md-12">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllIe" name="AllIe" checked="checked" value="AllIe">
+                                <label for="AllIe">All IE</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Particularie" name="AllIe" value="Particularie">
+                                <label for="Particularie">Particular IE</label>
+                            </li>
+                            <li>
+                                @Html.DropDownList("IENAME", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Region), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">Training Area</h3>
+                    <div class="col-md-12">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllArea" name="AllArea" checked="checked" value="AllArea">
+                                <label for="AllArea">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="ParticularArea" name="AllArea" value="ParticularArea">
+                                <label for="ParticularArea">Particular Area</label>
+                            </li>
+                            <li>
+                                @Html.DropDownList("TrainingArea", new SelectList(IBS.Models.Common.TrainingArea(), "Value", "Text"), "--Select--", new { id = "TrainingArea" })
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportIEWISET();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsIEWISET();">Clear</button>
+                </div>
+             </form>
+        </div>
     </div>
     <section class="table-section COIEWiseCalls" id="tblCOIEWiseCalls" style="display: none">
         <div class="task-listinput">
@@ -111,8 +342,13 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
         $(document).ready(function () {
+
+            $("#divdate").hide();
+            $("#iecmname").hide();
+            $("#IENAME").hide();
+            $("#TrainingArea").hide();
+
             BindlstIE();
             if ('@ReportType' == 'COWISEIE') {
                 ViewReportCOWISEIE();
@@ -132,9 +368,106 @@
                     }
                 });
             }
+            else if ('@ReportType' == 'C' || '@ReportType' == 'I') {
+                 $(".C").css("display", "");
+            } else if ('@ReportType' == 'IEWISET') {
+                $(".IEWISET").css("display", "");
+            }
+
+            $('#Particularie').change(function () {
+                $("#IENAME").show();
+            });
+
+            $('#ParticularArea').change(function () {
+                $("#TrainingArea").show();
+            });
+
+            $('#AllIe').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#AllArea').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#AllIeCat').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Regular').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Deputaion').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Alldescipline').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Mechanical').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Electrical').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Civil').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
         });
 
 
+        $('#forperiod').change(function () {
+            $("#divdate").show();
+            $("#divmonth").hide();
+            $("#month").val('');
+            $("#year").val('');
+        });
+
+        $('#formonth').change(function () {
+            $("#divdate").hide();
+            $("#divmonth").show();
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+        });
+
+        $('#forCM').change(function () {
+            $("#iecmname").show();
+        });
+
+        $('#AllCM').change(function () {
+            $("#iecmname").hide();
+        });
 
         function ViewReportCOWISEIE() {
             var ReportType = '@ReportType';
@@ -333,6 +666,141 @@
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function ClearControls1() {
+            $("#month").val('');
+            $("#year").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#formonth").prop("checked", true);
+            $("#divdate").hide();
+            $("#divmonth").show();
+        }
+
+        function SubmitNCRC() {
+
+            $("#spnErrorToDate").html("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorFromDate").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrorToDate").html("Enter To Date.");
+                    IsValid = false;
+                }
+                if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                    $("#spnErrorFromDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                    $("#spnErrorToDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+            var IsValid = true;
+            var ReportType = '@ReportType';
+            var monthChar = $('#month option:selected').text();
+            var month = getMonthNumber(monthChar);
+            var year = $('#year').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+            var forCM = $("#forCM").is(":checked") == true ? "true" : "false";
+            var All = $("#All").is(":checked") == true ? "true" : "false";
+            var Outstanding = $("#Outstanding").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var iecmname = $('#iecmname').val();
+            var COName = $('#iecmname option:selected').text();
+            var IENametext = $('#iecmname option:selected').text();
+
+
+            $('#frmC').find("#hdnReportType").val(ReportType);
+            $('#frmC').find("#hdnmonthtxt").val(monthChar);
+            $('#frmC').find("#hdnmonth").val(month);
+            $('#frmC').find("#hdnyear").val(year);
+            $('#frmC').find("#hdnFromDate").val(FromDate);
+            $('#frmC').find("#hdnToDate").val(ToDate);
+            $('#frmC').find("#hdnAllCM").val(AllCM);
+            $('#frmC').find("#hdnforCM").val(forCM);
+            $('#frmC').find("#hdnAll").val(All);
+            $('#frmC').find("#hdnOutstanding").val(Outstanding);
+            $('#frmC').find("#hdnformonth").val(formonth);
+            $('#frmC').find("#hdnforperiod").val(forperiod);
+            $('#frmC').find("#hdniecmname").val(iecmname);
+            $('#frmC').find("#hdnCOName").val(COName);
+            $('#frmC').find("#hdnIENametext").val(IENametext);
+
+            $("#frmC").submit();
+
+        }
+
+        function getMonthNumber(monthName) {
+
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
+            return monthNumber;
+        }
+
+        function ClearControlsIEWISET() {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+            $("#Alldescipline").prop("checked", true);
+            $("#AllIeCat").prop("checked", true);
+            $("#AllIe").prop("checked", true);
+            $("#AllArea").prop("checked", true);
+        }
+
+        function ViewReportIEWISET() {
+            var ReportType = '@ReportType';
+            var IENAME = $('#IENAME').val();
+            var TrainingArea = $('#TrainingArea').val();
+            var Mechanical = $("#Mechanical").is(":checked") == true ? "true" : "false";
+            var Electrical = $("#Electrical").is(":checked") == true ? "true" : "false";
+            var Civil = $("#Civil").is(":checked") == true ? "true" : "false";
+            var Regular = $("#Regular").is(":checked") == true ? "true" : "false";
+            var Deputaion = $("#Deputaion").is(":checked") == true ? "true" : "false";
+            var Particularie = $("#Particularie").is(":checked") == true ? "true" : "false";
+            var ParticularArea = $("#ParticularArea").is(":checked") == true ? "true" : "false";
+
+            $('#frmIEWISET').find("#hdnReportType").val(ReportType);
+            $('#frmIEWISET').find("#hdnIENAME").val(IENAME);
+            $('#frmIEWISET').find("#hdnTrainingArea").val(TrainingArea);
+            $('#frmIEWISET').find("#hdnMechanical").val(Mechanical);
+            $('#frmIEWISET').find("#hdnElectrical").val(Electrical);
+            $('#frmIEWISET').find("#hdnCivil").val(Civil);
+            $('#frmIEWISET').find("#hdnRegular").val(Regular);
+            $('#frmIEWISET').find("#hdnDeputaion").val(Deputaion);
+            $('#frmIEWISET').find("#hdnParticularie").val(Particularie);
+            $('#frmIEWISET').find("#hdnParticularArea").val(ParticularArea);
+
+            $("#frmIEWISET").submit();
         }
     </script>
 }
