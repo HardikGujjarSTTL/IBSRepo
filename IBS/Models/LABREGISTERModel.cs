@@ -71,7 +71,7 @@ namespace IBS.Models
         public string CASE_NO { get; set; }
         public string NARRATION { get; set; }
         public string BANK_CD { get; set; }
-
+        public string Flag { get; set; }
 
 
 

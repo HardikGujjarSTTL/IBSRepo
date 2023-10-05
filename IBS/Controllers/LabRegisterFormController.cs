@@ -53,9 +53,10 @@ namespace IBS.Controllers
             return Json(lABREGISTERModel);
         }
         [HttpPost]
-        public IActionResult LoadTable(string RegNo,string SNO)
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            List<LABREGISTERModel> dTResult = LabRegFormRepository.GetLabRegDtl(RegNo,SNO);
+            //List<LABREGISTERModel> dTResult = LabRegFormRepository.GetLabRegDtl(RegNo,SNO);
+            DTResult<LABREGISTERModel> dTResult = LabRegFormRepository.GetLabRegDtl(dtParameters);
             return Json(dTResult);
         }
         [HttpPost]
@@ -72,20 +73,20 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        public IActionResult LapIndexData(string CaseNo, string CallRdt , string RegNo)
+        public IActionResult LapIndexData([FromBody] DTParameters dtParameters)
         {
-            List<LABREGISTERModel> dTResult = LabRegFormRepository.LapIndexData(CaseNo, CallRdt, RegNo);
+            DTResult<LABREGISTERModel> dTResult = LabRegFormRepository.LapIndexData(dtParameters);
             return Json(dTResult);
         }
         [Authorization("LabRegisterForm", "Index", "view")]
-        public IActionResult LabRegisterFormNew(string CaseNo,string CallDt,string CallSno)
+        public IActionResult LabRegisterFormNew(string CaseNo,string CallRdt, string CallSno)
         {
             LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
             lABREGISTERModel.CaseNo = CaseNo;
-            lABREGISTERModel.CallRecDt = CallDt;
+            lABREGISTERModel.CallRecDt = CallRdt;
             lABREGISTERModel.CallSNO = CallSno;
             ViewBag.CN = CaseNo;
-            ViewBag.CDT = CallDt;
+            ViewBag.CDT = CallRdt;
             ViewBag.CSN = CallSno;
             return View(lABREGISTERModel);
         }
@@ -105,7 +106,15 @@ namespace IBS.Controllers
         {
             LABREGISTERModel.UName = UserId.ToString();
             bool result;
-            result = LabRegFormRepository.SaveDataDetails(LABREGISTERModel);
+            if(LABREGISTERModel.Flag == "1")
+            {
+                result = LabRegFormRepository.SaveDataDetails(LABREGISTERModel);
+            }
+            else
+            {
+                result = LabRegFormRepository.InsertDataDetails(LABREGISTERModel);
+            }
+            
             if(result == false)
             {
                 return false;
@@ -152,13 +161,17 @@ namespace IBS.Controllers
             return Json(Results);
         }
         [HttpPost]
-        public IActionResult PostAmount([FromBody] LABREGISTERModel LABREGISTERModel)
+        public bool PostAmount([FromBody] LABREGISTERModel LABREGISTERModel)
         {
             //LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
             LABREGISTERModel.Region = GetRegionCode;
             LABREGISTERModel.UName = UserId.ToString();
             bool Results = LabRegFormRepository.PostAmount(LABREGISTERModel);
-            return Json(Results);
+            if(Results == true)
+            {
+                return true;
+            }
+            return false;
         }
         #endregion
 
