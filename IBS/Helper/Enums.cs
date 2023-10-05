@@ -603,6 +603,17 @@ namespace IBS.Helper
             [Description("NCR Controlling Wise Report")] C,
             [Description("NCR IE Wise Report")] I,
             [Description("IE Wise Training Details")] IEWISET,
+            [Description("Ongoing Contracts")] ONGCON,
+            [Description("Contracts")] CONTRACT,
+            [Description("Cluster vendor & IE mapping")] CLUSVENDOR,
+            [Description("IE's Alternate IE mapping")] IEALTER,
+            [Description("Vendor's Performance Report")] VENDPER,
+            [Description("Vendor's FeedBack Report")] VENDFEED,
+            [Description("Period Wise Progress Of Checksheet")] CHECK,
+            [Description("Period Wise Technical Reference")] TECH,
+            [Description("Daily IE Work Plan Report")] U,
+            [Description("Daily IE Work Plan Exception Report")] E,
+            [Description("Download / View Photo Uploaded")] IEICPHOTO,
         }
     }
 

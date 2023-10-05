@@ -14,7 +14,9 @@
         //public string Status { get; set; }
         //public string IE { get; set; }
         //public bool IsCallDate { get; set; }
-
+        public string department { get; set; }
+        public string allreport { get; set; }
+        public string departreport { get; set; }
         public string Case_No { get; set; }
         public string Call_Recv_Date { get; set; }
         public string Call_SNo { get; set; }
@@ -40,6 +42,29 @@
         public string Deputaion { get; set; }
         public string Particularie { get; set; }
         public string ParticularArea { get; set; }
+        public string StatusOffer { get; set; }
+        public string Region { get; set; }
+        public string StatusOffertxt { get; set; }
+        public string Regiontxt { get; set; }
+        public string rdoregionwise { get; set; }
+        public string clientname { get; set; }
+        public string vendor { get; set; }
+        public string vendorcd { get; set; }
+        public string monthtxt { get; set; }
+        public string lstIE { get; set; }
+        public string lstCM { get; set; }
+        public string AllIEs { get; set; }
+        public string ParticularIEs { get; set; }
+        public string ParticularCMs { get; set; }
+        public string IEWise { get; set; }
+        public string CMWise { get; set; }
+        public string SortedIE { get; set; }
+        public string visitdate { get; set; }
+        public string CaseNo { get; set; }
+        public string CallRecDT { get; set; }
+        public string CallSno { get; set; }
+        public string BKNO { get; set; }
+        public string SETNO { get; set; }
     }
 
     public class ControllingOfficerIEModel
