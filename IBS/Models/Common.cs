@@ -1494,6 +1494,20 @@ namespace IBS.Models
             return IE;
 
         }
+        public static List<SelectListItem> Discipline()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> Disc = (from a in ModelContext.DisciplineMasters
+                                       
+                                       select
+                                  new SelectListItem
+                                  {
+                                      Text = a.DisciplineName,
+                                      Value = Convert.ToString(a.DiscId)
+                                  }).ToList();
+            return Disc;
+
+        }
 
         public static List<SelectListItem> GetItem(string CaseNo, string CallRecDt, string CallSNO)
         {

@@ -7,11 +7,26 @@
 <div>
     <div class="list-inner">
         <div class="tast-list">
-            <h2>
-                CLIENT WISE CALL DETAILS
-            </h2>
+            @if (ViewBag.Action == "C")
+            {
+                <h2>
+                    CLIENT WISE CALL DETAILS
+                </h2>
+            }
+            else
+            {
+                <h2>
+                    VENDOR WISE REJECTION
+                </h2>
+            }
         </div>
-
+        <div class="col-md-3">
+            <div class="list-btn">
+                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            </div>
+        </div>
     </div>
     <div class="accordion-body">
         <div class="row my-0">
@@ -132,6 +147,17 @@
             InitializeDatatable();
             $("#hide").css("display", "block");
         }
+        $("#imgExcel").on("click", function () {
+            $('#dtlistr').DataTable().buttons(0, 0).trigger();
+        });
+
+        $("#imgPdf").on("click", function () {
+            $('#dtlistr').DataTable().buttons(0, 1).trigger();
+        });
+
+        $("#imgPrint").on("click", function () {
+            $('#dtlistr').DataTable().buttons(0, 2).trigger();
+        });
         $(function () {
             $("#rb1").prop("checked", true);
             if ($("#rb1").val() == true) {
@@ -152,64 +178,8 @@
 
         function InitializeDatatable() {
             var Action = '@ViewBag.Action';
-            if(Action == "R"){
-            $("#dtlistr").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            FromDate: $("#dtfrom").val(),
-                            ToDate: $("#dtto").val(),
-                            ReportStatus: $("#ddlstatus").val(),
-                            RadioButton: sessionStorage.getItem("rb"),
-                            Action: Action
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-
-                columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                   
-                    { data: "VendorName" },
-                    { data: "PO_NO" },
-                    { data: "PO_DT" },
-                    { data: "ITEM_DESC" },
-                    { data: "QTY_TO_INSP" },
-                    { data: "QTY_REJECTED" },
-                    { data: "REASON_REJECT" },
-                    { data: "IC_DT" },
-                    { data: "IE_NAME" },
-                    { data: "BK_NO" },
-                    { data: "SET_NO" },
-
-                    
-
-                ],
-                
-                "order": [[0, "asc"]]
-            });
-            }
-            else
-            {
+            if (Action == "R") {
+                var _title = 'Vendor Wise Rejection';
                 $("#dtlistr").DataTable({
                     stateSave: false,// Design Assets
                     autoWidth: true,
@@ -220,6 +190,163 @@
                     destroy: true,
                     paging: true,// Paging Setups
                     searching: true,// Searching Setups
+                    dom: 'rtip',
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            text: 'Export to Excel',
+                            filename: function () { return getExportFileName('Vendor_Wise_Rejection'); },
+                            download: 'open',
+                            orientation: 'landscape',
+                            title: _title,
+                            footer: true,
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                modifier: {
+                                    page: 'all',
+                                    search: 'none'
+                                }
+                            },
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            filename: function () { return getExportFileName('Vendor_Wise_Rejection'); },
+                            text: 'Export to PDF',
+                            orientation: 'landscape',
+                            title: _title,
+                            footer: true,
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                modifier: {
+                                    page: 'all',
+                                    pageSize: 'LEGAL',
+                                    search: 'none',
+                                }
+                            },
+                            customize: function (doc) {
+                                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                                doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                                doc.pageMargins = [5, 100, 5, 5];
+
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            title: _title,
+                            footer: true,
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                            },
+                        },
+                    ],
+                    ajax: {// Ajax Filter
+                        url: "@Url.Action("LoadTable")",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                                FromDate: $("#dtfrom").val(),
+                                ToDate: $("#dtto").val(),
+                                ReportStatus: $("#ddlstatus").val(),
+                                RadioButton: sessionStorage.getItem("rb"),
+                                Action: Action
+                            };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        }
+                    },
+
+                    columns: [// Columns Setups
+                        {
+                            data: '', orderable: false, width: '5%',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+
+                        { data: "VendorName" },
+                        { data: "PO_NO" },
+                        { data: "PO_DT" },
+                        { data: "ITEM_DESC" },
+                        { data: "QTY_TO_INSP" },
+                        { data: "QTY_REJECTED" },
+                        { data: "REASON_REJECT" },
+                        { data: "IC_DT" },
+                        { data: "IE_NAME" },
+                        { data: "BK_NO" },
+                        { data: "SET_NO" },
+
+
+
+                    ],
+
+                    "order": [[0, "asc"]]
+                });
+            }
+            else {
+                var _title = 'Client Call Status Report';
+                $("#dtlistr").DataTable({
+                    stateSave: false,// Design Assets
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true, // ServerSide Setups
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,// Paging Setups
+                    searching: true,// Searching Setups
+                    dom: 'rtip',
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            text: 'Export to Excel',
+                            filename: function () { return getExportFileName('Client_Call_Status_Report'); },
+                            download: 'open',
+                            orientation: 'landscape',
+                            title: _title,
+                            footer: true,
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                                modifier: {
+                                    page: 'all',
+                                    search: 'none'
+                                }
+                            },
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            filename: function () { return getExportFileName('Client_Call_Status_Report'); },
+                            text: 'Export to PDF',
+                            orientation: 'landscape',
+                            title: _title,
+                            footer: true,
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                                modifier: {
+                                    page: 'all',
+                                    pageSize: 'LEGAL',
+                                    search: 'none',
+                                }
+                            },
+                            customize: function (doc) {
+                                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                                doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                                doc.pageMargins = [20, 100, 5, 5];
+
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            title: _title,
+                            footer: true,
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+                            },
+                        },
+                    ],
                     ajax: {// Ajax Filter
                         url: "@Url.Action("LoadTable")",
                         type: "POST",
@@ -266,19 +393,19 @@
                         { data: "REMARK" },
 
                     ],
-                    
+
                     "order": [[0, "asc"]]
                 });
             }
         }
 
-       
 
-                                //function UserDelete(UserId) {
-                                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
-                                //    $("#btn-delete-yes").attr("href", url);
-                                //    $("#modal-delete-conf").modal("show");
-                                //}
+
+                                                //function UserDelete(UserId) {
+                                                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                                                //    $("#btn-delete-yes").attr("href", url);
+                                                //    $("#modal-delete-conf").modal("show");
+                                                //}
 
     </script>
 }

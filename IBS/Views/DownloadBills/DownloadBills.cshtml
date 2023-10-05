@@ -10,7 +10,13 @@
     <div class="tast-list">
         <h2>DOWNLOAD ONLINE BILLS/PO/IC</h2>
     </div>
-
+    <div class="col-md-3">
+        <div class="list-btn">
+            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+        </div>
+    </div>
 </div>
 <section class="table-section">
     <div class="task-listinput">
@@ -133,6 +139,7 @@
                 var parts1 = ToDate.split('/');
                 var ToDate = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
             }
+            var _title = 'Download Bills';
             $("#dtbill").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -143,6 +150,56 @@
                 destroy: true,
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export to Excel',
+                        filename: function () { return getExportFileName('Download_Bills'); },
+                        download: 'open',
+                        orientation: 'landscape',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,19,20],
+                            modifier: {
+                                page: 'all',
+                                search: 'none'
+                            }
+                        },
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        filename: function () { return getExportFileName('Download_Bills'); },
+                        text: 'Export to PDF',
+                        orientation: 'landscape',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,19,20],
+                            modifier: {
+                                page: 'all',
+                                pageSize: 'LEGAL',
+                                search: 'none',
+                            }
+                        },
+                        customize: function (doc) {
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                            doc.pageMargins = [5, 100, 5, 5];
+
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,19,20]
+                        },
+                    },
+                ],
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -277,7 +334,17 @@
                 window.open(fpath1, "_blank");
             }
         }
+        $("#imgExcel").on("click", function () {
+            $('#dtbill').DataTable().buttons(0, 0).trigger();
+        });
 
+        $("#imgPdf").on("click", function () {
+            $('#dtbill').DataTable().buttons(0, 1).trigger();
+        });
+
+        $("#imgPrint").on("click", function () {
+            $('#dtbill').DataTable().buttons(0, 2).trigger();
+        });
                                 //function UserDelete(UserId) {
                                 //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
                                 //    $("#btn-delete-yes").attr("href", url);

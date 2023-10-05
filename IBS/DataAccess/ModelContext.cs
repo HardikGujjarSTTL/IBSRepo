@@ -51,6 +51,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Deowork> Deoworks { get; set; }
 
+    public virtual DbSet<DisciplineMaster> DisciplineMasters { get; set; }
+
     public virtual DbSet<DocumentCatalogView> DocumentCatalogViews { get; set; }
 
     public virtual DbSet<DownloadBillingDocumentsForDigitalInvoice> DownloadBillingDocumentsForDigitalInvoices { get; set; }
@@ -1518,6 +1520,21 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USER_NAME");
+        });
+
+        modelBuilder.Entity<DisciplineMaster>(entity =>
+        {
+            entity.HasKey(e => e.DiscId).HasName("DISCIPLINE_MASTER_PK");
+
+            entity.ToTable("DISCIPLINE_MASTER");
+
+            entity.Property(e => e.DiscId)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DISC_ID");
+            entity.Property(e => e.DisciplineName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("DISCIPLINE_NAME");
         });
 
         modelBuilder.Entity<DocumentCatalogView>(entity =>
@@ -10939,7 +10956,7 @@ public partial class ModelContext : DbContext
             entity.HasIndex(e => new { e.VchrNo, e.AccCd }, "UQ29_JV_DETAILS").IsUnique();
 
             entity.Property(e => e.AccCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ACC_CD");
             entity.Property(e => e.Amount)
                 .HasColumnType("NUMBER(12,2)")
@@ -12568,6 +12585,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.DisciplineId)
+                .HasPrecision(6)
+                .HasColumnName("DISCIPLINE_ID");
             entity.Property(e => e.HandlingCharges)
                 .HasColumnType("NUMBER(10,2)")
                 .HasColumnName("HANDLING_CHARGES");
