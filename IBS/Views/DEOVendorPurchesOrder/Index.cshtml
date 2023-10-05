@@ -186,11 +186,11 @@
                     if (response != null) {
                         if (response.status) {
                             $("#EditCaseNoModal").modal('hide');
-                            ShowHideMsgNew(res.status, response.responseText);
+                            ShowHideMsgNew(response.status, response.responseText);
                             InitializeDatatable();
                         }
                         else {
-                            ShowHideMsgNew(res.status, response.responseText);
+                            ShowHideMsgNew(response.status, response.responseText);
                         }
                     }
                 });

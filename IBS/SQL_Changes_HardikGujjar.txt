@@ -475,11 +475,26 @@ create or replace PROCEDURE GENERATE_VEND_CASE_NO(
 ) AS
     w_ctr VARCHAR2(100) := NULL;
     w_sno CHAR(100) := NULL;
-    w_region CHAR(100) := NULL;
+    w_region VARCHAR2(500) := NULL;
     w_Case_No VARCHAR2(500) := NULL;
 
 BEGIN
-    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    IF IN_REGION_CD   ='N' THEN
+        w_region       := 'n';
+      elsif IN_REGION_CD='W' THEN
+        w_region       :='w';
+      elsif IN_REGION_CD='S' THEN
+        w_region       :='s';
+      elsif IN_REGION_CD='E' THEN
+        w_region       :='e';
+      elsif IN_REGION_CD='C' THEN
+        w_region       :='c';
+      elsif IN_REGION_CD='Q' THEN
+        w_region       :='q';
+      END IF;
+      
+    w_ctr := w_region || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
 
     SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
     INTO w_sno
