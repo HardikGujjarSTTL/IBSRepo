@@ -7898,6 +7898,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("VEND_EMAIL");
+            entity.Property(e => e.VendGstno)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("VEND_GSTNO");
             entity.Property(e => e.VendInspStopped)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -7907,6 +7911,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("VEND_NAME");
+            entity.Property(e => e.VendPanno)
+               .HasMaxLength(20)
+               .IsUnicode(false)
+               .HasColumnName("VEND_PANNO");
             entity.Property(e => e.VendPwd)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -7925,6 +7933,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.VendStatusDtTo)
                 .HasColumnType("DATE")
                 .HasColumnName("VEND_STATUS_DT_TO");
+            entity.Property(e => e.VendTanno)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("VEND_TANNO");
 
             entity.HasOne(d => d.VendCityCdNavigation).WithMany(p => p.T05Vendors)
                 .HasForeignKey(d => d.VendCityCd)
