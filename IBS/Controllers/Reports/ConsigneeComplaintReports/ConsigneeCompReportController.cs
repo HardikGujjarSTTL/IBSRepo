@@ -337,7 +337,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
         {
             string htmlContent = string.Empty;
 
-            if (ReportType == "CCU" && ReportType == "CORP")
+            if (ReportType == "CCU" || ReportType == "CORP")
             {
                 ConsigneeCompReports model = GlobalDeclaration.ConsigneeCompPeriod;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/ComplaintsByPeriod.cshtml", model);
@@ -355,7 +355,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/DefectCodeReport.cshtml", model);
             }else if (ReportType == "COCOMPJI")
             {
-                DefectCodeReport model = GlobalDeclaration.DefectCodeReports;
+                JIRequiredReport model = GlobalDeclaration.JIRequiredReports;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/JICompReport.cshtml", model);
             }else if (ReportType == "TOPNHIGH")
             {

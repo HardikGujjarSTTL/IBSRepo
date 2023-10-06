@@ -975,7 +975,7 @@ namespace IBS.Repositories.Reports.OtherReports
 
                 DataSet ds;
                 
-                string formattedFromDate = "";
+                string formattedFromDate = null;
 
                 if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
                 {
@@ -1057,7 +1057,7 @@ namespace IBS.Repositories.Reports.OtherReports
             DataTable dt = new DataTable();
 
 
-            string formattedFromDate = "";
+            string formattedFromDate = null;
 
             if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
             {

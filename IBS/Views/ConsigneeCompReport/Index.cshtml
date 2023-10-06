@@ -2,7 +2,7 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
 
-    string Region = ViewBag.Regions;
+    string Region = ViewBag.Region;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["Action"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["Action"]) : "";
     string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
@@ -22,7 +22,7 @@
 </style>
 
 <div class="accordion-body CCU" style="display:none;">
-    <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCCU">
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmCCU">
         <input type="hidden" id="hdnReportType" name="hdnReportType" />
         <input type="hidden" id="hdncompfromdt" name="hdncompfromdt" />
         <input type="hidden" id="hdncomptodt" name="hdncomptodt" />
@@ -180,7 +180,7 @@
 </div>
 
 <div class="accordion-body COMPJI" style="display:none;">
-    <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCOMPJI">
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmCOMPJI">
         <input type="hidden" id="hdnReportType" name="hdnReportType" />
         <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
         <input type="hidden" id="hdnToDate" name="hdnToDate" />
@@ -417,8 +417,8 @@
 </div>
 
 <div class="accordion-body CORP" style="display:none;">
-    <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCORP">
-        <input type="hidden" id="hdnReportTypecorp" name="hdnReportTypecorp" />
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmCORP">
+        <input type="hidden" id="hdnReportType" name="hdnReportType" />
         <input type="hidden" id="hdncompfromdtcorp" name="hdncompfromdtcorp" />
         <input type="hidden" id="hdncomptodtcorp" name="hdncomptodtcorp" />
         <input type="hidden" id="hdnallRegionscorp" name="hdnallRegionscorp" />
@@ -663,8 +663,8 @@
 </div>
 
 <div class="accordion-body TOPNHIGH" style="display:none;">
-    <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmTOPNHIGH">
-        <input type="hidden" id="hdnReportTypecorp" name="hdnReportTypecorp" />
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmTOPNHIGH">
+        <input type="hidden" id="hdnReportType" name="hdnReportType" />
         <input type="hidden" id="hdnmonth" name="hdnmonth" />
         <input type="hidden" id="hdnyear" name="hdnyear" />
         <input type="hidden" id="hdnvalinsp" name="hdnvalinsp" />

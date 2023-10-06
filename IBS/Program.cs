@@ -219,7 +219,6 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
-builder.Services.AddScoped<IIEICPhotoEnclosedReportRepository, IEICPhotoEnclosedReportRepository>();
 builder.Services.AddScoped<IDailyIEWorkPlanReportRepository, DailyIEWorkPlanReportRepository>();
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();

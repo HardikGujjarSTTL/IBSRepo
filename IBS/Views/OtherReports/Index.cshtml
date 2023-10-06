@@ -627,7 +627,7 @@
                         </div>
                         <div class="col-md-4">
                             <input type="radio" id="CMWiseUE" name="CMWises" value="CMWise">
-                            <label for="CMWise">Controlling Manager Wise</label>
+                            <label for="CMWiseUE">Controlling Manager Wise</label>
 
                             <div id="AllCMWiseUE">
                                 <ul class="radioListForm m-0">
@@ -660,11 +660,11 @@
                                 <ul class="radioListForm">
                                     <li>
                                         <input type="radio" id="SortedIEUE" name="visitdate" value="SortedIE">
-                                        <label for="SortedIE">IE</label>
+                                        <label for="SortedIEUE">IE</label>
                                     </li>
                                     <li>
                                         <input type="radio" id="visitdateUE" name="visitdate" value="visitdate">
-                                        <label for="visitdate">VISIT DATE</label>
+                                        <label for="visitdateUE">VISIT DATE</label>
                                     </li>
                                 </ul>
 
@@ -718,6 +718,12 @@
                             <div class="input-search">
                                 <label for="FromDate">Book No.</label>
                                 <input type="text" id="BKNO" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                            </div>
+                        </div>  <div class="col-md-2">
+                            <div class="input-search">
+                                <label for="FromDate">Set No.</label>
+                                <input type="text" id="SETNO" />
                                 <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
                             </div>
                         </div>
@@ -1770,7 +1776,7 @@
             var CallSno = $("#CallSno").val();
             var BKNO = $("#BKNO").val();
             var SETNO = $("#SETNO").val();
-
+            var ReportType = '@ReportType';
             $('#frmIEICPHOTO').find("#hdnReportType").val(ReportType);
             $('#frmIEICPHOTO').find("#hdnCaseNo").val(CaseNo);
             $('#frmIEICPHOTO').find("#hdnCallRecDT").val(CallRecDT);

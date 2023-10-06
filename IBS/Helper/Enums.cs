@@ -627,6 +627,9 @@ namespace IBS.Helper
             [Description("Summary Of Consignee Complaints where JI Required")] COMPJI,
             [Description("JI CONSIGNEE COMPLAINTS")] CORP,
             [Description("Top N HIGH VALUE INSPECTIONS")] TOPNHIGH,
+            [Description("Top JI Report")] TOPJI,
+            [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
+            [Description("CONSIGNEE COMPLAINTS")] COCOMPJI,
         }
     }
 
