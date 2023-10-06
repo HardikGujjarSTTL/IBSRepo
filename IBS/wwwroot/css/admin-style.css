@@ -1485,3 +1485,4 @@ overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; wi
 .datepickerInline .ui-widget-content{ max-width:inherit; background:#fff; box-shadow:inherit;}
 .datepickerInline .ui-datepicker td, .datepickerInline .ui-datepicker th{ border:none;}
 table.dataTable thead>tr>th.padR10{padding-right:10px;}
+.borderGrid label{ margin:0; padding:0;}

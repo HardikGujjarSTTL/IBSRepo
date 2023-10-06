@@ -64,7 +64,7 @@ namespace IBS.Controllers.Vendor
             ViewBag.VendorMADoc = FileUploaderCOI;
 
             VendorPOMAModel model = new();
-
+            model.MA_STATUS = MaStatus;
             if (Action_T == "N")
             {
                 if (CaseNo != null)

@@ -1,4 +1,6 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class Clientmaster
     {
@@ -7,6 +9,7 @@
         public string ORGANISATION { get; set; }
         public string Client_DESIGNATION { get; set; }
         public string MOBILE { get; set; }
+        [EmailAddress]
         public string EMAIL { get; set; }
         public string UNIT { get; set; }
         public string Orgn_Type { get; set; }

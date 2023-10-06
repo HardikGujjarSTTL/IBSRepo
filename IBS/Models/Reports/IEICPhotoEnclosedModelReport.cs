@@ -18,6 +18,7 @@
         public string FILE_9 { get; set; }
         public string FILE_10 { get; set; }
         public string ReportTitle { get; set; }
+        public string Regions { get; set; }
         public List<listSubmittedPhotobyIE> lstlistSubmittedPhotobyIE { get; set; }
     }
 

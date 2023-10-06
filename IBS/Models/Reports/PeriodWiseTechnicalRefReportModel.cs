@@ -5,6 +5,7 @@
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string ReportTitle { get; set; }
+        public string Regions { get; set; }
 
         public List<PeriodWiseTechnicalRef> lstPeriodWiseTechnicalRef { get; set; }
     }

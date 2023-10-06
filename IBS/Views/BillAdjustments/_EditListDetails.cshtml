@@ -1,0 +1,55 @@
+﻿@model IBS.Models.InspectionCertModel
+<div class="modal-dialog modal-lg" role="document">
+    <input type="hidden" asp-for="Caseno" />
+    <input type="hidden" asp-for="Callrecvdt" />
+    <input type="hidden" asp-for="Callsno" />
+    <input type="hidden" asp-for="ItemSrnoPo" />
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit/Update Item Description </h5>
+            <p class="left">Item Sr No. : <span style="color:red;">@Model.ItemSrnoPo</span></p>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Off Now</label>
+                    <input type="text" class="input" asp-for="QtyToInsp">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Passed</label>
+                    <input type="text" class="input" asp-for="QtyPassed">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Rejected</label>
+                    <input type="text" class="input" asp-for="QtyRejected">
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Due</label>
+                    <input type="text" class="input" asp-for="QtyDue">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Other Charges</label>
+                    <input type="text" class="input" asp-for="OtherCharges">
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Item Desc</label>
+                    <textarea asp-for="ItemDescPo" class="input"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" data-bs-dismiss="modal">Close</button>
+                <button class="save-btn active" id="btnUpdateCallDetails" onclick="UpdateCallDetails()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

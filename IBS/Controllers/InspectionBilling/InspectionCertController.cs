@@ -563,7 +563,7 @@ namespace IBS.Controllers.InspectionBilling
                     }
                     else
                     {
-                        AlertAddSuccess("The IC For the Given Case No, Call Date, Call SNo. and Consignee CD Already Present.So You Cannot update the Consignee!!!");
+                        AlertDanger("The IC For the Given Case No, Call Date, Call SNo. and Consignee CD Already Present.So You Cannot update the Consignee!!!");
                     }
                 }
 
@@ -584,6 +584,37 @@ namespace IBS.Controllers.InspectionBilling
                 model = inpsRepository.GetReturned_Bills_ChangesDetails(CaseNo, Bkno, Setno, ActionType, Region);
             }
 
+            return View(model);
+        }
+
+        //Save Returned_Bills_BPO_Change_Form
+        [HttpPost]
+        public IActionResult Returned_Bills_BPO_Change_Form(InspectionCertModel model)
+        {
+            try
+            {
+                if (model.Caseno != null && model.Bkno != null && model.Setno != null && model.BillNo != null)
+                {
+                    model.Updatedby = UserId;
+                    model.UserId = USER_ID.Substring(0, 8);
+                    model.Regioncode = Region;
+                    inpsRepository.SaveReturned_Bills_Changes(model);
+                    if (model.UpdateStatus == "1")
+                    {
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
+                    else
+                    {
+                        AlertDanger("Kindly Select the BPO OR old Recipient GST No. does not match with new GST No. !!!");
+                    }
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "ChangeConsignee", 1, GetIPAddress());
+            }
             return View(model);
         }
     }
