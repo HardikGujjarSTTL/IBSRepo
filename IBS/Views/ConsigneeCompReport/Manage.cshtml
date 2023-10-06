@@ -1,9 +1,11 @@
-﻿@model IBS.Models.Reports.ConsigneeCompReports
+﻿@using System.Web;
+@model IBS.Models.Reports.ConsigneeCompReports
 
 @{
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
+    string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "ConsigneeCompReport");
     ViewData["Title"] = ReportTitle;
 }
 
@@ -13,6 +15,7 @@
 </head>
 <body>
     <p align="right">
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -35,7 +38,7 @@
     var fileName = '';
 
     $(document).ready(function () {
-        if ('@ReportType' == 'U') {
+        if ('@ReportType' == 'CCU') {
             loadComplaints();
             fileName = 'Consignee Complaints For The Period';
         }

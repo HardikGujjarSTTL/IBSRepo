@@ -166,7 +166,7 @@ namespace IBS.Repositories.Vendor
             }
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
             MaNo = MaNo.ToString() == "" ? string.Empty : MaNo.ToString();
-            DateTime? _MaDt = MaDt == "" ? null : DateTime.ParseExact(MaDt, "dd-MM-yyyy", null);
+            DateTime? _MaDt = MaDt == "" ? null : DateTime.ParseExact(MaDt, "dd/MM/yyyy", null);
             MaStatus = MaStatus.ToString() == "" ? string.Empty : MaStatus.ToString();
             MaSNo = MaSNo.ToString() == "" ? string.Empty : MaSNo.ToString();
 

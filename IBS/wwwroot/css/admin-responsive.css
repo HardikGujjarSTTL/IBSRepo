@@ -1,10 +1,8 @@
 /* ************* Media Queries Tablets ****************** */
-@media only screen and (max-width:1023px) {
-.contentContainer { margin-left: 70px; } 
+@media only screen and (max-width:1366px) {
+    body, button, input, select, textarea{ font-size:14px;}
 }
-@media (max-width:991px) {
-.tab-content>.tab-pane { display: block; opacity: 1; }
-}
+
 @media only screen and (max-width:1279px) {
 .columnBoxWrap.topCoutner  .columnBox4 { width: 50%; }
 .countContent p { max-width: none; }
@@ -42,6 +40,7 @@ h2.boxTitle.feildPadding { padding-right: 0; }
     #landlord-details .company-checkbox, .remember{ display: flex;}
 }
 @media only screen and (max-width:1023px) {
+.contentContainer { margin-left: 70px; } 
 .menuCollepase { width: 70px !important; }
 .contentContainer { padding: 0px;margin-left: 0 !important; }
 .leftSidebarNav { width: 100%; position: static; padding: 0; margin: 30px 0 0 0; }
@@ -64,6 +63,7 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .search .fa{ color: #c7c7c7; }
 }
 @media only screen and (max-width:991px) {
+    .tab-content>.tab-pane { display: block; opacity: 1; }
 h2, .heading2 { font-size: 24px; }
 #footer { padding: 10px; margin: 50px 0 0 0; position: relative; border-top: 1px solid #ccc; }
 .left-side-collapsed #footer{ padding:10px}

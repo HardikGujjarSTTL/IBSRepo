@@ -96,6 +96,7 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
 builder.Services.AddScoped<IBillAdjustmentsRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsRepository>();
+builder.Services.AddScoped<IBillAdjustmentsNewRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsNewRepository>();
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
@@ -219,18 +220,7 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
-builder.Services.AddScoped<IIEICPhotoEnclosedReportRepository, IEICPhotoEnclosedReportRepository>();
 builder.Services.AddScoped<IDailyIEWorkPlanReportRepository, DailyIEWorkPlanReportRepository>();
-builder.Services.AddScoped<IPeriodWiseTechnicalReportRepository, PeriodWiseTechnicalReportRepository>();
-builder.Services.AddScoped<IPeriodWiseChecksheetReportRepository, PeriodWiseChecksheetReportRepository>();
-builder.Services.AddScoped<IVendorPerformanceReportRepository, VendorPerformanceReportRepository>();
-builder.Services.AddScoped<IIEWiseTrainingReportRepository, IEWiseTrainingReportRepository>();
-builder.Services.AddScoped<IContractsReportsRepository, ContractsReportsRepository>();
-builder.Services.AddScoped<IOngoingContractsReportRepository, OngoingContractsReportRepository>();
-builder.Services.AddScoped<IVendorFeedbackReportRepository, VendorFeedbackReportRepository>();
-builder.Services.AddScoped<IIEAlterReportRepository, IEAlterReportRepository>();
-builder.Services.AddScoped<IVendorClusterIERepository, VendorClusterIERepository>();
-builder.Services.AddScoped<INCRCWiseReportRepository, NCRCWiseReportRepository>();
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 

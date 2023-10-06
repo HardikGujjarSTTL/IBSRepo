@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
 using System.Drawing;
 using System.Net;
+using System.Dynamic;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -624,7 +625,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.IrfcFunded = "N";
                     }
-                    
+
                     if (GetDetails.C.AccGroup == "Z006")
                     {
                         get_legalname(model, Convert.ToInt32(GetDetails.C.IrfcBpoCd), "B");
@@ -647,7 +648,7 @@ namespace IBS.Repositories.InspectionBilling
                             get_legalname(model, Convert.ToInt32(GetDetails.C.ConsigneeCd), "C");
                             getconsignee_gstno(model);
                         }
-                        
+
                     }
 
                     if (GetDetails.C.BillNo != null)
@@ -1595,7 +1596,7 @@ namespace IBS.Repositories.InspectionBilling
             string c_note_bno = "";
             if (model.BillNo != null)
             {
-                if(model.IcTypeId == 9)
+                if (model.IcTypeId == 9)
                 {
                     c_note_bno = model.CnoteBillNo;
                 }
@@ -1603,7 +1604,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     c_note_bno = model.BillNo;
                 }
-                
+
             }
             if (c_note_bno != "")
             {
@@ -1763,7 +1764,7 @@ namespace IBS.Repositories.InspectionBilling
                     int w_cnote_amt = Convert.ToInt32(cmdCNoteAmt);
 
                     var str_cnote_bill = context.T22Bills.Where(b => b.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
-                    if(str_cnote_bill != null)
+                    if (str_cnote_bill != null)
                     {
                         str_cnote_bill.CnoteAmount = w_cnote_amt;
                         str_cnote_bill.BillAmtCleared = Convert.ToDecimal(w_amt_rec + w_tds_amt + w_ret_amt + w_writeoff_amt + w_cnote_amt);
@@ -1771,7 +1772,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
 
                     var str = context.T22Bills.Where(b => b.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
-                    if(str != null)
+                    if (str != null)
                     {
                         str_cnote_bill.Remarks = model.Remarks;
                         str_cnote_bill.UserId = model.UserId;
@@ -1780,7 +1781,7 @@ namespace IBS.Repositories.InspectionBilling
                         context.SaveChanges();
                     }
                     var strUpdateCnoteAmt = context.T22Bills.Where(b => b.CnoteBillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
-                    if(strUpdateCnoteAmt != null)
+                    if (strUpdateCnoteAmt != null)
                     {
                         str_cnote_bill.AmountReceived = w_cnote_amt;
                         str_cnote_bill.BillAmtCleared = w_cnote_amt;
@@ -1980,23 +1981,47 @@ namespace IBS.Repositories.InspectionBilling
         public InspectionCertModel FindByItemID(string CaseNo, DateTime CallRecvDt, int CallSno, int ItemSrnoPo, string Region)
         {
             InspectionCertModel model = new();
-            T18CallDetail CDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+            //T18CallDetail CDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+
+
+            var query = (from c in context.T18CallDetails
+                         join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+                         join u in context.T04Uoms on p.UomCd equals u.UomCd
+                         where c.CaseNo == CaseNo
+                             && c.CallRecvDt == CallRecvDt
+                             && c.CallSno == CallSno
+                         //&& c.CONSIGNEE_CD == consigneeCd
+                         select new
+                         {
+                             c,
+                             p,
+                             u
+                         }).FirstOrDefault();
+            var CDetails = query;
 
             if (CDetails == null)
                 throw new Exception("Call Record Not found");
             else
             {
-                model.Caseno = CDetails.CaseNo;
-                model.Callrecvdt = CDetails.CallRecvDt;
-                model.Callsno = CDetails.CallSno;
+                model.Caseno = CDetails.c.CaseNo;
+                model.Callrecvdt = CDetails.c.CallRecvDt;
+                model.Callsno = CDetails.c.CallSno;
 
-                model.ItemSrnoPo = CDetails.ItemSrnoPo;
-                model.ItemDescPo = CDetails.ItemDescPo;
-                model.QtyPassed = CDetails.QtyPassed;
-                model.QtyToInsp = CDetails.QtyToInsp;
-                model.QtyPassed = CDetails.QtyPassed;
-                model.QtyRejected = CDetails.QtyRejected;
-                model.QtyDue = CDetails.QtyDue;
+                model.ItemSrnoPo = CDetails.c.ItemSrnoPo;
+                model.ItemDescPo = CDetails.c.ItemDescPo;
+                model.QtyPassed = CDetails.c.QtyPassed;
+                model.QtyToInsp = CDetails.c.QtyToInsp;
+                model.QtyPassed = CDetails.c.QtyPassed;
+                model.QtyRejected = CDetails.c.QtyRejected;
+                model.QtyDue = CDetails.c.QtyDue;
+                model.Rate = CDetails.p.Rate;
+                model.SalesTaxPer = CDetails.p.SalesTaxPer;
+                model.SalesTax = CDetails.p.SalesTax;
+                model.ExcisePer = CDetails.p.ExcisePer;
+                model.Excise = CDetails.p.Excise;
+                model.DiscountPer = CDetails.p.DiscountPer;
+                model.Discount = CDetails.p.Discount;
+                model.OtherCharges = CDetails.p.OtherCharges;
 
                 return model;
             }
@@ -2032,12 +2057,19 @@ namespace IBS.Repositories.InspectionBilling
                 CallDetails.QtyPassed = model.QtyPassed;
                 CallDetails.QtyRejected = model.QtyRejected;
                 CallDetails.QtyDue = model.QtyDue;
-
                 CallDetails.Updatedby = model.UserId;
                 CallDetails.Updateddate = DateTime.Now.Date;
 
                 context.SaveChanges();
                 ID = Convert.ToString(CallDetails.ItemSrnoPo);
+
+                var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                if (PODetails != null)
+                {
+                    PODetails.OtherCharges = model.OtherCharges;
+                    context.SaveChanges();
+                }
+
             }
             return ID;
         }
@@ -2123,14 +2155,28 @@ namespace IBS.Repositories.InspectionBilling
             {
                 if (T20 != null)
                 {
-                    T20.ConsigneeCd = model.ConsigneeCd;
-                    T20.UserId = model.UserId;
-                    T20.Datetime = DateTime.Now.Date;
-                    T20.Updatedby = Convert.ToString(model.Updatedby);
-                    T20.Updateddate = DateTime.Now;
+                    //T20.ConsigneeCd = model.ConsigneeCd;
+                    //T20.UserId = model.UserId;
+                    //T20.Datetime = DateTime.Now.Date;
+                    //T20.Updatedby = Convert.ToString(model.Updatedby);
+                    //T20.Updateddate = DateTime.Now;
 
-                    context.SaveChanges();
-                    model.UpdateStatus = "1";
+                    //context.SaveChanges();
+                    DataSet ds = new DataSet();
+                    OracleParameter[] parameter = new OracleParameter[7];
+                    parameter[0] = new OracleParameter("p_BkNo", OracleDbType.Varchar2, model.Bkno, ParameterDirection.Input);
+                    parameter[1] = new OracleParameter("p_SetNo", OracleDbType.Varchar2, model.Setno, ParameterDirection.Input);
+                    parameter[2] = new OracleParameter("p_RegionCode", OracleDbType.Varchar2, model.Regioncode, ParameterDirection.Input);
+                    parameter[3] = new OracleParameter("p_ConsigneeCd", OracleDbType.Varchar2, model.ConsigneeCd, ParameterDirection.Input);
+                    parameter[4] = new OracleParameter("p_UserId", OracleDbType.Varchar2, model.UserId, ParameterDirection.Input);
+                    parameter[5] = new OracleParameter("p_UpdatedBy", OracleDbType.Varchar2, model.Updatedby, ParameterDirection.Input);
+                    parameter[6] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                    ds = DataAccessDB.GetDataSet("SP_T20IC_CONSIGNEEUPDATE", parameter);
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        model.UpdateStatus = Convert.ToString(ds.Tables[0].Rows[0]["OUT_ERR_CD"]);
+                    }
                 }
             }
             else
@@ -2145,8 +2191,178 @@ namespace IBS.Repositories.InspectionBilling
         {
             InspectionCertModel model = new();
 
+            var Details = (from I in context.T20Ics
+                           join C in context.T06Consignees on I.ConsigneeCd equals C.ConsigneeCd
+                           join B in context.T12BillPayingOfficers on I.BpoCd equals B.BpoCd
+                           join D in context.T03Cities on C.ConsigneeCity equals D.CityCd
+                           join E in context.T03Cities on B.BpoCityCd equals E.CityCd
+                           join A in context.AuCris on B.Au equals A.Au
+                           where I.BkNo == Bkno && I.SetNo == Setno && I.CaseNo.Substring(0, 1) == Region
+                           select new
+                           {
+                               I,
+                               C,
+                               B,
+                               D,
+                               E,
+                               A
+                           }).FirstOrDefault();
+
+            if (Details != null)
+            {
+                model.Caseno = Details.I.CaseNo;
+                model.Consignee = (Details.I.ConsigneeCd + "-" +
+                                  (Details.C.ConsigneeDesig?.Trim() + "/" ?? "") +
+                                  (Details.C.ConsigneeDept?.Trim() + "/" ?? "") +
+                                  (Details.C.ConsigneeFirm?.Trim() + "/" ?? "") +
+                                  (Details.C.ConsigneeAdd1?.Trim() + "/" ?? "") +
+                                  (Details.D.Location?.Trim() + " : " + Details.D.City?.Trim() ?? Details.D.City?.Trim() ?? ""));
+                model.BpoName = (Details.I.BpoCd + "-" +
+                            (Details.B.BpoName + "/" + Details.B.BpoRly + "/" +
+                             (Details.B.BpoAdd?.Trim() + "/" ?? "") +
+                             (Details.E.Location ?? Details.E.City ?? Details.E.City ?? "")));
+                model.BpoCd = Details.I.BpoCd;
+                model.Bkno = Details.I.BkNo;
+                model.Setno = Details.I.SetNo;
+                model.BillNo = Details.I.BillNo;
+                model.OldAu = (Details.A.RlyCd + "-" + Details.A.Au + "/" + Details.A.Audesc + "/" + Details.A.Address);
+                model.IrfcFunded = Details.I.IrfcFunded ?? "N";
+                model.AccGroup = Details.I.AccGroup ?? "X";
+                model.IrfcBpo = Details.I.IrfcBpoCd;
+                model.RecipientGstinNo = Details.I.RecipientGstinNo;
+                model.GstinNo = Details.I.RecipientGstinNo;
+                if (model.IrfcFunded == "Y")
+                {
+                    model.Au = (Details.A.RlyCd + "-" + Details.A.Au + "/" + Details.A.Audesc + "/" + Details.A.Address);
+                }
+            }
+            var RitesBillDtls = context.RitesBillDtls.Where(b => b.BkNo == Bkno && b.SetNo == Setno && b.RegionCode == Region && b.Co6Status == "R").Select(b => b.BillNo ?? "X").FirstOrDefault();
+            if (RitesBillDtls == null)
+            {
+                model.UpdateStatus = "1";
+            }
 
             return model;
+        }
+
+        public int SaveReturned_Bills_Changes(InspectionCertModel model)
+        {
+            int Status = 0;
+            model.UpdateStatus = "0";
+            string NewAU = "";
+            string NewIRFCBpo = "";
+            if (model.IrfcFunded == "Y")
+            {
+                NewAU = "";
+                NewIRFCBpo = model.IrfcBpo;
+            }
+            else
+            {
+                if (model.AccGroup == "Z007")
+                {
+                    NewAU = "Z007";
+                }
+                else if (model.AccGroup == "Z006")
+                {
+                    NewAU = "Z006";
+                }
+            }
+            if (model.BpoCd != "" && model.RecipientGstinNo.ToUpper().Equals(model.GstinNo.ToUpper()) == true)
+            {
+                ReturnedBillsBpoChange Billobj = new ReturnedBillsBpoChange();
+                Billobj.BillNo = model.BillNo;
+                Billobj.OldBpoCd = model.BpoName;
+                Billobj.NewBpoCd = model.BpoCd;
+                Billobj.UserId = model.UserId;
+                Billobj.Datetime = DateTime.Now.Date;
+                Billobj.OldAccGroup = model.AccGroup;
+                Billobj.NewAccGroup = NewAU;
+                Billobj.OldIrfcBpoCd = model.IrfcBpo;
+                Billobj.NewIrfcBpoCd = NewIRFCBpo;
+                Billobj.OldRecipientGstinNo = model.RecipientGstinNo;
+                Billobj.NewRecipientGstinNo = model.GstinNo;
+
+                context.ReturnedBillsBpoChanges.Add(Billobj);
+                context.SaveChanges();
+                if (model.AccGroup == "Z007" && NewAU == "Z007")
+                {
+                    var T20_IC = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.StartsWith(model.Regioncode) && x.BillNo == model.BillNo).FirstOrDefault();
+                    if (T20_IC != null)
+                    {
+                        T20_IC.BpoCd = model.BpoCd;
+                        context.SaveChanges();
+                    }
+                }
+                else if (model.AccGroup == "Z006" && NewAU == "Z006")
+                {
+                    var T20_IC = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.StartsWith(model.Regioncode) && x.BillNo == model.BillNo).FirstOrDefault();
+                    if (T20_IC != null)
+                    {
+                        T20_IC.BpoCd = model.BpoCd;
+                        context.SaveChanges();
+                    }
+                }
+                else if ((model.AccGroup == "Z006" && NewAU == "") || (model.AccGroup == "Z007" && NewAU == ""))
+                {
+                    var T20_IC = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.StartsWith(model.Regioncode) && x.BillNo == model.BillNo).FirstOrDefault();
+                    if (T20_IC != null)
+                    {
+                        T20_IC.BpoCd = model.BpoCd;
+                        T20_IC.AccGroup = NewAU;
+                        T20_IC.IrfcBpoCd = model.IrfcBpo;
+                        T20_IC.IrfcFunded = "Y";
+
+                        context.SaveChanges();
+                    }
+                }
+                else if (model.AccGroup == "X" && NewAU == "")
+                {
+                    var T20_IC = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.StartsWith(model.Regioncode) && x.BillNo == model.BillNo).FirstOrDefault();
+                    if (T20_IC != null)
+                    {
+                        T20_IC.BpoCd = model.BpoCd;
+                        T20_IC.IrfcBpoCd = model.IrfcBpo;
+                        context.SaveChanges();
+                    }
+                }
+            }
+            else
+            {
+                Status = 1;
+                model.UpdateStatus = "1";
+            }
+            return Status;
+        }
+
+        int fill_BPO(string bpo)
+        {
+            int ecode = 0;
+            var query = from B in context.T12BillPayingOfficers
+                        join C in context.T03Cities on B.BpoCityCd equals C.CityCd
+                        join A in context.AuCris on B.Au equals A.Au
+                        where (string.IsNullOrWhiteSpace(bpo) || B.BpoCd.Trim().ToUpper() == bpo.Trim().ToUpper() || B.BpoName.Trim().ToUpper().StartsWith(bpo.Trim().ToUpper()))
+                              && B.Au != null
+                        orderby (B.BpoName + "/" + (B.BpoAdd ?? "") + "/" + (C.Location ?? C.City ?? "") + "/" + B.BpoRly)
+                        select new
+                        {
+                            BpoCd = B.BpoCd,
+                            BpoName = B.BpoCd + "-" + B.BpoName + "/" + (B.BpoAdd ?? "") + "/" + (C.Location ?? C.City ?? "") + "/" + B.BpoRly,
+                            BpoType = B.BpoType,
+                            AUDesc = A.RlyCd + "-" + A.Au + "/" + A.Audesc + "/" + A.Address,
+                            GstinNo = B.GstinNo
+                        };
+
+            var result = query.ToList();
+            if (result.Count == 0)
+            {
+                ecode = 1;
+                return ecode;
+            }
+            else
+            {
+                ecode = 2;
+                return ecode;
+            }
         }
 
     }

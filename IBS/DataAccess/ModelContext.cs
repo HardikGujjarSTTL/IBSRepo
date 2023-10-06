@@ -8002,9 +8002,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VEND_NAME");
             entity.Property(e => e.VendPanno)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("VEND_PANNO");
+               .HasMaxLength(20)
+               .IsUnicode(false)
+               .HasColumnName("VEND_PANNO");
             entity.Property(e => e.VendPwd)
                 .HasMaxLength(8)
                 .IsUnicode(false)

@@ -6,8 +6,10 @@
         <input type="hidden" asp-for="BpoFeeType" />
         <input type="hidden" asp-for="IcTypeId" />
         <input type="hidden" asp-for="Callrecvdt" />
+        <input type="hidden" asp-for="BpoCd" />
 
-        <h3 class="heading3">Adjustment Bill Details </h3>
+        <h3 class="heading3">Credit/Debit Bill Details </h3>
+        @*<h3 class="heading3"><span id="spnBillHdr"></span> </h3>*@
 
         <div class="row my-0">
             <div class="col-md-3 mb-3">
@@ -18,12 +20,12 @@
                             <div class="remecheckbox">
                                 <ul class="radioListForm">
                                     <li>
-                                        <input type="radio" asp-for="BillTypes" value="C" id="BillTypes_C" checked />
-                                        <label for="BillTypes_C">Credit Note</label>
+                                        <input type="radio" asp-for="BillAdType" name="BillAdType" value="Credit" id="BillAdType_C" checked />
+                                        <label for="BillAdType_C">Credit Note</label>
                                     </li>
                                     <li>
-                                        <input type="radio" asp-for="BillTypes" value="D" id="BillTypes_D" />
-                                        <label for="BillTypes_D">Debit Note</label>
+                                        <input type="radio" asp-for="BillAdType" name="BillAdType" value="Debit" id="BillAdType_D" />
+                                        <label for="BillAdType_D">Debit Note</label>
                                     </li>
                                 </ul>
                             </div>
@@ -32,6 +34,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -88,6 +91,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row my-0">
             @if (Model.IrfcFunded == "Y")
             {
@@ -115,6 +119,36 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
+                    <label for="Caseno">Bk No.</label>
+                    <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;" readonly>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Caseno">Set No.</label>
+                    <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span id="spnBillDt" style="color:#d52127;"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Caseno">Cert Date (DD/MM/YYYY)</label>
+                    <input type="text" class="input" asp-for="CertDt" maxlength="100" style="text-transform: uppercase;" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">BPO.</label>
+                    @Html.DropDownListFor(model => model.Bpo, new SelectList(IBS.Models.Common.GetBPOList(Model.BpoCd) , "Value", "Text"))
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
                     <label for="Caseno">Bill No.</label>
                     <input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
@@ -123,6 +157,13 @@
                 <div class="reference">
                     <label for="Caseno">Bill Date</label>
                     <input type="text" class="input" asp-for="BillDt" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span id="spnBillDt" style="color:#d52127;"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Caseno">No. of Visits</label>
+                    <input type="text" class="input" asp-for="NoOfInsp" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
         </div>
@@ -233,13 +274,15 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Caseno">Min Fee Payble</label>
-                    <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;">
+                    <span id="spnMinFee" style="color:#d52127;"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Caseno">Max Fee Allowed</label>
-                    <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;">
+                    <span id="spnMaxFee" style="color:#d52127;"></span>
                 </div>
             </div>
         </div>
@@ -248,7 +291,7 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">FEE</label>
-                    @Html.DropDownListFor(model => model.Rate, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+                    @Html.DropDownListFor(model => model.BpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -281,22 +324,38 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Caseno">Advance Bill</label>
-                    @Html.DropDownListFor(model => model.AdvBill, new SelectList(IBS.Models.Common.GetAdvanceBill() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
+                    @Html.DropDownListFor(model => model.AdvBill, new SelectList(IBS.Models.Common.GetAdvanceBill() , "Value", "Text"),"--Select--")
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-8 mb-3">
                 <div class="reference">
                     <label for="Caseno">Remarks</label>
-                    <input type="text" class="input" asp-for="Remarks" maxlength="200" style="text-transform: uppercase;" readonly>
+                    @*<input type="text" class="input" asp-for="Remarks" maxlength="200" style="text-transform: uppercase;">*@
+                    <textarea class="input" asp-for="Remarks" style="text-transform: uppercase;"></textarea>
+                    <span id="spnRemarks" style="color:#d52127;"></span>
                 </div>
             </div>
 
         </div>
-
+        <div class="alert alert-warning">
+            <div class="row center my-0">
+                <div class="col-md-12">
+                    <span style="color:#d52127;">* Enter Fee Details Before Generating Bill !!!</span>
+                    <div>
+                        @if (@Model.STS != "X")
+                        {
+                            <button type="button" class="commonBtn" id="btnGBill" onclick="onbtnGBill();">Generate Bill</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 <div id="EditCallDetailsModal" class="modal" tabindex="-1" role="dialog">
 </div>
 
 <div id="PopUp" class="modal" tabindex="-1" role="dialog">
 </div>
+

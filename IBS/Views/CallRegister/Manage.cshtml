@@ -52,30 +52,30 @@
     </div>
     <div class="accordion-body">
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-1 mb-3">
                 <div class="reference">
                     <label for="Reference">Item SNo.</label>
-                    <input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span asp-validation-for="ItemSrNoPo" class="text-danger"></span>
                 </div>
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Ordered</label>
                     <input type="text" class="input" asp-for="QtyOrdered" maxlength="100" style="text-transform: uppercase;">
                     <span asp-validation-for="QtyOrdered" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Cumm. Qty off Prev</label>
                     <input type="text" class="input" asp-for="CumQtyPrevOffered" maxlength="100" style="text-transform: uppercase;">
                     <span asp-validation-for="CumQtyPrevOffered" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Prev Passed</label>
                     <input type="text" class="input" asp-for="CumQtyPrevPassed" maxlength="100" style="text-transform: uppercase;">
