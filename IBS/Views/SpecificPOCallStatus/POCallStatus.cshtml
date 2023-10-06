@@ -11,7 +11,13 @@
                 CALL DETAILS FOR SPECIFIC PO
             </h2>
         </div>
-
+        <div class="col-md-3">
+            <div class="list-btn">
+                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            </div>
+        </div>
     </div>
     <div class="accordion-body">
         <div class="row my-0">
@@ -113,7 +119,7 @@
         });
 
         function InitializeDatatable(PONO, PODT, RLYNONRLY, RLY_CD) {
-            
+            var _title = 'Po Call Status';
                 $("#dtlistr").DataTable({
                     stateSave: false,// Design Assets
                     autoWidth: true,
@@ -124,6 +130,56 @@
                     destroy: true,
                     paging: true,// Paging Setups
                     searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export to Excel',
+                        filename: function () { return getExportFileName('Po_Call_Status'); },
+                        download: 'open',
+                        orientation: 'landscape',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12,13,14,15,16,17,18],
+                            modifier: {
+                                page: 'all',
+                                search: 'none'
+                            }
+                        },
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        filename: function () { return getExportFileName('Po_Call_Status'); },
+                        text: 'Export to PDF',
+                        orientation: 'landscape',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                            modifier: {
+                                page: 'all',
+                                pageSize: 'LEGAL',
+                                search: 'none',
+                            }
+                        },
+                        customize: function (doc) {
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                            doc.pageMargins = [5, 100, 5, 5];
+
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+                        },
+                    },
+                ],
                     ajax: {// Ajax Filter
                         url: "@Url.Action("LoadTable1")",
                         type: "POST",
@@ -254,6 +310,16 @@
                                 //    $("#btn-delete-yes").attr("href", url);
                                 //    $("#modal-delete-conf").modal("show");
                                 //}
+        $("#imgExcel").on("click", function () {
+            $('#dtlistr').DataTable().buttons(0, 0).trigger();
+        });
 
+        $("#imgPdf").on("click", function () {
+            $('#dtlistr').DataTable().buttons(0, 1).trigger();
+        });
+
+        $("#imgPrint").on("click", function () {
+            $('#dtlistr').DataTable().buttons(0, 2).trigger();
+        });
     </script>
 }

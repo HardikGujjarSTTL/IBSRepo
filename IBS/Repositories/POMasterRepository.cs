@@ -100,6 +100,7 @@ namespace IBS.Repositories
                 query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -217,7 +218,7 @@ namespace IBS.Repositories
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
                 POMaster.RlyCdDesc = model.RlyCdDesc;
-                POMaster.RegionCode = model.RegionCode;
+                //POMaster.RegionCode = model.RegionCode;
                 POMaster.Remarks = model.Remarks;
                 POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
@@ -499,6 +500,10 @@ namespace IBS.Repositories
                 {
                     returnVal = "Not Match";
                 }
+            }
+            else
+            {
+                returnVal = "Not Match";
             }
             return returnVal;
         }

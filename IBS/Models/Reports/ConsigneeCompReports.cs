@@ -71,6 +71,8 @@
         public string formonth { get; set; }
         public string monthChar { get; set; }
         public string forperiod { get; set; }
+        public string jirequired { get; set; }
+        public string Regions { get; set; }
 
         public List<DefectCodeList> lstDefectCodeList { get; set; }
 
@@ -116,6 +118,7 @@
         public string ToDate { get; set; }
         public string FinancialYearsText { get; set; }
         public string FinancialYearsValue { get; set; }
+        public string Regions { get; set; }
         public List<JIRequiredList> lstJIRequiredList { get; set; }
         public List<JIRequiredList> lstCompList { get; set; }
         public List<ComplaintJIIE> lstComplaintJIIE { get; set; }

@@ -202,6 +202,7 @@ input[type="date"] {
                 </div>
                 <div class="col-md-8 mb-4">
                     <label class="control-label">Testing Type</label>
+                    </br>
                     @Html.RadioButtonFor(m => m.TestingType, "Normal", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "5",@id = "N",@onchange = "ToggleInfo(this);" })
                     Normal
                     @Html.RadioButtonFor(m => m.TestingType, "Re-Testing", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "RT",@onchange = "ToggleInfo(this);"})
@@ -211,6 +212,9 @@ input[type="date"] {
                     @Html.RadioButtonFor(m => m.TestingType, "IREPS_Case", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "IC",@onchange = "ToggleInfo(this);"})
                     IREPS Case
                 </div>
+               
+                    
+               
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
@@ -291,7 +295,7 @@ input[type="date"] {
             <div class="row my-0">
 
                 <div class="col-md-12 mb-4" style="margin-top:auto;">
-                    <textarea asp-for="ItemNm" class="form-control custom-textarea" id="txtitemnm"></textarea>
+                    <textarea asp-for="ItemNm" class="form-control custom-textarea" id="txtitemnm" style="height:auto;"></textarea>
                 </div>
             </div>
             <div class="row my-0">
@@ -365,15 +369,17 @@ input[type="date"] {
                 </div>
             </div>
             <div class="row my-0">
+                <div class="col-md-3 mb-4">
+                    <label for="Reference">Discipline</label>
+                    @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.Discipline() , "Value", "Text"),new { @id = "ddldisc"})
 
-                <div class="col-md-12 mb-4">
+                </div>
+                <div class="col-md-3 mb-4">
                     <label>Testing Result</label>
                     @Html.DropDownListFor(model => model.TestingResult, new SelectList(IBS.Models.Common.GetStatus() , "Value", "Text"),"",new { @id = "ddlstatus" })
                 </div>
-            </div>
-            <div class="row my-0">
-
-                <div class="col-md-12 mb-4">
+            
+                <div class="col-md-6 mb-4">
                     <label>Remarks</label>
                     <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks"></textarea>
                 </div>
@@ -496,6 +502,7 @@ input[type="date"] {
                 TestStatus: $("#ddlstatus").val(),
                 DRemarks: $("#txtremarks").val(),
                 SampleDispatchLabDate: $("#dtofdistolab").val(),
+                DISCIPLINE_ID: $("#ddldisc").val(),
 
                 TotalTestingFee: $("#lbltotf").val(),
                 TotalServiceTax: $("#lblservicetax").val(),

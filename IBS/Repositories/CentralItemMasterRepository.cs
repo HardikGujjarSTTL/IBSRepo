@@ -130,6 +130,20 @@ namespace IBS.Repositories
             #endregion
             return ID;
         }
+
+        public bool CheckAlreadyExist(CentralItemMasterModel model)
+        {
+            var t34CentralItemMaster =(from m in context.T34CentralItemMasters
+                                       where m.RailCd == model.RailCd && m.Id != model.Id select m).ToList();
+            if(t34CentralItemMaster != null && t34CentralItemMaster.Count != 0) 
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region Details

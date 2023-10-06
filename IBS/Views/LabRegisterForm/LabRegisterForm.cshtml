@@ -206,6 +206,7 @@
                 </div>
                 <div class="col-md-8 mb-4">
                     <label class="control-label">Testing Type</label>
+                    </br>
                     @Html.RadioButtonFor(m => m.TestingType, "Normal", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "5",@id = "N",@onchange = "ToggleInfo(this);" ,@disabled = "disabled"})
                     Normal
                     @Html.RadioButtonFor(m => m.TestingType, "Re-Testing", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "RT",@onchange = "ToggleInfo(this);",@disabled = "disabled"})
@@ -215,6 +216,7 @@
                     @Html.RadioButtonFor(m => m.TestingType, "IREPS_Case", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" ,@id = "IC",@onchange = "ToggleInfo(this);",@disabled = "disabled"})
                     IREPS Case
                 </div>
+               
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
@@ -295,7 +297,7 @@
             <div class="row my-0">
                 
                 <div class="col-md-12 mb-4" style="margin-top:auto;">
-                    <textarea asp-for="ItemNm" class="form-control custom-textarea" id="txtitemnm"></textarea>
+                    <textarea asp-for="ItemNm" class="form-control custom-textarea" id="txtitemnm" style="height:auto;"></textarea>
                 </div>
             </div>
             <div class="row my-0">
@@ -369,15 +371,17 @@
                 </div>
             </div>
             <div class="row my-0">
+                <div class="col-md-3 mb-4">
+                    <label for="Reference">Discipline</label>
+                    @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.Discipline() , "Value", "Text"),new { @id = "ddldisc"})
 
-                <div class="col-md-12 mb-4">
+                </div>
+                <div class="col-md-3 mb-4">
                     <label>Testing Result</label>
                     @Html.DropDownListFor(model => model.TestingResult, new SelectList(IBS.Models.Common.GetStatus() , "Value", "Text"),"",new { @id = "ddlstatus" })
                 </div>
-            </div>
-            <div class="row my-0">
-
-                <div class="col-md-12 mb-4">
+           
+                <div class="col-md-6 mb-4">
                     <label>Remarks</label>
                     <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks"></textarea>
                 </div>
@@ -792,6 +796,7 @@
                     $("#handlingcharges").val(data.HandlingCharges);
                     $("#ddlstatus").val(data.TestStatus);
                     $("#txtremarks").val(data.Remarks);
+                    $("#ddldisc").val(data.DISCIPLINE_ID);
                 }
 
             });
@@ -827,7 +832,8 @@
                 TotalServiceTax: $("#lblservicetax").val(),
                 TotalHandlingCharges: $("#lblthc").val(),
                 TotalLabCharges: $("#lbltolc").val(),
-                Flag:sessionStorage.getItem("Flag")
+                Flag:sessionStorage.getItem("Flag"),
+                DISCIPLINE_ID: $("#ddldisc").val()
             };
 
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);

@@ -30,7 +30,7 @@ namespace IBS.Controllers
         public IActionResult Manage(int id)
         {
             CentralItemMasterModel model = new();
-            if (id>0)
+            if (id > 0)
             {
                 model = centralItemMasterRepository.FindByID(id);
             }
@@ -69,17 +69,25 @@ namespace IBS.Controllers
             try
             {
                 model.UserId = USER_ID.Substring(0, 8);
-                if (model.Id>0)
+                if (centralItemMasterRepository.CheckAlreadyExist(model))
                 {
-                    model.Updatedby = UserId;
-                    centralItemMasterRepository.InsertUpdate(model);
-                    AlertAddSuccess("Record Added Successfully.");
+                    AlertAlreadyExist("Record already exist.");
+                    return RedirectToAction("Manage", "CentralItemMaster", new { id = model.Id });
                 }
                 else
                 {
-                    model.Createdby = UserId;
-                    centralItemMasterRepository.InsertUpdate(model);
-                    AlertAddSuccess("Record Updated Successfully.");
+                    if (model.Id > 0)
+                    {
+                        model.Updatedby = UserId;
+                        centralItemMasterRepository.InsertUpdate(model);
+                        AlertAddSuccess("Record Added Successfully.");
+                    }
+                    else
+                    {
+                        model.Createdby = UserId;
+                        centralItemMasterRepository.InsertUpdate(model);
+                        AlertAddSuccess("Record Updated Successfully.");
+                    }
                 }
                 return RedirectToAction("Index");
             }
@@ -99,7 +107,7 @@ namespace IBS.Controllers
             return View();
         }
         [Authorization("CentralItemMaster", "Index", "view")]
-        public IActionResult ManageDetails(int id,int RailId)
+        public IActionResult ManageDetails(int id, int RailId)
         {
             CentralItemDetailModel model = new();
             model.RailId = RailId;
@@ -117,7 +125,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [Authorization("CentralItemMaster", "Index", "delete")]
-        public IActionResult DeleteDetails(int id,int RailId)
+        public IActionResult DeleteDetails(int id, int RailId)
         {
             try
             {
@@ -153,7 +161,7 @@ namespace IBS.Controllers
                     centralItemMasterRepository.DetailsInsertUpdate(model);
                     AlertAddSuccess("Record Updated Successfully.");
                 }
-                return RedirectToAction("Details",new { id = model.RailId});
+                return RedirectToAction("Details", new { id = model.RailId });
             }
             catch (Exception ex)
             {

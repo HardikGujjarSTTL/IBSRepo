@@ -227,7 +227,7 @@ namespace IBS.Repositories
                 par[1] = new OracleParameter("p_SNO", OracleDbType.NVarchar2, SNO, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails", par, 2);
+                var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails_Edit", par, 2);
 
                 LABREGISTERModel model = new();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -251,6 +251,7 @@ namespace IBS.Repositories
                         TestStatus = Convert.ToString(row["TEST_STATUS"]),
                         Remarks = Convert.ToString(row["REMARKS"]),
                         SampleDispatchLabDate = Convert.ToString(row["SAMPLE_DISPATCH_LAB_DT"]),
+                        DISCIPLINE_ID = Convert.ToString(row["discipline_id"]),
                     };
 
                     //modelList.Add(model);
@@ -484,6 +485,7 @@ namespace IBS.Repositories
                         cmd.Parameters.Add("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date).Value = LABREGISTERModel.SampleDispatchLabDate;
                         cmd.Parameters.Add("p_USER_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.UName;
                         cmd.Parameters.Add("p_DATETIME", OracleDbType.Date).Value = ss;
+                        cmd.Parameters.Add("p_DISCIPLINE_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.DISCIPLINE_ID;
 
                         cmd.ExecuteNonQuery();
                         SaveDataDetails2(LABREGISTERModel);
@@ -669,7 +671,7 @@ namespace IBS.Repositories
                 string ss;
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                 ss = GetDateString(sqlQuery);
-                OracleParameter[] par = new OracleParameter[17];
+                OracleParameter[] par = new OracleParameter[18];
                 par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, REG_NO, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_SNO", OracleDbType.Varchar2, Sno, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_ITEM_DESC", OracleDbType.Varchar2, LABREGISTERModel.ItemDesc, ParameterDirection.Input);
@@ -687,6 +689,7 @@ namespace IBS.Repositories
                 par[14] = new OracleParameter("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchLabDate, ParameterDirection.Input);
                 par[15] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, LABREGISTERModel.UName, ParameterDirection.Input);
                 par[16] = new OracleParameter("p_DATETIME", OracleDbType.Date, ss, ParameterDirection.Input);
+                par[17] = new OracleParameter("p_DISCIPLINE_ID", OracleDbType.Varchar2, LABREGISTERModel.DISCIPLINE_ID, ParameterDirection.Input);
                 var ds = DataAccessDB.ExecuteNonQuery("SP_INSERT_LAB_REGISTER_DETAIL", par, 1);
             }
             catch (Exception ex)

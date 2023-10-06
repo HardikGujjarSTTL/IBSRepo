@@ -4,6 +4,7 @@ namespace IBS.Models
 {
     public class LABREGISTERModel
     {
+        public string DISCIPLINE_ID { get; set; }
         public string UName { get; set; }
         public string Region { get; set; }
         public string SampleRegNo { get; set; }

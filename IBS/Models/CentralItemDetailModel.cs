@@ -6,15 +6,14 @@ namespace IBS.Models
     {
         public int Id { get; set; }
         public int RailId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Rail Price Per Mt is required")]
         public string? RailPricePerMt { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Packing Charge is required")]
         public string? PackingCharge { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Price Date From is required")]
         public DateTime? PriceDateFr { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Price Date To is required")]
         public DateTime? PriceDateTo { get; set; }
-        [Required]
         public bool Isactive { get; set; }
 
         public int? Createdby { get; set; }
