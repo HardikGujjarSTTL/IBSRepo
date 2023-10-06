@@ -174,13 +174,14 @@
                 success: function (contacts) {
                     if (contacts.data && contacts.data.length > 0) {
                         var VendCd = contacts.data[0].VEND_CD;
-                        var VEND_CD_S = contacts.data[0].VEND_CD_S;
+                        var VendCdS = contacts.data[0].VEND_CD_S;
+
                         var Check = "";
                         if (VendCd == "") {
                             Check = "0";
                             alert('ENTERED CASE NUMBER DOES NOT MATCH!!!');
                         }
-                        else if (VendCd == VEND_CD_S) {
+                        if ($.trim(VendCd) == $.trim(VendCdS)) {
                             Check = "2";
                         }
                         else {
@@ -189,7 +190,7 @@
                             return;
                         }
                         if (Check == "2") {
-                            window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&Action=N";
+                            window.location.href = '@Url.Action("Manage", "VendorPOMA")' + '?CaseNo=' + CaseNo + "&Action_T=N";
                         }
 
                     }
@@ -316,11 +317,11 @@
                         render: function (data, type, row) {
                             var CaseNo = data.CASE_NO;
                             var MaNo = data.MA_NO;
-                            var MaDt = moment(data.MA_DT).format("DD-MM-YYYY");
+                            var MaDt = moment(data.MA_DT).format("DD/MM/YYYY");
                             var MaStatus = data.MA_STATUS;
                             var MaSNo = data.MA_SNO;
                             var editUrl = '@Url.Action("Index", "VendorPOMA")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDt=" + MaDt + "&MaStatus=" + MaStatus + "&MaSNo=" + MaSNo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }

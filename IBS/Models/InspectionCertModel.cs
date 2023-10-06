@@ -94,6 +94,8 @@ namespace IBS.Models
 
         public string Au { get; set; }
 
+        public string OldAu { get; set; }
+
         public string BpoRly { get; set; }
 
         public decimal RlyBpoFee { get; set; }
@@ -280,7 +282,7 @@ namespace IBS.Models
 
         public string UpdateStatus { get; set; }
 
-        public string BillTypes { get; set; }
+        public string BillAdType { get; set; }
 
     }
 

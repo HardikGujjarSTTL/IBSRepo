@@ -192,6 +192,7 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
+                            //var CallRecvDt = data.CallRecvDt;
                             var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
                             var CallSNo = data.CallSNo;
                             var editUrl = '@Url.Action("Index", "CallRegister")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSNo=" + CallSNo;
@@ -209,6 +210,8 @@
         $("#btnModify").click(function () {
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
+            //var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("DD/MM/YYYY");
+            
             var CallSNo = $("#CallSNo").val();
 
             $("#spnErrorCaseNo").html("");

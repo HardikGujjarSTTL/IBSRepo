@@ -43,6 +43,8 @@ public partial class T51LabRegisterDetail
 
     public string? PaymentId { get; set; }
 
+    public int? DisciplineId { get; set; }
+
     public virtual T65LaboratoryMaster? Lab { get; set; }
 
     public virtual T50LabRegister? SampleRegNoNavigation { get; set; }
