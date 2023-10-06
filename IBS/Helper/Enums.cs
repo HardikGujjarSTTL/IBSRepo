@@ -275,6 +275,15 @@ namespace IBS.Helper
             N,
         }
 
+        public enum AdvanceBill
+        {
+            [Description("Advance bill to be raised")]
+            A,
+            [Description("No Advance bill")]
+            X,
+        }
+
+
         public enum ActiveInActive
         {
             [Description("Active")]
@@ -732,7 +741,7 @@ namespace IBS.Helper
 
         public static JIRequiredReport JIRequiredReports { get; set; }
 
-        public static ConsigneeCompPeriodReport ConsigneeCompPeriod { get; set; }
+        public static ConsigneeCompReports ConsigneeCompPeriod { get; set; }
 
         public static DefectCodeReport DefectCodeReports { get; set; }
 

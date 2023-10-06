@@ -21,49 +21,58 @@ namespace IBS.Repositories
             int maxID = 0;
             int NonClientId = 0;
             var NonClient = (from r in context.NonRlyClients where r.Id == Convert.ToInt32(model.Id) select r).FirstOrDefault();
-            #region Non Client save
-            if (NonClient == null)
+            var existingClient = context.NonRlyClients.FirstOrDefault(r => r.Mobileno == model.MOBILE);
+            if (existingClient == null || existingClient.Id == Convert.ToInt32(model.Id))
             {
-                if (context.NonRlyClients.Any())
+                #region Non Client save
+                if (NonClient == null)
                 {
-                    maxID = context.NonRlyClients.Max(x => x.Id) + 1;
+                    if (context.NonRlyClients.Any())
+                    {
+                        maxID = context.NonRlyClients.Max(x => x.Id) + 1;
+                    }
+                    else
+                    {
+                        maxID = 1;
+                    }
+                    NonRlyClient obj = new NonRlyClient();
+                    obj.Id = maxID;
+                    obj.Clientname = model.ClientName;
+                    obj.Contactdesignation = model.Client_DESIGNATION;
+                    obj.Emailid = model.EMAIL;
+                    obj.Mobileno = model.MOBILE;
+                    obj.Orgntype = model.Orgn_Type;
+                    obj.Shortcode = model.ShortCode;
+                    obj.Contactname = model.ContactName;
+                    obj.Isdeleted = Convert.ToByte(false);
+                    obj.Createdby = model.Createdby;
+                    obj.Createddate = DateTime.Now;
+                    context.NonRlyClients.Add(obj);
+                    context.SaveChanges();
+                    NonClientId = Convert.ToInt32(obj.Id);
                 }
                 else
                 {
-                    maxID = 1;
+                    NonClient.Clientname = model.ClientName;
+                    NonClient.Contactdesignation = model.Client_DESIGNATION;
+                    NonClient.Emailid = model.EMAIL;
+                    NonClient.Mobileno = model.MOBILE;
+                    NonClient.Orgntype = model.Orgn_Type;
+                    NonClient.Shortcode = model.ShortCode;
+                    NonClient.Contactname = model.ContactName;
+                    NonClient.Isdeleted = Convert.ToByte(false);
+                    NonClient.Updatedby = model.Updatedby;
+                    NonClient.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                    NonClientId = Convert.ToInt32(NonClient.Id);
                 }
-                NonRlyClient obj = new NonRlyClient();
-                obj.Id = maxID;
-                obj.Clientname = model.USER_NAME;
-                obj.Contactdesignation = model.DESIGNATION;
-                obj.Emailid = model.EMAIL;
-                obj.Mobileno = model.MOBILE;
-                obj.Orgntype = model.Orgn_Type;
-                obj.Shortcode = model.ShortCode;
-                obj.Contactname = model.ContactName;
-                obj.Isdeleted = Convert.ToByte(false);
-                obj.Createdby = model.Createdby;
-                obj.Createddate = DateTime.Now;
-                context.NonRlyClients.Add(obj);
-                context.SaveChanges();
-                NonClientId = Convert.ToInt32(obj.Id);
+                #endregion
             }
             else
             {
-                NonClient.Clientname = model.USER_NAME;
-                NonClient.Contactdesignation = model.DESIGNATION;
-                NonClient.Emailid = model.EMAIL;
-                NonClient.Mobileno = model.MOBILE;
-                NonClient.Orgntype = model.Orgn_Type;
-                NonClient.Shortcode = model.ShortCode;
-                NonClient.Contactname = model.ContactName;
-                NonClient.Isdeleted = Convert.ToByte(false);
-                NonClient.Updatedby = model.Updatedby;
-                NonClient.Updateddate = DateTime.Now;
-                context.SaveChanges();
-                NonClientId = Convert.ToInt32(NonClient.Id);
+                return NonClientId;
             }
-            #endregion
+
             return NonClientId;
         }
 
@@ -117,10 +126,10 @@ namespace IBS.Repositories
 
                 List<Clientmaster> list = dt.AsEnumerable().Select(row => new Clientmaster
                 {
-                    USER_NAME = row.Field<string>("CLIENTNAME"),
+                    ClientName = row.Field<string>("CLIENTNAME"),
                     ShortCode = row.Field<string>("SHORTCODE"),
                     ContactName = row.Field<string>("CONTACTNAME"),
-                    DESIGNATION = row.Field<string>("CONTACTDESIGNATION"),
+                    Client_DESIGNATION = row.Field<string>("CONTACTDESIGNATION"),
                     MOBILE = row.Field<string>("MOBILENO"),
                     EMAIL = row.Field<string>("EMAILID"),
                     Orgn_Type = row.Field<string>("ORGNTYPE"),
@@ -132,7 +141,7 @@ namespace IBS.Repositories
                 dTResult.recordsTotal = ds.Tables[0].Rows.Count;
 
                 if (!string.IsNullOrEmpty(searchBy))
-                    query = query.Where(w => Convert.ToString(w.USER_NAME).ToLower().Contains(searchBy.ToLower())
+                    query = query.Where(w => Convert.ToString(w.ClientName).ToLower().Contains(searchBy.ToLower())
                     || Convert.ToString(w.ShortCode).ToLower().Contains(searchBy.ToLower())
                     );
 
@@ -159,10 +168,10 @@ namespace IBS.Repositories
                 throw new Exception("Client Not found");
             else
             {
-                model.USER_NAME = client.Clientname;
+                model.ClientName = client.Clientname;
                 model.ContactName = client.Contactname;
                 model.ShortCode = client.Shortcode;
-                model.DESIGNATION = client.Contactdesignation;
+                model.Client_DESIGNATION = client.Contactdesignation;
                 model.Orgn_Type = client.Orgntype;
                 model.MOBILE = client.Mobileno;
                 model.EMAIL = client.Emailid;

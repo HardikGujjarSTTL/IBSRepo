@@ -7,12 +7,13 @@ namespace IBS.Interfaces
     {
 
         public LABREGISTERModel LoaddataModify(string RegNo);
-        List<LABREGISTERModel> GetLabRegDtl(string RegNo,string SNO);
+        DTResult<LABREGISTERModel> GetLabRegDtl(DTParameters dtParameters);
         public LABREGISTERModel LabDtlModify(string RegNo, string SNO);
         List<LABREGISTERModel> LabPaymentModify(string CaseNo, string VCode);
-        List<LABREGISTERModel> LapIndexData(string CaseNo, string CallRdt, string RegNo);
+        DTResult<LABREGISTERModel> LapIndexData(DTParameters dtParameters);
         public LABREGISTERModel LabRegisterFormNew(string CaseNo, string CallDt, string CallSno);
         bool SaveDataDetails(LABREGISTERModel LABREGISTERModel);
+        bool InsertDataDetails(LABREGISTERModel LABREGISTERModel);
         bool InsertLabReg(LABREGISTERModel LABREGISTERModel);
         bool PrintInvoice(string RegNo, LABREGISTERModel LABREGISTERModel);
         bool PostAmount(LABREGISTERModel LABREGISTERModel);

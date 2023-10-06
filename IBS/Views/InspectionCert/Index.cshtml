@@ -5,7 +5,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Inspection Certificate</h2>
+        <h2>@ViewData["Title"]</h2>
     </div>
 </div>
 
@@ -23,7 +23,7 @@
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Call Recieve Date</label>
-                        <input type="text" class="datepicker" asp-for="Callrecvdt" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" class="datepicker" asp-for="Callrecvdt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -63,7 +63,6 @@
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <div class="savenext-btn">
-                        
                     </div>
                 </div>
             </div>
@@ -265,7 +264,7 @@
                 return false;
             }
             if (Bkno == "" || Bkno == null) {
-                ShowHideMsgNew(false, "Please select Bk no.");
+                ShowHideMsgNew(false, "Please select Book no.");
                 return false;
             }
             if (Setno == "" || Setno == null) {
@@ -286,23 +285,23 @@
             var Setno = $("#Setno").val();
 
             if (Caseno == "" || Caseno == null) {
-                ShowHideMsgNew(false, "Please select Case No.");
+                ShowHideMsgNew(false, "Please add Case No.");
                 return false;
             }
             if (Callrecvdt == "" || Callrecvdt == null) {
-                ShowHideMsgNew(false, "Please select Call Recieved Date.");
+                ShowHideMsgNew(false, "Please add Call Recieved Date.");
                 return false;
             }
             if (Callsno == "" || Callsno == null) {
-                ShowHideMsgNew(false, "Please select Call S No.");
+                ShowHideMsgNew(false, "Please add Call S No.");
                 return false;
             }
             if (Bkno == "" || Bkno == null) {
-                ShowHideMsgNew(false, "Please select Bk no.");
+                ShowHideMsgNew(false, "Please add Book no.");
                 return false;
             }
             if (Setno == "" || Setno == null) {
-                ShowHideMsgNew(false, "Please select Set no");
+                ShowHideMsgNew(false, "Please add Set no");
                 return false;
             }
             if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
@@ -310,6 +309,48 @@
             }
         });
 
+        $("#btnChangeConsignee").click(function () {
+            var Caseno = $("#Caseno").val();
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
 
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please add Case No.");
+                return false;
+            }
+            if (Bkno == "" || Bkno == null) {
+                ShowHideMsgNew(false, "Please add Book no.");
+                return false;
+            }
+            if (Setno == "" || Setno == null) {
+                ShowHideMsgNew(false, "Please add Set no");
+                return false;
+            }
+            if (Bkno != "" && Setno != "") {
+                window.location.href = '@Url.Action("ChangeConsignee", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+            }
+        });
+
+        $("#btnBPOReturned").click(function () {
+            var Caseno = $("#Caseno").val();
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
+
+            if (Caseno == "" || Caseno == null) {
+                ShowHideMsgNew(false, "Please add Case No.");
+                return false;
+            }
+            if (Bkno == "" || Bkno == null) {
+                ShowHideMsgNew(false, "Please add Book no.");
+                return false;
+            }
+            if (Setno == "" || Setno == null) {
+                ShowHideMsgNew(false, "Please add Set no");
+                return false;
+            }
+            if (Bkno != "" && Setno != "") {
+                window.location.href = '@Url.Action("Returned_Bills_BPO_Change_Form", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+            }
+        });
     </script>
 }

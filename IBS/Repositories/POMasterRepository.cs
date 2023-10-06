@@ -100,6 +100,7 @@ namespace IBS.Repositories
                 query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -166,11 +167,6 @@ namespace IBS.Repositories
             #region POMaster save
             if (POMaster == null)
             {
-                //var w_ctr= model.RegionCode + model.PoDt.ToString().Substring(8,2) + model.PoDt.ToString().Substring(0, 2);
-                //var cn=(from m in context.T80PoMasters 
-                //        where m.RegionCode==model.RegionCode && m.CaseNo.Substring(0,4)== w_ctr
-                //        select m.CaseNo.Substring(6,4)).Max();
-
                 string date = model.PoDt.ToString().Substring(0, 10);
                 OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, model.RegionCode, ParameterDirection.Input);
@@ -204,6 +200,8 @@ namespace IBS.Repositories
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
+                obj.Createdby = model.Createdby;
+                obj.Createddate = DateTime.Now;
                 context.T80PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -220,13 +218,15 @@ namespace IBS.Repositories
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
                 POMaster.RlyCdDesc = model.RlyCdDesc;
-                POMaster.RegionCode = model.RegionCode;
+                //POMaster.RegionCode = model.RegionCode;
                 POMaster.Remarks = model.Remarks;
                 POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 POMaster.Contractid = model.Contractid;
+                POMaster.Updatedby = model.Updatedby;
+                POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
                 CaseNo = POMaster.CaseNo;
             }
@@ -500,6 +500,10 @@ namespace IBS.Repositories
                 {
                     returnVal = "Not Match";
                 }
+            }
+            else
+            {
+                returnVal = "Not Match";
             }
             return returnVal;
         }

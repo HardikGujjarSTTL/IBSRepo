@@ -7,29 +7,32 @@ namespace IBS.Models
     {
         public string CaseNo { get; set; } = null!;
 
+        [Required(ErrorMessage = "Purchaser is required")]
         public int? PurchaserCd { get; set; }
 
         public string? Purchaser { get; set; }
-
+        [Required(ErrorMessage = "Stock / Non-Stock (For Railways Only) is required")]
         public string? StockNonstock { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Railway/Non-Railway is required")]
         public string? RlyNonrly { get; set; }
 
         public string? PoNo { get; set; }
 
+        [Required(ErrorMessage = "PO/LOA Date is required")]
         public DateTime? PoDt { get; set; }
 
         public DateTime? RecvDt { get; set; }
 
         public int? VendCd { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Agency/Client is required")]
         public string? RlyCd { get; set; }
         public string? MainrlyCd { get; set; }
 
         public string? RlyCdDesc { get; set; }
 
+        [Required(ErrorMessage = "Case To Be Registered At is required")]
         public string? RegionCode { get; set; }
 
         public string? RealCaseNo { get; set; }
@@ -40,6 +43,7 @@ namespace IBS.Models
 
         public int? PoiCd { get; set; }
 
+        [Required(ErrorMessage = "PO/Offer Letter No is required")]
         public string? PoOrLetter { get; set; }
 
         public int? Createdby { get; set; }

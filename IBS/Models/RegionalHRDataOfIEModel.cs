@@ -13,12 +13,12 @@ namespace IBS.Models
 
         public string IE_NAME { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Joining Date is required.")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? Joiningdate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Posting Date is required.")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? Postingdate { get; set; }

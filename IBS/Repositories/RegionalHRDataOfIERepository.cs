@@ -95,8 +95,9 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.Disclipline).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Joiningdate).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.IeCd).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.IE_NAME).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Disclipline).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
