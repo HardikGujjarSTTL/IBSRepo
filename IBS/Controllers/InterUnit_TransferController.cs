@@ -48,6 +48,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("InterUnit_Transfer", "Index", "edit")]
         public IActionResult DetailsSave(InterUnit_TransferModel model)
         {
             if (objSessionHelper.lstInterUnitTransferRegionModel != null)
@@ -134,6 +135,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("InterUnit_Transfer", "Index", "delete")]
         public IActionResult DetailDelete(string BANK_CD, string CHQ_NO, string CHQ_DT, string JV_NO, string DelID)
         {
             try
