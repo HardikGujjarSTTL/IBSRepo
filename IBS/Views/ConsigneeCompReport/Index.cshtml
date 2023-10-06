@@ -2,8 +2,8 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
 
-    string Region = ViewBag.Region;
-    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["Action"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["Action"]) : "";
+    string Region = ViewBag.Regions;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
     string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
     ViewData["Title"] = ReportTitle;
@@ -258,7 +258,7 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6" id="particularCM">
-                        @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Region), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
+                        @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
                     </div>
                 </div>
             </div>
@@ -281,7 +281,7 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6" id="particularIE">
-                        @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Region), "Value", "Text"), "--Select--", new { id = "ddliename" })
+                        @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
                     </div>
                 </div>
             </div>

@@ -5,7 +5,7 @@
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
-
+    string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "ConsigneeCompReport");
     ViewData["Title"] = ReportTitle;
 }
 
@@ -15,6 +15,7 @@
 </head>
 <body>
     <p align="right">
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />

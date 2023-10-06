@@ -30,7 +30,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
         public IActionResult Index()
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            ViewBag.Region = Region;
+            ViewBag.Regions = Region;
             return View();
         }
 
