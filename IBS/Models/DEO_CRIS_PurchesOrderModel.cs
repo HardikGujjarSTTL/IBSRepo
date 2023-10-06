@@ -30,7 +30,11 @@ namespace IBS.Models
         public string PO_YR { get; set; }
         public string MFG { get; set; }
         public string RAILWAY { get; set; }
-
+        public DateTime? RecvDt { get; set; }
+        public string? L5noPo { get; set; }
+        public int? ddlManufac { get; set; }
+        public string UserId { get; set; }
+        
         //List<SelectListItem> selectVend_CDListItems { get; set; }
     }
 
