@@ -25,35 +25,33 @@ namespace IBS.Controllers.IE
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<DailyWorkPlanModel> dTResult = dailyworkplanRepository.GetMessageList(dtParameters,GetIeCd);
+            DTResult<DailyWorkPlanModel> dTResult = dailyworkplanRepository.GetMessageList(dtParameters, GetIeCd);
             return Json(dTResult);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DetailsSave(DailyWorkPlanModel model)
+        public IActionResult DailyWorkPlan(DailyWorkPlanModel model)
         {
             try
             {
-                string msg = "Message Inserted Successfully.";
-
-                if (model.Reason  != null)
+                int i = 0;
+                if (model.Reason != null)
                 {
-                    msg = "Message Updated Successfully.";
-                    //model.Updatedby = Convert.ToString(UserId);
+                    model.Createdby = Convert.ToString(UserName.Trim());
+                    model.UserId = Convert.ToString(UserName.Trim());
+                    model.IeCd = GetIeCd;
+                    model.RegionCode = Region;
+                    i = dailyworkplanRepository.DetailsInsertUpdate(model);
+                    AlertAddSuccess("Record Added Successfully.");
                 }
-                //model.Createdby = Convert.ToString(UserId);
-                int i = dailyworkplanRepository.DetailsInsertUpdate(model);
-                if (i > 0)
-                {
-                    return Json(new { status = true, responseText = msg, Id = i });
-                }
+                return RedirectToAction("DailyWorkPlan");
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "User", "UserDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DailyWorkPlan", "UserDetailsSave", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
         }
     }
 }

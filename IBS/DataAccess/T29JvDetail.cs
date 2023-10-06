@@ -7,7 +7,7 @@ public partial class T29JvDetail
 {
     public string? VchrNo { get; set; }
 
-    public byte? AccCd { get; set; }
+    public int? AccCd { get; set; }
 
     public decimal? Amount { get; set; }
 

@@ -9,7 +9,13 @@
         <div class="tast-list">
             <h2>Returned Bills yet to be Resent (Not Posted in IBS)</h2>
         </div>
-        
+        <div class="col-md-3">
+            <div class="list-btn">
+                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
+                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
+            </div>
+        </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -51,9 +57,19 @@
         $(function () {
             InitializeDatatable1();
         });
+        $("#imgExcel").on("click", function () {
+            $('#dtinvoiced').DataTable().buttons(0, 0).trigger();
+        });
 
+        $("#imgPdf").on("click", function () {
+            $('#dtinvoiced').DataTable().buttons(0, 1).trigger();
+        });
+
+        $("#imgPrint").on("click", function () {
+            $('#dtinvoiced').DataTable().buttons(0, 2).trigger();
+        });
         function InitializeDatatable1() {
-           
+            var _title = 'Returned Bills';
             $("#dtinvoiced").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -64,6 +80,56 @@
                 destroy: true,
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
+                dom: 'rtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export to Excel',
+                        filename: function () { return getExportFileName('Returned_Bills'); },
+                        download: 'open',
+                        orientation: 'landscape',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                            modifier: {
+                                page: 'all',
+                                search: 'none'
+                            }
+                        },
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        filename: function () { return getExportFileName('Returned_Bills'); },
+                        text: 'Export to PDF',
+                        orientation: 'landscape',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                            modifier: {
+                                page: 'all',
+                                pageSize: 'LEGAL',
+                                search: 'none',
+                            }
+                        },
+                        customize: function (doc) {
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
+                            doc.pageMargins = [5, 100, 5, 5];
+
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: _title,
+                        footer: true,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        },
+                    },
+                ],
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",

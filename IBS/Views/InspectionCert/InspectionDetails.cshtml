@@ -16,11 +16,20 @@
         <input type="hidden" asp-for="Callsno" />
         <input type="hidden" asp-for="SelectRadio" />
         <input type="hidden" asp-for="ActionType" />
-        <input type="hidden" asp-for="State" />
         <input type="hidden" asp-for="Au" />
         <input type="hidden" asp-for="Bpo" />
         <input type="hidden" asp-for="IeCd" />
         <input type="hidden" asp-for="ItemSrnoPo" />
+
+        <input type="hidden" asp-for="City" />
+        <input type="hidden" asp-for="State" />
+        <input type="hidden" asp-for="Pincode" />
+        <input type="hidden" asp-for="BpoType" />
+        <input type="hidden" asp-for="BillNo" />
+        <input type="hidden" asp-for="chkABill" />
+
+
+
         <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
 
         <div class="boxRadius">
@@ -79,7 +88,7 @@
                     <td><label for="Reference" id="lblIrfcBpo">IRFC BPO : </label></td>
                     <td>
                         <b><span></span></b>
-                        @Html.DropDownListFor(model => model.IrfcBpo, new SelectList(IBS.Models.Common.GetBPOList("") , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.IrfcBpo, new SelectList(IBS.Models.Common.GetBPOList() , "Value", "Text"),"--Select--")
                     </td>
                     <td><label for="Reference">IRFC Funded : </label></td>
                     <td>
@@ -189,10 +198,10 @@
                     <div class="reference">
                         <label for="Reference">Legal Name</label>
                         <input type="text" class="input" asp-for="LegalName" maxlength="100" style="text-transform: uppercase;">
-                        @*<span id="lblCity" style="color:#d52127;"></span>
+                        <span id="lblCity" style="color:#d52127;"></span>
                         <span id="lblState" style="color:#d52127;"></span>
-                        <span id="lblPincode" style="color:#d52127;"></span>*@
-                        <span style="color:#d52127;" class="note">@Model.City @Model.State @Model.Pincode</span>
+                        <span id="lblPincode" style="color:#d52127;"></span>
+                        @*<span style="color:#d52127;" class="note">@Model.City @Model.State @Model.Pincode</span>*@
                     </div>
                 </div>
                 <div class="col-md-4" style="margin-top: 30px;">
@@ -213,16 +222,14 @@
                         @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="reference">
-                        <label for="Reference">AU Code</label>
-                        <label class="darkRedBoldText">@Model.Au</label>
-                    </div>
+                <div class="col-md-4 mb-3" style="margin-top: 30px;">
+                    <label for="Reference">AU Code : </label>
+                    <label class="darkRedBoldText">@Model.Au</label>
                 </div>
                 <div class="col-md-4 mb-3" style="margin-top: 30px;">
                     <label for="Reference">Bill Paying Officer : </label>
                     @*<input type="text" class="input" asp-for="Bpo" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>*@
-                    <label class="darkRedBoldText">@Model.Bpo</label>
+                    <label class="darkRedBoldText">@Model.BpoName</label>
                 </div>
             </div>
 
@@ -230,7 +237,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="BillNo">Bill No. for which Credit Note is biegn prepared</label>
-                        <input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;" onchange="OnBillNoChanged()">
+                        <input type="text" class="input" asp-for="CnoteBillNo" maxlength="100" style="text-transform: uppercase;" onchange="OnBillNoChanged()">
                         <span id="spnBillNo" class="darkRedBoldText"></span>
                     </div>
                 </div>
@@ -295,7 +302,15 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference"><a onclick="lnkbtnMRDT();" style="color:dodgerblue;" title="Click here to refresh Call / Material Rediness Date from [Call Registration] Form">Call/Material Readiness Date</a></label>
-                        <input type="text" class="datepicker" asp-for="CallDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        @if (@Model.ActionType == "A")
+                        {
+                            <input type="text" class="datepicker" asp-for="DtInspDesire" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        }
+                        else
+                        {
+                            <input type="text" class="datepicker" asp-for="CallDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        }
+
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -336,7 +351,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">Photo Attached</label>
-                        @Html.DropDownListFor(model => model.Photo, new SelectList(IBS.Models.Common.GetYesNoCommon() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.Photo, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
             </div>
@@ -401,28 +416,31 @@
             <div class="row my-0">
                 <div class="col-md-2 mb-3">
                     <div class="reference">
-                        <label for="Reference">Bill Date</label>
+                        <label for="Reference">Bill Date <span style="color:#d52127;">*</span></label>
                         <input type="text" class="datepicker" asp-for="BillDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        <span id="spnBillDt" style="color:#d52127;"></span>
                     </div>
                 </div>
                 <div class="col-md-2 mb-3" style="margin-top: 30px;">
                     <div class="reference">
                         @*<label for="Reference" id="lblBillDtUpdate">Bill Date</label>*@
                         <div class="savenext-btn">
-                            <button type="button" class="save-btn active" id="btnBillDtUpdate">Bill Date Update</button>
+                            <button type="button" class="save-btn active" id="btnBillDtUpdate" style="display:none;">Bill Date Update</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Min Fee Payble (if any)</label>
+                        <label for="Reference">Min Fee Payble (if any) <span style="color:#d52127;">*</span></label>
                         <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;">
+                        <span id="spnMinFee" style="color:#d52127;"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Max Fee Allowed (if any)</label>
+                        <label for="Reference">Max Fee Allowed (if any) <span style="color:#d52127;">*</span></label>
                         <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;">
+                        <span id="spnMaxFee" style="color:#d52127;"></span>
                     </div>
                 </div>
             </div>
@@ -433,7 +451,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Reference">Rly BPO Fee</label>
-                            @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
                         </div>
                     </div>
                 }
@@ -476,7 +494,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">BPO.</label>
-                        <input type="text" class="input" asp-for="BpoCd" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="BpoCd" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -496,10 +514,19 @@
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <div class="reference">
-                        <div class="custom-control custom-checkbox">
+                        <div class="custom-control custom-checkbox" id="OuterDivOrBody">
                             <label class="custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="chkABill" asp-for="chkABill" />
-                                Advance Bill
+                                @*<input type="checkbox" class="custom-control-input" id="chkABill" asp-for="chkABill" />*@
+                                @if (Model.AdvBill == "A")
+                                {
+                                    <input type="checkbox" id="chkABill" name="chkABill" asp-for="chkABill" checked />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chkABill" name="chkABill" asp-for="chkABill" />
+                                }
+                                <label for="chkABill">Advance Bill</label>
+
                             </label>
                         </div>
                     </div>
@@ -509,8 +536,9 @@
             <div class="row my-0">
                 <div class="col-md-8 mb-3">
                     <div class="reference">
-                        <label for="Reference">Remarks (if any)</label>
+                        <label for="Reference">Remarks (if any) <span style="color:#d52127;">*</span></label>
                         <textarea class="input" asp-for="Remarks"></textarea>
+                        <span id="spnRemarks" style="color:#d52127;"></span>
                     </div>
                 </div>
             </div>
@@ -559,11 +587,15 @@
             <h3 class="heading3">Bill Date</h3>
             </div>
             </div>*@
-            <div class="row my-0 center lblBillDt">
-                <div class="col-md-12 mb-3">
-                    <label>Bill Date : @Convert.ToDateTime(@Model.BillDt).ToString("dd/MM/yyyy")</label>
+            @if (Model.BillNo != null)
+            {
+                <div class="row my-0 center lblBillDt">
+                    <div class="col-md-12 mb-3">
+                        <label>Bill Date : @Convert.ToDateTime(@Model.BillDt).ToString("dd/MM/yyyy")</label>
+                    </div>
                 </div>
-            </div>
+            }
+
             <div class="row my-0 center">
                 <div class="col-md-12 mb-3">
                     <span style="color:#d52127;">
@@ -592,12 +624,16 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            if ($('#chkABill').is(":checked")) {
-                $("#chkABill").val('A');
-            }
-            else {
-                $("#chkABill").val('X');
-            }
+            $('#OuterDivOrBody').delegate('#chkABill', 'change', function () {
+                if (this.checked) {
+                    $("#chkABill").val('A');
+                }
+                else {
+                    $("#chkABill").val('X');
+                }
+            });
+
+
             var GSTNo = $("#GstinNo").val();
             if (GSTNo == "") {
                 $('#GstinNo').prop('readonly', false);
@@ -615,35 +651,55 @@
                 $("#lblIrfcBpo").show();
             }
             if ($("#STS").val() != "X") {
-                $("#btnGBill").text("Update Bill");
+                //$("#btnGBill").text("Update Bill");
+                if ($("#BillNo").val() != "")
+                    $("#btnGBill").text("Update Bill");
             }
+
             ConsigneeGSTChanged();
+            if ($("#BillDt").val() != "") {
+                $("#btnBillDtUpdate").show();
+            }
 
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
             $("#ActionType").val(actiontype);
             if (actiontype == "A") {
-                $("#IrfcBpo").hide();
-                $("#lblIrfcBpo").hide();
+                $("#IcTypeId").val("1");
+
                 $("#btnGBill").hide();
                 $(".UploadDoc").hide();
                 $(".lblBillDt").hide();
-
+                $("#IrfcBpo").hide();
+                $("#lblIrfcBpo").hide();
                 $("#lblBillDtUpdate").hide();
                 $("#btnBillDtUpdate").hide();
+
+                if ($("#IrfcFunded").val() == "Y") {
+
+                    $("#IrfcBpo").show();
+                    $("#lblIrfcBpo").show();
+                }
+
             }
             if (actiontype == "M") {
+                $('input[type=radio][name=ConsigneeGST]').change();
                 InitializeDatatable();
-                $("#btnGBill").text("Update Bill");
-                if ($("#BillNo").val() != null)
+
+                if ($("#BillNo").val() == "") {
+                    $("#BillNo").text("Generate Bill");
+                }
+                else {
+                    $("#BillNo").text("Update Bill");
                     ShowHideMsgNew(true, "The bill has been generated for this IC Vide Bill No : " + $("#BillNo").val());
+                }
+
             }
             if (actiontype == "D") {
                 $("#btnDelete").show();
                 $("#btnSave").hide();
             }
         });
-
 
         $("#StampPatternCd").change(function () {
             if ($("#StampPatternCd").val() == "O") {
@@ -652,6 +708,10 @@
             else {
                 $("#StampPattern").hide();
             }
+        });
+
+        $("#IrfcBpo").change(function () {
+            $('input[type=radio][name=ConsigneeGST]').change();
         });
 
         $("#IrfcFunded").change(function () {
@@ -725,59 +785,71 @@
         }
 
         function ConsigneeGSTChanged() {
+
             $('input[type=radio][name=ConsigneeGST]').change(function () {
                 var ConsigneeCd = $("#Consignee").val();
-                if (this.value === 'rdbConsignee') {
-                    $.ajax({
-                        url: '@Url.Action("GetConsignee", "InspectionCert")',
-                        type: "GET",
-                        dataType: "JSON",
-                        data: { "ConsigneeCd": ConsigneeCd },
-                        success: function (contacts) {
-                            if (contacts.data && contacts.data.length > 0) {
-                                //$("#lblCity").text("City : " + contacts.data[0].City);
-                                //$("#lblState").text(",State : " + contacts.data[0].State);
-                                //$("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
-
-                                $("#GstinNo").val(contacts.data[0].GstinNo);
-                                $("#LegalName").val(contacts.data[0].LegalName);
-
-                                $('#GstinNo').prop('readonly', true);
-                            }
-                        }
-                    });
-                } else if (this.value === 'rdbBPO') {
-                    var BPOCd = $("#BpoCd").val();
-                    $.ajax({
-                        url: '@Url.Action("GetBPO", "InspectionCert")',
-                        type: "GET",
-                        dataType: "JSON",
-                        data: { "BPOCd": BPOCd },
-                        success: function (contacts) {
-                            if (contacts.data && contacts.data.length > 0) {
+                if ($("#IrfcFunded").val() == "Y") {
+                    if (this.value === 'rdbBPO') {
+                        var BPOCd = $("#IrfcBpo").val();
+                        $.ajax({
+                            url: '@Url.Action("GetBPO", "InspectionCert")',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { "BPOCd": BPOCd },
+                            success: function (contacts) {
                                 if (contacts.data && contacts.data.length > 0) {
-                                    //$("#lblCity").text("City : " + contacts.data[0].City);
-                                    //$("#lblState").text(",State : " + contacts.data[0].State);
-                                    //$("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
+                                    if (contacts.data && contacts.data.length > 0) {
+                                        $("#lblCity").text("City : " + contacts.data[0].City);
+                                        $("#lblState").text(",State : " + contacts.data[0].State);
+                                        $("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
+
+                                        $("#GstinNo").val(contacts.data[0].GstinNo);
+                                        $("#LegalName").val(contacts.data[0].LegalName);
+
+                                        $('#GstinNo').prop('readonly', true);
+
+                                        $("#City").val(contacts.data[0].City);
+                                        $("#State").val(contacts.data[0].State);
+                                        $("#Pincode").val(contacts.data[0].Pincode);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    if (this.value === 'rdbConsignee') {
+                        $.ajax({
+                            url: '@Url.Action("GetConsignee", "InspectionCert")',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { "ConsigneeCd": ConsigneeCd },
+                            success: function (contacts) {
+                                if (contacts.data && contacts.data.length > 0) {
+                                    $("#lblCity").text("City : " + contacts.data[0].City);
+                                    $("#lblState").text(",State : " + contacts.data[0].State);
+                                    $("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
 
                                     $("#GstinNo").val(contacts.data[0].GstinNo);
                                     $("#LegalName").val(contacts.data[0].LegalName);
 
                                     $('#GstinNo').prop('readonly', true);
+
+                                    $("#City").val(contacts.data[0].City);
+                                    $("#State").val(contacts.data[0].State);
+                                    $("#Pincode").val(contacts.data[0].Pincode);
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-
-
             });
 
 
         }
 
         function OnBillNoChanged() {
-            var BillNo = $("#BillNo").val();
+            var BillNo = $("#CnoteBillNo").val();
             var CaseNo = $("#Caseno").val();
 
             if (BillNo == "" || BillNo == null) {
@@ -797,20 +869,22 @@
                             if (CaseNo == CaseN) {
                                 ShowHideMsgNew(true, "Valid Bill No.");
                                 $("#btnBillVerify").hide();
+                                $("#CnoteBillNo").attr("disabled", "disabled");
                             }
                             else {
-                                $("#BillNo").val("");
+                                $("#CnoteBillNo").val("");
                                 ShowHideMsgNew(false, "Invalid Bill No. This Bill No. does not belong to this PO");
                             }
                         }
                         else {
-                            $("#BillNo").val("");
+                            $("#CnoteBillNo").val("");
                             ShowHideMsgNew(false, "Invalid Bill No. This Bill No. does not belong to this PO");
                         }
                     }
                 });
             }
         }
+
         $("#btnBillVerify").click(function () {
             var BillNo = $("#BillNo").val();
             var CaseNo = $("#Caseno").val();
@@ -852,10 +926,13 @@
         $("#btnSave").click(function () {
             var ConsigneeGST = $("input[name='ConsigneeGST']:checked").val();
             $("#SelectRadio").val(ConsigneeGST);
-            if ($("#BillNo").val() == "") {
-                ShowHideMsgNew(false, "Bill No are required.");
-                return;
+            if ($("#IcTypeId").val() == "9") {
+                if ($("#CnoteBillNo").val() == "") {
+                    ShowHideMsgNew(false, "Bill No are required.");
+                    return;
+                }
             }
+
             if ($("#GstinNo").val() == "") {
                 ShowHideMsgNew(false, "Gstin No are required.");
                 return;
@@ -1049,18 +1126,52 @@
         }
 
         $("#btnGBill").click(function () {
-            if ($('#chkABill').is(":checked")) {
+
+            //if ($("#chkABill").is(":checked")) {
+            //    $("#chkABill").val('A');
+            //}
+            //else {
+            //    $("#chkABill").val('X');
+            //}
+
+            var chkABill = $('input[name="chkABill"]:checked').val();
+            if (chkABill == "on") {
                 $("#chkABill").val('A');
             }
             else {
                 $("#chkABill").val('X');
             }
+
+            $("#spnMinFee").html("");
+            $("#spnMaxFee").html("");
+            $("#spnBillDt").html("");
+            if ($("#BillDt").val() == "") {
+                $("#spnBillDt").html("Please add Bill Date.");
+                return;
+            }
+            if ($("#MinFee").val() == null) {
+                $("#spnMinFee").html("Please Minimum fees.");
+                return;
+            }
+            if ($("#MaxFee").val() == null) {
+                $("#spnMaxFee").html("Please Maximum fees.");
+                return;
+            }
+            if ($("#Remarks").val() == "") {
+                $("#spnRemarks").html("Please add Remarks.");
+                return;
+            }
+
+
+
+
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
             $.post("@Url.Action("BillUpdate", "InspectionCert")", formData, function (response) {
                 if (response.status) {
                     if (response.responseText == "Update Successfully.") {
-                        PopUp();
+                        var BillNo = response.Id;
+                        PopUp(BillNo);
                     }
                     else {
                         ShowHideMsgNew(false, response.responseText);
@@ -1072,10 +1183,10 @@
             });
         });
 
-        function PopUp() {
-            var _BillNo = $("#BillNo").val();
+        function PopUp(BillNo) {
+            //var _BillNo = $("#BillNo").val();
             $.ajax({
-                url: '@Url.Action("PopUp", "InspectionCert")?BillNo=' + _BillNo,
+                url: '@Url.Action("PopUp", "InspectionCert")?BillNo=' + BillNo,
                 type: 'GET',
                 cache: false,
                 processData: false,
@@ -1090,6 +1201,7 @@
         }
 
         function PopUpOk() {
+            //location.reload();
             $("#PopUp").modal('hide');
         }
 

@@ -1,19 +1,20 @@
 ﻿@model IBS.Models.DailyWorkPlanModel
 @{
-    ViewData["Title"] = "IE DAILY WORK PLAN";
+    ViewData["Title"] = "Ie Daily Work Plan";
 }
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="DailyWorkPlan" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+<form role="form" asp-controller="DailyWorkPlan" asp-action="DailyWorkPlan" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>IE DAILY WORK PLAN</h2>
+            <h2>@ViewData["Title"]</h2>
         </div>
     </div>
     <div class="accordion-body">
+        <input type="hidden" asp-for="ReasonDt" />
         <div class="row my-0">
             <div class="col-md-6 mb-3">
                 <div class="reference">
-                    <label for="Reference">Reason for Not Entering WorkPlan of Date: <strong><span id="ReasonDt" name="ReasonDt" runat="server"></span></strong></label>
+                    <label for="Reference">Reason for Not Entering WorkPlan of Date: <strong><span id="RDt" name="RDt" runat="server"></span></strong></label>
                     <textarea rows="4" asp-for="Reason" style="text-transform: uppercase;"></textarea>
                     <span asp-validation-for="Reason" class="text-danger"></span>
                 </div>
@@ -33,9 +34,9 @@
         </div>
         <div class="row my-0">
             <div class="savenext-btn">
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            </div>
         </div>
-       </div>
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -69,15 +70,19 @@
 
         function Save() {
             if ($("#frmDetails").valid()) {
+                var todate = new Date();
+                $('#ReasonDt').val(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
                 $("#frmDetails").submit();
             }
         }
+
         function setDefaultDate() {
             var fromdate = new Date();
             var todate = new Date();
-            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
-            $('#ToDate').text(moment(todate.setDate(todate.getDate() + 1)).format('@Common.CommonDateFormateForJS'));
-            $('#ReasonDt').text(moment(todate.setDate(todate.getDate() )).format('@Common.CommonDateFormateForJS'));
+            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('DD/MM/YYYY'));
+            $('#ToDate').text(moment(todate.setDate(todate.getDate() + 1)).format('DD/MM/YYYY'));
+            $('#RDt').text(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
+            $('#ReasonDt').val(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
         }
 
         function InitializeDatatable() {
@@ -118,13 +123,13 @@
                         data: "NwpDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
                     },
                     { data: "RegionCode" },
-                    
+
                 ],
                 "order": [[0, "asc"]]
             });

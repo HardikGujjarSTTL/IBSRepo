@@ -81,59 +81,142 @@ namespace IBS.Repositories
                 return model;
             }
         }
-        public List<LABREGISTERModel> GetLabRegDtl(string RegNo, string SNO)
+        //public List<LABREGISTERModel> GetLabRegDtl(string RegNo, string SNO)
+        //{
+
+        //    //DTResult<LABREGISTERModel> dTResult = new() { draw = 0 };
+        //    //IQueryable<LABREGISTERModel>? query = null;
+
+
+
+
+        //    using (var dbContext = context.Database.GetDbConnection())
+        //    {
+        //        OracleParameter[] par = new OracleParameter[3];
+        //        par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
+        //        par[1] = new OracleParameter("p_SNO", OracleDbType.NVarchar2, SNO, ParameterDirection.Input);
+        //        par[2] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+        //        var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails", par, 2);
+
+        //        List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();
+        //        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        //        {
+        //            foreach (DataRow row in ds.Tables[0].Rows)
+        //            {
+        //                LABREGISTERModel model = new LABREGISTERModel
+        //                {
+        //                    SampleRegNo = row["SAMPLE_REG_NO"] as string,
+        //                    SNO = Convert.ToString(row["SNO"]),
+        //                    ItemDesc = Convert.ToString(row["ITEM_DESC"]),
+        //                    Qty = Convert.ToString(row["QTY"]),
+        //                    TestCategoryCode = Convert.ToString(row["TEST_CATEGORY_CD"]),
+        //                    Test = Convert.ToString(row["TEST"]),
+        //                    LabID = Convert.ToString(row["LAB_ID"]),
+        //                    LabName = Convert.ToString(row["LAB_NAME"]),
+        //                    TestingFee = Convert.ToString(row["TESTING_FEE"]),
+        //                    ServiceTax = Convert.ToString(row["SERVICE_TAX"]),
+        //                    HandlingCharges = Convert.ToString(row["HANDLING_CHARGES"]),
+        //                    TestReportRequestDate = Convert.ToString(row["TEST_REPORT_REQ_DATE"]),
+        //                    TestReportReceiveDate = Convert.ToString(row["TEST_REPORT_REC_DATE"]),
+        //                    TestStatus = Convert.ToString(row["TEST_STATUS"]),
+        //                    Remarks = Convert.ToString(row["REMARKS"]),
+        //                    SampleDispatchLabDate = Convert.ToString(row["SAMPLE_DISPATCH_LAB_DT"]),
+        //                };
+
+        //                modelList.Add(model);
+        //            }
+        //        }
+
+        //        return modelList;
+        //    }
+
+        //    //return dTResult;
+        //}
+
+        public DTResult<LABREGISTERModel> GetLabRegDtl(DTParameters dtParameters)
         {
 
-            //DTResult<LABREGISTERModel> dTResult = new() { draw = 0 };
-            //IQueryable<LABREGISTERModel>? query = null;
+            DTResult<LABREGISTERModel> dTResult = new() { draw = 0 };
+            IQueryable<LABREGISTERModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
 
 
-
-
-            using (var dbContext = context.Database.GetDbConnection())
+            if (dtParameters.Order != null)
             {
-                OracleParameter[] par = new OracleParameter[3];
-                par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_SNO", OracleDbType.NVarchar2, SNO, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails", par, 2);
-
-                List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                if (orderCriteria == "")
                 {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        LABREGISTERModel model = new LABREGISTERModel
-                        {
-                            SampleRegNo = row["SAMPLE_REG_NO"] as string,
-                            SNO = Convert.ToString(row["SNO"]),
-                            ItemDesc = Convert.ToString(row["ITEM_DESC"]),
-                            Qty = Convert.ToString(row["QTY"]),
-                            TestCategoryCode = Convert.ToString(row["TEST_CATEGORY_CD"]),
-                            Test = Convert.ToString(row["TEST"]),
-                            LabID = Convert.ToString(row["LAB_ID"]),
-                            LabName = Convert.ToString(row["LAB_NAME"]),
-                            TestingFee = Convert.ToString(row["TESTING_FEE"]),
-                            ServiceTax = Convert.ToString(row["SERVICE_TAX"]),
-                            HandlingCharges = Convert.ToString(row["HANDLING_CHARGES"]),
-                            TestReportRequestDate = Convert.ToString(row["TEST_REPORT_REQ_DATE"]),
-                            TestReportReceiveDate = Convert.ToString(row["TEST_REPORT_REC_DATE"]),
-                            TestStatus = Convert.ToString(row["TEST_STATUS"]),
-                            Remarks = Convert.ToString(row["REMARKS"]),
-                            SampleDispatchLabDate = Convert.ToString(row["SAMPLE_DISPATCH_LAB_DT"]),
-                        };
-
-                        modelList.Add(model);
-                    }
+                    orderCriteria = "LabName";
                 }
-
-                return modelList;
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "LabName";
+                orderAscendingDirection = true;
             }
 
-            //return dTResult;
-        }
 
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_SNO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("SNO"), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+
+            var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails", par, 2);
+
+            List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+
+                    LABREGISTERModel model = new LABREGISTERModel
+                    {
+                        SampleRegNo = row["SAMPLE_REG_NO"] as string,
+                        SNO = Convert.ToString(row["SNO"]),
+                        ItemDesc = Convert.ToString(row["ITEM_DESC"]),
+                        Qty = Convert.ToString(row["QTY"]),
+                        TestCategoryCode = Convert.ToString(row["TEST_CATEGORY_CD"]),
+                        Test = Convert.ToString(row["TEST"]),
+                        LabID = Convert.ToString(row["LAB_ID"]),
+                        LabName = Convert.ToString(row["LAB_NAME"]),
+                        TestingFee = Convert.ToString(row["TESTING_FEE"]),
+                        ServiceTax = Convert.ToString(row["SERVICE_TAX"]),
+                        HandlingCharges = Convert.ToString(row["HANDLING_CHARGES"]),
+                        TestReportRequestDate = Convert.ToString(row["TEST_REPORT_REQ_DATE"]),
+                        TestReportReceiveDate = Convert.ToString(row["TEST_REPORT_REC_DATE"]),
+                        TestStatus = Convert.ToString(row["TEST_STATUS"]),
+                        Remarks = Convert.ToString(row["REMARKS"]),
+                        SampleDispatchLabDate = Convert.ToString(row["SAMPLE_DISPATCH_LAB_DT"]),
+                    };
+
+                    modelList.Add(model);
+                }
+            }
+            query = modelList.AsQueryable();
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.SampleRegNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
         public LABREGISTERModel LabDtlModify(string RegNo, string SNO)
         {
 
@@ -144,7 +227,7 @@ namespace IBS.Repositories
                 par[1] = new OracleParameter("p_SNO", OracleDbType.NVarchar2, SNO, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails", par, 2);
+                var ds = DataAccessDB.GetDataSet("GetLabRegisterDetails_Edit", par, 2);
 
                 LABREGISTERModel model = new();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -168,6 +251,7 @@ namespace IBS.Repositories
                         TestStatus = Convert.ToString(row["TEST_STATUS"]),
                         Remarks = Convert.ToString(row["REMARKS"]),
                         SampleDispatchLabDate = Convert.ToString(row["SAMPLE_DISPATCH_LAB_DT"]),
+                        DISCIPLINE_ID = Convert.ToString(row["discipline_id"]),
                     };
 
                     //modelList.Add(model);
@@ -218,45 +302,119 @@ namespace IBS.Repositories
             //return dTResult;
         }
 
-        public List<LABREGISTERModel> LapIndexData(string CaseNo, string CallRdt, string RegNo)
+        //public List<LABREGISTERModel> LapIndexData(string CaseNo, string CallRdt, string RegNo)
+        //{
+
+        //    using (var dbContext = context.Database.GetDbConnection())
+        //    {
+        //        OracleParameter[] par = new OracleParameter[4];
+        //        par[0] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, CaseNo, ParameterDirection.Input);
+        //        par[1] = new OracleParameter("p_CallRecvDt", OracleDbType.Date, CallRdt, ParameterDirection.Input);
+        //        par[2] = new OracleParameter("p_LabRegNo", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
+        //        par[3] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+        //        var ds = DataAccessDB.GetDataSet("SP_GETCALLREGISTER", par, 3);
+
+        //        List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();
+        //        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        //        {
+        //            foreach (DataRow row in ds.Tables[0].Rows)
+        //            {
+        //                LABREGISTERModel model = new LABREGISTERModel
+        //                {
+        //                    SampleRegNo = row["SAMPLE_REG_NO"] as string,
+        //                    CaseNo = Convert.ToString(row["CASE_NO"]),
+        //                    CallRecDt = Convert.ToString(row["CALL_RECV_DATE"]),
+        //                    CallSNO = Convert.ToString(row["CALL_SNO"]),
+        //                    IE = Convert.ToString(row["IE_SNAME"]),
+        //                    TestStatus = Convert.ToString(row["CALL_STATUS"]),
+
+        //                };
+
+        //                modelList.Add(model);
+        //            }
+        //        }
+
+        //        return modelList;
+        //    }
+
+        //    //return dTResult;
+        //}
+        public DTResult<LABREGISTERModel> LapIndexData(DTParameters dtParameters)
         {
 
-            using (var dbContext = context.Database.GetDbConnection())
+            DTResult<LABREGISTERModel> dTResult = new() { draw = 0 };
+            IQueryable<LABREGISTERModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+
+            if (dtParameters.Order != null)
             {
-                OracleParameter[] par = new OracleParameter[4];
-                par[0] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, CaseNo, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_CallRecvDt", OracleDbType.Date, CallRdt, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_LabRegNo", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                var ds = DataAccessDB.GetDataSet("SP_GETCALLREGISTER", par, 3);
-
-                List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                if (orderCriteria == "")
                 {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        LABREGISTERModel model = new LABREGISTERModel
-                        {
-                            SampleRegNo = row["SAMPLE_REG_NO"] as string,
-                            CaseNo = Convert.ToString(row["CASE_NO"]),
-                            CallRecDt = Convert.ToString(row["CALL_RECV_DATE"]),
-                            CallSNO = Convert.ToString(row["CALL_SNO"]),
-                            IE = Convert.ToString(row["IE_SNAME"]),
-                            TestStatus = Convert.ToString(row["CALL_STATUS"]),
-
-                        };
-
-                        modelList.Add(model);
-                    }
+                    orderCriteria = "SampleRegNo";
                 }
-
-                return modelList;
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "SampleRegNo";
+                orderAscendingDirection = true;
             }
 
-            //return dTResult;
-        }
 
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo"), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_CallRecvDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CallRdt"), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_LabRegNo", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("RegNo"), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_Cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+           
+            var ds = DataAccessDB.GetDataSet("SP_GETCALLREGISTER", par, 3);
+
+            List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+
+                    LABREGISTERModel model = new LABREGISTERModel
+                    {
+                        SampleRegNo = row["SAMPLE_REG_NO"] as string,
+                        CaseNo = Convert.ToString(row["CASE_NO"]),
+                        CallRecDt = Convert.ToString(row["CALL_RECV_DATE"]),
+                        CallSNO = Convert.ToString(row["CALL_SNO"]),
+                        IE = Convert.ToString(row["IE_SNAME"]),
+                        TestStatus = Convert.ToString(row["CALL_STATUS"]),
+
+                    };
+
+                    modelList.Add(model);
+                }
+            }
+            query = modelList.AsQueryable();
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.IE).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
         public LABREGISTERModel LabRegisterFormNew(string CaseNo, string CallDt, string CallSno)
         {
 
@@ -327,6 +485,7 @@ namespace IBS.Repositories
                         cmd.Parameters.Add("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date).Value = LABREGISTERModel.SampleDispatchLabDate;
                         cmd.Parameters.Add("p_USER_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.UName;
                         cmd.Parameters.Add("p_DATETIME", OracleDbType.Date).Value = ss;
+                        cmd.Parameters.Add("p_DISCIPLINE_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.DISCIPLINE_ID;
 
                         cmd.ExecuteNonQuery();
                         SaveDataDetails2(LABREGISTERModel);
@@ -471,6 +630,22 @@ namespace IBS.Repositories
             }
             return true;
         }
+        public bool InsertDataDetails(LABREGISTERModel LABREGISTERModel)
+        {
+            
+            try
+            {
+                string REG_NO = LABREGISTERModel.SampleRegNo;
+                string Sno = GetSNo(REG_NO);
+                InsertLabRegDetails(REG_NO, Sno, LABREGISTERModel);
+                UpdateLabReg(REG_NO, LABREGISTERModel);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
         public string GetSNo(string RegNo)
         {
             string query = "Select NVL(max(SNO),0)+1 from T51_LAB_REGISTER_DETAIL WHERE SAMPLE_REG_NO ='" + RegNo + "'";
@@ -483,6 +658,7 @@ namespace IBS.Repositories
 
 
         }
+
         public bool InsertLabRegDetails(string REG_NO, string Sno, LABREGISTERModel LABREGISTERModel)
         {
             try
@@ -495,7 +671,7 @@ namespace IBS.Repositories
                 string ss;
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                 ss = GetDateString(sqlQuery);
-                OracleParameter[] par = new OracleParameter[17];
+                OracleParameter[] par = new OracleParameter[18];
                 par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, REG_NO, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_SNO", OracleDbType.Varchar2, Sno, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_ITEM_DESC", OracleDbType.Varchar2, LABREGISTERModel.ItemDesc, ParameterDirection.Input);
@@ -513,6 +689,7 @@ namespace IBS.Repositories
                 par[14] = new OracleParameter("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchLabDate, ParameterDirection.Input);
                 par[15] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, LABREGISTERModel.UName, ParameterDirection.Input);
                 par[16] = new OracleParameter("p_DATETIME", OracleDbType.Date, ss, ParameterDirection.Input);
+                par[17] = new OracleParameter("p_DISCIPLINE_ID", OracleDbType.Varchar2, LABREGISTERModel.DISCIPLINE_ID, ParameterDirection.Input);
                 var ds = DataAccessDB.ExecuteNonQuery("SP_INSERT_LAB_REGISTER_DETAIL", par, 1);
             }
             catch (Exception ex)

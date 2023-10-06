@@ -275,6 +275,15 @@ namespace IBS.Helper
             N,
         }
 
+        public enum AdvanceBill
+        {
+            [Description("Advance bill to be raised")]
+            A,
+            [Description("No Advance bill")]
+            X,
+        }
+
+
         public enum ActiveInActive
         {
             [Description("Active")]
