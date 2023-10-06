@@ -16,51 +16,81 @@
 <div class="@clsView">
     <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
         <div class="accordion-body">
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Bank : </label>
-                    <label class="text-danger" id="lblBank">@Model.BANK_NAME</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Cheque No : </label>
-                    <label class="text-danger" id="lblChqNo">@Model.CHQ_NO</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Cheque Date : </label>
-                    <label class="text-danger" id="lblChqDate">@Model.CHQ_DT</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">RV Voucher No. & Date : </label>
-                    <label class="text-danger" id="lblVNo">@Model.VCHR_NO</label> &
-                    <label class="text-danger" id="lblVDT">@Model.VCHR_DT</label>
-                    <label class="text-danger" id="lblSNO">@Model.SNO</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">JV NO :</label>
-                    <label class="text-danger" id="lblJVNO">@Model.JV_NO</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">JV Date :</label>
-                    <input type="text" class="input datepicker" asp-for="TXTV_DT" />
-                    <label class="text-danger" id="lblJVDT">@Model.JV_DT</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Cheque Amount :</label>
-                    <label class="text-danger" id="lblAmt">@Model.CHQ_AMOUNT</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Amount Transferred To Other Units :</label>
-                    <label class="text-danger" id="lblAmtADJ">@Model.AMT_TRANSFERRED</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Available Amount :</label>
-                    <label class="text-danger" id="lblSAmt">@Model.SUSPENSE_AMT</label>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Paying Authority :</label>
-                    <label class="text-danger" id="lblCBPO">@Model.BPO</label>
-                </div>
-            </div>
+            <table class="borderGrid mb-0">
+                <tr>
+                    <td>
+                        Bank :
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblBank">@Model.BANK_NAME</label>
+                    </td>
+                    <td>
+                        Cheque No :
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblChqNo">@Model.CHQ_NO</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Cheque Date :
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblChqDate">@Model.CHQ_DT</label>
+                    </td>
+                    <td>
+                        <label for="Reference">RV Voucher No. & Date : </label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblVNo">@Model.VCHR_NO</label> &
+                        <label class="text-danger" id="lblVDT">@Model.VCHR_DT</label>
+                        <label class="text-danger" id="lblSNO">@Model.SNO</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">JV NO :</label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblJVNO">@Model.JV_NO</label>
+                    </td>
+                    <td>
+                        <label for="Reference">JV Date :</label>
+                    </td>
+                    <td>
+                        <input type="text" class="input datepicker" asp-for="TXTV_DT" />
+                        <label class="text-danger" id="lblJVDT">@Model.JV_DT</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Cheque Amount :</label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblAmt">@Model.CHQ_AMOUNT</label>
+                    </td>
+                    <td>
+                        <label for="Reference">Amount Transferred To Other Units :</label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblAmtADJ">@Model.AMT_TRANSFERRED</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Available Amount :</label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblSAmt">@Model.SUSPENSE_AMT</label>
+                    </td>
+                    <td>
+                        <label for="Reference">Paying Authority :</label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblCBPO">@Model.BPO</label>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         @*<form role="form" asp-controller="InterUnit_Transfer" asp-action="SaveDetail" id="frmJVDetail">*@
@@ -102,11 +132,11 @@
                     </div>
                 </div>*@
                 <div class="row my-0">
-                    <div class="col-md-12 mb-3">
-                        <section class="table-section">
+                    <div class="col-md-12">
+                        
                             <div class="task-listinput">
-                                <div class="dash-table">
-                                    <table id="dtList" class="table-responsive">
+                        <div class="dash-table mb-0">
+                                    <table id="dtList" class="table-responsive mb-0">
                                         <thead>
                                             <tr>
                                                 <th>Region to which Transferred</th>
@@ -114,7 +144,7 @@
                                                 <th>Narration</th>
                                                 <th>Inter Unit Advice No.</th>
                                                 <th>Inter Unit Advice Date.</th>
-                                                <th>Action</th>
+                                                <th class="center padR10">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -122,7 +152,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </section>
+                        
                     </div>
                 </div>
                 <div id="modal-delete-conf-valuation-detail" class="modal fade" tabindex="-1" role="dialog">
