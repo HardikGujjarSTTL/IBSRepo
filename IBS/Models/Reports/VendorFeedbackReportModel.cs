@@ -2,6 +2,7 @@
 {
     public class VendorFeedbackReportModel
     {
+        public string Regions { get; set; }
         public List<VendorFeedbackReport> lstVendorFeedbackReport { get; set; }
     }
 

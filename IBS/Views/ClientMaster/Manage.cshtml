@@ -41,7 +41,7 @@
                     <div class="col-md-4 mb-3">
                     <label for="Reference">Email</label><i class="text-danger">*</i>
                         <input type="email" class="input" id="email" ASP-FOR="EMAIL" maxlength="30" required />
-                         <span id="emailValidationMessage" style="color:red;"></span>
+                    <span asp-validation-for="EMAIL" id="emailValidationMessage" style="color:red;"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                     <label for="Reference">Unit</label><i class="text-danger">*</i>
@@ -111,14 +111,15 @@
         function Save() {
             var password = $("#password").val();
             var confirmPassword = $("#confirmPassword").val();
-            if (!Emailvalidation()) {
-                return; 
-            }
+           
             if (password !== confirmPassword) {
                 $("#confirmPasswordError").text("The password and confirmation password do not match.");
             } else {
                 $("#confirmPasswordError").text("");
                 if ($("#frmUserRole").valid()) {
+                    if (!Emailvalidation()) {
+                        return;
+                    }
                     $("#frmUserRole").submit();
                 }
             }
@@ -129,7 +130,7 @@
             var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
             if (!expr.test(email)) {
-                $('#emailValidationMessage').text('Email is not valid.');
+                $('#emailValidationMessage').text('Please enter a valid email address.');
                 return false;
             } else {
                 $('#emailValidationMessage').text('');

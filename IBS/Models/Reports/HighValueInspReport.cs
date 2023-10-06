@@ -13,6 +13,7 @@
         public string monthChar { get; set; }
         public string forperiod { get; set; }
         public string ReportTitle { get; set; }
+        public string Regions { get; set; }
 
         public List<ValueInspList> lstValueInspList { get; set; }
     }

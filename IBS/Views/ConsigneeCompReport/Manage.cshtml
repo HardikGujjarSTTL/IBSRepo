@@ -1,9 +1,11 @@
-﻿@model IBS.Models.Reports.ConsigneeCompReports
+﻿@using System.Web;
+@model IBS.Models.Reports.ConsigneeCompReports
 
 @{
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
+
     ViewData["Title"] = ReportTitle;
 }
 
@@ -35,7 +37,7 @@
     var fileName = '';
 
     $(document).ready(function () {
-        if ('@ReportType' == 'U') {
+        if ('@ReportType' == 'CCU') {
             loadComplaints();
             fileName = 'Consignee Complaints For The Period';
         }

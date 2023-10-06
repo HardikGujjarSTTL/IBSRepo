@@ -20,6 +20,8 @@ namespace IBS.Models.Reports
         public string COName { get; set; }
         public string IEName { get; set; }
         public string IENametext { get; set; }
+        public string Regions { get; set; }
+        public DateTime Todaydate { get; set; }
 
         public List<AllNCRCMIE> lstAllNCRCMIE { get; set; }
         public List<IECMWise> lstIECMWise { get; set; }
