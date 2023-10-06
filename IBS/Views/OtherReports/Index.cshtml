@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row align-items-end my-0" id="divdate">
+                <div class="row align-items-end" id="divdate">
                     <div class="col-md-3">
                         <div class="input-search">
                             <label for="FromDate">For The Period From</label>
@@ -110,7 +110,7 @@
                             <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4">
+                    <div class="col-md-3">
                         <div class="input-search">
                             <label for="ToDate">To</label>
                             <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row align-items-end my-0" id="divmonth">
+                <div class="row align-items-end" id="divmonth">
                     <div class="col-md-3">
                         <div class="input-search">
                             <label for="FromDate">Month</label>
@@ -132,7 +132,7 @@
                             <span class="text-danger field-validation-error" id="spnErrormonth"></span>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4">
+                    <div class="col-md-3">
                         <div class="input-search">
                             <label for="ToDate">Year</label>
                             @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
@@ -163,7 +163,6 @@
                         </div>
                     </div>
                 }
-                <br />
                 @if (ReportType == "C")
                 {
                     <div class="col-md-12 custom-readio">
@@ -184,7 +183,7 @@
                 <div class="col-md-3">
                     @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetCOData(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
                 </div>
-                <br />
+                
                 <div class="custom-readio">
                     <div class="company-checkbox">
                         <div class="remember">
