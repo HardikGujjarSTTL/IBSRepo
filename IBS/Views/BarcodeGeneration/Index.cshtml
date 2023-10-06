@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Barcode Generation";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Barcode Generation List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="BarcodeGeneration" asp-action="AddBarcode" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Barcode</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtbarcode" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Barcode</th>
+                            <th>Case No</th>
+                            <th>System Date</th>
+                            <th>Inspector Name</th>
+                            <th>Description</th>
+                            <th>Sealing Type</th>
+                            <th>Rates</th>
+                            <th>Targated Date</th>
+                            <th>RTax</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtbarcode").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, 
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [
+
+                { data: "BARCODE" },
+                { data: "CASE_NO" },
+                { data: "CURRENT_DATE" },
+                { data: "INSPECTOR_CUSTOMER" },
+                { data: "DESCRIPTION" },
+                { data: "SEALING_TYPE" },
+                    { data: "TotalRate" },
+                { data: "TARGETED_DATE" },
+                    { data: "GSTAmount" },
+
+                    
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                        var Id = data.BARCODE;
+                        var editUrl = '@Url.Action("EditBarcode", "BarcodeGeneration")?Barcode=' + Id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    }
+                   
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+               
+
+    </script>
+}
