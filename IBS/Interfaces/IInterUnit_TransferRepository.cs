@@ -14,6 +14,8 @@ namespace IBS.Interfaces
         DTResult<InterUnitTransferRegionModel> GetInterUnitTransferRegion(DTParameters dTParameters, List<InterUnitTransferRegionModel> UnitTransferModel);
 
         bool DetailsInsertUpdate(InterUnit_TransferModel model, UserSessionModel user);
+
+        bool DetailDelete(string BANK_CD, string CHQ_NO, string CHQ_DT, string JV_NO, string DelID, InterUnitTransferRegionModel model, UserSessionModel user);
         #endregion
 
         //#region Old Code

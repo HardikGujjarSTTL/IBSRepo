@@ -70,9 +70,9 @@
             var ChqDate = $("#txtChequeDate").val();
 
             if (Bank == "" || ChqNo == "" || ChqDate==""){
-                if (Bank == "") { $("#lblErrorBank").html("Please select Bank") }
-                if (ChqNo == "") { $("#lblErrorChequeNo").html("Enter Cheque No") }
-                if (ChqDate == "") { $("#lblErrorChequeDate").html("Enter Cheque Date") }
+                if (Bank == "") { $("#lblErrorBank").html("Please select Bank") } else { $("#lblErrorBank").html("") }
+                if (ChqNo == "") { $("#lblErrorChequeNo").html("Enter Cheque No") } else { $("#lblErrorChequeNo").html("") }
+                if (ChqDate == "") { $("#lblErrorChequeDate").html("Enter Cheque Date") } else { $("#lblErrorChequeDate").html("") }
                 return;
             }
 

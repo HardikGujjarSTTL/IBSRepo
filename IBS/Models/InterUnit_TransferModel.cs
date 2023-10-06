@@ -12,7 +12,7 @@ namespace IBS.Models
         public string BANK_NAME { get; set; }
         public int BANK_CD { get; set; }
         public string BPO { get; set; }
-        public decimal AMOUNT { get; set; }
+        public decimal CHQ_AMOUNT { get; set; }
         public decimal AMT_TRANSFERRED { get; set; }
         public decimal SUSPENSE_AMT { get; set; }
 
@@ -25,6 +25,8 @@ namespace IBS.Models
         public List<InterUnitTransferRegionModel> lstUnitTransfer { get; set; }
         public string Region_ID { get; set; }
         public string DeletedJVID { get; set; }
+
+        public string ErrorMsg { get; set; }
     }
 
     public class InterUnitTransferRegionModel

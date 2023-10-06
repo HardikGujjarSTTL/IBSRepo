@@ -49,9 +49,14 @@ namespace IBS.Repositories
                 model.CHQ_DT = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_DT"]);
                 model.BANK_CD = Convert.ToInt32(ds.Tables[0].Rows[0]["BANK_CD"]);
                 model.BPO = Convert.ToString(ds.Tables[0].Rows[0]["BPO"]);
-                model.AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["AMOUNT"]);
+                model.CHQ_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["AMOUNT"]);
                 model.AMT_TRANSFERRED = Convert.ToDecimal(ds.Tables[0].Rows[0]["AMT_TRANSFERRED"]);
                 model.SUSPENSE_AMT = Convert.ToDecimal(ds.Tables[0].Rows[0]["SUSPENSE_AMT"]);
+            }
+            else
+            {
+                model.ErrorMsg = "InValid Cheque No.,Cheque Date Or Bank";
+                return model;
             }
 
             var query = (from jv in context.T27Jvs
@@ -118,18 +123,18 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "ID";
+                    orderCriteria = "ACC_CD";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "ID";
+                orderCriteria = "ACC_CD";
                 orderAscendingDirection = true;
             }
 
-            query = UnitTransferModel.OrderBy(x => x.ID).AsQueryable();
+            query = UnitTransferModel.OrderBy(x => x.ACC_CD).AsQueryable();
             dTResult.recordsTotal = query.Count();
 
             //if (!string.IsNullOrEmpty(searchBy))
@@ -138,7 +143,7 @@ namespace IBS.Repositories
 
             dTResult.recordsFiltered = query.Count();
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.data = query.ToList(); //DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
         }
@@ -149,40 +154,68 @@ namespace IBS.Repositories
             {
                 try
                 {
-                    foreach (var item in model.lstUnitTransfer)
+                    var item = model.Transfer;
+                    //foreach (var item in model.lstUnitTransfer)
+                    //{
+                    var query = (context.T25RvDetails
+                                    .Where(t => t.ChqNo == model.CHQ_NO &&
+                                                t.ChqDt == DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null) &&
+                                                t.BankCd == model.BANK_CD)
+                                    .Select(t => new
+                                    {
+                                        camt = t.Amount,
+                                        amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
+                                        susamt = t.SuspenseAmt
+                                    })).FirstOrDefault();
+                    if (model.JV_NO == "")
                     {
-                        var query = (context.T25RvDetails
-                                        .Where(t => t.ChqNo == model.CHQ_NO &&
-                                                    t.ChqDt == DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null) &&
-                                                    t.BankCd == model.BANK_CD)
-                                        .Select(t => new
-                                        {
-                                            camt = t.Amount,
-                                            amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
-                                            susamt = t.SuspenseAmt
-                                        })).FirstOrDefault();
-                        if (model.JV_NO == "")
+                        var ss = user.Region + model.TXTV_DT.Substring(8, 2) + model.TXTV_DT.Substring(3, 2);
+                        var res = GenerateJVNO(ss);
+                        model.JV_NO = ss + res;
+
+                        T27Jv Clst = new T27Jv();
                         {
-                            var ss = user.Region + model.TXTV_DT.Substring(8, 2) + model.TXTV_DT.Substring(3, 2);
-                            var res = GenerateJVNO(ss);
-                            model.JV_NO = ss + res;
+                            Clst.VchrNo = model.JV_NO;
+                            Clst.VchrDt = DateTime.ParseExact(model.JV_DT, "dd/MM/yyyy", null);
+                            Clst.RvVchrNo = model.VCHR_NO;
+                            Clst.RvSno = Convert.ToByte(model.SNO);
+                            Clst.BankCd = Convert.ToByte(model.BANK_CD);
+                            Clst.ChqNo = model.CHQ_NO;
+                            Clst.ChqDt = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                            Clst.Createdby = user.UserID;
+                            Clst.Createddate = DateTime.Now;
+                        }
+                        context.T27Jvs.Add(Clst);
+                        context.SaveChanges();
 
-                            T27Jv Clst = new T27Jv();
-                            {
-                                Clst.VchrNo = model.JV_NO;
-                                Clst.VchrDt = DateTime.ParseExact(model.JV_DT, "dd/MM/yyyy", null);
-                                Clst.RvVchrNo = model.VCHR_NO;
-                                Clst.RvSno = Convert.ToByte(model.SNO);
-                                Clst.BankCd = Convert.ToByte(model.BANK_CD);
-                                Clst.ChqNo = model.CHQ_NO;
-                                Clst.ChqDt = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
-                                Clst.Createdby = user.UserID;
-                                Clst.Createddate = DateTime.Now;
-                            }
-                            context.T27Jvs.Add(Clst);
+                        DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                        var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
+                        if (_data != null)
+                        {
+                            _data.AmtTransferred = query.amtadj + Convert.ToDecimal(item.AMOUNT);
+                            _data.SuspenseAmt = query.susamt - Convert.ToDecimal(item.AMOUNT);
+                            _data.Updatedby = user.UserID;
+                            _data.Updateddate = DateTime.Now;
                             context.SaveChanges();
+                        }
 
-                            DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                        T29JvDetail t29Jv = new T29JvDetail();
+                        t29Jv.VchrNo = model.JV_NO;
+                        t29Jv.AccCd = Convert.ToInt32(item.ACC_CD);
+                        t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
+                        t29Jv.Narration = item.NARRATION;
+                        t29Jv.IuAdvNo = item.IU_ADV_NO;
+                        t29Jv.IuAdvDt = DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                        t29Jv.Createdby = user.UserID;
+                        t29Jv.Createddate = DateTime.Now;
+                        context.T29JvDetails.Add(t29Jv);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                        if (string.IsNullOrEmpty(item.ACTION))
+                        {
                             var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
                             if (_data != null)
                             {
@@ -199,7 +232,7 @@ namespace IBS.Repositories
                             t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
                             t29Jv.Narration = item.NARRATION;
                             t29Jv.IuAdvNo = item.IU_ADV_NO;
-                            t29Jv.IuAdvDt = DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                            t29Jv.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
                             t29Jv.Createdby = user.UserID;
                             t29Jv.Createddate = DateTime.Now;
                             context.T29JvDetails.Add(t29Jv);
@@ -207,102 +240,34 @@ namespace IBS.Repositories
                         }
                         else
                         {
-                            DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
-                            if (string.IsNullOrEmpty(item.ACTION))
-                            {
-                                var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
-                                if (_data != null)
-                                {
-                                    _data.AmtTransferred = query.amtadj + Convert.ToDecimal(item.AMOUNT);
-                                    _data.SuspenseAmt = query.susamt - Convert.ToDecimal(item.AMOUNT);
-                                    _data.Updatedby = user.UserID;
-                                    _data.Updateddate = DateTime.Now;
-                                    context.SaveChanges();
-                                }
-
-                                T29JvDetail t29Jv = new T29JvDetail();
-                                t29Jv.VchrNo = model.JV_NO;
-                                t29Jv.AccCd = Convert.ToInt32(item.ACC_CD);
-                                t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
-                                t29Jv.Narration = item.NARRATION;
-                                t29Jv.IuAdvNo = item.IU_ADV_NO;
-                                t29Jv.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
-                                t29Jv.Createdby = user.UserID;
-                                t29Jv.Createddate = DateTime.Now;
-                                context.T29JvDetails.Add(t29Jv);
-                                context.SaveChanges();
-                            }
-                            else
-                            {
-                                var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
-                                if (_data != null)
-                                {
-                                    _data.AmtTransferred = query.amtadj - Convert.ToDecimal(item.lblIUAMT) + Convert.ToDecimal(item.AMOUNT);
-                                    _data.SuspenseAmt = query.susamt + Convert.ToDecimal(item.lblIUAMT) - Convert.ToDecimal(item.AMOUNT);
-                                    _data.Updatedby = user.UserID;
-                                    _data.Updateddate = DateTime.Now;
-                                    context.SaveChanges();
-                                }
-
-                                var jvDetail = (from m in context.T29JvDetails
-                                                where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD)
-                                                select m).FirstOrDefault();
-
-                                if (jvDetail != null)
-                                {
-                                    jvDetail.AccCd = Convert.ToInt32(item.ACC_CD);
-                                    jvDetail.Amount = Convert.ToDecimal(item.AMOUNT);
-                                    jvDetail.Narration = item.NARRATION;
-                                    jvDetail.IuAdvNo = item.IU_ADV_NO;
-                                    jvDetail.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
-                                    jvDetail.Updatedby = user.UserID;
-                                    jvDetail.Updateddate = DateTime.Now;
-                                    context.SaveChanges();
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(model.DeletedJVID))
-                    {
-                        DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
-                        var query = (context.T25RvDetails
-                                            .Where(t => t.ChqNo == model.CHQ_NO &&
-                                                        t.ChqDt == DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null) &&
-                                                        t.BankCd == model.BANK_CD)
-                                            .Select(t => new
-                                            {
-                                                camt = t.Amount,
-                                                amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
-                                                susamt = t.SuspenseAmt
-                                            })).FirstOrDefault();
-
-                        var lstIds = model.DeletedJVID.Split(',');
-                        foreach (var str in lstIds)
-                        {                            
-                            var row = (from m in context.T29JvDetails
-                                            where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(str)
-                                            select m).FirstOrDefault();
-
                             var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == model.BANK_CD).FirstOrDefault();
                             if (_data != null)
                             {
-                                _data.AmtTransferred = query.amtadj - Convert.ToDecimal(row.Amount);
-                                _data.SuspenseAmt = query.susamt + Convert.ToDecimal(row.Amount);
+                                _data.AmtTransferred = query.amtadj - Convert.ToDecimal(item.lblIUAMT) + Convert.ToDecimal(item.AMOUNT);
+                                _data.SuspenseAmt = query.susamt + Convert.ToDecimal(item.lblIUAMT) - Convert.ToDecimal(item.AMOUNT);
                                 _data.Updatedby = user.UserID;
                                 _data.Updateddate = DateTime.Now;
                                 context.SaveChanges();
                             }
 
-                            if(row != null)
+                            var jvDetail = (from m in context.T29JvDetails
+                                            where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD)
+                                            select m).FirstOrDefault();
+
+                            if (jvDetail != null)
                             {
-                                row.Isdeleted = 1;
-                                row.Updatedby= user.UserID;
-                                row.Updateddate = DateTime.Now;
+                                jvDetail.AccCd = Convert.ToInt32(item.ACC_CD);
+                                jvDetail.Amount = Convert.ToDecimal(item.AMOUNT);
+                                jvDetail.Narration = item.NARRATION;
+                                jvDetail.IuAdvNo = item.IU_ADV_NO;
+                                jvDetail.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                                jvDetail.Updatedby = user.UserID;
+                                jvDetail.Updateddate = DateTime.Now;
                                 context.SaveChanges();
                             }
                         }
                     }
+                    //}                   
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -310,6 +275,59 @@ namespace IBS.Repositories
                     trans.Rollback();
                     return false;
                 }
+            }
+            return true;
+        }
+
+        public bool DetailDelete(string BANK_CD, string CHQ_NO, string CHQ_DT, string JV_NO, string DelID, InterUnitTransferRegionModel model, UserSessionModel user)
+        {
+            using (var trans = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var query = (context.T25RvDetails
+                                 .Where(t => t.ChqNo == CHQ_NO &&
+                                             t.ChqDt == DateTime.ParseExact(CHQ_DT, "dd/MM/yyyy", null) &&
+                                             t.BankCd == Convert.ToInt32(BANK_CD))
+                                 .Select(t => new
+                                 {
+                                     camt = t.Amount,
+                                     amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
+                                     susamt = t.SuspenseAmt
+                                 })).FirstOrDefault();
+
+                    // Update the T25RvDetails record
+                    DateTime chqDate = DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null);
+                    var _data = context.T25RvDetails.Where(r => r.ChqNo == model.CHQ_NO && r.ChqDt == chqDate && r.BankCd == Convert.ToInt32(BANK_CD)).FirstOrDefault();
+                    if (_data != null)
+                    {
+                        _data.AmtTransferred = query.amtadj - Convert.ToDecimal(model.AMOUNT);
+                        _data.SuspenseAmt = query.susamt + Convert.ToDecimal(model.AMOUNT);
+                        _data.Updatedby = user.UserID;
+                        _data.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                    }
+
+                    // Delete Record from T29JvDetails
+                    var JvDetail = (from m in context.T29JvDetails
+                                    where m.VchrNo == JV_NO && m.AccCd == Convert.ToInt32(model.ACC_CD)
+                                    select m).FirstOrDefault();
+                    //context.T29JvDetails.Remove(JvDetail);
+                    //context.SaveChanges();
+                    if (JvDetail != null)
+                    {
+                        JvDetail.Isdeleted = 1;
+                        JvDetail.Updatedby = user.UserID;
+                        JvDetail.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    return false;
+                }
+                trans.Commit();
             }
             return true;
         }

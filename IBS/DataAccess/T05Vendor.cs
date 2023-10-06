@@ -63,6 +63,12 @@ public partial class T05Vendor
 
     public string? OfflineCallStatus { get; set; }
 
+    public string? Gstno { get; set; }
+
+    public string? Tanno { get; set; }
+
+    public string? Panno { get; set; }
+
     public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();
 
     public virtual ICollection<T17CallRegister> T17CallRegisters { get; set; } = new List<T17CallRegister>();

@@ -27,13 +27,16 @@ namespace IBS.Controllers
         public IActionResult Manage(string Bank, string ChqNo, string ChqDT)
         {
             InterUnit_TransferModel data = interunittransferrepository.Get_Inter_Unit_Transfer(Bank, ChqNo, ChqDT, Region);
-            if (data != null)
+            if (!string.IsNullOrEmpty(data.ErrorMsg))
             {
-                objSessionHelper.lstInterUnitTransferRegionModel = data.lstUnitTransfer;
+                AlertDanger(data.ErrorMsg);
+                return RedirectToAction("Index");
+                
             }
             else
             {
-                objSessionHelper.lstInterUnitTransferRegionModel = null;
+                objSessionHelper.lstInterUnitTransferRegionModel = data.lstUnitTransfer;
+                //objSessionHelper.lstInterUnitTransferRegionModel = null;
             }
 
             if (Region == "N") { data.Region_ID = "3007"; }
@@ -42,17 +45,6 @@ namespace IBS.Controllers
             else if (Region == "W") { data.Region_ID = "3006"; }
             else if (Region == "C") { data.Region_ID = "3066"; }
             return View(data);
-        }
-
-        [HttpPost]
-        public IActionResult ManageData(IFormCollection formCollection)
-        {
-            string Bank = "", ChqNo = "", ChqDate = "";
-            if (formCollection.Keys.Contains("hdnBank")) { Bank = formCollection["hdnBank"]; }
-            if (formCollection.Keys.Contains("hdnChequeNo")) { ChqNo = formCollection["hdnChequeNo"]; }
-            if (formCollection.Keys.Contains("hdnChequeDate")) { ChqDate = formCollection["hdnChequeDate"]; }
-            var data = interunittransferrepository.Get_Inter_Unit_Transfer(Bank, ChqNo, ChqDate, Region);
-            return View("Manage", data);
         }
 
         [HttpPost]
@@ -142,18 +134,23 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteInterUnitTransfer(string id)
+        public IActionResult DetailDelete(string BANK_CD, string CHQ_NO, string CHQ_DT, string JV_NO, string DelID)
         {
             try
             {
                 List<InterUnitTransferRegionModel> lstInterUnitTransferRegionModel = objSessionHelper.lstInterUnitTransferRegionModel == null ? new List<InterUnitTransferRegionModel>() : objSessionHelper.lstInterUnitTransferRegionModel;
-                lstInterUnitTransferRegionModel.RemoveAll(x => x.ID == Convert.ToInt32(id));
-                objSessionHelper.lstInterUnitTransferRegionModel = lstInterUnitTransferRegionModel;
-                return Json(new { status = true, responseText = "Inter Unit Transfer Deleted Successfully" });
+
+                var model = lstInterUnitTransferRegionModel.Where(x => x.ID == Convert.ToInt32(DelID)).FirstOrDefault();
+                var result = interunittransferrepository.DetailDelete(BANK_CD, CHQ_NO, CHQ_DT, JV_NO, DelID, model, GetUserInfo);
+                if (result)
+                {
+                    return Json(new { status = true, responseText = "Inter Unit Transfer Deleted Successfully" });
+                }
+                //objSessionHelper.lstInterUnitTransferRegionModel = lstInterUnitTransferRegionModel;
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "InterUnit_Transfer", "DeleteInterUnitTransfer", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InterUnit_Transfer", "DetailDelete", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

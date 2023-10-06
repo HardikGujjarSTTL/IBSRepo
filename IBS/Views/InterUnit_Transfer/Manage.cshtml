@@ -2,13 +2,18 @@
 
 @{
     ViewData["Title"] = "INTER UNIT TRANSFERS MANAGE";
+    string clsView = "";
+    if (Model.ErrorMsg != null)
+    {
+        clsView = "Permission_View";
+    }
 }
 <div class="list-inner">
     <div class="tast-list">
         <h2>INTER UNIT TRANSFERS MANAGE</h2>
     </div>
 </div>
-<div class="task-listinput">
+<div class="@clsView">
     <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
         <div class="accordion-body">
             <div class="row my-0">
@@ -41,7 +46,7 @@
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="Reference">Cheque Amount :</label>
-                    <label class="text-danger" id="lblAmt">@Model.AMOUNT</label>
+                    <label class="text-danger" id="lblAmt">@Model.CHQ_AMOUNT</label>
                 </div>
                 <div class="col-md-2 mb-3">
                     <label for="Reference">Amount Transferred To Other Units :</label>
@@ -58,7 +63,7 @@
             </div>
         </div>
 
-        <form role="form" asp-controller="InterUnit_Transfer" asp-action="SaveDetail" id="frmJVDetail">
+        @*<form role="form" asp-controller="InterUnit_Transfer" asp-action="SaveDetail" id="frmJVDetail">*@
             <div class="accordion-body">
                 <div class="row my-0">
                     <input type="hidden" id="hdnID" name="hdnID" />
@@ -78,7 +83,7 @@
                         <input type="text" class="input" asp-for="Transfer.AMOUNT" maxlength="12" />
                         <span asp-validation-for="Transfer.AMOUNT" class="text-danger"></span>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Narration</label>
                         <input type="text" class="input" asp-for="Transfer.NARRATION" />
                     </div>
@@ -91,11 +96,11 @@
                         <input type="text" class="input" asp-for="Transfer.IU_ADV_DT" readonly />
                     </div>
                 </div>
-                <div class="row my-0">
+                @*<div class="row my-0">
                     <div class="col-md-2 mb-3">
                         <button type="button" id="btnAdd" class="formBtn"><span class="fa fa-plus"></span> Add</button>
                     </div>
-                </div>
+                </div>*@
                 <div class="row my-0">
                     <div class="col-md-12 mb-3">
                         <section class="table-section">
@@ -142,7 +147,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        @*</form>*@
         <div class="savenext-btn">
             <a asp-controller="InterUnit_Transfer" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" id="btnSave">Save</button>
@@ -173,6 +178,21 @@
             InitializeDataTable();
         });
         $("#btnSave").click(function () {
+            var formData = {
+                ID: $("#hdnID").val(),
+                CHQ_NO: $("#Transfer_CHQ_NO").val(),
+                CHQ_DT: $("#Transfer_CHQ_DT").val(),
+                BANK_CD: $("#Transfer_BANK_CD").val(),
+                VCHR_NO: $("#Transfer_VCHR_NO").val(),
+                ACC_CD: $("#Transfer_ACC_CD").val(),
+                ACC_DESC: $("#Transfer_ACC_DESC").val(),
+                AMOUNT: parseFloat($("#Transfer_AMOUNT").val()),
+                NARRATION: $("#Transfer_NARRATION").val(),
+                IU_ADV_NO: $("#Transfer_IU_ADV_NO").val(),
+                IU_ADV_DT: $("#Transfer_IU_ADV_DT").val(),
+                lblIUAMT: $("#Transfer_lblIUAMT").val(),
+                ACTION: $("#Transfer_ACTION").val(),
+            }
 
             var VCHR_NO = "@Model.VCHR_NO";
             var VCHR_DT = "@Model.VCHR_DT";
@@ -182,18 +202,18 @@
             var BANK_NAME = "@Model.BANK_NAME";
             var BANK_CD = "@Model.BANK_CD";
             var BPO = "@Model.BPO";
-            var AMOUNT = "@Model.AMOUNT";
+            var AMOUNT = "@Model.CHQ_AMOUNT";
             var AMT_TRANSFERRED = "@Model.AMT_TRANSFERRED";
             var SUSPENSE_AMT = "@Model.SUSPENSE_AMT";
             var JV_NO = "@Model.JV_NO";
             var JV_DT = "@Model.JV_DT";
             var TXTV_DT = "@Model.TXTV_DT";
-            var DeletedJVID = deleteIDs;
+            var Transfer = formData;
             $.ajax({
                 url: "@Url.Action("DetailsSave", "InterUnit_Transfer")",
                 type: "POST",
                 dataType: "JSON",
-                data: { VCHR_NO, VCHR_DT, SNO, CHQ_NO, CHQ_DT, BANK_NAME, BANK_CD, BPO, AMOUNT, AMT_TRANSFERRED, SUSPENSE_AMT, JV_NO, JV_DT, TXTV_DT, DeletedJVID },
+                data: { VCHR_NO, VCHR_DT, SNO, CHQ_NO, CHQ_DT, BANK_NAME, BANK_CD, BPO, AMOUNT, AMT_TRANSFERRED, SUSPENSE_AMT, JV_NO, JV_DT, TXTV_DT, Transfer },
                 success: function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
                     if (response.status) {
@@ -282,8 +302,8 @@
                         render: function (data, type, row) {
                             var id = data.ID;
                             acc_cd = data.ACC_CD;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="EditInterUnitTransfer(' + id + ');" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
-                            html += '<a onclick="DeleteInterUnitTransfer(' + id + ');"  href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="EditInterUnitTransfer(' + id + ');" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="DeleteInterUnitTransfer(' + id + ');"  href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -328,26 +348,27 @@
         }
 
         $("#btnDeletevaluationDetail").click(function () {
-            $.ajax({
-                url: '@Url.Action("DeleteInterUnitTransfer", "InterUnit_Transfer")?id=' + $(this).attr("data-id"),
-                type: 'POST',
-                cache: false,
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                ShowHideMsgNew(response.status, response.responseText);
-                if (response.status) {
-                    if (deleteIDs == "") {
-                        deleteIDs = acc_cd;
-                    } else {
-                        deleteIDs = "," + acc_cd;
-                    }
+            var BANK_CD = "@Model.BANK_CD";
+            var CHQ_NO = "@Model.CHQ_NO";
+            var CHQ_DT = "@Model.CHQ_DT";
+            var JV_NO = "@Model.JV_NO";
+            var DelID = $(this).attr("data-id");
 
-                    $("#btnDeletevaluationDetail").attr("data-id", "");
-                    $("#modal-delete-conf-valuation-detail").modal('hide');
-                    InitializeDataTable();
+            $.ajax({
+                //url: '@Url.Action("DeleteInterUnitTransfer", "InterUnit_Transfer")?id=' + $(this).attr("data-id"),
+                url: '@Url.Action("DetailDelete", "InterUnit_Transfer")',
+                type: "POST",
+                dataType: "JSON",
+                data: { BANK_CD, CHQ_NO, CHQ_DT, JV_NO, DelID },
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.status) {
+                        var url = "@Url.Action("Manage","InterUnit_Transfer")?Bank=" + BANK_CD + "&ChqNo=" + CHQ_NO + "&ChqDT=" + CHQ_DT;
+                        window.location.href = url;
+                    }
                 }
-            });
+
+            });            
         });
     </script>
 }
