@@ -281,6 +281,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T21CallStatusCode> T21CallStatusCodes { get; set; }
 
+    public virtual DbSet<T22AdjustmentBill> T22AdjustmentBills { get; set; }
+
     public virtual DbSet<T22Bill> T22Bills { get; set; }
 
     public virtual DbSet<T23BillItem> T23BillItems { get; set; }
@@ -10389,6 +10391,43 @@ public partial class ModelContext : DbContext
                 .HasColumnName("CALL_STATUS_DESC");
         });
 
+        modelBuilder.Entity<T22AdjustmentBill>(entity =>
+        {
+            entity.HasKey(e => e.Aid).HasName("SYS_C009884");
+
+            entity.ToTable("T22_ADJUSTMENT_BILL");
+
+            entity.Property(e => e.Aid)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T22_ADJUSTMENT_BILL_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("AID");
+            entity.Property(e => e.BillNoN)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO_N");
+            entity.Property(e => e.BillNoO)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO_O");
+            entity.Property(e => e.Billadtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILLADTYPE");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+        });
+
         modelBuilder.Entity<T22Bill>(entity =>
         {
             entity.HasKey(e => e.BillNo).HasName("PK_BILL_NO");
@@ -10442,6 +10481,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("BILL_STATUS");
+            entity.Property(e => e.Billadtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILLADTYPE");
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)
                 .IsUnicode(false)
@@ -10527,6 +10570,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.QrCode)
                 .HasColumnType("NCLOB")
                 .HasColumnName("QR_CODE");
+            entity.Property(e => e.ReferenceAid)
+                .HasPrecision(6)
+                .HasColumnName("REFERENCE_AID");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(300)
                 .IsUnicode(false)
@@ -10799,9 +10845,19 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Narration)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -10824,6 +10880,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SuspenseAmt)
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -10914,6 +10976,16 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(12)
                 .IsUnicode(false)
                 .HasColumnName("CHQ_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.RvSno)
                 .HasPrecision(4)
                 .HasColumnName("RV_SNO");
@@ -10921,6 +10993,12 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(8)
                 .IsUnicode(false)
                 .HasColumnName("RV_VCHR_NO");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.VchrDt)
                 .HasColumnType("DATE")
                 .HasColumnName("VCHR_DT");
@@ -10961,18 +11039,32 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T29JvDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T29_JV_DETAILS");
+            entity.HasKey(e => e.Id).HasName("T29_JV_DETAILS_PK");
+
+            entity.ToTable("T29_JV_DETAILS");
 
             entity.HasIndex(e => new { e.VchrNo, e.AccCd }, "UQ29_JV_DETAILS").IsUnique();
 
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T29_JV_DETAILS_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AccCd)
                 .HasPrecision(6)
                 .HasColumnName("ACC_CD");
             entity.Property(e => e.Amount)
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("AMOUNT");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.IuAdvDt)
                 .HasColumnType("DATE")
                 .HasColumnName("IU_ADV_DT");
@@ -10984,12 +11076,18 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NARRATION");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.VchrNo)
                 .HasMaxLength(8)
                 .IsUnicode(false)
                 .HasColumnName("VCHR_NO");
 
-            entity.HasOne(d => d.VchrNoNavigation).WithMany()
+            entity.HasOne(d => d.VchrNoNavigation).WithMany(p => p.T29JvDetails)
                 .HasForeignKey(d => d.VchrNo)
                 .HasConstraintName("SYS_C008167");
         });
@@ -19637,6 +19735,8 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
         modelBuilder.HasSequence("T16_IC_CANCEL_SEQ");
+        modelBuilder.HasSequence("T22_ADJUSTMENT_BILL_SEQ");
+        modelBuilder.HasSequence("T29_JV_DETAILS_SEQ");
         modelBuilder.HasSequence("T31_HOLOGRAM_ISSUED_SEQ");
         modelBuilder.HasSequence("T32_CLIENT_LOGIN_SEQ");
         modelBuilder.HasSequence("T34_CENTRAL_ITEM_MASTER_SEQ");
