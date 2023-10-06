@@ -82,6 +82,7 @@ namespace IBS.Repositories
 
                 List<InterUnitTransferRegionModel> lst = dt.AsEnumerable().Select(row => new InterUnitTransferRegionModel
                 {
+                    ID = Convert.ToInt32(row["ID"]),
                     CHQ_NO = Convert.ToString(row["CHQ_NO"]),
                     CHQ_DT = Convert.ToString(row["CHQ_DT"]),
                     BANK_CD = Convert.ToString(row["BANK_CD"]),
@@ -95,12 +96,12 @@ namespace IBS.Repositories
                     ACTION = "M",
                 }).ToList();
 
-                var Srno = 1;
-                foreach (var item in lst)
-                {
-                    item.ID = Srno;
-                    Srno = Srno + 1;
-                }
+                //var Srno = 1;
+                //foreach (var item in lst)
+                //{
+                //    item.ID = Srno;
+                //    Srno = Srno + 1;
+                //}
                 model.lstUnitTransfer = lst;
             }
             return model;
@@ -250,10 +251,10 @@ namespace IBS.Repositories
                                 context.SaveChanges();
                             }
 
-                            var jvDetail = (from m in context.T29JvDetails
-                                            where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD)
-                                            select m).FirstOrDefault();
-
+                            //var jvDetail = (from m in context.T29JvDetails
+                            //                where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD)
+                            //                select m).FirstOrDefault();
+                            var jvDetail = context.T29JvDetails.Where(m => m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD) && m.Id == item.ID).FirstOrDefault();                                          
                             if (jvDetail != null)
                             {
                                 jvDetail.AccCd = Convert.ToInt32(item.ACC_CD);
@@ -310,7 +311,7 @@ namespace IBS.Repositories
 
                     // Delete Record from T29JvDetails
                     var JvDetail = (from m in context.T29JvDetails
-                                    where m.VchrNo == JV_NO && m.AccCd == Convert.ToInt32(model.ACC_CD)
+                                    where m.VchrNo == JV_NO && m.AccCd == Convert.ToInt32(model.ACC_CD) && m.Id == model.ID
                                     select m).FirstOrDefault();
                     //context.T29JvDetails.Remove(JvDetail);
                     //context.SaveChanges();
