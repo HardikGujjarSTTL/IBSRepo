@@ -15,7 +15,8 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public MasterItemsListFormModel FindByID(string ItemCd, string GetRegionCode)
+
+        public MasterItemsListFormModel FindByID(string ItemCd, string Region)
         {
             MasterItemsListFormModel model = new();
             T61ItemMaster role = context.T61ItemMasters.Find(ItemCd);
@@ -33,7 +34,7 @@ namespace IBS.Repositories
                 model.TimeForInsp = role.TimeForInsp;
                 model.UserId = role.UserId;
                 model.Datetime = role.Datetime;
-                model.Region = GetRegionCode;
+                model.Region = Region;
 
                 model.Isdeleted = role.Isdeleted;
                 model.Updatedby = role.Updatedby;
@@ -92,8 +93,8 @@ namespace IBS.Repositories
                         UserId = l.UserId,
                         Department = l.Department,
                         TimeForInsp = l.TimeForInsp,
-                        Checksheet = "/MASTER_ITEMS_CHECKSHEETS/" + l.ItemCd + ".RAR",
-                        FilePath = "/MASTER_ITEMS_CHECKSHEETS/" + a.Fileid,
+                        Checksheet = "/ReadWriteData/MASTER_ITEMS_CHECKSHEETS/" + l.ItemCd + ".RAR",
+                        FilePath = "/ReadWriteData/MASTER_ITEMS_CHECKSHEETS/" + a.Fileid,
 
                         //Isdeleted = l.Isdeleted,
                         //Createddate = l.Createddate,
@@ -130,14 +131,14 @@ namespace IBS.Repositories
             return true;
         }
 
-        public string MasterItemsListFormInsertUpdate(MasterItemsListFormModel model, string GetRegionCode, int GetIeCd)
+        public string DtlInsertUpdate(MasterItemsListFormModel model, string Region, int GetIeCd)
         {
             string RoleId = "";
             var checkit = "N001704";
             var substring = checkit.Substring(0, 1);
 
             var itemsWithWctr = (from v in context.T61ItemMasters
-                                 where v.ItemCd.Substring(0, 1) == GetRegionCode
+                                 where v.ItemCd.Substring(0, 1) == Region
                                  select new MasterItemsListFormModel
                                  {
                                      ItemCd = v.ItemCd,
@@ -153,14 +154,14 @@ namespace IBS.Repositories
             if (RDF == null)
             {
                 T61ItemMaster obj = new T61ItemMaster();
-                obj.ItemCd = GetRegionCode + w_sno;
+                obj.ItemCd = Region + w_sno;
                 obj.ItemDesc = model.ItemDesc;
                 obj.Department = model.Department;
                 obj.TimeForInsp = model.TimeForInsp;
-                obj.Checksheet = GetRegionCode + w_sno;
+                obj.Checksheet = Region + w_sno;
                 obj.UserId = Convert.ToString(model.Createdby);
                 obj.Datetime = DateTime.Now;
-                obj.Ie = GetIeCd;
+                obj.Ie = model.IeCd;
                 obj.Cm = model.CoCd;
                 obj.CreationRevDt = model.CreationRevDt;
 
@@ -180,7 +181,7 @@ namespace IBS.Repositories
                 RDF.TimeForInsp = model.TimeForInsp;
                 RDF.Checksheet = model.ItemCd;
                 RDF.UserId = Convert.ToString(model.Updatedby);
-                RDF.Ie = GetIeCd;
+                RDF.Ie = model.IeCd;
                 RDF.Cm = model.CoCd;
                 RDF.CreationRevDt = model.CreationRevDt;
 

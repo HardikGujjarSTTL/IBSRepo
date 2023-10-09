@@ -26,7 +26,7 @@ namespace IBS.Models
         public DateTime BILL_DATE { get; set; }
         public double AMOUNT_CLEARED { get; set; }
         public double BILL_AMOUNT_CLEARED { get; set; }
-        public DateTime POSTING_DATE { get; set; }
+        public string POSTING_DATE { get; set; }
         public double WriteOffAmount { get; set; }
         public string CASE_NO { get; set; }
         public string BK_NO { get; set; }

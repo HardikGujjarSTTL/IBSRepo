@@ -9,7 +9,7 @@
     //}
 }
 
-<style>
+@*<style>
     .billInvoiceClass{
 
     }
@@ -24,7 +24,7 @@
         justify-content: flex-end;
     }
 
-</style>
+</style>*@
 <div class="list-inner">
     <div class="tast-list">
         <h2>Cheaque Posting</h2>
@@ -35,7 +35,7 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-    <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingForm" asp-action="search" data-ajax-method="post" data-ajax-complete="completed" id="frmchqposting">
+          <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingForm" asp-action="search" data-ajax-method="post" data-ajax-complete="completed" id="frmchqposting">
                 <div class="accordion-body">
                     <div class="row my-0">
                        
@@ -140,16 +140,16 @@
 
                              <input type="text" class="billInvoiceClass" id="Bill/InvoiceNo" class="input" asp-for="BILL_NO" maxlength="300" />
                              <br></br>
-                            <button class="billInvoiceClass save-btn active" id="btnBillDetails" onclick="btnBillDetailsClick();">Bill Details</button>
+                           
                         </div>
 
                    </div>
 
-                   
 
+                <button class="billInvoiceClass save-btn active" id="btnBillDetails" onclick="btnBillDetailsClick();">Bill Details</button>
 
                 </div>
-            </form>
+          </form>
     </div>
     <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -164,90 +164,90 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="Reference">Bill/Invoice No.</label>
-                                        <input type="text" id="billNo" class="form-control" placeholder="Bill No" readonly>
+                                        <input type="text" id="billNo" class="form-control"  readonly>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="Reference">Bill Date</label>
-                                        <input type="text" id="billDate" class="form-control" placeholder="Bill Date" readonly>
+                                        <input type="text" id="billDate" class="form-control"  readonly>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="Reference">Bill Amount</label>
-                                        <input type="text" id="BillAmount" class="form-control" placeholder="Bill Amount" readonly>
+                                        <input type="text" id="BillAmount" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-6">
                                         <label for="Reference">Amount Already Recieved Thru Cheque/EFT</label>
-                                        <input type="text" id="AmountRecieved" class="form-control" placeholder="Amount Recieved" readonly>
+                                        <input type="text" id="AmountRecieved" class="form-control"  readonly>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="Reference">Total Amount Cleared (B)	</label>
-                                        <input type="text" id="totalAmount" class="form-control" placeholder="Total Amount Cleared" readonly>
+                                        <input type="text" id="totalAmount" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Amount To Recover (A-B)</label>
-                                        <input type="text" id="AmountRecover" class="form-control" placeholder="Amount Recover" readonly>
+                                        <input type="text" id="AmountRecover" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Total TDS</label>
-                                        <input type="text" id="totalTDS" class="form-control" placeholder="Total TDS" readonly>
+                                        <input type="text" id="totalTDS" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Retention Money</label>
-                                        <input type="text" id="RetentionMoney" class="form-control" placeholder="Retention Money" readonly>
+                                        <input type="text" id="RetentionMoney" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Amount To Thru Credit Note</label>
-                                        <input type="number" id="AmountCreditNote" class="form-control" placeholder="Amount Through Credit Note" readonly>
+                                        <input type="number" id="AmountCreditNote" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Write off Amt / Amt Adjusted	</label>
-                                        <input type="text" id="AmountAdjusted" class="form-control" placeholder="Amount Adjusted">
+                                        <input type="text" id="AmountAdjusted" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
-                                        <label for="Reference">Posting Date		</label>
-                                        <input type="text" id="PostingDate" class="form-control" placeholder=" Posting Date ">
+                                        <label for="Reference">Posting Date	</label>
+                                        <input type="text" id="PostingDate" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Amount To be Cleared by this Cheque</label>
-                                        <input type="text" id="AmountClearedByCheque" class="form-control" placeholder=" Amount Cleared by cheque ">
+                                        <input type="text" id="AmountClearedByCheque" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">Case No</label>
-                                        <input type="text" id="caseNo" class="form-control" placeholder=" Case No " readonly>
+                                        <input type="text" id="caseNo" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">BK NO</label>
-                                        <input type="text" id="BKNO" class="form-control" placeholder=" Bk No " readonly>
+                                        <input type="text" id="BKNO" class="form-control"  readonly>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="Reference">SET NO</label>
-                                        <input type="text" id="SetNo" class="form-control" placeholder=" Set No " readonly>
+                                        <input type="text" id="SetNo" class="form-control"  readonly>
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-md-12">
                                             <label for="Reference">BPO</label>
-                                            <input type="text" id="BPO" class="form-control" placeholder=" BPO " readonly>
+                                            <input type="text" id="BPO" class="form-control"  readonly>
                                         </div>
                                 </div>
                             </form>
@@ -263,7 +263,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+       
     </div>
 </section>
 
@@ -345,7 +345,7 @@
                 var BankNameDropdown = $("#BankNameDropdown").val();
                 var CHQ_NO = $("#CHQ_NO").val();
                 var CHQ_DATE = $("#CHQ_DATE").val();
-                $(".hide1").css("display", "block");
+              
                 $(".billInvoiceClass").css("display", "block");
                 InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
                 GetValue(BankNameDropdown, CHQ_NO, CHQ_DATE);
@@ -363,18 +363,25 @@
                 dataType: "JSON",
                 data: { BankNameDropdown: BankNameDropdown, CHQ_NO: CHQ_NO, CHQ_DATE: CHQ_DATE },
 
-                success: function (success) {
-                  
-                    $("#vchr_no").val(success.VCHR_NO)
-                    $("#vchr_dt").val(success.VCHR_DT)
-                    $("#chqAmt").val(success.Cheaque_amount)
-                    $("#payAuth").val(success.BPO_CD)
-                    $("#pstAmt").val(success.Amount_Adjusted)
-                    $("#Amttrnsfered").val(success.amount_transferred)
-                    $("#unAdjstedAdvance").val(success.un_adjusted_advance)
+                success: function (success) 
+                {
 
-                    sessionStorage.setItem("IEcode", success.IE);
+                      if(success != null)
+                      {
+                        $(".hide1").css("display", "block");
+                        $("#vchr_no").val(success.VCHR_NO)
+                        $("#vchr_dt").val(success.VCHR_DT)
+                        $("#chqAmt").val(success.Cheaque_amount)
+                        $("#payAuth").val(success.BPO_CD)
+                        $("#pstAmt").val(success.Amount_Adjusted)
+                        $("#Amttrnsfered").val(success.amount_transferred)
+                        $("#unAdjstedAdvance").val(success.un_adjusted_advance)
 
+                        sessionStorage.setItem("IEcode", success.IE);
+                      }
+                      else{
+                        $(".hide1").css("display", "none");
+                      }
                 }
 
             });
@@ -466,23 +473,22 @@
         $("#dtchequepost").on("click", ".custom-edit-button", function () {
             debugger;
 
-            var billNo = $(this).closest("tr").find("td:eq(1)").text();
+            var BILL_NO = $(this).closest("tr").find("td:eq(1)").text();
             // Make an AJAX call to fetch additional data from the controller
             $.ajax({
                 type: 'POST',
-                contentType: false,
-                processData: false,
                 url: '/CheckPostingForm/FindByID', // Replace with your actual controller and action URL
                 dataType: "json",
-                data: { billNo: billNo },
+                data: { BILL_NO: BILL_NO },
                 success: function (data) {
                     debugger;
-                    $("#billNo").val(billNo);
+                    $("#billNo").val(BILL_NO);
                     $("#billDate").val(data.BILL_DATE);
                     $("#BillAmount").val(data.BILL_AMOUNT_CLEARED);
                     $("#AmountRecieved").val(data.AMOUNT_RECIEVED);
+                    $("#AmountRecover").val(data.AMOUNT_RECIEVED);
                     $("#totalAmount").val(data.BILL_AMOUNT_CLEARED);
-                    $("#totalTDS").val(data.TDS);
+                    $("#totalTDS").val(data.TDS === 0 ? 0 : data.TDS);
                     $("#RetentionMoney").val(data.Retention_Money);
                     $("#AmountCreditNote").val(data.Cnote);
                     $("#AmountAdjusted").val(data.WriteOffAmount);
@@ -491,7 +497,7 @@
                     $("#caseNo").val(data.CASE_NO);
                     $("#BKNO").val(data.BK_NO);
                     $("#SetNo").val(data.SET_NO);
-                    $("#BPO").val(data.BPO_NAME);
+                    $("#BPO").val(data.BPO_CD);
 
                     // Open the modal
                     $("#editModal").modal("show");

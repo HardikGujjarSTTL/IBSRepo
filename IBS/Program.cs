@@ -96,7 +96,7 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
 builder.Services.AddScoped<IBillAdjustmentsRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsRepository>();
-builder.Services.AddScoped<IBillAdjustmentsNewRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsNewRepository>();
+builder.Services.AddScoped<ISupplementaryBillRepository, IBS.Repositories.InspectionBilling.SupplementaryBillRepository>();
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
@@ -132,6 +132,8 @@ builder.Services.AddScoped<IBillingOperatingTargetRepository, BillingOperatingRe
 builder.Services.AddScoped<IBillingAdjustmentRepository, BillingAdjustmentRepository>();
 builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRepository>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<IInterUnitRecieptRepository, InterUnitRecieptRepository>();
+
 builder.Services.AddScoped<IVendorDocumentRepository, VendorDocumentRepository>();
 builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
 builder.Services.AddScoped<ICentralQOIRepository, CentralQOIRepository>();

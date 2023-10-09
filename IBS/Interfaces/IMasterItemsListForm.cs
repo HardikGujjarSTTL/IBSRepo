@@ -4,10 +4,13 @@ namespace IBS.Interfaces
 {
     public interface IMasterItemsListForm
     {
-        public MasterItemsListFormModel FindByID(string ItemCd, string GetRegionCode);
+        public MasterItemsListFormModel FindByID(string ItemCd, string Region);
+
         DTResult<MasterItemsListFormModel> GetMasterItemsListFormList(DTParameters dtParameters);
+
         bool Remove(string ItemCd, int UserID);
-        string MasterItemsListFormInsertUpdate(MasterItemsListFormModel model, string GetRegionCode, int GetIeCd);
+
+        string DtlInsertUpdate(MasterItemsListFormModel model, string Region, int GetIeCd);
     }
 }
 

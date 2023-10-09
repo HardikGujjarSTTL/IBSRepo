@@ -10,24 +10,26 @@
 </div>
 
 <div class="task-listinput">
-    <form data-ajax="true" asp-antiforgery="true" asp-controller="MasterItemsListForm" asp-action="MasterItemsListFormDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmMasterItemsListForm">
+    <form role="form" asp-controller="MasterItemsListForm" asp-action="Manage" id="frmDetails">
         <div class="accordion-body" id="tab-1">
             <input type="hidden" asp-for="ItemCd" />
             <input type="hidden" asp-for="Region" />
+            <input type="hidden" asp-for="actiontype" />
+            
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Item Description</label>
                     <textarea class="input" asp-for="ItemDesc" maxlength="30"> </textarea>
                     <span asp-validation-for="ItemDesc" class="text-danger"></span>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Descipline</label>
                     @*<textarea class="input" asp-for="Department" maxlength="30"> </textarea>*@
                     @Html.DropDownListFor(model => model.Department, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select Item Descipline--")
                     <span asp-validation-for="Department" class="text-danger"></span>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Prep By Inspection Engineer</label>
                     @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEData(Model.Region) , "Value", "Text"),"--Select--", new { @class = "" })
                     <span asp-validation-for="IeCd" class="text-danger"></span>
@@ -35,24 +37,24 @@
             </div>
 
             <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">App By Controlling Officer </label>
                     @Html.DropDownListFor(model => model.CoCd, new SelectList(IBS.Models.Common.GetCOData(Model.Region) , "Value", "Text"),"--Select--", new { @class = "" })
                     <span asp-validation-for="CoCd" class="text-danger"></span>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Creation Or Revision Date</label>
-                    <input type="text" class="input" asp-for="CreationRevDt" maxlength="100">
+                    <input type="text" class="datepicker" asp-for="CreationRevDt" maxlength="100" placeholder="DD/MM/YYYY">
                     <span asp-validation-for="CreationRevDt" class="text-danger"></span>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">No of Days For IC</label>
                     <input type="text" class="input" asp-for="TimeForInsp" maxlength="100">
                     <span asp-validation-for="TimeForInsp" class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.MasterItemDoc" />
                 </div>
             </div>
@@ -74,9 +76,6 @@
 
         $(document).ready(function () {
             setDefaultDate();
-            //GetIEData();
-            //GetCOData();
-            
         });
 
         function Cancel() {
@@ -90,18 +89,13 @@
             }
         }
 
-        function setDefaultDate() {
-            $('#CreationRevDt').datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd/mm/yy',
-            });
-        }
-
         function Save() {
-            if ($("#frmMasterItemsListForm").valid()) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('actiontype');
+            $("#actiontype").val(actiontype);
+            if ($("#frmDetails").valid()) {
                 if (!SaveSingleDocuments("tab-1")) { return; }
-                $("#frmMasterItemsListForm").submit();
+                $("#frmDetails").submit();
             }
         }
 
@@ -149,11 +143,5 @@
             });
         }
 
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/MasterItemsListForm/Index";
-            window.location.href = '@Url.Action("Index", "MasterItemsListForm")';
-        };
     </script>
 }
