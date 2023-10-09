@@ -41,5 +41,7 @@ public partial class T10IcBookset
 
     public int Id { get; set; }
 
+    public string? Ictype { get; set; }
+
     public virtual T09Ie? IssueToIecdNavigation { get; set; }
 }
