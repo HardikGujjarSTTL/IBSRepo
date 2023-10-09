@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.LabPaymentListModel
 
 @{
-  
+
 }
 
 
@@ -18,87 +18,87 @@
 
 <section>
     <div class="task-listinput">
-      @*  <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">*@
-            <div class="accordion-body">
-                <div class="row my-0">
-                    <div  class="col-md-4 mb-4">
-                        <label for="Reference">CAse No.</label>
-                    <input type="text" id="lblcno" class="input" />
+        @*  <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">*@
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">CAse No.</label>
+                    <input type="text" id="lblcno" class="input" readonly="readonly" />
 
-                    </div>
+                </div>
 
-                    <div class="col-md-4 mb-4">
+                <div class="col-md-4 mb-4">
                     <label for="Reference">Call Sno.</label>
-                    <input type="text" id="lblCallSno" class="input" />
+                    <input type="text" id="lblCallSno" class="input" readonly="readonly" />
 
-                    </div>
+                </div>
 
 
 
-                    <div class="col-md-4 mb-4">
+                <div class="col-md-4 mb-4">
                     <label for="Reference">Call Recv Dt.</label>
-                    <input type="text" id="lblCallDT" class="input datepicker">
+                    <input type="text" id="lblCallDT" class="input" readonly="readonly">
 
-                    </div>
+                </div>
 
-                    <div class="col-md-4 mb-4">
-                    <label for="Reference">Gross Testing Charges Submitted by LAB Official.<span class="text-danger"></label>
-                    <input type="text" id="lblgrosstcv" class="input" />
-                        @* <span asp-validation-for="AMOUNT" class="text-danger"></span>*@
-                    </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Gross Testing Charges Submitted by LAB Official.</label>
+                    <input type="text" id="lblgrosstcv" class="input" readonly="readonly" />
+                    @* <span asp-validation-for="AMOUNT" class="text-danger"></span>*@
+                </div>
 
 
 
-                    <div class="col-md-4 mb-4">
+                <div class="col-md-4 mb-4">
                     <label for="Reference">Net Testing Charges Paid by Vendor.*</label>
-                    <input type="text" id="lblnettcv" class="input" />
-                        @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
-                    </div>
+                    <input type="text" id="lblnettcv" class="input" readonly="readonly" />
+                    @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
+                </div>
 
-                    <div class="col-md-4 mb-3">
-                        <label for="Reference">TDS Deducted by Vendor. (If Any)*</label>
-                        <input type="text" id="lbltds" class="input" />
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">TDS Deducted by Vendor. (If Any)*</label>
+                    <input type="text" id="lbltds" class="input" readonly="readonly" />
+                </div>
 
-                    <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Gross Testing Charges Submitted by Vendor*</label>
-                    <input type="text" id="lblgrosstcv" class="input" />
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                         <label for="Reference">UTR No.*</label>
-                         <input type="text" id="lblutrno" class="input" />
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label for="Reference">UTR Date.*</label>
-                          <input type="text" id="lblutrdt" class="input" />
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label for="Reference">LAB Sample Payment Reciept</label>
-                    <input type="text" id="lbllabspr" class="input" />
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                         <label for="Reference">Status</label>
-                          @Html.DropDownListFor(model => model.DocStatusFin, new SelectList(IBS.Models.Common.PaymentStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
-                    </div>
-
-
-                    <div class="col-md-4 mb-3">
-                           <label for="Reference">Remarks</label>
-                            <textarea class="form-control custom-textarea" id="txtremark"></textarea>
-                    </div>
-
+                    <input type="text" id="lblgrosstcv" class="input" readonly="readonly" />
                 </div>
 
-                <div class="savenext-btn">
-                <button type="submit" class="save-btn active Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
-                    @*<button type="submit" onclick="find();">Search2</button>*@
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">UTR No.*</label>
+                    <input type="text" id="lblutrno" class="input" readonly="readonly" />
                 </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">UTR Date.*</label>
+                    <input type="text" id="lblutrdt" class="input" readonly="readonly" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">LAB Sample Payment Reciept</label>
+                    <input type="text" id="lbllabspr" class="input" readonly="readonly" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Status</label>
+                    @Html.DropDownListFor(model => model.DocStatusFin, new SelectList(IBS.Models.Common.PaymentStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
+                </div>
+
+
+                <div class="col-md-4 mb-3" style="display:none;" id="remark">
+                    <label for="Reference">Remarks</label>
+                    <textarea class="form-control custom-textarea" id="txtremark"></textarea>
+                </div>
+
             </div>
-      @*  </form>*@
+
+            <div class="savenext-btn">
+                <button type="submit" class="save-btn active Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
+                @*<button type="submit" onclick="find();">Search2</button>*@
+            </div>
+        </div>
+        @*  </form>*@
     </div>
 </section>
 @*</form>*@
@@ -106,9 +106,9 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
-                
+
         $(function () {
-            
+
             var CaseNo = '@ViewBag.CaseNo';
             var CallSno = '@ViewBag.CallSno';
             var CallRDt = '@ViewBag.CallRecvDt';
@@ -117,21 +117,22 @@
             LoadPayment(CaseNo, CallSno, CallRecvDt);
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
-            });            
+            });
             //LoadSampleDtl();
-                         
+
         });
         $("#ddlstatus").change(function () {
-            if ($("#ddlstatus").val() != "R") {
-                $("#remark").css("display", "");
+
+            if (($("#ddlstatus").val() != "R") && $("#ddlstatus").val() != "A") {
+                $("#remark").css("display", "none");
             }
             else {
-                $("#remark").css("display", "");
+                $("#remark").css("display", "block");
             }
-          })
+        })
 
-        function LoadPayment(CaseNo, CallSno, CallRecvDt) {                      
-            
+        function LoadPayment(CaseNo, CallSno, CallRecvDt) {
+
             $.ajax({
                 url: '/LabPaymentList/LoadPayment',
                 type: "POST",
@@ -153,15 +154,15 @@
                     //$("#ddlstatus").val(success.DocStatusFin);
 
                     //$("#txtremark").val(success.Remarks);
-                    
-                    
+
+
                 }
 
             });
         }
 
         function SaveDetails() {
-            
+
             if ($("#ddlstatus").val() == "") {
                 alert("Status Can not Left Blank!!!");
                 return false;
@@ -170,19 +171,19 @@
                 alert("Remarks Can not Left Blank!!!");
                 return false;
             }
-            
 
-            var parts = $("#lblCallDT").text().split('/');
+
+            var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
-            
+
             var formData = new FormData();
-            
-            formData.append("CaseNo", $("#lblcno").text());
+            debugger;
+            formData.append("CaseNo", $("#lblcno").val());
             formData.append("CallRecvDt", convertedDate);
-            formData.append("CallSno", $("#lblCallSno").text());
+            formData.append("CallSno", $("#lblCallSno").val());
             formData.append("DocStatusFin", $("#ddlstatus").val());
             formData.append("Remarks", $("#txtremark").val());
-            
+
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
@@ -230,7 +231,7 @@
 
         }
         function UpdateDetails() {
-          
+
             if ($("#ddlstatus").val() == "U") {
                 if ($("#upload").val() == "") {
                     alert("please Upload File");

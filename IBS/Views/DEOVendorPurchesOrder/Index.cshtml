@@ -12,7 +12,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtList" class="table-responsive">
+                <table id="dtList" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -24,9 +24,9 @@
                             <th>Vendor</th>
                             <th>Remarks</th>
                             <th></th>
-                            <th>Edit Case No</th>
-                            <th>View PO Details</th>
-                            <th>Action</th>
+                            <th class="padR10 center">Edit Case No</th>
+                            <th class="padR10 center">View PO Details</th>
+                            <th class="padR10 center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+               // scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -119,7 +119,7 @@
                             var CaseNo = data.CaseNo;
                             var RealCaseNo = data.RealCaseNo == null ? "" : data.RealCaseNo;
                             //var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="OpenCaseNoModal(\'' + data.CaseNo + '\',\'' + data.PoNo + '\',\'' + data.PoDt + '\',\'' + data.RlyCd + '\',\'' + RealCaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a onclick="OpenCaseNoModal(\'' + data.CaseNo + '\',\'' + data.PoNo + '\',\'' + data.PoDt + '\',\'' + data.RlyCd + '\',\'' + RealCaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -129,7 +129,7 @@
                         render: function (data, type, row) {
                             var id = data.CaseNo;
                             var poDetsilsUrl = '@Url.Action("PODetails", "DEOVendorPurchesOrder")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -139,14 +139,17 @@
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
                             var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             //html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 
@@ -183,18 +186,18 @@
                     if (response != null) {
                         if (response.status) {
                             $("#EditCaseNoModal").modal('hide');
-                            ShowHideMsgNew(res.status, response.responseText);
+                            ShowHideMsgNew(response.status, response.responseText);
                             InitializeDatatable();
                         }
                         else {
-                            ShowHideMsgNew(res.status, response.responseText);
+                            ShowHideMsgNew(response.status, response.responseText);
                         }
                     }
                 });
             }
             else
             {
-                ShowHideMsgNew(true, "PLEASE ENTER 9 CHARACTERS CASE NUMBER!!!");
+                ShowHideMsgNew(false, "PLEASE ENTER 9 CHARACTERS CASE NUMBER!!!");
             }
         }
     </script>

@@ -1,0 +1,264 @@
+﻿@model IBS.Models.InspectionCertModel
+
+@{
+    ViewData["Title"] = "Bill Adjustments";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="BillAdjustments" asp-action="Index" id="frmDetails">
+        <input type="hidden" asp-for="UpdateStatus" />
+        <input type="hidden" asp-for="ItemSrnoPo" />
+
+        <div class="accordion-body" style="overflow-x: auto;">
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Bill No. <span class="darkRedBoldText">*</span></label>
+                        <input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;">
+                        <span id="spnBillNo" class="darkRedBoldText"></span>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="BillSearch();">Search</button>
+                        <button type="button" class="reset-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="table-section" id="tblsection">
+        </section>
+    </form>
+</div>
+
+<div id="EditCallDetailsModal" class="modal" tabindex="-1" role="dialog">
+</div>
+
+<div id="PopUp" class="modal" tabindex="-1" role="dialog">
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$("#Callrecvdt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
+            //$('input[name="BillTypes"]').change(function () {
+            //    var selectedId = $(this).attr('id');
+            //    alert(selectedId);
+            //});
+        });
+
+        function BillSearch() {
+            var BillNo = $("#BillNo").val();
+            $("#spnBillNo").html("");
+            if ($("#BillNo").val() == null || $("#BillNo").val() == "") {
+                $("#spnBillNo").html("Please add Bill No.");
+                return;
+            }
+
+            let myObject = { BillNo };
+            $.get("@Url.Action("GetBillDetails", "BillAdjustments")", $.param(myObject), function (response) {
+                $("#tblsection").html(response);
+                InitializeDatatable();
+            });
+        }
+
+        function InitializeDatatable() {
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
+            var Consignee = $("#Consignee").val();
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                //scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                dom: 'rtip',
+                ajax: {
+                    url: "@Url.Action("LoadTableDetails", "BillAdjustments")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "Caseno": Caseno,
+                            "Callrecvdt": Callrecvdt,
+                            "Callsno": Callsno,
+                            "Consignee": Consignee
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var _ItemSrnoPo = data.ItemSrnoPo;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    { data: "ItemSrnoPo" },
+                    { data: "ItemDescPo" },
+                    { data: "UomSDesc" },
+                    { data: "QtyOrdered" },
+                    { data: "CumQtyPrevOffered" },
+                    { data: "CumQtyPrevPassed" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassed" },
+                    { data: "QtyRejected" },
+                    { data: "QtyDue" },
+                    { data: "Rate" },
+                    { data: "SalesTaxPer" },
+                    { data: "SalesTax" },
+                    { data: "ExcisePer" },
+                    { data: "Excise" },
+                    { data: "DiscountPer" },
+                    { data: "Discount" },
+                    { data: "OtherCharges" },
+                ],
+                "order": [[0, "desc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+        }
+
+        function OpenEditCallDetailsModal(ItemSrnoPo) {
+            $("#ItemSrnoPo").val(ItemSrnoPo);
+            event.preventDefault();
+            $('select').prop('disabled', false);
+            var formData = $("#frmDetails").serialize();
+
+            $.post("@Url.Action("EditListDetails", "BillAdjustments")", formData, function (response) {
+                if (response != null) {
+                    $("#EditCallDetailsModal").html("");
+                    $("#EditCallDetailsModal").html(response);
+                    $("#EditCallDetailsModal").modal('show');
+                }
+
+            });
+        }
+
+        function UpdateCallDetails() {
+            var ItemDescPo = $("#ItemDescPo").val();
+            var QtyToInsp = $("#QtyToInsp").val();
+            var QtyPassed = $("#QtyPassed").val();
+            var QtyRejected = $("#QtyRejected").val();
+            var QtyDue = $("#QtyDue").val();
+            var Consignee = $("#Consignee").val();
+
+            if (QtyToInsp == "") {
+                ShowHideMsgNew(false, "Please add Qty Off Now.");
+                return;
+            }
+            if (QtyPassed == "") {
+                ShowHideMsgNew(false, "Please add Qty Passed.");
+                return;
+            }
+            if (QtyRejected == "") {
+                ShowHideMsgNew(false, "Please add Qty Rejected.");
+                return;
+            }
+            if (QtyDue == "") {
+                ShowHideMsgNew(false, "Please add Qty Due.");
+                return;
+            }
+            if (ItemDescPo == "") {
+                ShowHideMsgNew(false, "Please add Description.");
+                return;
+            }
+            event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+            //let myObject = { CaseNo, CallRecvDt, CallSno, ItemSrnoPo, Consignee };
+            //$.post("@Url.Action("UpdateCallDetails", "BillAdjustments")", $.param(myObject), function (response) {
+            $.post("@Url.Action("UpdateCallDetails", "BillAdjustments")", formData, function (response) {
+                if (response.status) {
+                    $("#EditCallDetailsModal").modal('hide');
+                    ShowHideMsgNew(response.status, response.responseText);
+                    InitializeDatatable();
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+
+        function PopUp(BillNo) {
+            //var _BillNo = $("#BillNo").val();
+            $.ajax({
+                url: '@Url.Action("PopUp", "BillAdjustments")?BillNo=' + BillNo,
+                type: 'GET',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $("#PopUp").html("");
+                    $("#PopUp").html(response);
+                    $("#PopUp").modal('show');
+                }
+            });
+        }
+
+        function PopUpOk() {
+            //location.reload();
+            $("#PopUp").modal('hide');
+        }
+
+        function onbtnGBill()
+        {
+            $("#spnMinFee").html("");
+            $("#spnMaxFee").html("");
+            $("#spnBillDt").html("");
+            $("#spnRemarks").html("");
+            if ($("#BillDt").val() == "") {
+                $("#spnBillDt").html("Please add Bill Date.");
+                return;
+            }
+            if ($("#MinFee").val() == null) {
+                $("#spnMinFee").html("Please Minimum fees.");
+                return;
+            }
+            if ($("#MaxFee").val() == null) {
+                $("#spnMaxFee").html("Please Maximum fees.");
+                return;
+            }
+            if ($("#Remarks").val() == "") {
+                $("#spnRemarks").html("Please add Remarks.");
+                return;
+            }
+            $('select').prop('disabled', false);
+            event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+            $.post("@Url.Action("BillUpdate", "BillAdjustments")", formData, function (response) {
+                if (response.status) {
+                    if (response.responseText == "Update Successfully.") {
+                        var BillNo = response.Id;
+                        PopUp(BillNo);
+                    }
+                    else {
+                        ShowHideMsgNew(false, response.responseText);
+                    }
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+    </script>
+}

@@ -117,6 +117,10 @@ public partial class T22Bill
 
     public decimal? Isdeleted { get; set; }
 
+    public string? Billadtype { get; set; }
+
+    public int? ReferenceAid { get; set; }
+
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
 
     public virtual ICollection<T30IcReceived> T30IcReceiveds { get; set; } = new List<T30IcReceived>();

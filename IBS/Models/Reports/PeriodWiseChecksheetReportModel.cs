@@ -4,6 +4,7 @@
     {
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public string Regions { get; set; }
         public string ReportTitle { get; set; }
 
         public List<PeriodWiseChecksheet> lstPeriodWiseChecksheet { get; set; }

@@ -1,10 +1,10 @@
 ﻿@model IBS.Models.HologramAccountalModel
 @{
 
-    ViewData["Title"] = "Manage Hologram Accountal";    
+    ViewData["Title"] = "Manage Hologram Accountal";
     string clsView = "";
     if (Model.CASE_NO != null)
-    {        
+    {
         clsView = "Permission_View";
     }
 }
@@ -80,7 +80,7 @@
         <h2>Manage Hologram Accountal</h2>
     </div>
     <div>
-        <a asp-action="Index" asp-controller="HologramAccountal" class="formBtn viewall-btn">View List</a>
+        <a asp-action="Index" asp-controller="HologramAccountal" class="formBtn btnViewList viewall-btn">View List</a>
     </div>
 </div>
 <section class="@clsView">
@@ -133,7 +133,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">From</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_MATERIAL_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusin="" onfocusout="Change('HG_NO_MATERIAL_FR');Check('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO');">
                                 <span asp-validation-for="HG_NO_MATERIAL_FR" class="text-danger"></span>
                             </div>
@@ -141,7 +141,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">To</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_MATERIAL_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusin="" onfocusout="Change('HG_NO_MATERIAL_TO');Check('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO');txtCopy('HG_NO_MATERIAL_FR','HG_NO_MATERIAL_TO')">
                                 <span asp-validation-for="HG_NO_MATERIAL_TO" class="text-danger"></span>
                             </div>
@@ -154,7 +154,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">From</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_SAMPLE_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusout="Change('HG_NO_SAMPLE_FR');Check('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO');">
                                 <span asp-validation-for="HG_NO_SAMPLE_FR" class="text-danger"></span>
                             </div>
@@ -162,7 +162,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">To</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_SAMPLE_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onfocusout="Change('HG_NO_SAMPLE_TO');Check('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO');txtCopy('HG_NO_SAMPLE_FR','HG_NO_SAMPLE_TO')">
                                 <span asp-validation-for="HG_NO_SAMPLE_TO" class="text-danger"></span>
                             </div>
@@ -175,7 +175,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">From</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_TEST_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_TEST_FR');Check('HG_NO_TEST_FR','HG_NO_TEST_TO');">
                                 <span asp-validation-for="HG_NO_TEST_FR" class="text-danger"></span>
                             </div>
@@ -183,7 +183,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">To</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_TEST_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_TEST_TO');Check('HG_NO_TEST_FR','HG_NO_TEST_TO');txtCopy('HG_NO_TEST_FR','HG_NO_TEST_TO')">
                                 <span asp-validation-for="HG_NO_TEST_TO" class="text-danger"></span>
                             </div>
@@ -198,7 +198,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">From</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_IC_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_IC_FR');Check('HG_NO_IC_FR','HG_NO_IC_TO');">
                                 <span asp-validation-for="HG_NO_IC_FR" class="text-danger"></span>
                             </div>
@@ -206,7 +206,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">To</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_IC_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_IC_TO');Check('HG_NO_IC_FR','HG_NO_IC_TO');txtCopy('HG_NO_IC_FR','HG_NO_IC_TO')">
                                 <span asp-validation-for="HG_NO_IC_TO" class="text-danger"></span>
                             </div>
@@ -219,7 +219,7 @@
                         <div class="col-md-12 mb-3">
                             <div class="reference">
                                 <label for="Reference">Hologram No.</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_IC_DOC" maxlength="90" style="text-transform: uppercase; width: 40%;" onblur="Change('HG_NO_IC_DOC');">
                                 <span asp-validation-for="HG_NO_IC_DOC" class="text-danger"></span>
                             </div>
@@ -232,7 +232,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">From</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_OT_FR" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_OT_FR');Check('HG_NO_OT_FR','HG_NO_OT_TO');">
                                 <span asp-validation-for="HG_NO_OT_FR" class="text-danger"></span>
                             </div>
@@ -240,7 +240,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="reference">
                                 <label for="Reference">To</label>
-                                <span style="color: orangered;font-weight: bold;">N</span>
+                                <span style="color: orangered;font-weight: bold;">@Model.Region</span>
                                 <input type="text" class="input" asp-for="HG_NO_OT_TO" maxlength="90" style="text-transform: uppercase; width: 90%;" onblur="Change('HG_NO_OT_TO');Check('HG_NO_OT_FR','HG_NO_OT_TO');txtCopy('HG_NO_OT_FR','HG_NO_OT_TO');">
                                 <span asp-validation-for="HG_NO_OT_TO" class="text-danger"></span>
                             </div>
@@ -260,7 +260,7 @@
             <div class="row my-0">
                 <div class="col-md-12 mb-3" style="text-align: center;">
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();" id="btnSave">Save</button>
                         @*<a asp-controller="HologramAccountal" asp-action="Index" class="reset-btn">Cancel</a>*@
                     </div>
                 </div>
@@ -327,39 +327,42 @@
 
 
         function Save() {
-            var formData = new FormData($("#frmDetails")[0]);
-            RNO = $("#REC_NO").val();
-            var url = "@Url.Action("HologramAccountalDetailsSave", "HologramAccountal")?REC_NO=" + RNO;
-            $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "JSON",
-                processData: false, // Prevent jQuery from converting the data to a string
-                contentType: false,
-                data: formData,
-                success: function (response) {
-                    var errorMsg = response._msg;
-                    var result = response._result;
-                    if (errorMsg != "0") {
-                        alert(errorMsg);
-                        ShowHideMsgNew(false, errorMsg)
-                    }
-                    else {
-                        if (RNO != 0) {
-                            ShowHideMsgNew(true, "Record Save Successfull")
-                            alert("Record Save Successfull");
-                            $('#frmDetails').trigger("reset");
-                            window.location.href = "/HologramAccountal/Manage?CASE_NO=" + $("#lblCaseNo").html() + "&CALL_RECV_DT=" + $("#lblCallRecvDt").html() + "&CALL_SNO=" + $("#lblCallSNo").html() + "&CONSIGNEE_CD=" + $("#lblCCD").html();
+            debugger
+            if ($("#frmDetails").valid()) {
+                var formData = new FormData($("#frmDetails")[0]);
+                RNO = $("#REC_NO").val();
+                var url = "@Url.Action("HologramAccountalDetailsSave", "HologramAccountal")?REC_NO=" + RNO;
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: "JSON",
+                    processData: false, // Prevent jQuery from converting the data to a string
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        var errorMsg = response._msg;
+                        var result = response._result;
+                        if (errorMsg != "0") {
+                            alert(errorMsg);
+                            ShowHideMsgNew(false, errorMsg)
                         }
                         else {
-                            ShowHideMsgNew(true, "Record Save Successfull")
-                            alert("Record Save Successfull");
-                            $('#frmDetails').trigger("reset");
+                            if (RNO != 0) {
+                                ShowHideMsgNew(true, "Record Save Successfull")
+                                alert("Record Save Successfull");
+                                $('#frmDetails').trigger("reset");
+                                window.location.href = "/HologramAccountal/Manage?CASE_NO=" + $("#lblCaseNo").html() + "&CALL_RECV_DT=" + $("#lblCallRecvDt").html() + "&CALL_SNO=" + $("#lblCallSNo").html() + "&CONSIGNEE_CD=" + $("#lblCCD").html();
+                            }
+                            else {
+                                ShowHideMsgNew(true, "Record Save Successfull")
+                                alert("Record Save Successfull");
+                                $('#frmDetails').trigger("reset");
 
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
         function Delete() {
             var formData = new FormData($("#frmDetails")[0]);

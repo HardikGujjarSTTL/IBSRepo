@@ -49,6 +49,9 @@ namespace IBS.Repositories.Vendor
                 model.VendInspStopped = vendor.VendInspStopped;
                 model.OnlineCallStatus = vendor.OnlineCallStatus;
                 model.OfflineCallStatus = vendor.OfflineCallStatus;
+                model.GSTNO = vendor.VendGstno;
+                model.TANNO = vendor.VendTanno;
+                model.PANNO = vendor.VendPanno;
             }
 
             return model;
@@ -142,6 +145,9 @@ namespace IBS.Repositories.Vendor
                     VendInspStopped = model.VendInspStopped,
                     OnlineCallStatus = model.OnlineCallStatus,
                     OfflineCallStatus = model.OfflineCallStatus,
+                    VendGstno = model.GSTNO,
+                    VendTanno = model.TANNO,
+                    VendPanno = model.PANNO,
                     VendPwd = model.VendCd.ToString(),
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
@@ -178,6 +184,9 @@ namespace IBS.Repositories.Vendor
                     vendor.OnlineCallStatus = model.OnlineCallStatus;
                     vendor.OfflineCallStatus = model.OfflineCallStatus;
                     vendor.VendRemarks = model.VendRemarks;
+                    vendor.VendGstno = model.GSTNO;
+                    vendor.VendTanno = model.TANNO;
+                    vendor.VendPanno = model.PANNO;
                     vendor.UserId = model.UserId;
                     vendor.Datetime = DateTime.Now.Date;
                     vendor.Updatedby = model.Updatedby;

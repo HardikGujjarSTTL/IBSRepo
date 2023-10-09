@@ -38,7 +38,7 @@
                             <span asp-validation-for="IC_SUBMIT_DT" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="row my-0" style="text-align:center;">
+                    <div class="row my-0" >
                         <div class="col-md-9 mb-4">
                             <label for="Reference">Remarks</label>
                             <input type="text" class="input" asp-for="REMARKS" maxlength="200" tabindex="5" />
@@ -47,7 +47,7 @@
 
                         <div class="col-md-3 mb-4">
                             <label for="Reference">Remarks Date</label>
-                            <input type="text" class="datepicker" asp-for="REMARKS_DT" maxlength="200" style="text-align: center;" tabindex="6" />
+                            <input type="text" class="datepicker" asp-for="REMARKS_DT" maxlength="200" style="text-align: center;" tabindex="6" placeholder="DD/MM/YYYY"/>
                             @*<input type="text" class="datepicker" asp-for="FromDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">*@
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                             <div class="savenext-btn ">
                                 <button tabindex="7" type="button" class="save-btn active Permission_Save" id="btnSave" style="background-color:#F66A2F">Save</button>
                                 <button tabindex="9" type="button" class="reset-btn" id="btnSearch" style="background: none;color:#646464">Search</button>
-                                <a asp-controller="IC_Receipt" asp-action="Index" class="reset-btn">Cancel</a>
+                                <a asp-controller="IC_Receipt" asp-action="Index" class="reset-btn" id="btnCancel">Cancel</a>
                                 <button tabindex="10" type="button" class="reset-btn" id="btnReport" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of Unbilled IC's</button>
                                 <button tabindex="11" type="button" class="reset-btn" id="btnIssuedNRec" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Statement of IC's Issued but not Received</button>
                                 <button tabindex="12" type="button" class="reset-btn" id="btnStatusIC" style="padding-left: 10px;padding-right: 10px;background: none;color:#646464">Status of IC's</button>
@@ -88,7 +88,7 @@
                             <th>Set No.</th>
                             <th>IE to Whom Issued</th>
                             <th>IC Submision Date</th>
-                            <th>Action</th>
+                            <th class="padR10 center">Action</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -52,26 +52,23 @@
                     <div class="col-md-4 mb-3">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="Reference">Agency/Client</label>
+                                <label for="Reference">Agency/Client<i class="text-danger">*</i></label>
                                 @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                                <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
                                 <input type="text" class="input" id="txtBPO_RLY">
-                                <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                         </div>
-                        
-                        
-                       
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Case To Be Registered At</label>
+                        <label for="Reference">Case To Be Registered At<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="RegionCode" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
+                        <label for="Reference">Stock / Non-Stock (For Railways Only)<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="StockNonstock" class="text-danger"></span>
                     </div>
@@ -106,7 +103,7 @@
                         <span asp-validation-for="PoNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">PO/LOA Date (DD/MM/YYYY)</label>
+                        <label for="Reference">PO/LOA Date <i class="text-danger">*</i></label>
                         @*<input type="text" class="datepicker" asp-for="PoDt" readonly="true">*@
                         <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                         <span asp-validation-for="PoDt" class="text-danger"></span>
@@ -122,7 +119,7 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
-                        <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below</label>
+                        <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below <i class="text-danger">*</i></label>
                     </div>
                     <div class="col-md-4 mb-3">
                         @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("","","") , "Value", "Text"),"--Select--")
@@ -285,9 +282,9 @@
 
         function LOASubmit() {
             $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
-                if (response != null && response != undefined) {
+                if (response.status) {
                     $('#PoNo').val(response.poMaster.PoNo);
-                    $('#PoDt').val(response.poMaster.PoDt);
+                    $('#PoDt').val(moment(response.poMaster.PoDt).format("DD-MM-YYYY"));
                     $('#Remarks').val(response.poMaster.Remarks);
                     $('#RecvDt').val(response.poMaster.RecvDt);
                     $('#StockNonstock').val(response.poMaster.StockNonstock);
@@ -309,6 +306,7 @@
                 }
                 else {
                     $('#PoNo').val('');
+                    ShowHideMsgNew(response.status, response.responseText);
                 }
             });
         }
@@ -389,6 +387,7 @@
                 if (response.status) {
                     $("#PurchaserCd").html("");
                     $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    $("#PurchaserCd").append("<option value='0'>Other</option>");
                     $.each(response.list, function (index, value) {
                         $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });

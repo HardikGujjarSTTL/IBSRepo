@@ -33,10 +33,15 @@
                             Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
                         </label>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="gridSearch"><input type="text" class="input" id="txtCaseNo"> <button type="button" class="btn btn-primary" onclick="LOASubmit();">Submit</button></div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference" id="lblRealCaseNO1"></label>
                     </div>
-
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" id="txtCaseNo">
+                    </div>
+                    <div class="col-md-1 mb-3">
+                    <button type="button" class="btn btn-primary w-100" onclick="LOASubmit();">Submit</button>
+                    </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -61,11 +66,14 @@
 
 
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="Reference">Case To Be Registered At</label>
-                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="RegionCode" class="text-danger"></span>
-                    </div>
+                    @if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() != "admin")
+                    {
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Case To Be Registered At</label>
+                            @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                            <span asp-validation-for="RegionCode" class="text-danger"></span>
+                        </div>
+                    }
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
@@ -229,8 +237,8 @@
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="DEOVendorPurchesOrder" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                    <button type="button" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
+                    <button type="button" id="btnSave" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    <button type="button" id="btnAcceptPO" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
                 </div>
             </div>
         </form>
@@ -264,6 +272,12 @@
                     $('#txtSPur').val('@Model.RlyCd');
                 }
                 FillPurchaserCd('@Model.PurchaserCd');
+
+                setTimeout(function () {
+                    fill_consignee_purcher();
+                }, 2000);
+
+
             }
         });
 
@@ -287,11 +301,14 @@
             }).done(function (response) {
                 if (response != null) {
                     if (response.status) {
-                        ShowHideMsgNew(res.status, response.responseText);
-                        window.location.href = "/DEOVendorPurchesOrder/Index";
+                        ShowHideMsgNew(response.status, response.responseText);
+                        $("#lblRealCaseNO1").text(" Case No. --> " + response.OUT_CASE_NO);
+                        $("#btnSave").attr("disabled", "disabled");
+                        $("#btnAcceptPO").attr("disabled", "disabled");
+                        //window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
                     }
                     else {
-                        ShowHideMsgNew(res.status, response.responseText);
+                        ShowHideMsgNew(response.status, response.responseText);
                     }
                 }
             });
@@ -299,7 +316,6 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/DEOVendorPurchesOrder/Index";
             window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
         };
 
@@ -413,6 +429,9 @@
                     $.each(response.list, function (index, value) {
                         $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
+                    if ('@Model.PurchaserCd' != null) {
+                        $("#PurchaserCd").val('@Model.PurchaserCd');
+                    }
                 }
             });
         }

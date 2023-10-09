@@ -537,7 +537,7 @@ h2.boxTitle.calendarBg { background: url(../images/calendar-icon-bg.png) right c
 .approved { color: #03953f; }
 .pending { color: #c85c1a; }
 .process { color: #0072bc; }
-.reportIcon { white-space: nowrap; text-align: right; font-size: 19px; color: #585858; }
+.reportIcon { white-space: nowrap; text-align: center; font-size: 16px; color: #585858; }
 .reportIcon a { color: #585858; display: inline-block; }
 .reportIcon a:hover { color: #008B29; }
 .btnRow input, .btnRow a.button { background: #78a51e; font-size: 15px; border: 0 none; padding: 4px 10px; height: 28px; line-height: 18px; margin-left: 10px; border-radius: 25px; text-transform: uppercase; font-weight: bold; font-size: 13px; }
@@ -1056,7 +1056,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .information-tittle h2:after { content: ''; position: absolute; width: 100px; height: 2px; background-color: #00b471; bottom: -20px; left: 0 }
 .cost-para { margin: 10px 0 -10px 0; font-weight: bold; }
 .cost-para-1 { margin: 10px 0 -10px 0; font-weight: bold; }
-.formBtn { border-radius: 10px; border: 0px; padding: 12px 20px; transition: all 0.3s; background: #515CB2; font-size: 14px; font-weight: 400; color:#fff; text-decoration:none; }
+.formBtn { border-radius: 10px; border: 0px; padding: 12px 20px; transition: all 0.3s; background: #515CB2; font-size: 14px; font-weight: 400; color:#fff; text-decoration:none;  margin:0px 10px; }
 .formBtn:hover { background-color:#F66A2F; color:#fff; }
 .greenBg { background: #00B471; }
 .blueBg { background: #066597; }
@@ -1163,10 +1163,11 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .otherdetails .from-celender { width: 100%; max-width: 100%; }
 .otherdetails .from-celender input { border-radius: 5px; }
 .savenext-btn { display: flex; align-items: center; }
-.savenext-btn button { border: 1px solid #848484; background: transparent; color: #646464; border-radius: 8px; padding: 10px 30px; margin-right: 15px; transition: all 0.4s; font-size: 14px; font-weight: 400; }
+.savenext-btn button { border: 1px solid #848484; background: transparent; color: #646464; border-radius: 8px; padding: 10px 30px; margin-right: 10px; transition: all 0.4s; font-size: 14px; font-weight: 400; }
 .savenext-btn button:last-child { margin-right: 0; }
 .savenext-btn button.active { color: #fff; background: #F66A2F; border: 1px solid #F66A2F; line-height:inherit; }
 .savenext-btn button:hover{background: #008B29; color:#fff; border: 1px solid #008B29;}
+.savenext-btn .reset-btn{ margin-right:10px;}
 
 #sidebar { width:314px; height:calc(100% - 87px); z-index:3; position:absolute; left:0; top:87px; color:#fff; }
 .nav { margin-bottom:0; padding-left:0; list-style:none }
@@ -1338,9 +1339,12 @@ animation: show-bar-one 1.2s 0.1s forwards;}
 .navbar-static-side ul li .nav-second-level, .navbar-static-side ul li .nav-third-level {margin: 0; display: none;}
 .navbar-static-side ul li .nav-second-level.show{ display:block;}
 .dataTables_scrollHeadInner, .table-responsive{ width:100%!important;}
-.dataTable th, .dataTable td{ border-bottom:1px solid #f1f1f1;} 
-.dataTable th{border-bottom:1px solid #d1d1d1; font-size:13px;}
-.dataTable tr:nth-child(even) td{ background:#f3f4ff;}
+.dataTable{border-top:1px solid #d1d1d1; border-left:1px solid #d1d1d1;}
+.dataTable th, .dataTable td{ border-bottom:1px solid #d1d1d1; border-right:1px solid #d1d1d1;}
+.dataTable td{ padding:0px 5px!important;}
+.dataTable td:first-child{ text-align:center;}
+.dataTable th{border-bottom:1px solid #d1d1d1; font-size:13px; background:#f3f4ff!important;}
+.dataTable tr:nth-child(even) td{ background:#f2f2f2;}
 .userDetail .dropPopup.messagePopup li form{ width:100%;}
 .userDetail .dropPopup.messagePopup li button.logout-btn{ width:100%; border-radius:4px; display:flex; justify-content:center; align-items:center;}
 body table.dataTable thead .sorting:before, body table.dataTable thead .sorting:after,
@@ -1348,7 +1352,7 @@ body table.dataTable thead .sorting_asc:before, body table.dataTable thead .sort
 body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorting_desc:after{ transform: translateY(-50%); top: 50%; bottom: 0;}
 .reportIcon a .fa-trash{ color:#f00;}
 .reportIcon a:hover .fa-trash{ color:#008B29;}
-.reset-btn{ border: 1px solid #AEAEAE;  background: #AEAEAE; color: #fff; border-radius: 8px; padding: 10px 30px; margin-right: 15px; transition: all 0.4s; font-size: 14px; font-weight:400; text-decoration:none;}
+.reset-btn{ border: 1px solid #AEAEAE;  background: #AEAEAE; color: #fff; border-radius: 8px; padding: 10px 30px; transition: all 0.4s; font-size: 14px; font-weight:400; text-decoration:none;}
 .reset-btn:hover{ background:#333; color:#fff;}
 .left-side-collapsed .navbar-static-side ul li .nav-second-level.show{ display:none;}
 
@@ -1378,7 +1382,7 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .formInputs .fieldOuter { display: block; margin-bottom: 10px;}
 .rightAction { display: block; position: relative;}
 .rightAction .button { position: absolute; right: 5px; top: 6px; padding: 4px 10px; font-size: 14px; border-radius:5px;}
-.aTag { -moz-appearance: textfield !important; -webkit-appearance: textfield !important; border: 1px solid #e1e1e1; width: 100%; padding: 7px 10px; height: 40px;  background: #f1f1f1;  border-radius: 5px; display: block;  width: 100% !important;}
+.aTag { -moz-appearance: textfield !important; -webkit-appearance: textfield !important; border: 1px solid #e1e1e1; width: 100%; padding: 7px 10px; height: 40px;  background: #f1f1f1;  border-radius: 5px; display: block;  width: 100% !important; overflow:hidden; text-overflow:ellipsis; padding-right:80px;}
 .menu-scroll { overflow-x:auto; height:100%; scrollbar-color:#ccc transparent; scrollbar-width:thin; }
 .menu-scroll::-webkit-scrollbar {width:8px}
 .menu-scroll::-webkit-scrollbar-track {background:#2B368B;border-radius:0px}
@@ -1450,16 +1454,16 @@ input[type="datetime-local"]{ height:43px;}
 
 .input-group {position: relative; display: flex; flex-wrap: wrap; align-items: stretch; width: 100%;}
 .input-group-prepend {margin-right: -2px; display:flex;}
-.ui-widget-content{ max-width:250px; max-height:300px; overflow-x:hidden; overflow-y:auto; list-style:none; margin:0; padding:0; border-radius:6px; background:#e7dfff; box-shadow:2px 4px 6px 2px #d1d1d1;}
+.ui-widget-content{ max-width:250px; max-height:350px; overflow-x:hidden; overflow-y:auto; list-style:none; margin:0; padding:0; border-radius:6px; background:#e7dfff; box-shadow:2px 4px 6px 2px #d1d1d1;}
 .ui-widget-content li{ padding:5px; border-bottom:1px solid #d1d1d1;}
 .ui-widget-content li, .ui-widget-content li a{ font-size:12px; cursor:pointer; text-decoration:none;}
 .ui-widget-content li a:hover{ color:#F66A2F;}
 .borderGrid{border-top:1px solid #d1d1d1;border-left:1px solid #d1d1d1;}
 .borderGrid th, .borderGrid td{border-bottom:1px solid #d1d1d1;border-right:1px solid #d1d1d1;}
-overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;}
+.overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;}
 .loaderHolder {position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);}
 .lds-dual-ring {display: inline-block; width: 120px; height: 120px; }
-.lds-dual-ring:after {content: " "; display: block; width: 104px; height: 104px; margin: 8px; border-radius: 50%; border: 10px solid #8eedff; border-color: #8eedff transparent #8eedff transparent; animation: loaderAnimate 1.2s linear infinite;}
+.lds-dual-ring:after {content: " "; display: block; width: 104px; height: 104px; margin: 8px; border-radius: 50%; border: 10px solid #118133; border-color: #118133 transparent #118133 transparent; animation: loaderAnimate 1.2s linear infinite;}
 @keyframes loaderAnimate {
     0% {
         transform: rotate(0deg);
@@ -1480,3 +1484,5 @@ overlayLoader {background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; wi
 .nav-wrapper ul li{ min-width:200px; display:flex; height:120px;}
 .datepickerInline .ui-widget-content{ max-width:inherit; background:#fff; box-shadow:inherit;}
 .datepickerInline .ui-datepicker td, .datepickerInline .ui-datepicker th{ border:none;}
+table.dataTable thead>tr>th.padR10{padding-right:10px;}
+.borderGrid label{ margin:0; padding:0;}

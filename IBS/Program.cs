@@ -3,21 +3,23 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.IE;
-using IBS.Interfaces.IE_Reports;
+
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.Billing;
+using IBS.Interfaces.Reports.ConsigneeComplaintReports;
 using IBS.Interfaces.Reports.OtherReports;
 using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
-using IBS.Repositories.IE_Report;
+
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
+using IBS.Repositories.Reports.ConsigneeComplaintReports;
 using IBS.Repositories.Reports.OtherReports;
 using IBS.Repositories.Reports.RealisationPayment;
 using IBS.Repositories.Transaction;
@@ -93,15 +95,14 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
+builder.Services.AddScoped<IBillAdjustmentsRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsRepository>();
+builder.Services.AddScoped<ISupplementaryBillRepository, IBS.Repositories.InspectionBilling.SupplementaryBillRepository>();
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
 
 builder.Services.AddScoped<IRemitanceReportsRepository, IBS.Repositories.Reports.RemitanceReportsRepository>();
 
-builder.Services.AddScoped<IComplaintsJIRequiredReportRepository, IBS.Repositories.ComplaintsJIRequiredReportRepository>();
-builder.Services.AddScoped<IConsigneeCompPeriodRepository, IBS.Repositories.ConsigneeCompPeriodRepository>();
-builder.Services.AddScoped<IJITopsheetReportRepository, IBS.Repositories.JITopsheetReportRepository>();
 builder.Services.AddScoped<ISearchRepository, IBS.Repositories.SearchRepository>();
 builder.Services.AddScoped<IContractEntryRepository, IBS.Repositories.ContractEntryRepository>();
 builder.Services.AddScoped<IClientMasterRepository, IBS.Repositories.ClientMasterRepository>();
@@ -173,7 +174,7 @@ builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 
 
 #region IE Report
-builder.Services.AddScoped<IIE_PerfomanceRepository, IE_PerformanceRepository>();
+
 #endregion
 
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
@@ -221,22 +222,7 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
-builder.Services.AddScoped<IIEICPhotoEnclosedReportRepository, IEICPhotoEnclosedReportRepository>();
-builder.Services.AddScoped<IDailyIEWorkPlanReportRepository, DailyIEWorkPlanReportRepository>();
-builder.Services.AddScoped<IPeriodWiseTechnicalReportRepository, PeriodWiseTechnicalReportRepository>();
-builder.Services.AddScoped<IPeriodWiseChecksheetReportRepository, PeriodWiseChecksheetReportRepository>();
-builder.Services.AddScoped<IVendorPerformanceReportRepository, VendorPerformanceReportRepository>();
-builder.Services.AddScoped<IIEWiseTrainingReportRepository, IEWiseTrainingReportRepository>();
-builder.Services.AddScoped<IContractsReportsRepository, ContractsReportsRepository>();
-builder.Services.AddScoped<IOngoingContractsReportRepository, OngoingContractsReportRepository>();
-builder.Services.AddScoped<IVendorFeedbackReportRepository, VendorFeedbackReportRepository>();
-builder.Services.AddScoped<IIEAlterReportRepository, IEAlterReportRepository>();
-builder.Services.AddScoped<IVendorClusterIERepository, VendorClusterIERepository>();
-builder.Services.AddScoped<INCRCWiseReportRepository, NCRCWiseReportRepository>();
-builder.Services.AddScoped<IHighValueInspecReportRepository, HighValueInspecReportRepository>();
-builder.Services.AddScoped<ICoComplaintJIRequiredRepository, CoComplaintJIRequiredRepository>();
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
-builder.Services.AddScoped<IDefectCodeReportRepository, DefectCodeReportRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 
 builder.Services.AddScoped<IPCDOReportRepository, PCDOReportRepository>();
@@ -245,6 +231,7 @@ builder.Services.AddScoped<IRealisationPaymentRepository, RealisationPaymentRepo
 builder.Services.AddScoped<IInspectionStatusRepository, InspectionStatusRRepository>();
 builder.Services.AddScoped<ILabReportsRepository, LabReportsRRepository>();
 builder.Services.AddScoped<IOtherReportsRepository, OtherReportsRepository>();
+builder.Services.AddScoped<IConsigneeCompReportRepository, ConsigneeCompReportRepository>();
 builder.Services.AddScoped<IReceiptsRemitanceRepository, ReceiptsRemitanceRRepository>();
 builder.Services.AddScoped<IBillingRepository, BillingRRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();

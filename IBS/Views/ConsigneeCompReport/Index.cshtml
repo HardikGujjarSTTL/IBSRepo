@@ -1,0 +1,1660 @@
+﻿@using IBS.Helper;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+
+    string Region = ViewBag.Regions;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
+
+    ViewData["Title"] = ReportTitle;
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+</div>
+
+<style type="text/css">
+    #particularclient {display: flex;justify-content: space-between;}
+
+    #particularclient select {margin-right: 10px;}
+</style>
+
+<div class="accordion-body CCU" style="display:none;">
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmCCU">
+        <input type="hidden" id="hdnReportType" name="hdnReportType" />
+        <input type="hidden" id="hdncompfromdt" name="hdncompfromdt" />
+        <input type="hidden" id="hdncomptodt" name="hdncomptodt" />
+        <input type="hidden" id="hdnallRegions" name="hdnallRegions" />
+        <input type="hidden" id="hdnnorthern" name="hdnnorthern" />
+        <input type="hidden" id="hdnsouthern" name="hdnsouthern" />
+        <input type="hidden" id="hdneastern" name="hdneastern" />
+        <input type="hidden" id="hdnwestern" name="hdnwestern" />
+        <input type="hidden" id="hdnalljiRegions" name="hdnalljiRegions" />
+        <input type="hidden" id="hdnnorthernji" name="hdnnorthernji" />
+        <input type="hidden" id="hdnsouthernji" name="hdnsouthernji" />
+        <input type="hidden" id="hdneasternji" name="hdneasternji" />
+        <input type="hidden" id="hdnwesternji" name="hdnwesternji" />
+        <input type="hidden" id="hdncompallRegions" name="hdncompallRegions" />
+        <input type="hidden" id="hdnYes" name="hdnYes" />
+        <input type="hidden" id="hdnNo" name="hdnNo" />
+        <input type="hidden" id="hdnCancelled" name="hdnCancelled" />
+        <input type="hidden" id="hdnUnderConsideration" name="hdnUnderConsideration" />
+        <input type="hidden" id="hdnallaction" name="hdnallaction" />
+        <input type="hidden" id="hdnParticularAction" name="hdnParticularAction" />
+        <input type="hidden" id="hdnParticularActiondrp" name="hdnParticularActiondrp" />
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label for="reference">Complaints Recieved From Date</label>
+                <input type="text" class="input datepicker" placeholder="DD/MM/YYYY" id="compfromdt">
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label for="reference">To Date</label>
+                <input type="text" class="input datepicker" placeholder="DD/MM/YYYY" id="comptodt">
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Inspection Region</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" id="allRegions" name="inspectionRegion" value="All Regions">
+                <label for="allRegions">All Regions</label>
+            </li>
+            <li>
+                <input type="radio" id="northern" name="inspectionRegion" value="Northern">
+                <label for="northern">Northern</label>
+            </li>
+            <li>
+                <input type="radio" id="southern" name="inspectionRegion" value="Southern">
+                <label for="southern">Southern</label>
+            </li>
+            <li>
+                <input type="radio" id="eastern" name="inspectionRegion" value="Eastern">
+                <label for="eastern">Eastern</label>
+            </li>
+            <li>
+                <input type="radio" id="western" name="inspectionRegion" value="Western">
+                <label for="western">Western</label>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Joint Inspection Region</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" id="alljiRegions" name="jointinspectionRegion" value="All Regions">
+                <label for="alljiRegions">All Regions</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="northernji" name="jointinspectionRegion" value="Northern">
+                <label for="northernji">Northern</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="southernji" name="jointinspectionRegion" value="Southern">
+                <label for="southernji">Southern</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="easternji" name="jointinspectionRegion" value="Eastern">
+                <label for="easternji">Eastern</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="westernji" name="jointinspectionRegion" value="Western">
+                <label for="westernji">Western</label>
+                <br>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Include Complaints Where JI Required ?</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" id="compallRegions" name="compinspectionRegion" value="All">
+                <label for="compallRegions">All</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="Yes" name="compinspectionRegion" value="Yes">
+                <label for="Yes">Yes</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="No" name="compinspectionRegion" value="No">
+                <label for="No">No</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="Cancelled" name="compinspectionRegion" value="Cancelled">
+                <label for="Cancelled">Cancelled</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="UnderConsideration" name="compinspectionRegion" value="Under Consideration">
+                <label for="UnderConsideration">Under Consideration</label>
+                <br>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Action Proposed</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="allaction" name="actioninspectionRegion" value="allaction">
+                        <label for="allaction">All</label>
+                        <br>
+                    </li>
+                    <li>
+                        <input type="radio" id="ParticularAction" name="actioninspectionRegion" value="ParticularAction">
+                        <label for="ParticularAction">Particular Action</label>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3"> @Html.DropDownList("ParticularAction", new SelectList(IBS.Models.Common.ParticularAction(), "Value", "Text"), "--Select--", new { id = "ParticularActiondrp" }) </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="accordion-body COMPJI" style="display:none;">
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmCOMPJI">
+        <input type="hidden" id="hdnReportType" name="hdnReportType" />
+        <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+        <input type="hidden" id="hdnToDate" name="hdnToDate" />
+        <input type="hidden" id="hdnAllCM" name="hdnAllCM" />
+        <input type="hidden" id="hdnAllIEs" name="hdnAllIEs" />
+        <input type="hidden" id="hdnAllVendors" name="hdnAllVendors" />
+        <input type="hidden" id="hdnAllClient" name="hdnAllClient" />
+        <input type="hidden" id="hdnAllConsignee" name="hdnAllConsignee" />
+        <input type="hidden" id="hdnCompact" name="hdnCompact" />
+        <input type="hidden" id="hdnAwaitingJI" name="hdnAwaitingJI" />
+        <input type="hidden" id="hdnJIConclusion" name="hdnJIConclusion" />
+        <input type="hidden" id="hdnJIConclusionfollowup" name="hdnJIConclusionfollowup" />
+        <input type="hidden" id="hdnJIconclusionreport" name="hdnJIconclusionreport" />
+        <input type="hidden" id="hdnJIDecidedDT" name="hdnJIDecidedDT" />
+        <input type="hidden" id="hdnAll" name="hdnAll" />
+        <input type="hidden" id="hdnParticularIEs" name="hdnParticularIEs" />
+        <input type="hidden" id="hdnIEWise" name="hdnIEWise" />
+        <input type="hidden" id="hdnCMWise" name="hdnCMWise" />
+        <input type="hidden" id="hdnVendorWise" name="hdnVendorWise" />
+        <input type="hidden" id="hdnConsigneeWise" name="hdnConsigneeWise" />
+        <input type="hidden" id="hdnFinancialYear" name="hdnFinancialYear" />
+        <input type="hidden" id="hdnParticularCMs" name="hdnParticularCMs" />
+        <input type="hidden" id="hdnParticularClients" name="hdnParticularClients" />
+        <input type="hidden" id="hdnParticularConsignee" name="hdnParticularConsignee" />
+        <input type="hidden" id="hdnParticularVendor" name="hdnParticularVendor" />
+        <input type="hidden" id="hdnDetailed" name="hdnDetailed" />
+        <input type="hidden" id="hdnFinancialYears" name="hdnFinancialYears" />
+        <input type="hidden" id="hdnFinancialYears" name="hdnFinancialYears" />
+        <input type="hidden" id="hdnddlsupercm" name="hdnddlsupercm" />
+        <input type="hidden" id="hdnddliename" name="hdnddliename" />
+        <input type="hidden" id="hdnClientwiseddl" name="hdnClientwiseddl" />
+        <input type="hidden" id="hdnvendor" name="hdnvendor" />
+        <input type="hidden" id="hdnItem" name="hdnItem" />
+        <input type="hidden" id="hdnconsignee" name="hdnconsignee" />
+        <div class="row">
+            <div class="col-md-3">
+                <input type="radio" id="FinancialYear" name="FinancialYear" value="FinancialYear">
+                <label for="FinancialYear">For The Financial Year</label>
+                @Html.DropDownList("FinancialYears", new SelectList(IBS.Models.Common.FinancialYear(), "Value", "Text"), "--Select--", new { id = "FinancialYears" })
+                <span class="text-danger field-validation-error" id="spnErrorFinyear"></span>
+            </div>
+            <div class="col-md-9">
+                <input type="radio" id="JIDecidedDT" name="FinancialYear" value="JIDecidedDT">
+                <label for="JIDecidedDT">JI Decided on For The Period(From Date - To Date)</label>
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="input datepicker" id="FromDate" placeholder="DD/MM/YYYY">
+                        <span class="text-danger field-validation-error" id="spnErrorFromDateCOJI"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="JIDecidedDT" class="d-none"></label>
+                        <input type="text" class="input datepicker" id="ToDate" placeholder="DD/MM/YYYY">
+                        <span class="text-danger field-validation-error" id="spnErrorToDateCOJI"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="radio" id="CMWise" name="CMWises" value="CMWise">
+                <label for="CMWise">CM Wise</label>
+                <div class="row my-0">
+                    <div class="col-md-12" id="AllCMWise">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllCM" name="CMWise" value="AllCM">
+                                <label for="AllCM">All CM </label>
+                            </li>
+                            <li>
+                                <input type="radio" id="ParticularCMs" name="CMWise" value="ParticularCMs">
+                                <label for="ParticularCMs">Particular CM</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6" id="particularCM">
+                        @Html.DropDownList("ddlsupercm", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercm" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="radio" id="IEWise" name="CMWises" value="IEWise">
+                <label for="IEWise">IE Wise</label>
+                <div class="row my-0">
+                    <div class="col-md-12" id="AllIE">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllIEs" name="IEWise" value="AllIE">
+                                <label for="AllIEs">All IE</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="ParticularIEs" name="IEWise" value="ParticularIEs">
+                                <label for="ParticularIEs">Particular IE</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6" id="particularIE">
+                        @Html.DropDownList("ddliename", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddliename" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="radio" id="VendorWise" name="CMWises" value="VendorWise">
+                <label for="VendorWise">Vendor Wise</label>
+                <div class="col-md-12" id="vendorrdo">
+                    <ul class="radioListForm m-0">
+                        <li>
+                            <input type="radio" id="AllVendors" name="VendorWise" value="AllVendors">
+                            <label for="AllVendors">All Vendors</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ParticularVendor" name="VendorWise" value="ParticularVendor">
+                            <label for="ParticularVendor">Particular Vendor</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6" id="vendor">
+                    <label for="Reference">Vendor</label>
+                    <input type="text" id="vendortxt" class="input" maxlength="3" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="radio" id="ClientWise" name="CMWises" value="ClientWise">
+                <label for="ClientWise">Client Wise</label>
+                <div class="col-md-12" id="clientwises">
+                    <ul class="radioListForm m-0">
+                        <li>
+                            <input type="radio" id="AllClient" name="ClientWise" value="AllClient">
+                            <label for="AllClient">All Client</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ParticularClients" name="ClientWise" value="ParticularClients">
+                            <label for="ParticularClients">Particular Client</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12" id="particularclient">
+                    @Html.DropDownList("Clientwiseddl", new SelectList(IBS.Models.Common.ClientWise(), "Value", "Text"), "--Select--", new { id = "Clientwiseddl" })
+                    <select id="Item" class="form-control" required></select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="radio" id="ConsigneeWise" name="CMWises" value="ConsigneeWise">
+                <label for="ConsigneeWise">Consignee Wise</label>
+                <div class="col-md-12" id="consignees">
+                    <ul class="radioListForm m-0">
+                        <li>
+                            <input type="radio" id="AllConsignee" name="ConsigneeWise" value="AllConsignee">
+                            <label for="AllConsignee">All Consignee</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ParticularConsignee" name="ConsigneeWise" value="ParticularConsignee">
+                            <label for="ParticularConsignee">Particular Consignee</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6" id="consignee">
+                    <label for="Reference">Consignee</label>
+                    <input type="text" id="consigneetxt" class="input" maxlength="3" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Report Type</h3>
+                <div class="col-md-12" id="reporttypes">
+                    <ul class="radioListForm m-0">
+                        <li>
+                            <input type="radio" id="Compact" name="Compact" value="Compact">
+                            <label for="Compact">Compact </label>
+                        </li>
+                        <li>
+                            <input type="radio" id="Detailed" name="Compact" value="Detailed">
+                            <label for="Detailed">Detailed</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12" id="detaileds">
+                    <ul class="radioListForm m-0">
+                        <li>
+                            <input type="radio" id="AwaitingJI" name="Detaileds" value="AwaitingJI">
+                            <label for="AwaitingJI">Awaiting JI </label>
+                        </li>
+                        <li>
+                            <input type="radio" id="JIConclusion" name="Detaileds" value="JIConclusion">
+                            <label for="JIConclusion">Awaiting JI Conclusion</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="JIConclusionfollowup" name="Detaileds" value="JIConclusionfollowup">
+                            <label for="JIConclusionfollowup">Awaiting Action on JI Conclusion follow up</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="JIconclusionreport" name="Detaileds" value="JIconclusionreport">
+                            <label for="JIconclusionreport">Awaiting Final disposal of JI conclusion report</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="All" name="Detaileds" value="All">
+                            <label for="All">All </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+        <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+    </div>
+    <br />
+    <div class="alert alert-secondary center mb-3">
+        <span id="Label8">After Apply Next Filter Old Data Should Be Clear</span>
+    </div>
+    </form>
+</div>
+
+<div class="accordion-body TOPJI" style="display:none;">
+    <div class="row d-flex align-items-end my-0">
+        <div class="col-md-2 mb-3">
+            <label for="reference">JI SNO</label>
+            <input type="text" class="input" id="JISNO">
+            <span class="text-danger field-validation-error" id="spnErrorJISno"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport2();">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="accordion-body CORP" style="display:none;">
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmCORP">
+        <input type="hidden" id="hdnReportType" name="hdnReportType" />
+        <input type="hidden" id="hdncompfromdtcorp" name="hdncompfromdtcorp" />
+        <input type="hidden" id="hdncomptodtcorp" name="hdncomptodtcorp" />
+        <input type="hidden" id="hdnallRegionscorp" name="hdnallRegionscorp" />
+        <input type="hidden" id="hdnnortherncorp" name="hdnnortherncorp" />
+        <input type="hidden" id="hdnsoutherncorp" name="hdnsoutherncorp" />
+        <input type="hidden" id="hdneasterncorp" name="hdneasterncorp" />
+        <input type="hidden" id="hdnwesterncorp" name="hdnwesterncorp" />
+        <input type="hidden" id="hdnalljiRegionscorp" name="hdnalljiRegionscorp" />
+        <input type="hidden" id="hdnnorthernjicorp" name="hdnnorthernjicorp" />
+        <input type="hidden" id="hdnsouthernjicorp" name="hdnsouthernjicorp" />
+        <input type="hidden" id="hdneasternjicorp" name="hdneasternjicorp" />
+        <input type="hidden" id="hdnwesternjicorp" name="hdnwesternjicorp" />
+        <input type="hidden" id="hdncompallRegionscorp" name="hdncompallRegionscorp" />
+        <input type="hidden" id="hdnYescorp" name="hdnYescorpcorp" />
+        <input type="hidden" id="hdnNocorp" name="hdnNocorpcorp" />
+        <input type="hidden" id="hdnCancelledcorp" name="hdnCancelledcorpcorp" />
+        <input type="hidden" id="hdnUnderConsiderationcorp" name="hdnUnderConsiderationcorp" />
+        <input type="hidden" id="hdnallactioncorp" name="hdnallactioncorp" />
+        <input type="hidden" id="hdnParticularActioncorp" name="hdnParticularActioncorp" />
+        <input type="hidden" id="hdnDefectCodecorp" name="hdnDefectCodecorp" />
+        <input type="hidden" id="hdnParticularjicodecorp" name="hdnParticularjicodecorp" />
+        <input type="hidden" id="hdnParticularDefectCodecorp" name="hdnParticularDefectCodecorp" />
+        <input type="hidden" id="hdnParticularJIcorp" name="hdnParticularJIcorp" />
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label for="reference">Complaints Recieved From Date</label>
+                <input type="text" class="input datepicker" placeholder="DD/MM/YYYY" id="compfromdtcrop">
+                <span class="text-danger field-validation-error" id="spnErrorFromDatecrop"></span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label for="reference">To Date</label>
+                <input type="text" class="input datepicker" placeholder="DD/MM/YYYY" id="comptodtcrop">
+                <span class="text-danger field-validation-error" id="spnErrorToDatecrop"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Inspection Region</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" id="allRegionscorp" name="inspectionRegion" value="All Regions">
+                <label for="allRegionscorp">All Regions</label>
+            </li>
+            <li>
+                <input type="radio" id="northerncorp" name="inspectionRegion" value="Northern">
+                <label for="northerncorp">Northern</label>
+            </li>
+            <li>
+                <input type="radio" id="southerncorp" name="inspectionRegion" value="Southern">
+                <label for="southerncorp">Southern</label>
+            </li>
+            <li>
+                <input type="radio" id="easterncorp" name="inspectionRegion" value="Eastern">
+                <label for="easterncorp">Eastern</label>
+            </li>
+            <li>
+                <input type="radio" id="westerncorp" name="inspectionRegion" value="Western">
+                <label for="westerncorp">Western</label>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Joint Inspection Region</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" id="alljiRegionscorp" name="jointinspectionRegion" value="All Regions">
+                <label for="alljiRegionscorp">All Regions</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="northernjicorp" name="jointinspectionRegion" value="Northern">
+                <label for="northernjicorp">Northern</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="southernjicorp" name="jointinspectionRegion" value="Southern">
+                <label for="southernjicorp">Southern</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="easternjicorp" name="jointinspectionRegion" value="Eastern">
+                <label for="easternjicorp">Eastern</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="westernjicorp" name="jointinspectionRegion" value="Western">
+                <label for="westernjicorp">Western</label>
+                <br>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3 mb-4">Include Complaints Where JI Required ?</h3>
+            </div>
+        </div>
+        <ul class="radioListForm">
+            <li>
+                <input type="radio" id="compallRegionscorp" name="compinspectionRegion" value="All">
+                <label for="compallRegionscorp">All</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="Yescorp" name="compinspectionRegion" value="Yes">
+                <label for="Yescorp">Yes</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="Nocorp" name="compinspectionRegion" value="No">
+                <label for="Nocorp">No</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="Cancelledcorp" name="compinspectionRegion" value="Cancelled">
+                <label for="Cancelledcorp">Cancelled</label>
+                <br>
+            </li>
+            <li>
+                <input type="radio" id="UnderConsiderationcorp" name="compinspectionRegion" value="Under Consideration">
+                <label for="UnderConsiderationcorp">Under Consideration</label>
+                <br>
+            </li>
+        </ul>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3  mb-4">Defect Code</h3>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="allcodecorp" name="actionincode" value="allcode">
+                        <label for="allcodecorp">All</label>
+                        <br>
+                    </li>
+                    <li>
+                        <input type="radio" id="DefectCodecorp" name="actionincode" value="DefectCode">
+                        <label for="DefectCodecorp">Particular Defect Code</label>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3"> @Html.DropDownList("ParticularDefectCodecorp", new SelectList(IBS.Models.Common.GetDefectDesc(), "Value", "Text"), "--Select--", new { id = "ParticularDefectCodecorp" }) </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3  mb-4">JI Status Code/Classification</h3>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="alljicodecorp" name="actionjicode" value="alljicode">
+                        <label for="alljicodecorp">All</label>
+                        <br>
+                    </li>
+                    <li>
+                        <input type="radio" id="Particularjicodecorp" name="actionjicode" value="Particularjicode">
+                        <label for="Particularjicodecorp">Particular JI Status Code</label>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3"> @Html.DropDownList("ParticularJIcorp", new SelectList(IBS.Models.Common.GetClassification(), "Value", "Text"), "--Select--", new { id = "ParticularJIcorp" }) </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12">
+                <h3 class="heading3  mb-4">Action Proposed</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="radioListForm">
+                    <li>
+                        <input type="radio" id="allactioncorp" name="actionall" value="allaction">
+                        <label for="allactioncorp">All</label>
+                        <br>
+                    </li>
+                    <li>
+                        <input type="radio" id="ParticularActioncorp" name="actionall" value="ParticularAction">
+                        <label for="ParticularActioncorp">Particular Action</label>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3"> @Html.DropDownList("ParticularActioncorp", new SelectList(IBS.Models.Common.ParticularAction(), "Value", "Text"), "--Select--", new { id = "ParticularActiondrpcorp" }) </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReport3();">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="accordion-body DCWACOMPS" style="display:none;">
+    <div class="task-inner row report1">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDateDC" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDateDC"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDateDC" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorToDateDC"></span>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 30px;">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport4();">Submit</button>
+                <button type="button" class="reset-btn" onclick="ClearControls4();">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="accordion-body COCOMPJI" style="display:none;">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="FinancialYear">For The Financial Year</label>
+            @Html.DropDownList("FinancialYearsCOJI", new SelectList(IBS.Models.Common.FinancialYear(), "Value", "Text"), "--Select--", new { id = "FinancialYearsCOJI" })
+            <span class="text-danger field-validation-error" id="spnErrorFinyearCOJI"></span>
+        </div>
+        <div class="col-md-3" style="margin-top: 30px;">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="ViewReport5();">Submit</button>
+                <button type="button" class="reset-btn" onclick="ClearControls5();">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="accordion-body TOPNHIGH" style="display:none;">
+    <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmTOPNHIGH">
+        <input type="hidden" id="hdnReportType" name="hdnReportType" />
+        <input type="hidden" id="hdnmonth" name="hdnmonth" />
+        <input type="hidden" id="hdnyear" name="hdnyear" />
+        <input type="hidden" id="hdnvalinsp" name="hdnvalinsp" />
+        <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+        <input type="hidden" id="hdnToDate" name="hdnToDate" />
+        <input type="hidden" id="hdnICDate" name="hdnICDate" />
+        <input type="hidden" id="hdnBillDate" name="hdnBillDate" />
+        <input type="hidden" id="hdnformonth" name="hdnformonth" />
+        <input type="hidden" id="hdnforperiod" name="hdnforperiod" />
+        <div class="col-md-6">
+            <div class="custom-readio">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="radio" id="formonth" name="formonth" value="formonth" checked>
+                            <label for="formonth">For The Month</label>
+                        </div>
+                    </div>
+                    <div c lass="remember">
+                        <div class="remecheckbox">
+                            <input type="radio" id="forperiod" name="formonth" value="forperiod">
+                            <label for="forperiod">For Given Period</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0" id="forperioddt">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">For The Period From</label>
+                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To</label>
+                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrortodt"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row my-0" id="fromothyear">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">Month</label>
+                    @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                    <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">Year</label>
+                    @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                    <span class="text-danger field-validation-error" id="spnErroryear"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="custom-readio">
+            @*<label for="Reference">Summary of Report</label>*@
+            <div class="company-checkbox">
+                <div class="remember">
+                    <label for="year">Report based on</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                    <div class="remecheckbox">
+                        <input type="radio" value="ICDate" id="ICDate" name="ICDate" checked="checked" />
+                        <label for="ICDate">IC Date</label>
+                        &nbsp;&nbsp;
+                        <input type="radio" value="BillDate" id="BillDate" name="ICDate" />
+                        <label for="BillDate">Bill Date</label>
+                    </div>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <div>
+
+                    <label for="valinsp">No. of High Value Inspections</label>
+                    <input type="text" onkeypress="return isNumber(event)" maxlength="10" id="valinsp" />
+                    <span class="text-danger field-validation-error" id="spnErrorvalinsp"></span>
+
+                </div>
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <button type="button" class="reset-btn" onclick="ClearControlTOP();">Clear</button>
+            <button type="button" class="save-btn active" onclick="GetViewReport();">Generate</button>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />*@
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            if ('@ReportType' == 'CCU') {
+                $(".CCU").css("display", "");
+            } else if ('@ReportType' == 'COMPJI') {
+                $(".COMPJI").css("display", "");
+            } else if ('@ReportType' == 'TOPJI') {
+                $(".TOPJI").css("display", "");
+            } else if ('@ReportType' == 'CORP') {
+                $(".CORP").css("display", "");
+            } else if ('@ReportType' == 'DCWACOMPS') {
+                $(".DCWACOMPS").css("display", "");
+            } else if ('@ReportType' == 'COCOMPJI') {
+                $(".COCOMPJI").css("display", "");
+            } else if ('@ReportType' == 'TOPNHIGH') {
+                $(".TOPNHIGH").css("display", "");
+            }
+
+            $("#ParticularActiondrp").hide();
+            $("#ParticularDefectCodecorp").hide();
+            $("#ParticularJIcorp").hide();
+            $("#ParticularActiondrpcorp").hide();
+            $("#ParticularJI").hide();
+            $("#forperioddt").hide();
+            $("#ParticularDefectCode").hide();
+            $("#allRegions").prop("checked", true);
+            $("#alljiRegions").prop("checked", true);
+            $("#compallRegions").prop("checked", true);
+            $("#allcode").prop("checked", true);
+            $("#alljicode").prop("checked", true);
+            $("#allaction").prop("checked", true);
+            $("#allactioncorp").prop("checked", true);
+            $("#alljicodecorp").prop("checked", true);
+            $("#allcodecorp").prop("checked", true);
+            $("#compallRegionscorp").prop("checked", true);
+            $("#alljiRegionscorp").prop("checked", true);
+            $("#allRegionscorp").prop("checked", true);
+
+            $('#ParticularActioncorp').change(function () {
+                $("#ParticularActiondrpcorp").show();
+            });
+            $('#ParticularAction').change(function () {
+                $("#ParticularActiondrp").show();
+            });
+            $('#allaction').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+
+            $('#allactioncorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+            });
+
+            $('#DefectCodecorp').change(function () {
+                $("#ParticularDefectCodecorp").show();
+            });
+
+            $('#allcodecorp').change(function () {
+                $("#ParticularDefectCodecorp").hide();
+                $("#ParticularDefectCodecorp").val('');
+            });
+
+            $('#Particularjicodecorp').change(function () {
+                $("#ParticularJIcorp").show();
+                $("#ParticularJIcorp").val('');
+            });
+
+            $('#alljicodecorp').change(function () {
+                $("#ParticularJIcorp").hide();
+                $("#ParticularJIcorp").val('');
+            });
+
+            $('#northerncorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#southerncorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#easterncorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#westerncorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#northernjicorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#southernjicorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#easternjicorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#westernjicorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#Yescorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#Nocorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#Cancelledcorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+            $('#UnderConsiderationcorp').change(function () {
+                $("#ParticularActiondrpcorp").hide();
+                $("#ParticularJIcorp").hide();
+                $("#ParticularDefectCodecorp").hide();
+            });
+
+            $('#northern').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#southern').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#eastern').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#western').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#northernji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#southernji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#easternji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#westernji').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#Yes').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#No').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#Cancelled').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+            $('#UnderConsideration').change(function () {
+                $("#ParticularActiondrp").hide();
+            });
+
+            $('#forperiod').change(function () {
+                $("#forperioddt").show();
+                $("#fromothyear").hide();
+                $("#month").val('');
+                $("#year").val('');
+            });
+
+            $('#formonth').change(function () {
+                $("#forperioddt").hide();
+                $("#fromothyear").show();
+                $("#FromDate").val('');
+                $("#ToDate").val('');
+            });
+
+
+            $("#particularCM").hide();
+            $("#particularIE").hide();
+            $("#vendor").hide();
+            $("#particularclient").hide();
+            $("#consignee").hide();
+            $("#AllCMWise").hide();
+            $("#AllIE").hide();
+            $("#vendorrdo").hide();
+            $("#clientwises").hide();
+            $("#consignees").hide();
+            $("#detaileds").hide();
+            $("#Compact").prop("checked", true);
+            $("#FinancialYear").prop("checked", true);
+            $("#CMWise").prop("checked", true);
+            $("#AllCM").prop("checked", true);
+
+            $("#vendortxt").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
+            $("#consigneetxt").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Search/GetConsigneeData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CONSIGNEE, value: item.CONSIGNEE };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
+            $("#Clientwiseddl").change(function () {
+                var Clientwise = $(this).val();
+                debugger
+                $.ajax({
+                    url: '/ConsigneeCompReport/GetClientType',
+                    type: 'GET',
+                    data: { Clientwise: Clientwise },
+                    success: function (data) {
+                        var Item = $("#Item");
+                        Item.empty();
+                        Item.append($('<option>').text('--Select--').val(''));
+
+                        var items = JSON.parse(data);
+
+                        $.each(items, function (index, item) {
+                            Item.append($('<option>').text(item.Text).val(item.Value));
+                        });
+                    }
+                });
+            });
+
+
+            $('#FinancialYear').change(function () {
+                $("#FromDate").val('');
+                $("#ToDate").val('');
+            });
+
+            $('#JIDecidedDT').change(function () {
+                $("#FinancialYears").val('');
+            });
+
+            $('#CMWise').change(function () {
+                $("#AllCMWise").show();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+            });
+            $('#ParticularCMs').change(function () {
+                $("#particularCM").show();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+            });
+
+            $('#IEWise').change(function () {
+                debugger
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#AllIE").show();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#AllCMWise").hide();
+                $("#ddlsupercm").show();
+            });
+            $('#ParticularIEs').change(function () {
+                $("#particularIE").show();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#AllCMWise").hide();
+            });
+
+            $('#VendorWise').change(function () {
+                $("#vendorrdo").show();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+            });
+            $('#ParticularVendor').change(function () {
+                $("#vendor").show();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detailed").hide();
+                $("#AllCMWise").hide();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+                $("#AllIE").hide();
+            });
+
+            $('#ClientWise').change(function () {
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#consignees").hide();
+                $("#clientwises").show();
+            });
+            $('#ParticularClients').change(function () {
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#consignee").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").show();
+                $("#consignees").hide();
+                $("#particularclient").show();
+            });
+
+            $('#ConsigneeWise').change(function () {
+                $("#consignees").show();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+            });
+            $('#ParticularConsignee').change(function () {
+                $("#consignee").hide();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#detaileds").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignee").show();
+            });
+
+            $('#Detailed').change(function () {
+                $("#detaileds").show();
+                $("#particularCM").hide();
+                $("#particularIE").hide();
+                $("#vendor").hide();
+                $("#particularclient").hide();
+                $("#consignee").hide();
+                $("#AllCMWise").hide();
+                $("#AllIE").hide();
+                $("#vendorrdo").hide();
+                $("#clientwises").hide();
+                $("#consignees").hide();
+            });
+
+            $('#AllCM').change(function () {
+                $("#particularCM").hide();
+            });
+            $('#AllIEs').change(function () {
+                $("#particularIE").hide();
+            });
+            $('#AllVendors').change(function () {
+                $("#vendor").hide();
+            });
+            $('#AllClient').change(function () {
+                $("#particularclient").hide();
+            });
+            $('#AllConsignee').change(function () {
+                $("#consignee").hide();
+            });
+            $('#Compact').change(function () {
+                $("#detaileds").hide();
+            });
+        });
+
+        function ViewReport2() {
+
+            $("#spnErrorJISno").html("");
+            var IsValid = true;
+
+            if ($("#JISNO").val() == "") {
+                $("#spnErrorJISno").html("Enter JISno");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+
+            var JISNO = $('#JISNO').val();;
+            var ReportType = '@ReportType';
+            let myObject = { JISNO, ReportType };
+
+            var url = '@Url.Action("ManageByTopJI", "ConsigneeCompReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ViewReport1() {
+            debugger
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#compfromdt").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#comptodt").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#compfromdt").val() != "" && IsValidDate($("#compfromdt").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#comptodt").val() != "" && IsValidDate($("#comptodt").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+            var ReportType = '@ReportType';
+            var FromDate = $('#compfromdt').val();;
+            var ToDate = $('#comptodt').val();;
+            var Allregion = $("#allRegions").is(":checked") == true ? "true" : "false";
+            var regionorth = $("#northern").is(":checked") == true ? "true" : "false";
+            var regionsouth = $("#southern").is(":checked") == true ? "true" : "false";
+            var regioneast = $("#eastern").is(":checked") == true ? "true" : "false";
+            var regionwest = $("#western").is(":checked") == true ? "true" : "false";
+            var jiallregion = $("#alljiRegions").is(":checked") == true ? "true" : "false";
+            var jinorth = $("#northernji").is(":checked") == true ? "true" : "false";
+            var jisourth = $("#southernji").is(":checked") == true ? "true" : "false";
+            var jieast = $("#easternji").is(":checked") == true ? "true" : "false";
+            var jiwest = $("#westernji").is(":checked") == true ? "true" : "false";
+            var compallregion = $("#compallRegions").is(":checked") == true ? "true" : "false";
+            var compyes = $("#Yes").is(":checked") == true ? "true" : "false";
+            var compno = $("#No").is(":checked") == true ? "true" : "false";
+            var cancelled = $("#Cancelled").is(":checked") == true ? "true" : "false";
+            var underconsider = $("#UnderConsideration").is(":checked") == true ? "true" : "false";
+            var allaction = $("#allaction").is(":checked") == true ? "true" : "false";
+            var particilaraction = $("#ParticularAction").is(":checked") == true ? "true" : "false";
+            var actiondrp = $('#ParticularActiondrp').val();
+
+            $('#frmCCU').find("#hdnReportType").val(ReportType);
+            $('#frmCCU').find("#hdncompfromdt").val(FromDate);
+            $('#frmCCU').find("#hdncomptodt").val(ToDate);
+            $('#frmCCU').find("#hdnallRegions").val(Allregion);
+            $('#frmCCU').find("#hdnnorthern").val(regionorth);
+            $('#frmCCU').find("#hdnsouthern").val(regionsouth);
+            $('#frmCCU').find("#hdneastern").val(regioneast);
+            $('#frmCCU').find("#hdnwestern").val(regionwest);
+            $('#frmCCU').find("#hdnalljiRegions").val(jiallregion);
+            $('#frmCCU').find("#hdnnorthernji").val(jinorth);
+            $('#frmCCU').find("#hdnsouthernji").val(jisourth);
+            $('#frmCCU').find("#hdneasternji").val(jieast);
+            $('#frmCCU').find("#hdnwesternji").val(jiwest);
+            $('#frmCCU').find("#hdncompallRegions").val(compallregion);
+            $('#frmCCU').find("#hdnYes").val(compyes);
+            $('#frmCCU').find("#hdnNo").val(compno);
+            $('#frmCCU').find("#hdnCancelled").val(cancelled);
+            $('#frmCCU').find("#hdnUnderConsideration").val(underconsider);
+            $('#frmCCU').find("#hdnallaction").val(allaction);
+            $('#frmCCU').find("#hdnParticularAction").val(particilaraction);
+            $('#frmCCU').find("#hdnParticularActiondrp").val(actiondrp);
+
+            $("#frmCCU").submit();
+        }
+
+        function ViewReport() {
+
+            $("#spnErrorFromDateCOJI").html("");
+            $("#spnErrorToDateCOJI").html("");
+            $("#spnErrorFinyear").html("");
+            var IsValid = true;
+            debugger
+            if ($('#JIDecidedDT').is(':checked')) {
+                $('#FinancialYears').val('');
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorFromDateCOJI").html("The From Date field is required.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrorToDateCOJI").html("The To Date field is required.");
+                    IsValid = false;
+                }
+
+                if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                    $("#spnErrorFromDateCOJI").html("Invalid date format.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                    $("#spnErrorToDateCOJI").html("Invalid date format.");
+                    IsValid = false;
+                }
+            }
+
+            if ($('#FinancialYear').is(':checked')) {
+                $('#FromDate').val('');
+                $('#JIDecidedDT').val('');
+                if ($("#FinancialYears").val() == "") {
+                    $("#spnErrorFinyear").html("Select Financial Year");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+            var ReportType = '@ReportType';
+            var FromDate = $('#FromDate').val();;
+            var ToDate = $('#ToDate').val();;
+            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+            var AllIEs = $("#AllIEs").is(":checked") == true ? "true" : "false";
+            var AllVendors = $("#AllVendors").is(":checked") == true ? "true" : "false";
+            var AllClient = $("#AllClient").is(":checked") == true ? "true" : "false";
+            var AllConsignee = $("#AllConsignee").is(":checked") == true ? "true" : "false";
+            var Compact = $("#Compact").is(":checked") == true ? "true" : "false";
+            var AwaitingJI = $("#AwaitingJI").is(":checked") == true ? "true" : "false";
+            var JIConclusion = $("#JIConclusion").is(":checked") == true ? "true" : "false";
+            var JIConclusionfollowup = $("#JIConclusionfollowup").is(":checked") == true ? "true" : "false";
+            var JIconclusionreport = $("#JIconclusionreport").is(":checked") == true ? "true" : "false";
+            var JIDecidedDT = $("#JIDecidedDT").is(":checked") == true ? "true" : "false";
+            var All = $("#All").is(":checked") == true ? "true" : "false";
+            var ParticularIEs = $("#ParticularIEs").is(":checked") == true ? "true" : "false";
+            var IEWise = $("#IEWise").is(":checked") == true ? "true" : "false";
+            var CMWise = $("#CMWise").is(":checked") == true ? "true" : "false";
+            var VendorWise = $("#VendorWise").is(":checked") == true ? "true" : "false";
+            var ClientWise = $("#ClientWise").is(":checked") == true ? "true" : "false";
+            var ConsigneeWise = $("#ConsigneeWise").is(":checked") == true ? "true" : "false";
+            var FinancialYear = $("#FinancialYear").is(":checked") == true ? "true" : "false";
+            var ParticularCMs = $("#ParticularCMs").is(":checked") == true ? "true" : "false";
+            var ParticularClients = $("#ParticularClients").is(":checked") == true ? "true" : "false";
+            var ParticularConsignee = $("#ParticularConsignee").is(":checked") == true ? "true" : "false";
+            var ParticularVendor = $("#ParticularVendor").is(":checked") == true ? "true" : "false";
+            var Detailed = $("#Detailed").is(":checked") == true ? "true" : "false";
+            var FinancialYearsvalue = $("#FinancialYears").val();
+            var FinancialYears = $('#FinancialYears option:selected').text();
+            var ddlsupercm = $('#ddlsupercm').val();
+            var ddliename = $('#ddliename').val();
+            var Clientwiseddl = $('#Clientwiseddl').val();
+            var vendor = $('#vendor').val();
+            var Item = $('#Item').val();
+            var consignee = $('#consignee').val();
+
+            $('#frmCOMPJI').find("#hdnReportType").val(ReportType);
+            $('#frmCOMPJI').find("#hdnFromDate").val(FromDate);
+            $('#frmCOMPJI').find("#hdnToDate").val(ToDate);
+            $('#frmCOMPJI').find("#hdnAllCM").val(AllCM);
+            $('#frmCOMPJI').find("#hdnAllIEs").val(AllIEs);
+            $('#frmCOMPJI').find("#hdnAllVendors").val(AllVendors);
+            $('#frmCOMPJI').find("#hdnAllClient").val(AllClient);
+            $('#frmCOMPJI').find("#hdnAllConsignee").val(AllConsignee);
+            $('#frmCOMPJI').find("#hdnCompact").val(Compact);
+            $('#frmCOMPJI').find("#hdnAwaitingJI").val(AwaitingJI);
+            $('#frmCOMPJI').find("#hdnJIConclusion").val(JIConclusion);
+            $('#frmCOMPJI').find("#hdnJIConclusionfollowup").val(JIConclusionfollowup);
+            $('#frmCOMPJI').find("#hdnJIconclusionreport").val(JIconclusionreport);
+            $('#frmCOMPJI').find("#hdnJIDecidedDT").val(JIDecidedDT);
+            $('#frmCOMPJI').find("#hdnAll").val(All);
+            $('#frmCOMPJI').find("#hdnParticularIEs").val(ParticularIEs);
+            $('#frmCOMPJI').find("#hdnIEWise").val(IEWise);
+            $('#frmCOMPJI').find("#hdnCMWise").val(CMWise);
+            $('#frmCOMPJI').find("#hdnVendorWise").val(VendorWise);
+            $('#frmCOMPJI').find("#hdnClientWise").val(ClientWise);
+            $('#frmCOMPJI').find("#hdnConsigneeWise").val(ConsigneeWise);
+            $('#frmCOMPJI').find("#hdnFinancialYear").val(FinancialYear);
+            $('#frmCOMPJI').find("#hdnParticularCMs").val(ParticularCMs);
+            $('#frmCOMPJI').find("#hdnParticularClients").val(ParticularClients);
+            $('#frmCOMPJI').find("#hdnParticularConsignee").val(ParticularConsignee);
+            $('#frmCOMPJI').find("#hdnParticularVendor").val(ParticularVendor);
+            $('#frmCOMPJI').find("#hdnDetailed").val(Detailed);
+            $('#frmCOMPJI').find("#hdnFinancialYears").val(FinancialYearsvalue);
+            $('#frmCOMPJI').find("#hdnFinancialYears").val(FinancialYears);
+            $('#frmCOMPJI').find("#hdnddlsupercm").val(ddlsupercm);
+            $('#frmCOMPJI').find("#hdnddliename").val(ddliename);
+            $('#frmCOMPJI').find("#hdnClientwiseddl").val(Clientwiseddl);
+            $('#frmCOMPJI').find("#hdnvendor").val(vendor);
+            $('#frmCOMPJI').find("#hdnItem").val(Item);
+            $('#frmCOMPJI').find("#hdnconsignee").val(consignee);
+
+            $("#frmCOMPJI").submit();
+        }
+
+        function ClearControls1() {
+            $("#FinancialYears").val("");
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+            $("#ddliename").val("");
+            $("#vendortxt").val("");
+            $("#Clientwiseddl").val("");
+            $("#Item").val("");
+            $("#consigneetxt").val("");
+
+        }
+
+        function ViewReport3() {
+            $("#spnErrorFromDatecrop").html("");
+            $("#spnErrorToDatecrop").html("");
+            var IsValid = true;
+
+            if ($("#compfromdtcrop").val() == "") {
+                $("#spnErrorFromDatecrop").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#comptodtcrop").val() == "") {
+                $("#spnErrorToDatecrop").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#compfromdtcrop").val() != "" && IsValidDate($("#compfromdtcrop").val()) == false) {
+                $("#spnErrorFromDatecrop").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#comptodtcrop").val() != "" && IsValidDate($("#comptodtcrop").val()) == false) {
+                $("#spnErrorToDatecrop").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+            var ReportType = '@ReportType';
+            var FromDate = $('#compfromdtcrop').val();;
+            var ToDate = $('#comptodtcrop').val();;
+            var Allregion = $("#allRegionscorp").is(":checked") == true ? "true" : "false";
+            var regionorth = $("#northerncorp").is(":checked") == true ? "true" : "false";
+            var regionsouth = $("#southerncorp").is(":checked") == true ? "true" : "false";
+            var regioneast = $("#easterncorp").is(":checked") == true ? "true" : "false";
+            var regionwest = $("#westerncorp").is(":checked") == true ? "true" : "false";
+            var jiallregion = $("#alljiRegionscorp").is(":checked") == true ? "true" : "false";
+            var jinorth = $("#northernjicorp").is(":checked") == true ? "true" : "false";
+            var jisourth = $("#southernjicorp").is(":checked") == true ? "true" : "false";
+            var jieast = $("#easternjicorp").is(":checked") == true ? "true" : "false";
+            var jiwest = $("#westernjicorp").is(":checked") == true ? "true" : "false";
+            var compallregion = $("#compallRegionscorp").is(":checked") == true ? "true" : "false";
+            var compyes = $("#Yescorp").is(":checked") == true ? "true" : "false";
+            var compno = $("#Nocorp").is(":checked") == true ? "true" : "false";
+            var cancelled = $("#Cancelledcorp").is(":checked") == true ? "true" : "false";
+            var underconsider = $("#UnderConsiderationcorp").is(":checked") == true ? "true" : "false";
+            var allaction = $("#allactioncorp").is(":checked") == true ? "true" : "false";
+            var particilaraction = $("#ParticularActioncorp").is(":checked") == true ? "true" : "false";
+            var particilarcode = $("#DefectCodecorp").is(":checked") == true ? "true" : "false";
+            var particilarjicode = $("#Particularjicodecorp").is(":checked") == true ? "true" : "false";
+            var actiondrp = $('#ParticularActiondrpcorp').val();
+            var actioncodedrp = $('#ParticularDefectCodecorp').val();
+            var actionjidrp = $('#ParticularJIcorp').val();
+
+            $('#frmCORP').find("#hdnReportType").val(ReportType);
+            $('#frmCORP').find("#hdncompfromdtcorp").val(FromDate);
+            $('#frmCORP').find("#hdncomptodtcorp").val(ToDate);
+            $('#frmCORP').find("#hdnallRegionscorp").val(Allregion);
+            $('#frmCORP').find("#hdnnortherncorp").val(regionorth);
+            $('#frmCORP').find("#hdnsoutherncorp").val(regionsouth);
+            $('#frmCORP').find("#hdneasterncorp").val(regioneast);
+            $('#frmCORP').find("#hdnwesterncorp").val(regionwest);
+            $('#frmCORP').find("#hdnalljiRegionscorp").val(jiallregion);
+            $('#frmCORP').find("#hdnnorthernjicorp").val(jinorth);
+            $('#frmCORP').find("#hdnsouthernjicorp").val(jisourth);
+            $('#frmCORP').find("#hdneasternjicorp").val(jieast);
+            $('#frmCORP').find("#hdnwesternjicorp").val(jiwest);
+            $('#frmCORP').find("#hdncompallRegionscorp").val(compallregion);
+            $('#frmCORP').find("#hdnYescorp").val(compyes);
+            $('#frmCORP').find("#hdnNocorp").val(compno);
+            $('#frmCORP').find("#hdnCancelledcorp").val(cancelled);
+            $('#frmCORP').find("#hdnUnderConsiderationcorp").val(underconsider);
+            $('#frmCORP').find("#hdnallactioncorp").val(allaction);
+            $('#frmCORP').find("#hdnParticularActioncorp").val(particilaraction);
+            $('#frmCORP').find("#hdnParticularActiondrpcorp").val(actiondrp);
+            $('#frmCORP').find("#hdnDefectCodecorp").val(particilarcode);
+            $('#frmCORP').find("#hdnParticularjicodecorp").val(particilarjicode);
+            $('#frmCORP').find("#hdnParticularDefectCodecorp").val(actioncodedrp);
+            $('#frmCORP').find("#hdnParticularJIcorp").val(actionjidrp);
+
+            $("#frmCORP").submit();
+        }
+
+        function ViewReport4() {
+            debugger
+            $("#spnErrorFromDateDC").html("");
+            $("#spnErrorToDateDC").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDateDC").val() == "") {
+                $("#spnErrorFromDateDC").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDateDC").val() == "") {
+                $("#spnErrorToDateDC").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FromDateDC").val() != "" && IsValidDate($("#FromDateDC").val()) == false) {
+                $("#spnErrorFromDateDC").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateDC").val() != "" && IsValidDate($("#ToDateDC").val()) == false) {
+                $("#spnErrorToDateDC").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+            var ReportType = '@ReportType';
+
+            var FromDate = moment($('#FromDateDC').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDateDC').datepicker('getDate')).format("YYYY-MM-DD");
+            let myObject = {ReportType, FromDate, ToDate };
+
+            var url = '@Url.Action("ManageByDefectCode", "ConsigneeCompReport")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+
+        function ClearControls4() {
+            $("#FromDateDC").val("");
+            $("#ToDateDC").val("");
+            $("#spnErrorFromDateDC").html("");
+            $("#spnErrorToDateDC").html("");
+        }
+
+        function ViewReport5() {
+            debugger
+            $("#spnErrorFinyearCOJI").html("");
+
+            var IsValid = true;
+
+            if ($("#FinancialYearsCOJI").val() == "") {
+                $("#spnErrorFinyearCOJI").html("Select Financial Year");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+            var ReportType = '@ReportType';
+            var FinancialYearsText = $("#FinancialYearsCOJI option:selected").text();
+            var FinancialYearsValue = $("#FinancialYearsCOJI").val();
+
+            var myObject = { ReportType, FinancialYearsText: FinancialYearsText, FinancialYearsValue: FinancialYearsValue };
+
+            var url = '@Url.Action("ManageByCOCOMP", "ConsigneeCompReport")?' + $.param(myObject);
+
+            window.open(url, '_blank');
+        }
+
+
+        function ClearControls5() {
+            $("#FinancialYearsCOJI").val("");
+            $("#spnErrorFinyearCOJI").html("");
+        }
+
+        function GetViewReport() {
+
+            $("#spnErrorvalinsp").html("");
+            $("#spnErrortodt").html("");
+            $("#spnErrorfromdt").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+            if ($("#valinsp").val() == "") {
+                $("#spnErrorvalinsp").html("Enter No of Inspection show in Report");
+                IsValid = false;
+            }
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorfromdt").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrortodt").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+            var monthChar = $('#month option:selected').text();
+            var month = getMonthNumber(monthChar);
+            var year = $('#year').val();
+            var valinsp = $('#valinsp').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var ICDate = $("#ICDate").is(":checked") == true ? "true" : "false";
+            var BillDate = $("#BillDate").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var ReportType = '@ReportType';
+
+            $('#frmTOPNHIGH').find("#hdnReportType").val(ReportType);
+            $('#frmTOPNHIGH').find("#hdnmonth").val(monthChar);
+            $('#frmTOPNHIGH').find("#hdnmonth").val(month);
+            $('#frmTOPNHIGH').find("#hdnyear").val(year);
+            $('#frmTOPNHIGH').find("#hdnvalinsp").val(valinsp);
+            $('#frmTOPNHIGH').find("#hdnFromDate").val(FromDate);
+            $('#frmTOPNHIGH').find("#hdnToDate").val(ToDate);
+            $('#frmTOPNHIGH').find("#hdnICDate").val(ICDate);
+            $('#frmTOPNHIGH').find("#hdnBillDate").val(BillDate);
+            $('#frmTOPNHIGH').find("#hdnformonth").val(formonth);
+            $('#frmTOPNHIGH').find("#hdnforperiod").val(forperiod);
+
+            $("#frmTOPNHIGH").submit();
+        }
+
+        function ClearControlTOP() {
+            $("#month").val('');
+            $("#year").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#valinsp").val('');
+            $("#ICDate").prop("checked", true);
+            $("#formonth").prop("checked", true);
+            $("#forperioddt").hide();
+            $("#fromothyear").show();
+            $("#spnErrorvalinsp").val('');
+            $("#spnErrortodt").val('');
+            $("#spnErrorfromdt").val('');
+            $("#spnErrormonth").val('');
+            $("#spnErroryear").val('');
+        }
+
+        function getMonthNumber(monthName) {
+
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
+            return monthNumber;
+        }
+    </script>
+}

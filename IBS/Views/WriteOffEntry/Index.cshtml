@@ -9,11 +9,11 @@
         <div class="row my-0 d-flex align-items-end">
             <div class="col-md-2 mb-4">
                 <label for="Reference">From Date</label>
-                <input type="text" id="FrmDt" class="datepicker"  maxlength="200" />
+                <input type="text" id="FrmDt" class="datepicker"  maxlength="200" placeholder="DD/MM/YYYY"/>
             </div>
             <div class="col-md-2 mb-4">
                 <label for="Reference">To Date</label>
-                <input type="text" id="ToDt" class="datepicker"  maxlength="200" />
+                <input type="text" id="ToDt" class="datepicker" maxlength="200" placeholder="DD/MM/YYYY" />
             </div>
             <div class="col-md-2 mb-4">
                 <label for="Reference">BPO Name</label>
@@ -67,12 +67,13 @@
             event.preventDefault();
             var formData = new FormData();
             const dataArr = [];
-            debugger
+
             $('#dtWriteoffam tbody tr').each(function () {
                 const billNo = $(this).find('td:eq(0)').text(); 
-                const writeOffAmtValue = $(this).find('input.txtwriteofamt').val();
+                const inputId = $(this).find('input.txtwriteofamt').attr('data-errorId'); 
+                const writeOffAmtValue = parseFloat($(`#txtwriteofamt_${inputId}`).val()) || 0;
 
-                if (writeOffAmtValue.trim() !== '' && parseFloat(writeOffAmtValue) !== 0) {
+                if (writeOffAmtValue !== '' && writeOffAmtValue !== 0) {
                     const billNo = $(this).find('td:eq(0)').text();
 
                     const UpdateDataModel = {
@@ -116,7 +117,7 @@
             
             var ajaxUrl = "@Url.Action("LoadTable")";
 
-            $("#dtWriteoffam").DataTable({
+            var table = $("#dtWriteoffam").DataTable({
                 stateSave: false,
                 autoWidth: true,
                 scrollX: true,
@@ -157,15 +158,33 @@
                     { data: "BillAmtClr" },
                     {
                         data: "WRITE_OFF_AMT",
-                        "targets": [1, 2],
+                        targets: [1, 2],
                         render: function (data, type, row, meta) {
-                            debugger
-                            return generateRowHtml(meta);
+                            return generateRowHtml(meta, row);
                         }
                     }
-
                 ],
                 "order": [[0, "asc"]]
+            });
+
+            $('#dtWriteoffam').on('keypress', 'input.txtwriteofamt', function (event) {
+
+                const row = table.row($(this).closest('tr')).data();
+                const billAmt = parseFloat(row.BillAmt) || 0;
+                const billAmtRec = parseFloat(row.BillAmtRec) || 0;
+                const difference = Math.abs(billAmtRec - billAmt);
+                const inputId = $(this).attr('data-errorId');
+                const key = event.key;
+                const writeOffAmtElement = $(`#txtwriteofamt_${inputId}`);
+                let writeOffAmt = parseFloat(writeOffAmtElement.val()) || 0;
+                writeOffAmt = parseFloat(writeOffAmt + key) || 0;
+
+                if (writeOffAmt > difference) {
+                    event.preventDefault();
+                    displayErrorMessage(`Amount Should Not Be More Then (${difference}).`, $(this).attr('data-errorId'));
+                } else {
+                    clearErrorMessage($(this).attr('data-errorId'));
+                }
             });
         }
 
@@ -175,41 +194,20 @@
             return 'error-message_' + errorMessageCounter++;
         }
 
-        function generateRowHtml(meta) {
+        function generateRowHtml(meta, row, index) {
             const writeOffAmt = meta.data || 0;
             const errorId = generateUniqueId();
 
-            return '<input type="text" name="txtwriteofamt" onkeypress="return validateInput(event, \'' + errorId + '\')" class="txtwriteofamt" value="' + writeOffAmt + '">' +
-                '<div id="' + errorId + '" style="color: red;"></div>';
-        }
-
-        function validateInput(event, inputId) {
-            const inputValue = event.key;
-            const validValues = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
-
-            if (!validValues.includes(inputValue)) {
-                event.preventDefault();
-                displayErrorMessage('Please enter numbers only.', inputId);
-                return;
-            }
-
-            const currentValue = event.target.value + inputValue;
-            const intValue = parseInt(currentValue, 10);
-
-            if (isNaN(intValue) || intValue < 1 || intValue > 13) {
-                event.preventDefault();
-                displayErrorMessage('Please enter a number between 1 and 13.', inputId);
-            } else {
-                clearErrorMessage(inputId);
-            }
+            return `<input type="text" id="txtwriteofamt_${errorId}" name="txtwriteofamt" onkeypress="return isNumberWithDot(event, '${errorId}')" class="txtwriteofamt" value="${writeOffAmt}" data-errorId="${errorId}">
+                    <div id="${errorId}" style="color: red;"></div>`;
         }
 
         function displayErrorMessage(message, inputId) {
-            $(`#${inputId}`).text(message).show();
+            $('#' + inputId).text(message).show();
         }
 
         function clearErrorMessage(inputId) {
-            $(`#${inputId}`).text('').hide();
+            $('#' + inputId).text('').hide();
         }
 
     </script>

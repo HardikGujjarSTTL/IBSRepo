@@ -1,10 +1,13 @@
-﻿@model IBS.Models.Reports.OtherReportsModel
+﻿@using System.Web;
+@model IBS.Models.Reports.OtherReportsModel
 
 @{
     Layout = null;
     string ReportType = (Model != null ? Model.ReportType : "");
     string ReportTitle = (Model != null ? Model.ReportTitle : "");
     ViewData["Title"] = ReportTitle;
+    string gobackUrl = Url.Action("Index?ReportType=" + ReportType, "OtherReports");
+
 }
 
 <html>
@@ -13,6 +16,7 @@
 </head>
 <body>
     <p align="right">
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -42,8 +46,183 @@
         else if ('@ReportType' == 'COIEWiseCalls'){
             loadCOIEWiseCalls();
             fileName = 'Co_Ie_Wise_Calls';
+        } else if ('@ReportType' == 'C' || '@ReportType' == 'I') {
+            loadNCRCReport();
+            fileName = 'NCR_Controlling_Wise';
+        } else if ('@ReportType' == 'IEWISET') {
+            loadIEWISE();
+            fileName = 'IE Wise Training Report';
+        } else if ('@ReportType' == 'ONGCON') {
+            loadongoingcontract();
+            fileName = 'Ongoing Contracts';
+        } else if ('@ReportType' == 'CONTRACT') {
+            loadcontract();
+            fileName = 'Contracts';
+        } else if ('@ReportType' == 'CLUSVENDOR') {
+            loadClusterVednor();
+            fileName = 'Vendor Cluster report';
+        } else if ('@ReportType' == 'IEALTER') {
+            loadIEAlternate();
+            fileName = 'IE Alternate Mapping Report';
+        } else if ('@ReportType' == 'VENDPER') {
+            loadVendorPer();
+            fileName = 'Vendor Cluster report';
+        } else if ('@ReportType' == 'VENDFEED') {
+            loadVENDFEED();
+            fileName = 'Vendor Feedback Report';
+        } else if ('@ReportType' == 'CHECK') {
+            loadPWCHECK();
+            fileName = 'Period Wise Progress Of Checksheet';
+        }else if ('@ReportType' == 'TECH') {
+            loadTECH();
+            fileName = 'Period Wise Technical Refernce';
+        }else if ('@ReportType' == 'U') {
+            loadDailyIEWork();
+            fileName = 'Daily IE Work Plan Report';
+        }
+        else if ('@ReportType' == 'E') {
+            loadDailyIEExcpWork();
+            fileName = 'Daily IE Work Plan Report';
+        } else if ('@ReportType' == 'IEICPHOTO') {
+            loadIEWorkPhoto();
+            fileName = 'Photo Submitted By IE';
         }
     });
+
+    function loadIEWorkPhoto() {
+        $("#dvReportViewer").load("@Url.Action("PhotoSubmiteedByIE")", {
+            CaseNo: '@Model.CaseNo', CallRecDT: '@Model.CallRecDT'
+            , CallSno: '@Model.CallSno', BKNO: '@Model.BKNO', SETNO: '@Model.SETNO'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadDailyIEWork() {
+        $("#dvReportViewer").load("@Url.Action("DailyWorkIECMReport")", {
+            ReportType: '@Model.ReportType', FromDate: '@Model.FromDate'
+            , ToDate: '@Model.ToDate', lstIE: '@Model.lstIE', lstCM: '@Model.lstCM', AllIEs: '@Model.AllIEs', ParticularIEs: '@Model.ParticularIEs',
+            AllCM: '@Model.AllCM', ParticularCMs: '@Model.ParticularCMs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise', SortedIE: '@Model.SortedIE', visitdate: '@Model.visitdate'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadDailyIEExcpWork() {
+        $("#dvReportViewer").load("@Url.Action("DailyWorkIEExcepReport")", {
+            ReportType: '@Model.ReportType', FromDate: '@Model.FromDate'
+            , ToDate: '@Model.ToDate', lstIE: '@Model.lstIE', lstCM: '@Model.lstCM', AllIEs: '@Model.AllIEs', ParticularIEs: '@Model.ParticularIEs',
+            AllCM: '@Model.AllCM', ParticularCMs: '@Model.ParticularCMs', IEWise: '@Model.IEWise', CMWise: '@Model.CMWise', SortedIE: '@Model.SortedIE', visitdate: '@Model.visitdate'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadPWCHECK() {
+        $("#dvReportViewer").load("@Url.Action("PeriodWiseChecksheet")", {
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadTECH() {
+        $("#dvReportViewer").load("@Url.Action("PeriodWiseTechRef")", {
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadVENDFEED() {
+        $("#dvReportViewer").load("@Url.Action("VendorFeedback")", {
+
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadVendorPer() {
+        $("#dvReportViewer").load("@Url.Action("VendorPerforeport")", {
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', formonth: '@Model.formonth', forperiod: '@Model.forperiod', month: '@Model.month', year: '@Model.year', vendcd: '@Model.vendorcd', vendor: '@Model.vendor', monthtxt: '@Model.monthtxt'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadIEAlternate() {
+        $("#dvReportViewer").load("@Url.Action("IEAlterMappingReport")", {
+
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+
+    function loadClusterVednor() {
+        $("#dvReportViewer").load("@Url.Action("VendorClusterIEReport")", {
+            department: '@Model.department', allreport: '@Model.allreport', departreport: '@Model.departreport'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadcontract() {
+        $("#dvReportViewer").load("@Url.Action("ContractReport")", {
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', Region: '@Model.Region', clientname: '@Model.clientname',
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadongoingcontract() {
+        $("#dvReportViewer").load("@Url.Action("OngoingContractReport")", {
+            StatusOffer: '@Model.StatusOffer', Region: '@Model.Region', StatusOffertxt: '@Model.StatusOffertxt', Regiontxt: '@Model.Regiontxt', rdoregionwise: '@Model.rdoregionwise'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadIEWISE() {
+        $("#dvReportViewer").load("@Url.Action("IEWiseTrainingReport")", {
+            IENAME: '@Model.IEName', TrainingArea: '@Model.TrainingArea', Mechanical: '@Model.Mechanical', Electrical: '@Model.Electrical', Civil: '@Model.Civil'
+            , Regular: '@Model.Regular', Deputaion: '@Model.Deputaion', Particularie: '@Model.Particularie', ParticularArea: '@Model.ParticularArea'
+        }
+            , function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+    }
+
+    function loadNCRCReport() {
+        $("#dvReportViewer").load("@Url.Action("NCRCWiseReport")", {
+            month: '@Model.month', year: '@Model.year', FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', AllCM: '@Model.AllCM', forCM: '@Model.forCM',
+            All: '@Model.All', Outstanding: '@Model.Outstanding', formonth: '@Model.formonth', monthChar: '@Model.monthChar', iecmname: '@Model.iecmname',
+            forperiod: '@Model.forperiod', ReportType: '@Model.ReportType', IENametext: '@Model.IENametext', COName: '@Model.COName'
+        }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
 
     function loadCOWISEIE() {
         $("#dvReportViewer").load("@Url.Action("CoWiseIE")", function (response) {

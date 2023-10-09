@@ -11,6 +11,8 @@
     else if (ReportType == "ICStatus") ReportTitle = "IC Status";
     else if (ReportType == "PendingJICases") ReportTitle = "PENDING JI CASES";
     else if (ReportType == "IEDairy") ReportTitle = "IE DAIRY REPORT";
+    else if (ReportType == "IEWorkPlan") ReportTitle = "IE DAILY WORK PLAN REPORT";
+    else if (ReportType == "CCI") ReportTitle = "CONSIGNEE COMPLAINTS";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -239,42 +241,25 @@
 
         $(document).ready(function () {
             
-            if ('@ReportType' == "IE7thCopy") {
-                $(".report1").css("display", "none");
-                $(".report2").css("display", "");
-                $(".report3").css("display", "none");
-                $(".report4").css("display", "none");
-                $(".report5").css("display", "none");
+            if ('@ReportType' == "IE7thCopy") {                
+                $(".report2").css("display", "");                
             }
-            else if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "PendingJICases") {
-                $(".report1").css("display", "");
-                $(".report2").css("display", "none");
-                $(".report3").css("display", "none");
-                $(".report4").css("display", "none");
-                $(".report5").css("display", "none");
+            else if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "PendingJICases" || '@ReportType' == "IEWorkPlan" || '@ReportType' == "CCI") {
+                $(".report1").css("display", "");                
             }
             else if ('@ReportType' == "CaseHistory") {
-                $(".report1").css("display", "none");
-                $(".report2").css("display", "none");
+                
                 $(".report3").css("display", "");
-                $(".report4").css("display", "none");
-                $(".report5").css("display", "none");
+                
             }
             else if ('@ReportType' == "ICISSUEDNSUB") {
-                $(".report1").css("display", "none");
-                $(".report2").css("display", "none");
-                $(".report3").css("display", "none");
-                $(".report4").css("display", "");
-                $(".report5").css("display", "none");
+                
+                $(".report4").css("display", "");                
                 if ('@Action' == "I") {
                     $("#rdbIECM").css("display", "none");
                 }
             }
-            else if ('@ReportType' == "ICStatus") {
-                $(".report1").css("display", "none");
-                $(".report2").css("display", "none");
-                $(".report3").css("display", "none");
-                $(".report4").css("display", "none");
+            else if ('@ReportType' == "ICStatus") {               
                 $(".report5").css("display", "");
 
                 $('input[type=radio][id=rdType]').change(function () {
@@ -286,14 +271,8 @@
                     }
                 });
             }
-            else if ('@ReportType' == "IEDairy") {
-                //$(".report1").css("display", "none");
-                //$(".report2").css("display", "none");
-                //$(".report3").css("display", "none");
-                //$(".report4").css("display", "none");
-                //$(".report5").css("display", "none");
+            else if ('@ReportType' == "IEDairy") {                
                 $(".IEDairy").css("display", "");
-
             }
 
             if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "ICISSUEDNSUB" || '@ReportType' == "ICStatus") {

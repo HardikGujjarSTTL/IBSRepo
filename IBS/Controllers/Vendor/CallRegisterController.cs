@@ -3,6 +3,7 @@ using IBS.Models;
 using IBS.Repositories;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace IBS.Controllers.Vendor
 {
@@ -77,10 +78,10 @@ namespace IBS.Controllers.Vendor
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSNo > 0 && model.ItemSrNoPo > 0)
                 {
                     msg = "Updated Successfully.";
-                    model.Updatedby = UserName;
+                    model.Updatedby = Convert.ToString(UserId);
                 }
 
-                int i = callregisterRepository.DetailsSave(model,UserName);
+                int i = callregisterRepository.DetailsSave(model,UserId);
                 if (i > 0)
                 {
                     return Json(new { success = true, responseText = msg, Status = i });

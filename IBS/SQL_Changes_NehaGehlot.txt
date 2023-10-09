@@ -1265,11 +1265,374 @@ AS
 BEGIN
     OPEN P_RESULT_CURSOR FOR
 
-        SELECT T22.BILL_NO, T22.BILL_DT, T22.BILL_AMOUNT, T22.AMOUNT_RECEIVED, T22.BILL_AMT_CLEARED,T22.WRITE_OFF_AMT, T26.CHQ_DT, T26.BPO_CD
-        FROM T26_CHEQUE_POSTING T26
-        JOIN T22_BILL T22 ON T26.BILL_NO = T22.BILL_NO
-        WHERE (p_bpo_CD IS NULL OR T26.BPO_CD=p_bpo_CD)
-                --AND (p_po_date_param IS NULL OR m.PO_DT = TO_DATE(p_po_date_param, 'dd-MM-yy'));
-            AND (p_frm_dt IS NULL OR T26.CHQ_DT between to_date(p_frm_dt,'dd/mm/yyyy') and to_date(p_to_dt,'dd/mm/yyyy'));
+   SELECT T22.BILL_NO, T22.BILL_DT, T22.BILL_AMOUNT, T22.AMOUNT_RECEIVED, T22.BILL_AMT_CLEARED, T22.WRITE_OFF_AMT, T26.CHQ_DT, T26.BPO_CD
+    FROM T26_CHEQUE_POSTING T26
+    JOIN T22_BILL T22 ON T26.BILL_NO = T22.BILL_NO
+    WHERE NVL(WRITE_OFF_AMT, 0) = 0
+        AND (p_bpo_CD IS NULL OR T26.BPO_CD = p_bpo_CD)
+        AND (p_frm_dt IS NULL OR T26.CHQ_DT BETWEEN TO_DATE(p_frm_dt, 'dd/mm/yyyy') AND TO_DATE(p_to_dt, 'dd/mm/yyyy'))
+        --AND (T22.WRITE_OFF_AMT = 0 OR T22.WRITE_OFF_AMT IS NULL)
+        AND T22.AMOUNT_RECEIVED <> T22.BILL_AMOUNT;
 
+END;
+
+========================================================================================================================================
+
+create or replace PROCEDURE GetNonClientInfo(
+    p_clientname IN VARCHAR2,
+    p_shortcode IN VARCHAR2,
+    p_ResultSet OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+ OPEN p_ResultSet FOR
+        SELECT 
+            ID AS NonClientId,
+            CLIENTNAME,
+            SHORTCODE,
+            CONTACTNAME,
+            CONTACTDESIGNATION,
+            MOBILENO,
+            EMAILID,
+            CASE 
+                WHEN ORGNTYPE = 'P' THEN 'Private'
+                WHEN ORGNTYPE = 'U' THEN 'PSU'
+                WHEN ORGNTYPE = 'S' THEN 'State Government'
+                WHEN ORGNTYPE = 'F' THEN 'Foreing Railways'
+                WHEN ORGNTYPE = 'C' THEN 'Central Government'
+                ELSE ORGNTYPE
+            END AS ORGNTYPE
+        FROM 
+            Non_Rly_Client
+        WHERE 
+            (ISDELETED = 0 OR ISDELETED IS NULL)
+            AND (UPPER(TRIM(CLIENTNAME)) LIKE UPPER(TRIM(COALESCE(p_clientname, ''))) || '%' OR p_clientname IS NULL)
+            AND (UPPER(TRIM(SHORTCODE)) LIKE UPPER(TRIM(COALESCE(p_shortcode, ''))) || '%' OR p_shortcode IS NULL);
+END;
+
+================================================================================================================================================
+
+create or replace PROCEDURE compliants_statement_reporttypes_Report (
+    p_Frm_dt IN VARCHAR2,
+    p_To_dt IN VARCHAR2,
+    p_Co IN VARCHAR2,
+    p_Ie IN VARCHAR2,
+    p_Vend_cd IN VARCHAR2,
+    p_Consignee_cd IN VARCHAR2,
+    p_Today_dt IN VARCHAR2,
+    p_Fin_year IN VARCHAR2,
+    p_Bpo_rly IN VARCHAR2,
+    p_Client_type IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_Awaiting_ji IN VARCHAR2,
+    p_Awaiting_conclusion IN VARCHAR2,
+    p_Awaiting_action IN VARCHAR2,
+    p_Awaiting_finalaction IN VARCHAR2,
+    p_Cm_wise IN VARCHAR2,
+    p_Ie_wise IN VARCHAR2,
+    p_Vendor_wise IN VARCHAR2,
+    p_Client_wise IN VARCHAR2,
+    p_Consignee_wise IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) IS
+ v_query VARCHAR2(7000) := '';
+BEGIN
+        IF p_Frm_dt IS NOT NULL AND p_To_dt IS NOT NULL THEN
+            v_query := 'select DECODE(INSP_REGION,''N'',''NORTHERN'',''S'',''SOUTHERN'',''E'',''EASTERN'',''W'',''WESTERN'',''CENTRAL'') IN_REGION,COMPLAINT_ID,to_char(COMPLAINT_DT,''dd/mm/yyyy'')COMPLAINT_DATE,REJ_MEMO_NO||'' Dt. ''||to_char(REJ_MEMO_DT,''dd/mm/yyyy'') REJ_MEMO, CASE_NO,BK_NO||'' & ''||SET_NO BK_SET,T40.IE_NAME, IE_CO_NAME,decode(COMP_RECV_REGION,''N'',''Northern'',''S'',''Southern'',''W'',''Western'',''E'',''Eastern'',''C'',''Central'') COMP_RECV_REGION, CONSIGNEE_NAME||'', ''||CONSIGNEE_CITY CONSIGNEE, VENDOR, ITEM_DESC, QTY_OFFERED||'' ''||UOM_S_DESC QTY_OFF,QTY_REJECTED||'' ''||UOM_S_DESC QTY_REJECTED,REJECTION_VALUE, REJECTION_REASON, STATUS, DECODE(JI_REQUIRED,''Y'',''Yes'',''N'',''NO'',''Cancelled'')JI_REQUIRED, JI_SNO, to_char(JI_FIX_DT,''dd/mm/yyyy'')JI_DATE, T38.DEFECT_DESC, T39.JI_STATUS_DESC, ACTION, L5NO_PO PO_NO, to_char(PO_DT,''dd/mm/yyyy'')PO_DATE, to_char(IC_DT,''dd/mm/yyyy'')IC_DATE,T09.IE_NAME JI_IE_NAME,Decode(ACTION_PROPOSED,''W'',''Warning Letter'',''I'',''Minor Penalty'',''J'',''Major Penalty'',''O'',''Others'') ACTION_PROPOSED, to_char(ACTION_PROPOSED_DT,''dd/mm/yyyy'') ACTION_PROPOSED_DATE, CO_NAME, T40.CASE_NO, T40.BK_NO, T40.SET_NO, REMARKS, TO_CHAR(T40.CONCLUSION_DT,''DD/MM/YYYY'')CONCLUSION_DATE, DECODE(NO_JI_REASON,''A'',''DP Expired'',''B'',''Validity of IC Expired'',''C'',''Broken Condition'',''D'',''Rejection <5%'',''E'',''Rejection issued after 90 Days of reciept of material'',''F'',''Guarantee Claim'',''G'',''Wrong Dispatch'') NO_JI_RES,decode(T09.IE_DEPARTMENT,''C'',''Civil'',''E'',''Electrical'',''M'',''Mechanical'',''L'',''Metallergy'',''Others'') DEPT,ROOT_CAUSE_ANALYSIS,TECH_REF,DECODE(CHKSHEET_STATUS,''A'',''APPROVED'',''R'',''REVISION'',''P'',''PREPRATION'')CHK_STATUS,ANY_OTHER,CAPA_STATUS,DANDAR_STATUS from V40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38,T39_JI_STATUS_CODES T39,T09_IE T09, T08_IE_CONTROLL_OFFICER T08 where T40.DEFECT_CD=T38.DEFECT_CD(+) and T40.JI_STATUS_CD =T39.JI_STATUS_CD(+) and T40.JI_IE_CD=T09.IE_CD(+) and T40.IE_CO_CD=T08.CO_CD(+) and (JI_DT between to_date('''||p_Frm_dt||''',''dd/mm/yyyy'') and to_date('''||p_To_dt||''',''dd/mm/yyyy'')) and INSP_REGION='''||p_Region||''' and JI_REQUIRED=''Y''';
+        ELSIF p_Fin_year IS NOT NULL THEN
+           v_query := 'select DECODE(INSP_REGION,''N'',''NORTHERN'',''S'',''SOUTHERN'',''E'',''EASTERN'',''W'',''WESTERN'',''CENTRAL'') IN_REGION,COMPLAINT_ID,to_char(COMPLAINT_DT,''dd/mm/yyyy'')COMPLAINT_DATE,REJ_MEMO_NO||'' Dt. ''||to_char(REJ_MEMO_DT,''dd/mm/yyyy'') REJ_MEMO, CASE_NO,BK_NO||'' & ''||SET_NO BK_SET,T40.IE_NAME, IE_CO_NAME,decode(COMP_RECV_REGION,''N'',''Northern'',''S'',''Southern'',''W'',''Western'',''E'',''Eastern'',''C'',''Central'') COMP_RECV_REGION, CONSIGNEE_NAME||'', ''||CONSIGNEE_CITY CONSIGNEE, VENDOR, ITEM_DESC, QTY_OFFERED||'' ''||UOM_S_DESC QTY_OFF,QTY_REJECTED||'' ''||UOM_S_DESC QTY_REJECTED,REJECTION_VALUE, REJECTION_REASON, STATUS, DECODE(JI_REQUIRED,''Y'',''Yes'',''N'',''NO'',''Cancelled'')JI_REQUIRED, JI_SNO, to_char(JI_FIX_DT,''dd/mm/yyyy'')JI_DATE, T38.DEFECT_DESC, T39.JI_STATUS_DESC, ACTION, L5NO_PO PO_NO, to_char(PO_DT,''dd/mm/yyyy'')PO_DATE, to_char(IC_DT,''dd/mm/yyyy'')IC_DATE,T09.IE_NAME JI_IE_NAME,Decode(ACTION_PROPOSED,''W'',''Warning Letter'',''I'',''Minor Penalty'',''J'',''Major Penalty'',''O'',''Others'') ACTION_PROPOSED, to_char(ACTION_PROPOSED_DT,''dd/mm/yyyy'') ACTION_PROPOSED_DATE, CO_NAME, T40.CASE_NO, T40.BK_NO, T40.SET_NO, REMARKS, TO_CHAR(T40.CONCLUSION_DT,''DD/MM/YYYY'')CONCLUSION_DATE, DECODE(NO_JI_REASON,''A'',''DP Expired'',''B'',''Validity of IC Expired'',''C'',''Broken Condition'',''D'',''Rejection <5%'',''E'',''Rejection issued after 90 Days of reciept of material'',''F'',''Guarantee Claim'',''G'',''Wrong Dispatch'') NO_JI_RES,decode(T09.IE_DEPARTMENT,''C'',''Civil'',''E'',''Electrical'',''M'',''Mechanical'',''L'',''Metallergy'',''Others'') DEPT,ROOT_CAUSE_ANALYSIS,TECH_REF,DECODE(CHKSHEET_STATUS,''A'',''APPROVED'',''R'',''REVISION'',''P'',''PREPRATION'')CHK_STATUS,ANY_OTHER,CAPA_STATUS,DANDAR_STATUS from V40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38,T39_JI_STATUS_CODES T39,T09_IE T09, T08_IE_CONTROLL_OFFICER T08 where T40.DEFECT_CD=T38.DEFECT_CD(+) and T40.JI_STATUS_CD =T39.JI_STATUS_CD(+) and T40.JI_IE_CD=T09.IE_CD(+) and T40.IE_CO_CD=T08.CO_CD(+) and (substr(JI_SNO,4,5)=''' || p_Fin_year || ''') and INSP_REGION=''' || p_Region || ''' and JI_REQUIRED=''Y''';
+        END IF;
+
+      IF p_Awaiting_ji = 'true' THEN
+             v_query := v_query || ' AND (NVL(JI_DT,''01-JAN-00'')=''01-JAN-00'' OR JI_FIX_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy'')';
+      ELSIF p_Awaiting_conclusion = 'true' THEN
+         v_query := v_query ||  ' and (NVL(JI_DT,''01-JAN-00'')<>''01-JAN-00'') and (NVL(CONCLUSION_DT,''01-JAN-00'')=''01-JAN-00'' OR CONCLUSION_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy''))';
+      ELSIF p_Awaiting_action = 'true' THEN
+         v_query := v_query || ' and (NVL(JI_DT,''01-JAN-00'')<>''01-JAN-00'') and (NVL(CONCLUSION_DT,''01-JAN-00'')<>''01-JAN-00'') AND (NVL(ACTION_PROPOSED_DT,''01-JAN-00'')=''01-JAN-00'' OR ACTION_PROPOSED_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy''))';
+      ELSIF p_Awaiting_finalaction = 'true' THEN
+         v_query := v_query || ' and (NVL(JI_DT,''01-JAN-00'')<>''01-JAN-00'') and (NVL(CONCLUSION_DT,''01-JAN-00'')<>''01-JAN-00'') AND (NVL(ACTION_PROPOSED_DT,''01-JAN-00'')<>''01-JAN-00'') AND (NVL(PENALTY_DT,''01-JAN-00'')=''01-JAN-00'' OR PENALTY_DT>to_date('''||p_Today_dt||''',''dd/mm/yyyy''))';
+      END IF;
+      
+        IF p_Cm_wise = 'true' THEN
+
+            IF p_Co IS NOT NULL THEN        
+               v_query := v_query || ' and T40.IE_CO_CD=''' || p_Co || ''' order by JI_SNO,COMPLAINT_DT' ;
+            ELSE
+               v_query := v_query || ' order by IE_CO_NAME,JI_SNO,COMPLAINT_DT';
+            END IF;
+
+       ELSIF p_Ie_wise = 'true' THEN
+            IF p_Ie IS NOT NULL THEN
+             v_query := v_query || ' AND T40.IE_CD=''' || p_Ie || ''' order by JI_SNO,COMPLAINT_DT';
+            ELSE
+                v_query := v_query || ' order by IE_NAME,JI_SNO,COMPLAINT_DT';
+            END IF;
+       ELSIF p_Vendor_wise='true' THEN
+
+             IF p_Vend_cd IS NOT NULL THEN
+               v_query := v_query ||  ' and T40.VEND_CD=''' || p_Vend_cd || ''' order by JI_SNO,COMPLAINT_DT';
+            ELSE
+                v_query := v_query || ' order by VENDOR,JI_SNO,COMPLAINT_DT';
+            END IF;
+
+       ELSIF p_Client_wise = 'true' THEN
+
+            IF p_Bpo_rly IS NOT NULL and p_Client_type IS NOT NULL THEN
+                 v_query := v_query || ' and T40.BPO_TYPE=''' ||p_Client_type||''' and T40.RLY_CD=''' ||p_Bpo_rly|| ''' order by JI_SNO,COMPLAINT_DT';
+            ELSE
+                v_query := v_query || ' order by BPO_TYPE,RLY_CD,JI_SNO,COMPLAINT_DT';
+            END IF;
+
+       ELSIF p_Consignee_wise = 'true' THEN
+
+            IF p_Consignee_cd IS NOT NULL THEN
+              v_query := v_query || ' and T40.CONSIGNEE_CD=''' || p_Consignee_cd|| ''' order by JI_SNO,COMPLAINT_DT';
+           ELSE
+            v_query := v_query || ' order by CONSIGNEE_CD,RLY_CD,JI_SNO,COMPLAINT_DT';
+           END IF;
+
+       END IF;
+
+ OPEN p_result FOR v_query;
+END;
+
+=================================================================================================================================================
+
+create or replace PROCEDURE Defect_Code_Wise_Report (
+    p_From_date IN VARCHAR2,
+    p_To_date IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+ OPEN p_result FOR
+        select DEFECT_CD,DEFECT_DESC,SUM(UPHELD) UPHELD,SUM(SORTING) SORTING,SUM(RECTIFICATION) RECTIFICATION,SUM(PRICE_REDUCTION) PRICE_REDUCTION from 
+        (select T38.DEFECT_CD,T38.DEFECT_DESC,count(*) UPHELD,0 SORTING,0 RECTIFICATION,0 PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=2 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        UNION ALL select T38.DEFECT_CD,T38.DEFECT_DESC,0 UPHELD,count(*) SORTING,0 RECTIFICATION,0 PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=3 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        UNION ALL select T38.DEFECT_CD,T38.DEFECT_DESC,0 UPHELD,0 SORTING,count(*) RECTIFICATION,0 PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=4 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        UNION ALL select T38.DEFECT_CD,T38.DEFECT_DESC,0 UPHELD,0 SORTING,0 RECTIFICATION,count(*) PRICE_REDUCTION from T40_CONSIGNEE_COMPLAINTS T40,T38_DEFECT_CODES T38 where T40.DEFECT_CD=T38.DEFECT_CD and JI_STATUS_CD=5 and JI_REQUIRED='Y' and substr(T40.COMPLAINT_ID,1,1)=p_Region and (T40.COMPLAINT_DT BETWEEN to_date(p_From_date,'dd/mm/yyyy') AND to_date(p_To_date,'dd/mm/yyyy')) group by T38.DEFECT_CD,T38.DEFECT_DESC 
+        ) group by DEFECT_CD,DEFECT_DESC order by DEFECT_CD;
+END;
+
+============================================================================================================================================
+create or replace PROCEDURE GetDailyIEWorkPlanReport (
+    p_region    IN VARCHAR2,
+    rdbIEWise   IN VARCHAR2,
+    rdbCOWise   IN VARCHAR2,
+    FrmDt       IN VARCHAR2,
+    ToDt        IN VARCHAR2,
+    lstIE       IN VARCHAR2,
+    lstCO       IN VARCHAR2,
+    rdopartIE   IN VARCHAR2,
+    rdopartCM   IN VARCHAR2,
+    p_result    OUT SYS_REFCURSOR,
+    p_result1   OUT SYS_REFCURSOR
+)
+AS
+    v_query VARCHAR2(4000) := '';
+    v_query1 VARCHAR2(4000) := '';
+BEGIN
+    IF rdbIEWise = 'true' THEN
+        v_query := 'SELECT a.CO_NAME, a.IE_NAME, to_char(a.VISIT_DT,''dd/mm/yyyy'') VISIT_DATE, ' ||
+                   'to_char(a.DATETIME,''DD/MM/YYYY-HH24:MI:SS'') LOGIN_TIME, a.CASE_NO, ' ||
+                   'to_char(a.CALL_RECV_DT,''dd/mm/yyyy'') CALL_RECV_DATE, a.CALL_SNO, ' ||
+                   'a.MFG_NAME, a.MFG_PLACE, a.MFG_CITY, a.CALL_STATUS, ' ||
+                   'TO_CHAR(a.DT_INSP_DESIRE,''dd/mm/yyyy'') DESIRE_DT, a.ITEM_DESC_PO, ' ||
+                   'NVL(b.VALUE,0) VALUE, ' ||
+                   'decode((SELECT COUNT(ITEM_CD) FROM T15_PO_DETAIL T15, T18_CALL_DETAILS T18 ' ||
+                   'WHERE T15.CASE_NO=T18.CASE_NO AND T15.ITEM_SRNO=T18.ITEM_SRNO_PO AND ' ||
+                   'T18.CASE_NO=a.CASE_NO AND CALL_RECV_DT=a.CALL_RECV_DT AND CALL_SNO=a.CALL_SNO), ' ||
+                   '0,''No'',''Yes'') CHK_COUNT ' ||
+                   'FROM (SELECT T08.CO_NAME, T09.IE_NAME, VISIT_DT, T47.DATETIME, T47.CASE_NO, ' ||
+                   'T47.CALL_RECV_DT, T47.CALL_SNO, T05.VEND_NAME MFG_NAME, T47.MFG_PLACE, ' ||
+                   'T03.CITY MFG_CITY, decode(T21.CALL_STATUS_CD,''C'', ' ||
+                   'T21.CALL_STATUS_DESC||decode(T17.CALL_CANCEL_STATUS,''N'','' (Non Chargeable)'', ' ||
+                   '''C'',''(Chargeable)''||''@''||T17.CALL_CANCEL_CHARGES||''+ S.T.'',''''),' ||
+                   '''B'',''Accepted'',T21.CALL_STATUS_DESC)||''on''|| ' ||
+                   'to_char(T17.CALL_STATUS_DT ,''dd/mm/yyyy'') CALL_STATUS, T17.DT_INSP_DESIRE, ' ||
+                   'T18.ITEM_DESC_PO FROM T47_IE_WORK_PLAN T47, T08_IE_CONTROLL_OFFICER T08, ' ||
+                   'T05_VENDOR T05, T09_IE T09, T03_CITY T03, T17_CALL_REGISTER T17, ' ||
+                   'T21_CALL_STATUS_CODES T21, T18_CALL_DETAILS T18 ' ||
+                   'WHERE T47.CO_CD=T08.CO_CD AND T47.IE_CD=T09.IE_CD AND T47.MFG_CD=T05.VEND_CD ' ||
+                   'AND T05.VEND_CITY_CD=T03.CITY_CD AND T17.CALL_STATUS=T21.CALL_STATUS_CD ' ||
+                   'AND T47.CASE_NO=T17.CASE_NO AND T47.CALL_RECV_DT=T17.CALL_RECV_DT ' ||
+                   'AND T47.CALL_SNO=T17.CALL_SNO AND T17.CASE_NO=T18.CASE_NO ' ||
+                   'AND T17.CALL_RECV_DT=T18.CALL_RECV_DT AND T17.CALL_SNO=T18.CALL_SNO';
+
+        v_query := v_query || ' AND (TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')>=''' || FrmDt || ''' AND ' ||
+                             'TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')<=''' || ToDt || ''') AND ' ||
+                             'T47.REGION_CODE=''' || p_region || ''' AND ' ||
+                             '(T18.ITEM_SRNO_PO=(SELECT MIN(B.ITEM_SRNO_PO) FROM T18_CALL_DETAILS B ' ||
+                             'WHERE B.CASE_NO=T18.CASE_NO AND B.CALL_RECV_DT=T18.CALL_RECV_DT AND ' ||
+                             'B.CALL_SNO=T18.CALL_SNO))';
+
+        IF rdopartIE = 'true' THEN
+            v_query := v_query || ' AND T47.IE_CD=''' || lstIE || '''';
+        END IF;
+
+        v_query := v_query || ') a, ' ||
+                   '(SELECT CASE_NO, CALL_RECV_DT, CALL_SNO, ROUND(SUM(VALUE), 2) VALUE FROM ' ||
+                   '(SELECT T47.CASE_NO, T47.CALL_RECV_DT, T47.CALL_SNO, ' ||
+                   '(T15.VALUE/DECODE(T15.QTY, 0, 1, T15.QTY))*T18.QTY_TO_INSP VALUE ' ||
+                   'FROM T18_CALL_DETAILS T18, T15_PO_DETAIL T15, T47_IE_WORK_PLAN T47 ' ||
+                   'WHERE T15.CASE_NO=T18.CASE_NO AND T15.ITEM_SRNO=T18.ITEM_SRNO_PO ' ||
+                   'AND T18.CASE_NO=T47.CASE_NO AND T18.CALL_RECV_DT=T47.CALL_RECV_DT ' ||
+                   'AND T18.CALL_SNO=T47.CALL_SNO';
+
+        v_query := v_query || ' AND (TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')>=''' || FrmDt || ''' AND ' ||
+                             'TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')<=''' || ToDt || ''') AND ' ||
+                             'T47.REGION_CODE=''' || p_region || '''';
+
+        IF rdopartIE = 'true' THEN
+            v_query := v_query || ' AND T47.IE_CD=''' || lstIE || '''';
+        END IF;
+
+        v_query := v_query || ') GROUP BY CASE_NO, CALL_RECV_DT, CALL_SNO) b ' ||
+                             'WHERE a.CASE_NO=b.CASE_NO AND a.CALL_RECV_DT=b.CALL_RECV_DT AND ' ||
+                             'a.CALL_SNO=b.CALL_SNO ORDER BY a.VISIT_DT, a.DATETIME, IE_NAME, ' ||
+                             'MFG_CITY, MFG_NAME, a.CALL_RECV_DT, CALL_SNO';
+    ELSIF rdbCOWise = 'true' THEN
+        v_query := 'SELECT a.CO_NAME, a.IE_NAME, to_char(a.VISIT_DT,''dd/mm/yyyy'') VISIT_DATE, ' ||
+                   'to_char(a.DATETIME,''DD/MM/YYYY-HH24:MI:SS'') LOGIN_TIME, a.CASE_NO, ' ||
+                   'to_char(a.CALL_RECV_DT,''dd/mm/yyyy'') CALL_RECV_DATE, a.CALL_SNO, ' ||
+                   'a.MFG_NAME, a.MFG_PLACE, a.MFG_CITY, a.CALL_STATUS, ' ||
+                   'TO_CHAR(a.DT_INSP_DESIRE,''dd/mm/yyyy'') DESIRE_DT, a.ITEM_DESC_PO, ' ||
+                   'NVL(b.VALUE,0) VALUE, ' ||
+                   'decode((SELECT COUNT(ITEM_CD) FROM T15_PO_DETAIL T15, T18_CALL_DETAILS T18 ' ||
+                   'WHERE T15.CASE_NO=T18.CASE_NO AND T15.ITEM_SRNO=T18.ITEM_SRNO_PO AND ' ||
+                   'T18.CASE_NO=a.CASE_NO AND CALL_RECV_DT=a.CALL_RECV_DT AND CALL_SNO=a.CALL_SNO), ' ||
+                   '0,''No'',''Yes'') CHK_COUNT ' ||
+                   'FROM (SELECT T08.CO_NAME, T09.IE_NAME, VISIT_DT, T47.DATETIME, T47.CASE_NO, ' ||
+                   'T47.CALL_RECV_DT, T47.CALL_SNO, T05.VEND_NAME MFG_NAME, T47.MFG_PLACE, ' ||
+                   'T03.CITY MFG_CITY, decode(T21.CALL_STATUS_CD,''C'', ' ||
+                   'T21.CALL_STATUS_DESC||decode(T17.CALL_CANCEL_STATUS,''N'','' (Non Chargeable)'', ' ||
+                   '''C'',''(Chargeable)''||''@''||T17.CALL_CANCEL_CHARGES||''+ S.T.'',''''),' ||
+                   '''B'',''Accepted'',T21.CALL_STATUS_DESC)||''on''|| ' ||
+                   'to_char(T17.CALL_STATUS_DT ,''dd/mm/yyyy'') CALL_STATUS, T17.DT_INSP_DESIRE, ' ||
+                   'T18.ITEM_DESC_PO FROM T47_IE_WORK_PLAN T47, T08_IE_CONTROLL_OFFICER T08, ' ||
+                   'T05_VENDOR T05, T09_IE T09, T03_CITY T03, T17_CALL_REGISTER T17, ' ||
+                   'T21_CALL_STATUS_CODES T21, T18_CALL_DETAILS T18 ' ||
+                   'WHERE T47.CO_CD=T08.CO_CD AND T47.IE_CD=T09.IE_CD AND T47.MFG_CD=T05.VEND_CD ' ||
+                   'AND T05.VEND_CITY_CD=T03.CITY_CD AND T17.CALL_STATUS=T21.CALL_STATUS_CD ' ||
+                   'AND T47.CASE_NO=T17.CASE_NO AND T47.CALL_RECV_DT=T17.CALL_RECV_DT ' ||
+                   'AND T47.CALL_SNO=T17.CALL_SNO AND T17.CASE_NO=T18.CASE_NO ' ||
+                   'AND T17.CALL_RECV_DT=T18.CALL_RECV_DT AND T17.CALL_SNO=T18.CALL_SNO';
+
+        v_query := v_query || ' AND (TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')>=''' || FrmDt || ''' AND ' ||
+                             'TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')<=''' || ToDt || ''') AND ' ||
+                             'T47.REGION_CODE=''' || p_region || ''' AND ' ||
+                             '(T18.ITEM_SRNO_PO=(SELECT MIN(B.ITEM_SRNO_PO) FROM T18_CALL_DETAILS B ' ||
+                             'WHERE B.CASE_NO=T18.CASE_NO AND B.CALL_RECV_DT=T18.CALL_RECV_DT AND ' ||
+                             'B.CALL_SNO=T18.CALL_SNO))';
+
+        IF rdopartCM = 'true' THEN
+            v_query := v_query || ' AND T47.CO_CD=''' || lstCO || '''';
+        END IF;
+
+        v_query := v_query || ') a, ' ||
+                   '(SELECT CASE_NO, CALL_RECV_DT, CALL_SNO, ROUND(SUM(VALUE), 2) VALUE FROM ' ||
+                   '(SELECT T47.CASE_NO, T47.CALL_RECV_DT, T47.CALL_SNO, ' ||
+                   '(T15.VALUE/DECODE(T15.QTY, 0, 1, T15.QTY))*T18.QTY_TO_INSP VALUE ' ||
+                   'FROM T18_CALL_DETAILS T18, T15_PO_DETAIL T15, T47_IE_WORK_PLAN T47 ' ||
+                   'WHERE T15.CASE_NO=T18.CASE_NO AND T15.ITEM_SRNO=T18.ITEM_SRNO_PO ' ||
+                   'AND T18.CASE_NO=T47.CASE_NO AND T18.CALL_RECV_DT=T47.CALL_RECV_DT ' ||
+                   'AND T18.CALL_SNO=T47.CALL_SNO';
+
+        v_query := v_query || ' AND (TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')>=''' || FrmDt || ''' AND ' ||
+                             'TO_CHAR(T47.VISIT_DT,''yyyyMMdd'')<=''' || ToDt || ''') AND ' ||
+                             'T47.REGION_CODE=''' || p_region || '''';
+
+        IF rdopartCM = 'true' THEN
+            v_query := v_query || ' AND T47.CO_CD=''' || lstCO || '''';
+        END IF;
+
+        v_query := v_query || ') GROUP BY CASE_NO, CALL_RECV_DT, CALL_SNO) b ' ||
+                             'WHERE a.CASE_NO=b.CASE_NO AND a.CALL_RECV_DT=b.CALL_RECV_DT AND ' ||
+                             'a.CALL_SNO=b.CALL_SNO ORDER BY a.VISIT_DT, a.DATETIME, CO_NAME, IE_NAME, ' ||
+                             'MFG_CITY, MFG_NAME, a.CALL_RECV_DT, CALL_SNO';
+    END IF;
+
+     IF rdbIEWise = 'true' THEN
+        v_query1 := v_query1 || 'SELECT T08.CO_NAME, T09.IE_NAME, TO_CHAR(NI_WORK_DT, ''DD/MM/YYYY'') AS WORK_DATE, TO_CHAR(T48.DATETIME, ''HH24:MI:SS'') AS LOGIN_TIME, ';
+        v_query1 := v_query1 || 'DECODE(NI_WORK_CD, ''T'', ''Training'', ''L'', ''Leave'', ''O'', ''Office'', ''J'', ''JI'', ''F'', ''Firm Visit'', ''X'', ''Others''||''-''||NI_OTHER_DESC) AS NI_WORK_PLAN_CD ';
+        v_query1 := v_query1 || 'FROM T48_NI_IE_WORK_PLAN T48, T08_IE_CONTROLL_OFFICER T08, T09_IE T09 ';
+        v_query1 := v_query1 || 'WHERE T48.CO_CD=T08.CO_CD AND T48.IE_CD=T09.IE_CD ';
+
+        IF rdopartIE = 'true' THEN
+            v_query1 := v_query1 || 'AND T48.IE_CD IN (' || lstIE || ')';
+        END IF;
+
+        v_query1 := v_query1 || 'AND TO_CHAR(T48.NI_WORK_DT, ''YYYYMMDD'') BETWEEN ''' || FrmDt || ''' AND ''' || ToDt || ''' ';
+        v_query1 := v_query1 || 'AND T48.REGION_CODE = :p_region ';
+        v_query1 := v_query1 || 'ORDER BY T48.NI_WORK_DT, T48.DATETIME, T09.IE_NAME';
+    ELSIF rdbCOWise = 'true' THEN
+        v_query1 := v_query1 || 'SELECT T08.CO_NAME, T09.IE_NAME, TO_CHAR(NI_WORK_DT, ''DD/MM/YYYY'') AS WORK_DATE, TO_CHAR(T48.DATETIME, ''HH24:MI:SS'') AS LOGIN_TIME, ';
+        v_query1 := v_query1 || 'DECODE(NI_WORK_CD, ''T'', ''Training'', ''L'', ''Leave'', ''O'', ''Office'', ''J'', ''JI'', ''F'', ''Firm Visit'', ''X'', ''Others''||''-''||NI_OTHER_DESC) AS NI_WORK_PLAN_CD ';
+        v_query1 := v_query1 || 'FROM T48_NI_IE_WORK_PLAN T48, T08_IE_CONTROLL_OFFICER T08, T09_IE T09 ';
+        v_query1 := v_query1 || 'WHERE T48.CO_CD=T08.CO_CD AND T48.IE_CD=T09.IE_CD ';
+
+        IF rdopartCM = 'true' THEN
+            v_query1 := v_query1 || 'AND T48.CO_CD IN (' || lstCO || ')';
+        END IF;
+
+        v_query1 := v_query1 || 'AND TO_CHAR(T48.NI_WORK_DT, ''YYYYMMDD'') BETWEEN ''' || FrmDt || ''' AND ''' || ToDt || ''' ';
+        v_query1 := v_query1 || 'AND T48.REGION_CODE = :p_region ';
+        v_query1 := v_query1 || 'ORDER BY T48.NI_WORK_DT, T48.DATETIME, T08.CO_NAME, T09.IE_NAME';
+    END IF;
+    OPEN p_result FOR v_query;
+    OPEN p_result1 FOR v_query1 USING p_region;
+END;
+
+==================================================================================================================================
+create or replace PROCEDURE GetDailyIEWorkPlanReporttbl2(
+    p_region IN VARCHAR2,
+    rdbIEWise IN VARCHAR2,
+    rdbCOWise IN VARCHAR2,
+    FrmDt IN VARCHAR2,
+    ToDt IN VARCHAR2,
+    lstIE IN VARCHAR2,
+    lstCO IN VARCHAR2,
+    rdopartIE IN VARCHAR2,
+    rdopartCM IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+    
+)
+AS
+    v_query VARCHAR2(4000);
+    
+BEGIN
+    v_query := '';
+
+    IF rdbIEWise = 'true' THEN
+        v_query := v_query || 'SELECT T08.CO_NAME, T09.IE_NAME, TO_CHAR(NI_WORK_DT, ''DD/MM/YYYY'') AS WORK_DATE, TO_CHAR(T48.DATETIME, ''HH24:MI:SS'') AS LOGIN_TIME, ';
+        v_query := v_query || 'DECODE(NI_WORK_CD, ''T'', ''Training'', ''L'', ''Leave'', ''O'', ''Office'', ''J'', ''JI'', ''F'', ''Firm Visit'', ''X'', ''Others''||''-''||NI_OTHER_DESC) AS NI_WORK_PLAN_CD ';
+        v_query := v_query || 'FROM T48_NI_IE_WORK_PLAN T48, T08_IE_CONTROLL_OFFICER T08, T09_IE T09 ';
+        v_query := v_query || 'WHERE T48.CO_CD=T08.CO_CD AND T48.IE_CD=T09.IE_CD ';
+
+        IF rdopartIE = 'true' THEN
+            v_query := v_query || 'AND T48.IE_CD IN (' || lstIE || ')';
+        END IF;
+
+        v_query := v_query || 'AND TO_CHAR(T48.NI_WORK_DT, ''YYYYMMDD'') BETWEEN ''' || FrmDt || ''' AND ''' || ToDt || ''' ';
+        v_query := v_query || 'AND T48.REGION_CODE = :p_region ';
+        v_query := v_query || 'ORDER BY T48.NI_WORK_DT, T48.DATETIME, T09.IE_NAME';
+    ELSIF rdbCOWise = 'true' THEN
+        v_query := v_query || 'SELECT T08.CO_NAME, T09.IE_NAME, TO_CHAR(NI_WORK_DT, ''DD/MM/YYYY'') AS WORK_DATE, TO_CHAR(T48.DATETIME, ''HH24:MI:SS'') AS LOGIN_TIME, ';
+        v_query := v_query || 'DECODE(NI_WORK_CD, ''T'', ''Training'', ''L'', ''Leave'', ''O'', ''Office'', ''J'', ''JI'', ''F'', ''Firm Visit'', ''X'', ''Others''||''-''||NI_OTHER_DESC) AS NI_WORK_PLAN_CD ';
+        v_query := v_query || 'FROM T48_NI_IE_WORK_PLAN T48, T08_IE_CONTROLL_OFFICER T08, T09_IE T09 ';
+        v_query := v_query || 'WHERE T48.CO_CD=T08.CO_CD AND T48.IE_CD=T09.IE_CD ';
+
+        IF rdopartCM = 'true' THEN
+            v_query := v_query || 'AND T48.CO_CD IN (' || lstCO || ')';
+        END IF;
+
+        v_query := v_query || 'AND TO_CHAR(T48.NI_WORK_DT, ''YYYYMMDD'') BETWEEN ''' || FrmDt || ''' AND ''' || ToDt || ''' ';
+        v_query := v_query || 'AND T48.REGION_CODE = :p_region ';
+        v_query := v_query || 'ORDER BY T48.NI_WORK_DT, T48.DATETIME, T08.CO_NAME, T09.IE_NAME';
+    END IF;
+
+    -- Execute the dynamic SQL with parameters
+    OPEN p_result FOR v_query USING p_region;
+    
+    
 END;

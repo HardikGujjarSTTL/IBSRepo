@@ -8,7 +8,7 @@ namespace IBS.Interfaces
 
         DTResult<LabPaymentFormModel> GetLabPayments(DTParameters dtParameters, string Regin);
         List<LabPaymentFormModel> GetPayments(LabPaymentFormModel paymentFormModel);
-        List<LabPaymentFormModel> GetPaymentsEdit(string PaymentID);
+        DTResult<LabPaymentFormModel> GetPaymentsEdit(DTParameters dtParameters);
         LabPaymentFormModel Edit(string PaymentID);
         bool SavePayment(LabPaymentFormModel LabPaymentFormModel);
         bool UpdatePayment(LabPaymentFormModel LabPaymentFormModel);

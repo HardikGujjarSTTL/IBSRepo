@@ -89,5 +89,15 @@ namespace IBS.Models
         public DateTime? Createddate { get; set; }
 
         public DateTime? Updateddate { get; set; }
+        [Display(Name = "GSTIN No")]
+        [RegularExpression(@"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$", ErrorMessage = "Invalid GSTIN No.")]
+        [Required]
+        public string? GSTNO { get; set; }
+
+        public string? TANNO { get; set; }
+        [Display(Name = "PAN No")]
+        [RegularExpression(@"[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}", ErrorMessage = "Invalid PAN number.")]
+        [Required]
+        public string? PANNO { get; set; }
     }
 }

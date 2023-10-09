@@ -37,7 +37,9 @@
                     @Html.DropDownList("DepartmentName", new SelectList(Common.GetDepartment() , "Value", "Text"), "--Select--",  new { @class = "" })
                 </div>
             </div>
-            <div class="col-md-2" style="margin-top: 30px;">
+            </div>
+            <div class="row my-0">
+            <div class="col-md-12">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
                     <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
@@ -56,7 +58,7 @@
                             <th>Geographical Area</th>
                             <th>Department Name</th>
                             <th>Region Name</th>
-                            <th style="text-align:center">Action</th>
+                            <th class="padR10 center">Action</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -1,6 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces.IE;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace IBS.Repositories.IE
 {
@@ -70,31 +71,22 @@ namespace IBS.Repositories.IE
         public int DetailsInsertUpdate(DailyWorkPlanModel model)
         {
             int ID = 0;
-            var G_Message = context.NoIeWorkPlans.Find(model.IeCd);
-            #region User save
-            if (G_Message == null)
+            var co_cd = context.T09Ies.Where(x=>x.IeCd == model.IeCd).FirstOrDefault();
+            if( co_cd != null )
             {
                 NoIeWorkPlan obj = new NoIeWorkPlan();
-                //obj.Message = model.MESSAGE;
-                //obj.UserId = model.Createdby;
-                //obj.Datetime = DateTime.Now;
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = model.Createdby;
-                //obj.Createddate = DateTime.Now;
+                obj.IeCd = model.IeCd;
+                obj.CoCd = Convert.ToByte(co_cd.IeCoCd);
+                obj.Reason = model.Reason;
+                obj.NwpDt = model.ReasonDt;
+                obj.RegionCode = model.RegionCode;
+                obj.UserId = model.Createdby;
+                obj.Datetime = DateTime.Now;
                 context.NoIeWorkPlans.Add(obj);
                 context.SaveChanges();
                 ID = Convert.ToInt32(obj.IeCd);
             }
-            else
-            {
-                //G_Message.Message = model.MESSAGE;
-                //G_Message.Isdeleted = Convert.ToByte(false);
-                //G_Message.Updatedby = model.Updatedby;
-                //G_Message.Updateddate = DateTime.Now;
-                context.SaveChanges();
-                ID = Convert.ToInt32(G_Message.IeCd);
-            }
-            #endregion
+            
             return ID;
         }
     }

@@ -27,40 +27,123 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public List<LabSampleInfoModel> LapSampleIndex(string CaseNo, string CallRdt,string CallSno, string VenCod)
+        //public List<LabSampleInfoModel> LapSampleIndex(string CaseNo, string CallRdt,string CallSno, string VenCod)
+        //{
+
+        //    using (var dbContext = context.Database.GetDbConnection())
+        //    {
+        //        OracleParameter[] par = new OracleParameter[5];
+        //        par[0] = new OracleParameter("p_VEND_CD", OracleDbType.NVarchar2, VenCod, ParameterDirection.Input);
+        //        par[1] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, CaseNo, ParameterDirection.Input);
+        //        par[2] = new OracleParameter("p_CSNO", OracleDbType.NVarchar2, CallSno, ParameterDirection.Input);
+        //        par[3] = new OracleParameter("p_Rdt", OracleDbType.NVarchar2, CallRdt, ParameterDirection.Input);
+        //        par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+        //        var ds = DataAccessDB.GetDataSet("Vendor_GetSampleInfoIndex", par, 4);
+
+        //        List<LabSampleInfoModel> modelList = new List<LabSampleInfoModel>();
+        //        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        //        {
+        //            foreach (DataRow row in ds.Tables[0].Rows)
+        //            {
+        //                LabSampleInfoModel model = new LabSampleInfoModel
+        //                {
+        //                    CaseNo = Convert.ToString(row["case_no"]),
+        //                    CallRecDt = Convert.ToString(row["call_recv_dt"]),
+        //                    CallSNO = Convert.ToString(row["call_sno"]),
+        //                    IEName = Convert.ToString(row["ie_name"]),
+                            
+        //                };
+
+        //                modelList.Add(model);
+        //            }
+        //        }
+
+        //        return modelList;
+        //    }
+
+        //    //return dTResult;
+        //}
+        public DTResult<LabSampleInfoModel> LapSampleIndex(DTParameters dtParameters, string Regin)
         {
 
-            using (var dbContext = context.Database.GetDbConnection())
+            DTResult<LabSampleInfoModel> dTResult = new() { draw = 0 };
+            IQueryable<LabSampleInfoModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            if (dtParameters.Order != null)
             {
-                OracleParameter[] par = new OracleParameter[5];
-                par[0] = new OracleParameter("p_VEND_CD", OracleDbType.NVarchar2, VenCod, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, CaseNo, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_CSNO", OracleDbType.NVarchar2, CallSno, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_Rdt", OracleDbType.NVarchar2, CallRdt, ParameterDirection.Input);
-                par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
-                var ds = DataAccessDB.GetDataSet("Vendor_GetSampleInfoIndex", par, 4);
-
-                List<LabSampleInfoModel> modelList = new List<LabSampleInfoModel>();
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                if (orderCriteria == "")
                 {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        LabSampleInfoModel model = new LabSampleInfoModel
-                        {
-                            CaseNo = Convert.ToString(row["case_no"]),
-                            CallRecDt = Convert.ToString(row["call_recv_dt"]),
-                            CallSNO = Convert.ToString(row["call_sno"]),
-                            IEName = Convert.ToString(row["ie_name"]),
-                            
-                        };
-
-                        modelList.Add(model);
-                    }
+                    orderCriteria = "CallRecDt";
                 }
-
-                return modelList;
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CallRecDt";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("p_VEND_CD", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_CaseNo", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo"), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CSNO", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CallSNo"), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_Rdt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CallRdt"), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("Vendor_GetSampleInfoIndex", par, 4);
+
+            List<LabSampleInfoModel> modelList = new List<LabSampleInfoModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+
+                    LabSampleInfoModel model = new LabSampleInfoModel
+                    {
+                        CaseNo = Convert.ToString(row["case_no"]),
+                        CallRecDt = Convert.ToString(row["call_recv_dt"]),
+                        CallSNO = Convert.ToString(row["call_sno"]),
+                        IEName = Convert.ToString(row["ie_name"]),
+
+                    };
+
+                    modelList.Add(model);
+                }
+            }
+
+
+
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.IEName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.IEName).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.data = query.ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+
+            //using (var dbContext = context.Database.GetDbConnection())
+            //{
+
+            //}
 
             //return dTResult;
         }
@@ -164,9 +247,10 @@ namespace IBS.Repositories
                 par[5] = new OracleParameter("p_TDS", OracleDbType.Varchar2, LabSampleInfoModel.TDS, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_UTRNo", OracleDbType.Varchar2, LabSampleInfoModel.UTRNO, ParameterDirection.Input);
                 par[7] = new OracleParameter("p_UTRDate", OracleDbType.Date, LabSampleInfoModel.UTRDT, ParameterDirection.Input);               
-                par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName, ParameterDirection.Input);
+                par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName.Trim(), ParameterDirection.Input);
 
                 var ds = DataAccessDB.ExecuteNonQuery("Vendor_InsertLabSampleInfo", par, 1);
+               
             }
             catch (Exception ex)
             {

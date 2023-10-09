@@ -1,0 +1,160 @@
+﻿@model IBS.Models.BillDetailsModel
+
+@{
+    ViewData["Title"] = "Supplementary Bill";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="SupplementaryBill" asp-action="Index" id="frmDetails">
+        <div class="accordion-body" style="overflow-x: auto;">
+            <div class="row my-0">
+                <div class="col-md-3">
+                    <div class="reference">
+                        <label for="CaseNo">Case No. <span class="text-danger field-validation-error">*</span></label>
+                        @*<input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;">*@
+                        <input type="text" class="input" id="CaseNo" />
+                        <span id="spnCaseNo" class="text-danger field-validation-error"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="FromDt">From Date</label>
+                        <input type="text" class="datepicker" id="FromDt" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorFromDt"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="ToDt">To Date</label>
+                        <input type="text" class="datepicker" id="ToDt" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorToDt"></span>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="BillSearch();">Search</button>
+                        <button type="button" class="reset-btn" onclick="btnClear();">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="table-section" id="divSection" style="display:none;">
+            <h3 class="heading3">Bill Details</h3>
+            <div class="task-listinput">
+                <div class="dash-table">
+                    <table id="dtList" class="table-responsive nowrap">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Case No.</th>
+                                <th>Bill No.</th>
+                                <th>Material Value</th>
+                                <th>Rate</th>
+                                <th>Insp. Fee</th>
+                                <th>Bill Amount</th>
+                                <th>Amount Received</th>
+                                <th>Bill Amt Cleared</th>
+                                <th>Invoice No.</th>
+                                <th>CNote Bill No.</th>
+                                <th>CNote Bill Amount</th>
+                                <th>Bill Type</th>
+                                @*<th class="padR10 center">Action</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </form>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+        function BillSearch() {
+            $("#spnCaseNo").html("");
+            if ($("#CaseNo").val() == "") {
+                $("#spnCaseNo").html("Please Add Case no.");
+                return;
+            }
+            $("#divSection").show();
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            var FromDt = $("#FromDt").val();
+            var ToDt = $("#ToDt").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {
+                    url: "@Url.Action("LoadTable", "SupplementaryBill")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "FromDt": FromDt,
+                            "ToDt": ToDt
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    { data: "BillNo" },
+                    { data: "MaterialValue" },
+                    { data: "FeeRate" },
+                    { data: "InspFee" },
+                    { data: "BillAmount" },
+                    { data: "AmountReceived" },
+                    { data: "BillAmtCleared" },
+                    { data: "InvoiceNo" },
+                    { data: "CnoteBillNo" },
+                    { data: "CnoteAmount" },
+                    { data: "Billadtype" },
+
+                ],
+                "order": [[0, "desc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+        }
+
+        function btnClear() {
+            $("#divSection").hide();
+
+            $("#CaseNo").val("");
+            $("#FromDt").val("");
+            $("#ToDt").val("");
+        }
+
+    </script>
+}

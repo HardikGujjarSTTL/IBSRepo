@@ -2,10 +2,14 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models;
+using IBS.Models.Reports;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 
 namespace IBS.Repositories.Reports
 {
@@ -284,6 +288,170 @@ namespace IBS.Repositories.Reports
             }).ToList();
 
             model.lstICStatus = list;
+            return model;
+        }
+
+        public IEWorkPlanModel Get_IE_WorkPlan(DateTime FromDate, DateTime ToDate, string IECD, string Region)
+        {
+            IEWorkPlanModel model = new();
+            List<IEWorkPlanList1Model> lst1 = new();
+            List<IEWorkPlanList2Model> lst2 = new();
+            List<IEWorkPlanList3Model> lst3 = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            OracleParameter[] par = new OracleParameter[7];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, Common.DateConcate(model.Display_FromDate), ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, Common.DateConcate(model.Display_ToDate), ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, Convert.ToInt32(IECD), ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT1_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT2_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT3_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_IE_WORKPLAN", par, 3);
+            DataTable dt1 = ds.Tables[0];
+            DataTable dt2 = ds.Tables[1];
+            DataTable dt3 = ds.Tables[2];
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lst1 = JsonConvert.DeserializeObject<List<IEWorkPlanList1Model>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                model.lstWorkPlan1 = lst1;
+
+                string serializeddt2 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
+                lst2 = JsonConvert.DeserializeObject<List<IEWorkPlanList2Model>>(serializeddt2, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                model.lstWorkPlan2 = lst2;
+            }
+
+            var dateList = Enumerable.Range(0, (int)(Convert.ToDateTime(ToDate) - Convert.ToDateTime(FromDate)).TotalDays + 1)
+                            .Select(offset => Convert.ToDateTime(FromDate).AddDays(offset).ToString("dd/MM/yyyy")).ToList();
+
+            foreach (var item in dateList)
+            {
+                if(item == "08/09/2018")
+                {
+
+                }
+                OracleParameter[] param = new OracleParameter[7];
+                par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, item, ParameterDirection.Input);
+                par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, item, ParameterDirection.Input);
+                par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, Convert.ToInt32(IECD), ParameterDirection.Input);
+                par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+                par[4] = new OracleParameter("P_RESULT1_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[5] = new OracleParameter("P_RESULT2_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[6] = new OracleParameter("P_RESULT3_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds1 = DataAccessDB.GetDataSet("SP_GET_IE_WORKPLAN", par, 3);
+                if (ds1 != null && ds1.Tables[2].Rows.Count > 0)
+                {
+                    string serializeddt3 = JsonConvert.SerializeObject(ds1.Tables[2], Formatting.Indented);
+                    var data = JsonConvert.DeserializeObject<List<IEWorkPlanList3Model>>(serializeddt3, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    var SrNo = 1;
+                    foreach (var a in data)
+                    {
+                        IEWorkPlanList3Model obj = new();
+                        obj.SrNo = SrNo;
+                        obj.IE_NAME = a.IE_NAME;
+                        obj.CO_NAME = a.CO_NAME;
+                        var reason = (from row in context.NoIeWorkPlans
+                                      where row.IeCd == Convert.ToInt32(IECD) &&
+                                            row.NwpDt == DateTime.ParseExact(item, "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                                      select row.Reason).FirstOrDefault();
+                        obj.Date = item;
+                        obj.Reason = reason;
+                        SrNo = SrNo + 1;
+                        lst3.Add(obj);
+                    }
+                }
+            }
+            model.lstWorkPlan3 = lst3;
+            //lst1 = dt1.AsEnumerable().Select(row => new IEWorkPlanList1Model
+            //{
+            //    IE_NAME = Convert.ToString(row["IE_NAME"]),
+            //    CO_NAME = Convert.ToString(row["CO_NAME"]),
+            //    VISIT_DATE = Convert.ToString(row["VISIT_DATE"]),
+            //    LOGIN_TIME = Convert.ToString(row["LOGIN_TIME"]),
+            //    CASE_NO = Convert.ToString(row["CASE_NO"]),
+            //    CALL_RECV_DATE = Convert.ToString(row["CALL_RECV_DATE"]),
+            //    DESIRE_DT = Convert.ToString(row["DESIRE_DT"]),
+            //    CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+            //    CHK_COUNT = Convert.ToString(row["CHK_COUNT"]),
+            //    MFG_NAME = Convert.ToString(row["MFG_NAME"]),
+            //    MFG_PLACE = Convert.ToString(row["MFG_PLACE"]),
+            //    MFG_CITY = Convert.ToString(row["MFG_CITY"]),
+            //    ITEM_DESC_PO = Convert.ToString(row["ITEM_DESC_PO"]),
+            //    VALUE = Convert.ToString(row["VALUE"]),
+            //    CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
+            //}).ToList();
+            return model;
+        }
+
+        public ConsigneeComplaintsModel Get_Consignee_Complaints(DateTime FromDate, DateTime ToDate, string IECD, string Region)
+        {
+            ConsigneeComplaintsModel model = new();
+            List<ConsigneeComplaintsListModel> lstCons = new();
+
+            model.FromDate = FromDate;
+            model.ToDate = ToDate;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Varchar2, IECD, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CONSIGNEE_COMPLAINTS", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            lstCons = dt.AsEnumerable().Select(row => new ConsigneeComplaintsListModel
+            {
+                IN_REGION = Convert.ToString(row["IN_REGION"]),
+                COMPLAINT_ID = Convert.ToString(row["COMPLAINT_ID"]),
+                JI_SNO = Convert.ToString(row["JI_SNO"]),
+                VENDOR = Convert.ToString(row["VENDOR"]),
+                PO_NO = Convert.ToString(row["PO_NO"]),
+                PO_DATE = Convert.ToString(row["PO_DATE"]),
+                BK_SET = Convert.ToString(row["BK_SET"]),
+                IC_DATE = Convert.ToString(row["IC_DATE"]),
+                ITEM_DESC = Convert.ToString(row["ITEM_DESC"]),
+                CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
+                IE_NAME = Convert.ToString(row["IE_NAME"]),
+                QTY_OFF = Convert.ToString(row["QTY_OFF"]),
+                QTY_REJECTED = Convert.ToString(row["QTY_REJECTED"]),
+                REJECTION_VALUE = Convert.ToString(row["REJECTION_VALUE"]),
+                DEPT = Convert.ToString(row["DEPT"]),
+                COMPLAINT_DATE = Convert.ToString(row["COMPLAINT_DATE"]),
+                //REJECTIONMEMOPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),// "/REJECTION_MEMO/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                REJECTION_REASON = Convert.ToString(row["REJECTION_REASON"]),
+                NO_JI_RES = Convert.ToString(row["NO_JI_RES"]),
+                JI_DATE = Convert.ToString(row["JI_DATE"]),
+                //COMPLAINTSCASESPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),//"/COMPLAINTS_CASES/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                STATUS = Convert.ToString(row["STATUS"]),
+                //COMPLAINTSREPORTPATH = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"])),//"/COMPLAINTS_REPORT/" + Convert.ToString(row["CASE_NO"]) + "-" + Convert.ToString(row["BK_NO"]) + "-" + Convert.ToString(row["SET_NO"]),
+                DEFECT_DESC = Convert.ToString(row["DEFECT_DESC"]),
+                JI_STATUS_DESC = Convert.ToString(row["JI_STATUS_DESC"]),
+                CONCLUSION_DATE = Convert.ToString(row["CONCLUSION_DATE"]),
+                CO_NAME = Convert.ToString(row["CO_NAME"]),
+                JI_IE_NAME = Convert.ToString(row["JI_IE_NAME"]),
+                ROOT_CAUSE_ANALYSIS = Convert.ToString(row["ROOT_CAUSE_ANALYSIS"]),
+                CHK_STATUS = Convert.ToString(row["CHK_STATUS"]),
+
+                TECH_REF = Convert.ToString(row["TECH_REF"]),
+                ACTION_PROPOSED = Convert.ToString(row["ACTION_PROPOSED"]),
+                ANY_OTHER = Convert.ToString(row["ANY_OTHER"]),
+                CAPA_STATUS = Convert.ToString(row["CAPA_STATUS"]),
+                DANDAR_STATUS = Convert.ToString(row["DANDAR_STATUS"]),
+
+                CASE_NO = Convert.ToString(row["CASE_NO"]),
+                BK_NO = Convert.ToString(row["BK_NO"]),
+                SET_NO = Convert.ToString(row["SET_NO"]),
+
+            }).ToList();
+            model.lstConsigneeComplaints = lstCons;
             return model;
         }
     }

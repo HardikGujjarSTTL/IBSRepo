@@ -1,6 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using static IBS.Helper.Enums;
+using System.Data;
 
 namespace IBS.Repositories
 {
@@ -13,62 +18,37 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public DEOCRISPurchesOrderMAModel FindByID(string Rly, int Makey, byte Slno)
+        public DEO_CRIS_PurchesOrderModel FindByID(string ImmsPokey, string ImmsRlyCd)
         {
-            DEOCRISPurchesOrderMAModel model = new();
-            //MmpPomaDtl user = context.MmpPomaDtls.Find(Rly, Makey, Slno);
+            DEO_CRIS_PurchesOrderModel model = new();
+            List<DEO_CRIS_PurchesOrderModel> model1 = new();
 
-            var GetValuePO = (from h in context.ImmsRitesPoHdrs
-                              join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd
-                              join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
-                              join d in context.MmpPomaDtls on m.Makey equals d.Makey
-                              where 
-                              d.Rly == Rly && d.Makey == Makey && d.Slno == Slno
-                              select new
-                              {
-                                  h,
-                                  r,
-                                  m,
-                                  d
-                              }
-                  ).ToList();
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("p_POKey", OracleDbType.Varchar2, ImmsPokey, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_RlyCode", OracleDbType.Varchar2, ImmsRlyCd, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            if (GetValuePO == null)
-                throw new Exception("Record Not found");
-            else
+            var ds = DataAccessDB.GetDataSet("SP_Get_DEO_CRIS_PurchesOrderData", par, 1);
+            DataTable dt = ds.Tables[0];
+
+            if (ds != null && ds.Tables.Count > 0)
             {
-                model.Rly = GetValuePO[0].d.Rly;
-                model.Makey = GetValuePO[0].d.Makey;
-                model.Slno = GetValuePO[0].d.Slno;
-
-                model.RitesCaseNo = GetValuePO[0].h.RitesCaseNo;
-                model.ImmsPokey = GetValuePO[0].h.ImmsPokey;
-                model.PoNo = GetValuePO[0].h.PoNo;
-                model.PoDt = GetValuePO[0].h.PoDt;
-                model.RecvDate = GetValuePO[0].h.RecvDate;
-                model.ImmsRlyCd = GetValuePO[0].h.ImmsRlyCd;
-                model.ImmsRlyShortname = GetValuePO[0].h.ImmsRlyShortname;
-                model.VendorName = GetValuePO[0].h.ImmsVendorName + "," + GetValuePO[0].h.ImmsVendorDetail;
-                model.Remarks = GetValuePO[0].h.Remarks;
-
-                model.PoDoc = "Vendor/PO/" + GetValuePO[0].h.PoNo + ".pdf";
-                model.MaNo = GetValuePO[0].m.MaNo;
-                model.MaDate = GetValuePO[0].m.MaDate;
-                model.Subject = GetValuePO[0].m.Subject;
-                model.MaFldDescr = GetValuePO[0].d.MaFldDescr;
-                model.NewValue = GetValuePO[0].d.NewValue;
-                model.OldValue = GetValuePO[0].d.OldValue;
-
-
-                return model;
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model1 = JsonConvert.DeserializeObject< List<DEO_CRIS_PurchesOrderModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                if (model1 != null)
+                {
+                    model = model1.FirstOrDefault();
+                }
             }
+            
+            return model;
         }
 
-        public DTResult<DEOCRISPurchesOrderMAModel> GetDataList(DTParameters dtParameters, string Region)
+        public DTResult<DEO_CRIS_PurchesOrderListModel> GetDataList(DTParameters dtParameters, string Region)
         {
 
-            DTResult<DEOCRISPurchesOrderMAModel> dTResult = new() { draw = 0 };
-            IQueryable<DEOCRISPurchesOrderMAModel>? query = null;
+            DTResult<DEO_CRIS_PurchesOrderListModel> dTResult = new() { draw = 0 };
+            IQueryable<DEO_CRIS_PurchesOrderListModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -81,62 +61,38 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "PoNo";
+                    orderCriteria = "CASE_NO";
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "PoNo";
+                orderCriteria = "CASE_NO";
                 orderAscendingDirection = true;
             }
 
-            string MaDt1 = Convert.ToDateTime("31-03-2020").ToString("dd-MM-yyyy");
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region == "" ? DBNull.Value : Region.ToString(), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            //query = from h in context.ImmsRitesPoHdrs
-            //        join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd
-            //        join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
-            //        join d in context.MmpPomaDtls on m.Makey equals d.Makey
-            //        where h.ImmsPokey == m.Pokey && h.ImmsRlyCd == m.Rly && m.Makey == d.Makey && m.Rly == d.Rly && h.ImmsRlyCd == r.ImmsRlyCd
-            //        && h.RegionCode == null
-            //        && m.MaDate > Convert.ToDateTime(MaDt1)
-            //        && h.RitesCaseNo == null && d.MaStatus == null
-            query = from h in context.ImmsRitesPoHdrs
-                    join r in context.T91Railways on h.ImmsRlyCd equals r.ImmsRlyCd into rGroup
-                    from r in rGroup.DefaultIfEmpty()
-                    where (h.RegionCode == Region || h.RegionCode == null)
-                       && h.PoDt > DateTime.Parse("2021-03-31")
-                       && h.RitesCaseNo == null
-                    orderby h.RegionCode descending, h.PoDt descending
+            var ds = DataAccessDB.GetDataSet("Get_SP_DEO_CRIS_PurchesOrderList", par, 1);
+            DataTable dt = ds.Tables[0];
 
-                    select new DEOCRISPurchesOrderMAModel
-                    {
-                        RitesCaseNo = h.RitesCaseNo,
-                        ImmsPokey = h.ImmsPokey,
-                        PoNo = h.PoNo,
-                        PoDt = h.PoDt,
-                        RecvDate = h.RecvDate,
-                        ImmsRlyCd = h.ImmsRlyCd,
-                        ImmsRlyShortname = h.ImmsRlyShortname,
-                        RlyCd = r != null ? r.RlyCd : h.ImmsRlyShortname,
-                        VendorName = h.ImmsVendorName + "," + h.ImmsVendorDetail,
-                        Remarks = h.Remarks,
-                        PoDoc = "Vendor/PO/" + h.PoNo + ".pdf",
-                        POI = h.ImmsPoiName + "/" + h.ImmsPoiDetail,
-                        RegionCode = h.RegionCode == "N" ? "NORTHERN" :
-                         h.RegionCode == "S" ? "SOUTHERN" :
-                         h.RegionCode == "E" ? "EASTERN" :
-                         h.RegionCode == "W" ? "WESTERN" :
-                         h.RegionCode == "C" ? "CENTRAL" : "NA",
-                    };
 
+            List<DEO_CRIS_PurchesOrderListModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<DEO_CRIS_PurchesOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+
+            query = list.AsQueryable();
             dTResult.recordsTotal = query.Count();
-
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.PoNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.MaNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.ImmsRlyShortname).ToLower().Contains(searchBy.ToLower()) || Convert.ToString(w.ImmsPokey).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.IMMS_POKEY).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -148,32 +104,81 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public int DetailsUpdate(DEOCRISPurchesOrderMAModel model)
+        public bool DetailsUpdate(DEO_CRIS_PurchesOrderModel model)
         {
-            int Id = 0;
-            var GetValuePO = context.MmpPomaDtls.Find(model.Rly, model.Makey, model.Slno);
+            bool objRet = false;
+            var immsRitesPoHdr = (from m in context.ImmsRitesPoHdrs
+                                  where m.ImmsPokey == Convert.ToInt32(model.IMMS_POKEY) && m.ImmsRlyCd == model.IMMS_RLY_CD
+                                  select m).FirstOrDefault();
 
             #region save
-            if (GetValuePO == null)
+            if (immsRitesPoHdr != null)
             {
-                MmpPomaDtl obj = new MmpPomaDtl();
-                obj.MaStatus = model.MaStatus;
-                obj.ApprovedBy = model.ApprovedBy;
-                obj.ApprovedDatetime = DateTime.Now;
-                context.MmpPomaDtls.Add(obj);
+                immsRitesPoHdr.RecvDate = model.RecvDt;
+                immsRitesPoHdr.RegionCode = model.REGION_CODE;
+                immsRitesPoHdr.PurchaserCd = Convert.ToInt32(model.PURCHASER_CD);
+                immsRitesPoHdr.RlyCd = model.RLY_CD;
+                immsRitesPoHdr.Remarks = model.REMARKS;
+                immsRitesPoHdr.UserId = model.UserId;
+                immsRitesPoHdr.PoId =Convert.ToDecimal(model.POI_CD);
+                immsRitesPoHdr.VendCd = Convert.ToInt32(model.VEND_CD);
+                immsRitesPoHdr.BpoCd = model.BPO_CD;
+                immsRitesPoHdr.Datetime = DateTime.Now;
                 context.SaveChanges();
-                Id = Convert.ToInt32(obj.Makey);
-            }
-            else
-            {
-                GetValuePO.MaStatus = model.MaStatus;
-                GetValuePO.ApprovedBy = model.ApprovedBy;
-                GetValuePO.ApprovedDatetime = DateTime.Now;
-                context.SaveChanges();
-                Id = Convert.ToInt32(GetValuePO.Makey);
+                objRet = true;
             }
             #endregion
-            return Id;
+            return objRet;
+        }
+
+        public bool UpdateREMARKS(string REMARKS, int IMMS_POKEY, string IMMS_RLY_CD)
+        {
+            bool retVal = false;
+            var immsRitesPoHdr = (from m in context.ImmsRitesPoHdrs
+                              where m.ImmsPokey == IMMS_POKEY && m.ImmsRlyCd == IMMS_RLY_CD
+                              select m).FirstOrDefault();
+
+            #region save
+            if (immsRitesPoHdr != null)
+            {
+                immsRitesPoHdr.Remarks = REMARKS;
+                context.SaveChanges();
+                retVal =true;
+            }
+            #endregion
+            return retVal;
+        }
+
+        public string getVendorEmail(string CASE_NO)
+        {
+            string vendorEmail = "";
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("IN_CASE_NO", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_INFO", par, 1);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                vendorEmail = ds.Tables[0].Rows[0]["VEND_EMAIL"].ToString();
+            }
+            return vendorEmail;
+        }
+
+        public string[] GenerateRealCaseNoCRIS(string REGION_CD, string IMMS_POKEY,string IMMS_RLY_CD, string USER_ID)
+        {
+            string[] result = new string[2];
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, REGION_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("IN_TEMP_POKEY", OracleDbType.Char, IMMS_POKEY, ParameterDirection.Input);
+            par[2] = new OracleParameter("IN_TEMP_RLY_CD", OracleDbType.Char, IMMS_RLY_CD, ParameterDirection.Input);
+            par[3] = new OracleParameter("IN_TEMP_USER_ID", OracleDbType.Char, USER_ID, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GENERATE_REAL_CASE_NO_CRIS_new", par, 1);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                result[0] = ds.Tables[0].Rows[0]["ERR_CD"].ToString();
+                result[1] = ds.Tables[0].Rows[0]["CASE_NO"].ToString();
+            }
+            return result;
         }
     }
 }

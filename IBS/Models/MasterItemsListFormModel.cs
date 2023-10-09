@@ -49,5 +49,7 @@ namespace IBS.Models
 
         public string? FilePath { get; set; }
 
+        public string actiontype { get; set; }
+
     }
 }

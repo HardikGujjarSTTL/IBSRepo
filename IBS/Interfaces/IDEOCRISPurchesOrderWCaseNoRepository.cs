@@ -4,10 +4,15 @@ namespace IBS.Interfaces
 {
     public interface IDEOCRISPurchesOrderWCaseNoRepository
     {
-        public DEOCRISPurchesOrderMAModel FindByID(string Rly, int Makey, byte Slno);
+        public DEO_CRIS_PurchesOrderModel FindByID(string ImmsPokey, string ImmsRlyCd);
 
-        DTResult<DEOCRISPurchesOrderMAModel> GetDataList(DTParameters dtParameters, string Region);
+        DTResult<DEO_CRIS_PurchesOrderListModel> GetDataList(DTParameters dtParameters, string Region);
 
-        int DetailsUpdate(DEOCRISPurchesOrderMAModel model);
+        bool DetailsUpdate(DEO_CRIS_PurchesOrderModel model);
+
+        bool UpdateREMARKS(string REMARKS, int IMMS_POKEY, string IMMS_RLY_CD);
+
+        string getVendorEmail(string CASE_NO);
+        string[] GenerateRealCaseNoCRIS(string REGION_CD, string IMMS_POKEY, string IMMS_RLY_CD, string USER_ID);
     }
 }

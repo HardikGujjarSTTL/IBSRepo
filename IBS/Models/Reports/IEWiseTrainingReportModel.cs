@@ -12,6 +12,7 @@
         public string Particularie { get; set; }
         public string ParticularArea { get; set; }
         public string ReportTitle { get; set; }
+        public string Regions { get; set; }
 
         public List<IEWISETRAINING> lstIEWISETRAINING { get; set; }
     }

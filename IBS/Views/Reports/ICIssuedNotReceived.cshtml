@@ -1,4 +1,5 @@
-﻿@model IBS.Models.ICIssuedNotReceivedReportModel
+﻿@using IBS.Helper;
+@model IBS.Models.ICIssuedNotReceivedReportModel
 <div>
     @*<h3 class="heading3">@Model.Region</h3>
     <h3 class="heading3">IC Issued but not Received in Office For The Period <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></h3>*@
@@ -61,7 +62,7 @@
                                 PartSrNo = PartSrNo + 1;
                             }
                         }
-                        var ICPath = "/RBS/BILL_IC/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var ICPath = "/ReadWriteData/BILL_IC/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
                         <tr>
                             <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
 
@@ -95,8 +96,8 @@
                                         }
                                         else
                                         {
-                                            var urlTif = "/RBS/CASE_NO/" + @item.CASE_NO + ".TIF";
-                                            var urlPdf = "/RBS/CASE_NO/" + @item.CASE_NO + ".PDF";
+                                            var urlTif = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".TIF";
+                                            var urlPdf = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".PDF";
                                             if (item.IsTIF == true)
                                             {
                                                 <div width='10%' valign='top' align='center'><a href='@urlTif' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'> @item.CASE_NO </font></a></div>
@@ -120,8 +121,8 @@
                                         }
                                         else
                                         {
-                                            var urlTif = "/RBS/CASE_NO/" + @item.CASE_NO + ".TIF";
-                                            var urlPdf = "/RBS/CASE_NO/" + @item.CASE_NO + ".PDF";
+                                            var urlTif = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".TIF";
+                                            var urlPdf = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".PDF";
                                             if (item.IsTIF == true)
                                             {
                                                 <div width='10%' valign='top' align='center'><a href='@urlTif' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'> @item.CASE_NO </font></a></div>

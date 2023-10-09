@@ -6,12 +6,14 @@ namespace IBS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        
+        [Required(ErrorMessage = "Rail Cd is required")]
         public string? RailCd { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Rail Description is required")]
         public string? RailDesc { get; set; }
 
+        [Required(ErrorMessage = "Rail Length Meter is required")]
         public string? RailLengthMeter { get; set; }
 
         public string? UserId { get; set; }

@@ -7,7 +7,7 @@
         <h2>Consignee/Purchaser Master</h2>
     </div>
     <div>
-        <a asp-area="" asp-controller="ConsigneePurchase" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New</a>
+        <a asp-area="" asp-controller="ConsigneePurchase" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus" id="btnAddNew"></span> Add New</a>
     </div>
 </div>
 <div class="task-listinput">
@@ -51,8 +51,8 @@
             </div>
             <div class="col-md-3 mb-2" style="margin-top: 30px;">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
-                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                    <button type="button" class="save-btn active" onclick="InitializeDatatable();" id="btnSearch">Search</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();" id="btnClear">Clear</button>
                 </div>
             </div>
         </div>
@@ -87,9 +87,9 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            InitializeDatatable();
-        });
+        //$(document).ready(function () {
+        //    InitializeDatatable();
+        //});
 
         function InitializeDatatable() {
             var ConsigneeCode = $("#ConsigneeCode").val();
@@ -140,8 +140,8 @@
                         render: function (data, type, row) {
                             var id = row.CONSIGNEE_CD;
                             var editUrl = '@Url.Action("Manage", "ConsigneePurchase")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="Delete(' + id + ')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit btnedit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '<a onclick="Delete(' + id + ')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete btndelete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

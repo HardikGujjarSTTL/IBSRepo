@@ -1,125 +1,635 @@
-﻿@model IBS.Models.DEOCRISPurchesOrderMAModel
+﻿@model IBS.Models.DEO_CRIS_PurchesOrderModel
 
 @{
-    ViewData["Title"] = "MA ISSUED BY CRIS AGAINST CRIS PURCHASE ORDERS NOT REGISTERED IN RITES";
+    ViewData["Title"] = "Purchase order submitted by vendors awaiting allocation of case number";
     string clsView = "";
-    if (Model.PoNo != null)
+    if (Model.IMMS_POKEY != null)
     {
         clsView = "Permission_View";
     }
 }
-
-<form data-ajax="true" asp-antiforgery="true" asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>@ViewData["Title"] </h2>
-        </div>
-        <div>
-                    <a asp-action="Index" asp-controller="DEOCRISPurchesOrderMAWCaseNo" class="formBtn viewall-btn">View List</a>
-                </div>
-        <input type="hidden" asp-for="Rly" />
-        <input type="hidden" asp-for="Makey" />
-        <input type="hidden" asp-for="Slno" />
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Purchase order submitted by vendors awaiting allocation of case number</h2>
     </div>
-    <div class="accordion-body">
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <label for="Reference">PO No.</label>
-                <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                <span asp-validation-for="PoNo" class="text-danger"></span>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="Reference">PO Date</label>
-                <input type="text" class="input" asp-for="PoDt" maxlength="30" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                <span asp-validation-for="PoDt" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <label for="Reference">MA No.</label>
-                <input type="text" class="input" asp-for="MaNo" maxlength="100" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                <span asp-validation-for="MaNo" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name">MA Date</label>
-                    <input type="text" class="input" asp-for="MaDate" maxlength="30" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                    <span asp-validation-for="MaDate" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-12 mb-3">
-                <div class="reference">
-                    <label for="Name">Vendor</label>
-                    <textarea rows="4" asp-for="VendorName" style="text-transform: uppercase; color:orangered" readonly="readonly"></textarea>
-                    <span asp-validation-for="VendorName" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <div class="reference">
-                    <label for="Name">MA Subject</label>
-                    <input type="text" class="input" asp-for="Subject" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                    <span asp-validation-for="Subject" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="reference">
-                    <label for="Name">MA Field</label>
-                    <input type="text" class="input" asp-for="MaFldDescr" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                    <span asp-validation-for="MaFldDescr" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <div class="reference">
-                    <label for="Name">New Value</label>
-                    <input type="text" class="input" asp-for="NewValue" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                    <span asp-validation-for="NewValue" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="reference">
-                    <label for="Name">Old Value</label>
-                    <input type="text" class="input" asp-for="OldValue" style="text-transform: uppercase; color:orangered" readonly="readonly">
-                    <span asp-validation-for="OldValue" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <label for="Reference">MA Status</label>
-                @Html.DropDownListFor(model => model.MaStatus, new SelectList(IBS.Models.Common.MAStatus() , "Value", "Text"),"--Select--")
-                <span asp-validation-for="MaStatus" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="savenext-btn">
-            <a asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="Index" class="reset-btn">Cancel</a>
-            <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-        </div>
+    <div>
+        <a asp-action="Index" asp-controller="DEOCRISPurchesOrderMAWCaseNo" class="formBtn viewall-btn">View List</a>
     </div>
-</form>
+</div>
+<section id="tab-1" class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="DeoCrisPOMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDeoCrisPO">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <input type="hidden" id="hdnType" />
+
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Ref No.</label>
+                        <input type="text" class="input" asp-for="IMMS_POKEY" readonly>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference" id="lblRealCaseNO1"></label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Railway/Non-Railway</label>
+                        <input type="text" class="input" value="Railways" readonly>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="RAILWAY" readonly>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Case To Be Registered At</label>
+                        @Html.DropDownListFor(model => model.REGION_CODE, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="REGION_CODE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Agency/Client</label>
+                        @Html.DropDownListFor(model => model.RLY_CD, new SelectList(IBS.Models.Common.GetAgencyClientForDEOCris() , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Stock / Non-Stock (For Railways Only)</label>
+                        @Html.DropDownListFor(model => model.STOCK_NONSTOCK, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="STOCK_NONSTOCK" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Vendor<i class="text-danger">*</i></label>
+                        <input type="text" class="input" id="txtVend">
+                        <label for="Reference" id="lblVendor"></label>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <button type="button" id="btnbtnFCList" class="btn btn-primary formSubBtn" onclick="GetVendor('1');">Select Vendor</button>
+                    </div>
+                    <div class="col-md-4 mb-3" style="margin-top: 32px;">
+                        @Html.DropDownListFor(model => model.VEND_CD, new SelectList(IBS.Models.Common.GetVendor_City(Convert.ToInt32(Model.VEND_CD)) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="VEND_CD" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
+                        @Html.DropDownListFor(model => model.PO_OR_LETTER, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="PO_OR_LETTER" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Purchase Order No./ LOA No.</label>
+                        <input type="text" class="input" asp-for="PO_NO">
+                        <span asp-validation-for="PO_NO" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PO Date<i class="text-danger">*</i></label>
+                        <input id="PoDt" asp-for="PO_DT" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
+                        <span asp-validation-for="PO_DT" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3" id="dvSPur">
+                        <label for="Reference">Purchaser</label>
+                        <input type="text" class="input" id="txtSPur">
+                    </div>
+                    <div class="col-md-2 mb-3" id="dvbtnSPur">
+                        <label for="Reference" style="font-size: 90%;" id="Label14"><i class="text-danger">*</i>In Case Of other Client</label>
+                        <button type="button" id="btnSPur" class="btn btn-primary formSubBtn" style="margin-top: 1px;" onclick="SearchPurchaser();">Search Purchaser</button>
+                    </div>
+                    <div class="col-md-4 mb-3" id="dvPurchaser" style="margin-top: 32px;">
+                        <label for="Reference" id="lblPurchaser" style="display:none;">Purchaser</label>
+                        @Html.DropDownListFor(model => model.PURCHASER_CD, new SelectList(IBS.Models.Common.GetPurchaserCdusingConsigneeCd(Convert.ToInt32(Model.PURCHASER_CD)) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="PURCHASER_CD" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" id="txtPurchaser" style="margin-top: 30px;">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3" id="dvtxtSBPO">
+                        <label for="Reference">BPO<i class="text-danger">*</i></label>
+                        <input type="text" class="input" id="txtSBPO">
+                    </div>
+                    <div class="col-md-2 mb-3" id="dvbtnBPO">
+                        <button type="button" id="btnBPO" class="btn btn-primary formSubBtn" onclick="LoadBPO();" style="margin-top: 33px;">Search BPO</button>
+                    </div>
+                    <div class="col-md-4 mb-3" id="dvBPO" style="margin-top: 32px;">
+                        <label for="Reference" id="lblBPO" style="display:none;">BPO</label>
+                        @Html.DropDownListFor(model => model.BPO_CD, new SelectList(IBS.Models.Common.GetBPOList(Model.BPO_CD) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();"})
+                    </div>
+                    <div class="col-md-4 mb-3" id="dvtxtBPO">
+                        <input type="text" class="input" id="txtBPO" style="margin-top: 30px;">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Date of Reciept of PO in RITES</label>
+                        <input type="text" class="input datepicker" asp-for="RecvDt" readonly="true">
+                        <span asp-validation-for="RecvDt" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Last 5 digit of PO</label>
+                        <input type="text" class="input" asp-for="L5noPo">
+                        <span asp-validation-for="L5noPo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Inspection Agency/PO Cancelled</label>
+                        @Html.DropDownListFor(model => model.INSPECTING_AGENCY, new SelectList(IBS.Models.Common.getInspectingAgency() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <h4><label for="Reference">Manufacturer's Information</label></h4>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <div class="custom-control custom-checkbox">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
+                                    Same As Vendor
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="input" asp-for="POI_CD">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" id="btnPOI" class="save-btn active" style="width:auto;" onclick="SelectManufacturer();">Select Manufacturer</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference" id="lblManufacturer"> </label>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
+                    </div>
+                    <div class="col-md-4 mb-3" style="display:none;" id="dvManufac">
+                        @Html.DropDownListFor(model => model.ddlManufac, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();"})
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Place of Inspection</label>
+                        <input type="text" class="input" id="txtMPOI">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Remarks</label>
+                        <textarea class="input" asp-for="REMARKS"> </textarea>
+                        <span asp-validation-for="REMARKS" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button type="button" id="btnBPO" class="btn btn-primary formSubBtn" onclick="SaveRemarks();" style="margin-top: 33px;">Save Remarks</button>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        @{
+                            var link = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Convert.ToString(Model.PO_YR) + "/" + Model.IMMS_RLY_CD + "/" + Convert.ToString(Model.PO_NO) + ".pdf";
+                        }
+                        <a href="@link" target="_blank">Download PO</a>
+                    </div>
+                </div>
+
+                <div class="savenext-btn">
+                    <a asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="Index" class="reset-btn">Cancel</a>
+                    <button type="button" id="btnSave" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    <button type="button" id="btnAcceptPO" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div id="AddEditConsigneeModal" class="modal" tabindex="-1" role="dialog">
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        function Save() {
-            if ($("#frmDetails").valid()) {
-                $("#frmDetails").submit();
+    <script type="text/javascript">
+        $(function () {
+            setTimeout(function () {
+                GetVendor(0);
+            }, 2000);
+
+            if ('@Model.PURCHASER_CD' != null && '@Model.PURCHASER_CD' != '') {
+                $("#dvbtnSPur").css("display", "none");
+                $("#dvSPur").css("display", "none");
+                $("#txtPurchaser").css("display", "none");
+                $("#Label14").css("display", "none");
+                $("#lblPurchaser").css("display", "block");
+                $("#dvPurchaser").css("margin-top", "0px");
+            }
+            else {
+                SearchPurchaserOnLoad();
+            }
+            if ('@Model.BPO_CD' != null && '@Model.BPO_CD' != '' && '@Model.BPO_CD' != '0') {
+                $("#dvtxtBPO").css("display", "none");
+                $("#dvbtnBPO").css("display", "none");
+                $("#dvtxtSBPO").css("display", "none");
+                $("#lblBPO").css("display", "block");
+                $("#dvBPO").css("margin-top", "0px");
+
+            }
+            else {
+                SearchBPOOnLoad();
+            }
+            if ('@Model.POI_CD' != null && '@Model.POI_CD' != '') {
+                fill_manufacturer();
+            }
+            else {
+                $("#lblManufacturer").text('@Model.MFG');
+                fill_manufacturerUsingMFG();
+            }
+
+        });
+
+        function GetVendor(i) {
+            var VEND_CD = '@Model.VEND_CD';
+            if (i == 1) {
+                VEND_CD = $("#txtVend").val();
+            }
+            var IMMS_VENDOR_CD = ('@Model.IMMS_VENDOR_CD').replace(':', '');
+            var VENDOR = ('@Model.VENDOR');
+            $.ajax({
+                url: '@Url.Action("GetVend_CD", "DEOCRISPurchesOrderMAWCaseNo")?VEND_CD=' + VEND_CD + '&IMMS_VENDOR_CD=' + IMMS_VENDOR_CD + '&VENDOR=' + VENDOR,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#VEND_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#VEND_CD").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    if (VEND_CD != null && VEND_CD != '') {
+                        $("#VEND_CD").val(VEND_CD);
+                        $("#txtVend").val(VEND_CD);
+                        $("#btnbtnFCList").css("display", "none");
+                    }
+                    else {
+                        if (response.Vend_CdID != null && response.Vend_CdID != '') {
+                            $("#txtVend").val(response.Vend_CdID);
+                            $("#btnbtnFCList").css("display", "none");
+                        }
+                        else {
+                            $("#lblVendor").text(VENDOR);
+                            vendor_status($("#VEND_CD").val());
+                        }
+                    }
+                }
+            });
+        }
+
+        function vendor_status(VendCd) {
+            $.ajax({
+                url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    $("#txtVend").val("");
+                }
+                else {
+                    $("#txtVend").val(VendCd);
+                }
+            });
+        }
+
+        function SearchPurchaserOnLoad() {
+            var RLY_CD = '@Model.IMMS_RLY_CD';
+            var IMMS_PURCHASER_CD = '@Model.IMMS_PURCHASER_CD';
+            var IMMS_PURCHASER_DETAIL = '@Model.IMMS_PURCHASER_DETAIL';
+            $.ajax({
+                url: '@Url.Action("SearchPurchaserOnLoad", "DEOCRISPurchesOrderMAWCaseNo")?RLY_CD=' + RLY_CD + '&IMMS_PURCHASER_CD=' + IMMS_PURCHASER_CD,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PURCHASER_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#PURCHASER_CD").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    if (response.Vend_CdID != null && response.Vend_CdID != '') {
+                        $("#txtSPur").val(response.Vend_CdID);
+                        $("#dvbtnSPur").css("display", "none");
+                        $("#dvSPur").css("display", "none");
+                        $("#txtPurchaser").css("display", "none");
+                        $("#Label14").css("display", "none");
+                        $("#lblPurchaser").css("display", "block");
+                        $("#dvPurchaser").css("margin-top", "0px");
+                    }
+                    else {
+                        $("#txtSPur").val($("#RLY_CD").val());
+                        $("#txtPurchaser").val(IMMS_PURCHASER_DETAIL);
+                        SearchPurchaser();
+                    }
+                }
+            });
+        }
+
+        function SearchPurchaser() {
+            var txtSPur = $("#txtSPur").val();
+            $.ajax({
+                url: '@Url.Action("GetPurchaserCd", "POMaster")?consignee=' + txtSPur,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PURCHASER_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#PURCHASER_CD").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function SearchBPOOnLoad() {
+            var RLY_CD = '@Model.IMMS_RLY_CD';
+            var IMMS_BPO_CD = '@Model.IMMS_BPO_CD';
+            var BPO = '@Model.BPO';
+            $.ajax({
+                url: '@Url.Action("getBPOOnLoad", "DEOCRISPurchesOrderMAWCaseNo")?RLY_CD=' + RLY_CD + '&IMMS_BPO_CD=' + IMMS_BPO_CD,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BPO_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BPO_CD").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    if (response.BpoCdID != null && response.BpoCdID != '') {
+                        $("#BPO_CD").val(response.BpoCdID);
+                        $("#dvtxtBPO").css("display", "none");
+                        $("#dvbtnBPO").css("display", "none");
+                        $("#dvtxtSBPO").css("display", "none");
+                        $("#lblBPO").css("display", "block");
+                        $("#dvBPO").css("margin-top", "0px");
+                    }
+                    else {
+                        $("#txtSBPO").val($("#RLY_CD").val());
+                        getBPO();
+                    }
+                }
+            });
+        }
+
+        function getBPO() {
+            var RLY_CD = $("#RLY_CD").val();
+            $.ajax({
+                url: '@Url.Action("GetBPO", "POMaster")?RLY_CD=' + RLY_CD,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BPO_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BPO_CD").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function LoadBPO() {
+            var SBPO = $("#txtSBPO").val();
+            $.ajax({
+                url: '@Url.Action("GetBPO", "AdministratorPurchaseOrder")?SBPO=' + SBPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BPO_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BPO_CD").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function fill_manufacturer() {
+            var VendCd = '@Model.POI_CD';
+            $.ajax({
+                url: '@Url.Action("GetVendors", "AdministratorPurchaseOrder")?id=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.list != null) {
+                    $("#dvManufac").css("display", "block");
+                    $("#ddlManufac").html("");
+                    $("#ddlManufac").append("<option value=''>--Select--</option>");
+                    $.each(response.list, function (index, value) {
+                        $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                    });
+                    $("#ddlManufac").val(0);
+                    $("#POI_CD").val($("#ddlManufac").val());
+                    GetManufVEND();
+                }
+                else {
+                    ShowHideMsgNew(response.status, "No Manufacturer Found!!!");
+                    $("#ddlManufac").css("display", "none");
+                    $("#txtMPOI").val("");
+                    $("#txtMPOI").focus();
+                }
+            });
+        }
+
+        function fill_manufacturerUsingMFG() {
+            var MFG = '@Model.MFG';
+            if (MFG.Length >= 5) {
+                $.ajax({
+                    url: '@Url.Action("GetVendorUsingMFG", "DEOCRISPurchesOrderMAWCaseNo")?MFG=' + MFG,
+                    type: 'GET',
+                    cache: false,
+                    data: '{}',
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response.list != null) {
+                        $("#dvManufac").css("display", "block");
+                        $("#ddlManufac").html("");
+                        $("#ddlManufac").append("<option value=''>--Select--</option>");
+                        $.each(response.list, function (index, value) {
+                            $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        });
+                        $("#ddlManufac").val(0);
+                        $("#POI_CD").val($("#ddlManufac").val());
+                        GetManufVEND();
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, "No Manufacturer Found!!!");
+                        $("#ddlManufac").css("display", "none");
+                        $("#txtMPOI").val("");
+                        $("#txtMPOI").focus();
+                    }
+                });
+
             }
         }
-        completed = function (response) {
+
+        function GetManufVEND(id) {
+            var VendCd = $("#ddlManufac").val();
+            $.ajax({
+                url: '@Url.Action("GetManufVEND", "AdministratorPurchaseOrder")?id=' + VendCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    if (response.getvendor.VendStatus == 'B') {
+                        ShowHideMsgNew(response.getvendor.status, "It is informed that due to unavoidable reasons, online call booking facility has temporarily restricted against your ID From: " + response.getvendor.VendStatusDtFrST);
+                        if (id == 0) {
+                            $("#POI_CD").val("");
+                            $("#txtMPOI").val("");
+                        }
+                        $("#ddlManufac").css("display", "none");
+                    }
+                    else {
+                        $("#txtMPOI").val(response.getvendor.VendAdd1);
+                        $("#POI_CD").attr("disabled", "disabled");
+                        if (id == 0) {
+                            $("#ddlManufac").css("display", "block");
+                            $("#btnPOI").css("display", "none");
+                        }
+                    }
+                }
+
+            });
+        }
+
+        function sameAsVendor() {
+            if ($("#chkManuf").prop('checked') == true) {
+                GetManufVEND(0);
+                var VendCd = $("#VEND_CD").val();
+                $.ajax({
+                    url: '@Url.Action("GetVendors", "AdministratorPurchaseOrder")?id=' + VendCd,
+                    type: 'GET',
+                    cache: false,
+                    data: '{}',
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response.list != null) {
+                        $("#dvManufac").css("display", "block");
+                        $("#ddlManufac").html("");
+                        $("#ddlManufac").append("<option value=''>--Select--</option>");
+                        $.each(response.list, function (index, value) {
+                            $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        });
+                        $("#POI_CD").val($("#ddlManufac").val());
+                        $("#ddlManufac").focus();
+                        GetManufVEND();
+                        $("#txtMPOI").attr("disabled", "disabled");
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, "No Manufacturer Found!!!");
+                        $("#ddlManufac").css("display", "none");
+                        $("#txtMPOI").val("");
+                        $("#txtMPOI").focus();
+                    }
+                });
+            }
+            else {
+                $("#dvManufac").css("display", "none");
+                $("#txtMPOI").val("");
+                $("#ddlManufac").html("");
+                $("#POI_CD").removeAttr("disabled");
+                $("#txtMPOI").removeAttr("disabled");
+                $("#POI_CD").val("");
+            }
+        }
+
+        function SaveRemarks() {
+            var IMMS_POKEY = '@Model.IMMS_POKEY';
+            var IMMS_RLY_CD = '@Model.IMMS_RLY_CD';
+            var REMARKS = $("#REMARKS").val();
+            $.ajax({
+                url: '@Url.Action("UpdateREMARKS", "DEOCRISPurchesOrderMAWCaseNo")?REMARKS=' + REMARKS + "&IMMS_POKEY=" + IMMS_POKEY + "&IMMS_RLY_CD=" + IMMS_RLY_CD,
+                type: 'POST',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+
+        function AcceptPO() {
+            var REGION_CODE = $("#REGION_CODE").val();
+            var IMMS_POKEY = '@Model.IMMS_POKEY';
+            var IMMS_RLY_CD = '@Model.IMMS_RLY_CD';
+            var PO_NO = $("#PO_NO").val();
+            var PoDt = $("#PoDt").val();
+            $.ajax({
+                url: '@Url.Action("AcceptPO", "DEOCRISPurchesOrderMAWCaseNo")?REGION_CODE=' + REGION_CODE + "&IMMS_POKEY=" + IMMS_POKEY + "&IMMS_RLY_CD=" + IMMS_RLY_CD
+                    + "&PO_NO=" + PO_NO + "&PoDt=" + PoDt,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    if (response.status) {
+                        ShowHideMsgNew(response.status, response.responseText);
+                        $("#lblRealCaseNO1").text(" Case No. --> " + response.OUT_CASE_NO);
+                        $("#btnSave").attr("disabled", "disabled");
+                        $("#btnAcceptPO").attr("disabled", "disabled");
+                        //window.location.href = '@Url.Action("Index", "DEOCRISPurchesOrderMAWCaseNo")';
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, response.responseText);
+                    }
+                }
+            });
+        }
+
+        function Save() {
+            if ($("#frmDeoCrisPO").valid()) {
+                $("#frmDeoCrisPO").submit();
+            }
+        }
+
+         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/DEOCRISPurchesOrderMAWCaseNo/Index";
             window.location.href = '@Url.Action("Index", "DEOCRISPurchesOrderMAWCaseNo")';
         };
+
     </script>
 }

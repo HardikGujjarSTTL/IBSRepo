@@ -183,7 +183,11 @@ namespace IBS.Controllers
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetPurchaserCd(consignee);
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (consignee != null)
+                {
+                    agencyClient = Common.GetPurchaserCd(consignee);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
@@ -302,7 +306,7 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOVendorPurchesOrder", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("PODetails", "DEOVendorPurchesOrder", new { CaseNo = CASE_NO });
         }
 
         [Authorization("DEOVendorPurchesOrder", "Index", "view")]
@@ -477,11 +481,11 @@ namespace IBS.Controllers
                 {
                     if (result[1] != null)
                     {
-                        SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
-                        return Json(new { status = true, responseText = msg });
+                        //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
+                        return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }
                 }
-                return Json(new { status = false, responseText = "Not Successfully" });
+                return Json(new { status = false, responseText = "PO is not accepted" });
             }
             catch (Exception ex)
             {
@@ -590,7 +594,7 @@ namespace IBS.Controllers
             sender = "hardiksilvertouch007@outlook.com";
             sendMailModel.From = sender;
             sendMailModel.To = vendorEmail;
-            sendMailModel.Subject = "Test";
+            sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
             sendMailModel.Message = mail_body;
             bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
             return isSend;

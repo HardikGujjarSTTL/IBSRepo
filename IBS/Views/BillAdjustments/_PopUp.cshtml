@@ -1,0 +1,32 @@
+﻿@model IBS.Models.ICPopUpModel
+<div class="modal-dialog modal-lg" role="document">
+    @*<input type="hidden" asp-for="Caseno" />*@
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Bill Details </h5>
+            <h5 class="modal-title">Bill Date :  <span style="color:red;">@Convert.ToDateTime(@Model.BillDt).ToString("dd/MM/yyyy")</span> </h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="BillNo">Bill No :  <span style="color:red;">@Model.BillNo</span></label>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="BillNo">Total Material Value :  <span style="color:red;">@Model.TMValue</span></label>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="BillNo">Inspection Fee :  <span style="color:red;">@Model.TIFee</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="savenext-btn">
+                @*<button type="button" class="reset-btn" data-bs-dismiss="modal">Close</button>*@
+                <button class="save-btn active" id="btnPopUpOk" onclick="PopUpOk()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

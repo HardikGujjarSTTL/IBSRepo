@@ -25,12 +25,12 @@
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Rail Price Per Mt</label>
+                        <label for="Reference">Rail Price Per Mt<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="RailPricePerMt" maxlength="30">
                         <span asp-validation-for="RailPricePerMt" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Packing Charge</label>
+                        <label for="Reference">Packing Charge<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="PackingCharge" maxlength="30">
                         <span asp-validation-for="PackingCharge" class="text-danger"></span>
                     </div>
@@ -47,12 +47,12 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Price Date From</label>
+                        <label for="Reference">Price Date From<i class="text-danger">*</i></label>
                         <input id="PriceDateFr" asp-for="PriceDateFr" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                         <span asp-validation-for="PriceDateFr" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Price Date To</label>
+                        <label for="Reference">Price Date To<i class="text-danger">*</i></label>
                         <input id="PriceDateTo" asp-for="PriceDateTo" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                         <span asp-validation-for="PriceDateTo" class="text-danger"></span>
                     </div>

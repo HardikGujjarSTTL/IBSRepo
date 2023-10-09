@@ -1,0 +1,44 @@
+﻿@model IBS.Models.Reports.PeriodWiseTechnicalRefReportModel
+
+<div>
+    <h3 class="heading3">@Model.Regions</h3>
+    <h3 class="heading3">Technical References for the period  : @Model.FromDate To @Model.ToDate</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Name of CM/Sh.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Name of IE/Sh.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Spec & Drg</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">RITES Letter No.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Date</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Reference made to</font></b></th>
+                    <th width="18%" valign="top" align="center"><b><font size="1" face="Verdana">Content of technical reference in brief</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstPeriodWiseTechnicalRef != null && Model.lstPeriodWiseTechnicalRef.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstPeriodWiseTechnicalRef)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="4%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.cm_name</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.ie_name</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.item_des</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.spec_drg</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.letter_no</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.tech_date</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.ref_made</font></td>
+                            <td width="18%" valign="top" align="center"><font size="1" face="Verdana">@item.tech_content</font></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

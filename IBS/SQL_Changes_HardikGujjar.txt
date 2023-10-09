@@ -400,7 +400,7 @@ ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
 
 
     
-create View VIEW_POMASTERLIST
+create or replace View VIEW_POMASTERLIST
 AS
 select 
         m.VEND_CD,
@@ -412,7 +412,8 @@ select
         (nvl2(trim(c.CONSIGNEE_DESIG),trim(c.CONSIGNEE_DESIG)||'/','')||nvl2(trim(c.CONSIGNEE_DEPT),trim(c.CONSIGNEE_DEPT)||'/','')||trim(c.CONSIGNEE_FIRM)) CONSIGNEE_S_NAME,
         m.REMARKS ,
         m.Isdeleted,
-        m.RLY_NONRLY
+        m.RLY_NONRLY,
+        m.RLY_CD AS MAINRLY_CD
         from 
             T80_PO_MASTER m,
             T05_VENDOR v,
@@ -422,6 +423,7 @@ select
             m.VEND_CD=v.VEND_CD and 
             v.VEND_CITY_CD=t.CITY_CD And 
             m.PURCHASER_CD=c.CONSIGNEE_CD(+)
+        Order by m.datetime desc;
 
 
 Create VIEW view_GetVendor
@@ -473,11 +475,26 @@ create or replace PROCEDURE GENERATE_VEND_CASE_NO(
 ) AS
     w_ctr VARCHAR2(100) := NULL;
     w_sno CHAR(100) := NULL;
-    w_region CHAR(100) := NULL;
+    w_region VARCHAR2(500) := NULL;
     w_Case_No VARCHAR2(500) := NULL;
 
 BEGIN
-    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    IF IN_REGION_CD   ='N' THEN
+        w_region       := 'n';
+      elsif IN_REGION_CD='W' THEN
+        w_region       :='w';
+      elsif IN_REGION_CD='S' THEN
+        w_region       :='s';
+      elsif IN_REGION_CD='E' THEN
+        w_region       :='e';
+      elsif IN_REGION_CD='C' THEN
+        w_region       :='c';
+      elsif IN_REGION_CD='Q' THEN
+        w_region       :='q';
+      END IF;
+      
+    w_ctr := w_region || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
 
     SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
     INTO w_sno
@@ -559,6 +576,7 @@ BEGIN
     JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
     WHERE
         p.CASE_NO = p_case_no
+        AND NVL(p.IsDeleted ,0) =0
     ORDER BY
         p.ITEM_SRNO;
 END;
@@ -3825,3 +3843,243 @@ ALTER TABLE T13_Po_Master ADD ContractID NUMBER(6,0)
 ALTER TABLE T80_Po_Master ADD ContractID NUMBER(6,0)
 
 ==================
+
+create or replace PROCEDURE Get_SP_DEO_CRIS_PurchesOrderList(
+    p_Region IN NVARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        RITES_CASE_NO AS CASE_NO,
+        IMMS_POKEY,
+        PO_NO,
+        TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        TO_CHAR(RECV_DATE, 'dd/mm/yyyy') AS RECV_DT,
+        H.IMMS_RLY_CD,
+        H.IMMS_RLY_SHORTNAME,
+        NVL2(R.RLY_CD, R.RLY_CD, H.IMMS_RLY_SHORTNAME) AS RLY_CD,
+        IMMS_VENDOR_NAME || ',' || IMMS_VENDOR_DETAIL AS VEND_NAME,
+        REMARKS,
+        'Vendor/PO/' || PO_NO || '.pdf' AS PO_DOC,
+        IMMS_POI_NAME || '/' || IMMS_POI_DETAIL AS POI,
+        DECODE(REGION_CODE, 'N', 'NORTHERN', 'S', 'SOUTHERN', 'E', 'EASTERN', 'W', 'WESTERN', 'C', 'CENTRAL', 'NA') AS REGION,
+        REGION_CODE
+    FROM 
+        IMMS_RITES_PO_HDR H
+    LEFT JOIN 
+        T91_RAILWAYS R ON H.IMMS_RLY_CD = R.IMMS_RLY_CD
+    WHERE 
+        (REGION_CODE = p_Region OR REGION_CODE IS NULL)
+        AND PO_DT > TO_DATE('2021-03-31', 'yyyy-mm-dd') -- Assuming your database uses this date format
+        AND RITES_CASE_NO IS NULL
+    ORDER BY 
+        REGION_CODE DESC, H.PO_DT DESC;
+END;
+
+
+=============
+
+create or replace PROCEDURE SP_Get_DEO_CRIS_PurchesOrderData (
+    p_POKey IN VARCHAR2,
+    p_RlyCode IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        RITES_CASE_NO,
+        IMMS_POKEY,
+        IMMS_RLY_CD,
+        RLY_CD,
+        PURCHASER_CD AS PURCHASER_CD,
+        IMMS_PURCHASER_CD,
+        IMMS_PURCHASER_DETAIL,
+        STOCK_NONSTOCK,
+        INSPECTING_AGENCY,
+        PO_OR_LETTER,
+        PO_NO,
+        TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        L5NO_PO,
+        VEND_CD AS VEND_CD,
+        IMMS_VENDOR_CD,
+        IMMS_VENDOR_NAME || ',' || IMMS_VENDOR_DETAIL AS VENDOR,
+        IMMS_RLY_SHORTNAME,
+        REGION_CODE AS REGION_CODE,
+        REMARKS,
+        BPO_CD AS BPO_CD,
+        IMMS_BPO_CD,
+        IMMS_BPO_NAME AS BPO,
+        POI_CD,
+        TO_CHAR(PO_DT, 'YYYY') AS PO_YR,
+        IMMS_POI_NAME || ',' || IMMS_POI_DETAIL AS MFG,
+        (select RAILWAY from T91_RAILWAYS where RLY_CD= (Select nvl(RLY_CD,'XX') RLY_CD from T91_RAILWAYS WHERE IMMS_RLY_CD=p_RlyCode)) As RAILWAY
+    FROM IMMS_RITES_PO_HDR
+    WHERE IMMS_POKEY = p_POKey AND IMMS_RLY_CD = p_RlyCode;
+END;
+
+==========
+
+CREATE OR REPLACE PROCEDURE GENERATE_REAL_CASE_NO_CRIS_new (
+    IN_REGION_CD IN CHAR,
+    IN_TEMP_POKEY IN NUMBER,
+    IN_TEMP_RLY_CD IN CHAR,
+    IN_TEMP_USER_ID IN CHAR,
+    p_Result OUT SYS_REFCURSOR
+)
+IS
+    CURSOR po_detail IS
+        SELECT D.ITEM_SRNO, D.CONSIGNEE_CD, H.BPO_CD
+        FROM IMMS_RITES_PO_HDR H, IMMS_RITES_PO_DETAIL D
+        WHERE H.IMMS_POKEY = D.IMMS_POKEY
+            AND H.IMMS_RLY_CD = D.IMMS_RLY_CD
+            AND D.IMMS_POKEY = IN_TEMP_POKEY
+            AND D.IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    r1 po_detail%ROWTYPE;
+    w_ctr CHAR(5) := NULL;
+    w_sno CHAR(4) := NULL;
+    w_Case_No CHAR(9) := NULL;
+    w_Purchaser NUMBER(8) := NULL;
+    w_Rly_Cd VARCHAR2(50) := NULL;
+    w_Bpo_Cd VARCHAR2(50) := NULL;
+    my_exception EXCEPTION;
+    OUT_ERR_CD NUMBER := 0;
+    p_Result_Cursor SYS_REFCURSOR;
+BEGIN
+    -- Rest of your procedure logic here...
+
+    -- Retrieve PURCHASER_CD and RLY_CD
+    SELECT PURCHASER_CD, TRIM(RLY_CD) INTO w_Purchaser, w_Rly_Cd
+    FROM IMMS_RITES_PO_HDR
+    WHERE REGION_CODE = IN_REGION_CD
+        AND IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) IS NULL) THEN
+        OUT_ERR_CD := 2;
+        RAISE my_exception;
+    END IF;
+
+    FOR r1 IN po_detail LOOP
+        IF r1.CONSIGNEE_CD = 0 OR TRIM(r1.BPO_CD) = '0' THEN
+            OUT_ERR_CD := 3;
+            RAISE my_exception;
+            EXIT;
+        END IF;
+        w_Bpo_Cd := r1.BPO_CD;
+    END LOOP;
+
+    SELECT REGION_CODE || TO_CHAR(PO_DT, 'YYMM') INTO w_ctr
+    FROM IMMS_RITES_PO_HDR
+    WHERE REGION_CODE = IN_REGION_CD
+        AND IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0') INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD
+        AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    OUT_ERR_CD := 4;
+    w_Case_No := w_ctr || w_sno;
+
+    INSERT INTO T13_PO_MASTER(case_no,purchaser_cd,stock_nonstock,rly_nonrly,po_or_letter,po_no,l5no_po,po_dt,recv_dt,vend_cd,rly_cd,region_code,user_id,datetime,
+   remarks,inspecting_agency,poi_cd,po_source,pending_charges) 
+    SELECT
+        w_Case_No,
+        PURCHASER_CD,
+        STOCK_NONSTOCK,
+        RLY_NONRLY,
+        PO_OR_LETTER,
+        PO_NO,
+        L5NO_PO,
+        PO_DT,
+        RECV_DATE,
+        VEND_CD,
+        RLY_CD,
+        REGION_CODE,
+        IN_TEMP_USER_ID,
+        DATETIME,
+        REMARKS,
+        'R',
+        POI_CD,
+        'C',
+        0
+    FROM IMMS_RITES_PO_HDR
+    WHERE REGION_CODE = IN_REGION_CD
+        AND IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    OUT_ERR_CD := 5;
+    INSERT INTO T14_PO_BPO(CASE_NO, CONSIGNEE_CD, BPO_CD)
+    SELECT DISTINCT w_Case_No, CONSIGNEE_CD, w_Bpo_Cd
+    FROM IMMS_RITES_PO_DETAIL
+    WHERE IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    OUT_ERR_CD := 6;
+    INSERT INTO T15_PO_DETAIL(case_no,item_srno,item_desc,consignee_cd,qty,rate,uom_cd,basic_value,sales_tax_per,
+    sales_tax,excise_type,excise_per,excise,discount_type,discount_per,discount,other_charges,value,
+    delv_dt,ext_delv_dt,user_id,datetime,ot_charge_type,ot_charge_per,item_cd,
+    pl_no)
+    SELECT
+        w_Case_No,
+        ITEM_SRNO,
+        UPPER(SUBSTR(REPLACE(ITEM_DESC, CHR(39), ''), 0, 400)),
+        CONSIGNEE_CD,
+        QTY,
+        RATE,
+        UOM_CD,
+        BASIC_VALUE,
+        SALES_TAX_PER,
+        SALES_TAX,
+        EXCISE_TYPE,
+        EXCISE_PER,
+        EXCISE,
+        DISCOUNT_TYPE,
+        DISCOUNT_PER,
+        DISCOUNT,
+        OT_CHARGES,
+        VALUE,
+        DELV_DT,
+        NVL2(EXT_DELV_DT, EXT_DELV_DT, DELV_DT),
+        IN_TEMP_USER_ID,
+        DATETIME,
+        OT_CHARGE_TYPE,
+        OT_CHARGE_PER,
+        ITEM_CD,
+        PL_NO
+    FROM IMMS_RITES_PO_DETAIL
+    WHERE IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    OUT_ERR_CD := 7;
+
+    UPDATE IMMS_RITES_PO_HDR
+    SET RITES_CASE_NO = w_Case_No
+    WHERE IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+
+    COMMIT;
+
+    OPEN p_Result_Cursor FOR
+        SELECT OUT_ERR_CD AS ERR_CD, w_Case_No AS CASE_NO FROM DUAL;
+    p_Result := p_Result_Cursor;
+
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        ROLLBACK;
+    WHEN NO_DATA_FOUND THEN
+        ROLLBACK;
+    WHEN my_exception THEN
+        ROLLBACK;
+    WHEN OTHERS THEN
+        ROLLBACK;
+END;
+/
+
+=================

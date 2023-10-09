@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "MA ISSUED BY CRIS AGAINST CRIS PURCHASE ORDERS NOT REGISTERED IN RITES";
+    ViewData["Title"] = "Purchase order submitted by vendors awaiting allocation of case number";
 }
 
 <div>
@@ -7,14 +7,11 @@
         <div class="tast-list">
             <h2>Purchase order submitted by vendors awaiting allocation of case number List</h2>
         </div>
-        @*<div class="list-btn">
-        <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn"> Add New User</a>
-        </div>*@
     </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtList" class="table-responsive">
+                <table id="dtList" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -50,11 +47,10 @@
         });
 
         function InitializeDatatable() {
-
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+               // scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -81,37 +77,20 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "ImmsPokey" },
-                    { data: "PoNo" },
-                    {
-                        data: "PoDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: "RecvDate",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "ImmsRlyShortname" },
-                    { data: "VendorName" },
+                    { data: "IMMS_POKEY" },
+                    { data: "PO_NO" },
+                    { data: "PO_DT" },
+                    { data: "RECV_DT" },
+                    { data: "RLY_CD" },
+                    { data: "VEND_NAME" },
                     { data: "POI" },
-                    { data: "RegionCode" },
-                    { data: "Remarks" },
+                    { data: "REGION" },
+                    { data: "REMARKS" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var ImmsPokey = data.ImmsPokey;
-                            var ImmsRlyCd = data.ImmsRlyCd;
-                            var Slno = data.Slno;
+                            var ImmsPokey = data.IMMS_POKEY;
+                            var ImmsRlyCd = data.IMMS_RLY_CD;
                             var editUrl = '@Url.Action("Manage", "DEOCRISPurchesOrderMAWCaseNo")?ImmsPokey=' + ImmsPokey + "&ImmsRlyCd=" + ImmsRlyCd;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
@@ -120,7 +99,10 @@
                     },
                     //{ data: "MaStatus" },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 

@@ -67,6 +67,10 @@ namespace IBS.Helper
             PurchaseOrderForm = 20,
             [Description("/ReadWriteData/Files/INVOICE_SUPP_DOCS")]
             ICDocument = 21,
+            [Description("/ReadWriteData/CASE_NO")]
+            CaseNo = 22,
+            [Description("/ReadWriteData/LAB")]
+            Lab = 23,
         }
 
         public enum DocumentCategory : int
@@ -78,7 +82,7 @@ namespace IBS.Helper
             VendorMADoc = 5,
             Contract = 6,
             TechnicalReferences = 8,
-            MasterItemDoc = 9,
+            MasterItemDoc = 7,
             CallRegistrationDoc = 10,
             //AdministratorPurchaseOrder =13,
             OnlineComplaints = 11,
@@ -270,6 +274,15 @@ namespace IBS.Helper
             [Description("Otherwise")]
             N,
         }
+
+        public enum AdvanceBill
+        {
+            [Description("Advance bill to be raised")]
+            A,
+            [Description("No Advance bill")]
+            X,
+        }
+
 
         public enum ActiveInActive
         {
@@ -596,6 +609,27 @@ namespace IBS.Helper
             [Description("Format for Monthly Non Conformity Report")] NON_CONFORMITY,
             [Description("Tentative Inspection Fee Wise Pending Call")] HIGHVALUE,
             [Description("Call Remarking Detail")] REMARKING,
+            [Description("NCR Controlling Wise Report")] C,
+            [Description("NCR IE Wise Report")] I,
+            [Description("IE Wise Training Details")] IEWISET,
+            [Description("Ongoing Contracts")] ONGCON,
+            [Description("Contracts")] CONTRACT,
+            [Description("Cluster vendor & IE mapping")] CLUSVENDOR,
+            [Description("IE's Alternate IE mapping")] IEALTER,
+            [Description("Vendor's Performance Report")] VENDPER,
+            [Description("Vendor's FeedBack Report")] VENDFEED,
+            [Description("Period Wise Progress Of Checksheet")] CHECK,
+            [Description("Period Wise Technical Reference")] TECH,
+            [Description("Daily IE Work Plan Report")] U,
+            [Description("Daily IE Work Plan Exception Report")] E,
+            [Description("Download / View Photo Uploaded")] IEICPHOTO,
+            [Description("Consignee Complaints For The Period")] CCU,
+            [Description("Summary Of Consignee Complaints where JI Required")] COMPJI,
+            [Description("JI CONSIGNEE COMPLAINTS")] CORP,
+            [Description("Top N HIGH VALUE INSPECTIONS")] TOPNHIGH,
+            [Description("Top JI Report")] TOPJI,
+            [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
+            [Description("CONSIGNEE COMPLAINTS")] COCOMPJI,
         }
     }
 
@@ -728,7 +762,7 @@ namespace IBS.Helper
 
         public static JIRequiredReport JIRequiredReports { get; set; }
 
-        public static ConsigneeCompPeriodReport ConsigneeCompPeriod { get; set; }
+        public static ConsigneeCompReports ConsigneeCompPeriod { get; set; }
 
         public static DefectCodeReport DefectCodeReports { get; set; }
 
@@ -779,5 +813,12 @@ namespace IBS.Helper
         public static AllICStatusModel AllICStatus { get; set; }
         public static ReInspectionICsModel ReInspectionICs { get; set; }
         public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
+        public static ICUnbilledModel ICUnbilled { get; set; }
+        public static IE7thCopyListModel IE7thCopyList { get; set; }
+        public static ICIssuedNotReceivedReportModel ICIssuedNotReceivedReport{ get; set; }
+        public static ICStatusModel ICStatus { get; set; }
+        public static PendingJICasesReportModel PendingJICasesReport { get; set; }
+        public static IEDairyModel IEDairy { get;set; }
+        public static IEWorkPlanModel IEWorkPlan { get; set; }
     }
 }
