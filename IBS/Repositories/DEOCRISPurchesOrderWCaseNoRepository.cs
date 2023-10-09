@@ -104,32 +104,81 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public int DetailsUpdate(DEOCRISPurchesOrderMAModel model)
+        public bool DetailsUpdate(DEO_CRIS_PurchesOrderModel model)
         {
-            int Id = 0;
-            var GetValuePO = context.MmpPomaDtls.Find(model.Rly, model.Makey, model.Slno);
+            bool objRet = false;
+            var immsRitesPoHdr = (from m in context.ImmsRitesPoHdrs
+                                  where m.ImmsPokey == Convert.ToInt32(model.IMMS_POKEY) && m.ImmsRlyCd == model.IMMS_RLY_CD
+                                  select m).FirstOrDefault();
 
             #region save
-            if (GetValuePO == null)
+            if (immsRitesPoHdr != null)
             {
-                MmpPomaDtl obj = new MmpPomaDtl();
-                obj.MaStatus = model.MaStatus;
-                obj.ApprovedBy = model.ApprovedBy;
-                obj.ApprovedDatetime = DateTime.Now;
-                context.MmpPomaDtls.Add(obj);
+                immsRitesPoHdr.RecvDate = model.RecvDt;
+                immsRitesPoHdr.RegionCode = model.REGION_CODE;
+                immsRitesPoHdr.PurchaserCd = Convert.ToInt32(model.PURCHASER_CD);
+                immsRitesPoHdr.RlyCd = model.RLY_CD;
+                immsRitesPoHdr.Remarks = model.REMARKS;
+                immsRitesPoHdr.UserId = model.UserId;
+                immsRitesPoHdr.PoId =Convert.ToDecimal(model.POI_CD);
+                immsRitesPoHdr.VendCd = Convert.ToInt32(model.VEND_CD);
+                immsRitesPoHdr.BpoCd = model.BPO_CD;
+                immsRitesPoHdr.Datetime = DateTime.Now;
                 context.SaveChanges();
-                Id = Convert.ToInt32(obj.Makey);
-            }
-            else
-            {
-                GetValuePO.MaStatus = model.MaStatus;
-                GetValuePO.ApprovedBy = model.ApprovedBy;
-                GetValuePO.ApprovedDatetime = DateTime.Now;
-                context.SaveChanges();
-                Id = Convert.ToInt32(GetValuePO.Makey);
+                objRet = true;
             }
             #endregion
-            return Id;
+            return objRet;
+        }
+
+        public bool UpdateREMARKS(string REMARKS, int IMMS_POKEY, string IMMS_RLY_CD)
+        {
+            bool retVal = false;
+            var immsRitesPoHdr = (from m in context.ImmsRitesPoHdrs
+                              where m.ImmsPokey == IMMS_POKEY && m.ImmsRlyCd == IMMS_RLY_CD
+                              select m).FirstOrDefault();
+
+            #region save
+            if (immsRitesPoHdr != null)
+            {
+                immsRitesPoHdr.Remarks = REMARKS;
+                context.SaveChanges();
+                retVal =true;
+            }
+            #endregion
+            return retVal;
+        }
+
+        public string getVendorEmail(string CASE_NO)
+        {
+            string vendorEmail = "";
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("IN_CASE_NO", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_INFO", par, 1);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                vendorEmail = ds.Tables[0].Rows[0]["VEND_EMAIL"].ToString();
+            }
+            return vendorEmail;
+        }
+
+        public string[] GenerateRealCaseNoCRIS(string REGION_CD, string IMMS_POKEY,string IMMS_RLY_CD, string USER_ID)
+        {
+            string[] result = new string[2];
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, REGION_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("IN_TEMP_POKEY", OracleDbType.Char, IMMS_POKEY, ParameterDirection.Input);
+            par[2] = new OracleParameter("IN_TEMP_RLY_CD", OracleDbType.Char, IMMS_RLY_CD, ParameterDirection.Input);
+            par[3] = new OracleParameter("IN_TEMP_USER_ID", OracleDbType.Char, USER_ID, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GENERATE_REAL_CASE_NO_CRIS_new", par, 1);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                result[0] = ds.Tables[0].Rows[0]["ERR_CD"].ToString();
+                result[1] = ds.Tables[0].Rows[0]["CASE_NO"].ToString();
+            }
+            return result;
         }
     }
 }
