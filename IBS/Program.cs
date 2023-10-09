@@ -131,6 +131,8 @@ builder.Services.AddScoped<IBillingOperatingTargetRepository, BillingOperatingRe
 builder.Services.AddScoped<IBillingAdjustmentRepository, BillingAdjustmentRepository>();
 builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRepository>();
 builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<IInterUnitRecieptRepository, InterUnitRecieptRepository>();
+
 builder.Services.AddScoped<IVendorDocumentRepository, VendorDocumentRepository>();
 builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
 builder.Services.AddScoped<ICentralQOIRepository, CentralQOIRepository>();

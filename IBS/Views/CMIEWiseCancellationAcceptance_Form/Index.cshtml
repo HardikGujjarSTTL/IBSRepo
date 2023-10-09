@@ -29,8 +29,8 @@
                         @Html.DropDownListFor(model => model.ControllingOfficers, Common.GetControllingOfficer(), new { id = "controllingOfficers" })
                         </div>
                         </div>
-            <h3 class="heading3 mb-4">Inspection Engineer</h3>
-            <div class="row align-items-center my-0">
+                     <h3 class="heading3 mb-4">Inspection Engineer</h3>
+                     <div class="row align-items-center my-0">
                         <div class="col-md-4">
                        
                        <ul class="radioListForm">
@@ -43,9 +43,9 @@
                        </ul>
                        </div>
                        </div>
-            <div class="row">
-                <div class="col-md-4">
-                        <select id="particularIE"></select>
+                     <div class="row">
+                        <div class="col-md-4">
+                                <select id="particularIE"></select>
                         </div>
 
                   
@@ -81,6 +81,7 @@
                 </div>
 
                 </div>
+        <iframe id="pdfFrame" style="width: 100%; height: 100vh; border: none;"></iframe>
        @*     </form>*@
        
     </div>
@@ -186,7 +187,11 @@
                         data: null,
                         render: function (data, type, row) {
                             // Add data attributes to the link for the required values
-                            return '<a href="' + row.Your_Link_Column3 + '">View call cancel doc</a>';
+                            var pdfFileName = 'N19101188-20200926-33.pdf';
+                            var pdfUrl = '/ReadWriteData/CALL_CANCELLATION_DOCUMENTS/' + pdfFileName;
+
+                            // Add data attributes to the link for the required values
+                            return '<a href="javascript:void(0);" onclick="displayPdf(\'' + pdfUrl + '\')">View call cancel doc</a>';
                         },
                         orderable: false
                     },
@@ -319,6 +324,14 @@
 
         }
 
+        function displayPdf(pdfUrl) {
+            // Get the iframe element
+            var pdfFrame = document.getElementById('pdfFrame');
+
+            // Set the src attribute to load the PDF
+            pdfFrame.src = pdfUrl;
+        }
+       
 
     </script>
  }

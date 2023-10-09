@@ -1,132 +1,11 @@
 ﻿@model IBS.Models.LabPaymentListModel
 
 @{
-    ViewData["Title"] = "LAB SAMPLE PAYMENT RECIEPT APPROVE FORM";
-    string clsView = "";
-    //if (Model.CaseNo != "0")
-    //{
-    //    clsView = "Permission_View";
-    //}
+  
 }
 
 
-<style>
-    tr:nth-child(even) {
-    background-color: #f0f8ff; /* Light Blue */
-}
 
-/* Style for table cells */
-td {
-    height: 50px;
-    padding: 10px;
-    border: 1px solid #b0c4de;
-    vertical-align: top;
-}
-    table {
-  width: 100%;
-  border-collapse: collapse;
-  border-top: 2px solid #b0c4de; /* Add top border */
-  background-color: #f0f8ff;
-  margin-bottom: 20px; /* Add margin at the bottom for spacing */
-}
-
-/* Style for table cells */
-td {
-  height: 50px; /* Adjust the height of table cells */
-  padding: 5px;
-  vertical-align: top;
-}
-
-/* Style for labels */
-label {
-  display: block; /* Make labels block-level to occupy the whole cell width */
-  font-weight: bold;
-}
-
-/* Style for input fields */
-input[type="text"],
-input[type="date"] {
-  width: 100%;
-  height: 42px;
-  border: 1px solid #cccccc;
-  border-radius: 6px;
-  padding: 5px;
-  box-sizing: border-box; /* Ensure the padding is included in the width */
-}
-
-/* Style for error message */
-.text-danger {
-  color: red;
-  margin-left: 6%;
-}
-
-/* Style for left-aligned button */
-.left-button {
-  float: left;
-  margin-right: 10px;
-}
-
-/* Style for right-aligned button */
-.right-button {
-  float: right;
-  margin-left: 10px;
-}
-
-/* Clear floating elements */
-.clearfix::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-    .table-responsive {
-    overflow-x: auto;
-    height:190px;
-}
-    .custom-textarea {
-    width: 400px;
-    height:auto; 
-}
-.table-section {
-        width: 100%;
-        /*height: 400px;*/ /* Set the desired height */
-        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
-    }
-
-    /* Set table width to 100% and disable horizontal scrollbar */
-    #dtlabregdtl {
-        width: 100%;
-        table-layout: fixed;
-    }
-
-    /* Style table header cells */
-    #dtlabregdtl th {
-        background-color: #f2f2f2;
-        border: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    /* Style table body cells */
-    #dtlabregdtl td {
-        border: 1px solid #dddddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    /* Add custom scrollbar style for the table section */
-    .table-section::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .table-section::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 4px;
-    }
-
-    .table-section::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
-</style>
 <h2>@ViewData["Title"]</h2>
 <div class="list-inner">
     <div class="tast-list">
@@ -136,113 +15,91 @@ input[type="date"] {
         <a asp-action="LabPaymentList" asp-controller="LabPaymentList" class="formBtn viewall-btn">View List</a>
     </div>
 </div>
-<section class="@clsView">
-@*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
-    <table class="borderGrid">
-        <tr>
-           <td>
-            <label class="control-label">Case No.</label>
-            </td>
-           <td>
-                <label  class="control-label" id="lblcno"></label>
-            </td>
-        <td>
-            <label class="control-label">
-                Call Sno.
-            </label>
-        </td>
-        <td>
-            <label class="control-label" id="lblCallSno"></label>
-        </td>
-        </tr>
-    <tr>
-        <td>
-            <label class="control-label">
-                Call Recv Dt.
-            </label>
-        </td>
-        <td>
-            <label class="control-label" id="lblCallDT"></label>
-        </td>
-        <td>
-            <label class="control-label">Gross Testing Charges Submitted by LAB Official.</label>
-        </td>
-        <td>          
-            <label class="control-label" id="lblgrosstc"></label>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label class="control-label">
-                Net Testing Charges Paid by Vendor.*
-            </label>
-        </td>
-        <td>
-            <label class="control-label" id="lblnettcv"></label>
-        </td>
-        <td>
-            <label class="control-label">TDS Deducted by Vendor. (If Any)*</label>
-        </td>
-        <td>
-            <label class="control-label" id="lbltds"></label>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label class="control-label">
-                Gross Testing Charges Submitted by Vendor*
-            </label>
-        </td>
-        <td>
-            <label class="control-label" id="lblgrosstcv"></label>
-        </td>
-        <td>
-            <label class="control-label">UTR No.*</label>
-        </td>
-        <td>
-            <label class="control-label" id="lblutrno"></label>
-        </td>
-    </tr>
 
-    <tr>
-        <td>
-            <label class="control-label">
-                UTR Date*
-            </label>
-        </td>
-        <td>
-            <label class="control-label" id="lblutrdt"></label>
-        </td>
-        <td>
-            <label class="control-label">LAB Sample Payment Reciept</label>
-        </td>
-        <td>
-            <label class="control-label" id="lbllabspr"></label>
-        </td>
-    </tr>
-       
-        <tr>
-        <td colspan="5">
-           
-            <label>Status</label>
-            
-            @Html.DropDownListFor(model => model.DocStatusFin, new SelectList(IBS.Models.Common.PaymentStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
-            <span class="fa fa-caret-down" style="position: absolute; right: 35px; top: 952px; transform: translateY(-50%); pointer-events: none;"></span>
-        </td>
-        </tr>
-    <tr id="remark" style="display:none;">
+<section>
+    <div class="task-listinput">
+      @*  <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">*@
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div  class="col-md-4 mb-4">
+                        <label for="Reference">CAse No.</label>
+                    <input type="text" id="lblcno" class="input" />
 
-        
-        <td>
-            <label>Remarks</label>
-            <textarea  class="form-control custom-textarea" id="txtremark"></textarea>
-        </td>
+                    </div>
 
-    </tr>
-    
-    </table>
-    <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
-    <br />
+                    <div class="col-md-4 mb-4">
+                    <label for="Reference">Call Sno.</label>
+                    <input type="text" id="lblCallSno" class="input" />
+
+                    </div>
+
+
+
+                    <div class="col-md-4 mb-4">
+                    <label for="Reference">Call Recv Dt.</label>
+                    <input type="text" id="lblCallDT" class="input datepicker">
+
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                    <label for="Reference">Gross Testing Charges Submitted by LAB Official.<span class="text-danger"></label>
+                    <input type="text" id="lblgrosstcv" class="input" />
+                        @* <span asp-validation-for="AMOUNT" class="text-danger"></span>*@
+                    </div>
+
+
+
+                    <div class="col-md-4 mb-4">
+                    <label for="Reference">Net Testing Charges Paid by Vendor.*</label>
+                    <input type="text" id="lblnettcv" class="input" />
+                        @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">TDS Deducted by Vendor. (If Any)*</label>
+                        <input type="text" id="lbltds" class="input" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                    <label for="Reference">Gross Testing Charges Submitted by Vendor*</label>
+                    <input type="text" id="lblgrosstcv" class="input" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                         <label for="Reference">UTR No.*</label>
+                         <input type="text" id="lblutrno" class="input" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">UTR Date.*</label>
+                          <input type="text" id="lblutrdt" class="input" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="Reference">LAB Sample Payment Reciept</label>
+                    <input type="text" id="lbllabspr" class="input" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                         <label for="Reference">Status</label>
+                          @Html.DropDownListFor(model => model.DocStatusFin, new SelectList(IBS.Models.Common.PaymentStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
+                    </div>
+
+
+                    <div class="col-md-4 mb-3">
+                           <label for="Reference">Remarks</label>
+                            <textarea class="form-control custom-textarea" id="txtremark"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="savenext-btn">
+                <button type="submit" class="save-btn active Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
+                    @*<button type="submit" onclick="find();">Search2</button>*@
+                </div>
+            </div>
+      @*  </form>*@
+    </div>
 </section>
 @*</form>*@
 @section scripts{
@@ -283,16 +140,16 @@ input[type="date"] {
 
                 success: function (success) {
 
-                    $("#lblcno").text(CaseNo).css("color", "red");
-                    $("#lblCallDT").text(CallRecvDt).css("color", "red");
-                    $("#lblCallSno").text(CallSno).css("color", "red");
-                    $("#lblgrosstc").text(success.GrossTestingChargesLab).css("color", "red");
-                    $("#lblnettcv").text(success.NetTestingChargesVend).css("color", "red");
-                    $("#lbltds").text(success.TDS).css("color", "red");
-                    $("#lblgrosstcv").text(success.GrossVendor).css("color", "red");
-                    $("#lblutrno").text(success.UTRNO).css("color", "red");
-                    $("#lblutrdt").text(success.UTRDT).css("color", "red");
-                    $("#lbllabspr").text(success.PaymentRecUpload).css("color", "red");
+                    $("#lblcno").val(CaseNo);
+                    $("#lblCallDT").val(CallRecvDt);
+                    $("#lblCallSno").val(CallSno);
+                    $("#lblgrosstc").val(success.GrossTestingChargesLab);
+                    $("#lblnettcv").val(success.NetTestingChargesVend);
+                    $("#lbltds").val(success.TDS);
+                    $("#lblgrosstcv").val(success.GrossVendor);
+                    $("#lblutrno").val(success.UTRNO);
+                    $("#lblutrdt").val(success.UTRDT);
+                    $("#lbllabspr").val(success.PaymentRecUpload);
                     //$("#ddlstatus").val(success.DocStatusFin);
 
                     //$("#txtremark").val(success.Remarks);
