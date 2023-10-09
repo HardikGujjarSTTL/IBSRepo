@@ -1,14 +1,14 @@
 ﻿@model IBS.Models.Reports.VendorPerformanceReportModel
 
 <div>
-    <h3 class="heading3">@ViewBag.Region</h3>
-    @if (@ViewBag.frmdt != null)
+    <h3 class="center">@Model.Region</h3>
+    @if (@Model.FromDate != null)
     {
-        <h3 class="heading3">Vendor Performance For  :  @ViewBag.vendortext <span class="orangeText"> During  @ViewBag.frmdt To @ViewBag.todt </span> (Based on Call Date)</h3>
+        <h3 class="heading3">Vendor Performance For  :  @Model.vendor <span class="orangeText"> During  @Model.FromDate To @Model.ToDate </span> (Based on Call Date)</h3>
     }
     else
     {
-        <h3 class="heading3">Vendor Performance For  : @ViewBag.vendortext <span class="orangeText"> (@ViewBag.monthtxtshow , @ViewBag.yearshow) </span> (Based on Call Date)</h3>
+        <h3 class="heading3">Vendor Performance For  : @Model.vendor <span class="orangeText"> (@Model.monthtxt , @Model.year) </span> (Based on Call Date)</h3>
     }
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
