@@ -33,6 +33,9 @@
                             Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
                         </label>
                     </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference" id="lblRealCaseNO1"></label>
+                    </div>
                     <div class="col-md-4 mb-3">
                         <input type="text" class="input" id="txtCaseNo">
                     </div>
@@ -234,8 +237,8 @@
                 </div>
                 <div class="savenext-btn">
                     <a asp-controller="DEOVendorPurchesOrder" asp-action="Index" class="reset-btn">Cancel</a>
-                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                    <button type="button" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
+                    <button type="button" id="btnSave" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    <button type="button" id="btnAcceptPO" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
                 </div>
             </div>
         </form>
@@ -299,7 +302,10 @@
                 if (response != null) {
                     if (response.status) {
                         ShowHideMsgNew(response.status, response.responseText);
-                        window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
+                        $("#lblRealCaseNO1").text(" Case No. --> " + response.OUT_CASE_NO);
+                        $("#btnSave").attr("disabled", "disabled");
+                        $("#btnAcceptPO").attr("disabled", "disabled");
+                        //window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
                     }
                     else {
                         ShowHideMsgNew(response.status, response.responseText);

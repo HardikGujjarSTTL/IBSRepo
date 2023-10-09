@@ -92,5 +92,25 @@ namespace IBS.Helper
                 httpContextAccessor.HttpContext.Session.SetString("sessionInspectionEClusterModel", JsonSerializer.Serialize(value));
             }
         }
+
+        public List<InterUnitTransferRegionModel> lstInterUnitTransferRegionModel
+        {
+            get
+            {
+                string UnitTransfer = httpContextAccessor.HttpContext.Session.GetString("sessionInterUnitTransferRegionModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(UnitTransfer))
+                {
+                    List<InterUnitTransferRegionModel> UnitTransferModels = JsonSerializer.Deserialize<List<InterUnitTransferRegionModel>>(UnitTransfer);
+
+                    if (UnitTransferModels != null)
+                        return UnitTransferModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionInterUnitTransferRegionModel", JsonSerializer.Serialize(value));
+            }
+        }
     }
 }
