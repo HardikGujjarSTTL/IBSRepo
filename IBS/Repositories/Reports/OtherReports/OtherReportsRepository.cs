@@ -9,6 +9,7 @@ using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Security.Cryptography;
 
 namespace IBS.Repositories.Reports.OtherReports
 {
@@ -756,9 +757,9 @@ namespace IBS.Repositories.Reports.OtherReports
             List<DailyIEWorklanExcepReport> lstDailyIEWorklanExcepReport = new();
 
             DataSet ds = null;
-            DataSet ds1 = null;
             DataSet ds2 = null;
             DataTable dt = new DataTable();
+            DataTable dt1 = new DataTable();
 
 
             string formattedFromDate = "";
@@ -776,7 +777,7 @@ namespace IBS.Repositories.Reports.OtherReports
             if (ReportType == "U")
             {
 
-                OracleParameter[] par = new OracleParameter[10];
+                OracleParameter[] par = new OracleParameter[11];
                 par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
                 par[1] = new OracleParameter("rdbIEWise", OracleDbType.Varchar2, IEWise, ParameterDirection.Input);
                 par[2] = new OracleParameter("rdbCOWise", OracleDbType.Varchar2, CMWise, ParameterDirection.Input);
@@ -787,23 +788,9 @@ namespace IBS.Repositories.Reports.OtherReports
                 par[7] = new OracleParameter("rdopartIE", OracleDbType.Varchar2, ParticularIEs, ParameterDirection.Input);
                 par[8] = new OracleParameter("rdopartCM", OracleDbType.Varchar2, ParticularCMs, ParameterDirection.Input);
                 par[9] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[10] = new OracleParameter("p_result1", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                ds = DataAccessDB.GetDataSet("GetDailyIEWorkPlanReport", par, 1);
-
-                OracleParameter[] par1 = new OracleParameter[10];
-                par1[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-                par1[1] = new OracleParameter("rdbIEWise", OracleDbType.Varchar2, IEWise, ParameterDirection.Input);
-                par1[2] = new OracleParameter("rdbCOWise", OracleDbType.Varchar2, CMWise, ParameterDirection.Input);
-                par1[3] = new OracleParameter("FrmDt", OracleDbType.Varchar2, formattedFromDate, ParameterDirection.Input);
-                par1[4] = new OracleParameter("ToDt", OracleDbType.Varchar2, formattedToDate, ParameterDirection.Input);
-                par1[5] = new OracleParameter("lstIE", OracleDbType.Varchar2, lstIE, ParameterDirection.Input);
-                par1[6] = new OracleParameter("lstCO", OracleDbType.Varchar2, lstCM, ParameterDirection.Input);
-                par1[7] = new OracleParameter("rdopartIE", OracleDbType.Varchar2, ParticularIEs, ParameterDirection.Input);
-                par1[8] = new OracleParameter("rdopartCM", OracleDbType.Varchar2, ParticularCMs, ParameterDirection.Input);
-                par1[9] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
-
-                ds1 = DataAccessDB.GetDataSet("GetDailyIEWorkPlanReporttbl2", par1, 1);
-
+                ds = DataAccessDB.GetDataSet("GetDailyIEWorkPlanReport", par, 2);
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -827,12 +814,9 @@ namespace IBS.Repositories.Reports.OtherReports
                         CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
                     }).ToList();
                     model.lstDailyIECMWorkPlanReporttbl1 = listcong;
-                }
 
-                if (ds1 != null && ds1.Tables.Count > 0)
-                {
-                    dt = ds1.Tables[0];
-                    List<DailyIECMWorkPlanReporttbl2> listcong = dt.AsEnumerable().Select(row => new DailyIECMWorkPlanReporttbl2
+                    dt1 = ds.Tables[1];
+                    List<DailyIECMWorkPlanReporttbl2> listcong1 = dt1.AsEnumerable().Select(row => new DailyIECMWorkPlanReporttbl2
                     {
                         IE_NAME = Convert.ToString(row["IE_NAME"]),
                         CO_NAME = Convert.ToString(row["CO_NAME"]),
@@ -840,7 +824,7 @@ namespace IBS.Repositories.Reports.OtherReports
                         LOGIN_TIME = Convert.ToString(row["LOGIN_TIME"]),
                         NI_WORK_PLAN_CD = Convert.ToString(row["NI_WORK_PLAN_CD"]),
                     }).ToList();
-                    model.lstDailyIECMWorkPlanReporttbl2 = listcong;
+                    model.lstDailyIECMWorkPlanReporttbl2 = listcong1;
                 }
 
                 var dates = Enumerable.Range(0, (int)(Convert.ToDateTime(ToDate) - Convert.ToDateTime(FromDate)).TotalDays + 1)

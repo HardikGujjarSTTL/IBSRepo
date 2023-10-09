@@ -602,13 +602,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <input type="radio" id="IEWiseUE" name="CMWises" value="IEWise">
+                            <input type="radio" id="IEWiseUE" name="CMWises" value="IEWise" checked="checked">
                             <label for="IEWiseUE">IE Wise</label>
 
                             <div id="AllIEUE">
                                 <ul class="radioListForm m-0">
                                     <li>
-                                        <input type="radio" id="AllIEsUE" name="IEWise" value="AllIE">
+                                        <input type="radio" id="AllIEsUE" name="IEWise" value="AllIE" checked="checked">
                                         <label for="AllIEsUE">All IE</label>
                                     </li>
                                     <li>
@@ -1018,13 +1018,15 @@
         });
 
         $('#IEWiseUE').change(function () {
-            $("#AllIEUEUE").show();
+            debugger
+            $("#AllIEUE").show();
             $("#AllCMWiseUE").hide();
             $("#ddlsupercmUE").hide();
             $("#ddlienameUE").hide();
         });
 
         $('#CMWiseUE').change(function () {
+            $("#AllIEsUE").prop("checked", false);
             $("#AllCMWiseUE").show();
             $("#AllIEUE").hide();
             $("#ddlsupercmUE").hide();
