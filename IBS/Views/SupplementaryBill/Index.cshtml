@@ -42,7 +42,9 @@
                 </div>
             </div>
         </div>
+
         <section class="table-section" id="divSection" style="display:none;">
+            <h3 class="heading3">Bill Details</h3>
             <div class="task-listinput">
                 <div class="dash-table">
                     <table id="dtList" class="table-responsive nowrap">
@@ -137,7 +139,7 @@
                     { data: "CnoteBillNo" },
                     { data: "CnoteAmount" },
                     { data: "Billadtype" },
-                    
+
                 ],
                 "order": [[0, "desc"]],
                 "initComplete": function (settings, json) {
@@ -148,7 +150,7 @@
 
         function btnClear() {
             $("#divSection").hide();
-            
+
             $("#CaseNo").val("");
             $("#FromDt").val("");
             $("#ToDt").val("");
