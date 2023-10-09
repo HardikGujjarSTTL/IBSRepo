@@ -769,8 +769,8 @@ namespace IBS.Repositories.Reports.OtherReports
                 DateTime parsedFromDate = DateTime.ParseExact(FromDate, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                 DateTime parsedToDate = DateTime.ParseExact(ToDate, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
-                formattedFromDate = parsedFromDate.ToString("yyyy/MM/dd");
-                formattedToDate = parsedToDate.ToString("yyyy/MM/dd");
+                formattedFromDate = parsedFromDate.ToString("yyyyMMdd");
+                formattedToDate = parsedToDate.ToString("yyyyMMdd");
             }
 
             if (ReportType == "U")
