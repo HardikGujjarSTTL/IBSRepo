@@ -38,6 +38,11 @@ namespace IBS.Models
         public string HandlingCharge { get; set; }
         public string ExtraCharge { get; set; }
         public string RTotal { get; set; }
+        public string LABRATEID { get; set; }
+        public string DISCIPLINE_ID { get; set; }
+        public string TEST_NAME { get; set; }
+        public string PRICE { get; set; }
+        public string QTY { get; set; }
 
     }
 }

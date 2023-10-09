@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T29JvDetail
+public partial class T29JvDetailsHistory
 {
     public string? VchrNo { get; set; }
 
@@ -17,8 +17,6 @@ public partial class T29JvDetail
 
     public DateTime? IuAdvDt { get; set; }
 
-    public int Id { get; set; }
-
     public int? Createdby { get; set; }
 
     public DateTimeOffset? Createddate { get; set; }
@@ -29,5 +27,11 @@ public partial class T29JvDetail
 
     public byte? Isdeleted { get; set; }
 
-    public virtual T27Jv? VchrNoNavigation { get; set; }
+    public string? Actiontype { get; set; }
+
+    public DateTimeOffset? Actiondate { get; set; }
+
+    public int? Actionuserid { get; set; }
+
+    public int Id { get; set; }
 }

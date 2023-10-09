@@ -9,7 +9,7 @@
     // }
 }
 <style>
-    
+
     #popup {
         position: fixed;
         top: 0;
@@ -25,13 +25,14 @@
     #popup2 {
         position: fixed;
         top: 0;
-        left: 10%;
+        left: 0%;
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 999;
     }
 
     .popup-content {
@@ -39,7 +40,7 @@
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        width:70%;
+        width: 70%;
     }
 
     .close-button {
@@ -50,6 +51,23 @@
         cursor: pointer;
         font-size: xx-large;
         margin-top: -2%;
+    }
+
+    .close-button1 {
+        position: absolute;
+        right: 6%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: xx-large;
+        margin-top: -2%;
+    }
+
+    .scroller {
+        height: 550px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align: justify;
     }
 </style>
 <div class="list-inner">
@@ -63,108 +81,107 @@
 <section class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="BarcodeGeneration" asp-action="Save" data-ajax-method="post" data-ajax-complete="completed" id="frmbarcode">
-        <div class="accordion-body">
-            <div class="row my-0">
-                <input type="hidden" class="input" asp-for="CALL_RECV_DT">
-                <input type="hidden" class="input" asp-for="CALL_SNO">
-                <input type="hidden" class="input" asp-for="ITEM_SRNO_PO">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <input type="hidden" class="input" asp-for="CALL_RECV_DT">
+                    <input type="hidden" class="input" asp-for="CALL_SNO">
+                    <input type="hidden" class="input" asp-for="ITEM_SRNO_PO">
                     <input type="hidden" class="input" asp-for="VEND_CD">
                     <input type="hidden" class="input" asp-for="IE_CD">
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Case No</label>
-                    <input type="text" class="input" asp-for="CASE_NO">
-                    
-                </div>
-                
-                <div class="col-md-3 mb-3 savenext-btn" style="margin-top:auto;">
-                    <button type="button" class="save-btn active" onclick="Show();">Search</button>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Total Rate</label>
-                    <input type="text" class="input" asp-for="TotalRate">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Case No</label>
+                        <input type="text" class="input" asp-for="CASE_NO">
+
+                    </div>
+
+                    <div class="col-md-3 mb-3 savenext-btn" style="margin-top:auto;">
+                        <button type="button" class="save-btn active" onclick="Show();">Search</button>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Total Rate</label>
+                        <input type="text" class="input" asp-for="TotalRate">
                         <span class="text-danger field-validation-error" id="spnError1"></span>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">GST Amount</label>
-                    <input type="text" class="input" asp-for="GSTAmount">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">GST Amount</label>
+                        <input type="text" class="input" asp-for="GSTAmount">
                         <span class="text-danger field-validation-error" id="spnError2"></span>
+                    </div>
+                    <div class="col-md-2 mb-3 savenext-btn" style="margin-top:auto;">
+                        <button type="button" class="save-btn active" onclick="LabCalculation()">@Model.Region</button>
+                    </div>
                 </div>
-                <div class="col-md-2 mb-3 savenext-btn" style="margin-top:auto;">
-                    <button type="button" class="save-btn active" onclick="LabCalculation()">@Model.Region</button>
+
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Customer Name</label>
+                        <textarea class="input" asp-for="CUSTOMER_NAME" readonly="readonly"> </textarea>
+                        @* <input type="text" class="input" asp-for="CUSTOMER_NAME" readonly="readonly"> *@
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Sealing Type</label>
+                        <input type="text" class="input" asp-for="SEALING_TYPE">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Customer GSTN</label>
+                        <input type="text" class="input" asp-for="CUSTOMER_GSTN">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Description</label>
+                        <textarea class="input" asp-for="DESCRIPTION"> </textarea>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Targeted Date</label>
+                        <input type="text" class="input datepicker" asp-for="TARGETED_DATE">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Current Date</label>
+                        <input type="text" class="input" asp-for="CURRENT_DATE" readonly="readonly">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Inspector/Customer</label>
+                        <input type="text" class="input" asp-for="INSPECTOR_CUSTOMER" readonly="readonly">
+                    </div>
+                </div>
+                <div class="savenext-btn" style="margin-left:47%;">
+                    <button type="button" class="save-btn active Permission_Save" onclick="SaveBarcode();">Save</button>
                 </div>
             </div>
-           
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Customer Name</label>
-                    <textarea class="input" asp-for="CUSTOMER_NAME" readonly="readonly"> </textarea>
-                    @* <input type="text" class="input" asp-for="CUSTOMER_NAME" readonly="readonly"> *@
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Sealing Type</label>
-                    <input type="text" class="input" asp-for="SEALING_TYPE">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Customer GSTN</label>
-                    <input type="text" class="input" asp-for="CUSTOMER_GSTN">
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Description</label>
-                    <textarea class="input" asp-for="DESCRIPTION"> </textarea>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Targeted Date</label>
-                    <input type="text" class="input datepicker" asp-for="TARGETED_DATE">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Current Date</label>
-                    <input type="text" class="input" asp-for="CURRENT_DATE" readonly="readonly">
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Inspector/Customer</label>
-                    <input type="text" class="input" asp-for="INSPECTOR_CUSTOMER" readonly="readonly">
-                </div>
-            </div>
-            <div class="savenext-btn" style="margin-left:47%;">
-                <button type="button" class="save-btn active Permission_Save" onclick="SaveBarcode();">Save</button>
-            </div>
-        </div>
         </form>
     </div>
 </section>
 <div id="popup" style="display: none;">
 
-        <section class="table-section" style="width:75%;height:78%;margin-top:auto;">
+    <section class="table-section" style="width:75%;height:78%;margin-top:auto;">
         <span class="close-button" id="close" onclick="ClosePopup();">&times;</span>
-            <div class="task-listinput">
-                <div class="dash-table">
-                    <table id="dtshow" class="table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Vendor Code</th>
-                                <th>Case No</th>
-                                <th>Call Recv Date</th>
-                                <th>Call Sno</th>
-                                <th>Item SRNO PO</th>
-                                <th>Item Desc PO</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtshow" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Vendor Code</th>
+                            <th>Case No</th>
+                            <th>Call Recv Date</th>
+                            <th>Call Sno</th>
+                            <th>Item SRNO PO</th>
+                            <th>Item Desc PO</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-        </section>
-    
+        </div>
+    </section>
+
 </div>
 <div id="popup2" style="display: none;">
-    <div class="col-lg-12" id="divGrid" style="width:74%;">
-       
+    <div class="col-lg-12" id="divGrid" style="width:90%;">
     </div>
 </div>
 
@@ -178,38 +195,20 @@
         $(function () {
             
         });
-        function Change() {
-            
-            if ($("#ddlTGST").val() == "IN-STATE") {
-                $("#SGST").val("9");
-                $("#CGST").val("9");
-                $("#IGST").val("18");
-            }
-            else if ($("#ddlTGST").val() == "OUT-STATE") {
-                $("#SGST").val("9");
-                $("#CGST").val("9");
-                $("#IGST").val("18");
-            }
-            else
-            {
-                $("#SGST").val("");
-                $("#CGST").val("");
-                $("#IGST").val("");
-            }
-        }
+
         function InitializeDatatableShow() {
             var CaseNo = $("#CASE_NO").val();
             $("#dtshow").DataTable({
-                stateSave: false,// Design Assets
+                stateSave: false,
                 autoWidth: true,
                 scrollX: true,
                 scrollCollapse: true,
-                processing: true, // ServerSide Setups
+                processing: true,
                 serverSide: true,
                 destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                ajax: {// Ajax Filter
+                paging: true,
+                searching: true,
+                ajax: {
                     url: "@Url.Action("CaseNoSearch")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
@@ -223,10 +222,10 @@
                     }
                 },
 
-                columns: [// Columns Setups
+                columns: [
 
                     { data: "CUSTOMER_NAME" },
-                    // { data: "CASE_NO" },
+
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -267,11 +266,7 @@
             $("#CUSTOMER_GSTN").val(escapedRow.CUSTOMER_GSTN);
             $("#popup").fadeOut();
         }
-        // $("#popup").click(function (event) {
-        //     if (!$(event.target).closest(".popup-content").length) {
-        //         $("#popup").fadeOut();
-        //     }
-        // });
+
         function ClosePopup() {
             $("#popup").fadeOut();
             $("#popup2").fadeOut();
@@ -280,7 +275,7 @@
             InitializeDatatableShow();
             $("#popup").fadeIn();
         }
-        function SaveBarcode(){
+        function SaveBarcode() {
             $("#spnError1").html("");
             $("#spnError2").html("");
             var IsValid = true;
@@ -299,12 +294,235 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
             window.location.href = '@Url.Action("Index", "BarcodeGeneration")';
         };
-        function LabCalculation(){
+        function LabCalculation() {
             $("#popup2").fadeIn();
+            $("#popup2").show();
             $("#divGrid").load('/BarcodeGeneration/LabCalculation');
         }
+        //Lab Calculation page data
+        function Change() {
+
+            if ($("#ddlTGST").val() == "IN-STATE") {
+                $("#SGST").val("9");
+                $("#CGST").val("9");
+                $("#IGST").val("18");
+                var originalAmount = $("#Total").val();
+                var gstRate = $("#IGST").val();
+                if (originalAmount != null && originalAmount != "") {
+                    var originalAmount1 = parseFloat(originalAmount);
+                    var gstRate1 = parseFloat(gstRate);
+
+                    var gstAmount = (originalAmount1 * gstRate1) / 100;
+
+                    var roundedGST = gstAmount.toFixed(2);
+                    $("#Tax").val(roundedGST);
+                    $("#GTotal").val(originalAmount1 + parseFloat(roundedGST));
+                }
+            }
+            else if ($("#ddlTGST").val() == "OUT-STATE") {
+                $("#SGST").val("9");
+                $("#CGST").val("9");
+                $("#IGST").val("18");
+                debugger;
+                var originalAmount = $("#Total").val();
+                var gstRate = $("#IGST").val();
+                if (originalAmount != null && originalAmount != "") {
+                    var originalAmount1 = parseFloat(originalAmount);
+                    var gstRate1 = parseFloat(gstRate);
+
+                    var gstAmount = (originalAmount1 * gstRate1) / 100;
+
+                    var roundedGST = gstAmount.toFixed(2);
+                    $("#Tax").val(roundedGST);
+                    $("#GTotal").val(originalAmount1 + parseFloat(roundedGST));
+                }
+            }
+            else {
+                $("#SGST").val("");
+                $("#CGST").val("");
+                $("#IGST").val("");
+                
+            }
+        }
+        function GridShow() {
+            if ($("#ddldisc").val() == "") {
+                alert("please select Discipline");
+            }
+            else {
+                $('#dtcal').DataTable().destroy();
+                InitializeDatatableCalData();
+                $("#grid").css("display", "block");
+            }
+
+        }
+        function VisibleGrid() {
+
+            if ($("#ddldisc").val() == "") {
+                $("#grid").css("display", "none");
+            }
+        }
+        function InitializeDatatableCalData() {
+            var DisId = $("#ddldisc").val();
+            var dataTable = $("#dtcal").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: false,
+                destroy: true,
+                paging: true,
+                searching: true,
+                info: false,
+                ajax: {
+                    url: "@Url.Action("LoadCalculation")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            DisId: DisId
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+
+                            return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.LABRATEID + '">';
+                        }
+                    },
+
+                    { data: "TEST_NAME" },
+                    { data: "PRICE" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<input type="text" class="text-filter" name="qty" id="' + data.QTY + '" value="1"/>';
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<input type="text" class="text-filter" name="total" id="' + data.Total + '" readonly />';
+                        }
+                    }
+
+                ],
+                "order": [[0, "asc"]]
+            });
+            var destinationTable = $("#dtcal2").DataTable();
+            // var destinationTable = $('#dtcal2').DataTable({
+
+            // });
+
+            $("#dtcal").on("change", ".row-checkbox", function () {
+                
+                var checkbox = $(this);
+                var row = checkbox.closest("tr");
+                var qtyInput = checkbox.closest('tr').find('input[name="qty"]');
+                var qtytotal = checkbox.closest('tr').find('input[name="total"]');
+                if (checkbox.is(':checked')) {
+                    qtyInput.prop('readonly', true);
+                } else {
+                    qtyInput.prop('readonly', false);
+                    qtyInput.val("1");
+                    qtytotal.val("");
+                }
+                var rowData = dataTable.row(row).data();
+                if (rowData) {
+                    var testName = rowData.TEST_NAME;
+
+                    if (checkbox.is(":checked")) {
+                        var price = rowData.PRICE;
+                        var qtyTextbox = row.find('input[name="qty"]');
+                        var totalTextbox = row.find('input[name="total"]');
+                        var qtyValue = parseInt(qtyTextbox.val() || 0);
+                        var totalValue = price * qtyValue;
+                        totalTextbox.val(totalValue);
+
+
+                        var testNameExists = destinationTable.column(0).data().indexOf(testName) !== -1;
+
+                        if (!testNameExists) {
+
+                            destinationTable.row.add([testName, price, qtyValue, totalValue]).draw(false);
+                        
+                            var sumTotal = 0;
+                            destinationTable.rows().eq(0).each(function (index) {
+                                var rowData = destinationTable.row(index).data();
+                                var totalValue = rowData[3]; 
+                                if (!isNaN(totalValue)) {
+                                    sumTotal += parseFloat(totalValue);
+                                    $("#Total").val(sumTotal);
+                                    debugger    ;
+                                    var originalAmount = $("#Total").val();
+                                    var gstRate = $("#IGST").val();
+                                    if (gstRate != null && gstRate != "") {
+                                        var originalAmount1 = parseFloat(originalAmount);
+                                        var gstRate1 = parseFloat(gstRate);
+
+                                        var gstAmount = (originalAmount1 * gstRate1) / 100;
+
+                                        var roundedGST = gstAmount.toFixed(2);
+                                        $("#Tax").val(roundedGST);
+                                        $("#GTotal").val(originalAmount1 + parseFloat(roundedGST));
+                                    }
+                                }
+                            });
+                            
+                        }
+                    } else {
+
+                        destinationTable.rows().eq(0).each(function (index) {
+                            var row = destinationTable.row(index);
+                            var rowData = row.data();
+                            if (rowData[0] === testName) {
+                                row.remove().draw(false);
+                                return false; 
+                            }
+                            
+                        });
+                        var sumTotal = 0;
+                        destinationTable.rows().eq(0).each(function (index) {
+                            var rowData = destinationTable.row(index).data();
+                            var totalValue = rowData[3]; 
+                            if (!isNaN(totalValue)) {
+                                sumTotal += parseFloat(totalValue);
+                            }
+                        });
+
+                        $("#Total").val(sumTotal);
+                        var originalAmount = $("#Total").val();
+                        var gstRate = $("#IGST").val();
+                        if (gstRate != null && gstRate != "") {
+                            var originalAmount1 = parseFloat(originalAmount);
+                            var gstRate1 = parseFloat(gstRate);
+
+                            var gstAmount = (originalAmount1 * gstRate1) / 100;
+
+                            var roundedGST = gstAmount.toFixed(2);
+                            $("#Tax").val(roundedGST);
+                            $("#GTotal").val(originalAmount1 + parseFloat(roundedGST));
+                        }
+                    }
+
+                    $("#grid2").css("display", destinationTable.data().count() > 0 ? "block" : "none");
+                }
+            });
+        }
+        function calsavedata() {
+            debugger;
+            var savedData = [];
+            var destinationTable = $("#dtcal2").DataTable();
+            savedData = destinationTable.rows().data().toArray();
+        }
+
     </script>
 }

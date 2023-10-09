@@ -243,5 +243,32 @@ namespace IBS.Repositories
             var Barcode = model1.BARCODE.Trim();
             return Barcode;
         }
+        public DTResult<BarcodeGenerate> LoadCalculation(DTParameters dtParameters)
+        {
+            string DisID = dtParameters.AdditionalValues?.GetValueOrDefault("DisId");
+            DTResult<BarcodeGenerate> dTResult = new() { draw = 0 };
+            IQueryable<BarcodeGenerate>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            var query1 = (from l in context.TestTables
+                          where l.DisciplineId == Convert.ToInt32(DisID)
+                          select new BarcodeGenerate
+                          {
+                              LABRATEID = Convert.ToString(l.Labrateid),
+                              TEST_NAME = Convert.ToString(l.TestName),
+                              PRICE = Convert.ToString(l.Price),
+                              QTY = "1"
+                          }).ToList();
+
+            var result = query1.ToList();
+
+            dTResult.recordsTotal = query1.Count();
+            dTResult.data = query1;
+            dTResult.recordsFiltered = query1.Count();
+            return dTResult;
+        }
     }
 }

@@ -88,5 +88,11 @@ namespace IBS.Controllers
         {
             return PartialView();
         }
+        [HttpPost]
+        public IActionResult LoadCalculation([FromBody] DTParameters dtParameters)
+        {
+            DTResult<BarcodeGenerate> dTResult = BarcodeGen.LoadCalculation(dtParameters);
+            return Json(dTResult);
+        }
     }
 }
