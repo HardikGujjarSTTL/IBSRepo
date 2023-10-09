@@ -482,7 +482,7 @@ namespace IBS.Controllers
                     if (result[1] != null)
                     {
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
-                        return Json(new { status = true, responseText = msg });
+                        return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }
                 }
                 return Json(new { status = false, responseText = "PO is not accepted" });

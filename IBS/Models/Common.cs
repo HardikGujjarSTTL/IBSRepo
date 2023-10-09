@@ -1498,13 +1498,13 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Disc = (from a in ModelContext.DisciplineMasters
-                                       
-                                       select
-                                  new SelectListItem
-                                  {
-                                      Text = a.DisciplineName,
-                                      Value = Convert.ToString(a.DiscId)
-                                  }).ToList();
+
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.DisciplineName,
+                                        Value = Convert.ToString(a.DiscId)
+                                    }).ToList();
             return Disc;
 
         }
@@ -2304,7 +2304,7 @@ namespace IBS.Models
             dropList = (from v in ModelContext.T05Vendors
                         join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
                         where v.VendCityCd == c.CityCd && v.VendName != null
-                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper().Substring(0, 5))
                         orderby v.VendName
                         select
                    new SelectListItem
@@ -2332,9 +2332,17 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             int? PurchaserCd = (from v in ModelContext.ImmsRitesPoHdrs
-                           where v.ImmsPurchaserCd == IMMS_PURCHASER_CD && v.ImmsRlyCd == RLY_CD && v.PurchaserCd != null
-                           select v.PurchaserCd).FirstOrDefault();
+                                where v.ImmsPurchaserCd == IMMS_PURCHASER_CD && v.ImmsRlyCd == RLY_CD && v.PurchaserCd != null
+                                select v.PurchaserCd).FirstOrDefault();
             return PurchaserCd;
+        }
+        public static string? GetBPO_CDusingRLY_CD(string RLY_CD, string IMMS_BPO_CD)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            string? BpoCd = (from v in ModelContext.ImmsRitesPoHdrs
+                             where v.ImmsBpoCd == IMMS_BPO_CD && v.ImmsRlyCd == RLY_CD && v.BpoCd != null
+                             select v.BpoCd).FirstOrDefault();
+            return BpoCd;
         }
 
         public static List<SelectListItem> GetIEData(string GetRegionCode)
@@ -2510,15 +2518,18 @@ namespace IBS.Models
             }
             else
             {
-                Sealing = (from t12 in ModelContext.T12BillPayingOfficers
-                           join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
-                           where (t12.BpoCd.Trim().ToUpper() == BPOCd.ToUpper() || t12.BpoName.Trim().ToUpper().StartsWith(BPOCd.ToUpper()))
-                           select new SelectListItem
-                           {
-                               Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
-                               Value = Convert.ToString(t12.BpoCd)
+                if (BPOCd != null)
+                {
+                    Sealing = (from t12 in ModelContext.T12BillPayingOfficers
+                               join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                               where (t12.BpoCd.Trim().ToUpper() == BPOCd.ToUpper() || t12.BpoName.Trim().ToUpper().StartsWith(BPOCd.ToUpper()))
+                               select new SelectListItem
+                               {
+                                   Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                                   Value = Convert.ToString(t12.BpoCd)
 
-                           }).ToList();
+                               }).ToList();
+                }
             }
 
 
@@ -2534,6 +2545,26 @@ namespace IBS.Models
             BPOList = (from t12 in ModelContext.T12BillPayingOfficers
                        join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
                        where t12.BpoType == "R" && (t12.BpoRly.Trim().ToUpper() == "IRFC")
+                       orderby t12.BpoName
+                       select new SelectListItem
+                       {
+                           Text = t12.BpoCd + '-' + t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                           Value = Convert.ToString(t12.BpoCd)
+
+                       }).ToList();
+
+            return BPOList;
+        }
+
+        public static List<SelectListItem> GetBPOListUsingBpoRly(string BpoRly)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> BPOList = new();
+
+            BPOList = (from t12 in ModelContext.T12BillPayingOfficers
+                       join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                       where t12.BpoType == "R" && (t12.BpoRly.Trim().ToUpper() == BpoRly.Trim().ToUpper())
                        orderby t12.BpoName
                        select new SelectListItem
                        {
@@ -2894,10 +2925,8 @@ namespace IBS.Models
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
 
             var obj = (from of in context.V12BillPayingOfficers
-                       where of.Bpo.Contains(SBPO) || of.BpoCd.Contains(SBPO)
+                       where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
                        select of).ToList();
-
-
             List<SelectListItem> objdata = (from a in obj
                                             select
                                        new SelectListItem
@@ -3854,6 +3883,19 @@ namespace IBS.Models
                                         Value = Convert.ToString(a.Id)
                                     }).ToList();
             return city;
+        }
+        public static List<SelectListItem> GetIterUnitRegionList()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Northern Region", Value = "3007" },
+                new SelectListItem() { Text = "Eastern Region", Value = "3008" },
+                new SelectListItem() { Text = "Southern Region", Value = "3009" },
+                new SelectListItem() { Text = "Western Region", Value = "3006" },
+                new SelectListItem() { Text = "Central Region", Value = "3066" },
+                new SelectListItem() { Text = "Bill Adjustment of Old System", Value = "9999" },
+                new SelectListItem() { Text = "Miscelleanous Adjustments", Value = "9998" }
+            };
+            return textValueDropDownDTO.ToList();
         }
     }
 
