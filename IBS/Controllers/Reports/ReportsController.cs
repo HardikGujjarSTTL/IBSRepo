@@ -42,7 +42,7 @@ namespace IBS.Controllers.Reports
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
             else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
             else if (ReportType == "IEWorkPlan") model.ReportTitle = "IE DAILY WORK PLAN REPORT";
-            else if (ReportType == "ConsCompls") model.ReportTitle = "CONSIGNEE COMPLAINTS";
+            else if (ReportType == "CCI") model.ReportTitle = "CONSIGNEE COMPLAINTS";
             return View(model);
         }
         public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)

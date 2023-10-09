@@ -82,7 +82,7 @@ namespace IBS.Helper
             VendorMADoc = 5,
             Contract = 6,
             TechnicalReferences = 8,
-            MasterItemDoc = 9,
+            MasterItemDoc = 7,
             CallRegistrationDoc = 10,
             //AdministratorPurchaseOrder =13,
             OnlineComplaints = 11,

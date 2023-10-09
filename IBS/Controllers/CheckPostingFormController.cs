@@ -51,14 +51,12 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("CheckPostingForm", "Index", "view")]
-
-        public IActionResult FindByID( string billNo)
+        public IActionResult FindByID(string BILL_NO)
             {
             CheckPostingFormModel model = new CheckPostingFormModel();
-            if (billNo != "" && billNo != null)
+            if (BILL_NO != "" && BILL_NO != null)
             {
-                model = checkpostingrepository.FindByID(billNo);
+                model = checkpostingrepository.FindByID(BILL_NO);
             }
             return Json(model);
 
@@ -71,10 +69,10 @@ namespace IBS.Controllers
 
         [HttpPost]
         [Authorization("CheckPostingForm", "Index", "view")]
-        public JsonResult UpdateInfo() {
+        public JsonResult UpdateInfo(CheckPostingFormModel model) {
             try
             {
-                CheckPostingFormModel model = new CheckPostingFormModel();
+                
                 model.BANK_CD = Convert.ToInt32(Request.Form["BANK_CD"]);
                 model.CHQ_DATE = Convert.ToDateTime(Request.Form["CHQ_DATE"]);
                 model.CHQ_NO = Convert.ToString(Request.Form["CHQ_NO"]);
