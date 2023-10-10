@@ -71,6 +71,11 @@
                             <input type="text" class="input" asp-for="CutOffSet" maxlength="3" onkeypress="return isNumber(event)" />
                             <span asp-validation-for="CutOffSet" class="text-danger"></span>
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="ICtype">IC Type<i class="text-danger">*</i></label>
+                            @Html.DropDownListFor(model => model.ICType, new SelectList(Common.ICType() , "Value", "Text"),"--Select--",  new { @class = "" })
+                            <span asp-validation-for="ICType" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="savenext-btn">
                         <a asp-controller="IC_Bookset_Form" asp-action="Index" class="reset-btn">Cancel</a>

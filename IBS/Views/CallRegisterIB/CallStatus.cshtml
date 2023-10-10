@@ -135,6 +135,11 @@
                     <td>
                         @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--")
                     </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">BK & Set No : </label>
+                    </td>
                     <td>
                         <input type="text" class="input" asp-for="BkNo" style="color:red;text-transform: uppercase;">
                     </td>
@@ -169,6 +174,69 @@
                 }
             </table>
         </div>
+
+         <div class="accordion-body" style="overflow-x: auto;" id="accepted">
+           <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Consignee : </label>
+                    @Html.DropDownListFor(model => model.Consignee, new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"), "--Select--")
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Book No : </label>
+                    <input type="text" asp-for="BkNo" maxlength="100" style="color:red;text-transform: uppercase;">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Set No : </label>
+                    <input type="text" asp-for="SetNo" maxlength="100" style="color:red;text-transform: uppercase;">
+                </div>
+             </div>
+             <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 1: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 2: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 3: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+             </div>
+             <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 4: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 5: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 6: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+             </div>
+             <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 7: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 8: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 9: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Image 10: </label>
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                </div>
+             </div>
+         </div>
         <div class="savenext-btn">
             <button type="button" class="save-btn active" onclick="Save();">Save</button>
             <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>

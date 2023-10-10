@@ -465,6 +465,14 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, string IeCd,string ActionType)
         {
             VenderCallStatusModel model = new();
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.AdminUserUploadDoc, "");
+            FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
+            FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.Browse_the_Document_to_Upload).ToList();
+            FileUploaderCOI.OthersSection = false;
+            FileUploaderCOI.MaxUploaderinOthers = 5;
+            FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.AdminUserUploadDoc = FileUploaderCOI;
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);

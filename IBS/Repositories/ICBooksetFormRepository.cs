@@ -33,6 +33,7 @@ namespace IBS.Repositories
                 model.BkSubmitDt = bookset.BkSubmitDt;
                 model.CutOffDt = bookset.CutOffDt;
                 model.CutOffSet = bookset.CutOffSet;
+                model.ICType = bookset.Ictype;
                 return model;
             }
         }
@@ -215,6 +216,7 @@ namespace IBS.Repositories
                     CutOffDt = model.CutOffDt,
                     CutOffSet = model.CutOffSet,
                     UserId = model.UserId,
+                    Ictype = model.ICType,
                     Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,
                     Createddate = DateTime.Now,
@@ -241,6 +243,7 @@ namespace IBS.Repositories
                     bookSet.Datetime = DateTime.Now.Date;
                     bookSet.Updatedby = model.Updatedby;
                     bookSet.Updateddate = DateTime.Now;
+                    bookSet.Ictype = model.ICType;
 
                     context.SaveChanges();
                 }
