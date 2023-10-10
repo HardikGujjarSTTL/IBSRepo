@@ -28,4 +28,12 @@ public partial class LabCalTranHeader
     public int? ExtraCharge { get; set; }
 
     public int? Rtotal { get; set; }
+
+    public string? Userid { get; set; }
+
+    public string? Ipaddress { get; set; }
+
+    public string? Createdby { get; set; }
+
+    public DateTime? Createddate { get; set; }
 }
