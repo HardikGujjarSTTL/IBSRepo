@@ -90,7 +90,7 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                         var Id = data.BARCODE;
-                        var editUrl = '@Url.Action("EditBarcode", "BarcodeGeneration")?Barcode=' + Id;
+                            var editUrl = '@Url.Action("GenerateBarcode", "BarcodeGeneration")?Barcode=' + Id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;

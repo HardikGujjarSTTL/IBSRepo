@@ -43,6 +43,12 @@ namespace IBS.Models
         public string TEST_NAME { get; set; }
         public string PRICE { get; set; }
         public string QTY { get; set; }
+        public string Caldata { get; set; }
+        public string Names { get; set; }
+        public string Amounts { get; set; }
+        public string Quantities { get; set; }
+        public string Subtotals { get; set; }
+        public string Othervalues { get; set; }
 
     }
 }

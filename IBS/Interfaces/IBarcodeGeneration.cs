@@ -9,5 +9,6 @@ namespace IBS.Interfaces
         DTResult<BarcodeGenerate> CaseNoSearch(DTParameters dtParameters);
         bool SaveBarCode(BarcodeGenerate BarcodeGenerate,string IPADDRESS);
         DTResult<BarcodeGenerate> LoadCalculation(DTParameters dtParameters);
+        bool InsertDataForLabTran(BarcodeGenerate BarcodeGenerate);
     }
 }

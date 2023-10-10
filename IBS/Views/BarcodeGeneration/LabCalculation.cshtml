@@ -34,6 +34,7 @@
                     <div class="col-md-2 mb-3">
                         <label for="Reference">Type of GST</label>
                         @Html.DropDownListFor(model => model.TypeGST, new SelectList(IBS.Models.Common.TypeofGST() , "Value", "Text"),new { @id = "ddlTGST",@onchange = "Change()"})
+                        <span class="text-danger field-validation-error" id="spnErrorGST"></span>
                     </div>
                     <div class="col-md-1 mb-3">
                         <label for="Reference">SGST</label>

@@ -88,6 +88,7 @@
                     <input type="hidden" class="input" asp-for="ITEM_SRNO_PO">
                     <input type="hidden" class="input" asp-for="VEND_CD">
                     <input type="hidden" class="input" asp-for="IE_CD">
+                    <input type="hidden" class="input" asp-for="BARCODE">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Case No</label>
                         <input type="text" class="input" asp-for="CASE_NO">
@@ -99,12 +100,12 @@
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="Reference">Total Rate</label>
-                        <input type="text" class="input" asp-for="TotalRate">
+                        <input type="text" class="input" asp-for="TotalRate" readonly="readonly">
                         <span class="text-danger field-validation-error" id="spnError1"></span>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="Reference">GST Amount</label>
-                        <input type="text" class="input" asp-for="GSTAmount">
+                        <input type="text" class="input" asp-for="GSTAmount" readonly="readonly">
                         <span class="text-danger field-validation-error" id="spnError2"></span>
                     </div>
                     <div class="col-md-2 mb-3 savenext-btn" style="margin-top:auto;">
@@ -325,7 +326,7 @@
                 $("#SGST").val("9");
                 $("#CGST").val("9");
                 $("#IGST").val("18");
-                debugger;
+                
                 var originalAmount = $("#Total").val();
                 var gstRate = $("#IGST").val();
                 if (originalAmount != null && originalAmount != "") {
@@ -373,8 +374,8 @@
                 processing: true,
                 serverSide: false,
                 destroy: true,
-                paging: true,
-                searching: true,
+                paging: false,
+                searching: false,
                 info: false,
                 ajax: {
                     url: "@Url.Action("LoadCalculation")",
@@ -395,7 +396,7 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
 
-                            return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.LABRATEID + '">';
+                            return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.DISCIPLINE_ID + '">';
                         }
                     },
 
@@ -404,13 +405,13 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return '<input type="text" class="text-filter" name="qty" id="' + data.QTY + '" value="1"/>';
+                            return '<input type="number" class="text-filter" name="qty" style="height:auto;" id="' + data.QTY + '" value="1" min="1" step="1"/>';
                         }
                     },
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return '<input type="text" class="text-filter" name="total" id="' + data.Total + '" readonly />';
+                            return '<input type="text" class="text-filter" name="total" style="height:auto;" id="' + data.Total + '" readonly />';
                         }
                     }
 
@@ -438,7 +439,7 @@
                 var rowData = dataTable.row(row).data();
                 if (rowData) {
                     var testName = rowData.TEST_NAME;
-
+                    var DISCIPLINE_ID = rowData.DISCIPLINE_ID;
                     if (checkbox.is(":checked")) {
                         var price = rowData.PRICE;
                         var qtyTextbox = row.find('input[name="qty"]');
@@ -452,7 +453,7 @@
 
                         if (!testNameExists) {
 
-                            destinationTable.row.add([testName, price, qtyValue, totalValue]).draw(false);
+                            destinationTable.row.add([testName, price, qtyValue, totalValue, DISCIPLINE_ID]).draw(false);
                         
                             var sumTotal = 0;
                             destinationTable.rows().eq(0).each(function (index) {
@@ -461,7 +462,7 @@
                                 if (!isNaN(totalValue)) {
                                     sumTotal += parseFloat(totalValue);
                                     $("#Total").val(sumTotal);
-                                    debugger    ;
+                                    
                                     var originalAmount = $("#Total").val();
                                     var gstRate = $("#IGST").val();
                                     if (gstRate != null && gstRate != "") {
@@ -518,10 +519,97 @@
             });
         }
         function calsavedata() {
-            debugger;
+          
+            $("#spnErrorGST").html("");
+          
+            var IsValid = true;
+            if ($("#ddlTGST").val() == "0") {
+                $("#spnErrorGST").html("Please Select GST Type");
+                IsValid = false;
+            }
+           
+            if (!IsValid) return;
+           
             var savedData = [];
+            var names = "";
+            var amounts = "";
+            var quantities = "";
+            var subtotals = "";
+            var othervalues = "";
             var destinationTable = $("#dtcal2").DataTable();
-            savedData = destinationTable.rows().data().toArray();
+            var tableData = destinationTable.rows().data().toArray();
+
+            $.each(tableData, function (index, row) {
+                names += row[0] + ","; 
+                amounts += row[1] + ",";
+                quantities += row[2] + ",";
+                subtotals += row[3] + ",";
+                othervalues += row[4] + ",";
+            });
+            names = names.slice(0, -1);
+            amounts = amounts.slice(0, -1);
+            quantities = quantities.slice(0, -1);
+            subtotals = subtotals.slice(0, -1);
+            othervalues = othervalues.slice(0, -1);
+            if (tableData.length == 0) {
+                alert('Please select atleast record for Discipline!!!')
+                return false;
+            }
+           // savedData = destinationTable.rows().data().toArray();
+            
+            // var BarCodeGenerate = {
+            //     TypeGST: $("#ddlTGST").val(),
+            //     SGST: $("#SGST").val(),
+            //     CGST: $("#CGST").val(),
+            //     IGST: $("#IGST").val(),
+            //     Total: $("#Total").val(),
+            //     Tax: $("#Tax").val(),
+            //     GTotal: $("#GTotal").val(),
+            //     HandlingCharge: $("#HandlingCharge").val(),
+            //     ExtraCharge: $("#ExtraCharge").val(),
+            //     RTotal: $("#RTotal").val(),
+            //     Caldata: savedData
+            // };
+            
+            
+            var formData = new FormData();
+            formData.append("TypeGST", $("#ddlTGST").val());
+            formData.append("SGST", $("#SGST").val());
+            formData.append("CGST", $("#CGST").val());
+            formData.append("IGST", $("#IGST").val());
+            formData.append("Total", $("#Total").val());
+            formData.append("Tax", $("#Tax").val());
+            formData.append("GTotal", $("#GTotal").val());
+            formData.append("HandlingCharge", $("#HandlingCharge").val());
+            formData.append("ExtraCharge", $("#ExtraCharge").val());
+            formData.append("RTotal", $("#RTotal").val());            
+            formData.append("Names", names);
+            formData.append("Amounts", amounts);
+            formData.append("Quantities", quantities);
+            formData.append("Subtotals", subtotals);
+            formData.append("Othervalues", othervalues);
+
+            $.ajax({
+                url: '@Url.Action("InsertDataForLabTran", "BarcodeGeneration")',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                //contentType: 'application/json',
+                //data: JSON.stringify(BarCodeGenerate),
+                data: formData,
+                success: function (response) {
+                   
+                    if (response.status) {
+                        $("#BARCODE").val(response.BarcodeGenerate.BARCODE);
+                        $("#TotalRate").val(response.BarcodeGenerate.GTotal);
+                        $("#GSTAmount").val(response.BarcodeGenerate.Tax);
+                        ShowHideMsg("success", response.responseText);
+                    } else {
+                        ShowHideMsg("Failed", response.responseText);
+                    }
+                }
+            });
+            
         }
 
     </script>
