@@ -41,7 +41,7 @@
                         <input type="text" class="input" asp-for="ItemSrno" readonly="readonly">
                     </div>
                 </div>
-                <div class="row my-0">
+                <div class="row align-items-end my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">PL NO.</label>
                         <input type="text" class="input" asp-for="PlNo">
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="savenext-btn">
-                            <button type="button" class="save-btn active" onclick="SubmitPlNo();" style="margin-top: 30px;">Submit</button>
+                            <button type="button" class="save-btn active" onclick="SubmitPlNo();">Submit</button>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -63,12 +63,17 @@
                         <span asp-validation-for="SpecificationNo" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row my-0">
+                <div class="row align-items-end my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Bill Paying Officer/Paying Authority</label>
-                        <input type="text" class="input" asp-for="SBPO" style="width: 61%;">
-                        <button type="button" class="save-btn active" onclick="SearchBPO();">Search BPO</button>
+                        <input type="text" class="input" asp-for="SBPO">
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="SearchBPO();">Search BPO</button>
+                        </div>
+                    </div>
+                    
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
                         @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"),"--Select--")
@@ -78,11 +83,15 @@
                         <input type="text" class="input" asp-for="Bpo">
                     </div>
                 </div>
-                <div class="row my-0">
+                <div class="row align-items-end my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference" style="width: 100%;">Consignee</label>
-                        <input type="text" class="input" asp-for="ConsigneeSearch" style="width: 46%;">
+                        <input type="text" class="input" asp-for="ConsigneeSearch">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="SearchConsignee();">Search Consignee</button>
+                        </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>

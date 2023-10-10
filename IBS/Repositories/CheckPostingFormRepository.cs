@@ -48,7 +48,7 @@ namespace IBS.Repositories
                           BILL_NO =   t26.BillNo,
                            BILL_AMOUNT = Convert.ToDouble(t22.BillAmount),
                           AMOUNT_CLEARED = Convert.ToDouble(t26.AmountCleared),
-                           POSTING_DATE = Convert.ToDateTime(t26.PostingDt),
+                           POSTING_DATE = Convert.ToString(t26.PostingDt),
                             BILL_AMOUNT_CLEARED = Convert.ToDouble(t22.BillAmtCleared) ,
                             BPO_CD = b.BpoCd + "-" + b.BpoName + "/" +
                                        (b.BpoAdd ?? "") + "/" +
@@ -154,7 +154,7 @@ namespace IBS.Repositories
             return query;
 
         }
-        public string UpdateData(CheckPostingFormModel model )  
+        public string UpdateData(CheckPostingFormModel model)  
         {
            
             var GetValue = context.T26ChequePostings.Find(model.BANK_CD,model.CHQ_NO,model.CHQ_DATE);
@@ -168,7 +168,7 @@ namespace IBS.Repositories
                 data.BillNo = model.BILL_NO;
                 data.BillAmount = Convert.ToDecimal(model.BILL_AMOUNT);
                 data.AmountCleared = Convert.ToDecimal(model.AMOUNT_CLEARED);
-                data.PostingDt = model.POSTING_DATE;
+                data.PostingDt = Convert.ToDateTime(model.POSTING_DATE);
                 data.BpoCd = model.BPO_CD;
                 //data.UserId = Uname;
                 data.Datetime = model.DATETIME;
@@ -185,7 +185,7 @@ namespace IBS.Repositories
                 GetValue.BillNo = model.BILL_NO;
                 GetValue.BillAmount = Convert.ToDecimal(model.BILL_AMOUNT);
                 GetValue.AmountCleared = Convert.ToDecimal(model.AMOUNT_CLEARED);
-                GetValue.PostingDt = model.POSTING_DATE; ;
+                GetValue.PostingDt = Convert.ToDateTime(model.POSTING_DATE); 
                 GetValue.BpoCd= model.BPO_CD;
                 //GetValue.UserId = Uname;
                 GetValue.Datetime = model.DATETIME;
