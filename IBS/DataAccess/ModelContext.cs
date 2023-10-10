@@ -11056,43 +11056,6 @@ public partial class ModelContext : DbContext
                 .HasColumnName("CONTRACT_NO");
             entity.Property(e => e.MaxFee)
                 .HasPrecision(11)
-                .HasDefaultValueSql("NULL")
-                .HasColumnName("MAX_FEE");
-            entity.Property(e => e.MinFee)
-                .HasPrecision(11)
-                .HasDefaultValueSql("NULL")
-                .HasColumnName("MIN_FEE");
-            entity.Property(e => e.ProjectRef)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("PROJECT_REF");
-            entity.Property(e => e.WithServTax)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("WITH_SERV_TAX");
-        });
-
-        modelBuilder.Entity<T14aPoNonrlyHistory>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("T14A_PO_NONRLY_HISTORY");
-
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.ContractDt)
-                .HasColumnType("DATE")
-                .HasColumnName("CONTRACT_DT");
-            entity.Property(e => e.ContractNo)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("CONTRACT_NO");
-            entity.Property(e => e.MaxFee)
-                .HasPrecision(11)
                 .HasColumnName("MAX_FEE");
             entity.Property(e => e.MinFee)
                 .HasPrecision(11)
