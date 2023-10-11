@@ -4,7 +4,7 @@
 @{
     string Region = ViewBag.Regions;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
+    string ReportTitle =  string.Empty;//EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
     if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
     else if (ReportType == "COIEWiseCalls") ReportTitle = "CONTROLLING WISE CALLS MARKED";
