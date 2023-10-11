@@ -317,11 +317,11 @@
                 if (response != null) {
                     if (response.status) {
                         $("#EditPODateModal").modal('hide');
-                        ShowHideMsgNew(res.status, response.responseText);
+                        ShowHideMsgNew(response.status, response.responseText);
                         InitializePOMasterDatatable();
                     }
                     else {
-                        ShowHideMsgNew(res.status, response.responseText);
+                        ShowHideMsgNew(response.status, response.responseText);
                     }
                 }
             });

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T26ChequePosting
+public partial class T26ChequePostingHistory
 {
     public int? BankCd { get; set; }
 
@@ -35,5 +35,11 @@ public partial class T26ChequePosting
 
     public byte? Isdeleted { get; set; }
 
-    public virtual T25RvDetail? T25RvDetail { get; set; }
+    public string? Actiontype { get; set; }
+
+    public DateTimeOffset? Actiondate { get; set; }
+
+    public string? Actionuserid { get; set; }
+
+    public int Id { get; set; }
 }

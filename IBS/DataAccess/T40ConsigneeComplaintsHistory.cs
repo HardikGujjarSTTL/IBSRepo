@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T40ConsigneeComplaint
+public partial class T40ConsigneeComplaintsHistory
 {
-    public string ComplaintId { get; set; } = null!;
+    public string? ComplaintId { get; set; }
 
     public DateTime? ComplaintDt { get; set; }
 
@@ -121,13 +121,11 @@ public partial class T40ConsigneeComplaint
 
     public byte? Isdeleted { get; set; }
 
-    public virtual T13PoMaster? CaseNoNavigation { get; set; }
+    public string? Actiontype { get; set; }
 
-    public virtual T06Consignee? ConsigneeCdNavigation { get; set; }
+    public DateTimeOffset? Actiondate { get; set; }
 
-    public virtual T38DefectCode? DefectCdNavigation { get; set; }
+    public string? Actionuserid { get; set; }
 
-    public virtual T39JiStatusCode? JiStatusCdNavigation { get; set; }
-
-    public virtual T05Vendor? VendCdNavigation { get; set; }
+    public int Id { get; set; }
 }
