@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T44SuperSurprise
+public partial class T44SuperSurpriseHistory
 {
     public string? SuperSurpriseNo { get; set; }
 
     public DateTime? SuperSurpriseDt { get; set; }
 
-    public string CaseNo { get; set; } = null!;
+    public string? CaseNo { get; set; }
 
-    public DateTime CallRecvDt { get; set; }
+    public DateTime? CallRecvDt { get; set; }
 
-    public int CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public int? IeCd { get; set; }
 
@@ -45,5 +45,11 @@ public partial class T44SuperSurprise
 
     public byte? Isdeleted { get; set; }
 
-    public virtual T17CallRegister Ca { get; set; } = null!;
+    public string? Actiontype { get; set; }
+
+    public DateTimeOffset? Actiondate { get; set; }
+
+    public string? Actionuserid { get; set; }
+
+    public int Id { get; set; }
 }
