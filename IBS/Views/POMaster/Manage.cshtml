@@ -40,7 +40,7 @@
                     <div class="col-md-2 mb-3">
                         <button type="button" class="btn btn-primary formSubBtn" onclick="LOASubmit();" style="margin-top: 0px;">Submit</button>
                     </div>
-                   
+
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -72,21 +72,21 @@
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="StockNonstock" class="text-danger"></span>
                     </div>
-               
 
-                @* <div class="row my-0">
-                <div class="col-md-5 mb-3">
-                <label for="Reference">Vendor</label>
-                <input type="text" class="input" id="txtVend">
-                <input type="hidden" id="hdnlblVendor" />
-                </div>
-                <div class="col-md-5 mb-3">
-                <label for="Reference"></label>
-                @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
-                </div>
-                </div>*@
 
-                
+                    @* <div class="row my-0">
+                    <div class="col-md-5 mb-3">
+                    <label for="Reference">Vendor</label>
+                    <input type="text" class="input" id="txtVend">
+                    <input type="hidden" id="hdnlblVendor" />
+                    </div>
+                    <div class="col-md-5 mb-3">
+                    <label for="Reference"></label>
+                    @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
+                    </div>
+                    </div>*@
+
+
                     <div class="col-md-4 mb-3">
                         <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
@@ -126,7 +126,7 @@
                         <span asp-validation-for="PurchaserCd" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <input type="text" class="input" id="txtPurchaser">
+                        <input type="text" class="input" asp-for="Purchaser">
                     </div>
                 </div>
                 <div class="row my-0" style="display: none;">
@@ -149,8 +149,9 @@
                         <div class="reference">
                             <div class="custom-control custom-checkbox">
                                 <label class="custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
-                                Same As Vendor</label>
+                                    <input type="checkbox" class="custom-control-input" id="chkManuf" onchange="sameAsVendor()" />
+                                    Same As Vendor
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -166,7 +167,7 @@
                     <div class="col-md-4 mb-3">
 
                         <button type="button" id="btnPOI" class="btn btn-primary" style="width:auto;" onclick="SelectManufacturer();">Select Manufacturer</button>
-                        
+
                     </div>
                     <div class="col-md-12 mb-3">
                         <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
@@ -224,10 +225,12 @@
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ParentLOA" />
                     </div>
                 </div>
-                <div class="savenext-btn">
-                    @*<a asp-controller="POMaster" asp-action="Index" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                </div>
+                @if (Model.RealCaseNo == null || Model.RealCaseNo == "")
+                {
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    </div>
+                }
             </div>
         </form>
     </div>
@@ -253,31 +256,41 @@
             FillVendor();
             if ('@Model' != null) {
                 FillAgencyClient('@Model.RlyCd');
-                if ('@Model.RlyCd' == "0")
-                {
+                if ('@Model.RlyCd' == "0") {
                     $('#txtSPur').val('@Model.RlyCdDesc');
+                }
+                else {
+                    $('#txtSPur').val('@Model.RlyCd');
+                }
+                if ('@Model.PoiCd' != "" && '@Model.PoiCd' != "0") {
+                    fill_manufacturer('@Model.PoiCd');
+                    GetManufVEND($("#ddlManufac").val());
+                }
+                
+                if ('@Model.PurchaserCd' != "" && '@Model.PurchaserCd' != "0") {
+                    FillPurchaserCd('@Model.PurchaserCd');
                 }
                 else
                 {
-                    $('#txtSPur').val('@Model.RlyCd');
+                    FillPurchaserCd();
                 }
-                FillPurchaserCd('@Model.PurchaserCd');
             }
         });
 
         function Save() {
             if ($("#frmPOMaster").valid()) {
-                SaveSingleDocuments("tab-1");
+                if (!SaveSingleDocuments("tab-1")) { return; }
                 $("#frmPOMaster").submit();
             }
         }
+
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.status) {
                 window.location.href = '@Url.Action("Index", "POMaster")';
             }
-            
+
         };
 
         function LOASubmit() {
@@ -357,9 +370,9 @@
                             id = value.Value;
                         }
                     });
-                    if (id > 0) {
-                        $("#PurchaserCd").val(id);
-                    }
+                    //if (id > 0) {
+                    //    $("#PurchaserCd").val(id);
+                    //}
                     if (ids > 0) {
                         $("#PurchaserCd").val(ids);
                     }

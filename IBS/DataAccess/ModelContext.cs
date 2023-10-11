@@ -4446,6 +4446,310 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.DispatchPackingNo)
                 .HasMaxLength(500)
                 .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("DISPATCH_PACKING_NO");
+            entity.Property(e => e.File1)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_1");
+            entity.Property(e => e.File10)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_10");
+            entity.Property(e => e.File2)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_2");
+            entity.Property(e => e.File3)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_3");
+            entity.Property(e => e.File4)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_4");
+            entity.Property(e => e.File5)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_5");
+            entity.Property(e => e.File6)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_6");
+            entity.Property(e => e.File7)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_7");
+            entity.Property(e => e.File8)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_8");
+            entity.Property(e => e.File9)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FILE_9");
+            entity.Property(e => e.GovBillAuth)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("GOV_BILL_AUTH");
+            entity.Property(e => e.Hologram)
+                .HasMaxLength(2000)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("HOLOGRAM");
+            entity.Property(e => e.IeCd)
+                .HasPrecision(4)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("IE_CD");
+            entity.Property(e => e.IeStamp)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("IE_STAMP");
+            entity.Property(e => e.IeStamp2)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("IE_STAMP2");
+            entity.Property(e => e.IeStampCd)
+                .HasPrecision(3)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("IE_STAMP_CD");
+            entity.Property(e => e.IeStampImage)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("BLOB")
+                .HasColumnName("IE_STAMP_IMAGE");
+            entity.Property(e => e.IeStampImage1)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("BLOB")
+                .HasColumnName("IE_STAMP_IMAGE1");
+            entity.Property(e => e.IeStampsDetail)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("IE_STAMPS_DETAIL");
+            entity.Property(e => e.IeStampsDetail2)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("IE_STAMPS_DETAIL2");
+            entity.Property(e => e.InvoiceNo)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("INVOICE_NO");
+            entity.Property(e => e.ItemDescPo)
+                .HasMaxLength(2000)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ITEM_DESC_PO");
+            entity.Property(e => e.ItemRemark)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ITEM_REMARK");
+            entity.Property(e => e.ItemSrnoPo)
+                .HasPrecision(4)
+                .HasColumnName("ITEM_SRNO_PO");
+            entity.Property(e => e.LabTstRectDt)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("DATE")
+                .HasColumnName("LAB_TST_RECT_DT");
+            entity.Property(e => e.ManType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .IsFixedLength()
+                .HasColumnName("MAN_TYPE");
+            entity.Property(e => e.NameOfIe)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("NAME_OF_IE");
+            entity.Property(e => e.NumVisits)
+                .HasPrecision(9)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("NUM_VISITS");
+            entity.Property(e => e.OffInstNoDtl)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("OFF_INST_NO_DTL");
+            entity.Property(e => e.PassedInstNo)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("PASSED_INST_NO");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.PurAutDtl)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("PUR_AUT_DTL");
+            entity.Property(e => e.PurDtl)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("PUR_DTL");
+            entity.Property(e => e.QtyDue)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY_DUE");
+            entity.Property(e => e.QtyOrdered)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY_ORDERED");
+            entity.Property(e => e.QtyPassed)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY_PASSED");
+            entity.Property(e => e.QtyRejected)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY_REJECTED");
+            entity.Property(e => e.QtyToInsp)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("QTY_TO_INSP");
+            entity.Property(e => e.ReasonOfRejection)
+                .HasMaxLength(2000)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("REASON_OF_REJECTION");
+            entity.Property(e => e.Remark)
+                .HasMaxLength(2000)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("REMARK");
+            entity.Property(e => e.SetNo)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("SET_NO");
+            entity.Property(e => e.UnitDtl)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("UNIT_DTL");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.VisitsDates)
+                .HasMaxLength(800)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("VISITS_DATES");
+        });
+
+        modelBuilder.Entity<IcIntermediateHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("IC_INTERMEDIATE_HISTORY_PK");
+
+            entity.ToTable("IC_INTERMEDIATE_HISTORY");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IC_INTERMEDIATE_HISTORY_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Actiondate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("ACTIONDATE");
+            entity.Property(e => e.Actiontype)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONTYPE");
+            entity.Property(e => e.Actionuserid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.Amendment1)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("AMENDMENT_1");
+            entity.Property(e => e.Amendment2)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("AMENDMENT_2");
+            entity.Property(e => e.Amendment3)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("AMENDMENT_3");
+            entity.Property(e => e.Amendment4)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("AMENDMENT_4");
+            entity.Property(e => e.BkNo)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("BK_NO");
+            entity.Property(e => e.BpoDtl)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("BPO_DTL");
+            entity.Property(e => e.CallRecvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_RECV_DT");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(5)
+                .HasColumnName("CALL_SNO");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.ConsgnCallStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CONSGN_CALL_STATUS");
+            entity.Property(e => e.ConsigneeCd)
+                .HasPrecision(8)
+                .HasColumnName("CONSIGNEE_CD");
+            entity.Property(e => e.ConsigneeDesg)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE_DESG");
+            entity.Property(e => e.ConsigneeDtl)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE_DTL");
+            entity.Property(e => e.CumQtyPrevOffered)
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("CUM_QTY_PREV_OFFERED");
+            entity.Property(e => e.CumQtyPrevPassed)
+                .HasColumnType("NUMBER(12,4)")
+                .HasColumnName("CUM_QTY_PREV_PASSED");
+            entity.Property(e => e.Datetime)
+                .HasPrecision(6)
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.DispatchPackingNo)
+                .HasMaxLength(500)
+                .IsUnicode(false)
                 .HasColumnName("DISPATCH_PACKING_NO");
             entity.Property(e => e.File1)
                 .HasMaxLength(25)
@@ -9857,6 +10161,72 @@ public partial class ModelContext : DbContext
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Datetime)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.DepartmentName)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("DEPARTMENT_NAME");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.VendorCode)
+                .HasPrecision(6)
+                .HasColumnName("VENDOR_CODE");
+        });
+
+        modelBuilder.Entity<T100VenderClusterHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T100_VENDER_CLUSTER_HISTORY_PK");
+
+            entity.ToTable("T100_VENDER_CLUSTER_HISTORY");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T100_VENDER_CLUSTER_HISTORY_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Actiondate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("ACTIONDATE");
+            entity.Property(e => e.Actiontype)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONTYPE");
+            entity.Property(e => e.Actionuserid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.ClusterCode)
+                .HasPrecision(6)
+                .HasColumnName("CLUSTER_CODE");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
@@ -13668,6 +14038,350 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.AckNo)
                 .HasMaxLength(20)
                 .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("ACK_NO");
+            entity.Property(e => e.Actiondate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("ACTIONDATE");
+            entity.Property(e => e.Actiontype)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONTYPE");
+            entity.Property(e => e.Actionuserid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.AdvBill)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("ADV_BILL");
+            entity.Property(e => e.AmountReceived)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("AMOUNT_RECEIVED");
+            entity.Property(e => e.BillAmount)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("BILL_AMOUNT");
+            entity.Property(e => e.BillAmtCleared)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("BILL_AMT_CLEARED");
+            entity.Property(e => e.BillDt)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("DATE")
+                .HasColumnName("BILL_DT");
+            entity.Property(e => e.BillFinalised)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("BILL_FINALISED");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.BillResentCount)
+                .HasPrecision(1)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("BILL_RESENT_COUNT");
+            entity.Property(e => e.BillResentStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("BILL_RESENT_STATUS");
+            entity.Property(e => e.BillStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("BILL_STATUS");
+            entity.Property(e => e.Billadtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("BILLADTYPE");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Cgst)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("CGST");
+            entity.Property(e => e.CnoteAmount)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("CNOTE_AMOUNT");
+            entity.Property(e => e.CnoteBillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("CNOTE_BILL_NO");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.CreditDocId)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("CREDIT_DOC_ID");
+            entity.Property(e => e.Datetime)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.DigBillGenDt)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("DATE")
+                .HasColumnName("DIG_BILL_GEN_DT");
+            entity.Property(e => e.EduCess)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("EDU_CESS");
+            entity.Property(e => e.FeeRate)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(11,4)")
+                .HasColumnName("FEE_RATE");
+            entity.Property(e => e.FeeType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("FEE_TYPE");
+            entity.Property(e => e.Igst)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("IGST");
+            entity.Property(e => e.InspFee)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("INSP_FEE");
+            entity.Property(e => e.InvoiceNo)
+                .HasMaxLength(14)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("INVOICE_NO");
+            entity.Property(e => e.InvoiceSuppDocs)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("INVOICE_SUPP_DOCS");
+            entity.Property(e => e.IrnNo)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("IRN_NO");
+            entity.Property(e => e.Isdeleted)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.KrishiKalyanCess)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("KRISHI_KALYAN_CESS");
+            entity.Property(e => e.LoRemarks)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("LO_REMARKS");
+            entity.Property(e => e.MaterialValue)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(15,2)")
+                .HasColumnName("MATERIAL_VALUE");
+            entity.Property(e => e.MaxFee)
+                .HasPrecision(11)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("MAX_FEE");
+            entity.Property(e => e.MinFee)
+                .HasPrecision(11)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("MIN_FEE");
+            entity.Property(e => e.QrCode)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NCLOB")
+                .HasColumnName("QR_CODE");
+            entity.Property(e => e.ReferenceAid)
+                .HasPrecision(6)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("REFERENCE_AID");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.RetentionMoney)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("RETENTION_MONEY");
+            entity.Property(e => e.SapStatus)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("SAP_STATUS");
+            entity.Property(e => e.ScannedStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("SCANNED_STATUS");
+            entity.Property(e => e.SentToSap)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("SENT_TO_SAP");
+            entity.Property(e => e.ServTaxRate)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(5,2)")
+                .HasColumnName("SERV_TAX_RATE");
+            entity.Property(e => e.ServiceTax)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(11,2)")
+                .HasColumnName("SERVICE_TAX");
+            entity.Property(e => e.Sgst)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("SGST");
+            entity.Property(e => e.SheCess)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("SHE_CESS");
+            entity.Property(e => e.SwachhBharatCess)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("SWACHH_BHARAT_CESS");
+            entity.Property(e => e.TaxType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("TAX_TYPE");
+            entity.Property(e => e.Tds)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("TDS");
+            entity.Property(e => e.TdsCgst)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("TDS_CGST");
+            entity.Property(e => e.TdsDt)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("DATE")
+                .HasColumnName("TDS_DT");
+            entity.Property(e => e.TdsIgst)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("TDS_IGST");
+            entity.Property(e => e.TdsSgst)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(10,2)")
+                .HasColumnName("TDS_SGST");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.WriteOffAmt)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("WRITE_OFF_AMT");
+        });
+
+        modelBuilder.Entity<T22BillHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T22_BILL_HISTORY_PK");
+
+            entity.ToTable("T22_BILL_HISTORY");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T22_BILL_HISTORY_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.AckDt)
+                .HasColumnType("DATE")
+                .HasColumnName("ACK_DT");
+            entity.Property(e => e.AckNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("ACK_NO");
             entity.Property(e => e.Actiondate)
@@ -14614,6 +15328,80 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("DATE")
                 .HasColumnName("VCHR_DT");
+        });
+
+        modelBuilder.Entity<T27JvHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T27_JV_HISTORY_PK");
+
+            entity.ToTable("T27_JV_HISTORY");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T27_JV_HISTORY_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Actiondate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("ACTIONDATE");
+            entity.Property(e => e.Actiontype)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONTYPE");
+            entity.Property(e => e.Actionuserid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.BankCd)
+                .HasPrecision(3)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.ChqDt)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.RvSno)
+                .HasPrecision(4)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("RV_SNO");
+            entity.Property(e => e.RvVchrNo)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("RV_VCHR_NO");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.VchrDt)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("DATE")
+                .HasColumnName("VCHR_DT");
+            entity.Property(e => e.VchrNo)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("VCHR_NO");
         });
 
         modelBuilder.Entity<T27JvHistory>(entity =>
@@ -24360,7 +25148,6 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T101_IE_CLUSTER_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
-        modelBuilder.HasSequence("T109_LAB_SAMPLE_INFO_HISTORY_SEQ");
         modelBuilder.HasSequence("T12_BILL_PAYING_OFFICER_HISTORY_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
@@ -24376,7 +25163,6 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T22_BILL_HISTORY_SEQ");
         modelBuilder.HasSequence("T24_RV_HISTORY_SEQ");
         modelBuilder.HasSequence("T25_RV_DETAILS_HISTORY_SEQ");
-        modelBuilder.HasSequence("T26_CHEQUE_POSTING_HISTORY_SEQ");
         modelBuilder.HasSequence("T27_JV_HISTORY_SEQ");
         modelBuilder.HasSequence("T29_JV_DETAILS_HISTORY_SEQ");
         modelBuilder.HasSequence("T29_JV_DETAILS_SEQ");

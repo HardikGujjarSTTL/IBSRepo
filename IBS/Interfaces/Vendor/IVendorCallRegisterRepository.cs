@@ -4,7 +4,7 @@ namespace IBS.Interfaces.Vendor
 {
     public interface IVendorCallRegisterRepository
     {
-        public VenderCallRegisterModel FindByID(string CaseNo, string CallRecvDt, int CallSno, string UserName);
+        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt,int CallSno, string FOS, string UserName);
 
         public VenderCallRegisterModel FindByVenderDetail(int MfgCd);
 
@@ -14,11 +14,15 @@ namespace IBS.Interfaces.Vendor
 
         DTResult<VenderCallRegisterModel> GetUserList(DTParameters dtParameters, string UserName);
 
-        DTResult<VenderCallRegisterModel> GetVenderList(DTParameters dtParameters, string UserName);
+        DTResult<VenderCallRegisterModel> GetVenderListM(DTParameters dtParameters, string UserName);
+
+        DTResult<VenderCallRegisterModel> GetVenderListA(DTParameters dtParameters, string UserName);
 
         int DetailsInsertUpdate(VenderCallRegisterModel model);
 
         string RegiserCallSave(VenderCallRegisterModel model);
+
+        public VenderCallRegisterModel GetValidate(VenderCallRegisterModel model);
 
         Task<string> send_IE_smsAsync(VenderCallRegisterModel model);
 
@@ -30,6 +34,14 @@ namespace IBS.Interfaces.Vendor
 
         DTResult<VenderCallRegisterModel> GetDataListReport(DTParameters dtParameters);
 
-        public VenderCallRegisterModel FindByAddDetails(string CaseNo, DateTime CallRecvDt, string CallStage, int UserId);
+        public VenderCallRegisterModel FindByAddDetails(string CaseNo, DateTime? CallRecvDt, string CallStage, int UserId);
+
+        string GetMatch(string CaseNo, string UserName);
+
+        public VenderCallRegisterModel FindByItemID(VenderCallRegisterModel model);
+
+        string UpdateCallDetails(VenderCallRegisterModel model, int ItemSrnoPo);
+
+        int GetItemList(string CaseNo);
     }
 }
