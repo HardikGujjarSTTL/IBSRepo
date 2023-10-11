@@ -37,7 +37,7 @@
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Call Date</label>
-                        <input type="text" class="input" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                     </div>
                 </div>
             </div>
@@ -141,7 +141,8 @@
 
         function NewCall() {
             var CaseNo = $("#CaseNo").val();
-            var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var CallRecvDt = $("#CallRecvDt").val();
+            //var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
             var CallSno = $("#CallSno").val();
             var Action = "A";
             var CallStage = $('input[name="CallStage"]:checked').val();
@@ -208,7 +209,7 @@
                         data: "PoDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -217,7 +218,7 @@
                         data: "CallRecvDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -236,14 +237,15 @@
                             var CallSno = data.CallSno;
                             var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
 
-                            var editUrl = '@Url.Action("VendorCallRegisterDetail", "VendorCallRegister")?Action=M' + "&CaseNo=" + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
-                            var html = "";
+                            //var editUrl = '@Url.Action("VendorCallRegisterDetail", "VendorCallRegister")?Action=M' + "&CaseNo=" + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+                            //var html = "";
+                            //html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //html += '</div>';
+                            //return html;
 
-                            html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="UrlClick(\'' + CaseNo + '\',\'' + CallSno + '\',\'' + CallRecvDt + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
-
-
 
                         }
                     },
@@ -251,6 +253,17 @@
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function UrlClick(CaseNo, CallSno, CallRecvDt) {
+            var CallStage = $('input:radio[name=CallStage]:checked').val();
+            if (CaseNo != null && CallSno > 0 && CallRecvDt != null) {
+                window.location.href = '@Url.Action("VendorCallRegisterDetail", "VendorCallRegister")' + '?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&ActionType=M" + "&FOS=" + CallStage;
+            }
+            else {
+                ShowHideMsgNew(false, "No Call is Registered On this Case. Kindly enter the Case No & Click on [New Call] Button!!!");
+            }
+            InitializeDatatable();
         }
     </script>
     }

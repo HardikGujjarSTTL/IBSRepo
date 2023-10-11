@@ -1,0 +1,69 @@
+﻿@model IBS.Models.VenderCallRegisterModel
+<div class="modal-dialog modal-lg" role="document">
+    <input type="hidden" asp-for="CaseNo" />
+    <input type="hidden" asp-for="CallRecvDt" />
+    <input type="hidden" asp-for="CallSno" />
+    <input type="hidden" asp-for="ItemSrnoPo" />
+    <input type="hidden" asp-for="ConsigneeCd" />
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit/Update Item Description </h5>
+            <p class="left">Item Sr No. : <span style="color:red;">@Model.ItemSrnoPo</span></p>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-0">
+                <div class="col-md-8 mb-3">
+                    <label for="Reference">Item Desc</label>
+                    <textarea asp-for="ItemDescPo" class="input" readonly></textarea>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Consignee</label>
+                    <input type="text" class="input" asp-for="Consignee" readonly>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty. Ord</label>
+                    <input type="text" class="input" asp-for="QtyOrdered" readonly>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Cumm Qty off Prev</label>
+                    <input type="text" class="input" asp-for="CumQtyPrevOffered" readonly>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Prev Passed</label>
+                    <input type="text" class="input" asp-for="CumQtyPrevPassed" readonly>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Off Now</label>
+                    <input type="text" class="input" asp-for="QtyToInsp">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Passed</label>
+                    <input type="text" class="input" asp-for="QtyPassed" readonly>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Rejected</label>
+                    <input type="text" class="input" asp-for="QtyRejected" readonly>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Due</label>
+                    <input type="text" class="input" asp-for="QtyDue" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="savenext-btn">
+                <button type="button" class="reset-btn" data-bs-dismiss="modal">Close</button>
+                <button class="save-btn active" id="btnUpdateCallDetails" onclick="UpdateCallDetails()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

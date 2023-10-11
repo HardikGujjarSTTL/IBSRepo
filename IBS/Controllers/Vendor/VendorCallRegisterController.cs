@@ -1,8 +1,10 @@
-﻿using IBS.Helper;
+﻿using Humanizer.Localisation.TimeToClockNotation;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
 using IBS.Repositories;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
@@ -69,22 +71,29 @@ namespace IBS.Controllers.Vendor
             return Json(dTResult);
         }
 
-        public IActionResult VendorCallRegisterDetail(string Action, string CaseNo, string CallRecvDt, int CallSno)
+        public IActionResult VendorCallRegisterDetail(string ActionType, string CaseNo, string CallRecvDt, int CallSno, string FOS)
         {
             VenderCallRegisterModel model = new();
 
-            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+            if (CaseNo != null && CallRecvDt != null && FOS != null)
             {
-                model = venderRepository.FindByID(CaseNo, CallRecvDt, CallSno, UserName);
+                model = venderRepository.FindByID(ActionType, CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, FOS, UserName.Trim());
             }
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult LoadTableList([FromBody] DTParameters dtParameters)
+        public IActionResult LoadTableListM([FromBody] DTParameters dtParameters)
         {
-            DTResult<VenderCallRegisterModel> dTResult = venderRepository.GetVenderList(dtParameters, UserName);
+            DTResult<VenderCallRegisterModel> dTResult = venderRepository.GetVenderListM(dtParameters, UserName);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableListA([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = venderRepository.GetVenderListA(dtParameters, UserName);
             return Json(dTResult);
         }
 
@@ -166,115 +175,55 @@ namespace IBS.Controllers.Vendor
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DetailsSave(VenderCallRegisterModel model)
         {
             try
             {
-                DateTime? Dt1 = model.CallRecvDt;
-                DateTime? Dt2 = model.DtInspDesire;
-                int w_no_of_days = 0;
                 string i = "";
-                string msg = "Message Inserted Successfully.";
-
-                if (model.RegionCode == "Northern")
+                string msg = "";
+                if (model.CaseNo != null && model.CallRecvDt != null)
                 {
-                    model.SetRegionCode = "N";
-                }
-                else if (model.RegionCode == "Eastern")
-                {
-                    model.SetRegionCode = "E";
-                }
-                else if (model.RegionCode == "Western")
-                {
-                    model.SetRegionCode = "W";
-                }
-                else if (model.RegionCode == "Southern")
-                {
-                    model.SetRegionCode = "S";
-                }
-                else if (model.RegionCode == "Central")
-                {
-                    model.SetRegionCode = "C";
-                }
-                else if (model.RegionCode == "CO QA Division")
-                {
-                    model.SetRegionCode = "Q";
-                }
-
-                if (Dt1.HasValue && Dt2.HasValue)
-                {
-                    TimeSpan ts = Dt2.Value - Dt1.Value;
-
-                    int differenceInDays = ts.Days;
-
-                    if (differenceInDays > 5)
+                    model.UserId = UserName.Trim();
+                    model.Createdby = UserName.Trim();
+                    model = venderRepository.GetValidate(model);
+                    if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
                     {
-                        w_no_of_days = 1;
+                        i = venderRepository.RegiserCallSave(model);
+                        if (model.callval == 0)
+                        {
+                            msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!";
+                        }
+                        else
+                        {
+                            msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name;
+                        }
                     }
                     else
                     {
-                        w_no_of_days = 0;
+                        if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                        {
+                            msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
+                        }
+                        else if (model.wMat_value < 1000)
+                        {
+                            msg = "Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!";
+                        }
+                        else if (model.desire_dt > 0)
+                        {
+                            msg = "Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!";
+                        }
+                        return Json(new { status = false, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
                     }
                 }
-                if (w_no_of_days == 1)
+                if (i != null)
                 {
-                    AlertDanger("Expected Date of Inspection cannot be more then 5 days from Call Registration Date!!!");
-                }
-                else if (model.SetRegionCode == "R" && model.IrfcFunded == "")
-                {
-                    AlertDanger("Select The project is IRFC Funded [Yes/No] !!!");
-                }
-                else
-                {
-                    model.UserId = UserName;
-                    model.Createdby = UserName;
-                    i = venderRepository.RegiserCallSave(model);
-                }
-                if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
-                {
-                    if (model.callval == 0)
-                    {
-                        AlertDanger("Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!");
-                    }
-                    else
-                    {
-                        AlertDanger("Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name);
-                    }
-                }
-                else
-                {
-                    if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
-                    {
-                        AlertDanger("Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!");
-                    }
-                    else if (model.wMat_value < 1000)
-                    {
-                        AlertDanger("Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!");
-                    }
-                    else if (model.desire_dt > 0)
-                    {
-                        AlertDanger("Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!");
-                    }
+                    return Json(new { status = true, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
                 }
                 if (model.e_status == 1 && model.callval != 0)
                 {
-                    //send_IE_sms(callval);
-                    //send_Vendor_Email(callval);
-
-                    Task<string> smsResult = venderRepository.send_IE_smsAsync(model);
-                    AlertDanger("SMS Send Success...");
-
                     string emailResult = venderRepository.send_Vendor_Email(model);
-                    if (emailResult == "success")
-                    {
-                        AlertDanger("Mail Send Success...");
-                    }
-                }
-
-
-                if (i != null)
-                {
-                    return Json(new { status = true, responseText = msg, Id = i });
+                    Task<string> smsResult = venderRepository.send_IE_smsAsync(model);
                 }
             }
             catch (Exception ex)
@@ -340,15 +289,15 @@ namespace IBS.Controllers.Vendor
         //}
 
         [HttpPost]
-        public IActionResult VendorCallRegister(string CaseNo, DateTime CallRecvDt, string CallStage)
+        public IActionResult VendorCallRegister(string CaseNo, DateTime? CallRecvDt, string CallStage)
         {
             VenderCallRegisterModel model = new();
             try
             {
-
+                string ActionType = "A";
                 if (CaseNo != null)
                 {
-                    model = venderRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, UserId);
+                    model = venderRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, Convert.ToInt32(UserName));
                     if (model.OnlineCallStatus == "Y")
                     {
                         if (model.InspectingAgency == "R")
@@ -361,7 +310,9 @@ namespace IBS.Controllers.Vendor
                                 }
                                 else
                                 {
-                                    string check = model.VendCd;
+                                    //string check = model.VendCd;
+
+                                    string check = venderRepository.GetMatch(CaseNo, UserName);
                                     if (check == "2")
                                     {
                                         int cno = model.MaxCount;
@@ -380,12 +331,14 @@ namespace IBS.Controllers.Vendor
                                                 }
                                                 else
                                                 {
-                                                    return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                                    //return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                                    return RedirectToAction("VendorCallRegisterDetail", new { ActionType = ActionType, CaseNo = CaseNo, CallRecvDt = Convert.ToDateTime(CallRecvDt).ToString("dd/MM/yyyy"), FOS = CallStage });
                                                 }
                                             }
                                             else
                                             {
-                                                return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                                //return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                                return RedirectToAction("VendorCallRegisterDetail", new { ActionType = ActionType, CaseNo = CaseNo, CallRecvDt = Convert.ToDateTime(CallRecvDt).ToString("dd/MM/yyyy"), FOS = CallStage });
                                             }
                                         }
                                         else
@@ -419,12 +372,14 @@ namespace IBS.Controllers.Vendor
                                     }
                                     else
                                     {
-                                        return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                        //return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                        return RedirectToAction("VendorCallRegisterDetail", new { ActionType = ActionType, CaseNo = CaseNo, CallRecvDt = Convert.ToDateTime(CallRecvDt).ToString("dd/MM/yyyy"), FOS = CallStage });
                                     }
                                 }
                                 else
                                 {
-                                    return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                    //return RedirectToAction("VendorCallRegisterDetail?Action=A&CaseNo=" + CaseNo + "&CallRecvDt=" + model.CallRecvDt + "&FOS=" + model.CallStage);
+                                    return RedirectToAction("VendorCallRegisterDetail", new { ActionType = ActionType, CaseNo = CaseNo, CallRecvDt = Convert.ToDateTime(CallRecvDt).ToString("dd/MM/yyyy"), FOS = CallStage });
                                 }
                             }
                             else
@@ -483,6 +438,89 @@ namespace IBS.Controllers.Vendor
             return View(model);
         }
 
+        [HttpPost]
+        public IActionResult EditListDetails(VenderCallRegisterModel model)
+        {
+            try
+            {
+                if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0 && model.ItemSrnoPo > 0)
+                {
+                    model = venderRepository.FindByItemID(model);
+                }
+                return PartialView("_EditListDetails", model);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "EditListDetails", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCallDetails(string CaseNo, DateTime CallRecvDt, int CallSno, int ItemSrnoPo, string ItemDescPo, int QtyDue, int QtyToInsp, int QtyOrdered, int ConsigneeCd)
+        {
+            try
+            {
+                string id = "";
+                VenderCallRegisterModel model = new();
+                model.CaseNo = CaseNo;
+                model.CallRecvDt = CallRecvDt;
+                model.CallSno = CallSno;
+                model.QtyDue = QtyDue;
+                model.QtyToInsp = QtyToInsp;
+                model.QtyOrdered = QtyOrdered;
+                model.ConsigneeCd = ConsigneeCd;
+                model.ItemDescPo = ItemDescPo;
+                string msg = "Item Description Updated Successfully.";
+
+                if (ItemSrnoPo > 0 && model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
+                {
+                    model.UserId = UserName.Trim();
+                    id = venderRepository.UpdateCallDetails(model, ItemSrnoPo);
+                }
+
+                if (id != null)
+                {
+                    return Json(new { status = true, responseText = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "UpdateCallDetails", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult GetItemDetails(string CaseNo)
+        {
+            try
+            {
+                int item = 0;
+                if (CaseNo != null)
+                {
+                    item = venderRepository.GetItemList(CaseNo);
+                }
+                return Json(new { status = true, responseText = item });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "GetItemDetails", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        public IActionResult PopUp(string CaseNo)
+        {
+            try
+            {
+                return PartialView("_PopUp");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "PopUp", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
 
     }
 }

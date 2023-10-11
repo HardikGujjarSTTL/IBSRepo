@@ -1153,11 +1153,11 @@ namespace IBS.Models
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
 
-            single = new SelectListItem();
-            single.Text = "-xx-";
-            single.Value = " ";
+            //single = new SelectListItem();
+            //single.Text = "-xx-";
+            //single.Value = " ";
 
-            textValueDropDownDTO.Add(single);
+            //textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "Railways";
             single.Value = "R";

@@ -3,29 +3,44 @@ using IBS.Models;
 using IBS.Repositories;
 using IBS.Repositories.IE;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace IBS.Controllers.IE
 {
     public class DailyWorkPlanController : BaseController
     {
         #region Variables
-        private readonly IDailyWorkPlanRepository dailyworkplanRepository;
+        private readonly IDailyWorkPlanRepository dailyRepository;
         #endregion
 
-        public DailyWorkPlanController(IDailyWorkPlanRepository _dailyworkplanRepository)
+        public DailyWorkPlanController(IDailyWorkPlanRepository _dailyRepository)
         {
-            dailyworkplanRepository = _dailyworkplanRepository;
+            dailyRepository = _dailyRepository;
         }
 
         public IActionResult DailyWorkPlan()
         {
-            return View();
+            DailyWorkPlanModel model = new();
+            model.IeCd = GetIeCd;
+
+            if (model.IeCd > 0)
+            {
+                model = dailyRepository.FindByDetails(model, Region);
+            }
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<DailyWorkPlanModel> dTResult = dailyworkplanRepository.GetMessageList(dtParameters, GetIeCd);
+            DTResult<DailyWorkPlanModel> dTResult = dailyRepository.GetLoadTable(dtParameters, Region, GetIeCd);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableCurrentDay([FromBody] DTParameters dtParameters)
+        {
+            DTResult<DailyWorkPlanModel> dTResult = dailyRepository.GetLoadTableCurrentDay(dtParameters, Region, GetIeCd);
             return Json(dTResult);
         }
 
@@ -42,7 +57,7 @@ namespace IBS.Controllers.IE
                     model.UserId = Convert.ToString(UserName.Trim());
                     model.IeCd = GetIeCd;
                     model.RegionCode = Region;
-                    i = dailyworkplanRepository.DetailsInsertUpdate(model);
+                    i = dailyRepository.DetailsInsertUpdate(model);
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 return RedirectToAction("DailyWorkPlan");
@@ -53,5 +68,12 @@ namespace IBS.Controllers.IE
             }
             return View(model);
         }
+
+        //[HttpPost]
+        //public IActionResult UpdateBillsFinalisation(DailyWorkPlanModel model)
+        //{
+        //    string i = dailyRepository.SaveDetails(model, Region);
+        //    return Json(new { status = true, responseText = "Records Locking Successfully." });
+        //}
     }
 }
