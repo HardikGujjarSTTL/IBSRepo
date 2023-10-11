@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class ReturnedBillsBpoChange
+public partial class ReturnedBillsBpoChangeHistory
 {
     public string? BillNo { get; set; }
 
@@ -36,4 +36,12 @@ public partial class ReturnedBillsBpoChange
     public DateTimeOffset? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public string? Actiontype { get; set; }
+
+    public DateTimeOffset? Actiondate { get; set; }
+
+    public string? Actionuserid { get; set; }
+
+    public int Id { get; set; }
 }
