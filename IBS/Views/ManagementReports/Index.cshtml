@@ -22,7 +22,7 @@
                 <input type="hidden" id="hdnReportType" name="hdnReportType" />
                 <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
-                <div class="task-inner row">
+                <div class="task-inner row my-0">
                     <div class="col-md-3">
                         <div class="input-search">
                             <label for="FromDate">For The Period From</label>
@@ -100,8 +100,8 @@
                 <input type="hidden" id="hdnReportType" name="hdnReportType" />
                 <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
                 <input type="hidden" id="hdnOutstanding" name="hdnOutstanding" />
-                <div class="task-inner row">
-                    <div class="col-md-3 mb-3">
+                <div class="task-inner row my-0">
+                    <div class="col-md-4 mb-3">
                         <div class="input-search">
                             <label for="FromDate_RWCO">Client wise Outstanding Statement as on</label>
                             <input type="text" class="datepicker" id="FromDate_RWCO" placeholder="DD/MM/YYYY" />
@@ -142,7 +142,7 @@
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
                 <input type="hidden" id="hdnParticularCM" name="hdnParticularCM" />
                 <input type="hidden" id="hdnParticularSector" name="hdnParticularSector" />
-                <div class="task-inner row">
+                <div class="task-inner row my-0">
                     <div class="col-md-3 mb-3">
                         <div class="input-search">
                             <label for="FromDateSuperSurprise">For The Period From</label>
@@ -215,7 +215,7 @@
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
                 <input type="hidden" id="hdnRegion" name="hdnRegion" />
                 <input type="hidden" id="hdnStatus" name="hdnStatus" />
-                <div class="task-inner row">
+                <div class="task-inner row my-0">
                     <div class="col-md-3">
                         <label for="RegionConsignReject">For The Region</label>
                         @Html.DropDownList("RegionConsignReject", new SelectList(Common.GetRegion() , "Value", "Text"), "--All--")
@@ -251,8 +251,8 @@
             <form role="form" asp-controller="ManagementReports" asp-action="ManageReportData" id="frmOutstandingOverRegion">
                 <input type="hidden" id="hdnReportType" name="hdnReportType" />
                 <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
-                <div class="task-inner row">
-                    <div class="col-md-3 mb-3">
+                <div class="task-inner row my-0">
+                    <div class="col-md-4 mb-3">
                         <div class="input-search">
                             <label for="FromDateOutstandingOverRegion">Client wise Outstanding Statement as on</label>
                             <input type="text" class="datepicker" id="FromDateOutstandingOverRegion" placeholder="DD/MM/YYYY" />
@@ -275,7 +275,7 @@
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
                 <input type="hidden" id="hdnClientType" name="hdnClientType" />
                 <input type="hidden" id="hdnBPORailway" name="hdnBPORailway" />
-                <div class="task-inner row">
+                <div class="task-inner row my-0">
                     <div class="col-md-3 mb-3">
                         <label for="ClientType_ClientWiseRejection">Client</label>
                         @Html.DropDownList("ClientType_ClientWiseRejection", new SelectList(Common.ClientType() , "Value", "Text"), "--Select--", new { @onchange = "BindBPORailway();" })
@@ -369,7 +369,7 @@
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
                 <input type="hidden" id="hdnParticularCM" name="hdnParticularCM" />
                 <input type="hidden" id="hdnSortedOn" name="hdnSortedOn" />
-                <div class="task-inner row">
+                <div class="task-inner row my-0">
                     <div class="col-md-3 mb-3">
                         <div class="input-search">
                             <label for="FromDateTentativeInspection">For The Period From</label>
@@ -452,7 +452,7 @@
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
                 <input type="hidden" id="hdnCallRemarkingDate" name="hdnCallRemarkingDate" />
                 <input type="hidden" id="hdnCallsStatus" name="hdnCallsStatus" />
-                <div class="task-inner row">
+                <div class="task-inner row my-0">
                     <div class="col-md-3 mb-3">
                         <div class="input-search">
                             <label for="FromDateCallRemarking">For The Period From</label>
