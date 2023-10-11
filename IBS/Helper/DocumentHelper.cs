@@ -76,6 +76,7 @@ namespace IBS.Helpers
         {
 
             int id = 0;
+            int AppID = 0;
             List<APPDocumentDTO> NewDocumentsList = new List<APPDocumentDTO>();
 
             //string path = Path.Combine(env.WebRootPath, FolderPath);
@@ -88,6 +89,7 @@ namespace IBS.Helpers
 
             foreach (APPDocumentDTO item in DocumentsList)
             {
+                
                 item.UniqueFileName = item.UniqueFileName.Replace("'", "");
                 string Filepath = "";
                 string TempPath = Path.Combine(TempFilePath, item.UniqueFileName);
@@ -96,43 +98,53 @@ namespace IBS.Helpers
                 {
                     if(item.DocName == "IC Image 1")
                     {
-                        Filepath = FilePreFix + "_01";
+                        AppID = 1;
+                        Filepath = FilePreFix + "_01.JPG";
                     }
                     if (item.DocName == "IC Image 2")
                     {
-                        Filepath = FilePreFix + "_02";
+                        AppID = 2;
+                        Filepath = FilePreFix + "_02.JPG";
                     }
                     if (item.DocName == "IC Image 3")
                     {
-                        Filepath = FilePreFix + "_03";
+                        AppID = 3;
+                        Filepath = FilePreFix + "_03.JPG";
                     }
                     if (item.DocName == "IC Image 4")
                     {
-                        Filepath = FilePreFix + "_04";
+                        AppID = 4;
+                        Filepath = FilePreFix + "_04.JPG";
                     }
                     if (item.DocName == "IC Image 5")
                     {
-                        Filepath = FilePreFix + "_05";
+                        AppID = 5;
+                        Filepath = FilePreFix + "_05.JPG";
                     }
                     if (item.DocName == "IC Image 6")
                     {
-                        Filepath = FilePreFix + "_06";
+                        AppID = 6;
+                        Filepath = FilePreFix + "_06.JPG";
                     }
                     if (item.DocName == "IC Image 7")
                     {
-                        Filepath = FilePreFix + "_07";
+                        AppID = 7;
+                        Filepath = FilePreFix + "_07.JPG";
                     }
                     if (item.DocName == "IC Image 8")
                     {
-                        Filepath = FilePreFix + "_08";
+                        AppID = 8;
+                        Filepath = FilePreFix + "_08.JPG";
                     }
                     if (item.DocName == "IC Image 9")
                     {
-                        Filepath = FilePreFix + "_09";
+                        AppID = 9;
+                        Filepath = FilePreFix + "_09.JPG";
                     }
                     if (item.DocName == "IC Image 10")
                     {
-                        Filepath = FilePreFix + "_10";
+                        AppID = 10;
+                        Filepath = FilePreFix + "_10.JPG";
                     }
                 }
 
@@ -145,7 +157,7 @@ namespace IBS.Helpers
                 } 
                 FileInfo newfile = new FileInfo(DestinationPath);
 
-                item.Applicationid = ApplicationID;
+                item.Applicationid = ApplicationID + "_" + AppID;
                 item.Relativepath = FolderPath.Replace("~", "");
                 item.Extension = newfile.Extension;
                 item.FileDisplayName = item.FileName;

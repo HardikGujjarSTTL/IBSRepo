@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Protocol.Plugins;
 using System.ComponentModel.DataAnnotations;
 
@@ -257,7 +258,7 @@ namespace IBS.Models
 
         public string Region { get; set; }
 
-        public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
+        public List<UnInspectedQtylstModel> lstUnInspectedQty { get; set; }
 
     }
 
@@ -463,7 +464,10 @@ namespace IBS.Models
         public string? VendName { get; set; }
 
         public string? Consignee { get; set; }
+
         public string ConsigneeFirm { get; set; }
+
+        public List<SelectListItem> ConsigneeFirmList { get; set; } = new List<SelectListItem>();
 
         public string? ItemDescPo { get; set; }
 
@@ -490,6 +494,8 @@ namespace IBS.Models
         public string? CallStatus { get; set; }
 
         public string? CallCancelStatus { get; set; }
+
+        public string? CallCancelCharges { get; set; }
 
         public DateTime? CallStatusDt { get; set; }
 
@@ -518,8 +524,11 @@ namespace IBS.Models
         public string ActionType { get; set; }
 
         public string? IeCd { get; set; }
+        public int? IssueToIecd { get; set; }
 
         public string UserId { get; set; }
+
+        public string? MaterialValue { get; set; }
 
     }
 
@@ -603,7 +612,7 @@ namespace IBS.Models
 
         public string ITEM_SRNO { get; set; }
 
-        public string ITEM_DESC { get;set; }
+        public string ITEM_DESC { get; set; }
 
         public decimal QTY { get; set; }
 
@@ -614,5 +623,19 @@ namespace IBS.Models
         public decimal? REJECTED { get; set; }
 
 
+    }
+
+    public class ImageFiles
+    {
+        public string File_1 { get; set; }
+        public string File_2 { get; set; }
+        public string File_3 { get; set; }
+        public string File_4 { get; set; }
+        public string File_5 { get; set; }
+        public string File_6 { get; set; }
+        public string File_7 { get; set; }
+        public string File_8 { get; set; }
+        public string File_9 { get; set; }
+        public string File_10 { get; set; }
     }
 }

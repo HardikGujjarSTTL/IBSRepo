@@ -466,9 +466,8 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, string IeCd,string ActionType)
         {
             VenderCallStatusModel model = new();
-
             #region Image Files
-            List<IBS_DocumentDTO> lstDocumentUpload_1 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_1 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_1"));
             FileUploaderDTO FileUploaderUpload_1 = new FileUploaderDTO();
             FileUploaderUpload_1.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_1.IBS_DocumentList = lstDocumentUpload_1.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1).ToList();
@@ -477,7 +476,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_1.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload1 = FileUploaderUpload_1;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_2 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_2 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_2"));
             FileUploaderDTO FileUploaderUpload_2 = new FileUploaderDTO();
             FileUploaderUpload_2.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_2.IBS_DocumentList = lstDocumentUpload_2.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload2).ToList();
@@ -486,7 +485,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_2.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload2 = FileUploaderUpload_2;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_3 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_3 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_3"));
             FileUploaderDTO FileUploaderUpload_3 = new FileUploaderDTO();
             FileUploaderUpload_3.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_3.IBS_DocumentList = lstDocumentUpload_3.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload3).ToList();
@@ -495,7 +494,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_3.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload3 = FileUploaderUpload_3;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_4 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_4 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_4"));
             FileUploaderDTO FileUploaderUpload_4 = new FileUploaderDTO();
             FileUploaderUpload_4.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_4.IBS_DocumentList = lstDocumentUpload_4.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload4).ToList();
@@ -504,7 +503,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_4.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload4 = FileUploaderUpload_4;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_5 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_5 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_5"));
             FileUploaderDTO FileUploaderUpload_5 = new FileUploaderDTO();
             FileUploaderUpload_5.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_5.IBS_DocumentList = lstDocumentUpload_5.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload5).ToList();
@@ -513,7 +512,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_5.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload5 = FileUploaderUpload_5;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_6 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_6 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_6"));
             FileUploaderDTO FileUploaderUpload_6 = new FileUploaderDTO();
             FileUploaderUpload_6.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_6.IBS_DocumentList = lstDocumentUpload_6.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload6).ToList();
@@ -522,7 +521,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_6.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload6 = FileUploaderUpload_6;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_7 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_7 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_7"));
             FileUploaderDTO FileUploaderUpload_7 = new FileUploaderDTO();
             FileUploaderUpload_7.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_7.IBS_DocumentList = lstDocumentUpload_7.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload7).ToList();
@@ -531,7 +530,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_7.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload7 = FileUploaderUpload_7;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_8 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_8 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_8"));
             FileUploaderDTO FileUploaderUpload_8 = new FileUploaderDTO();
             FileUploaderUpload_8.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_8.IBS_DocumentList = lstDocumentUpload_8.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload8).ToList();
@@ -540,7 +539,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_8.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload8 = FileUploaderUpload_8;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_9 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_9 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_9"));
             FileUploaderDTO FileUploaderUpload_9 = new FileUploaderDTO();
             FileUploaderUpload_9.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_9.IBS_DocumentList = lstDocumentUpload_9.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload9).ToList();
@@ -549,7 +548,7 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_9.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload9 = FileUploaderUpload_9;
 
-            List<IBS_DocumentDTO> lstDocumentUpload_10 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(model.CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_10 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_10"));
             FileUploaderDTO FileUploaderUpload_10 = new FileUploaderDTO();
             FileUploaderUpload_10.Mode = (int)Enums.FileUploaderMode.Add_Edit;
             FileUploaderUpload_10.IBS_DocumentList = lstDocumentUpload_10.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload10).ToList();
@@ -568,18 +567,25 @@ namespace IBS.Controllers.InspectionBilling
             return View(model);
         }
 
-        public IActionResult CallStatusFiles(string CaseNo, DateTime? CallRecvDt, int CallSno,  VenderCallStatusModel model, IFormCollection FrmCollection)
+        public IActionResult CallStatusFiles(VenderCallStatusModel model, IFormCollection FrmCollection)
         {
             List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
-            if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+            model.UserId = Convert.ToString(UserId);
+            model.IeCd = Convert.ToString(GetIeCd);
+            string msg = callregisterRepository.CallStatusFilesSave(model,DocumentsList);
+            if (msg == "Success")
             {
-                var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
-                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1 };
-                DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, iDocument, FileName, string.Empty, DocumentIds);
+                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                {
+                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1 };
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                    DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+                AlertAddSuccess("Upload done Successfully!!!");
+                return RedirectToAction("Index");
             }
-            string i = callregisterRepository.CallStatusFilesSave(model, CallRecvDt, CallSno, DocumentsList);
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -667,6 +673,19 @@ namespace IBS.Controllers.InspectionBilling
             return RedirectToAction("Index");
         }
 
-        
+        public IActionResult GetBkNoAndSetNo(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        {
+            string result = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno,model, selectedConsigneeCd);
+
+            return Json(model);
+        }
+
+        public IActionResult CancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            VenderCallStatusModel model = null;
+            string result = callregisterRepository.GetCancelChargeByStatus(CaseNo, DesireDt, CallSno, selectedValue);
+            return Json(model);
+        }
+
     }
 }
