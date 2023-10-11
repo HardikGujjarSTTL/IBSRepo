@@ -327,7 +327,8 @@
         function Save() {
             if ($("#frmPOMaster").valid()) {
                 if ('@Model.CaseNo' != '') {
-                    SaveSingleDocuments("tab-1");
+                    //SaveSingleDocuments("tab-1");
+                    if (!SaveSingleDocuments("tab-1")) { return; }
                 }
                 $("#frmPOMaster").submit();
             }

@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using NuGet.Protocol.Plugins;
 using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
@@ -13,6 +14,7 @@ namespace IBS.Models
 
         public string? ItemDesc { get; set; }
 
+        [Required(ErrorMessage = "Consignee is required")]
         public int? ConsigneeCd { get; set; }
         public decimal? UOMFactor { get; set; }
 

@@ -283,7 +283,8 @@
 
         function Save() {
             if ($("#frmPOMaster").valid()) {
-                SaveSingleDocuments("tab-1");
+                //SaveSingleDocuments("tab-1");
+                if (!SaveSingleDocuments("tab-1")) { return; }
                 $("#frmPOMaster").submit();
             }
         }
@@ -305,7 +306,7 @@
                         $("#lblRealCaseNO1").text(" Case No. --> " + response.OUT_CASE_NO);
                         $("#btnSave").attr("disabled", "disabled");
                         $("#btnAcceptPO").attr("disabled", "disabled");
-                        //window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
+                        window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
                     }
                     else {
                         ShowHideMsgNew(response.status, response.responseText);
