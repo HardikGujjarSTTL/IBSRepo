@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Principal;
 
 namespace IBS.Models
 {
@@ -3884,6 +3885,7 @@ namespace IBS.Models
                                     }).ToList();
             return city;
         }
+
         public static List<SelectListItem> GetIterUnitRegionList()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
@@ -3896,6 +3898,59 @@ namespace IBS.Models
                 new SelectListItem() { Text = "Miscelleanous Adjustments", Value = "9998" }
             };
             return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetBankNameWithFMIS()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from bank in context.T94Banks
+                    where bank.FmisBankCd != null
+                    orderby bank.BankName
+                    select new SelectListItem
+                    {
+                        Value = bank.BankCd.ToString(),
+                        Text = bank.FmisBankCd.ToString().PadLeft(4, '0') + "-" + bank.BankName,
+                    }).ToList();
+        }
+
+        public static List<SelectListItem> GetBankNames()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from a in context.T94Banks
+                    where a.BankCd < 990
+                    orderby a.BankName
+                    select new SelectListItem
+                    {
+                        Text = a.BankName,
+                        Value = a.BankCd.ToString()
+                    }).ToList();
+        }
+
+        public static List<SelectListItem> GetAccountCode(string Role_Cd)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            if (Role_Cd == "5")
+            {
+                return (from a in context.T95AccountCodes
+                        where (a.AccCd == 2210 || a.AccCd == 2212)
+                        orderby a.AccDesc
+                        select new SelectListItem
+                        {
+                            Text = a.AccDesc.ToString() + ":" + a.AccCd.ToString(),
+                            Value = a.AccCd.ToString()
+                        }).ToList();
+            }
+            else
+            {
+                return (from a in context.T95AccountCodes
+                        where a.AccCd < 3000
+                        orderby a.AccDesc
+                        select new SelectListItem
+                        {
+                            Text = a.AccDesc.ToString() + ":" + a.AccCd.ToString(),
+                            Value = a.AccCd.ToString()
+                        }).ToList();
+            }
         }
     }
 

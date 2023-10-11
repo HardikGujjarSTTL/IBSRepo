@@ -2,64 +2,50 @@
     ViewData["Title"] = "Voucher List";
 }
 
-<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>Voucher List</h2>
-        </div>
-        <form method="post" enctype="multipart/form-data" action="/AddRecieptVoucher/OnPostUpload">
-            <div class="form-group">
-                <label for="file">Select Excel File:</label>
-                <input type="file" name="file" id="file" accept=".xlsx" required />
-            </div>
-            <button type="submit">Upload and Process</button>
-        </form>
-        <div class="list-btn">
-            <input type="file" class="form-action"/>
-            <a href="~/ExcelSamples/AddVoucher.xlsx">Download Sample Excel</a>
-
-                <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn Permission_Add">Add New Voucher</a>
-            </div>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Voucher List</h2>
     </div>
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtListVoucher" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            @*<th>S NO</th>*@
-                            <th>Cheque No.</th>
-                            <th>Cheque Date</th>
-                            <th>Amount</th>
-                            <th>Bank Name</th>
-                            <th>BPO Name</th>
-                            <th>Account Description</th>
-                            <th>Case No.</th>
-                            <th>Narration</th>
-                            <th>Action</th>
-                            @*<th>View Contract</th>*@
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="RecieptVoucher" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New</a>
+    </div>
 </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtListVoucher" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Cheque No.</th>
+                        <th>Cheque Date</th>
+                        <th>Amount</th>
+                        <th>Bank Name</th>
+                        <th>BPO Name</th>
+                        <th>Account Description</th>
+                        <th>Case No.</th>
+                        <th>Narration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
-            InitializeDatatable();
+            //InitializeDatatable();
         });
 
         function InitializeDatatable() {
-            debugger;
             $("#dtListVoucher").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -87,10 +73,9 @@
                         data: '', orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
-                                ;
+                            ;
                         }
                     },
-                    //{ data: "SNO" },
                     { data: "CHQ_NO" },
                     { data: "CHQ_DT" },
                     { data: "AMOUNT" },
@@ -107,9 +92,9 @@
                             var CHQ_NO = data.CHQ_NO;
                             var CHQ_DT = data.CHQ_DT;
 
-                            var editUrl = '@Url.Action("AddRecieptVoucher", "AddRecieptVoucher")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
+                            var editUrl = '@Url.Action("RecieptVoucher", "RecieptVoucher")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                           // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -119,6 +104,5 @@
             });
         }
 
-        
     </script>
 }

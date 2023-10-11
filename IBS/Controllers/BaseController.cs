@@ -54,6 +54,7 @@ namespace IBS.Controllers
                 return Convert.ToInt32(GetUserInfo.IeCd);
             }
         }
+
         public string GetAuthType
         {
             get
@@ -93,6 +94,7 @@ namespace IBS.Controllers
                 return (GetUserInfo.UserName);
             }
         }
+
         public string OrgnType
         {
             get
@@ -100,6 +102,7 @@ namespace IBS.Controllers
                 return (GetUserInfo.OrgnTypeL);
             }
         }
+
         public string Organisation
         {
             get
@@ -107,6 +110,7 @@ namespace IBS.Controllers
                 return (GetUserInfo.OrganisationL);
             }
         }
+
         public string OrgnTypeClient
         {
             get
@@ -114,6 +118,7 @@ namespace IBS.Controllers
                 return (GetUserInfo.OrgnType);
             }
         }
+
         public string OrganisationClient
         {
             get
@@ -129,7 +134,8 @@ namespace IBS.Controllers
                 return (GetUserInfo.RoleId);
             }
         }
-        public String RoleName
+
+        public string RoleName
         {
             get
             {
@@ -214,6 +220,30 @@ namespace IBS.Controllers
         {
             string IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString();
             return IPAddress;
+        }
+
+        public List<VoucherDetailsModel> GetLstVoucherDetailsModel
+        {
+            get
+            {
+                string voucherDetailsString = HttpContext.Session.GetString("LstVoucherDetailsModel");
+                if (!string.IsNullOrWhiteSpace(voucherDetailsString))
+                {
+                    List<VoucherDetailsModel> appUser = JsonSerializer.Deserialize<List<VoucherDetailsModel>>(voucherDetailsString);
+
+                    if (appUser != null)
+                        return appUser;
+                }
+                return null;
+            }
+        }
+
+        public List<VoucherDetailsModel> SetLstVoucherDetailsModel
+        {
+            set
+            {
+                HttpContext.Session.SetString("LstVoucherDetailsModel", JsonSerializer.Serialize(value));
+            }
         }
     }
 }
