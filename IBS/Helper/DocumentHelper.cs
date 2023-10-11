@@ -72,6 +72,96 @@ namespace IBS.Helpers
             return id;
         }
 
+        public static int SaveICFiles(string ApplicationID, List<APPDocumentDTO> DocumentsList, string FolderPath, IWebHostEnvironment env, IDocument pIDocument1, string FilePreFix = "", String SpecificFileName = "", int[] DocumentIds = null)
+        {
+
+            int id = 0;
+            List<APPDocumentDTO> NewDocumentsList = new List<APPDocumentDTO>();
+
+            //string path = Path.Combine(env.WebRootPath, FolderPath);
+            string path = env.WebRootPath + FolderPath;
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.TempFilePath);
+
+            foreach (APPDocumentDTO item in DocumentsList)
+            {
+                item.UniqueFileName = item.UniqueFileName.Replace("'", "");
+                string Filepath = "";
+                string TempPath = Path.Combine(TempFilePath, item.UniqueFileName);
+
+                if (!string.IsNullOrEmpty(FilePreFix) && !item.UniqueFileName.Contains(FilePreFix))
+                {
+                    if(item.DocName == "IC Image 1")
+                    {
+                        Filepath = FilePreFix + "_01";
+                    }
+                    if (item.DocName == "IC Image 2")
+                    {
+                        Filepath = FilePreFix + "_02";
+                    }
+                    if (item.DocName == "IC Image 3")
+                    {
+                        Filepath = FilePreFix + "_03";
+                    }
+                    if (item.DocName == "IC Image 4")
+                    {
+                        Filepath = FilePreFix + "_04";
+                    }
+                    if (item.DocName == "IC Image 5")
+                    {
+                        Filepath = FilePreFix + "_05";
+                    }
+                    if (item.DocName == "IC Image 6")
+                    {
+                        Filepath = FilePreFix + "_06";
+                    }
+                    if (item.DocName == "IC Image 7")
+                    {
+                        Filepath = FilePreFix + "_07";
+                    }
+                    if (item.DocName == "IC Image 8")
+                    {
+                        Filepath = FilePreFix + "_08";
+                    }
+                    if (item.DocName == "IC Image 9")
+                    {
+                        Filepath = FilePreFix + "_09";
+                    }
+                    if (item.DocName == "IC Image 10")
+                    {
+                        Filepath = FilePreFix + "_10";
+                    }
+                }
+
+                if (SpecificFileName != "")
+                    item.UniqueFileName = SpecificFileName;
+                string DestinationPath = Path.Combine(path, Filepath);
+                if (File.Exists(TempPath) && !File.Exists(DestinationPath))
+                {
+                    File.Copy(TempPath, DestinationPath, true);
+                } 
+                FileInfo newfile = new FileInfo(DestinationPath);
+
+                item.Applicationid = ApplicationID;
+                item.Relativepath = FolderPath.Replace("~", "");
+                item.Extension = newfile.Extension;
+                item.FileDisplayName = item.FileName;
+
+                if (item.Documentid == null || item.Documentid == 0)
+                {
+                    item.Documentid = null;
+                    item.Isotherdoc = Convert.ToByte(true);
+                }
+
+                NewDocumentsList.Add(item);
+            }
+            id = pIDocument1.SaveDocument(NewDocumentsList, DocumentIds);
+            return id;
+        }
+
         public void DeleteAllFiles(string ApplicationID)
         {
             pIDocument.DeleteAllFiles(ApplicationID);

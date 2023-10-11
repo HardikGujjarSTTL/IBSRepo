@@ -174,12 +174,25 @@
                 }
             </table>
         </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+        </div>
+    </form>
 
-         <div class="accordion-body" style="overflow-x: auto;" id="accepted">
-           <div class="row my-0">
+</div>
+
+<div id="tab-1" class="task-listinput">
+    <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatusFiles" id="frmCallStatusAccept">
+        <input type="hidden" asp-for="ActionType" />
+        <input type="hidden" asp-for="CaseNo" />
+        <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+
+        <div class="accordion-body" style="overflow-x: auto;" id="accepted">
+            <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Consignee : </label>
-                    @Html.DropDownListFor(model => model.Consignee, new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"), "--Select--")
+                    <input type="text" asp-for="ConsigneeFirm" maxlength="100" style="color:red;text-transform: uppercase;">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Book No : </label>
@@ -189,60 +202,52 @@
                     <label for="Reference">Set No : </label>
                     <input type="text" asp-for="SetNo" maxlength="100" style="color:red;text-transform: uppercase;">
                 </div>
-             </div>
-             <div class="row my-0">
+            </div>
+            <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 1: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 2: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload2" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 3: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload3" />
                 </div>
-             </div>
-             <div class="row my-0">
+            </div>
+            <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 4: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload4" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 5: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload5" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 6: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload6" />
                 </div>
-             </div>
-             <div class="row my-0">
+            </div>
+            <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 7: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload7" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 8: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload8" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 9: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload9" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Image 10: </label>
-                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.AdminUserUploadDoc" />
+                    <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload10" />
                 </div>
-             </div>
-         </div>
-        <div class="savenext-btn">
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
-            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+                <div class="col-md-4 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="SaveImages();">Save Files</button>
+                        <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </form>
-
 </div>
 
 @section scripts{
@@ -251,7 +256,6 @@
     <script type="text/javascript">
         function Save() {
             if ($("#ActionType").val() == "C") {
-                debugger
                 $("#frmCallStatus").submit();
             }
             else {
@@ -259,8 +263,18 @@
                     $("#frmCallStatus").submit();
                 }
             }
+        }
 
-
+        function SaveImages() {
+            SaveSingleDocuments("tab-1");
+            if ($("#ActionType").val() == "C") {
+                $("#frmCallStatusAccept").submit();
+            }
+            else {
+                if ($("#frmCallStatusAccept").valid()) {
+                    $("#frmCallStatusAccept").submit();
+                }
+            }
         }
 
     </script>

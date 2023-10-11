@@ -71,6 +71,8 @@ namespace IBS.Helper
             CaseNo = 22,
             [Description("/ReadWriteData/LAB")]
             Lab = 23,
+            [Description("/ReadWriteData/IC_PHOTOS")]
+            ICPHOTOS = 24,
         }
 
         public enum DocumentCategory : int
@@ -93,6 +95,7 @@ namespace IBS.Helper
             ICCancellation = 17,
             PurchaseOrderForm = 18,
             ICDocument = 21,
+            ICPHOTOS = 22,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -112,6 +115,16 @@ namespace IBS.Helper
             Upload_JI_Report = 52,
             Upload_Tech_Ref1 = 53,
             Upload_Contract_Doc = 16,
+            IC_Photos_Upload1 = 22,
+            IC_Photos_Upload2 = 24,
+            IC_Photos_Upload3 = 25,
+            IC_Photos_Upload4 = 26,
+            IC_Photos_Upload5 = 27,
+            IC_Photos_Upload6 = 28,
+            IC_Photos_Upload7 = 29,
+            IC_Photos_Upload8 = 30,
+            IC_Photos_Upload9 = 31,
+            IC_Photos_Upload10 = 32,
         }
 
         public enum DocumentICCancellation : int

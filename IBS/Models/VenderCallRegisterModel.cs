@@ -463,6 +463,7 @@ namespace IBS.Models
         public string? VendName { get; set; }
 
         public string? Consignee { get; set; }
+        public string ConsigneeFirm { get; set; }
 
         public string? ItemDescPo { get; set; }
 

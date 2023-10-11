@@ -2482,6 +2482,23 @@ namespace IBS.Repositories.InspectionBilling
                 model.DesireDt = Status.DesireDt;
                 model.CallStatusDt = Status.CallStatusDt != null ? Status.CallStatusDt : CallStatusDt;
             }
+
+            string formattedCallRecvDt = "";
+            if (CallRecvDt != null && CallRecvDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+
+            var query = (from cdt in context.T18CallDetails
+                         join csn in context.V06Consignees on cdt.ConsigneeCd equals csn.ConsigneeCd
+                         where cdt.CaseNo == CaseNo &&
+                               cdt.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                               cdt.CallSno == CallSno
+                         select csn.ConsigneeCd + "-" + csn.Consignee).FirstOrDefault();
+
+            model.ConsigneeFirm = query;
             return model;
         }
 
@@ -2749,6 +2766,79 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             return Id;
+        }
+
+        public string CallStatusFilesSave(VenderCallStatusModel model, DateTime? CallRecvDt, int CallSno, List<APPDocumentDTO> DocumentsList)
+        {
+            int consignee_cd = 0;
+            string msg = "";
+
+            string formattedCallRecvDt = "";
+            if (CallRecvDt != null && CallRecvDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+
+            var query = context.IcIntermediates
+                    .Where(ici => ici.CaseNo == model.CaseNo &&
+                                  ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                  ici.CallSno == CallSno &&
+                                  ici.BkNo == model.BkNo &&
+                                  ici.SetNo == model.SetNo)
+                    .OrderBy(ici => ici.Datetime)
+                    .Select(ici => ici.ConsigneeCd)
+                    .FirstOrDefault();
+
+             consignee_cd = query;
+
+            if (consignee_cd > 0)
+            {
+                if(consignee_cd.ToString() != model.ConsigneeFirm)
+                {
+                    msg= "Please Enter other book no. or set no. same is used for consignee " + consignee_cd + " !!!";
+                    return msg;
+                }
+            }
+
+            if(model.BkNo != null && model.SetNo != null)
+            {
+                var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.BkNo && x.SetNo == model.SetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
+
+                if (recordExists == null)
+                {
+                    T49IcPhotoEnclosed obj = new T49IcPhotoEnclosed();
+
+                    obj.CaseNo = model.CaseNo;
+                    obj.CallRecvDt = CallRecvDt;
+                    obj.CallSno = (short?)CallSno;
+                    obj.BkNo = model.BkNo;
+                    obj.SetNo = model.SetNo;
+                    obj.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
+                    obj.Datetime = DateTime.Now;
+                    context.T49IcPhotoEncloseds.Add(obj);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    recordExists.CaseNo = model.CaseNo;
+                    recordExists.CallRecvDt = CallRecvDt;
+                    recordExists.CallSno = (short?)CallSno;
+                    recordExists.BkNo = model.BkNo;
+                    recordExists.SetNo = model.SetNo;
+                    recordExists.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
+                    recordExists.Datetime = DateTime.Now;
+                    context.SaveChanges();
+                }
+            }
+            else
+            {
+                msg = "Please enter valid book no. and set no. !";
+                return msg;
+            }
+
+            return msg;
         }
 
         public bool CallDetailsRemove(VendrorCallDetailsModel model)
