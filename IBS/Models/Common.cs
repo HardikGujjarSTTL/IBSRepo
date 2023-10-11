@@ -2978,8 +2978,15 @@ namespace IBS.Models
             List<PO_MasterDetailsModel> model = new List<PO_MasterDetailsModel>();
             if (ds != null && ds.Tables.Count > 0)
             {
-                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                model = JsonConvert.DeserializeObject<List<PO_MasterDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                if (ds.Tables[0].Rows.Count == 1 && Convert.ToInt32(ds.Tables[0].Rows[0]["CONSIGNEE_CD"]) == 0)
+                {
+                    model = new List<PO_MasterDetailsModel>();
+                }
+                else
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<PO_MasterDetailsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                }
             }
 
             List<SelectListItem> obj = (from a in model.ToList()
