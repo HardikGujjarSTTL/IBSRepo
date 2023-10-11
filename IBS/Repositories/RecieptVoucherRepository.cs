@@ -1,46 +1,38 @@
-﻿    using Microsoft.AspNetCore; 
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Diagnostics.Contracts;
-using Microsoft.DotNet.Scaffolding.Shared.Project;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using IBS.Helper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
-using System.Drawing;
 
 namespace IBS.Repositories
 {
-    public class AddRecieptVoucherRepository : IAddRecieptVoucher
+    public class RecieptVoucherRepository : IRecieptVoucherRepository
     {
         public string VNO, Action, VTYPE;
-        int SNO;
         private readonly ModelContext context;
-         public AddRecieptVoucherRepository(ModelContext context)
+
+        public RecieptVoucherRepository(ModelContext context)
         {
             this.context = context;
         }
-         
-        public AddRecieptVoucherModel FindByID(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT)
+
+        public RecieptVoucherModel FindByID(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT)
         {
 
-            AddRecieptVoucherModel model = new();
+            RecieptVoucherModel model = new();
             DateTime dt = Convert.ToDateTime(CHQ_DT);
             T24Rv tenant2 = context.T24Rvs.Find(VCHR_NO);
-            T25RvDetail tenant = context.T25RvDetails.Find( BANK_CD, CHQ_NO, dt);
-            
+            T25RvDetail tenant = context.T25RvDetails.Find(BANK_CD, CHQ_NO, dt);
+
             if (tenant == null && tenant2 == null)
             {
 
-               throw new Exception("Voucher Record Not found");
+                throw new Exception("Voucher Record Not found");
             }
             else
             {
                 model.VCHR_DT = Convert.ToString(tenant2.VchrDt);
-                model.BANK_CD = Convert.ToString(tenant.BankCd);
+                model.BANK_CD = tenant.BankCd;
                 model.CHQ_NO = tenant.ChqNo;
                 model.CHQ_DT = Convert.ToString(tenant.ChqDt);
                 model.BANK_NAME = Convert.ToString(tenant.BankCd);
@@ -50,15 +42,15 @@ namespace IBS.Repositories
                 model.CASE_NO = tenant.CaseNo;
                 model.NARRATION = tenant.Narration;
                 model.BPO_CD = tenant.BpoCd;
-                
+
             }
             return model;
         }
 
-        public DTResult<AddRecieptVoucherModel> GetVoucherList(DTParameters dtParameters)
+        public DTResult<RecieptVoucherModel> GetVoucherList(DTParameters dtParameters)
         {
-            DTResult<AddRecieptVoucherModel> dTResult = new() { draw = 0 };
-            IQueryable<AddRecieptVoucherModel>? query = null;
+            DTResult<RecieptVoucherModel> dTResult = new() { draw = 0 };
+            IQueryable<RecieptVoucherModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -88,16 +80,16 @@ namespace IBS.Repositories
                         //join m in context.T94Banks on i.BankCd equals m.BankCd
                         //join c in context.T03Cities on k.BpoCityCd equals c.CityCd
                         //where l.Isdeleted == 0  (nvl(T24.VCHR_TYPE, 'X') <> 'I')
-                        
-                    select new AddRecieptVoucherModel
+
+                    select new RecieptVoucherModel
                     {
-                        VCHR_NO=l.VchrNo,
+                        VCHR_NO = l.VchrNo,
                         //SNO = Convert.ToInt32(l.Sno),
                         CHQ_NO = l.ChqNo,
                         CHQ_DT = l.ChqDt,
                         AMOUNT = Convert.ToDouble(l.Amount),
                         BANK_NAME = l.BankName,
-                        BANK_CD = Convert.ToString(l.BankCd), 
+                        BANK_CD = l.BankCd,
                         BPO_CD = l.BpoName,
                         ACC_CD = Convert.ToString(l.AccDesc),
                         CASE_NO = l.CaseNo,
@@ -117,11 +109,10 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        
-        public string VoucherDetailsSave(AddRecieptVoucherModel model,string Region)
+        public string VoucherDetailsSave(RecieptVoucherModel model, string Region)
         {
-            DTResult<AddRecieptVoucherModel> dTResult = new() { draw = 0 };
-            IQueryable<AddRecieptVoucherModel>? query = null;
+            DTResult<RecieptVoucherModel> dTResult = new() { draw = 0 };
+            IQueryable<RecieptVoucherModel>? query = null;
 
             string VCHR_NO = "";
             string CASE_NO = "";
@@ -135,9 +126,9 @@ namespace IBS.Repositories
                 string ss1 = ss.Substring(Convert.ToInt32(model.VCHR_NO), 5);
                 var voucher1 = context.T24Rvs
                   .Where(r => r.VchrNo.StartsWith(ss))
-                  .Select(r => r.VchrNo.Substring(5, 8)) 
+                  .Select(r => r.VchrNo.Substring(5, 8))
                   .AsEnumerable()
-                  .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0) 
+                  .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0)
                   .DefaultIfEmpty(0)
                   .Max() + 1;
 
@@ -150,7 +141,7 @@ namespace IBS.Repositories
                     VCHR_NO = ss + (Convert.ToInt32(0) + 1);
                 }
             }
-                    var GetValue = context.T24Rvs.Find(model.VCHR_NO);
+            var GetValue = context.T24Rvs.Find(model.VCHR_NO);
 
             var GetValue2 = context.T25RvDetails.Find(Convert.ToInt32(model.BANK_CD), model.CHQ_NO, Convert.ToDateTime(model.CHQ_DT));
 
@@ -183,7 +174,7 @@ namespace IBS.Repositories
                 obj.CaseNo = model.CASE_NO;
                 obj.Narration = model.NARRATION;
                 obj.BpoCd = model.BPO_CD;
-              //  obj.CaseNo = model.CASE_NO;
+                //  obj.CaseNo = model.CASE_NO;
                 obj.BpoCd = model.BPO_CD;
                 obj.BpoType = model.BPO_TYPE;
 
@@ -191,43 +182,43 @@ namespace IBS.Repositories
                 context.SaveChanges();
 
 
-              
+
 
 
             }
             else
             {
-                        DateTime parsedDate;
-                        DateTime vdt;
-                        DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
-                        DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
+                DateTime parsedDate;
+                DateTime vdt;
+                DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
+                DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
                 VCHR_NO = model.VCHR_NO;
 
                 T24Rv data = new T24Rv();
                 GetValue.VchrNo = Convert.ToString(VCHR_NO);
-               // GetValue.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
+                // GetValue.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
                 GetValue.BankCd = Convert.ToByte(model.BANK_CD);
                 GetValue.VchrType = model.VCHR_TYPE;
-               // context.T24Rvs.Add(data);
+                // context.T24Rvs.Add(data);
                 context.SaveChanges();
                 VCHR_NO = Convert.ToString(GetValue.VchrNo);
 
                 T25RvDetail obj = new T25RvDetail();
                 GetValue2.VchrNo = Convert.ToString(VCHR_NO);
                 GetValue2.BankCd = Convert.ToByte(model.BANK_NAME);
-                obj.ChqDt = parsedDate; 
+                obj.ChqDt = parsedDate;
                 GetValue2.Amount = Convert.ToDecimal(model.AMOUNT);
                 GetValue2.SampleNo = model.SAMPLE_NO;
                 GetValue2.AccCd = Convert.ToInt32(model.ACC_CD);
                 GetValue2.CaseNo = model.CASE_NO;
                 GetValue2.Narration = model.NARRATION;
                 GetValue2.BpoCd = model.BPO_CD;
-               // GetValue2.CaseNo = model.CASE_NO;
+                // GetValue2.CaseNo = model.CASE_NO;
                 GetValue2.BpoCd = model.BPO_CD;
                 GetValue2.BpoType = model.BPO_TYPE;
                 GetValue2.Narration = model.NARRATION;
 
-               // context.T25RvDetails.Add(obj);
+                // context.T25RvDetails.Add(obj);
                 context.SaveChanges();
 
 
@@ -235,15 +226,15 @@ namespace IBS.Repositories
             return VCHR_NO;
         }
 
-        public string ChkCSNO(string txtCSNO, string lstBPO,out string Narrt)
+        public string ChkCSNO(string txtCSNO, string lstBPO, out string Narrt)
         {
-        
+
             var query = from p in context.T13PoMasters
                         join b in context.T14PoBpos on p.CaseNo equals b.CaseNo into bpoJoin
                         from bpo in bpoJoin.DefaultIfEmpty()
                         join v in context.T05Vendors on p.VendCd equals v.VendCd
                         where p.CaseNo == txtCSNO
-                        group new { p, bpo, v } by new { p.CaseNo, bpo.BpoCd, v.VendName} into g
+                        group new { p, bpo, v } by new { p.CaseNo, bpo.BpoCd, v.VendName } into g
                         select new
                         {
                             CaseNo = g.Key.CaseNo,
@@ -260,16 +251,15 @@ namespace IBS.Repositories
             {
                 Narrt = query.FirstOrDefault().VendName;
             }
-            
+
 
             return Narrt;
         }
 
-
         public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO)
         {
 
-   
+
 
             var query = from b in context.T12BillPayingOfficers
                         join p in context.T14PoBpos on b.BpoCd equals p.BpoCd
@@ -294,7 +284,7 @@ namespace IBS.Repositories
 
         }
 
-        public string Insert(AddRecieptVoucherModel model, string VoucherDate , string Bank_Code , string VoucherType , string Region)
+        public string Insert(RecieptVoucherModel model, string VoucherDate, string Bank_Code, string VoucherType, string Region)
         {
             string VCHR_NO = "";
 
@@ -311,7 +301,7 @@ namespace IBS.Repositories
             if (voucher1 != null)
             {
                 VCHR_NO = ss + "00" + voucher1.ToString();
-                }
+            }
             else
             {
                 VCHR_NO = ss + "001";
@@ -319,8 +309,91 @@ namespace IBS.Repositories
             return null;
         }
 
+        public string GetAccountName(int AccCd)
+        {
+            return context.T95AccountCodes.Where(x => x.AccCd == AccCd).Select(x => x.AccDesc.ToString() + ":" + x.AccCd.ToString()).FirstOrDefault();
+        }
+
+        public string GetBankName(int BankCd)
+        {
+            return context.T94Banks.Where(x => x.BankCd == BankCd).Select(x => x.BankName).FirstOrDefault();
+        }
+
+        public string GetBPOName(string BpoCd)
+        {
+            string BpoName = string.Empty;
+            var obj = (from bpo in context.T12BillPayingOfficers
+                           join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                           where bpo.BpoCd == BpoCd
+                           select new
+                           {
+                               BPO_NAME = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                           }).FirstOrDefault();
+
+            if (obj != null) BpoName = obj.BPO_NAME.ToString();
+
+            return BpoName;
+
+        }
+
+        public IEnumerable<SelectListItem> GetBPO(int Acc_cd, string BpoType, string BPO_cd)
+        {
+            int[] Acc_cds = new int[] { 2201, 2202, 2203, 2204, 2205 };
+
+            if (!string.IsNullOrEmpty(BPO_cd))
+            {
+                return (from bpo in context.T12BillPayingOfficers
+                        join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                        where bpo.BpoCd == BPO_cd
+                        select new SelectListItem
+                        {
+                            Value = bpo.BpoCd.ToString(),
+                            Text = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                        }).ToList();
+            }
+            else
+            {
+                if (Acc_cds.Contains(Acc_cd))
+                {
+                    return (from bpo in context.T12BillPayingOfficers
+                            join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                            where bpo.BpoType == BpoType
+                            orderby bpo.BpoName
+                            select new SelectListItem
+                            {
+                                Value = bpo.BpoCd.ToString(),
+                                Text = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                            }).ToList();
+                }
+                else
+                {
+                    return (from bpo in context.T12BillPayingOfficers
+                            join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                            orderby bpo.BpoName
+                            select new SelectListItem
+                            {
+                                Value = bpo.BpoCd.ToString(),
+                                Text = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                            }).ToList();
+                }
+            }
+        }
+
+        public BPODetailsModel FindBPODetails(string CaseNo)
+        {
+            return (from p in context.T13PoMasters
+                    join b in context.T14PoBpos on p.CaseNo equals b.CaseNo into bpoGroup
+                    from bpo in bpoGroup.DefaultIfEmpty()
+                    join v in context.T05Vendors on p.VendCd equals v.VendCd
+                    where p.CaseNo == CaseNo
+                    group new { p.CaseNo, bpo.BpoCd, v.VendName } by new { p.CaseNo, bpo.BpoCd, v.VendName } into grouped
+                    select new BPODetailsModel
+                    {
+                        CASE_NO = grouped.Key.CaseNo,
+                        BPO_CD = grouped.Key.BpoCd,
+                        VEND_NAME = grouped.Key.VendName
+                    }).FirstOrDefault();
+        }
+
     }
-
-
-
 }
