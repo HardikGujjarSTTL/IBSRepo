@@ -630,6 +630,7 @@ namespace IBS.Helper
             [Description("Top JI Report")] TOPJI,
             [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
             [Description("CONSIGNEE COMPLAINTS")] COCOMPJI,
+            [Description("Controlling Officer Wise IE")] COWISEIE,
         }
     }
 

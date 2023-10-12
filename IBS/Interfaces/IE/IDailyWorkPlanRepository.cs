@@ -4,8 +4,14 @@ namespace IBS.Interfaces.IE
 {
     public interface IDailyWorkPlanRepository
     {
-        DTResult<DailyWorkPlanModel> GetMessageList(DTParameters dtParameters,int GetIeCd);
+        public DailyWorkPlanModel FindByDetails(DailyWorkPlanModel model, string Region);
+
+        DTResult<DailyWorkPlanModel> GetLoadTable(DTParameters dtParameters,string Region, int GetIeCd);
+
+        DTResult<DailyWorkPlanModel> GetLoadTableCurrentDay(DTParameters dtParameters, string Region, int GetIeCd);
 
         int DetailsInsertUpdate(DailyWorkPlanModel model);
+
+        //string SaveDetails(InspectionCertModel model, string Region);
     }
 }

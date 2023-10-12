@@ -236,6 +236,7 @@ builder.Services.AddScoped<IReceiptsRemitanceRepository, ReceiptsRemitanceRRepos
 builder.Services.AddScoped<IBillingRepository, BillingRRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 builder.Services.AddScoped<IMonthlyReportsRepository, MonthlyReportsRepository>();
+builder.Services.AddScoped<IIC_RPT_IntermediateRepository, IC_RPT_IntermediateRepository>();
 
 var app = builder.Build();
 

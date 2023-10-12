@@ -322,7 +322,8 @@
         }
 
         $("#btnAddMA").click(function () {
-            SaveSingleDocuments("tab-1");
+            //SaveSingleDocuments("tab-1");
+            if (!SaveSingleDocuments("tab-1")) { return; }
 
             var CaseNo = $("#CASE_NO").val();
             var MaNo = $("#MA_NO").val();

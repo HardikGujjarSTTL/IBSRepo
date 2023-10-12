@@ -12,43 +12,83 @@
     <div class="accordion-body">
         <input type="hidden" asp-for="ReasonDt" />
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
-                <div class="reference">
-                    <label for="Reference">Reason for Not Entering WorkPlan of Date: <strong><span id="RDt" name="RDt" runat="server"></span></strong></label>
-                    <textarea rows="4" asp-for="Reason" style="text-transform: uppercase;"></textarea>
-                    <span asp-validation-for="Reason" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="row mt-5">
-                    <div class="col-md-3 mb-2">
-                        <input type="radio" id="huey" name="drone" checked>
-                        <label for="huey" id="FromDate" name="FromDate" runat="server"></label>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <input type="radio" id="dewey" name="drone">
-                        <label for="dewey" id="ToDate" name="ToDate" runat="server"></label>
+            @if (Model.errcode == 1)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="reference">
+                        @*<label for="Reference">Reason for Not Entering WorkPlan of Date: <strong><span id="RDt" name="RDt" runat="server"></span></strong></label>*@
+                        <label for="Reference">
+                            Reason for Not Entering WorkPlan of Date:
+                            <strong>
+                                <span id="RDt" name="RDt" runat="server">@Convert.ToDateTime(@Model.NwpDt).ToString("dd/MM/yyyy")</span>
+                            </strong>
+                        </label>
+                        <textarea rows="4" asp-for="Reason" style="text-transform: uppercase;"></textarea>
+                        <span asp-validation-for="Reason" class="text-danger"></span>
                     </div>
                 </div>
+            }
+
+
+            <div class="col-md-12 mb-3">
+                <label for="PlanDt">Work Plan Dated : </label>
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="PlanDt_F" asp-for="PlanDt" name="PlanDt" value=@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy") checked>
+                                <label for="PlanDt_F">@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy")</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="PlanDt_T" asp-for="PlanDt" name="PlanDt" value=@Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")>
+                                <label for="PlanDt_T">@Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+
+            <div class="col-md-12 mb-3">
+                <label for="InspWorkType">Inspection Work Type : </label>
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="InspWorkType_Y" asp-for="InspWorkType" name="InspWorkType" value="Y">
+                                <label for="InspWorkType_Y">Inspection Work</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="InspWorkType_N" asp-for="InspWorkType" name="InspWorkType" value="N">
+                                <label for="InspWorkType_N">Non Inspection Work</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <section class="table-section">
+        <h3 class="heading3">Enter the Daily Work Plan (DWP) for Calls a day in advance latest by 1500 HRS. </h3>
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtList" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Co Cd.</th>
-                            <th>Reason</th>
-                            <th>Nwp Dt</th>
-                            <th>Region Code</th>
+                            <th>Sr No.</th>
+                            <th></th>
+                            <th>Action</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call SNo.</th>
+                            <th>Call Status</th>
+                            <th>Manufacturer</th>
+                            <th>Manufacturer Place</th>
+                            <th>Manufacturer City</th>
+                            <th>Desire Dt</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,6 +97,36 @@
             </div>
         </div>
     </section>
+
+    <section class="table-section">
+        <h3 class="heading3">Calls Already Added in Daily Work Plan For the Day. </h3>
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtListCurrentDay" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th></th>
+                            <th>Visit Date</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call SNo.</th>
+                            <th>Manufacturer</th>
+                            <th>Manufacturer Place</th>
+                            <th>Manufacturer City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <div class="row my-0">
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+        </div>
+    </div>
 </form>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -64,11 +134,26 @@
 
     <script type="text/javascript">
         $(function () {
-            setDefaultDate();
-            InitializeDatatable();
+            //setDefaultDate();
+            //InitializeDatatable();
+            var InspWorkType_Y = $("#InspWorkType_Y");
+            var InspWorkType_N = $("#InspWorkType_N");
+
+            InspWorkType_Y.change(function () {
+                if (InspWorkType_Y.is(":checked")) {
+                    InitializeDatatable();
+                    InitializeDatatableCurrentDay();
+                }
+            });
+            InspWorkType_N.change(function () {
+                if (InspWorkType_N.is(":checked")) {
+                    InitializeDatatable();
+                    InitializeDatatableCurrentDay();
+                }
+            });
         });
 
-        function Save() {
+        function Save1() {
             if ($("#frmDetails").valid()) {
                 var todate = new Date();
                 $('#ReasonDt').val(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
@@ -79,13 +164,15 @@
         function setDefaultDate() {
             var fromdate = new Date();
             var todate = new Date();
-            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('DD/MM/YYYY'));
-            $('#ToDate').text(moment(todate.setDate(todate.getDate() + 1)).format('DD/MM/YYYY'));
-            $('#RDt').text(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
+            //$('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('DD/MM/YYYY'));
+            //$('#ToDate').text(moment(todate.setDate(todate.getDate() + 1)).format('DD/MM/YYYY'));
+            //$('#RDt').text(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
             $('#ReasonDt').val(moment(todate.setDate(todate.getDate())).format('DD/MM/YYYY'));
         }
 
         function InitializeDatatable() {
+            var PlanDt = $('input[name="PlanDt"]:checked').val();
+            var InspWorkType = $('input[name="InspWorkType"]:checked').val();
 
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -104,6 +191,8 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            "PlanDt": PlanDt,
+                            "InspWorkType": InspWorkType
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -117,10 +206,24 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CoCd" },
-                    { data: "Reason" },
                     {
-                        data: "NwpDt",
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" name="chkDWplan" id="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
+                        }
+                    },
+                    {
+                        data: "",
+                        render: function (data, type, row) {
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<a href='#' Font-Names='Verdana' Font-Size='8pt' target='_blank'>View Call</a><br/>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
                                 return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
@@ -128,11 +231,116 @@
                             return data;
                         }
                     },
-                    { data: "RegionCode" },
+                    { data: "CallSno" },
+                    { data: "CallStatus" },
+                    { data: "VendName" },
+                    { data: "MfgPlace" },
+                    { data: "MFGCity" },
+                    {
+                        data: "DtInspDesire",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
 
                 ],
-                "order": [[0, "asc"]]
+                "order": [[9, "asc"]]
             });
+        }
+
+        function InitializeDatatableCurrentDay() {
+            var PlanDt = $('input[name="PlanDt"]:checked').val();
+            var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+
+            $("#dtListCurrentDay").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("GetLoadTableCurrentDay")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "PlanDt": PlanDt,
+                            "InspWorkType": InspWorkType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    
+                    {
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" name="chkDWplan" id="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
+                        }
+                    },
+                    {
+                        data: "VisitDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "VendName" },
+                    { data: "MfgPlace" },
+                    { data: "MFGCity" },
+                ],
+                "order": [[9, "asc"]]
+            });
+        }
+
+        function Save() {
+            checkedWork = [];
+            var dt = $('#dtList').DataTable();
+            $(dt.$('input[name="chkDWplan"]:checked').each(function () {
+                checkedWork.push($(this).attr('id'));
+            }));
+
+            if (checkedWork.length == 0) {
+                alert('Please select atleast record for daily plan for work!!!')
+                return false;
+            }
+            $("#checkedWork").val(checkedWork);
+            event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+            $.post("@Url.Action("BillUpdate", "BillAdjustments")", formData, function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+            //$.post("@Url.Action("UpdateBillsFinalisation", "BillFinalisationForm")", { BillNos: checkedWork }, function (response) {
+            //    if (response.status) {
+            //        ShowHideMsg("success", response.responseText);
+            //        InitializeDatatable();
+            //    }
+            //});
         }
 
         completed = function (response) {
