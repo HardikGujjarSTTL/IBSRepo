@@ -111,12 +111,12 @@ namespace IBS.Controllers.Vendor
                 }
                 else
                 {
-                    PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
-                    if (pO_MasterModel != null)
-                    {
-                        var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
-                        return Json(new { status = false, responseText = Retmsg });
-                    }
+                    //PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
+                    //if (pO_MasterModel != null)
+                    //{
+                    //    var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
+                    //    return Json(new { status = false, responseText = Retmsg });
+                    //}
                     PO_MasterModel pO_MasterModel2 = pOMasterRepository.alreadyExistT13_PO_MASTER(model);
                     if (pO_MasterModel2 != null)
                     {
