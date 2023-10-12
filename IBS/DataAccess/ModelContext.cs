@@ -1832,15 +1832,19 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<GeneralFile>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("GENERAL_FILE");
+            entity.HasKey(e => e.Id).HasName("GENERAL_FILE_PK");
 
+            entity.ToTable("GENERAL_FILE");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"GENERAL_FILE_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AccCb)
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("ACC_CB");
             entity.Property(e => e.AccCode)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ACC_CODE");
             entity.Property(e => e.AccOb)
                 .HasColumnType("NUMBER(12,2)")
@@ -1852,7 +1856,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("BANK_CB");
             entity.Property(e => e.BankCode)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("BANK_CODE");
             entity.Property(e => e.BankOb)
                 .HasColumnType("NUMBER(12,2)")
@@ -1893,7 +1897,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(2)
                 .HasColumnName("PREP_BY");
             entity.Property(e => e.ProjectCode)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("PROJECT_CODE");
             entity.Property(e => e.RefNo)
                 .HasPrecision(4)
@@ -1904,10 +1908,10 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("REGION");
             entity.Property(e => e.SbuCode)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("SBU_CODE");
             entity.Property(e => e.SnoT25)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("SNO_T25");
             entity.Property(e => e.SubCode)
                 .HasMaxLength(6)
@@ -1917,10 +1921,10 @@ public partial class ModelContext : DbContext
                 .HasPrecision(2)
                 .HasColumnName("SUPPL_NO");
             entity.Property(e => e.Tc)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("TC");
             entity.Property(e => e.UnitCode)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("UNIT_CODE");
             entity.Property(e => e.UserCode)
                 .HasMaxLength(30)
@@ -1934,7 +1938,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VCHR_NO_T25");
             entity.Property(e => e.VchrNumb)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("VCHR_NUMB");
         });
 
@@ -24332,6 +24336,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("BARCODE_SEQ");
         modelBuilder.HasSequence("CLIENT_FEEDBACK_SEQ");
         modelBuilder.HasSequence("EMAILCONFIGURATIONSEQ");
+        modelBuilder.HasSequence("GENERAL_FILE_SEQ");
         modelBuilder.HasSequence("IBS_APPDOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENT_SEQ");
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
@@ -24412,6 +24417,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
         modelBuilder.HasSequence("TDS_HISTORY_SEQ");
         modelBuilder.HasSequence("TESTCAL");
+        modelBuilder.HasSequence("TRANSACTION_NUMBER_SEQ");
         modelBuilder.HasSequence("USERROLES_HISTORY_SEQ");
         modelBuilder.HasSequence("USERROLESSEQ");
         modelBuilder.HasSequence("VENDOR_FEEDBACK_SEQ");

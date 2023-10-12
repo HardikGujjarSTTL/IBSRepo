@@ -11,15 +11,19 @@
 </div>
 <div class="task-listinput">
     <form role="form" asp-controller="RecieptVoucher" asp-action="Manage" id="frmRecieptVoucher">
+        <input type="hidden" asp-for="Region" />
+        <input type="hidden" asp-for="IsNew" />
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="VCHR_NO">Voucher No</label>
+                    <label for="VCHR_NO">Voucher No <i class="text-danger">*</i></label>
                     <input type="text" class="input" asp-for="VCHR_NO" readonly />
+                    <span class="text-danger" asp-validation-for="VCHR_NO"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="VCHR_DT">Voucher Date</label>
-                    <input type="text" class="datepicker" asp-for="VCHR_DT" placeholder="DD/MM/YYYY" />
+                    <label for="VCHR_DT">Voucher Date <i class="text-danger">*</i></label>
+                    <input type="text" class="datepicker" asp-for="VCHR_DT" placeholder="DD/MM/YYYY" readonly />
+                    <span class="text-danger" asp-validation-for="VCHR_DT"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="BANK_CD">Bank/Cash</label>
@@ -43,7 +47,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-           
+            
         });
 
         function SubmitRecieptVoucherData() {
